@@ -21,6 +21,6 @@ namespace SOUI
         virtual HRESULT skew(float sx, float sy);
 
     protected:
-        CAutoRefPtr<SRenderTarget_Skia> m_pRT;
+        SAutoRefPtr<SRenderTarget_Skia> m_pRT;
     };
 }

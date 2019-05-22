@@ -132,7 +132,7 @@ protected:
 
     BOOL                 m_bTrackFlag;          /**< 跟踪鼠标标志 */
 
-    CAutoRefPtr<SCaret>     m_caret;            /**< 光标对象 */
+    SAutoRefPtr<SCaret>     m_caret;            /**< 光标对象 */
     BOOL                    m_bCaretShowing;    /**<当前有插入符正在显示*/
     BOOL                    m_bCaretActive;     /**<模拟插入符正在显示标志*/
     CPoint                  m_ptCaret;          /**<插入符位置*/
@@ -142,12 +142,12 @@ protected:
 
     IToolTip *              m_pTipCtrl;         /**<tip接口*/
 
-    CAutoRefPtr<IRegion>    m_rgnInvalidate;    /**<脏区域*/
-    CAutoRefPtr<IRenderTarget> m_memRT;         /**<绘制缓存*/
+    SAutoRefPtr<IRegion>    m_rgnInvalidate;    /**<脏区域*/
+    SAutoRefPtr<IRenderTarget> m_memRT;         /**<绘制缓存*/
     BOOL                    m_bResizing;        /**<执行WM_SIZE*/
-    CAutoRefPtr<SStylePool> m_privateStylePool; /**<局部style pool*/
-    CAutoRefPtr<SSkinPool>  m_privateSkinPool;  /**<局部skin pool*/
-	CAutoRefPtr<STemplatePool>  m_privateTemplatePool;/**< 局部template pool */
+    SAutoRefPtr<SStylePool> m_privateStylePool; /**<局部style pool*/
+    SAutoRefPtr<SSkinPool>  m_privateSkinPool;  /**<局部skin pool*/
+	SAutoRefPtr<STemplatePool>  m_privateTemplatePool;/**< 局部template pool */
 
     SList<SWND>             m_lstUpdateSwnd;    /**<等待刷新的非背景混合窗口列表*/
     SList<RECT>             m_lstUpdatedRect;   /**<更新的脏矩形列表*/
@@ -155,7 +155,7 @@ protected:
     
     MSG                     m_msgMouse;         /**<上一次鼠标按下消息*/
     
-    CAutoRefPtr<IScriptModule> m_pScriptModule; /**<脚本模块*/   
+    SAutoRefPtr<IScriptModule> m_pScriptModule; /**<脚本模块*/   
 
 	int						m_nScale;			/**<缩放比例 */
 

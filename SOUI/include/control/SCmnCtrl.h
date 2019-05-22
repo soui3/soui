@@ -373,7 +373,7 @@ protected:
     BOOL m_bManaged;  /**< 是否要自动释放当前的m_pSkin对象 */
     int m_iFrame;  /**< 资源图片ID */
     ISkinObj *m_pSkin;  /**< ISkinObj对象 */
-    CAutoRefPtr<IBitmap>    m_pImg;//使用代码设定的图片
+    SAutoRefPtr<IBitmap>    m_pImg;//使用代码设定的图片
     FilterLevel             m_fl;
 	bool m_bKeepAspect; /**< keep aspect ratio */
 

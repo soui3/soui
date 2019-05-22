@@ -79,11 +79,11 @@ namespace SOUI
 
 		if(count>1)
 		{
-			CAutoRefPtr<ICornerPathEffect> pathEffect;
+			SAutoRefPtr<ICornerPathEffect> pathEffect;
 			GETRENDERFACTORY->CreatePathEffect(__uuidof(ICornerPathEffect),(IPathEffect**)&pathEffect);
 			pathEffect->Init(m_fCornerRadius);
 
-			CAutoRefPtr<IPen> pen,oldPen;
+			SAutoRefPtr<IPen> pen,oldPen;
 			pRT->CreatePen(m_nLineStyle,m_crLine,m_nLineWidth,&pen);
 			pRT->SelectObject(pen,(IRenderObj**)&oldPen);
 

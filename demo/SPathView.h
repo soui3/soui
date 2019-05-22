@@ -45,8 +45,8 @@ namespace SOUI{
 		float m_fCornerRadius;
 
 		SArray<POINT> m_lstPoints;
-		CAutoRefPtr<IPath> m_path;
-		CAutoRefPtr<IPathMeasure> m_pathMeasure;
+		SAutoRefPtr<IPath> m_path;
+		SAutoRefPtr<IPathMeasure> m_pathMeasure;
 	};
 
 

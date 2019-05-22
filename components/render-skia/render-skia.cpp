@@ -192,7 +192,7 @@ namespace SOUI
         pRenderFactory->CreateBitmap(&m_defBmp);
         m_defBmp->Init(nWid,nHei);
         SelectObject(m_defBmp);
-		CAutoRefPtr<IPen> pPen;
+		SAutoRefPtr<IPen> pPen;
 		CreatePen(PS_SOLID,SColor(0,0,0).toCOLORREF(),1,&pPen);
 		SelectObject(pPen);
 	}
@@ -790,7 +790,7 @@ namespace SOUI
 
     HRESULT SRenderTarget_Skia::SelectObject( IRenderObj *pObj,IRenderObj ** ppOldObj /*= NULL*/ )
     {
-        CAutoRefPtr<IRenderObj> pRet;
+        SAutoRefPtr<IRenderObj> pRet;
         switch(pObj->ObjectType())
         {
         case OT_BITMAP: 
@@ -1496,7 +1496,7 @@ namespace SOUI
 
 	HRESULT SBitmap_Skia::LoadFromFile( LPCTSTR pszFileName)
 	{
-	    CAutoRefPtr<IImgX> imgDecoder;
+	    SAutoRefPtr<IImgX> imgDecoder;
 	    GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
 		if(imgDecoder->LoadFromFile(S_CT2W(pszFileName))==0) return S_FALSE;
 		return ImgFromDecoder(imgDecoder);
@@ -1504,7 +1504,7 @@ namespace SOUI
 
 	HRESULT SBitmap_Skia::LoadFromMemory(LPBYTE pBuf,size_t szLen)
 	{
-        CAutoRefPtr<IImgX> imgDecoder;
+        SAutoRefPtr<IImgX> imgDecoder;
         GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
 		if(imgDecoder->LoadFromMemory(pBuf,szLen)==0) return S_FALSE;
         return ImgFromDecoder(imgDecoder);

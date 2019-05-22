@@ -36,7 +36,7 @@ namespace SOUI
         SLayoutSize m_nItemHeight;
         SLayoutSize m_nDividerSize;
 		int	m_nScale;
-        CAutoRefPtr<ILvAdapter> m_adapter;
+        SAutoRefPtr<ILvAdapter> m_adapter;
     };
 
     class SOUI_EXP SListViewItemLocatorFlex : public TObjRefImpl<IListViewItemLocator>
@@ -106,7 +106,7 @@ namespace SOUI
         };
 
         SArray<SegmentInfo*>     m_segments;
-        CAutoRefPtr<ILvAdapter>   m_adapter;
+        SAutoRefPtr<ILvAdapter>   m_adapter;
     };
 
 }

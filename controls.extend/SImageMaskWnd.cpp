@@ -71,9 +71,9 @@ namespace SOUI
 	void SImageMaskWnd::UpdateCacheFromSkin(ISkinObj *pSkin)
 	{
 		SASSERT(m_bmpMask && m_bmpCache);
-		CAutoRefPtr<IRenderTarget> pRTDst;
+		SAutoRefPtr<IRenderTarget> pRTDst;
 		GETRENDERFACTORY->CreateRenderTarget(&pRTDst,0,0);
-		CAutoRefPtr<IRenderObj> pOldBmp;
+		SAutoRefPtr<IRenderObj> pOldBmp;
 		pRTDst->SelectObject(m_bmpCache,&pOldBmp);
 		CRect rc(CPoint(0,0),m_bmpCache->Size());
 		pSkin->Draw(pRTDst,&rc,0);
@@ -84,9 +84,9 @@ namespace SOUI
 	void SImageMaskWnd::UpdateCacheFromImage(IBitmap * pBitmap,FilterLevel fl)
 	{
 		SASSERT(m_bmpMask && m_bmpCache);
-		CAutoRefPtr<IRenderTarget> pRTDst;
+		SAutoRefPtr<IRenderTarget> pRTDst;
 		GETRENDERFACTORY->CreateRenderTarget(&pRTDst,0,0);
-		CAutoRefPtr<IRenderObj> pOldBmp;
+		SAutoRefPtr<IRenderObj> pOldBmp;
 		pRTDst->SelectObject(m_bmpCache,&pOldBmp);
 		CRect rc(CPoint(0,0),m_bmpCache->Size());
 		CRect rcSrc(CPoint(0,0),pBitmap->Size());

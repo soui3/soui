@@ -47,7 +47,7 @@ protected:
 	int GetMaxWidth();
 	int GetScale() const{return m_scale;}
 
-	CAutoRefPtr<IFont> GetFontPtr();
+	SAutoRefPtr<IFont> GetFontPtr();
 protected:
 	virtual void OnInitFinished(pugi::xml_node xmlNode);
 
@@ -212,7 +212,7 @@ protected:
     END_MSG_MAP()
 
     HWND m_hMenuOwner;
-	CAutoRefPtr<SMenuAttr> m_attr;
+	SAutoRefPtr<SMenuAttr> m_attr;
 };
 
 

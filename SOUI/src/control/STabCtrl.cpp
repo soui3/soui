@@ -257,14 +257,14 @@ namespace SOUI
 			SWindow::OnDestroy();
 		}
 
-		CAutoRefPtr<IRenderTarget> m_memRT;
+		SAutoRefPtr<IRenderTarget> m_memRT;
 		CPoint                     m_ptOffset;
 		//int                        m_nAniRange;
 		int						   m_nFrom,m_nTo;
 		int                        m_nSteps;
 		int                        m_iStep;
 		bool                       m_bVertical;
-		CAutoRefPtr<IInterpolator> m_aniInterpoloator;
+		SAutoRefPtr<IInterpolator> m_aniInterpoloator;
 		STabCtrl *                 m_pTabCtrl;
 		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_PAINT_EX(OnPaint)
@@ -728,7 +728,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
     //根据状态从style中获得字体，颜色
     IFontPtr font=m_style.GetTextFont(iState);
     COLORREF crTxt = m_style.GetTextColor(iState);
-    CAutoRefPtr<IFont> oldFont;
+    SAutoRefPtr<IFont> oldFont;
     if(font) pRT->SelectObject(font,(IRenderObj**)&oldFont);
     COLORREF crOld = 0;
     if(crTxt != CR_INVALID) crOld = pRT->SetTextColor(crTxt);

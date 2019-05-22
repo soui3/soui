@@ -31,8 +31,8 @@ namespace SOUI
         SOUI_ATTRS_END()
         
         SStringW                m_strSkin;
-        CAutoRefPtr<IBitmap>    m_bmpCache;
-        CAutoRefPtr<IBitmap>    m_bmpMask;
+        SAutoRefPtr<IBitmap>    m_bmpCache;
+        SAutoRefPtr<IBitmap>    m_bmpMask;
         int                     m_iMaskChannel;
     };
 }

@@ -387,7 +387,7 @@ public:                                                             \
      else                                                           \
 
 
-//ATTR_IMAGEAUTOREF:varname应该是一个CAutoRefPtr<SOUI::IBitmap>对象
+//ATTR_IMAGEAUTOREF:varname应该是一个SAutoRefPtr<SOUI::IBitmap>对象
 #define ATTR_IMAGEAUTOREF(attribname, varname, allredraw)           \
     if (0 == strAttribName.CompareNoCase(attribname))               \
     {                                                               \

@@ -73,7 +73,7 @@ namespace SOUI
 
     void SScrollText::UpdateScrollInfo(CSize size)
     {
-        CAutoRefPtr<IRenderTarget> pRT;
+        SAutoRefPtr<IRenderTarget> pRT;
         GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
         BeforePaintEx(pRT);
         SIZE sz;

@@ -44,7 +44,7 @@ namespace SOUI
 
 int SSkinAPNG::LoadFromFile( LPCTSTR pszFileName )
 {
-    CAutoRefPtr<IImgX> imgX;
+    SAutoRefPtr<IImgX> imgX;
     GETRENDERFACTORY->GetImgDecoderFactory()->CreateImgX(&imgX);
     imgX->LoadFromFile(pszFileName);
     return _InitImgFrame(imgX);
@@ -52,7 +52,7 @@ int SSkinAPNG::LoadFromFile( LPCTSTR pszFileName )
 
 int SSkinAPNG::LoadFromMemory( LPVOID pBuf,size_t dwSize )
 {
-    CAutoRefPtr<IImgX> imgX;
+    SAutoRefPtr<IImgX> imgX;
     GETRENDERFACTORY->GetImgDecoderFactory()->CreateImgX(&imgX);
     imgX->LoadFromMemory(pBuf,dwSize);
     return _InitImgFrame(imgX);

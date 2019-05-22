@@ -55,7 +55,7 @@ namespace SOUI
 
 		static FunFontCheck	s_funFontCheck;
 
-		CAutoRefPtr<IUiDefInfo> m_pCurUiDef;
+		SAutoRefPtr<IUiDefInfo> m_pCurUiDef;
 	};
 
 

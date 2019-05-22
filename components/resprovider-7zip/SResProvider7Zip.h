@@ -39,7 +39,7 @@ protected:
 	SStringT _GetFilePath(LPCTSTR pszResName,LPCTSTR pszType);
 	
 	SMap<SResID,SStringT> m_mapFiles;
-    CAutoRefPtr<IRenderFactory> m_renderFactory;
+    SAutoRefPtr<IRenderFactory> m_renderFactory;
 	CZipArchive m_zipFile;
 	SStringT m_childDir;
 };

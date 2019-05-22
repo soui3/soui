@@ -69,8 +69,8 @@ namespace SOUI
         SASSERT(m_pImgArray == NULL);
 
         IWICImagingFactory*    factory    = SImgDecoderFactory_WIC::s_wicImgFactory;
-        CAutoRefPtr<IWICBitmapDecoder>     decoder;
-        CAutoRefPtr<IWICStream> stream ;
+        SAutoRefPtr<IWICBitmapDecoder>     decoder;
+        SAutoRefPtr<IWICStream> stream ;
 
         if(FAILED(factory->CreateStream(&stream))) return 0;
 
@@ -86,7 +86,7 @@ namespace SOUI
         SASSERT(m_pImgArray == NULL);
         IWICImagingFactory*    factory    = SImgDecoderFactory_WIC::s_wicImgFactory;
 
-        CAutoRefPtr<IWICBitmapDecoder>     decoder;
+        SAutoRefPtr<IWICBitmapDecoder>     decoder;
 
         HRESULT hr = factory->CreateDecoderFromFilename(
             pszFileName,
@@ -114,7 +114,7 @@ namespace SOUI
         SASSERT(m_uImgCount == 0);
         
         IWICImagingFactory*    factory    = SImgDecoderFactory_WIC::s_wicImgFactory;
-        CAutoRefPtr<IWICFormatConverter> converter;
+        SAutoRefPtr<IWICFormatConverter> converter;
         if(FAILED(factory->CreateFormatConverter(&converter))) 
             return 0;
 
@@ -124,10 +124,10 @@ namespace SOUI
         m_pImgArray = new SImgFrame_WIC[m_uImgCount];
         for(UINT i = 0; i< m_uImgCount ;i++)
         {
-            CAutoRefPtr<IWICBitmapFrameDecode> frame;
+            SAutoRefPtr<IWICBitmapFrameDecode> frame;
             if(SUCCEEDED(pDecoder->GetFrame(i,&frame)))
             {
-//                 CAutoRefPtr<IWICMetadataQueryReader> pMetaReader;
+//                 SAutoRefPtr<IWICMetadataQueryReader> pMetaReader;
 //                 pDecoder->GetMetadataQueryReader(&pMetaReader);
 //                 if(pMetaReader)
 //                 {
@@ -144,7 +144,7 @@ namespace SOUI
                     m_bPremultiplied?GUID_WICPixelFormat32bppPBGRA:GUID_WICPixelFormat32bppBGRA,
                     WICBitmapDitherTypeNone,NULL,
                     0.f,WICBitmapPaletteTypeCustom);
-                CAutoRefPtr<IWICBitmapSource> bmp;
+                SAutoRefPtr<IWICBitmapSource> bmp;
                 converter->QueryInterface(IID_PPV_ARGS(&bmp));
                 m_pImgArray[i].SetWICBitmapSource(bmp);
             }
@@ -153,7 +153,7 @@ namespace SOUI
     }
 
     //////////////////////////////////////////////////////////////////////////
-    CAutoRefPtr<IWICImagingFactory> SImgDecoderFactory_WIC::s_wicImgFactory;
+    SAutoRefPtr<IWICImagingFactory> SImgDecoderFactory_WIC::s_wicImgFactory;
 
     SImgDecoderFactory_WIC::SImgDecoderFactory_WIC()
     {

@@ -167,7 +167,7 @@ void SItemPanel::OnRedraw(const CRect &rc)
         }else
         {
             IRenderTarget *pRT=OnGetRenderTarget(rc,OLEDC_PAINTBKGND);
-            CAutoRefPtr<IRegion> rgn;
+            SAutoRefPtr<IRegion> rgn;
             GETRENDERFACTORY->CreateRegion(&rgn);
             rgn->CombineRect(&rc,RGN_COPY);
             RedrawRegion(pRT,rgn);
@@ -259,7 +259,7 @@ void SItemPanel::Draw(IRenderTarget *pRT,const CRect & rc)
     SPainter painter;
     BeforePaint(pRT,painter);
 
-    CAutoRefPtr<IRegion> rgn;
+    SAutoRefPtr<IRegion> rgn;
     pRT->GetClipRegion(&rgn);
     
     pRT->OffsetViewportOrg(rc.left,rc.top);

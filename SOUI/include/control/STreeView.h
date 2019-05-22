@@ -83,7 +83,7 @@ namespace SOUI
         void _InitBranch(HTREEITEM hItem);
 
 
-        CAutoRefPtr<ITvAdapter> m_adapter;
+        SAutoRefPtr<ITvAdapter> m_adapter;
         int                     m_nLineHeight;
         int                     m_nIndent;
         CSize                   m_szDef;
@@ -189,9 +189,9 @@ namespace SOUI
 
 		void DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam);
 	protected:
-		CAutoRefPtr<ITvAdapter>		m_adapter;
-		CAutoRefPtr<ITvDataSetObserver>   m_observer;
-		CAutoRefPtr<ITreeViewItemLocator> m_tvItemLocator;
+		SAutoRefPtr<ITvAdapter>		m_adapter;
+		SAutoRefPtr<ITvDataSetObserver>   m_observer;
+		SAutoRefPtr<ITreeViewItemLocator> m_tvItemLocator;
         
         struct ItemInfo
         {

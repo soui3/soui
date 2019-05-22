@@ -28,7 +28,7 @@ namespace SOUI
 			ATTR_INT(L"speed",m_nSpeed,FALSE)
 		SOUI_ATTRS_END()
 		
-		CAutoRefPtr<IInterpolator> m_interpolator;
+		SAutoRefPtr<IInterpolator> m_interpolator;
 		int			m_nSpeed;
 		int			m_iFrame;
 		float		m_fTime;

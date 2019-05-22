@@ -9,8 +9,8 @@ namespace SOUI
 #define RT_SKIN _T("SkinXml")
 	class SSkinLoader :public SSingleton<SSkinLoader>
 	{
-		CAutoRefPtr<IResProvider> m_pResProvider; 
-		CAutoRefPtr<SSkinPool>  m_privateSkinPool;
+		SAutoRefPtr<IResProvider> m_pResProvider; 
+		SAutoRefPtr<SSkinPool>  m_privateSkinPool;
 		SApplication *m_theApp;
 		BOOL CreateResProvider_ZIP(IObjRef **ppObj)
 		{

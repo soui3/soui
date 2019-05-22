@@ -68,9 +68,9 @@ void SMenuAttr::OnInitFinished( pugi::xml_node xmlNode )
 }
 
 
-CAutoRefPtr<IFont> SMenuAttr::GetFontPtr()
+SAutoRefPtr<IFont> SMenuAttr::GetFontPtr()
 {
-	CAutoRefPtr<IFont> font = m_dpiFont.GetFontPtr();
+	SAutoRefPtr<IFont> font = m_dpiFont.GetFontPtr();
 	if(font) return font;
 	return SFontPool::getSingleton().GetFont(L"",m_scale);
 }
@@ -119,7 +119,7 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
     SMenuItemData *pdmmi=(SMenuItemData*)lpDrawItemStruct->itemData;
 
     HDC dc(lpDrawItemStruct->hDC);
-    CAutoRefPtr<IRenderTarget> pRT;
+    SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,rcItem.Width(),rcItem.Height());
 
     if(pdmmi)
@@ -162,7 +162,7 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
         COLORREF crOld=pRT->SetTextColor(bDisabled?m_attr->m_crTxtGray:(bSelected?m_attr->m_crTxtSel:m_attr->m_crTxtNormal));
 
 
-        CAutoRefPtr<IFont> oldFont;
+        SAutoRefPtr<IFont> oldFont;
         pRT->SelectObject(m_attr->GetFontPtr(),(IRenderObj**)&oldFont);
         pRT->DrawText(pdmmi->strText,pdmmi->strText.GetLength(),&rcTxt,DT_SINGLELINE|DT_VCENTER|DT_LEFT|DT_END_ELLIPSIS);
         pRT->SelectObject(oldFont);
@@ -200,9 +200,9 @@ void SMenuODWnd::MeasureItem( LPMEASUREITEMSTRUCT lpMeasureItemStruct )
         lpMeasureItemStruct->itemHeight = m_attr->GetItemHeight();
         lpMeasureItemStruct->itemWidth = m_attr->GetIconSize().cx + m_attr->GetIconMargin() * 2;
 
-        CAutoRefPtr<IRenderTarget> pRT;
+        SAutoRefPtr<IRenderTarget> pRT;
         GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
-        CAutoRefPtr<IFont> oldFont;
+        SAutoRefPtr<IFont> oldFont;
         pRT->SelectObject(m_attr->GetFontPtr(),(IRenderObj**)&oldFont);
         SIZE szTxt;
         pRT->MeasureText(pdmmi->strText,pdmmi->strText.GetLength(),&szTxt);

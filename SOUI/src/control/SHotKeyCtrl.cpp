@@ -23,7 +23,7 @@ int SHotKeyCtrl::OnCreate( LPVOID )
     int nRet=__super::OnCreate(NULL);
     if(nRet!=0) return nRet;
     
-    CAutoRefPtr<IRenderTarget> pRT;
+    SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
     BeforePaintEx(pRT);
     m_curFont=(IFont*)pRT->GetCurrentObject(OT_FONT);
@@ -52,7 +52,7 @@ void SHotKeyCtrl::UpdateCaret()
 {
     SStringT str=GetWindowText();
     IRenderTarget *pRT=GetRenderTarget(NULL,OLEDC_NODRAW);
-    CAutoRefPtr<IFont> oldFont;
+    SAutoRefPtr<IFont> oldFont;
     pRT->SelectObject(m_curFont,(IRenderObj**)&oldFont);
     SIZE szTxt;
     pRT->MeasureText(str,str.GetLength(),&szTxt);
@@ -84,7 +84,7 @@ UINT SHotKeyCtrl::GetTextAlign()
 void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 {
     IRenderTarget *pRT=GetRenderTarget(NULL,OLEDC_NODRAW);
-    CAutoRefPtr<IFont> oldFont;
+    SAutoRefPtr<IFont> oldFont;
     pRT->SelectObject(m_curFont,(IRenderObj**)&oldFont);
     SIZE szTxt;
     pRT->MeasureText(_T("A"),1,&szTxt);

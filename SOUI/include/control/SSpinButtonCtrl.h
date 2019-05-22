@@ -64,8 +64,8 @@ namespace SOUI
         BOOL m_bCircle;
         SStringW m_strBuddy;
         
-		CAutoRefPtr<ISkinObj> m_pUpSkin;
-		CAutoRefPtr<ISkinObj> m_pDownSkin;
+		SAutoRefPtr<ISkinObj> m_pUpSkin;
+		SAutoRefPtr<ISkinObj> m_pDownSkin;
 
 		enum ActionButton{
 			ACTION_NULL=-1,

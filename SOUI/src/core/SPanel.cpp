@@ -370,7 +370,7 @@ void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
             if(m_HitInfo.uSbCode==SB_LINEUP || m_HitInfo.uSbCode== SB_LINEDOWN)
             {
                 CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-                CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                 m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_PUSHDOWN,m_HitInfo.bVertical));
                 ReleaseRenderTarget(pRT);
             }
@@ -385,7 +385,7 @@ void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
             m_dwUpdateTime=GetTickCount()-m_dwUpdateInterval;//让第一次滚动消息能够即时刷新
 
             CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-            CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSlide,OLEDC_PAINTBKGND,FALSE);
+            SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSlide,OLEDC_PAINTBKGND,FALSE);
             CRect rcRail = GetSbRailwayRect(m_HitInfo.bVertical);
             m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
             m_pSkinSb->Draw(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
@@ -412,7 +412,7 @@ void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
 		{
 			rcRail.DeflateRect(GetSbArrowSize(),0);
 		}
-        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
+        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
         m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEDOWN,SBST_NORMAL,m_HitInfo.bVertical));
         psi->nTrackPos=-1;
         CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
@@ -424,7 +424,7 @@ void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
         if(m_HitInfo.uSbCode==SB_LINEUP||m_HitInfo.uSbCode==SB_LINEDOWN)
         {
             CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-            CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+            SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
             m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_NORMAL,m_HitInfo.bVertical));
             ReleaseRenderTarget(pRT);
         }
@@ -488,7 +488,7 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
             rcSlide.OffsetRect(nDragLen,0);
         }
 
-        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
+        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
         m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
         m_pSkinSb->Draw(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
         ReleaseRenderTarget(pRT);
@@ -515,7 +515,7 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                 if(IsScrollBarEnable(uHit.bVertical))
                 {
                     CRect rc=GetScrollBarRect(uHit.bVertical);
-                    CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                    SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                     if(uHit.uSbCode!=SB_LINEUP) 
                     {
                         rc=GetSbPartRect(uHit.bVertical,SB_LINEUP);
@@ -547,13 +547,13 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                     if(uHitOrig.uSbCode==SB_LINEUP || uHitOrig.uSbCode==SB_LINEDOWN)
                     {
                         CRect rc=GetSbPartRect(uHitOrig.bVertical,uHitOrig.uSbCode);
-                        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(uHitOrig.uSbCode,SBST_NORMAL,uHitOrig.bVertical));
                         ReleaseRenderTarget(pRT);
                     }else if(uHitOrig.uSbCode==SB_THUMBTRACK)
                     {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
                         CRect rc=GetSbRailwayRect(uHitOrig.bVertical);
-                        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHitOrig.bVertical));
                         rc=GetSbPartRect(uHitOrig.bVertical,SB_THUMBTRACK);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHitOrig.bVertical));
@@ -565,13 +565,13 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                     if(uHit.uSbCode==SB_LINEUP || uHit.uSbCode==SB_LINEDOWN)
                     {
                         CRect rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
-                        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
                         ReleaseRenderTarget(pRT);
                     }else if(uHit.uSbCode==SB_THUMBTRACK)
                     {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
                         CRect rc=GetSbRailwayRect(uHit.bVertical);
-                        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
+                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,uHit.bVertical));
                         rc=GetSbPartRect(uHit.bVertical,SB_THUMBTRACK);
                         m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,uHit.bVertical));
@@ -594,7 +594,7 @@ void SPanel::OnNcMouseLeave()
     if(IsScrollBarEnable(m_HitInfo.bVertical))
     {
         CRect rcSb=GetScrollBarRect(m_HitInfo.bVertical);
-        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSb,OLEDC_PAINTBKGND,FALSE);
+        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSb,OLEDC_PAINTBKGND,FALSE);
         CRect rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_LINEUP);
         m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEUP,SBST_INACTIVE,m_HitInfo.bVertical));
         rcDest=GetSbRailwayRect(m_HitInfo.bVertical);
@@ -702,7 +702,7 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 		{
 			rcRail.DeflateRect(GetSbArrowSize(), 0);
 		}
-		CAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
+		SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
 		m_pSkinSb->Draw(pRT, rcRail, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, bVertical));
 		psi->nTrackPos = -1;
 		CRect rcSlide = GetSbPartRect(bVertical, SB_THUMBTRACK);

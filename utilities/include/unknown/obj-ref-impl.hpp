@@ -62,21 +62,21 @@ public:
     }
 };
 
-//CAutoRefPtr provides the basis for all other smart pointers
+//SAutoRefPtr provides the basis for all other smart pointers
 template <class T>
-class CAutoRefPtr
+class SAutoRefPtr
 {
 public:
-	CAutoRefPtr() throw()
+	SAutoRefPtr() throw()
 	{
 		p = NULL;
 	}
-	CAutoRefPtr(int nNull) throw()
+	SAutoRefPtr(int nNull) throw()
 	{
 		(void)nNull;
 		p = NULL;
 	}
-	CAutoRefPtr(T* lp) throw()
+	SAutoRefPtr(T* lp) throw()
 	{
 		p = lp;
 		if (p != NULL)
@@ -85,7 +85,7 @@ public:
 		}
 	}
 
-	CAutoRefPtr(const CAutoRefPtr & src) throw()
+	SAutoRefPtr(const SAutoRefPtr & src) throw()
 	{
 		p=src.p;
 		if(p)
@@ -94,7 +94,7 @@ public:
 		}
 	}
 
-	~CAutoRefPtr() throw()
+	~SAutoRefPtr() throw()
 	{
 		if (p)
 		{
@@ -156,7 +156,7 @@ public:
 		return *this;
 	}
 
-	T* operator=(const CAutoRefPtr<T>& lp) throw()
+	T* operator=(const SAutoRefPtr<T>& lp) throw()
 	{
 		if(*this!=lp)
 		{
@@ -216,5 +216,8 @@ protected:
 	T* p;
 };
 
+
+
+#define CAutoRefPtr SAutoRefPtr	//for compatible
 
 }//end of namespace SOUI

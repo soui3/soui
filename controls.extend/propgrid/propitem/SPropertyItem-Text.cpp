@@ -38,7 +38,7 @@ namespace SOUI
         }
 
     protected:
-        CAutoRefPtr<IPropertyItem> m_pOwner;
+        SAutoRefPtr<IPropertyItem> m_pOwner;
 
     };
     

@@ -409,7 +409,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
         BeforePaint(m_memRT,painter);
 
         //m_rgnInvalidate有可能在RedrawRegion时被修改，必须生成一个临时的区域对象
-        CAutoRefPtr<IRegion> pRgnUpdate=m_rgnInvalidate;
+        SAutoRefPtr<IRegion> pRgnUpdate=m_rgnInvalidate;
         m_rgnInvalidate=NULL;
         GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
 
@@ -1088,7 +1088,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         CSimpleWnd::GetClientRect(&rcWnd);
         CRect rcShow(rcWnd);//动画过程中可见部分
         
-        CAutoRefPtr<IRenderTarget> pRT;
+        SAutoRefPtr<IRenderTarget> pRT;
         GETRENDERFACTORY->CreateRenderTarget(&pRT,rcShow.Width(),rcShow.Height());
         
         _Redraw();

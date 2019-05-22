@@ -6,7 +6,7 @@ namespace SOUI{
     SCaret::SCaret(SWND swnd,HBITMAP hBmp,int nWidth,int nHeight)
         :m_owner(swnd)
     {
-        CAutoRefPtr<IRenderTarget> pRT;
+        SAutoRefPtr<IRenderTarget> pRT;
         GETRENDERFACTORY->CreateRenderTarget(&pRT,nWidth,nHeight);
         m_bmpCaret = (IBitmap*) pRT->GetCurrentObject(OT_BITMAP);
         if(hBmp)
@@ -40,7 +40,7 @@ namespace SOUI{
         SASSERT(pOwner);
         SASSERT(pOwner->IsFocusable());
         
-        CAutoRefPtr<IRenderTarget> pRTCaret;
+        SAutoRefPtr<IRenderTarget> pRTCaret;
         GETRENDERFACTORY->CreateRenderTarget(&pRTCaret,0,0);
         pRTCaret->SelectObject(m_bmpCaret);
 

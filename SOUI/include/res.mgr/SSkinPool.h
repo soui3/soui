@@ -206,7 +206,7 @@ public:
 	}
 protected:
     SList<SSkinPool *> m_lstSkinPools;
-    CAutoRefPtr<SSkinPool> m_bulitinSkinPool;
+    SAutoRefPtr<SSkinPool> m_bulitinSkinPool;
 
 };
 

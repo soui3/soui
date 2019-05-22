@@ -443,7 +443,7 @@ namespace SOUI
 		GetClientRect(rcClient);
 		CRect rcItem(0, 0, m_arrItems[iItem].cx.toPixelSize(GetScale()), rcClient.Height());
 
-		CAutoRefPtr<IRenderTarget> pRT;
+		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcItem.Width(), rcItem.Height());
 		BeforePaintEx(pRT);
 		DrawItem(pRT, rcItem, m_arrItems.GetData() + iItem);

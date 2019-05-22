@@ -279,7 +279,7 @@ namespace SOUI
 			return 0; // existed.
 		if (hClient == m_hSvr)
 			return 0; // must be different hwnd.
-		CAutoRefPtr<IIpcHandle> pIpcHandle;
+		SAutoRefPtr<IIpcHandle> pIpcHandle;
 		pIpcHandle.Attach(new SIpcHandle);
 
 		IIpcConnection *pConn = NULL;

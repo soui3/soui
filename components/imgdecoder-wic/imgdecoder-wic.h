@@ -28,7 +28,7 @@ namespace SOUI
             /* [size_is][out] */ BYTE *pbBuffer);
         virtual int GetDelay(){return m_nFrameDelay;}
     protected:
-        CAutoRefPtr<IWICBitmapSource>  m_pFrame;
+        SAutoRefPtr<IWICBitmapSource>  m_pFrame;
         int     m_nFrameDelay;
     };
     
@@ -70,7 +70,7 @@ namespace SOUI
         HRESULT SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat);
         LPCWSTR GetDescription() const;
     protected:
-        static CAutoRefPtr<IWICImagingFactory> s_wicImgFactory;
+        static SAutoRefPtr<IWICImagingFactory> s_wicImgFactory;
     };
     
     //////////////////////////////////////////////////////////////////////////

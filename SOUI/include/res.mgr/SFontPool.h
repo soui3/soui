@@ -153,7 +153,7 @@ namespace SOUI
         
 		IFontPtr _CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExProp);
 
-        CAutoRefPtr<IRenderFactory> m_RenderFactory;
+        SAutoRefPtr<IRenderFactory> m_RenderFactory;
     };
 
 }//namespace SOUI

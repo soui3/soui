@@ -38,14 +38,14 @@ namespace SOUI
 			AM_SHOW,
 			AM_HIDE,
 		};
-		CAutoRefPtr<IInterpolator> m_aniInterpolator;
+		SAutoRefPtr<IInterpolator> m_aniInterpolator;
 		int						   m_nSteps;
 		int						   m_iAniStep;
 		CSize					   m_szWnd;
 
 		AniMode					   m_aniMode;
 		bool					   m_bSaveSize;
-		CAutoRefPtr<ILayoutParam>  m_layoutParamTmp;
+		SAutoRefPtr<ILayoutParam>  m_layoutParamTmp;
 		bool					   m_bEnableAni;
 	};
 

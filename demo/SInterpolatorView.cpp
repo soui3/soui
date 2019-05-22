@@ -61,11 +61,11 @@ namespace SOUI
 	void SInterpolatorView::OnPaint(IRenderTarget * pRT)
 	{
 
-		CAutoRefPtr<IPath> path;
+		SAutoRefPtr<IPath> path;
 		if(GETRENDERFACTORY->CreatePath(&path))
 		{
 			CRect rc = GetClientRect();
-			CAutoRefPtr<IPen> pen,oldPen;
+			SAutoRefPtr<IPen> pen,oldPen;
 			pRT->CreatePen(PS_DASH,RGBA(255,0,0,255),3,&pen);
 
 			pRT->SelectObject(pen,(IRenderObj**)&oldPen);

@@ -12,15 +12,15 @@ namespace SOUI
 	{
 	}
 
-	CAutoRefPtr<IBitmap> SRoundImage::GetRoundImage() const
+	SAutoRefPtr<IBitmap> SRoundImage::GetRoundImage() const
 	{
 		if (!m_pSkin) return NULL;
-		CAutoRefPtr<IRenderTarget> pRT; 
+		SAutoRefPtr<IRenderTarget> pRT; 
 		CRect rc = GetClientRect();
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rc.Width(), rc.Height());
 		rc.MoveToXY(0, 0);
 		pRT->ClearRect(&rc, 0);
-		CAutoRefPtr<IBrush> br;
+		SAutoRefPtr<IBrush> br;
 		pRT->CreateSolidColorBrush(RGBA(0xBA, 0xB3, 0x99, 0xFF), &br);
 		pRT->SelectObject(br);
 		pRT->FillEllipse(&rc);

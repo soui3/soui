@@ -114,7 +114,7 @@ namespace SOUI
 
     HRESULT SBitmap_GDI::LoadFromFile( LPCTSTR pszFileName)
     {
-        CAutoRefPtr<IImgX> imgDecoder;
+        SAutoRefPtr<IImgX> imgDecoder;
         GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
         if(imgDecoder->LoadFromFile(S_CT2W(pszFileName))==0) return S_FALSE;
         return ImgFromDecoder(imgDecoder);
@@ -122,7 +122,7 @@ namespace SOUI
 
     HRESULT SBitmap_GDI::LoadFromMemory(LPBYTE pBuf,size_t szLen)
     {
-        CAutoRefPtr<IImgX> imgDecoder;
+        SAutoRefPtr<IImgX> imgDecoder;
         GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
         if(imgDecoder->LoadFromMemory(pBuf,szLen)==0) return S_FALSE;
         return ImgFromDecoder(imgDecoder);
@@ -878,7 +878,7 @@ namespace SOUI
 
     HRESULT SRenderTarget_GDI::SelectObject( IRenderObj *pObj,IRenderObj ** ppOldObj /*= NULL*/ )
     {
-        CAutoRefPtr<IRenderObj> pRet;
+        SAutoRefPtr<IRenderObj> pRet;
         switch(pObj->ObjectType())
         {
         case OT_BITMAP: 

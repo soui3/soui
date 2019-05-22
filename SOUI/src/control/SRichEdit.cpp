@@ -844,12 +844,12 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
 
 HRESULT SRichEdit::InitDefaultCharFormat( CHARFORMAT2W* pcf ,IFont *pFont)
 {
-    CAutoRefPtr<IRenderTarget> pRT;
+    SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
     SASSERT(pRT);
     BeforePaintEx(pRT);
     
-    CAutoRefPtr<IFont> oldFont;
+    SAutoRefPtr<IFont> oldFont;
     if(pFont==NULL) pFont=(IFont *)pRT->GetCurrentObject(OT_FONT);
     SIZE szTxt;
     pRT->MeasureText(_T("A"),1,&szTxt);

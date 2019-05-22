@@ -75,12 +75,12 @@ protected:
     virtual UINT GetExpandMode();
 	HRESULT OnAttrStateMap(const SStringW & strValue, BOOL bLoading);
     
-    CAutoRefPtr<IBitmap> m_pImg;
+    SAutoRefPtr<IBitmap> m_pImg;
 	int  m_nStates;				  // skin 状态值 
     BOOL m_bTile;
     BOOL m_bAutoFit;
     BOOL m_bVertical;
-    CAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
+    SAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
 
     FilterLevel m_filterLevel;
 	SArray<DWORD> m_arrStateMap;				// 状态 映射
@@ -495,11 +495,11 @@ protected:
 	Shape  m_shape;
 
 	COLORREF	m_crSolid;
-	CAutoRefPtr<SShapeSize>		m_shapeSize;
-	CAutoRefPtr<SCornerSize>	m_cornerSize;
-	CAutoRefPtr<SStroke>	  	m_stroke;
-	CAutoRefPtr<SGradient>      m_gradient;
-	CAutoRefPtr<SShapeRing>		m_ringParam;
+	SAutoRefPtr<SShapeSize>		m_shapeSize;
+	SAutoRefPtr<SCornerSize>	m_cornerSize;
+	SAutoRefPtr<SStroke>	  	m_stroke;
+	SAutoRefPtr<SGradient>      m_gradient;
+	SAutoRefPtr<SShapeRing>		m_ringParam;
 };
 
 
@@ -524,6 +524,6 @@ public:
 protected:
 	virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
 	virtual void _Scale(ISkinObj * skinObj, int nScale);
-	CAutoRefPtr<ISkinObj> m_skins[4];
+	SAutoRefPtr<ISkinObj> m_skins[4];
 };
 }//namespace SOUI

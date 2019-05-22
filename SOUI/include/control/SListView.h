@@ -109,9 +109,9 @@ namespace SOUI
             ATTR_INT(L"wantTab",m_bWantTab,FALSE)
         SOUI_ATTRS_END()
 	protected:
-        CAutoRefPtr<ILvAdapter>           m_adapter;
-        CAutoRefPtr<ILvDataSetObserver>   m_observer;
-        CAutoRefPtr<IListViewItemLocator>  m_lvItemLocator;//列表项定位接口
+        SAutoRefPtr<ILvAdapter>           m_adapter;
+        SAutoRefPtr<ILvDataSetObserver>   m_observer;
+        SAutoRefPtr<IListViewItemLocator>  m_lvItemLocator;//列表项定位接口
         struct ItemInfo
         {
             SItemPanel *pItem;

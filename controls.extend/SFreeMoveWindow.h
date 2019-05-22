@@ -63,7 +63,7 @@ namespace SOUI
 		CRect  m_rcClickWndPos;
 
 		DWORD m_dwHit;
-		CAutoRefPtr<ISkinObj> m_pCaptionSkin;
+		SAutoRefPtr<ISkinObj> m_pCaptionSkin;
     };
 
 }

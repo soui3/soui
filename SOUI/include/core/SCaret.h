@@ -11,7 +11,7 @@ namespace SOUI{
         virtual RECT Draw(IRenderTarget *pRT,int x, int y, BOOL bErase);
         
     protected:
-        CAutoRefPtr<IBitmap>    m_bmpCaret;         /**< 模拟插入符*/
+        SAutoRefPtr<IBitmap>    m_bmpCaret;         /**< 模拟插入符*/
         SWND                    m_owner;            /**< 光标宿主窗口*/
     };
 }

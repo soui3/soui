@@ -5,13 +5,13 @@ namespace SOUI
 	{
 		SOUI_CLASS_NAME(SRoundImage,L"roundImg")
 	private:
-		CAutoRefPtr<IBitmap> m_img;
+		SAutoRefPtr<IBitmap> m_img;
 	public:
 		SRoundImage();
 		~SRoundImage();
 
 	protected:
-		CAutoRefPtr<IBitmap> GetRoundImage() const;
+		SAutoRefPtr<IBitmap> GetRoundImage() const;
 
 		void OnPaint(IRenderTarget *pRT);
 		void OnSize(UINT nType, CSize size);

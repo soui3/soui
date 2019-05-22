@@ -44,8 +44,8 @@ namespace SOUI
 		int  m_nRotate;
 		int  m_iStep;
 		int  m_nSpeed;
-		CAutoRefPtr<ISkinObj> m_skinFore;
-		CAutoRefPtr<ISkinObj> m_skinBack;
+		SAutoRefPtr<ISkinObj> m_skinFore;
+		SAutoRefPtr<ISkinObj> m_skinBack;
 	};
 
 

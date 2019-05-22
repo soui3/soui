@@ -315,14 +315,14 @@ protected:
     void _DestroySingletons();
     BOOL _LoadXmlDocment(LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::xml_document & xmlDoc,IResProvider *pResProvider = NULL);
     
-    CAutoRefPtr<IRealWndHandler>    m_pRealWndHandler;
-    CAutoRefPtr<IScriptFactory>     m_pScriptFactory;
-    CAutoRefPtr<IRenderFactory>     m_RenderFactory;
-    CAutoRefPtr<ITranslatorMgr>     m_translator;
-    CAutoRefPtr<IToolTipFactory>    m_tooltipFactory;
-    CAutoRefPtr<IMsgLoopFactory>    m_msgLoopFactory;
-    CAutoRefPtr<ILog4zManager>      m_logManager;   //log manager
-	CAutoRefPtr<IAttrStorageFactory> m_pAttrStroageFactory;
+    SAutoRefPtr<IRealWndHandler>    m_pRealWndHandler;
+    SAutoRefPtr<IScriptFactory>     m_pScriptFactory;
+    SAutoRefPtr<IRenderFactory>     m_RenderFactory;
+    SAutoRefPtr<ITranslatorMgr>     m_translator;
+    SAutoRefPtr<IToolTipFactory>    m_tooltipFactory;
+    SAutoRefPtr<IMsgLoopFactory>    m_msgLoopFactory;
+    SAutoRefPtr<ILog4zManager>      m_logManager;   //log manager
+	SAutoRefPtr<IAttrStorageFactory> m_pAttrStroageFactory;
 
     SNamedID                        m_namedID;
     

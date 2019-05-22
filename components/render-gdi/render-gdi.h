@@ -38,7 +38,7 @@ namespace SOUI
 		
 		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure);
     protected:
-        CAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
+        SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
     };
 
 
@@ -399,18 +399,18 @@ namespace SOUI
 	protected:
         HDC               m_hdc;
         SColor            m_curColor;
-        CAutoRefPtr<SBitmap_GDI> m_curBmp;
-        CAutoRefPtr<SPen_GDI> m_curPen;
-        CAutoRefPtr<SBrush_GDI> m_curBrush;
-        CAutoRefPtr<SFont_GDI> m_curFont;
+        SAutoRefPtr<SBitmap_GDI> m_curBmp;
+        SAutoRefPtr<SPen_GDI> m_curPen;
+        SAutoRefPtr<SBrush_GDI> m_curBrush;
+        SAutoRefPtr<SFont_GDI> m_curFont;
         POINT               m_ptOrg;
         
         //注意保存4个默认的GDI对象
-        CAutoRefPtr<IBitmap> m_defBmp;
-        CAutoRefPtr<IPen> m_defPen;
-        CAutoRefPtr<IBrush> m_defBrush;
-        CAutoRefPtr<IFont> m_defFont;
-		CAutoRefPtr<IRenderFactory> m_pRenderFactory;
+        SAutoRefPtr<IBitmap> m_defBmp;
+        SAutoRefPtr<IPen> m_defPen;
+        SAutoRefPtr<IBrush> m_defBrush;
+        SAutoRefPtr<IFont> m_defFont;
+		SAutoRefPtr<IRenderFactory> m_pRenderFactory;
         UINT m_uGetDCFlag;
     };
     

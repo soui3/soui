@@ -20,7 +20,7 @@ namespace SOUI
 		IFont * OnGetFont(const SStringW & strDesc,int nScale);
 
 		SStringW m_strDesc;
-		CAutoRefPtr<IFont> m_object;
+		SAutoRefPtr<IFont> m_object;
 	};
 
 }

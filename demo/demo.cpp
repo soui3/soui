@@ -138,15 +138,15 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 
         //定义一组类SOUI系统中使用的类COM组件
-        //CAutoRefPtr是一个SOUI系统中使用的智能指针类
-        CAutoRefPtr<IImgDecoderFactory> pImgDecoderFactory; //图片解码器，由imagedecoder-wid.dll模块提供
-        CAutoRefPtr<IRenderFactory> pRenderFactory;         //UI渲染模块，由render-gdi.dll或者render-skia.dll提供
-        CAutoRefPtr<ITranslatorMgr> trans;                  //多语言翻译模块，由translator.dll提供
-        CAutoRefPtr<IScriptFactory> pScriptLua;              //lua脚本模块，由scriptmodule-lua.dll提供
-        CAutoRefPtr<ILog4zManager>  pLogMgr;                //log4z对象
+        //SAutoRefPtr是一个SOUI系统中使用的智能指针类
+        SAutoRefPtr<IImgDecoderFactory> pImgDecoderFactory; //图片解码器，由imagedecoder-wid.dll模块提供
+        SAutoRefPtr<IRenderFactory> pRenderFactory;         //UI渲染模块，由render-gdi.dll或者render-skia.dll提供
+        SAutoRefPtr<ITranslatorMgr> trans;                  //多语言翻译模块，由translator.dll提供
+        SAutoRefPtr<IScriptFactory> pScriptLua;              //lua脚本模块，由scriptmodule-lua.dll提供
+        SAutoRefPtr<ILog4zManager>  pLogMgr;                //log4z对象
         
 		//演示异步任务。
-		CAutoRefPtr<ITaskLoop>  pTaskLoop;
+		SAutoRefPtr<ITaskLoop>  pTaskLoop;
 		if (pComMgr->CreateTaskLoop((IObjRef**)&pTaskLoop))
 		{
 			CAsyncTaskObj obj;
@@ -252,7 +252,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 #endif
 
         //定义一人个资源提供对象,SOUI系统中实现了3种资源加载方式，分别是从文件加载，从EXE的资源加载及从ZIP压缩包加载
-        CAutoRefPtr<IResProvider>   pResProvider;
+        SAutoRefPtr<IResProvider>   pResProvider;
 #if (RES_TYPE == 0)//从文件加载
         CreateResProvider(RES_FILE,(IObjRef**)&pResProvider);
         if(!pResProvider->Init((LPARAM)_T("uires"),0))
@@ -296,7 +296,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             pugi::xml_document xmlLang;
             if(theApp->LoadXmlDocment(xmlLang,_T("lang_cn"),_T("translator")))
             {
-                CAutoRefPtr<ITranslator> langCN;
+                SAutoRefPtr<ITranslator> langCN;
                 trans->CreateTranslator(&langCN);
                 langCN->Load(&xmlLang.child(L"language"),1);//1=LD_XML
                 trans->InstallTranslator(langCN);
@@ -314,7 +314,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         HMODULE hSysResource=LoadLibrary(SYS_NAMED_RESOURCE);
         if(hSysResource)
         {
-            CAutoRefPtr<IResProvider> sysSesProvider;
+            SAutoRefPtr<IResProvider> sysSesProvider;
             CreateResProvider(RES_PE,(IObjRef**)&sysSesProvider);
             sysSesProvider->Init((WPARAM)hSysResource,0);
             theApp->LoadSystemNamedResource(sysSesProvider);

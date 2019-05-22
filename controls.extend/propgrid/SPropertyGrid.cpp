@@ -287,7 +287,7 @@ namespace SOUI
         
         pItem->DrawItem(pRT,rcItem);
         
-        CAutoRefPtr<IPen> pen,oldPen;
+        SAutoRefPtr<IPen> pen,oldPen;
         pRT->CreatePen(PS_SOLID,KColorBorder,1,&pen);
         pRT->SelectObject(pen,(IRenderObj**)&oldPen);
         CPoint pts[2]={CPoint(rc.left+rc.Height(),rc.bottom-1),CPoint(rc.right,rc.bottom-1)};

@@ -833,7 +833,7 @@ void SLine::OnPaint(IRenderTarget *pRT)
     case HR_VERT:pts[1].x=rcWnd.left,pts[1].y=rcWnd.bottom;break;
     case HR_TILT:pts[1]=rcWnd.BottomRight();break;
     }
-    CAutoRefPtr<IPen> curPen,oldPen;
+    SAutoRefPtr<IPen> curPen,oldPen;
     pRT->CreatePen(m_nLineStyle,m_crLine,m_nLineSize,&curPen);
     pRT->SelectObject(curPen,(IRenderObj**)&oldPen);
     pRT->DrawLines(pts,2);
@@ -1348,7 +1348,7 @@ void SGroup::OnPaint(IRenderTarget *pRT)
         if(!m_strText.GetText(FALSE).IsEmpty()) rcGroupBox.top+=szFnt.cy/2;
         rcGroupBox.DeflateRect(1,1,1,0);
         
-        CAutoRefPtr<IPen> pen1,pen2,oldPen;
+        SAutoRefPtr<IPen> pen1,pen2,oldPen;
         pRT->CreatePen(PS_SOLID,m_crLine1,1,&pen1);
         pRT->CreatePen(PS_SOLID,m_crLine2,1,&pen2);
         pRT->SelectObject(pen1,(IRenderObj**)&oldPen);

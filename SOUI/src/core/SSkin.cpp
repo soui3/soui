@@ -238,7 +238,7 @@ void SSkinButton::_Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE 
    	// 只有 在 需要渐变的情况下 才 需要 这个
 	if (m_colors.m_crUp[dwState] != m_colors.m_crDown[dwState])
 	{
-		CAutoRefPtr<IRegion> rgnClip;
+		SAutoRefPtr<IRegion> rgnClip;
 		if (nCorner > 2)
 		{
 			GETRENDERFACTORY->CreateRegion(&rgnClip);
@@ -271,7 +271,7 @@ void SSkinButton::_Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE 
 	if (CR_INVALID == m_colors.m_crBorder[dwState])	//  不改变 原因的 效果
 		dwState = 0;
 	// 画 边框
-    CAutoRefPtr<IPen> pPen, pOldPen;
+    SAutoRefPtr<IPen> pPen, pOldPen;
     pRT->CreatePen(PS_SOLID, m_colors.m_crBorder[dwState] ,1, &pPen);
     pRT->SelectObject(pPen, (IRenderObj**)&pOldPen);
     pRT->DrawRoundRect(prcDraw, CPoint(nCorner, nCorner));
@@ -495,7 +495,7 @@ void SSkinColorRect::_Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BY
 
 	if (m_crBorders[dwState] != CR_INVALID && m_nBorderWidth>0)
 	{
-		CAutoRefPtr<IPen> pen, oldPen;
+		SAutoRefPtr<IPen> pen, oldPen;
 		pRT->CreatePen(PS_SOLID, m_crBorders[dwState], m_nBorderWidth, (IPen**)&pen);
 		pRT->SelectObject(pen, (IRenderObj**)&oldPen);
 		if (nCorner > 0)
@@ -604,7 +604,7 @@ void SSkinShape::_Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE by
 	RECT rcDest = *rcDraw;
 	if(m_crSolid != CR_INVALID)
 	{
-		CAutoRefPtr<IBrush> brush,oldBrush;
+		SAutoRefPtr<IBrush> brush,oldBrush;
 		pRT->CreateSolidColorBrush(m_crSolid,&brush);
 		pRT->SelectObject(brush,(IRenderObj**)&oldBrush);
 		
@@ -627,7 +627,7 @@ void SSkinShape::_Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE by
 
 	if(m_gradient!=NULL)
 	{
-		CAutoRefPtr<IRegion> region;
+		SAutoRefPtr<IRegion> region;
 		pRT->CreateRegion(&region);
 		RECT rcGradient = rcDest;
 		//set clip
@@ -657,7 +657,7 @@ void SSkinShape::_Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE by
 
 	if(m_stroke != NULL)
 	{
-		CAutoRefPtr<IPen> pPen,oldPen;
+		SAutoRefPtr<IPen> pPen,oldPen;
 		int nPenWidth = m_stroke->m_width.toPixelSize(GetScale());
 		pRT->CreatePen(m_stroke->m_style,m_stroke->m_color,nPenWidth,&pPen);
 		pRT->SelectObject(pPen,(IRenderObj**)&oldPen);

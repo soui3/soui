@@ -137,7 +137,7 @@ namespace SOUI
         }m_txtDir;
         int    m_nAnimateSteps; /**< 动画次数 */
 		int	m_nAniamteType;/*动画样式*/
-		CAutoRefPtr<IInterpolator> m_aniInterpolator;
+		SAutoRefPtr<IInterpolator> m_aniInterpolator;
     public:
         /**
         * STabCtrl::STabCtrl

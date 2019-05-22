@@ -301,7 +301,7 @@ void CMenuWndHook::OnPrint(HDC dc)
     ::ExcludeClipRect(dc,rcClient.left,rcClient.top,rcClient.right,rcClient.bottom);
     rcWnd.MoveToXY(0,0);
     
-    CAutoRefPtr<IRenderTarget> pRT;
+    SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,rcWnd.Width(),rcWnd.Height());
     pBorderSkin->Draw(pRT,rcWnd,0);
     HDC hmemdc=pRT->GetDC(0);

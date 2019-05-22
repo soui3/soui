@@ -201,7 +201,7 @@ namespace SOUI
       WORD     m_wInvalidModifier; /**< 对无效组合键的替换方案,默认方案 */
 
       BOOL    m_bInSetting;        /**< 正在设置中 */
-      CAutoRefPtr<IFont> m_curFont;/**< 当前字体，用于计算文字大小 */
+      SAutoRefPtr<IFont> m_curFont;/**< 当前字体，用于计算文字大小 */
   };
 }
 //namespace SOUI

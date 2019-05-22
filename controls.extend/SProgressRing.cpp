@@ -30,7 +30,7 @@ namespace SOUI
 
 		int innerRadius = radius -arcWid;
 
-		CAutoRefPtr<IPen> pPenBack,pPenFore,oldPen;
+		SAutoRefPtr<IPen> pPenBack,pPenFore,oldPen;
 		pRT->CreatePen(PS_SOLID|PS_GEOMETRIC|PS_ENDCAP_FLAT ,m_crBackground,arcWid,&pPenBack);
 		pRT->CreatePen(PS_SOLID|PS_GEOMETRIC|PS_ENDCAP_FLAT,m_crForeground,arcWid,&pPenFore);
 		pRT->SelectObject(pPenBack,(IRenderObj**)&oldPen);

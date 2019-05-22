@@ -477,7 +477,7 @@ namespace SOUI
 		//计算文本大小
 		CRect rcTest(0, 0, 100000, 100000);
 
-		CAutoRefPtr<IRenderTarget> pRT;
+		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
 		BeforePaintEx(pRT);
 

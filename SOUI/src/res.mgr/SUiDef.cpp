@@ -63,10 +63,10 @@ namespace SOUI{
 		virtual void SetTemplatePool(STemplatePool * pPool) override;
 	protected:
 
-		CAutoRefPtr<SSkinPool>    pSkinPool;
-		CAutoRefPtr<SStylePool>   pStylePool;
-		CAutoRefPtr<SObjDefAttr>  objDefAttr;
-		CAutoRefPtr<STemplatePool> templatePool;
+		SAutoRefPtr<SSkinPool>    pSkinPool;
+		SAutoRefPtr<SStylePool>   pStylePool;
+		SAutoRefPtr<SObjDefAttr>  objDefAttr;
+		SAutoRefPtr<STemplatePool> templatePool;
 
 		SNamedColor   namedColor;
 		SNamedString  namedString;
@@ -310,7 +310,7 @@ namespace SOUI{
 	{
 		SUiDefInfo *pRet = new SUiDefInfo();
 		//将新uidef设置到系统中，在皮肤初始化的时候可以引用当前定义的颜色表。
-		CAutoRefPtr<IUiDefInfo> pOldUiDef = SUiDef::getSingleton().GetUiDef();
+		SAutoRefPtr<IUiDefInfo> pOldUiDef = SUiDef::getSingleton().GetUiDef();
 		SUiDef::getSingleton().SetUiDef(pRet);
 		pRet->Init(pResProvider, pszUiDef);
 		SUiDef::getSingleton().SetUiDef(pOldUiDef);

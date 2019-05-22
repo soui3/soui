@@ -44,7 +44,7 @@ namespace SOUI
 
 
 	protected:
-        CAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
+        SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
 	};
 
     
@@ -503,20 +503,20 @@ namespace SOUI
     protected:
 		SkCanvas *m_SkCanvas;
         SColor            m_curColor;
-		CAutoRefPtr<SBitmap_Skia> m_curBmp;
-		CAutoRefPtr<SPen_Skia> m_curPen;
-		CAutoRefPtr<SBrush_Skia> m_curBrush;
-        CAutoRefPtr<SFont_Skia> m_curFont;
+		SAutoRefPtr<SBitmap_Skia> m_curBmp;
+		SAutoRefPtr<SPen_Skia> m_curPen;
+		SAutoRefPtr<SBrush_Skia> m_curBrush;
+        SAutoRefPtr<SFont_Skia> m_curFont;
     
         SkPoint         m_ptOrg;
         
         //注意保存4个默认的RenderObject对象
-        CAutoRefPtr<IBitmap> m_defBmp;
-        CAutoRefPtr<IPen> m_defPen;
-        CAutoRefPtr<IBrush> m_defBrush;
-        CAutoRefPtr<IFont> m_defFont;
+        SAutoRefPtr<IBitmap> m_defBmp;
+        SAutoRefPtr<IPen> m_defPen;
+        SAutoRefPtr<IBrush> m_defBrush;
+        SAutoRefPtr<IFont> m_defFont;
 
-		CAutoRefPtr<IRenderFactory> m_pRenderFactory;
+		SAutoRefPtr<IRenderFactory> m_pRenderFactory;
 
         HDC m_hGetDC;
         UINT m_uGetDCFlag;

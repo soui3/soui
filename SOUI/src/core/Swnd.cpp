@@ -920,7 +920,7 @@ namespace SOUI
 				{
 					pRTCache->ClearRect(&rcWnd,0);
 
-					CAutoRefPtr<IFont> oldFont;
+					SAutoRefPtr<IFont> oldFont;
 					COLORREF crOld=pRT->GetTextColor();
 					pRTCache->SelectObject(pRT->GetCurrentObject(OT_FONT),(IRenderObj**)&oldFont);
 					pRTCache->SetTextColor(crOld);
@@ -990,7 +990,7 @@ namespace SOUI
 
 	void SWindow::_RedrawNonClient()
 	{
-		CAutoRefPtr<IRegion> rgn;
+		SAutoRefPtr<IRegion> rgn;
 		GETRENDERFACTORY->CreateRegion(&rgn);
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = SWindow::GetClientRect();
@@ -1038,7 +1038,7 @@ namespace SOUI
 			pRT = GetLayerRenderTarget();
 
 			//绘制到窗口的缓存上,需要继承原RT的绘图属性
-			CAutoRefPtr<IFont> curFont;
+			SAutoRefPtr<IFont> curFont;
 			HRESULT hr = pRTBack->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
 			COLORREF crTxt = pRTBack->GetTextColor();
 			if(S_OK == hr) pRT->SelectObject(curFont);
@@ -1122,7 +1122,7 @@ namespace SOUI
 			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
 			pRTBack->AlphaBlend(&m_rcWindow,pRT,&m_rcWindow,m_style.m_byAlpha);
 
-			CAutoRefPtr<IFont> curFont;
+			SAutoRefPtr<IFont> curFont;
 			HRESULT hr = pRT->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
 
 			pRT = pRTBack;
@@ -1498,7 +1498,7 @@ namespace SOUI
 		}
 		rcTest4Text.right = smax(nMaxWid,10);
 
-		CAutoRefPtr<IRenderTarget> pRT;
+		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
 		BeforePaintEx(pRT);
 
@@ -1581,7 +1581,7 @@ namespace SOUI
 	void SWindow::DrawDefFocusRect(IRenderTarget *pRT,CRect rcFocus )
 	{
 		rcFocus.DeflateRect(2,2);
-		CAutoRefPtr<IPen> pPen,oldPen;
+		SAutoRefPtr<IPen> pPen,oldPen;
 		pRT->CreatePen(PS_DOT,RGBA(88,88,88,0xFF),1,&pPen);
 		pRT->SelectObject(pPen,(IRenderObj**)&oldPen);
 		pRT->DrawRectangle(&rcFocus);    
@@ -1909,7 +1909,7 @@ namespace SOUI
 		if(pRc) rcRT.IntersectRect(pRc,&rcRT);
 
 
-		CAutoRefPtr<IRegion> rgn;
+		SAutoRefPtr<IRegion> rgn;
 		GETRENDERFACTORY->CreateRegion(&rgn);
 		rgn->CombineRect(rcRT,RGN_COPY);
 
@@ -2137,7 +2137,7 @@ namespace SOUI
 		pRT->PushClipRect(&rcDraw,RGN_AND);
 
 		SWindow *pTopWnd=GetRoot();
-		CAutoRefPtr<IRegion> pRgn;
+		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
 		pRgn->CombineRect(&rcDraw,RGN_COPY);
 
@@ -2153,7 +2153,7 @@ namespace SOUI
 	{
 		CRect rcDraw=m_rcWindow;
 		if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
-		CAutoRefPtr<IRegion> pRgn;
+		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
 		pRgn->CombineRect(&rcDraw,RGN_COPY);
 		pRT->PushClipRect(&rcDraw);
@@ -2167,7 +2167,7 @@ namespace SOUI
 	{
 		CRect rcDraw = m_rcWindow;
 		if (pRc) rcDraw.IntersectRect(rcDraw, pRc);
-		CAutoRefPtr<IRegion> pRgn;
+		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
 		pRgn->CombineRect(&rcDraw, RGN_COPY);
 		pRT->PushClipRect(&rcDraw);
@@ -2222,12 +2222,12 @@ namespace SOUI
 		CRect rcWnd;
 		GetWindowRect(&rcWnd);
 
-		CAutoRefPtr<IRegion> rgn;
+		SAutoRefPtr<IRegion> rgn;
 		GETRENDERFACTORY->CreateRegion(&rgn);
 		rgn->CombineRect(&rcWnd,RGN_COPY);
 
 		IRenderTarget *pRT=GetRenderTarget(rcWnd,OLEDC_NODRAW);
-		CAutoRefPtr<IRenderTarget> pRTBefore;
+		SAutoRefPtr<IRenderTarget> pRTBefore;
 		GETRENDERFACTORY->CreateRenderTarget(&pRTBefore,rcWnd.Width(),rcWnd.Height());
 		pRTBefore->OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
 
@@ -2239,7 +2239,7 @@ namespace SOUI
 		//更新窗口可见性
 		SetVisible(!(dwFlags&AW_HIDE),FALSE);
 		//窗口变化后
-		CAutoRefPtr<IRenderTarget> pRTAfter;
+		SAutoRefPtr<IRenderTarget> pRTAfter;
 		GETRENDERFACTORY->CreateRenderTarget(&pRTAfter,rcWnd.Width(),rcWnd.Height());
 		pRTAfter->OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
 
@@ -2684,7 +2684,7 @@ namespace SOUI
 				//刷新非背景混合的窗口
 				CRect rcDirty;
 				m_invalidRegion->GetRgnBox(&rcDirty);
-				CAutoRefPtr<IRegion> tmpRegin = m_invalidRegion;
+				SAutoRefPtr<IRegion> tmpRegin = m_invalidRegion;
 				m_invalidRegion = NULL;
 
 				if(IsVisible(TRUE))

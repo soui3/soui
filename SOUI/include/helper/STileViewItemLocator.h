@@ -66,7 +66,7 @@ protected:
     //int m_nItemMargin;     //块间距
     int m_nCountInRow;     //每行的item个数
     
-    CAutoRefPtr<ILvAdapter> m_adapter;
+    SAutoRefPtr<ILvAdapter> m_adapter;
 };
 
 }

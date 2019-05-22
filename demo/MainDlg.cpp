@@ -354,7 +354,7 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
         rc.MoveToXY(0,0);//注意：SWindow将窗口的左上角定义为Rgn的原点。
         HRGN hRgn =::CreateEllipticRgnIndirect(&rc);
 
-        CAutoRefPtr<IRegion> pRgn;
+        SAutoRefPtr<IRegion> pRgn;
         GETRENDERFACTORY->CreateRegion(&pRgn);
         pRgn->SetRgn(hRgn);
         pWndRgn->SetWindowRgn(pRgn,TRUE);

@@ -29,11 +29,11 @@ namespace SOUI
     CSize GetSize();
     void Render(IRenderTarget *pRT,const CRect &rcClient);
     
-    CAutoRefPtr<IUIAnimationVariable> m_pAnimationVariableX;
-    CAutoRefPtr<IUIAnimationVariable> m_pAnimationVariableY;
+    SAutoRefPtr<IUIAnimationVariable> m_pAnimationVariableX;
+    SAutoRefPtr<IUIAnimationVariable> m_pAnimationVariableY;
 
     protected:
-    CAutoRefPtr<ISkinObj>   m_pImg;
+    SAutoRefPtr<ISkinObj>   m_pImg;
     };
     
     class SUiAnimationWnd;

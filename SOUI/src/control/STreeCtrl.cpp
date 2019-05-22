@@ -615,7 +615,7 @@ void STreeCtrl::ItemLayout()
 
 void STreeCtrl::CalcItemContentWidth(LPTVITEM pItem)
 {
-    CAutoRefPtr<IRenderTarget> pRT;
+    SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
     BeforePaintEx(pRT);
     
@@ -787,7 +787,7 @@ void STreeCtrl::RedrawItem(HSTREEITEM hItem)
         rcItem.OffsetRect(rcClient.left-m_ptOrigin.x,
                 rcClient.top+m_nItemHei*iItem-m_ptOrigin.y);
 
-        CAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcItem,OLEDC_PAINTBKGND);
+        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcItem,OLEDC_PAINTBKGND);
 
         SSendMessage(WM_ERASEBKGND,(WPARAM)(void*)pRT);
 

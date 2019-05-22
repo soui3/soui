@@ -82,7 +82,7 @@ namespace SOUI
         {
         }
 
-        CAutoRefPtr<IFont> oldFont;
+        SAutoRefPtr<IFont> oldFont;
         COLORREF           oldTextColor;
     };
 
@@ -1334,8 +1334,8 @@ namespace SOUI
         ISwndContainer *    m_pContainer;       /**< 容器对象 */
         SEventSet           m_evtSet;           /**< 窗口事件集合 */
 
-		CAutoRefPtr<ILayout>  m_pLayout;
-		CAutoRefPtr<ILayoutParam> m_pLayoutParam;
+		SAutoRefPtr<ILayout>  m_pLayout;
+		SAutoRefPtr<ILayoutParam> m_pLayoutParam;
 
         SWindow *           m_pOwner;           /**< 容器Owner，事件分发时，会把事件交给Owner处理 */
         SWindow *           m_pParent;          /**< 父窗口 */
@@ -1369,9 +1369,9 @@ namespace SOUI
         DWORD               m_bLayeredWindow:1; /**< 指示是否是一个分层窗口 */
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
-        CAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
-        CAutoRefPtr<IRenderTarget> m_layeredRT; /**< 分层窗口绘制的RT */
-        CAutoRefPtr<IRegion>       m_rgnWnd;    /**< 窗口Region */
+        SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
+        SAutoRefPtr<IRenderTarget> m_layeredRT; /**< 分层窗口绘制的RT */
+        SAutoRefPtr<IRegion>       m_rgnWnd;    /**< 窗口Region */
         ISkinObj *          m_pBgSkin;          /**< 背景skin */
         ISkinObj *          m_pNcSkin;          /**< 非客户区skin */
         ULONG_PTR           m_uData;            /**< 窗口的数据位,可以通过GetUserData获得 */
@@ -1385,17 +1385,17 @@ namespace SOUI
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */
             DWORD gdcFlags;         /**< GETRT绘制标志位 */
-            CAutoRefPtr<IRegion> rgn;/**< 保存一个和rcRT对应的IRegion对象 */
+            SAutoRefPtr<IRegion> rgn;/**< 保存一个和rcRT对应的IRegion对象 */
         } * PGETRTDATA;
         
         PGETRTDATA m_pGetRTData;
         
-        CAutoRefPtr<IRegion>    m_invalidRegion;/**< 非背景混合窗口的脏区域 */
-		CAutoRefPtr<IAttrStorage> m_attrStorage;/**< 属性保存对象 */
+        SAutoRefPtr<IRegion>    m_invalidRegion;/**< 非背景混合窗口的脏区域 */
+		SAutoRefPtr<IAttrStorage> m_attrStorage;/**< 属性保存对象 */
 		
 #ifdef SOUI_ENABLE_ACC
-		CAutoRefPtr<IAccessible>  m_pAcc;
-		CAutoRefPtr<IAccProxy> m_pAccProxy;
+		SAutoRefPtr<IAccessible>  m_pAcc;
+		SAutoRefPtr<IAccProxy> m_pAccProxy;
 #endif
 #ifdef _DEBUG
         DWORD               m_nMainThreadId;    /**< 窗口宿线程ID */
