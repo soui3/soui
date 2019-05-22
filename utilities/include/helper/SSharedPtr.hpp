@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SCriticalSection.h"
+#include <helper/SCriticalSection.h>
 
 namespace SOUI
 {

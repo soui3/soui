@@ -12,7 +12,7 @@
 */
 
 #pragma once
-#include "utilities-def.h"
+#include <utilities-def.h>
 #include <Windows.h>
 
 namespace SOUI

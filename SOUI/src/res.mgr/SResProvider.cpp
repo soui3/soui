@@ -4,7 +4,6 @@
 //////////////////////////////////////////////////////////////////////////
 #include "souistd.h"
 #include "res.mgr/Sresprovider.h"
-#include "helper/mybuffer.h"
 #include <io.h>
 
 namespace SOUI

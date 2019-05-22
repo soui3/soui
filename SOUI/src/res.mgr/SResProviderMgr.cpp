@@ -2,8 +2,6 @@
 #include "res.mgr/SResProviderMgr.h"
 #include "res.mgr/SResProvider.h"
 
-
-#include "helper/mybuffer.h"
 #include "helper/SplitString.h"
 
 namespace SOUI

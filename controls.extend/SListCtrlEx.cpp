@@ -7,7 +7,6 @@
 
 #include "stdafx.h"
 #include "SlistCtrlex.h"
-#include "helper/mybuffer.h"
 #include "SListboxex.h"
 
 #pragma warning(disable:4018)

@@ -2,7 +2,7 @@
 
 #include "SApp.h"
 #include "core/shostwnd.h"
-#include "helper/mybuffer.h"
+#include "helper/SByteArray.h"
 #include "helper/color.h"
 #include "helper/SplitString.h"
 #include "helper/copylist.hpp"
@@ -232,7 +232,7 @@ BOOL SHostWnd::_InitFromXml(pugi::xml_node xmlNode,int nWidth,int nHeight)
                 size_t dwSize = SApplication::getSingleton().GetRawBufferSize(lstSrc[0],lstSrc[1]);
                 if(dwSize)
                 {
-                    CMyBuffer<char> buff(dwSize);
+                    SByteArray buff(dwSize);
                     SApplication::getSingleton().GetRawBuffer(lstSrc[0],lstSrc[1],buff,dwSize);
                     m_pScriptModule->executeScriptBuffer(buff,dwSize);
                 }

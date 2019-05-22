@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "utilities-def.h"
+#include <utilities-def.h>
 #include <com-def.h>
 
 #ifdef LIB_SOUI_COM

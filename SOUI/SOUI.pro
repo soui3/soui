@@ -101,7 +101,6 @@ HEADERS += include/SApp.h \
            include/event/NotifyCenter.h \
            include/helper/auto_reset.h \
            include/helper/color.h \
-           include/helper/mybuffer.h \
            include/helper/DragWnd.h \
            include/helper/MemDC.h \
            include/helper/MenuWndHook.h \
@@ -130,6 +129,7 @@ HEADERS += include/SApp.h \
 		   include/helper/SFunctor.hpp \
 		   include/helper/sdpiscale.h \
 		   include/helper/sdpihelper.hpp \
+		   include/helper/SIpcParamHelper.hpp \
            include/interface/imgdecoder-i.h \
            include/interface/render-i.h \
            include/interface/SResProvider-i.h \

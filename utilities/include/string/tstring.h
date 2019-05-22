@@ -16,7 +16,7 @@
 #define TSTRING_PADDING 0
 #endif
 
-#include "utilities-def.h"
+#include <utilities-def.h>
 #include <soui_mem_wrapper.h>
 
 namespace SOUI
