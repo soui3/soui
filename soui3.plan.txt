@@ -1,0 +1,6 @@
+1、调整SOUI结点属性，将width,height属性放到root结点里来。
+2、增加一个默认的空的SwndContainer，一个SWindow创建出来就自动引用这个Container。
+3、修改GetDesiredSize方法，去掉传Rect*的重载。
+4、将CSize,CPoint,CRect替换成SSize,SPoint,SRect，包括消息映射宏的修改。
+5、加入动画模块。
+6、调研跨平台支持。
