@@ -7,7 +7,7 @@ namespace SOUI
 	* Inheriate this class to make your class cannot be copy and assign.
 	*
 	*/
-	class UTILITIES_API SNoCopyable
+	class SNoCopyable
 	{
 	public:
 		SNoCopyable() {}

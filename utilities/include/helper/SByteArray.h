@@ -1,9 +1,8 @@
 #pragma once
-#include <helper/SNoCopyable.hpp>
 
 namespace SOUI{
 
-	class UTILITIES_API SByteArray : public SNoCopyable
+	class UTILITIES_API SByteArray
 	{
 	public:
 		SByteArray();

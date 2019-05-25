@@ -36,7 +36,7 @@ namespace SOUI{
 
 	char* SByteArray::Allocate(size_t nBytes)
 	{
-		SASSERT(nElements <= SIZE_MAX-1);
+		SASSERT(nBytes <= SIZE_MAX-1);
 		SASSERT(m_pBuf == NULL);
 		m_pBuf = static_cast<char*>(soui_mem_wrapper::SouiMalloc(nBytes+1));
 		m_nSize=nBytes;
