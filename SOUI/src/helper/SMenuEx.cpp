@@ -600,7 +600,7 @@ namespace SOUI
 			root.append_attribute(L"trCtx").set_value(xmlNode.attribute(L"trCtx").value());
 		}
 		m_hParent = hParent;
-		_InitFromXml(root, 0, 0);
+		InitFromXml(root);
 
 		if (!hWnd) return FALSE;
 
@@ -1166,7 +1166,7 @@ namespace SOUI
 		pugi::xml_document souiXml;
 		pugi::xml_node root = souiXml.append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);		
-		_InitFromXml(root, 0, 0);
+		InitFromXml(root);
 		if (!hWnd) return FALSE;
 		SMenuExRoot *pMenuRoot = new SMenuExRoot(this);		
 		if (ParentRoot)

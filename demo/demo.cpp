@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include <helper/MenuWndHook.h>
-#include <helper/SByteArray.h>
+#include <helper/SAutoBuf.h>
 #include "httpsvr/HTTPServer.h"
 #include "MemFlash.h"
 #include "../controls.extend/SFadeFrame.h"

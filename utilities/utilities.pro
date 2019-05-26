@@ -51,6 +51,7 @@ HEADERS += include/gdialpha.h \
            include/helper/SNoCopyable.hpp \
            include/helper/SEmptyable.hpp \
 		   include/helper/SSharedPtr.hpp \
+		   include/helper/SAutoBuf.h \
            
 SOURCES += src/gdialpha.cpp \
            src/trace.cpp \
@@ -61,3 +62,4 @@ SOURCES += src/gdialpha.cpp \
            src/string/tstring.cpp \
            src/sobject/sobject.cpp \
 		   src/helper/SCriticalSection.cpp \
+		   src/helper/SAutoBuf.cpp \

@@ -8,7 +8,7 @@
 
 #include "helper/STimerEx.h"
 #include "helper/SScriptTimer.h"
-#include "helper/SByteArray.h"
+#include "helper/SAutoBuf.h"
 #include "helper/SToolTip.h"
 #include "helper/AppDir.h"
 #include "helper/SwndFinder.h"
@@ -320,7 +320,7 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
     size_t dwSize=pResProvider->GetRawBufferSize(pszType,pszXmlName);
     if(dwSize==0) return FALSE;
 
-    SByteArray strXml;
+    SAutoBuf strXml;
     strXml.Allocate(dwSize);
     pResProvider->GetRawBuffer(pszType,pszXmlName,strXml,dwSize);
 

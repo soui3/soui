@@ -72,8 +72,6 @@ namespace SOUI
             ATTR_STRINGW(L"trCtx",m_strTrCtx,FALSE)
             ATTR_I18NSTRT(L"title",m_strTitle,FALSE)
 			ATTR_LAYOUTSIZE4(L"maxInset",m_rcMaxInset,FALSE)
-            ATTR_LAYOUTSIZE(L"width",m_width,FALSE)
-			ATTR_LAYOUTSIZE(L"height",m_height,FALSE)
 			ATTR_LAYOUTSIZE4(L"margin",m_rcMargin,FALSE)
 			ATTR_LAYOUTSIZE2(L"minsize",m_szMin,FALSE)
             ATTR_DWORD(L"wndStyle",m_dwStyle,FALSE)
@@ -97,8 +95,6 @@ namespace SOUI
 	protected:
         SLayoutSize m_rcMargin[4];       //窗口拉伸的边缘检测大小
 		SLayoutSize m_szMin[2];          //窗口最小值
-		SLayoutSize	m_width;			/* 窗口初始宽度 */
-		SLayoutSize	m_height;			/* 窗口初始高度 */
 		SLayoutSize m_rcMaxInset[4];     //窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效
 
         DWORD m_byAlpha:8;          //透明度
@@ -144,14 +140,13 @@ protected:
 
     SAutoRefPtr<IRegion>    m_rgnInvalidate;    /**<脏区域*/
     SAutoRefPtr<IRenderTarget> m_memRT;         /**<绘制缓存*/
-    BOOL                    m_bResizing;        /**<执行WM_SIZE*/
     SAutoRefPtr<SStylePool> m_privateStylePool; /**<局部style pool*/
     SAutoRefPtr<SSkinPool>  m_privateSkinPool;  /**<局部skin pool*/
 	SAutoRefPtr<STemplatePool>  m_privateTemplatePool;/**< 局部template pool */
 
     SList<SWND>             m_lstUpdateSwnd;    /**<等待刷新的非背景混合窗口列表*/
     SList<RECT>             m_lstUpdatedRect;   /**<更新的脏矩形列表*/
-    BOOL                    m_bRending;         /**<正在渲染过程中*/
+    BOOL                    m_bRendering;         /**<正在渲染过程中*/
     
     MSG                     m_msgMouse;         /**<上一次鼠标按下消息*/
     
@@ -159,6 +154,9 @@ protected:
 
 	int						m_nScale;			/**<缩放比例 */
 
+	CSize					m_szAppSetted;		/**<应用层设置的窗口大小 */
+	bool					m_bAutoSizing;		/**<自动计算大小触发的WM_SIZE消息 */
+	bool                    m_bResizing;        /**<执行WM_SIZE*/
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
@@ -171,7 +169,7 @@ public:
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
     HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
-    BOOL InitFromXml(pugi::xml_node xmlNode);
+	BOOL InitFromXml(pugi::xml_node xmlNode);
     
     BOOL AnimateHostWindow(DWORD dwTime,DWORD dwFlags);
 
@@ -195,12 +193,10 @@ public:
 		return m_pTipCtrl;
 	}
 protected://辅助函数
-    BOOL _InitFromXml(pugi::xml_node xmlNode,int nWidth,int nHeight);
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
     void _DrawCaret(CPoint pt,BOOL bErase);
     void _RestoreClickState();
-	bool _IsRootWrapContent();
 protected:
     //////////////////////////////////////////////////////////////////////////
     // Message handler

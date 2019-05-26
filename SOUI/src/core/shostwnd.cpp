@@ -2,7 +2,7 @@
 
 #include "SApp.h"
 #include "core/shostwnd.h"
-#include "helper/SByteArray.h"
+#include "helper/SAutoBuf.h"
 #include "helper/color.h"
 #include "helper/SplitString.h"
 #include "helper/copylist.hpp"
@@ -108,9 +108,11 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_bNeedAllRepaint(TRUE)
 , m_pTipCtrl(NULL)
 , m_dummyWnd(this)
-, m_bRending(FALSE)
-, m_bResizing(FALSE)
+, m_bRendering(FALSE)
 , m_nScale(100)
+, m_szAppSetted(0,0)
+, m_bAutoSizing(false)
+, m_bResizing(false)
 {
     m_msgMouse.message = 0;
     m_privateStylePool.Attach(new SStylePool);
@@ -146,25 +148,19 @@ HWND SHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
     return Create(hWndParent, WS_CLIPCHILDREN | WS_TABSTOP | WS_OVERLAPPED,0,x,y,nWidth,nHeight);
 }
 
-
-BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode )
-{
-    CRect rcWnd = SWindow::GetWindowRect();
-    return _InitFromXml(xmlNode,rcWnd.Width(),rcWnd.Height());
-}
-
-
 bool SHostWnd::onRootResize( EventArgs *e )
 {
 	if (!m_bResizing)
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
+		m_bAutoSizing = true;
 		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
+		m_bAutoSizing = false;
 	}
 	return true;
 }
 
-BOOL SHostWnd::_InitFromXml(pugi::xml_node xmlNode,int nWidth,int nHeight)
+BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 {
     if(!xmlNode)
     {
@@ -232,7 +228,7 @@ BOOL SHostWnd::_InitFromXml(pugi::xml_node xmlNode,int nWidth,int nHeight)
                 size_t dwSize = SApplication::getSingleton().GetRawBufferSize(lstSrc[0],lstSrc[1]);
                 if(dwSize)
                 {
-                    SByteArray buff(dwSize);
+                    SAutoBuf buff(dwSize);
                     SApplication::getSingleton().GetRawBuffer(lstSrc[0],lstSrc[1],buff,dwSize);
                     m_pScriptModule->executeScriptBuffer(buff,dwSize);
                 }
@@ -309,50 +305,33 @@ BOOL SHostWnd::_InitFromXml(pugi::xml_node xmlNode,int nWidth,int nHeight)
     SWindow::InitFromXml(xmlNode.child(L"root"));
     BuildWndTreeZorder();
 
-	//width or height == 0 代表使用XML中指定的大小
-	if (nWidth == 0)
-	{
-		nWidth = m_hostAttr.m_width.toPixelSize(GetScale());
-		if (nWidth <= 0) nWidth = SIZE_WRAP_CONTENT;
-	}
-	else
-	{
-		m_hostAttr.m_width.setSize((float)nWidth, SLayoutSize::px);
-	}
-	if (nHeight == 0)
-	{
-		nHeight = m_hostAttr.m_height.toPixelSize(GetScale());
-		if (nHeight <= 0) nHeight = SIZE_WRAP_CONTENT;
-	}
-	else
-	{
-		m_hostAttr.m_height.setSize((float)nHeight, SLayoutSize::px);
-	}
-
+	int nWidth = m_szAppSetted.cx;
+	int nHeight = m_szAppSetted.cy;
 	if(nWidth <= 0 || nHeight <= 0)
 	{//计算出root大小		
+		if (nWidth <= 0)
+		{
+			nWidth = SIZE_WRAP_CONTENT;
+		}
+		if (nHeight <= 0)
+		{
+			nHeight = SIZE_WRAP_CONTENT;
+		}
+
 		CSize szRoot = GetDesiredSize(nWidth, nHeight);
 		if(nWidth == SIZE_WRAP_CONTENT) 
 			nWidth = szRoot.cx;
 		if(nHeight == SIZE_WRAP_CONTENT)
 			nHeight = szRoot.cy;
 		GetEventSet()->subscribeEvent(EventSwndSize::EventID, Subscriber(&SHostWnd::onRootResize, this));
-
-		if(m_hostAttr.m_width.isWrapContent())
-		{//禁止左右拉伸
-			m_hostAttr.m_rcMargin[0].setSize(0.f, SLayoutSize::px);
-			m_hostAttr.m_rcMargin[2].setSize(0.f, SLayoutSize::px);
-		}
-
-		if(m_hostAttr.m_height.isWrapContent())
-		{//禁止上下拉伸
-			m_hostAttr.m_rcMargin[1].setSize(0.f, SLayoutSize::px);
-			m_hostAttr.m_rcMargin[3].setSize(0.f, SLayoutSize::px);
-		}
-
 	}
 
-	SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
+	if(nWidth != m_szAppSetted.cx || nHeight != m_szAppSetted.cy)
+	{
+		m_bAutoSizing = true;
+		SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
+		m_bAutoSizing = false;
+	}
 	
 
     CRect rcClient;
@@ -380,11 +359,6 @@ void SHostWnd::_Redraw()
         CSimpleWnd::Invalidate(FALSE);
     else if(m_dummyWnd.IsWindow()) 
         m_dummyWnd.Invalidate(FALSE);
-}
-
-bool SHostWnd::_IsRootWrapContent()
-{
-	return m_hostAttr.m_width.isWrapContent() || m_hostAttr.m_height.isWrapContent();
 }
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
@@ -447,7 +421,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     }
     
     //渲染非背景混合窗口,设置m_bRending=TRUE以保证只执行一次UpdateHost
-    m_bRending = TRUE;
+    m_bRendering = TRUE;
     _UpdateNonBkgndBlendSwnd();
     SPOSITION pos = m_lstUpdatedRect.GetHeadPosition();
     while(pos)
@@ -455,7 +429,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
         rcInvalid = rcInvalid | m_lstUpdatedRect.GetNext(pos);
     }
     m_lstUpdatedRect.RemoveAll();
-    m_bRending = FALSE;
+    m_bRendering = FALSE;
 
     UpdateHost(dc,rcInvalid);
 }
@@ -481,6 +455,8 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
     m_pTipCtrl = GETTOOLTIPFACTORY->CreateToolTip(m_hWnd);
     if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
     
+	m_szAppSetted.cx = lpCreateStruct->cx;
+	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
 
 	if(!m_strXmlLayout.IsEmpty())
@@ -498,7 +474,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 		if(xmlDoc)
 		{
-			_InitFromXml(xmlDoc.child(L"SOUI"),lpCreateStruct->cx,lpCreateStruct->cy);
+			InitFromXml(xmlDoc.child(L"SOUI"));
 		}else
 		{
 			SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
@@ -540,7 +516,10 @@ void SHostWnd::OnSize(UINT nType, CSize size)
 
     if (size.cx==0 || size.cy==0)
         return;
-    
+    if(!m_bAutoSizing)
+	{
+		m_szAppSetted = size;
+	}
     m_bResizing = TRUE;
     m_memRT->Resize(size);
 	OnRelayout(CRect(0, 0, size.cx, size.cy));
@@ -756,7 +735,7 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,DWORD g
         {
             _DrawCaret(m_ptCaret,FALSE);//restore old caret
         }
-        if(!m_bRending)
+        if(!m_bRendering)
         {
             HDC dc=GetDC();
             UpdateHost(dc,rc);
@@ -1416,20 +1395,16 @@ void SHostWnd::UpdateLayout()
 {
 	if (!IsLayoutDirty()) 
 		return;
-	if (_IsRootWrapContent())
+	if ((m_szAppSetted.cx <=0 || m_szAppSetted.cy<=0) && GetLayoutParam()->IsWrapContent(Any))
 	{
-		int nWid = m_hostAttr.m_width.toPixelSize(GetScale());
-		int nHei = m_hostAttr.m_height.toPixelSize(GetScale());
+		int nWid = m_szAppSetted.cx<=0?SIZE_WRAP_CONTENT:m_szAppSetted.cx;
+		int nHei = m_szAppSetted.cy<=0?SIZE_WRAP_CONTENT:m_szAppSetted.cy;
 		CSize szRoot = GetDesiredSize(nWid, nHei);
-		if(m_hostAttr.m_width.isSpecifiedSize())
-			szRoot.cx = nWid;
-		if(m_hostAttr.m_height.isSpecifiedSize())
-			szRoot.cy = nHei;
 		OnRelayout(CRect(CPoint(), szRoot));
 	}
 	else
 	{
-		__super::UpdateLayout();
+		SWindow::UpdateLayout();
 	}
 }
 

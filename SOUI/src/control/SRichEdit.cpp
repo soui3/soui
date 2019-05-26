@@ -3,7 +3,7 @@
 #include "SApp.h"
 #include "helper/SMenu.h"
 #include "helper/SplitString.h"
-#include "helper/SByteArray.h"
+#include "helper/SAutoBuf.h"
 #include <gdialpha.h>
 #include <WinSCard.h>
 
@@ -1555,7 +1555,7 @@ HRESULT SRichEdit::OnAttrRTF( const SStringW & strValue,BOOL bLoading )
             {
                 EDITSTREAM es;
                 MemBlock mb={NULL,0};
-                SByteArray mybuf;
+                SAutoBuf mybuf;
                 mb.pBuf=(LPCBYTE)mybuf.Allocate(dwSize);
                 mb.nRemains=(DWORD)dwSize;
                 GETRESPROVIDER->GetRawBuffer(lstSrc[0],lstSrc[1],mybuf,dwSize);

@@ -1,7 +1,7 @@
 ﻿#include "include\souistd.h"
 #include "res.mgr\SUiDef.h"
 #include "helper\SplitString.h"
-#include "helper\SByteArray.h"
+#include "helper\SAutoBuf.h"
 
 namespace SOUI{
 
@@ -28,7 +28,7 @@ namespace SOUI{
 				SStringTList strList;
 				if(2==ParseResID(strSrc,strList))
 				{
-					SByteArray strXml;
+					SAutoBuf strXml;
 					size_t dwSize = pResProvider->GetRawBufferSize(strList[0],strList[1]);
 
 					strXml.Allocate(dwSize);
@@ -92,7 +92,7 @@ namespace SOUI{
 		}else
 		{
 			pugi::xml_document docInit;
-			SByteArray strXml;
+			SAutoBuf strXml;
 			strXml.Allocate(dwSize);
 
 			pResProvider->GetRawBuffer(strUiDef[0],strUiDef[1],strXml,dwSize);

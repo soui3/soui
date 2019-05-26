@@ -1,26 +1,26 @@
 #include <Windows.h>
 #include <soui_mem_wrapper.h>
-#include <helper/SByteArray.h>
+#include <helper/SAutoBuf.h>
 
 namespace SOUI{
 
 
-	SByteArray::SByteArray(size_t nElements) : m_pBuf(0)
+	SAutoBuf::SAutoBuf(size_t nElements) : m_pBuf(0)
 	{
 		Allocate(nElements);
 	}
 
-	SByteArray::SByteArray() : m_pBuf(NULL),m_nSize(0),m_bExternalBuf(false)
+	SAutoBuf::SAutoBuf() : m_pBuf(NULL),m_nSize(0),m_bExternalBuf(false)
 	{
 
 	}
 
-	SByteArray::~SByteArray()
+	SAutoBuf::~SAutoBuf()
 	{
 		Free();
 	}
 
-	void SByteArray::Free()
+	void SAutoBuf::Free()
 	{
 		if(!m_bExternalBuf)
 			soui_mem_wrapper::SouiFree(m_pBuf);
@@ -29,12 +29,12 @@ namespace SOUI{
 		m_bExternalBuf=false;
 	}
 
-	size_t SByteArray::size()
+	size_t SAutoBuf::size()
 	{
 		return m_nSize;
 	}
 
-	char* SByteArray::Allocate(size_t nBytes)
+	char* SAutoBuf::Allocate(size_t nBytes)
 	{
 		SASSERT(nBytes <= SIZE_MAX-1);
 		SASSERT(m_pBuf == NULL);
@@ -45,7 +45,7 @@ namespace SOUI{
 		return m_pBuf;
 	}
 
-	void SByteArray::Attach(char *pBuf,size_t size)
+	void SAutoBuf::Attach(char *pBuf,size_t size)
 	{
 		Free();
 		m_pBuf=pBuf;
@@ -53,7 +53,7 @@ namespace SOUI{
 		m_bExternalBuf=true;
 	}
 
-	char * SByteArray::Detach()
+	char * SAutoBuf::Detach()
 	{
 		char *pRet = m_pBuf;
 		m_pBuf = NULL;
@@ -62,25 +62,25 @@ namespace SOUI{
 		return pRet;
 	}
 
-	char & SByteArray::operator[](int i)
+	char & SAutoBuf::operator[](int i)
 	{
 		SASSERT(m_pBuf != NULL);
 		return m_pBuf[i];
 	}
 
-	const char & SByteArray::operator[](int i) const
+	const char & SAutoBuf::operator[](int i) const
 	{
 		SASSERT(m_pBuf != NULL);
 		return m_pBuf[i];
 	}
 
-	char* SByteArray::operator->() const
+	char* SAutoBuf::operator->() const
 	{
 		SASSERT(m_pBuf != NULL);
 		return m_pBuf;
 	}
 
-	SByteArray::operator char *() const
+	SAutoBuf::operator char *() const
 	{
 		return m_pBuf;
 	}

@@ -2,14 +2,14 @@
 
 namespace SOUI{
 
-	class UTILITIES_API SByteArray
+	class UTILITIES_API SAutoBuf
 	{
 	public:
-		SByteArray();
+		SAutoBuf();
 
-		SByteArray(size_t nElements);
+		SAutoBuf(size_t nElements);
 
-		~SByteArray();
+		~SAutoBuf();
 
 		operator char *() const;
 

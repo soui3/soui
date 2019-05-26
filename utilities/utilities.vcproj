@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\helper\SByteArray.cpp"
+				RelativePath=".\src\helper\SAutoBuf.cpp"
 				>
 			</File>
 			<File
@@ -285,7 +285,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\helper\SByteArray.h"
+				RelativePath=".\include\helper\SAutoBuf.h"
 				>
 			</File>
 			<File
