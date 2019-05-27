@@ -6,7 +6,7 @@ using namespace SOUI;
 
 namespace SOUI{
 
-class SClock : public SWindow
+class SClock : public SImageWnd
 {
 	SOUI_CLASS_NAME(SClock, L"clock")
 

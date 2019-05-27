@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<SOUI name="wrap_content" title="wrap_content" width="400" height="-1" margin="5,5,5,5" resizable="1" wndType="normal" translucent="1">
+<SOUI name="wrap_content" title="wrap_content" margin="5,5,5,5" resizable="1" wndType="normal" translucent="1">
   <!--演示root大小自动计算,注意soui结点width,height的设置，哪一个值需要自动计算就设置为-1-->
 	<root size="-2,-1" layout="vbox" padding="5,5,5,5" colorBkgnd="#ffffff">
     <caption size="-2,-1" colorBkgnd="#ffff00">

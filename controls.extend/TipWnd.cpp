@@ -40,9 +40,8 @@ namespace SOUI{
 		pTipWnd->m_ptAnchor.y = y;
 		pTipWnd->m_anchorType = at;
 		pTipWnd->Create(NULL);
-		pTipWnd->ShowWindow(SW_SHOWNOACTIVATE);
 		pTipWnd->SetTip(strTip);
-		pTipWnd->SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+		pTipWnd->SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		pTipWnd->SetTimer(TIMER_END_TIP, 3000);
 
 	}
