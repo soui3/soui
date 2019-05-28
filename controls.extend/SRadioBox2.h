@@ -12,10 +12,10 @@ namespace SOUI
         ~SRadioBox2(void);
         
     protected:
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer)
+        virtual CSize GetDesiredSize(int wid,int hei)
         {
             if(m_pSkin) return m_pSkin->GetSkinSize();
-            else return SWindow::GetDesiredSize(pRcContainer);
+            else return SWindow::GetDesiredSize(wid,hei);
         }
         virtual void GetTextRect(LPRECT pRect)
         {

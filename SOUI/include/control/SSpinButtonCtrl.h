@@ -17,7 +17,7 @@ namespace SOUI
 		SWindow * GetBuddy();
 
     protected:
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+        virtual CSize GetDesiredSize(int wid,int hei);
 		virtual BOOL NeedRedrawWhenStateChange() { return TRUE; }
         virtual void OnColorize(COLORREF cr);
 

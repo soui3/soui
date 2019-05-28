@@ -588,7 +588,7 @@ void SMCListView::UpdateVisibleItems()
 
             if(!m_lvItemLocator->IsFixHeight())
             {//计算出列表行高度
-                SIZE szView = m_adapter->getViewDesiredSize(iNewLastVisible,ii.pItem,&rcItem);
+                SIZE szView = m_adapter->getViewDesiredSize(iNewLastVisible,ii.pItem, rcItem.Width(), rcItem.Height());
                 m_lvItemLocator->SetItemHeight(iNewLastVisible,szView.cy);                    
                 rcItem.bottom = szView.cy;
                 ii.pItem->Move(rcItem);

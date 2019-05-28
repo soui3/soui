@@ -28,7 +28,7 @@ namespace SOUI
     protected:
         virtual BOOL CreateChildren(pugi::xml_node xmlNode);
 
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+        virtual CSize GetDesiredSize(int wid, int hei);
 
         virtual void GetTextRect(LPRECT pRect);
 

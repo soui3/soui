@@ -153,11 +153,11 @@ namespace SOUI
 			(xmlTemplate);
         }
         
-        virtual SIZE getViewDesiredSize(int position,SWindow *pItem, LPCRECT prcContainer)
+        virtual SIZE getViewDesiredSize(int position,SWindow *pItem, int wid,int hei)
         {
 			(position);
 			(pItem);
-            return pItem->GetDesiredSize(prcContainer);
+            return pItem->GetDesiredSize(wid,hei);
         }
     protected:
         SLvObserverMgr    m_obzMgr;
@@ -388,9 +388,9 @@ namespace SOUI
 		    return 1;
 		}
 		
-		virtual SIZE getViewDesiredSize(HTREEITEM hItem,SWindow * pItem, LPCRECT prcContainer)
+		virtual SIZE getViewDesiredSize(HTREEITEM hItem,SWindow * pItem, int wid, int hei)
 		{
-		    return pItem->GetDesiredSize(prcContainer);
+		    return pItem->GetDesiredSize(wid,hei);
 		}
         
         virtual bool isViewWidthMatchParent() const

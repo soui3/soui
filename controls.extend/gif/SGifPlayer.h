@@ -39,7 +39,7 @@ namespace SOUI
         BOOL PlayAPNGFile(LPCTSTR pszFileName);
 
     protected://SWindowµÄÐéº¯Êý
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+        virtual CSize GetDesiredSize(int wid,int hei);
     protected://ITimerLineHander
         virtual void OnNextFrame();
 

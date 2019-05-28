@@ -250,7 +250,7 @@ namespace SOUI
         CRect rcClient;
         GetClientRect(&rcClient);
         CSize szBtnNew;
-        if(m_pBtnNew) szBtnNew=m_pBtnNew->GetDesiredSize(&rcClient);
+        if(m_pBtnNew) szBtnNew=m_pBtnNew->GetDesiredSize(rcClient.Width(),rcClient.Height());
         CRect rcTab=rcClient;
         if(m_tabAlign == TDIR_HORZ)
         {

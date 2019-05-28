@@ -99,7 +99,7 @@ namespace SOUI
         */
         virtual int getViewTypeCount() PURE;
 
-        virtual SIZE getViewDesiredSize(int position,SWindow *pItem, LPCRECT prcContainer) PURE;
+        virtual SIZE getViewDesiredSize(int position,SWindow *pItem, int wid,int hei) PURE;
 
         /**
         * @return true if this adapter doesn't contain any data.  This is used to determine
@@ -255,7 +255,7 @@ namespace SOUI
         
         virtual int getViewTypeCount() const PURE;
         
-        virtual SIZE getViewDesiredSize(HTREEITEM hItem,SWindow * pItem, LPCRECT prcContainer) PURE;
+        virtual SIZE getViewDesiredSize(HTREEITEM hItem,SWindow * pItem, int wid, int hei) PURE;
         
         //定义行宽度和treeview客户区宽度相同
         virtual bool isViewWidthMatchParent() const PURE;

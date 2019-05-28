@@ -89,12 +89,13 @@ protected:
     /**
      * SSliderBar::GetDesiredSize
      * @brief    获取大小 
-     * @param    LPRECT pRcContainer  -- 内容大小
-     * @return   返回CSize 
+	 * @param    int wid -- 容器宽度
+	 * @param    int hei -- 容器高度
+	 * @return   返回CSize
      *
      * Describe  获取大小 
      */
-    virtual CSize    GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize    GetDesiredSize(int wid,int hei);
     
     virtual void OnColorize(COLORREF cr);
 

@@ -341,7 +341,7 @@ namespace SOUI
                 if(!m_lvItemLocator->IsFixHeight())
                 {
                     rcItem.bottom=0;
-                    CSize szItem = m_adapter->getViewDesiredSize(iNewLastVisible,ii.pItem,&rcItem);
+                    CSize szItem = m_adapter->getViewDesiredSize(iNewLastVisible,ii.pItem,rcItem.Width(),rcItem.Height());
                     rcItem.bottom = rcItem.top + szItem.cy;
                     ii.pItem->Move(rcItem);
                     m_lvItemLocator->SetItemHeight(iNewLastVisible,szItem.cy);

@@ -49,7 +49,7 @@ namespace SOUI
 
 
 
-    CSize SSpinButtonCtrl::GetDesiredSize(LPCRECT pRcContainer)
+    CSize SSpinButtonCtrl::GetDesiredSize(int wid, int hei)
     {
         CSize szRet;
         if(GetLayoutParam()->IsSpecifiedSize(Horz))
@@ -64,7 +64,7 @@ namespace SOUI
             szRet.cy = GetLayoutParam()->GetSpecifiedSize(Vert).toPixelSize(GetScale());
         }else
         {
-            szRet.cy = pRcContainer->bottom-pRcContainer->top;
+			szRet.cy = m_pDownSkin->GetSkinSize().cy  + m_pUpSkin->GetSkinSize().cy;
         }
 
         return szRet;

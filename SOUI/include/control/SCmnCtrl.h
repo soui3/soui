@@ -165,14 +165,15 @@ public:
     SButton();
 
 public:
-        /**
+     /**
      * SButton::GetDesiredSize
      * @brief    获得期望的大小值
-     * @param    LPRECT pRcContainer -- 内容窗体矩形
+     * @param    int wid -- 容器宽度
+	 * @param    int hei -- 容器高度
      *
      * Describe  根据内容窗体矩形大小，计算出适合的大小
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid,int hei);
 
 protected:
     /**
@@ -367,7 +368,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
 
 	int m_iTile;	//绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺
     BOOL m_bManaged;  /**< 是否要自动释放当前的m_pSkin对象 */
@@ -447,7 +448,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
     virtual void OnNextFrame();
     virtual void OnColorize(COLORREF cr);
     
@@ -547,12 +548,13 @@ protected:
     /**
      * SProgress::GetDesiredSize
      * @brief    获取预期大小
-     * @param    LPRECT pRcContainer  --  内容矩形框 
-     * @return   返回值 CSize对象 
+	 * @param    int wid -- 容器宽度
+	 * @param    int hei -- 容器高度
+	 * @return   返回值 CSize对象
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
     virtual void OnColorize(COLORREF cr);
 	virtual void OnScaleChanged(int scale);
 
@@ -689,12 +691,13 @@ protected:
     /**
      * SCheckBox::GetDesiredSize
      * @brief    获取预期大小
-     * @param    LPRECT pRcContainer  --  内容矩形框 
-     * @return   返回值 CSize对象 
+	 * @param    int wid -- 容器宽度
+	 * @param    int hei -- 容器高度
+	 * @return   返回值 CSize对象
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
     /**
      * SCheckBox::GetTextRect
      * @brief    获取文本大小
@@ -792,7 +795,16 @@ public:
      */
     void SetIcon(HICON hIcon);
 protected:
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+	/**
+	* SIconWnd::GetDesiredSize
+	* @brief    获取预期大小
+	* @param    int wid -- 容器宽度
+	* @param    int hei -- 容器高度
+	* @return   返回值 CSize对象
+	*
+	* Describe  根据矩形的大小，获取预期大小(解释有点不对)
+	*/
+	virtual CSize GetDesiredSize(int wid, int hei);
     HICON m_theIcon; /**< 图标资源句柄 */
 
     SOUI_ATTRS_BEGIN()
@@ -862,7 +874,7 @@ protected:
      *
      * Describe  获取预期大小值
      */
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
     /**
      * SRadioBox::NeedRedrawWhenStateChange
      * @brief    当状态改变时候是否需要重绘
@@ -1001,7 +1013,7 @@ public:
 protected:
     void OnPaint(IRenderTarget *pRT);
     void OnLButtonUp(UINT nFlags,CPoint pt);
-    virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+    virtual CSize GetDesiredSize(int wid, int hei);
     virtual BOOL NeedRedrawWhenStateChange(){return TRUE;}	
     virtual void OnColorize(COLORREF cr);
 	virtual void OnScaleChanged(int nScale);

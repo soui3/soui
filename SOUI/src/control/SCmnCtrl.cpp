@@ -388,12 +388,12 @@ HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
     return S_FALSE;
 }
 
-CSize SButton::GetDesiredSize( LPCRECT pRcContainer )
+CSize SButton::GetDesiredSize( int wid, int hei )
 {
     SASSERT(m_pBgSkin);
     CSize szRet=m_pBgSkin->GetSkinSize();
     if(szRet.cx==0 || szRet.cy==0)
-        szRet=__super::GetDesiredSize(pRcContainer);
+        szRet=__super::GetDesiredSize(wid,hei);
     return szRet;
 }
 
@@ -561,7 +561,7 @@ BOOL SImageWnd::SetIcon( int nSubID )
     return TRUE;
 }
 
-CSize SImageWnd::GetDesiredSize(LPCRECT pRcContainer)
+CSize SImageWnd::GetDesiredSize(int wid,int hei)
 {
     CSize szRet;
     if(m_pImg) szRet = m_pImg->Size();
@@ -632,7 +632,7 @@ void SAnimateImgWnd::OnDestroy()
 	__super::OnDestroy();
 }
 
-CSize SAnimateImgWnd::GetDesiredSize(LPCRECT pRcContainer)
+CSize SAnimateImgWnd::GetDesiredSize(int wid, int hei)
 {
     CSize szRet;
     if(m_pSkin) szRet=m_pSkin->GetSkinSize();
@@ -703,7 +703,7 @@ SProgress::SProgress()
 }
 
 
-CSize SProgress::GetDesiredSize(LPCRECT pRcContainer)
+CSize SProgress::GetDesiredSize(int wid, int hei)
 {
     CSize szRet;
     SIZE sizeBg = m_pSkinBg->GetSkinSize();
@@ -890,11 +890,11 @@ void SCheckBox::DrawFocus(IRenderTarget *pRT)
     }
 }
 
-CSize SCheckBox::GetDesiredSize(LPCRECT pRcContainer)
+CSize SCheckBox::GetDesiredSize(int wid, int hei)
 {
     SASSERT(m_pSkin);
     CSize szCheck=m_pSkin->GetSkinSize();
-    CSize szRet=__super::GetDesiredSize(pRcContainer);
+    CSize szRet=__super::GetDesiredSize(wid,hei);
     szRet.cx+=szCheck.cx + CheckBoxSpacing;
     szRet.cy=(std::max)(szRet.cy, szCheck.cy);
     return szRet;
@@ -1004,7 +1004,7 @@ void SIconWnd::OnPaint(IRenderTarget *pRT)
 }
 
 
-CSize SIconWnd::GetDesiredSize(LPCRECT pRcContainer)
+CSize SIconWnd::GetDesiredSize(int wid, int hei)
 {
     if(!m_theIcon) return CSize();
     ICONINFO iconInfo={0};
@@ -1120,9 +1120,9 @@ void SRadioBox::DrawFocus(IRenderTarget *pRT)
 }
 
 
-CSize SRadioBox::GetDesiredSize(LPCRECT pRcContainer)
+CSize SRadioBox::GetDesiredSize(int wid, int hei)
 {
-    CSize szRet=__super::GetDesiredSize(pRcContainer);
+    CSize szRet=__super::GetDesiredSize(wid,hei);
     CSize szRaio=m_pSkin->GetSkinSize();
     szRet.cx+=szRaio.cx + RadioBoxSpacing;
     szRet.cy=(std::max)(szRet.cy,szRaio.cy);
@@ -1277,7 +1277,7 @@ void SToggle::OnLButtonUp(UINT nFlags,CPoint pt)
     __super::OnLButtonUp(nFlags,pt);
 }
 
-CSize SToggle::GetDesiredSize(LPCRECT pRcContainer)
+CSize SToggle::GetDesiredSize(int wid, int hei)
 {
     CSize sz;
     if(m_pSkin) sz=m_pSkin->GetSkinSize();

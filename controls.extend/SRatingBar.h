@@ -13,7 +13,7 @@ namespace SOUI
     protected:
         void DrawStars(IRenderTarget *pRT,CRect rc,BOOL bForeground);
         
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer);
+        virtual CSize GetDesiredSize(int wid,int hei);
         
         void OnPaint(IRenderTarget *pRT);
         
