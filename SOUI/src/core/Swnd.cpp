@@ -1458,80 +1458,93 @@ namespace SOUI
 	static const int KWnd_MaxSize  = 0x7fffff;
 	CSize SWindow::GetDesiredSize(int nParentWid , int nParentHei )
 	{
+		//检查当前窗口的MatchParent属性及容器窗口的WrapContent属性。
+		ILayoutParam * pLayoutParam = GetLayoutParam();
+		bool bSaveHorz = nParentWid==SIZE_WRAP_CONTENT && pLayoutParam->IsMatchParent(Horz);
+		bool bSaveVert = nParentHei==SIZE_WRAP_CONTENT && pLayoutParam->IsMatchParent(Vert);
+		if(bSaveHorz)
+			pLayoutParam->SetWrapContent(Horz);
+		if(bSaveVert)
+			pLayoutParam->SetWrapContent(Vert);
+
 		CSize szRet(KWnd_MaxSize, KWnd_MaxSize);
-		if (GetLayoutParam()->IsSpecifiedSize(Horz))
+		if (pLayoutParam->IsSpecifiedSize(Horz))
 		{//检查设置大小
-			szRet.cx = GetLayoutParam()->GetSpecifiedSize(Horz).toPixelSize(GetScale());
+			szRet.cx = pLayoutParam->GetSpecifiedSize(Horz).toPixelSize(GetScale());
 		}
-		else if (GetLayoutParam()->IsMatchParent(Horz) && nParentWid>0)
+		else if (pLayoutParam->IsMatchParent(Horz) && nParentWid>0)
 		{
 			szRet.cx = nParentWid;
 		}
 
-		if (GetLayoutParam()->IsSpecifiedSize(Vert))
+		if (pLayoutParam->IsSpecifiedSize(Vert))
 		{//检查设置大小
-			szRet.cy = GetLayoutParam()->GetSpecifiedSize(Vert).toPixelSize(GetScale());
+			szRet.cy = pLayoutParam->GetSpecifiedSize(Vert).toPixelSize(GetScale());
 		}
-		else if (GetLayoutParam()->IsMatchParent(Vert) && nParentHei>0)
+		else if (pLayoutParam->IsMatchParent(Vert) && nParentHei>0)
 		{
 			szRet.cy = nParentHei;
 		}
 
-		if (szRet.cx != KWnd_MaxSize && szRet.cy != KWnd_MaxSize)
-			return szRet;
-
-		int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
-
-		CRect rcPadding = GetStyle().GetPadding();
-		CRect rcMargin = GetStyle().GetMargin();
-
-		//计算文本大小
-		SStringT strText = GetWindowText(FALSE);
-		CRect rcTest4Text;
-		if (!strText.IsEmpty())
+		if (szRet.cx == KWnd_MaxSize|| szRet.cy == KWnd_MaxSize)
 		{
-			rcTest4Text = CRect(0, 0, szRet.cx, szRet.cy);
-			int nMaxWid = GetLayoutParam()->IsWrapContent(Horz) ? m_nMaxWidth.toPixelSize(GetScale()) : szRet.cx;
-			if (nMaxWid == SIZE_WRAP_CONTENT)
+			int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
+
+			CRect rcPadding = GetStyle().GetPadding();
+			CRect rcMargin = GetStyle().GetMargin();
+
+			//计算文本大小
+			SStringT strText = GetWindowText(FALSE);
+			CRect rcTest4Text;
+			if (!strText.IsEmpty())
 			{
-				nMaxWid = KWnd_MaxSize;
+				rcTest4Text = CRect(0, 0, szRet.cx, szRet.cy);
+				int nMaxWid = pLayoutParam->IsWrapContent(Horz) ? m_nMaxWidth.toPixelSize(GetScale()) : szRet.cx;
+				if (nMaxWid == SIZE_WRAP_CONTENT)
+				{
+					nMaxWid = KWnd_MaxSize;
+				}
+				else //if(nMaxWid >= SIZE_SPEC)
+				{
+					nMaxWid -= rcPadding.left + rcPadding.right;
+					nTestDrawMode |= DT_WORDBREAK;
+				}
+				rcTest4Text.right = smax(nMaxWid, 10);
+				SAutoRefPtr<IRenderTarget> pRT;
+				GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
+				BeforePaintEx(pRT);
+				DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
 			}
-			else //if(nMaxWid >= SIZE_SPEC)
+			//计算子窗口大小
+			CSize szParent(nParentWid,nParentHei);
+			if (nParentWid>0)
 			{
-				nMaxWid -= rcPadding.left + rcPadding.right;
-				nTestDrawMode |= DT_WORDBREAK;
+				szParent.cx -= rcMargin.left + rcPadding.left + rcMargin.right + rcPadding.right;
+				if (szParent.cx < 0) szParent.cx = 0;
 			}
-			rcTest4Text.right = smax(nMaxWid, 10);
-			SAutoRefPtr<IRenderTarget> pRT;
-			GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
-			BeforePaintEx(pRT);
-			DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
-		}
-		//计算子窗口大小
-		CSize szParent = szRet;
-		if (nParentWid>0)
-		{
-			szParent.cx -= rcMargin.left + rcPadding.left + rcMargin.right + rcPadding.right;
-			if (szParent.cx < 0) szParent.cx = 0;
-		}
-		if (nParentHei>0)
-		{
-			szParent.cy -= rcMargin.top + rcPadding.top + rcMargin.bottom + rcPadding.bottom;
-			if (szParent.cy < 0) szParent.cy = 0;
-		}
-		CSize szChilds = GetLayout()->MeasureChildren(this, szParent.cx, szParent.cy);
+			if (nParentHei>0)
+			{
+				szParent.cy -= rcMargin.top + rcPadding.top + rcMargin.bottom + rcPadding.bottom;
+				if (szParent.cy < 0) szParent.cy = 0;
+			}
+			CSize szChilds = GetLayout()->MeasureChildren(this, szParent.cx, szParent.cy);
 
-		CRect rcTest(0, 0, smax(szChilds.cx, rcTest4Text.right), smax(szChilds.cy, rcTest4Text.bottom));
+			CRect rcTest(0, 0, smax(szChilds.cx, rcTest4Text.right), smax(szChilds.cy, rcTest4Text.bottom));
 
-		rcTest.InflateRect(rcMargin);
-		rcTest.InflateRect(rcPadding);
+			rcTest.InflateRect(rcMargin);
+			rcTest.InflateRect(rcPadding);
 
-		if (GetLayoutParam()->IsWrapContent(Horz) 
-			|| (GetLayoutParam()->IsMatchParent(Horz) && nParentWid<SIZE_WRAP_CONTENT))
-			szRet.cx = rcTest.Width();
-		if (GetLayoutParam()->IsWrapContent(Vert)
-			|| (GetLayoutParam()->IsMatchParent(Vert) && nParentHei<SIZE_WRAP_CONTENT))
-			szRet.cy = rcTest.Height();
+			if (pLayoutParam->IsWrapContent(Horz) 
+				|| (pLayoutParam->IsMatchParent(Horz) && nParentWid<SIZE_WRAP_CONTENT))
+				szRet.cx = rcTest.Width();
+			if (pLayoutParam->IsWrapContent(Vert)
+				|| (pLayoutParam->IsMatchParent(Vert) && nParentHei<SIZE_WRAP_CONTENT))
+				szRet.cy = rcTest.Height();
+
+		}
+
+		if(bSaveHorz) pLayoutParam->SetMatchParent(Horz);
+		if(bSaveVert) pLayoutParam->SetMatchParent(Vert);
 
 		return szRet;
 	}
