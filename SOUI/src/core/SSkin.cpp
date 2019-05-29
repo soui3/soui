@@ -10,6 +10,7 @@
 namespace SOUI
 {
 
+
 //////////////////////////////////////////////////////////////////////////
 // SSkinImgList
 SSkinImgList::SSkinImgList()
@@ -45,42 +46,30 @@ BOOL SSkinImgList::IgnoreState()
 
 int SSkinImgList::GetStates()
 {
-	int nStates = (int)m_arrStateMap.GetCount();
-	if (nStates > 0) return nStates;
-	
 	return m_nStates;
-}
-
-HRESULT SSkinImgList::OnAttrStateMap(const SStringW & strValue, BOOL bLoading)
-{
-	m_arrStateMap.RemoveAll();
-	
-	SStringWList strLst;
-	SplitString(strValue, '-', strLst);
-	
-	for(size_t i=0; i<strLst.GetCount(); ++i)
-	{
-		m_arrStateMap.Add(_wtoi(strLst[i]));
-	}
-
-	return S_OK;
 }
 
 void SSkinImgList::_Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
 {
     if(!m_pImg) return;
-		
-	size_t nCount = m_arrStateMap.GetCount();
-	if(dwState < nCount)
-		dwState = m_arrStateMap[dwState];
+	
+	int iState = State2Index(dwState);
+	if(iState>=0 && iState < GetStates())
+	{
+		Draw2(pRT,rcDraw,iState,byAlpha);
+	}
 
-    SIZE sz = GetSkinSize();
-    RECT rcSrc = {0, 0, sz.cx, sz.cy};
-    if(m_bVertical) 
-        OffsetRect(&rcSrc, 0, dwState*sz.cy);
-    else
-        OffsetRect(&rcSrc, dwState*sz.cx, 0);
-    pRT->DrawBitmapEx(rcDraw ,m_pImg, &rcSrc, GetExpandMode(), byAlpha);
+}
+
+void SSkinImgList::Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)
+{
+	SIZE sz = GetSkinSize();
+	RECT rcSrc = {0, 0, sz.cx, sz.cy};
+	if(m_bVertical) 
+		OffsetRect(&rcSrc, 0, iState*sz.cy);
+	else
+		OffsetRect(&rcSrc, iState*sz.cx, 0);
+	pRT->DrawBitmapEx(rcDraw ,m_pImg, &rcSrc, GetExpandMode(), byAlpha);
 }
 
 UINT SSkinImgList::GetExpandMode()
@@ -125,7 +114,7 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 	pRet->m_bVertical = m_bVertical;
 	pRet->m_filterLevel = m_filterLevel;
 	pRet->m_bAutoFit = m_bAutoFit;
-	pRet->m_arrStateMap = m_arrStateMap;
+	pRet->m_state2Index = m_state2Index;
 	
 	CSize szSkin = GetSkinSize();
 	szSkin.cx = MulDiv(szSkin.cx, nScale, 100);
@@ -147,6 +136,8 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 		m_pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
 }
+
+
 
 //////////////////////////////////////////////////////////////////////////
 //  SSkinImgCenter

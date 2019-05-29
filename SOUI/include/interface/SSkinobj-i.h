@@ -52,8 +52,20 @@ namespace SOUI
         * @param    DWORD dwState --  绘制状态
         * @return   void
         * Describe  使用SkinObj的GetAlpha属性绘制
-        */    
+        */
         virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)=0;
+
+		/**
+        * Draw2
+        * @brief    将this绘制到RenderTarget上去
+        * @param    IRenderTarget * pRT --  绘制用的RenderTarget
+        * @param    LPCRECT rcDraw --  绘制位置
+        * @param    int iState --  绘制Index
+		* @param    BYTE byAlpha --  绘制透明度
+        * @return   void
+        * Describe  使用SkinObj的GetAlpha属性绘制
+        */
+		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)=0;
 
         /**
         * GetSkinSize

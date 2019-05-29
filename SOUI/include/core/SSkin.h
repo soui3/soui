@@ -7,28 +7,6 @@
 namespace SOUI
 {
 
-// State Define
-enum
-{
-    WndState_Normal       = 0x00000000UL,
-    WndState_Hover        = 0x00000001UL,
-    WndState_PushDown     = 0x00000002UL,
-    WndState_Check        = 0x00000004UL,
-    WndState_Invisible    = 0x00000008UL,
-    WndState_Disable      = 0x00000010UL,
-};
-
-#define IIF_STATE2(the_state, normal_value, hover_value) \
-    (((the_state) & SOUI::WndState_Hover) ? (hover_value) : (normal_value))
-
-#define IIF_STATE3(the_state, normal_value, hover_value, pushdown_value) \
-    (((the_state) & (SOUI::WndState_PushDown|SOUI::WndState_Check)) ? (pushdown_value) : IIF_STATE2(the_state, normal_value, hover_value))
-
-#define IIF_STATE4(the_state, normal_value, hover_value, pushdown_value, disable_value) \
-    (((the_state) & SOUI::WndState_Disable) ? (disable_value) : IIF_STATE3(the_state, normal_value, hover_value, pushdown_value))
-
-
-//////////////////////////////////////////////////////////////////////////
 
 
 class SOUI_EXP SSkinImgList: public SSkinObjBase
@@ -45,9 +23,8 @@ public:
     virtual BOOL IgnoreState();
     
     virtual int GetStates();
+
     virtual void SetStates(int nStates){m_nStates=nStates;}
-
-
 
     virtual bool SetImage(IBitmap *pImg)
     {
@@ -68,22 +45,20 @@ public:
     
     virtual void OnColorize(COLORREF cr);
 
+	virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
 protected:
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
     virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
-
     virtual UINT GetExpandMode();
-	HRESULT OnAttrStateMap(const SStringW & strValue, BOOL bLoading);
-    
+
     SAutoRefPtr<IBitmap> m_pImg;
 	int  m_nStates;				  // skin 状态值 
     BOOL m_bTile;
     BOOL m_bAutoFit;
     BOOL m_bVertical;
     SAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
-
     FilterLevel m_filterLevel;
-	SArray<DWORD> m_arrStateMap;				// 状态 映射
+
     SOUI_ATTRS_BEGIN()
         ATTR_IMAGEAUTOREF(L"src", m_pImg, FALSE)    //skinObj引用的图片文件定义在uires.idx中的name属性。
         ATTR_INT(L"tile", m_bTile, FALSE)    //绘制是否平铺,0--位伸（默认），其它--平铺
@@ -96,7 +71,6 @@ protected:
             ATTR_ENUM_VALUE(L"medium",kMedium_FilterLevel)
             ATTR_ENUM_VALUE(L"high",kHigh_FilterLevel)
         ATTR_ENUM_END(m_filterLevel)
-		ATTR_CUSTOM(L"stateMap", OnAttrStateMap)			// 状态 映射
     SOUI_ATTRS_END()
 };
 

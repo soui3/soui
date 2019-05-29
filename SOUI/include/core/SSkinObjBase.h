@@ -2,9 +2,31 @@
 
 #include "interface/Sskinobj-i.h"
 #include <unknown/obj-ref-impl.hpp>
-
+#include <souicoll.h>
 namespace SOUI
 {
+	// State Define
+	enum
+	{
+		WndState_Normal       = 0x00000000UL,
+		WndState_Hover        = 0x00000001UL,
+		WndState_PushDown     = 0x00000002UL,
+		WndState_Check        = 0x00000004UL,
+		WndState_Invisible    = 0x00000008UL,
+		WndState_Disable      = 0x00000010UL,
+		WndState_Focus        = 0x00000020UL,
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////
+	class SOUI_EXP SState2Index{
+	public:
+		int GetIndex(DWORD dwState) const;
+
+		BOOL Init(pugi::xml_node xmlNode);
+	protected:
+		SMap<DWORD,int> m_mapOfStates;
+	};
 
     class SOUI_EXP SSkinObjBase : public TObjRefImpl<SObjectImpl<ISkinObj>>
     {
@@ -18,11 +40,9 @@ namespace SOUI
         * @return   BYTE -- 透明度
         * Describe  [0-255]
         */    
-        BYTE GetAlpha() const
-        {
-            return m_byAlpha;
-        }
+        BYTE GetAlpha() const;
 
+		int State2Index(DWORD dwState) const;
         /**
         * SetAlpha
         * @brief    设定skin对象包含透明度
@@ -30,54 +50,25 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        virtual void SetAlpha(BYTE byAlpha)
-        {
-            m_byAlpha = byAlpha;
-        }
+        virtual void SetAlpha(BYTE byAlpha);
 
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
-        {
-            _Draw(pRT,rcDraw,dwState,byAlpha);
-        }
+        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
 
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)
-        {
-            Draw(pRT,rcDraw,dwState,GetAlpha());
-        }
+        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState);
 
-        virtual SIZE GetSkinSize()
-        {
-            SIZE ret = {0, 0};
+		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
 
-            return ret;
-        }
+        virtual SIZE GetSkinSize();
 
-        virtual BOOL IgnoreState()
-        {
-            return TRUE;
-        }
+        virtual BOOL IgnoreState();
 
-        virtual int GetStates()
-        {
-            return 1;
-        }
+        virtual int GetStates();
 
-		virtual int GetScale() const{
-			return m_nScale;
-		}
+		virtual int GetScale() const;
 
-		virtual ISkinObj * Scale(int nScale)
-		{
-			ISkinObj * skinObj = SApplication::getSingleton().CreateSkinByName(GetObjectClass());
-			if(!skinObj) return NULL;
-			_Scale(skinObj,nScale);
-			return skinObj;
-		}
+		virtual ISkinObj * Scale(int nScale);
 
-		virtual LPCWSTR GetName() const
-		{
-			return m_strName;
-		}
+		virtual LPCWSTR GetName() const;
 
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"alpha",m_byAlpha,TRUE)   //皮肤透明度
@@ -87,16 +78,9 @@ namespace SOUI
         SOUI_ATTRS_END()
 
     protected:
+		virtual void OnInitFinished(pugi::xml_node xmlNode);
 
-		virtual void _Scale(ISkinObj *pObj, int nScale)
-		{
-			SSkinObjBase * pSkinObj = sobj_cast<SSkinObjBase>(pObj);
-			pSkinObj->m_nScale = nScale;
-			pSkinObj->m_byAlpha = m_byAlpha;
-			pSkinObj->m_bEnableColorize = m_bEnableColorize;
-			pSkinObj->m_crColorize = m_crColorize;
-			pSkinObj->m_strName = m_strName;
-		}
+		virtual void _Scale(ISkinObj *pObj, int nScale);
 
         /**
         * _Draw
@@ -116,6 +100,8 @@ namespace SOUI
 		int			m_nScale;
 
 		SStringW	m_strName;
+
+		SState2Index	m_state2Index;
 
     };
 
