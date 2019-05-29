@@ -120,7 +120,7 @@ namespace SOUI
 	// Get align
 	UINT SWindow::GetTextAlign()
 	{
-		return m_style.GetTextAlign() ;
+		return GetStyle().GetTextAlign() ;
 	}
 
 
@@ -134,7 +134,7 @@ namespace SOUI
 	{
 		SASSERT(pRect);
 		CRect rc = m_rcWindow;
-		rc.DeflateRect(m_style.GetMargin());
+		rc.DeflateRect(GetStyle().GetMargin());
 		*pRect=rc;
 	}
 
@@ -287,7 +287,7 @@ namespace SOUI
 	// Set current cursor, when hover
 	BOOL SWindow::OnSetCursor(const CPoint &pt)
 	{
-		HCURSOR hCursor=GETRESPROVIDER->LoadCursor(m_style.m_strCursor);
+		HCURSOR hCursor=GETRESPROVIDER->LoadCursor(GetStyle().m_strCursor);
 		::SetCursor(hCursor);
 		return TRUE;
 	}
@@ -580,6 +580,11 @@ namespace SOUI
 	}
 
 	// add by dummyz@126.com
+	const SwndStyle& SWindow::GetStyle() const
+	{
+		return m_style;
+	}
+
 	SwndStyle& SWindow::GetStyle()
 	{
 		return m_style;
@@ -904,7 +909,7 @@ namespace SOUI
 		{
 			return TRUE;
 		}
-		return m_style.GetStates()>1;
+		return GetStyle().GetStates()>1;
 	}
 
 	//如果当前窗口有绘制缓存，它可能是由cache属性定义的，也可能是由于定义了alpha
@@ -938,7 +943,7 @@ namespace SOUI
 				rcInter.IntersectRect(rcClip,rcWnd);
 				if(!rcInter.IsRectEmpty())
 				{
-					pRT->AlphaBlend(&rcInter,pRTCache,&rcInter,IsLayeredWindow()?0xFF:m_style.m_byAlpha);
+					pRT->AlphaBlend(&rcInter,pRTCache,&rcInter,IsLayeredWindow()?0xFF:GetStyle().m_byAlpha);
 				}
 			}
 		}else
@@ -969,7 +974,7 @@ namespace SOUI
 					pRT->PushClipRegion(m_rgnWnd);
 					m_rgnWnd->Offset(-rcWnd.TopLeft());
 				}
-				pRT->AlphaBlend(&rcWnd,pRTCache,&rcWnd,IsLayeredWindow()?0xFF:m_style.m_byAlpha);
+				pRT->AlphaBlend(&rcWnd,pRTCache,&rcWnd,IsLayeredWindow()?0xFF:GetStyle().m_byAlpha);
 				pRT->RestoreClip(nSave);
 			}
 		}else
@@ -1120,7 +1125,7 @@ namespace SOUI
 		if(pRTBack)
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
 			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
-			pRTBack->AlphaBlend(&m_rcWindow,pRT,&m_rcWindow,m_style.m_byAlpha);
+			pRTBack->AlphaBlend(&m_rcWindow,pRT,&m_rcWindow,GetStyle().m_byAlpha);
 
 			SAutoRefPtr<IFont> curFont;
 			HRESULT hr = pRT->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
@@ -1179,7 +1184,7 @@ namespace SOUI
 		CRect rcIntersect = rect & m_rcWindow;
 		if(rcIntersect.IsRectEmpty()) return;
 
-		if(!m_style.m_bBkgndBlend)
+		if(!GetStyle().m_bBkgndBlend)
 		{//非背景混合窗口，直接发消息支宿主窗口来启动刷新
 			if(!m_invalidRegion)
 			{
@@ -1295,12 +1300,12 @@ namespace SOUI
 
 	int SWindow::OnCreate( LPVOID )
 	{
-		if(m_style.m_bTrackMouseEvent)
+		if(GetStyle().m_bTrackMouseEvent)
 			GetContainer()->RegisterTrackMouseEvent(m_swnd);
 		else
 			GetContainer()->UnregisterTrackMouseEvent(m_swnd);
 
-		m_style.SetScale(GetScale());
+		GetStyle().SetScale(GetScale());
 
 		EventSwndCreate evt(this);
 		FireEvent(evt);
@@ -1344,7 +1349,7 @@ namespace SOUI
 		CRect rcClient=GetClientRect();
 		if (!m_pBgSkin)
 		{
-			COLORREF crBg = m_style.m_crBg;
+			COLORREF crBg = GetStyle().m_crBg;
 
 			if (CR_INVALID != crBg)
 			{
@@ -1374,11 +1379,11 @@ namespace SOUI
 
 	void SWindow::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 	{
-		IFontPtr pFont = m_style.GetTextFont(IIF_STATE4(m_dwState,0,1,2,3));
+		IFontPtr pFont = GetStyle().GetTextFont(IIF_STATE4(m_dwState,0,1,2,3));
 		if(pFont) 
 			pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
 
-		COLORREF crTxt = m_style.GetTextColor(IIF_STATE4(m_dwState,0,1,2,3));
+		COLORREF crTxt = GetStyle().GetTextColor(IIF_STATE4(m_dwState,0,1,2,3));
 		if(crTxt != CR_INVALID)
 			painter.oldTextColor = pRT->SetTextColor(crTxt);
 	}
@@ -1421,7 +1426,7 @@ namespace SOUI
 	void SWindow::OnNcPaint(IRenderTarget *pRT)
 	{
 		if(!IsVisible(TRUE)) return;
-		if(!m_style.GetMargin().IsRectNull())
+		if(!GetStyle().GetMargin().IsRectNull())
 		{
 			SASSERT(pRT);
 			CRect rcClient = SWindow::GetClientRect();
@@ -1437,7 +1442,7 @@ namespace SOUI
 			}
 			else
 			{
-				COLORREF crBg = m_style.m_crBorder;
+				COLORREF crBg = GetStyle().m_crBorder;
 				if (CR_INVALID != crBg)
 				{
 					pRT->FillSolidRect(&m_rcWindow,crBg);
@@ -1447,113 +1452,83 @@ namespace SOUI
 		}
 	}
 
-	const int KWnd_MaxSize  = 0x7fffff;
-
-	CSize SWindow::GetDesiredSize(LPCRECT pRcContainer)
+	static const int KWnd_MaxSize  = 0x7fffff;
+	CSize SWindow::GetDesiredSize(int nParentWid , int nParentHei )
 	{
-		CRect rcContainer;
-		if(pRcContainer)
-		{
-			rcContainer = *pRcContainer;
-			rcContainer.MoveToXY(0,0);
-		}else
-		{
-			rcContainer.SetRect(0,0,KWnd_MaxSize,KWnd_MaxSize);
-		}
-
-		CSize szRet(KWnd_MaxSize,KWnd_MaxSize);
-		if(GetLayoutParam()->IsSpecifiedSize(Horz))
+		CSize szRet(KWnd_MaxSize, KWnd_MaxSize);
+		if (GetLayoutParam()->IsSpecifiedSize(Horz))
 		{//检查设置大小
 			szRet.cx = GetLayoutParam()->GetSpecifiedSize(Horz).toPixelSize(GetScale());
-		}else if(GetLayoutParam()->IsMatchParent(Horz))
+		}
+		else if (GetLayoutParam()->IsMatchParent(Horz) && nParentWid>0)
 		{
-			szRet.cx = rcContainer.Width();
+			szRet.cx = nParentWid;
 		}
 
-		if(GetLayoutParam()->IsSpecifiedSize(Vert))
+		if (GetLayoutParam()->IsSpecifiedSize(Vert))
 		{//检查设置大小
 			szRet.cy = GetLayoutParam()->GetSpecifiedSize(Vert).toPixelSize(GetScale());
-		}else if(GetLayoutParam()->IsMatchParent(Vert))
+		}
+		else if (GetLayoutParam()->IsMatchParent(Vert) && nParentHei>0)
 		{
-			szRet.cy = rcContainer.Height();
+			szRet.cy = nParentHei;
 		}
 
-		if(szRet.cx !=KWnd_MaxSize && szRet.cy != KWnd_MaxSize) 
+		if (szRet.cx != KWnd_MaxSize && szRet.cy != KWnd_MaxSize)
 			return szRet;
 
 		int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
 
 		CRect rcPadding = GetStyle().GetPadding();
+		CRect rcMargin = GetStyle().GetMargin();
+
 		//计算文本大小
-		CRect rcTest4Text (0,0,szRet.cx,szRet.cy);
-		int nMaxWid = GetLayoutParam()->IsWrapContent(Horz)?m_nMaxWidth.toPixelSize(GetScale()):szRet.cx;
-		if(nMaxWid == SIZE_WRAP_CONTENT) 
-		{
-			nMaxWid = KWnd_MaxSize;
-		}
-		else //if(nMaxWid >= SIZE_SPEC)
-		{
-			nMaxWid -= rcPadding.left + rcPadding.right;
-			nTestDrawMode|=DT_WORDBREAK;
-		}
-		rcTest4Text.right = smax(nMaxWid,10);
-
-		SAutoRefPtr<IRenderTarget> pRT;
-		GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
-		BeforePaintEx(pRT);
-
 		SStringT strText = GetWindowText(FALSE);
-		DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
-
-		CRect rcMargin = m_style.GetMargin();
+		CRect rcTest4Text;
+		if (!strText.IsEmpty())
+		{
+			rcTest4Text = CRect(0, 0, szRet.cx, szRet.cy);
+			int nMaxWid = GetLayoutParam()->IsWrapContent(Horz) ? m_nMaxWidth.toPixelSize(GetScale()) : szRet.cx;
+			if (nMaxWid == SIZE_WRAP_CONTENT)
+			{
+				nMaxWid = KWnd_MaxSize;
+			}
+			else //if(nMaxWid >= SIZE_SPEC)
+			{
+				nMaxWid -= rcPadding.left + rcPadding.right;
+				nTestDrawMode |= DT_WORDBREAK;
+			}
+			rcTest4Text.right = smax(nMaxWid, 10);
+			SAutoRefPtr<IRenderTarget> pRT;
+			GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
+			BeforePaintEx(pRT);
+			DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
+		}
 		//计算子窗口大小
-		if(rcContainer.Width()>0)
+		CSize szParent = szRet;
+		if (nParentWid>0)
 		{
-			rcContainer.left += rcMargin.left + rcPadding.left;
-			rcContainer.right-=rcMargin.right + rcPadding.right;
-			if(rcContainer.Width()<0) rcContainer.right=rcContainer.left;
+			szParent.cx -= rcMargin.left + rcPadding.left + rcMargin.right + rcPadding.right;
+			if (szParent.cx < 0) szParent.cx = 0;
 		}
-		if(rcContainer.Height()>0)
+		if (nParentHei>0)
 		{
-			rcContainer.top += rcMargin.top + rcPadding.top;
-			rcContainer.bottom -= rcMargin.bottom + rcPadding.bottom;
-			if(rcContainer.Height()<0) rcContainer.bottom = rcContainer.top;
+			szParent.cy -= rcMargin.top + rcPadding.top + rcMargin.bottom + rcPadding.bottom;
+			if (szParent.cy < 0) szParent.cy = 0;
 		}
-		CSize szChilds = GetLayout()->MeasureChildren(this,rcContainer.Width(),rcContainer.Height());
+		CSize szChilds = GetLayout()->MeasureChildren(this, szParent.cx, szParent.cy);
 
-		CRect rcTest(0,0, smax(szChilds.cx,rcTest4Text.right),smax(szChilds.cy,rcTest4Text.bottom));
+		CRect rcTest(0, 0, smax(szChilds.cx, rcTest4Text.right), smax(szChilds.cy, rcTest4Text.bottom));
 
-		rcTest.InflateRect(m_style.GetMargin());
+		rcTest.InflateRect(rcMargin);
 		rcTest.InflateRect(rcPadding);
 
-		if(GetLayoutParam()->IsWrapContent(Horz)) 
+		if (GetLayoutParam()->IsWrapContent(Horz) 
+			|| (GetLayoutParam()->IsMatchParent(Horz) && nParentWid<SIZE_WRAP_CONTENT))
 			szRet.cx = rcTest.Width();
-		if(GetLayoutParam()->IsWrapContent(Vert)) 
+		if (GetLayoutParam()->IsWrapContent(Vert)
+			|| (GetLayoutParam()->IsMatchParent(Vert) && nParentHei<SIZE_WRAP_CONTENT))
 			szRet.cy = rcTest.Height();
-
-		return szRet;
-	}
-
-
-	CSize SWindow::GetDesiredSize(int nParentWid , int nParentHei )
-	{
-		bool isParentHorzWrapContent = nParentWid<0;
-		bool isParentVertWrapContent = nParentHei<0;
-
-		ILayoutParam * pLayoutParam = GetLayoutParam();
-		bool bSaveHorz = isParentHorzWrapContent && pLayoutParam->IsMatchParent(Horz);
-		bool bSaveVert = isParentVertWrapContent && pLayoutParam->IsMatchParent(Vert);
-		if(bSaveHorz)
-			pLayoutParam->SetWrapContent(Horz);
-
-		if(bSaveVert)
-			pLayoutParam->SetWrapContent(Vert);
-
-		CRect rcContainer(0,0,nParentWid,nParentHei);
-		CSize szRet = GetDesiredSize(rcContainer);
-
-		if(bSaveHorz) pLayoutParam->SetMatchParent(Horz);
-		if(bSaveVert) pLayoutParam->SetMatchParent(Vert);
 
 		return szRet;
 	}
@@ -2033,7 +2008,7 @@ namespace SOUI
 				//从root开始绘制当前layer前的窗口背景
 				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,ZORDER_MIN,pLayerWindow->m_uZorder);
 				//将layer的渲染更新到root上
-				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->m_style.m_byAlpha);
+				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetStyle().m_byAlpha);
 				//绘制当前layer前的窗口前景
 				if(uFrgndZorderMin!=ZORDER_MAX) 
 					pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,(UINT)uFrgndZorderMin,(UINT)ZORDER_MAX);
@@ -2502,10 +2477,10 @@ namespace SOUI
 
 	HRESULT SWindow::OnAttrTrackMouseEvent( const SStringW& strValue, BOOL bLoading )
 	{
-		m_style.m_bTrackMouseEvent = STRINGASBOOL(strValue);
+		GetStyle().m_bTrackMouseEvent = STRINGASBOOL(strValue);
 		if(!bLoading)
 		{
-			if(m_style.m_bTrackMouseEvent)
+			if(GetStyle().m_bTrackMouseEvent)
 				GetContainer()->RegisterTrackMouseEvent(m_swnd);
 			else
 				GetContainer()->UnregisterTrackMouseEvent(m_swnd);
@@ -2573,7 +2548,7 @@ namespace SOUI
 
 	HRESULT SWindow::OnAttrAlpha( const SStringW& strValue, BOOL bLoading )
 	{
-		m_style.m_byAlpha = _wtoi(strValue);
+		GetStyle().m_byAlpha = _wtoi(strValue);
 		if(!bLoading)
 		{
 			if(!IsLayeredWindow()) UpdateCacheMode();
@@ -2675,9 +2650,9 @@ namespace SOUI
 
 	void SWindow::_Update()
 	{
-		SASSERT(!m_style.m_bBkgndBlend);
+		SASSERT(!GetStyle().m_bBkgndBlend);
 
-		if(!m_style.m_bBkgndBlend && m_invalidRegion && !m_invalidRegion->IsEmpty()) 
+		if(!GetStyle().m_bBkgndBlend && m_invalidRegion && !m_invalidRegion->IsEmpty()) 
 		{
 			if(m_invalidRegion)
 			{
@@ -2706,7 +2681,7 @@ namespace SOUI
 
 	bool SWindow::IsDrawToCache() const
 	{
-		return m_bCacheDraw || (!IsLayeredWindow() && m_style.m_byAlpha!=0xff);
+		return m_bCacheDraw || (!IsLayeredWindow() && GetStyle().m_byAlpha!=0xff);
 	}
 
 	IRenderTarget * SWindow::GetLayerRenderTarget()
@@ -2924,7 +2899,7 @@ namespace SOUI
 
 	void SWindow::OnScaleChanged(int scale)
 	{
-		m_style.SetScale(scale);
+		GetStyle().SetScale(scale);
 		GetScaleSkin(m_pNcSkin,scale);
 		GetScaleSkin(m_pBgSkin,scale);
 

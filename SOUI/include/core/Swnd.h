@@ -289,7 +289,8 @@ namespace SOUI
          *
          * Describe  
          */
-        SwndStyle& GetStyle();
+        const SwndStyle& GetStyle() const;
+		SwndStyle& GetStyle();
 
         BOOL IsChecked();
         void SetCheck(BOOL bCheck);
@@ -874,16 +875,6 @@ namespace SOUI
         * Describe  通常是客户区，但是tab,group这样的控件不一样
         */
         virtual CRect GetChildrenLayoutRect();
-
-        /**
-        * GetDesiredSize
-        * @brief    当没有指定窗口大小时，通过如皮肤计算窗口的期望大小
-        * @param    LPRECT pRcContainer --  容器位置
-        * @return   CSize 
-        *
-        * Describe  
-        */
-        virtual CSize GetDesiredSize(LPCRECT pRcContainer);
 
         /**
         * GetDesiredSize

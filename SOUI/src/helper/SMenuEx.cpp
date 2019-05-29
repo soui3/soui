@@ -169,7 +169,7 @@ namespace SOUI
 			rcItem.bottom = rcItem.top;
 			while (pChild)
 			{
-				CSize szItem = pChild->GetDesiredSize(rcClient);
+				CSize szItem = pChild->GetDesiredSize(rcClient.Width(),rcClient.Height());
 				rcItem.top = rcItem.bottom;
 				rcItem.bottom += szItem.cy;
 				pChild->Move(rcItem);
