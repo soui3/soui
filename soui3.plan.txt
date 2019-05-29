@@ -1,3 +1,4 @@
+下面是3.0更新计划，欢迎有兴趣的朋友认领！
 1、调整SOUI结点属性，将width,height属性放到root结点里来。 done  2019.5.27
 2、增加一个默认的空的SwndContainer，一个SWindow创建出来就自动引用这个Container。canceled. 2019.5.29
 3、修改GetDesiredSize方法，去掉传Rect*的重载。 done 2019.5.29
@@ -13,3 +14,6 @@
 13、滚动条支持动画显示、隐藏。
 14、完善光位置计算方法。缓存光标矩形，布局变化后，更新矩形。
 15、解决edit在ItemPanel中的问题。
+16、升级新版本的skia。
+17、支持Direct2D。
+18、Chart控件。
