@@ -980,6 +980,7 @@ public:
 	BOOL Check(int nID);
 	BOOL Check(LPCTSTR pszName);
 
+	BOOL ClearCheck();
 protected:
 	virtual BOOL FireEvent(EventArgs &evt);
 

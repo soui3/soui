@@ -1267,6 +1267,22 @@ BOOL SRadioGroup::Check(LPCTSTR pszName) {
 	return TRUE;
 }
 
+BOOL SRadioGroup::ClearCheck()
+{
+	SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+	while (pChild)
+	{
+		SRadioBox *pRadio = sobj_cast<SRadioBox>(pChild);
+		if (pRadio && pRadio->IsChecked())
+		{
+			pRadio->SetCheck(FALSE);
+			return TRUE;
+		}
+		pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+	}
+	return FALSE;
+}
+
 BOOL SRadioGroup::FireEvent(EventArgs & evt) {
 	if (evt.sender == this)
 	{
@@ -1278,7 +1294,8 @@ BOOL SRadioGroup::FireEvent(EventArgs & evt) {
 		if (evt2->CheckState(WndState_Check))
 		{
 			EventRadioGroupCheckChanged evt3(this);
-			evt3.pOriSender = sobj_cast<SRadioBox>(evt.sender);
+			SRadioBox *pSender = sobj_cast<SRadioBox>(evt.sender);
+			evt3.pChecked = pSender->IsChecked() ? pSender : NULL;
 			return SWindow::FireEvent(evt3);
 		}
 	}

@@ -283,7 +283,7 @@ namespace SOUI
 
 	class SRadioBox;
 	SEVENT_BEGIN_EX(EventRadioGroupCheckChanged, EVT_RADIOGROUP_CHECK_CHANGED, on_radiogroup_check_changed, SOUI_EXP)
-		SRadioBox * pOriSender;
+		SRadioBox * pChecked;
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventItemPanelRclick, EVT_ITEMPANEL_RCLICK, on_itemparem_rclick, SOUI_EXP)
