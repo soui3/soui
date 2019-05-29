@@ -22,7 +22,7 @@ namespace SOUI
 {
 
     class SHostWnd;
-    class SDummyWnd : public CNativeWnd
+    class SDummyWnd : public SNativeWnd
     {
     public:
         SDummyWnd(SHostWnd* pOwner):m_pOwner(pOwner)
@@ -117,7 +117,7 @@ namespace SOUI
 
 class SOUI_EXP SHostWnd
     : public SwndContainerImpl
-    , public CNativeWnd
+    , public SNativeWnd
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
@@ -164,7 +164,7 @@ public:
 public:
     SWindow * GetRoot() const {return (SWindow*)this;}
 
-	CNativeWnd * GetNative(){return this;}
+	SNativeWnd * GetNative(){return this;}
 
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
     HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);

@@ -19,12 +19,12 @@ namespace SOUI
                              CMenuWndHook 类
               ------------------------------------------------
   ########################################################################*/
-class SOUI_EXP CMenuWndHook
+class SOUI_EXP SMenuWndHook
 {
 // 建构 ---------------------------------------------------------
 public:
-    CMenuWndHook(HWND hWnd);
-    ~CMenuWndHook();
+    SMenuWndHook(HWND hWnd);
+    ~SMenuWndHook();
     static void InstallHook(HINSTANCE hInst,LPCWSTR pszSkinName=NULL);
     static void UnInstallHook();
 
@@ -43,14 +43,14 @@ public:
 
 // 操作 ----------------------------------------------------------
 public:
-    static CMenuWndHook* AddWndHook(HWND hwnd);
-    static CMenuWndHook* GetWndHook(HWND hwnd);
+    static SMenuWndHook* AddWndHook(HWND hwnd);
+    static SMenuWndHook* GetWndHook(HWND hwnd);
 
 // 数据 -----------------------------------------------------------
 protected:
     HWND m_hWnd;
 
-    static SMap<HWND, CMenuWndHook*> m_WndMenuMap;
+    static SMap<HWND, SMenuWndHook*> m_WndMenuMap;
     static HHOOK m_hMenuHook;
     static SStringW    m_strSkinName;
 };

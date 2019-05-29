@@ -13,7 +13,7 @@ class CSetSkinWnd :
 	//TODO:消息映射
 	void OnClose()
 	{
-		CNativeWnd::DestroyWindow();
+		SNativeWnd::DestroyWindow();
 	}
 	HRESULT OnSkinChangeMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL bHandled);
 	

@@ -57,7 +57,7 @@ namespace SOUI
         if(pMsg->message==WM_MOUSEWHEEL 
             || ((pMsg->message == WM_KEYDOWN || pMsg->message==WM_KEYUP) && (pMsg->wParam == VK_UP || pMsg->wParam==VK_DOWN || pMsg->wParam==VK_RETURN || pMsg->wParam==VK_ESCAPE)))
         {//截获滚轮及上下键消息
-            CNativeWnd::SendMessage(pMsg->message,pMsg->wParam,pMsg->lParam);
+            SNativeWnd::SendMessage(pMsg->message,pMsg->wParam,pMsg->lParam);
             return TRUE;    
         }
         return FALSE;
@@ -389,7 +389,7 @@ namespace SOUI
 		else
 			m_pDropDownWnd->SetWindowPos(HWND_TOP,0,0,0,0,SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOZORDER|SWP_NOSIZE|SWP_NOACTIVATE);
 
-		m_pDropDownWnd->CNativeWnd::SetCapture();
+		m_pDropDownWnd->SNativeWnd::SetCapture();
 	}
 
     void SComboBase::CloseUp()

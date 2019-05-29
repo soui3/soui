@@ -6,7 +6,7 @@
 namespace SOUI
 {
 
-class CDragWnd : public CNativeWnd
+class CDragWnd : public SNativeWnd
 {
 public:
     CDragWnd(void);

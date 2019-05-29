@@ -6,7 +6,7 @@
 namespace SOUI
 {
     class STipCtrl : public IToolTip
-                   , public CNativeWnd 
+                   , public SNativeWnd 
     {
     public:
         STipCtrl(void);

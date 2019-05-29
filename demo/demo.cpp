@@ -320,7 +320,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             theApp->LoadSystemNamedResource(sysSesProvider);
         }
         //采用hook绘制菜单的边框
-        CMenuWndHook::InstallHook(hInstance,L"_skin.sys.menu.border");
+        SMenuWndHook::InstallHook(hInstance,L"_skin.sys.menu.border");
         
         //加载全局资源描述XML
         //theApp->Init(_T("xml_init")); 不再需要这句，在AddResProvider时自动执行初始化
@@ -332,7 +332,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		SNotifyCenter *pNotifyCenter = new SNotifyCenter;
         {
 			//设置提示窗口布局
-			CTipWnd::SetLayout(_T("layout:dlg_tip"));
+			STipWnd::SetLayout(_T("layout:dlg_tip"));
 
             //创建并显示使用SOUI布局应用程序窗口,为了保存窗口对象的析构先于其它对象，把它们缩进一层。
             CMainDlg dlgMain;  
@@ -359,7 +359,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         flashSvr.Shutdown();
 
         //卸载菜单边框绘制hook
-        CMenuWndHook::UnInstallHook();
+        SMenuWndHook::UnInstallHook();
         CUiAnimation::Free();
                 
         SSkinGif::Gdiplus_Shutdown();

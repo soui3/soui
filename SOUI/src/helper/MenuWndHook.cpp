@@ -33,18 +33,18 @@ const TCHAR CoolMenu_oldProc[] = _T("CoolMenu_oldProc");
                                 class CMenuWndHook
               ------------------------------------------------
   ########################################################################*/
-SMap <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
+SMap <HWND,SMenuWndHook*> SMenuWndHook::m_WndMenuMap;
 
-HHOOK CMenuWndHook::m_hMenuHook = NULL;
-SStringW CMenuWndHook::m_strSkinName;
+HHOOK SMenuWndHook::m_hMenuHook = NULL;
+SStringW SMenuWndHook::m_strSkinName;
 
-CMenuWndHook::CMenuWndHook (HWND hWnd)
+SMenuWndHook::SMenuWndHook (HWND hWnd)
     : m_hWnd(hWnd)
 {
 
 }
 
-CMenuWndHook::~CMenuWndHook ()
+SMenuWndHook::~SMenuWndHook ()
 {
     WNDPROC oldWndProc = (WNDPROC)::GetProp(m_hWnd, CoolMenu_oldProc);
     if (oldWndProc != NULL)
@@ -55,7 +55,7 @@ CMenuWndHook::~CMenuWndHook ()
     m_WndMenuMap.RemoveKey(m_hWnd);
 }
 
-void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCWSTR pszSkinName)
+void SMenuWndHook::InstallHook(HINSTANCE hInst,LPCWSTR pszSkinName)
 {
     if (m_hMenuHook == NULL )
     {
@@ -65,12 +65,12 @@ void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCWSTR pszSkinName)
     }
 }
 
-void CMenuWndHook::UnInstallHook()
+void SMenuWndHook::UnInstallHook()
 {
     SPOSITION pos= m_WndMenuMap.GetStartPosition();
     while(pos)
     {
-        SMap<HWND,CMenuWndHook*>::CPair *p=m_WndMenuMap.GetNext(pos);
+        SMap<HWND,SMenuWndHook*>::CPair *p=m_WndMenuMap.GetNext(pos);
         delete p->m_value;
     }
     m_WndMenuMap.RemoveAll();
@@ -81,20 +81,20 @@ void CMenuWndHook::UnInstallHook()
     }
 }
 
-CMenuWndHook* CMenuWndHook::GetWndHook(HWND hwnd)
+SMenuWndHook* SMenuWndHook::GetWndHook(HWND hwnd)
 {
 
-    SMap<HWND,CMenuWndHook*>::CPair *p=m_WndMenuMap.Lookup(hwnd);
+    SMap<HWND,SMenuWndHook*>::CPair *p=m_WndMenuMap.Lookup(hwnd);
     if(!p) return NULL;
     return p->m_value;
 }
 
-CMenuWndHook* CMenuWndHook::AddWndHook(HWND hwnd)
+SMenuWndHook* SMenuWndHook::AddWndHook(HWND hwnd)
 {
-    CMenuWndHook* pWnd = GetWndHook(hwnd);
+    SMenuWndHook* pWnd = GetWndHook(hwnd);
     if(pWnd) return pWnd;
 
-    pWnd = new CMenuWndHook(hwnd);
+    pWnd = new SMenuWndHook(hwnd);
     if (pWnd != NULL)
     {
         m_WndMenuMap[hwnd]=pWnd;
@@ -107,7 +107,7 @@ CMenuWndHook* CMenuWndHook::AddWndHook(HWND hwnd)
                                   消息过程
               ------------------------------------------------
   ########################################################################*/
-LRESULT CALLBACK CMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam)
 {
     CWPSTRUCT* pStruct = (CWPSTRUCT*)lParam;
 
@@ -162,10 +162,10 @@ LRESULT CALLBACK CMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam
     return CallNextHookEx (m_hMenuHook, code, wParam, lParam);
 }
 
-LRESULT CALLBACK CMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     WNDPROC oldWndProc = (WNDPROC)::GetProp(hWnd, CoolMenu_oldProc);
-    CMenuWndHook* pWnd = NULL;
+    SMenuWndHook* pWnd = NULL;
 
     switch (uMsg)
     {
@@ -243,13 +243,13 @@ LRESULT CALLBACK CMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                                 消息处理函数
               ------------------------------------------------
   ########################################################################*/
-int CMenuWndHook::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int SMenuWndHook::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     SetClassLong(m_hWnd, GCL_STYLE, GetClassLong(m_hWnd, GCL_STYLE) & ~CS_DROPSHADOW);
     return 0;
 }
 
-void CMenuWndHook::OnWindowPosChanging(WINDOWPOS *pWindowPos)
+void SMenuWndHook::OnWindowPosChanging(WINDOWPOS *pWindowPos)
 {
     if(m_strSkinName.IsEmpty()) return;
     ISkinObj *pSkin=GETSKIN(m_strSkinName,100);
@@ -260,7 +260,7 @@ void CMenuWndHook::OnWindowPosChanging(WINDOWPOS *pWindowPos)
     pWindowPos->cy += pBorderSkin->GetMargin().top+pBorderSkin->GetMargin().bottom-SM_CXMENUBORDER*2;
 }
 
-void CMenuWndHook::OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp)
+void SMenuWndHook::OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp)
 {
     if(m_strSkinName.IsEmpty()) return;
     ISkinObj *pSkin=GETSKIN(m_strSkinName,100);
@@ -274,14 +274,14 @@ void CMenuWndHook::OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp)
     lpncsp->rgrc[0].bottom=lpncsp->lppos->y+lpncsp->lppos->cy-pBorderSkin->GetMargin().bottom;
 }
 
-void CMenuWndHook::OnNcPaint()
+void SMenuWndHook::OnNcPaint()
 {
     HDC dc=GetWindowDC(m_hWnd);
     OnPrint(dc);
     ReleaseDC(m_hWnd,dc);
 }
 
-void CMenuWndHook::OnPrint(HDC dc)
+void SMenuWndHook::OnPrint(HDC dc)
 {
     if(m_strSkinName.IsEmpty()) return;
     ISkinObj *pSkin=GETSKIN(m_strSkinName,100);
@@ -310,13 +310,13 @@ void CMenuWndHook::OnPrint(HDC dc)
     ::RestoreDC(dc,nSave);
 }
 
-void CMenuWndHook::OnNcDestroy()
+void SMenuWndHook::OnNcDestroy()
 {
     delete this;
 }
 
 //不能设计窗口半透明，设置区域后，非客户区位置发生改变，不明白原因。
-void CMenuWndHook::OnWindowPosChanged()
+void SMenuWndHook::OnWindowPosChanged()
 {
 /*
     CRect rcWnd;

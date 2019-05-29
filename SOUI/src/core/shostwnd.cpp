@@ -135,7 +135,7 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
     if (NULL != m_hWnd)
         return m_hWnd;
 
-    HWND hWnd = CNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
+    HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
     if(!hWnd) return NULL;
 
     if(nWidth==0 || nHeight==0) CenterWindow(hWndParent);
@@ -166,7 +166,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         SASSERT_FMTA(FALSE,"Null XML node");
         return FALSE;
     }
-    if(!CNativeWnd::IsWindow()) return FALSE;
+    if(!SNativeWnd::IsWindow()) return FALSE;
     
     //free old script module
     if(m_pScriptModule)
@@ -244,8 +244,8 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         }
     }
 
-    DWORD dwStyle =CNativeWnd::GetStyle();
-    DWORD dwExStyle  = CNativeWnd::GetExStyle();
+    DWORD dwStyle =SNativeWnd::GetStyle();
+    DWORD dwExStyle  = SNativeWnd::GetExStyle();
     
     m_hostAttr.Init();
     m_hostAttr.InitFromXml(xmlNode);
@@ -276,7 +276,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     
     ModifyStyle(0,dwStyle);
     ModifyStyleEx(0,dwExStyle);
-    CNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
+    SNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
     
     if(m_hostAttr.m_bTranslucent)
     {
@@ -334,7 +334,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	
 
     CRect rcClient;
-    CNativeWnd::GetClientRect(&rcClient);
+    SNativeWnd::GetClientRect(&rcClient);
     OnRelayout(rcClient);
 
     //设置重绘标记
@@ -355,7 +355,7 @@ void SHostWnd::_Redraw()
     m_rgnInvalidate->Clear();
 
     if(!m_hostAttr.m_bTranslucent)
-        CNativeWnd::Invalidate(FALSE);
+        SNativeWnd::Invalidate(FALSE);
     else if(m_dummyWnd.IsWindow()) 
         m_dummyWnd.Invalidate(FALSE);
 }
@@ -505,7 +505,7 @@ void SHostWnd::OnDestroy()
 
     //exit app. (copy from wtl)
     if(m_hostAttr.m_byWndType == SHostWndAttr::WT_APPMAIN 
-    || (m_hostAttr.m_byWndType == SHostWndAttr::WT_UNDEFINE && (CNativeWnd::GetStyle() & (WS_CHILD | WS_POPUP)) == 0 && (CNativeWnd::GetExStyle()&WS_EX_TOOLWINDOW) == 0))
+    || (m_hostAttr.m_byWndType == SHostWndAttr::WT_UNDEFINE && (SNativeWnd::GetStyle() & (WS_CHILD | WS_POPUP)) == 0 && (SNativeWnd::GetExStyle()&WS_EX_TOOLWINDOW) == 0))
         ::PostQuitMessage(1);
 }
 
@@ -602,7 +602,7 @@ void SHostWnd::_DrawCaret(CPoint pt,BOOL bErase)
     
     if(!m_hostAttr.m_bTranslucent)
     {
-        CNativeWnd::InvalidateRect(&rcShowCaret, FALSE);
+        SNativeWnd::InvalidateRect(&rcShowCaret, FALSE);
     }else if(m_dummyWnd.IsWindow()) 
     {
         m_rgnInvalidate->CombineRect(&rcShowCaret,RGN_OR);
@@ -626,7 +626,7 @@ LRESULT SHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
         m_msgMouse.message = uMsg;
         m_msgMouse.wParam = wParam;
         m_msgMouse.lParam = lParam;
-        if(CNativeWnd::GetStyle()&WS_CHILD) CNativeWnd::SetFocus();//子窗口情况下才自动获取焦点
+        if(SNativeWnd::GetStyle()&WS_CHILD) SNativeWnd::SetFocus();//子窗口情况下才自动获取焦点
         break;
     case WM_LBUTTONUP:
     case WM_MBUTTONUP:
@@ -772,7 +772,7 @@ void SHostWnd::OnRedraw(const CRect &rc)
 
     if(!m_hostAttr.m_bTranslucent)
     {
-        CNativeWnd::InvalidateRect(rc, FALSE);
+        SNativeWnd::InvalidateRect(rc, FALSE);
     }else
     {
         if(m_dummyWnd.IsWindow()) 
@@ -794,7 +794,7 @@ BOOL SHostWnd::OnReleaseSwndCapture()
 
 SWND SHostWnd::OnSetSwndCapture(SWND swnd)
 {
-    CNativeWnd::SetCapture();
+    SNativeWnd::SetCapture();
     return SwndContainerImpl::OnSetSwndCapture(swnd);
 }
 
@@ -896,7 +896,7 @@ void SHostWnd::UpdateTooltip()
 
 LRESULT SHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
 {
-    if (bCalcValidRects && (CNativeWnd::GetStyle() & WS_CHILDWINDOW))
+    if (bCalcValidRects && (SNativeWnd::GetStyle() & WS_CHILDWINDOW))
     { 
         //子窗口，相对于父窗口坐标
         LPNCCALCSIZE_PARAMS pParam = (LPNCCALCSIZE_PARAMS)lParam;
@@ -905,7 +905,7 @@ LRESULT SHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
             return 0;
 
         CRect rcWindow;
-        CNativeWnd::GetWindowRect(rcWindow);
+        SNativeWnd::GetWindowRect(rcWindow);
         POINT point = {rcWindow.left, rcWindow.top};
         ::ScreenToClient(::GetParent(this->m_hWnd),&point); 
         int w = rcWindow.Width();
@@ -935,7 +935,7 @@ LRESULT SHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
             return 0;
 
         CRect rcWindow;
-        CNativeWnd::GetWindowRect(rcWindow);
+        SNativeWnd::GetWindowRect(rcWindow);
         rcWindow = CRect(rcWindow.TopLeft(),CSize(pParam->lppos->cx,pParam->lppos->cy));
         if (0 == (SWP_NOMOVE & pParam->lppos->flags))
         {
@@ -944,7 +944,7 @@ LRESULT SHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
         pParam->rgrc[0] = rcWindow;
     }else
     {
-        CNativeWnd::GetWindowRect((LPRECT)lParam);
+        SNativeWnd::GetWindowRect((LPRECT)lParam);
     }
 
     return 0;
@@ -1034,7 +1034,7 @@ void SHostWnd::UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCR
 {
     SASSERT(IsTranslucent());
     CRect rc;
-    CNativeWnd::GetWindowRect(&rc);
+    SNativeWnd::GetWindowRect(&rc);
     CRect rcDirty = prcDirty? (*prcDirty): CRect(0,0,rc.Width(),rc.Height());
     BLENDFUNCTION bf= {AC_SRC_OVER,0,byAlpha,AC_SRC_ALPHA};        
     
@@ -1063,7 +1063,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
     }else
     {
         CRect rcWnd;//窗口矩形
-        CNativeWnd::GetClientRect(&rcWnd);
+        SNativeWnd::GetClientRect(&rcWnd);
         CRect rcShow(rcWnd);//动画过程中可见部分
         
         SAutoRefPtr<IRenderTarget> pRT;
@@ -1350,7 +1350,7 @@ LRESULT SHostWnd::OnUpdateSwnd(UINT uMsg,WPARAM wParam,LPARAM)
         {//请求刷新窗口
             if(!m_hostAttr.m_bTranslucent)
             {
-                CNativeWnd::Invalidate(FALSE);
+                SNativeWnd::Invalidate(FALSE);
             }else if(m_dummyWnd.IsWindow()) 
             {
                 m_dummyWnd.Invalidate(FALSE);
@@ -1476,30 +1476,30 @@ void SHostWnd::RequestRelayout(SWND hSource,BOOL bSourceResizable)
 //////////////////////////////////////////////////////////////////////////
 BOOL SHostWnd::DestroyWindow()
 {
-    return CNativeWnd::DestroyWindow();
+    return SNativeWnd::DestroyWindow();
 }
 
 UINT_PTR SHostWnd::SetTimer(UINT_PTR nIDEvent,UINT nElapse)
 {
-    return CNativeWnd::SetTimer(nIDEvent,nElapse);
+    return SNativeWnd::SetTimer(nIDEvent,nElapse);
 }
 
 BOOL SHostWnd::KillTimer(UINT_PTR id)
 {
-    return CNativeWnd::KillTimer(id);
+    return SNativeWnd::KillTimer(id);
 }
 
 CRect SHostWnd::GetWindowRect() const
 {
     CRect rc;
-    CNativeWnd::GetWindowRect(&rc);
+    SNativeWnd::GetWindowRect(&rc);
     return rc;
 }
 
 CRect SHostWnd::GetClientRect() const
 {
     CRect rc;
-    CNativeWnd::GetClientRect(&rc);
+    SNativeWnd::GetClientRect(&rc);
     return rc;
 }
 
@@ -1561,7 +1561,7 @@ void SHostWnd::_RestoreClickState()
 
 HRESULT SHostWnd::OnLanguageChanged()
 {
-	CNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
+	SNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
 	return 3;
 }
 

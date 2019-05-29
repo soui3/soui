@@ -116,11 +116,11 @@ public:
                                       LRESULT& lResult, DWORD dwMsgMapID) = 0;
 };
 
-class  SOUI_EXP CNativeWnd : public SMessageMap
+class  SOUI_EXP SNativeWnd : public SMessageMap
 {
 public:
-    CNativeWnd(HWND hWnd=0);
-    virtual ~CNativeWnd(void);
+    SNativeWnd(HWND hWnd=0);
+    virtual ~SNativeWnd(void);
 
     static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 

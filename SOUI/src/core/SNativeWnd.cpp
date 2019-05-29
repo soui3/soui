@@ -10,9 +10,9 @@ namespace SOUI
         InitializeCriticalSection(&m_cs);
         m_hHeap=HeapCreate(HEAP_CREATE_ENABLE_EXECUTE,0,0);
 		if(bImeApp)
-			m_atom = CNativeWnd::RegisterSimpleWnd2(hInst, pszClassName);
+			m_atom = SNativeWnd::RegisterSimpleWnd2(hInst, pszClassName);
 		else
-			m_atom=CNativeWnd::RegisterSimpleWnd(hInst,pszClassName);
+			m_atom=SNativeWnd::RegisterSimpleWnd(hInst,pszClassName);
     }
 
     SNativeWndHelper::~SNativeWndHelper()
@@ -34,7 +34,7 @@ namespace SOUI
     }
 
 //////////////////////////////////////////////////////////////////////////
-CNativeWnd::CNativeWnd(HWND hWnd)
+SNativeWnd::SNativeWnd(HWND hWnd)
     :m_bDestoryed(FALSE)
     ,m_pCurrentMsg(NULL)
     ,m_hWnd(hWnd)
@@ -43,11 +43,11 @@ CNativeWnd::CNativeWnd(HWND hWnd)
 {
 }
 
-CNativeWnd::~CNativeWnd(void)
+SNativeWnd::~SNativeWnd(void)
 {
 }
 
-ATOM CNativeWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
+ATOM SNativeWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
 {
     WNDCLASSEX wcex = {sizeof(WNDCLASSEX),0};
     wcex.cbSize           = sizeof(WNDCLASSEX);
@@ -60,7 +60,7 @@ ATOM CNativeWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
     return ::RegisterClassEx(&wcex);
 }
 
-ATOM CNativeWnd::RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName)
+ATOM SNativeWnd::RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName)
 {
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX),0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -73,7 +73,7 @@ ATOM CNativeWnd::RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName)
 	return ::RegisterClassEx(&wcex);
 }
 
-HWND CNativeWnd::Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
+HWND SNativeWnd::Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
 {
     SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
 
@@ -90,7 +90,7 @@ HWND CNativeWnd::Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int
 }
 
 
-void CNativeWnd::OnFinalMessage( HWND hWnd )
+void SNativeWnd::OnFinalMessage( HWND hWnd )
 {
     if(m_pThunk)
     {
@@ -99,9 +99,9 @@ void CNativeWnd::OnFinalMessage( HWND hWnd )
     }
 }
 
-LRESULT CALLBACK CNativeWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK SNativeWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-    CNativeWnd* pThis = (CNativeWnd*)hWnd; // 强转为对象指针
+    SNativeWnd* pThis = (SNativeWnd*)hWnd; // 强转为对象指针
     MSG msg= {pThis->m_hWnd, uMsg, wParam, lParam};
     const MSG* pOldMsg = pThis->m_pCurrentMsg;
     pThis->m_pCurrentMsg = &msg;
@@ -145,9 +145,9 @@ LRESULT CALLBACK CNativeWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
     return lRes;
 }
 
-LRESULT CALLBACK CNativeWnd::StartWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK SNativeWnd::StartWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-    CNativeWnd* pThis=(CNativeWnd*)SNativeWndHelper::getSingletonPtr()->GetSharePtr();
+    SNativeWnd* pThis=(SNativeWnd*)SNativeWndHelper::getSingletonPtr()->GetSharePtr();
 
     pThis->m_hWnd=hWnd;
     // 初始化Thunk，做了两件事:1、mov指令替换hWnd为对象指针，2、jump指令跳转到WindowProc
@@ -161,7 +161,7 @@ LRESULT CALLBACK CNativeWnd::StartWindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
     return pProc(hWnd, uMsg, wParam, lParam);
 }
 
-BOOL CNativeWnd::SubclassWindow( HWND hWnd )
+BOOL SNativeWnd::SubclassWindow( HWND hWnd )
 {
     SASSERT(::IsWindow(hWnd));
     // Allocate the thunk structure here, where we can fail gracefully.
@@ -181,7 +181,7 @@ BOOL CNativeWnd::SubclassWindow( HWND hWnd )
 }
 
 
-HWND CNativeWnd::UnsubclassWindow( BOOL bForce /*= FALSE*/ )
+HWND SNativeWnd::UnsubclassWindow( BOOL bForce /*= FALSE*/ )
 {
     SASSERT(m_hWnd != NULL);
 
@@ -201,7 +201,7 @@ HWND CNativeWnd::UnsubclassWindow( BOOL bForce /*= FALSE*/ )
     return hWnd;
 }
 
-LRESULT CNativeWnd::ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT SNativeWnd::ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
     LRESULT lResult = 0;
     switch(uMsg)
@@ -234,7 +234,7 @@ LRESULT CNativeWnd::ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam
     return lResult;
 }
 
-LRESULT CNativeWnd::ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT SNativeWnd::ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
     HWND hWndChild = NULL;
 
@@ -305,7 +305,7 @@ LRESULT CNativeWnd::ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam
     return ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
 }
 
-BOOL CNativeWnd::DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+BOOL SNativeWnd::DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
     switch(uMsg)
     {
@@ -335,12 +335,12 @@ BOOL CNativeWnd::DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, L
     return FALSE;
 }
 
-LRESULT CNativeWnd::DefWindowProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT SNativeWnd::DefWindowProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
     return ::CallWindowProc(m_pfnSuperWindowProc,m_hWnd, uMsg, wParam, lParam);
 }
 
-BOOL CNativeWnd::CenterWindow(HWND hWndCenter /*= NULL*/)
+BOOL SNativeWnd::CenterWindow(HWND hWndCenter /*= NULL*/)
 {
 	SASSERT(::IsWindow(m_hWnd));
 
@@ -433,7 +433,7 @@ BOOL CNativeWnd::CenterWindow(HWND hWndCenter /*= NULL*/)
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
-BOOL CNativeWnd::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
+BOOL SNativeWnd::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
 {
 	SASSERT(::IsWindow(m_hWnd));
 
@@ -452,7 +452,7 @@ BOOL CNativeWnd::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
 	return TRUE;
 }
 
-BOOL CNativeWnd::ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
+BOOL SNativeWnd::ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
 {
 	SASSERT(::IsWindow(m_hWnd));
 

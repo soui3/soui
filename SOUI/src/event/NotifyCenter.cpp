@@ -6,7 +6,7 @@ namespace SOUI{
 template<> SNotifyCenter * SSingleton<SNotifyCenter>::ms_Singleton = 0;
 
 //////////////////////////////////////////////////////////////////////////
-class SNotifyReceiver:public CNativeWnd
+class SNotifyReceiver:public SNativeWnd
 {
 public:
 	enum{

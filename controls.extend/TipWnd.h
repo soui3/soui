@@ -2,11 +2,11 @@
 
 namespace SOUI
 {
-	class CTipWnd : public SHostWnd
+	class STipWnd : public SHostWnd
 	{
 	public:
-		CTipWnd(const SStringT & strLayout);
-		~CTipWnd();
+		STipWnd(const SStringT & strLayout);
+		~STipWnd();
 
 		enum AnchorType{
 			AT_LEFT_TOP,
@@ -24,7 +24,7 @@ namespace SOUI
 		void OnWindowPosChanging(LPWINDOWPOS lpWndPos);
 		
 		void OnTimer(UINT_PTR timerID);
-		BEGIN_MSG_MAP_EX(CTipWnd)
+		BEGIN_MSG_MAP_EX(STipWnd)
 			MSG_WM_TIMER(OnTimer)
 			MSG_WM_WINDOWPOSCHANGING(OnWindowPosChanging)
 			CHAIN_MSG_MAP(SHostWnd)

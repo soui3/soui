@@ -183,7 +183,7 @@ public:
     }
 };
 
-class SMenuODWnd : public CNativeWnd
+class SMenuODWnd : public SNativeWnd
     ,public SOwnerDraw<SMenuODWnd>
 {
     friend class SOwnerDraw<SMenuODWnd>;

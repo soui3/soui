@@ -943,7 +943,7 @@ namespace SOUI
 		//else
 			m_pDropDownWnd->SetWindowPos(HWND_TOP,0,0,0,0,SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOZORDER|SWP_NOSIZE|SWP_NOACTIVATE);
 
-		m_pDropDownWnd->CNativeWnd::SetCapture();
+		m_pDropDownWnd->SNativeWnd::SetCapture();
 
 	}
 

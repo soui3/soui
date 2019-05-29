@@ -7,35 +7,35 @@ namespace SOUI{
 
 	static SStringT s_TipLayout;
 
-	CTipWnd::CTipWnd(const SStringT & strLayout) :SHostWnd(strLayout)
+	STipWnd::STipWnd(const SStringT & strLayout) :SHostWnd(strLayout)
 	{
 	}
 
 
-	CTipWnd::~CTipWnd()
+	STipWnd::~STipWnd()
 	{
 	}
 
-	void CTipWnd::OnFinalMessage(HWND hWnd)
+	void STipWnd::OnFinalMessage(HWND hWnd)
 	{
 		__super::OnFinalMessage(hWnd);
 		delete this;
 	}
 
-	void CTipWnd::SetTip(const SStringT & strTip)
+	void STipWnd::SetTip(const SStringT & strTip)
 	{
 		SWindow *pText = FindChildByName(L"txt_tip");
 		pText->SetWindowText(strTip);
 	}
 
-	void CTipWnd::SetLayout(LPCTSTR pszLayout)
+	void STipWnd::SetLayout(LPCTSTR pszLayout)
 	{
 		s_TipLayout = pszLayout;
 	}
 
-	void CTipWnd::ShowTip(int x, int y, AnchorType at, const SStringT & strTip)
+	void STipWnd::ShowTip(int x, int y, AnchorType at, const SStringT & strTip)
 	{
-		CTipWnd *pTipWnd = new CTipWnd(s_TipLayout);
+		STipWnd *pTipWnd = new STipWnd(s_TipLayout);
 		pTipWnd->m_ptAnchor.x = x;
 		pTipWnd->m_ptAnchor.y = y;
 		pTipWnd->m_anchorType = at;
@@ -46,7 +46,7 @@ namespace SOUI{
 
 	}
 
-	void CTipWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
+	void STipWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 	{
 		if ( !(lpWndPos->flags&SWP_NOSIZE))
 		{//窗口大小改变，根据设置的anchor移动位置
@@ -75,12 +75,12 @@ namespace SOUI{
 		
 	}
 
-	void CTipWnd::OnTimer(UINT_PTR timerID)
+	void STipWnd::OnTimer(UINT_PTR timerID)
 	{
 		SetMsgHandled(FALSE);
 		if (timerID == TIMER_END_TIP)
 		{
-			CNativeWnd::DestroyWindow();
+			SNativeWnd::DestroyWindow();
 		}
 
 	}
