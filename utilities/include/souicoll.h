@@ -458,6 +458,7 @@ public:
 
 public:
     SArray();
+	~SArray();
 
     size_t GetCount() const;
     bool IsEmpty() const;
@@ -490,6 +491,7 @@ public:
     void InsertArrayAt( size_t iStart, const SArray< E, ETraits >* paNew );
     void RemoveAt( size_t iElement, size_t nCount = 1 );
 
+	int Find(const E & target) const;
 #ifdef _DEBUG
     void AssertValid() const;
 #endif  // _DEBUG
@@ -508,17 +510,25 @@ private:
     static void CallConstructors( E* pElements, size_t nElements );
     static void CallDestructors( E* pElements, size_t nElements );
 
-public:
-    ~SArray();
-
 };
 
 template< typename E, class ETraits /*= CElementTraits< E > */>
-SOUI::SArray< E, ETraits > & SOUI::SArray<E, ETraits>::operator=(const SArray< E, ETraits >& src)
+SArray< E, ETraits > & SArray<E, ETraits>::operator=(const SArray< E, ETraits >& src)
 {
     this->Copy(src);
     return *this;
 }
+
+template< typename E, class ETraits >
+int SArray<E, ETraits>::Find(const E & target) const
+{
+	for(size_t i=0;i<GetCount();i++)
+	{
+		if(GetAt(i) == target) return i;
+	}
+	return -1;
+}
+
 
 template< typename E, class ETraits >
 inline size_t SArray< E, ETraits >::GetCount() const
@@ -1043,9 +1053,15 @@ private:
 
 public:
     SList( UINT nBlockSize = 10 );
+	SList( const SList& src);
+	~SList();
+
 
     size_t GetCount() const;
     bool IsEmpty() const;
+
+	SList& operator=( const SList& src);
+	void Copy(const SList & src);
 
     E& GetHead();
     const E& GetHead() const;
@@ -1109,13 +1125,6 @@ private:
     CNode* NewNode( INARGTYPE element, CNode* pPrev, CNode* pNext );
     void FreeNode( CNode* pNode );
 
-public:
-    ~SList();
-
-private:
-    // Private to prevent use
-    SList( const SList& );
-    SList& operator=( const SList& );
 };
 
 template< typename E, class ETraits >
@@ -1265,7 +1274,7 @@ inline void SList< E, ETraits >::SetAt( SPOSITION pos, INARGTYPE element )
 }
 
 template< typename E, class ETraits >
-SList< E, ETraits >::SList( UINT nBlockSize ) :
+inline SList< E, ETraits >::SList( UINT nBlockSize ) :
     m_pHead( NULL ),
     m_pTail( NULL ),
     m_nElements(0),
@@ -1274,6 +1283,37 @@ SList< E, ETraits >::SList( UINT nBlockSize ) :
     m_nBlockSize(nBlockSize)
 {
     SASSERT( nBlockSize > 0 );
+}
+
+template< typename E, class ETraits >
+inline SList< E, ETraits >::SList(const SList<E,ETraits> &src) :
+    m_pHead( NULL ),
+    m_pTail( NULL ),
+    m_nElements(0),
+    m_pBlocks( NULL ),
+    m_pFree( NULL ),
+    m_nBlockSize(src.m_nBlockSize)
+{
+	Copy(src);
+}
+
+template< typename E, class ETraits >
+void SList< E, ETraits >::Copy(const SList<E,ETraits> &src) 
+{
+	RemoveAll();
+	SPOSITION pos=src.GetHeadPosition();
+	while(pos)
+	{
+		const E &t=src.GetNext(pos);
+		AddTail(t);
+	}
+}
+
+template< typename E, class ETraits >
+SList< E, ETraits > & SList< E, ETraits >::operator = (const SList< E, ETraits > & src)
+{
+	Copy(src);
+	return *this;
 }
 
 template< typename E, class ETraits >

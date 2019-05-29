@@ -107,7 +107,6 @@ HEADERS += include/SApp.h \
            include/helper/SAttrCracker.h \
            include/helper/SMenu.h \
            include/helper/SplitString.h \
-           include/helper/copylist.hpp \
            include/helper/SResID.h \
            include/helper/STime.h \
            include/helper/STimerEx.h \

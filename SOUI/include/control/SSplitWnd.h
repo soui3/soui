@@ -12,7 +12,6 @@
  */
 #pragma once
 #include <core/swnd.h>
-#include <helper/copylist.hpp>
 #include <layout/slayoutsize.h>
 
 namespace SOUI

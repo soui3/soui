@@ -14,7 +14,6 @@
 #pragma once
 #include "core/Swnd.h"
 #include "Accelerator.h"
-#include "helper/copylist.hpp"
 
 namespace SOUI
 {

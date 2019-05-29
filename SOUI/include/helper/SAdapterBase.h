@@ -2,7 +2,6 @@
 
 #include "interface/Adapter-i.h"
 #include <souicoll.h>
-#include "helper/copylist.hpp"
 #include "control/stree.hpp"
 
 namespace SOUI

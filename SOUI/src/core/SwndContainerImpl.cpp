@@ -405,8 +405,7 @@ void SwndContainerImpl::OnNextFrame()
 {
     if(!IsVisible(TRUE)) return;
     
-    SList<ITimelineHandler*> lstCopy;
-    CopyList(m_lstTimelineHandler,lstCopy);
+    SList<ITimelineHandler*> lstCopy = m_lstTimelineHandler;
     SPOSITION pos=lstCopy.GetHeadPosition();
     while(pos)
     {

@@ -163,7 +163,7 @@ namespace SOUI
         for(int i=0;i<(int)m_lstPriority.GetCount();i++)
         {
             SSplitPane *pane = m_lstPriority[i];
-            int idx = ArrayFind(m_lstPane,pane);
+            int idx = m_lstPane.Find(pane);
             SASSERT(idx!=-1);
             if(idx<=m_iDragSep)
                 lstPriority1.Add(pane);
@@ -195,7 +195,7 @@ namespace SOUI
             if(diff==0) return;
 
             //伸长part1
-            int idxPrev = ArrayFind(lstPriority1,lstPane1.GetAt(lstPane1.GetCount()-1));
+            int idxPrev = lstPriority1.Find(lstPane1.GetAt(lstPane1.GetCount()-1));
             SASSERT(idxPrev != -1);
             PANESIZE & paneSize1 = lstPaneSize1[idxPrev];
 
@@ -214,7 +214,7 @@ namespace SOUI
             }
 
             //压缩part2
-            int idxNext = ArrayFind(lstPriority2,lstPane2[0]);
+            int idxNext = lstPriority2.Find(lstPane2[0]);
             SASSERT(idxNext != -1);
             PANESIZE & paneSize2 = lstPaneSize2[idxNext];
 
@@ -249,7 +249,7 @@ namespace SOUI
             if(diff == 0) return;
 
             //压缩part1
-            int idxPrev = ArrayFind(lstPriority1,lstPane1.GetAt(lstPane1.GetCount()-1));
+            int idxPrev = lstPriority1.Find(lstPane1.GetAt(lstPane1.GetCount()-1));
             SASSERT(idxPrev != -1);
             PANESIZE & paneSize1 = lstPaneSize1[idxPrev];
 
@@ -268,7 +268,7 @@ namespace SOUI
             }
 
             //伸长part2
-            int idxNext = ArrayFind(lstPriority2,lstPane2[0]);
+            int idxNext = lstPriority2.Find(lstPane2[0]);
             SASSERT(idxNext != -1);
             PANESIZE & paneSize2 = lstPaneSize2[idxNext];
 
@@ -319,12 +319,12 @@ namespace SOUI
 
     void SSplitWnd::RemoveItem(SSplitPane * pane)
     {
-        int index = ArrayFind(m_lstPane,pane);
+        int index = m_lstPane.Find(pane);
         if(index == -1) return;
 
         m_lstPane.RemoveAt(index);
 
-        index = ArrayFind(m_lstPriority,pane);
+        index = m_lstPriority.Find(pane);
         m_lstPriority.RemoveAt(index);
 
         Relayout(GetChildrenLayoutRect());
@@ -340,7 +340,7 @@ namespace SOUI
     int SSplitWnd::InsertItem(SSplitPane* pane, int index /*= -1 */)
     {
         //禁止重复插入
-        if (ArrayFind(m_lstPane,pane)!=-1)
+        if (m_lstPane.Find(pane)!=-1)
         {
             SASSERT(FALSE);
             return -1;
@@ -362,7 +362,7 @@ namespace SOUI
             PANESIZELIST lstPaneSize;
             FatchPaneSizeInfo(m_lstPriority, lstPaneSize);
 
-            const int index = ArrayFind(m_lstPriority,pane);
+            const int index = m_lstPriority.Find(pane);
             lstPaneSize[index].actural = lstPaneSize[index].preferred;
 
             Relayout(rcContainer, lstPaneSize);
@@ -474,7 +474,7 @@ namespace SOUI
         CRect rc = GetChildrenLayoutRect();
         for(int i=0;i< (int)lstPane.GetCount();i++)
         {
-            int idx = ArrayFind(lstPanePriority,lstPane[i]);
+            int idx = lstPanePriority.Find(lstPane[i]);
             SASSERT(idx!=-1);
             if(m_orintation == Vertical)
             {

@@ -398,8 +398,7 @@ namespace SOUI
 
         // We have to copy the target list here, because an AcceleratorPressed
         // event handler may modify the list.
-        AcceleratorTargetList targets;
-        CopyList(accelerators_[accelerator],targets);
+        AcceleratorTargetList targets = accelerators_[accelerator];
         
         SPOSITION pos=targets.GetHeadPosition();
 

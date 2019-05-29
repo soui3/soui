@@ -5,7 +5,6 @@
 #include "helper/SAutoBuf.h"
 #include "helper/color.h"
 #include "helper/SplitString.h"
-#include "helper/copylist.hpp"
 
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
 
@@ -1364,8 +1363,7 @@ LRESULT SHostWnd::OnUpdateSwnd(UINT uMsg,WPARAM wParam,LPARAM)
 
 void SHostWnd::_UpdateNonBkgndBlendSwnd()
 {
-    SList<SWND> lstUpdateSwnd;
-    CopyList(m_lstUpdateSwnd,lstUpdateSwnd);
+    SList<SWND> lstUpdateSwnd = m_lstUpdateSwnd;
     m_lstUpdateSwnd.RemoveAll();
     
     SPOSITION pos = lstUpdateSwnd.GetHeadPosition();
