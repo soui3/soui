@@ -1301,11 +1301,14 @@ namespace SOUI
 			ATTR_CHAIN_PTR(m_pLayoutParam,HRET_FLAG_LAYOUT_PARAM)	//交给LayoutParam处理
         SOUI_ATTRS_END()
 
-
+	protected:
 		virtual HRESULT OnLanguageChanged();
 
 		virtual void OnScaleChanged(int scale);
 
+		virtual void OnInsertChild(SWindow *pChild) {}
+
+		virtual void OnRemoveChild(SWindow *pChild) {}
     private:
         CRect               m_rcWindow;         /**< 窗口在容器中的位置,由于它的值包含POS_INIT等，调整为private，不允许派生类中直接访问该变量的值 */
 

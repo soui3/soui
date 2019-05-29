@@ -828,11 +828,6 @@ class SOUI_EXP SRadioBox : public SWindow
 {
     SOUI_CLASS_NAME(SRadioBox, L"radio")
 
-    enum
-    {
-        RadioBoxSpacing = 4,
-    };
-
 public:
     /**
      * SRadioBox::SRadioBox
@@ -842,20 +837,19 @@ public:
      */
     SRadioBox();
 
-
 protected:
     /**
-     * SRadioBox::SRadioBox
-     * @brief    构造函数
+     * SRadioBox::_GetDrawState
+     * @brief    获取绘制状态
      *
-     * Describe  构造函数
+     * Describe  将状态值转换成子图索引
      */
     UINT _GetDrawState(); 
     /**
-     * SRadioBox::SRadioBox
-     * @brief    构造函数
+     * SRadioBox::GetRadioRect
+     * @brief    获取radio显示位置
      *
-     * Describe  构造函数
+     * Describe  
      */
     CRect GetRadioRect();
     
@@ -864,7 +858,7 @@ protected:
      * @brief    获得文本大小
      * @param    LPRECT pRect -- 文本大小Rect
      *
-     * Describe  构造函数
+     * Describe  
      */
     virtual void GetTextRect(LPRECT pRect);
     /**
@@ -937,7 +931,7 @@ protected:
 
 	virtual void OnScaleChanged(int nScale);
 protected:
-	void OnSetFocus(SWND wndOld,CFocusManager::FocusChangeReason reason);
+	void OnSetFocus(SWND wndOld,SFocusManager::FocusChangeReason reason);
     
     void OnLButtonUp(UINT nFlags,CPoint pt);
 
@@ -959,6 +953,7 @@ protected:
 			ATTR_ENUM_VALUE(L"middle", SwndStyle::VAlign_Middle)
 			ATTR_ENUM_VALUE(L"bottom", SwndStyle::VAlign_Bottom)
 		ATTR_ENUM_END(m_uIconVAlign)
+		ATTR_INT(L"sep",m_nRadioBoxSpacing,TRUE)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
@@ -973,6 +968,23 @@ protected:
 	ISkinObj *m_pFocusSkin; /**< 焦点皮肤资源 */
 	UINT m_uIconAlign;
 	UINT m_uIconVAlign;
+	int m_nRadioBoxSpacing;
+};
+
+class SOUI_EXP SRadioGroup : public SWindow
+{
+	SOUI_CLASS_NAME(SRadioGroup, L"radioGroup")
+public:
+	SRadioGroup();
+
+	BOOL Check(int nID);
+	BOOL Check(LPCTSTR pszName);
+
+protected:
+	virtual BOOL FireEvent(EventArgs &evt);
+
+	virtual void OnInsertChild(SWindow *pChild);
+	virtual void OnRemoveChild(SWindow *pChild);
 };
 
 /**

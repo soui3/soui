@@ -185,15 +185,15 @@ namespace SOUI
     }
 
     //////////////////////////////////////////////////////////////////////////
-    CFocusManager::CFocusManager(SWindow *pOwner):m_pOwner(pOwner),focused_view_(0),focused_backup_(0)
+    SFocusManager::SFocusManager(SWindow *pOwner):m_pOwner(pOwner),focused_view_(0),focused_backup_(0)
     {
     }
 
-    CFocusManager::~CFocusManager(void)
+    SFocusManager::~SFocusManager(void)
     {
     }
 
-    BOOL CFocusManager::IsTabTraversalKey( UINT vKey )
+    BOOL SFocusManager::IsTabTraversalKey( UINT vKey )
     {
         if(vKey!=VK_TAB) return FALSE;
         SWindow *pFocus=SWindowMgr::GetWindow(focused_view_);
@@ -202,7 +202,7 @@ namespace SOUI
         else return TRUE;
     }
 
-    BOOL CFocusManager::OnKeyDown(UINT vKey)
+    BOOL SFocusManager::OnKeyDown(UINT vKey)
     {
         //tab traversal
         if(IsTabTraversalKey(vKey))
@@ -253,7 +253,7 @@ namespace SOUI
         return FALSE;
     }
 
-    void CFocusManager::AdvanceFocus( bool reverse )
+    void SFocusManager::AdvanceFocus( bool reverse )
     {
         // Let's revalidate the focused view.
         ValidateFocusedView();
@@ -265,14 +265,14 @@ namespace SOUI
         }
     }
 
-    SWindow * CFocusManager::GetNextFocusableView( SWindow* original_starting_view, bool bReverse, bool bLoop )
+    SWindow * SFocusManager::GetNextFocusableView( SWindow* original_starting_view, bool bReverse, bool bLoop )
     {
         
         FocusSearch fs(m_pOwner,bLoop);
         return fs.FindNextFocusableView(original_starting_view,bReverse,false);
     }
 
-    void CFocusManager::SetFocusedHwndWithReason( SWND swnd, FocusChangeReason reason )
+    void SFocusManager::SetFocusedHwndWithReason( SWND swnd, FocusChangeReason reason )
     {
         if(swnd == focused_view_)
         {
@@ -308,12 +308,12 @@ namespace SOUI
         }
     }
 
-	void CFocusManager::SetFocusedHwnd(SWND swnd)
+	void SFocusManager::SetFocusedHwnd(SWND swnd)
 	{
 		SetFocusedHwndWithReason(swnd, kReasonDirectFocusChange);
 	}
 
-    void CFocusManager::ValidateFocusedView()
+    void SFocusManager::ValidateFocusedView()
     {
         if(focused_view_)
         {
@@ -332,14 +332,14 @@ namespace SOUI
         }
     }
 
-    void CFocusManager::ClearFocus()
+    void SFocusManager::ClearFocus()
     {
         SetFocusedHwnd(0);
     }
 
-	SWND CFocusManager::GetFocusedHwnd() { return focused_view_; }
+	SWND SFocusManager::GetFocusedHwnd() { return focused_view_; }
 
-    void CFocusManager::StoreFocusedView()
+    void SFocusManager::StoreFocusedView()
     {
         ValidateFocusedView();
         focused_backup_ = focused_view_;
@@ -355,7 +355,7 @@ namespace SOUI
 		}
     }
 
-    void CFocusManager::RestoreFocusedView()
+    void SFocusManager::RestoreFocusedView()
     {
         SWindow *pWnd=SWindowMgr::GetWindow(focused_backup_);
         if(pWnd && !pWnd->IsDisabled(TRUE) && pWnd->IsVisible(TRUE))
@@ -366,13 +366,13 @@ namespace SOUI
         focused_backup_ = 0;
     }
 
-    void CFocusManager::RegisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::RegisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
     {
         AcceleratorTargetList& targets = accelerators_[accelerator];
         targets.AddHead(target);
     }
 
-    void CFocusManager::UnregisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::UnregisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
     {
         if(!accelerators_.Lookup(accelerator)) return;
         AcceleratorTargetList* targets=&accelerators_[accelerator];
@@ -380,7 +380,7 @@ namespace SOUI
         if(pos) targets->RemoveAt(pos);
     }
 
-    void CFocusManager::UnregisterAccelerators( IAcceleratorTarget* target )
+    void SFocusManager::UnregisterAccelerators( IAcceleratorTarget* target )
     {
         SPOSITION pos=accelerators_.GetStartPosition();
         while(pos)
@@ -392,7 +392,7 @@ namespace SOUI
         }
     }
 
-    bool CFocusManager::ProcessAccelerator( const CAccelerator& accelerator )
+    bool SFocusManager::ProcessAccelerator( const CAccelerator& accelerator )
     {
         if(!accelerators_.Lookup(accelerator)) return false;
 

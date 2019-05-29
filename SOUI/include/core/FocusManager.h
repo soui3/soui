@@ -104,7 +104,7 @@ namespace SOUI
     * 
     * Describe    
     */
-    class SOUI_EXP CFocusManager : public IAcceleratorMgr
+    class SOUI_EXP SFocusManager : public IAcceleratorMgr
     {
     public:
         // The reason why the focus changed.
@@ -123,8 +123,8 @@ namespace SOUI
 
         };
 
-        CFocusManager(SWindow *pOwner);
-        ~CFocusManager(void);
+        SFocusManager(SWindow *pOwner);
+        ~SFocusManager(void);
 
         BOOL IsTabTraversalKey(UINT vKey);
         BOOL OnKeyDown(UINT vKey);

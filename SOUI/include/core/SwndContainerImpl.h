@@ -28,7 +28,7 @@ namespace SOUI
         
         IDropTarget * GetDropTarget(){return &m_dropTarget;}
 
-        CFocusManager * GetFocusManager() {return &m_focusMgr;}
+        SFocusManager * GetFocusManager() {return &m_focusMgr;}
     protected:
         //ISwndContainer
         virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget);
@@ -94,7 +94,7 @@ namespace SOUI
         SWND m_hHover;
         BOOL    m_bNcHover;
 
-        CFocusManager m_focusMgr;
+        SFocusManager m_focusMgr;
 
         SDropTargetDispatcher m_dropTarget;
 

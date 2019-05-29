@@ -106,6 +106,7 @@ void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SCheckBox>();
 	objFactory->TplRegisterFactory<SIconWnd>();
 	objFactory->TplRegisterFactory<SRadioBox>();
+	objFactory->TplRegisterFactory<SRadioGroup>();
 	objFactory->TplRegisterFactory<SLink>();
 	objFactory->TplRegisterFactory<SGroup>();
 	objFactory->TplRegisterFactory<SAnimateImgWnd>();

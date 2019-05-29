@@ -78,7 +78,7 @@ protected:                                                          \
 	if (uMsg == WM_SETFOCUS) \
 { \
 	SetMsgHandled(TRUE); \
-	func((SWND)wParam,(CFocusManager::FocusChangeReason)lParam); \
+	func((SWND)wParam,(SFocusManager::FocusChangeReason)lParam); \
 	lResult = 0; \
 	if(IsMsgHandled()) \
 	return TRUE; \

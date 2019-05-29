@@ -1034,6 +1034,7 @@ SRadioBox::SRadioBox()
     , m_pFocusSkin(GETBUILTINSKIN(SKIN_SYS_FOCUSRADIO))
 	, m_uIconAlign(SwndStyle::Align_Left)
 	, m_uIconVAlign(SwndStyle::VAlign_Middle)
+	, m_nRadioBoxSpacing(4)
 {
     m_style.SetAttribute(L"align",L"left");
     m_bFocusable=TRUE;
@@ -1082,19 +1083,19 @@ void SRadioBox::GetTextRect( LPRECT pRect )
 	switch (m_uIconAlign)
 	{
 	case SwndStyle::Align_Left:
-		pRect->left += (szRadioBox.cx + RadioBoxSpacing);
+		pRect->left += (szRadioBox.cx + m_nRadioBoxSpacing);
 		break;
 	case SwndStyle::Align_Right:
-		pRect->right -= (szRadioBox.cx + RadioBoxSpacing);
+		pRect->right -= (szRadioBox.cx + m_nRadioBoxSpacing);
 		break;
 	}
 	switch (m_uIconVAlign)
 	{
 	case SwndStyle::VAlign_Top:
-		pRect->top += (szRadioBox.cy + RadioBoxSpacing);
+		pRect->top += (szRadioBox.cy + m_nRadioBoxSpacing);
 		break;
 	case SwndStyle::VAlign_Bottom:
-		pRect->bottom -= (szRadioBox.cy + RadioBoxSpacing);
+		pRect->bottom -= (szRadioBox.cy + m_nRadioBoxSpacing);
 		break;
 	}
 }
@@ -1124,7 +1125,7 @@ CSize SRadioBox::GetDesiredSize(int wid, int hei)
 {
     CSize szRet=__super::GetDesiredSize(wid,hei);
     CSize szRaio=m_pSkin->GetSkinSize();
-    szRet.cx+=szRaio.cx + RadioBoxSpacing;
+    szRet.cx+=szRaio.cx + m_nRadioBoxSpacing;
     szRet.cy=(std::max)(szRet.cy,szRaio.cy);
     return szRet;
 }
@@ -1168,9 +1169,9 @@ BOOL SRadioBox::NeedRedrawWhenStateChange()
     return TRUE;
 }
 
-void SRadioBox::OnSetFocus(SWND wndOld,CFocusManager::FocusChangeReason reason)
+void SRadioBox::OnSetFocus(SWND wndOld,SFocusManager::FocusChangeReason reason)
 {
-	if(reason != CFocusManager::kReasonFocusRestore)
+	if(reason != SFocusManager::kReasonFocusRestore)
 	{
 		if(!IsChecked()) SetCheck(TRUE);
 	}
@@ -1244,7 +1245,57 @@ void SRadioBox::OnScaleChanged(int nScale)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// CDuiToggle
+// SRadioGroup
+SRadioGroup::SRadioGroup()
+{
+	GetEventSet()->addEvent(EVENTID(EventRadioGroupCheckChanged));
+}
+
+BOOL SRadioGroup::Check(int nID) {
+	SWindow *pChild = FindChildByID(nID);
+	if (!pChild)
+		return FALSE;
+	pChild->SetCheck(TRUE);
+	return TRUE;
+}
+
+BOOL SRadioGroup::Check(LPCTSTR pszName) {
+	SWindow *pChild = FindChildByName(pszName);
+	if (!pChild)
+		return FALSE;
+	pChild->SetCheck(TRUE);
+	return TRUE;
+}
+
+BOOL SRadioGroup::FireEvent(EventArgs & evt) {
+	if (evt.sender == this)
+	{
+		return SWindow::FireEvent(evt);
+	}
+	if (evt.GetID() == EventSwndStateChanged::EventID && evt.sender &&evt.sender->IsClass(SRadioBox::GetClassName()))
+	{
+		EventSwndStateChanged *evt2 = sobj_cast<EventSwndStateChanged>(&evt);
+		if (evt2->CheckState(WndState_Check))
+		{
+			EventRadioGroupCheckChanged evt3(this);
+			evt3.pOriSender = sobj_cast<SRadioBox>(evt.sender);
+			return SWindow::FireEvent(evt3);
+		}
+	}
+	return GetContainer()->OnFireEvent(evt);
+}
+
+void SRadioGroup::OnInsertChild(SWindow * pChild) {
+	pChild->SetOwner(this);
+}
+
+void SRadioGroup::OnRemoveChild(SWindow * pChild)
+{
+	pChild->SetOwner(NULL);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// SToggle
 SToggle::SToggle():m_bToggled(FALSE)
 {
     m_pSkin = GETBUILTINSKIN(SKIN_SYS_TREE_TOGGLE);
@@ -1387,3 +1438,4 @@ CSize SGroup::GetDesiredSize(int nParentWid, int nParentHei)
 }
 
 }//namespace SOUI
+

@@ -473,6 +473,7 @@ namespace SOUI
 
 		//只在插入新控件时需要标记zorder失效,删除控件不需要标记
 		GetContainer()->MarkWndTreeZorderDirty();
+		OnInsertChild(pNewChild);
 	}
 
 	BOOL SWindow::RemoveChild(SWindow *pChild)
@@ -480,6 +481,8 @@ namespace SOUI
 		TestMainThread();
 		if(this != pChild->GetParent()) 
 			return FALSE;
+
+		OnRemoveChild(pChild);
 
 		SWindow *pPrevSib=pChild->m_pPrevSibling;
 		SWindow *pNextSib=pChild->m_pNextSibling;
