@@ -281,7 +281,7 @@ namespace SOUI
 			}
 
 			//计算出网络大小
-			CSize szCell = pCell->GetDesiredSize(-1,-1);
+			CSize szCell = pCell->GetDesiredSize(SIZE_WRAP_CONTENT, SIZE_WRAP_CONTENT);
 			//填充网格,把大小平均分散到网格中。
 			szCell.cx/=colSpan;
 			szCell.cy/=rowSpan;
@@ -410,7 +410,7 @@ namespace SOUI
 			}
 
 			//计算出网络大小,强制使用-1,-1代表自适应大小
-			CSize szCell = pCell->GetDesiredSize(-1,-1);
+			CSize szCell = pCell->GetDesiredSize(SIZE_WRAP_CONTENT, SIZE_WRAP_CONTENT);
 			//填充网格,把大小平均分散到网格中。
 			szCell.cx/=colSpan;
 			szCell.cy/=rowSpan;

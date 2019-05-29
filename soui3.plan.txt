@@ -4,3 +4,11 @@
 4、将CSize,CPoint,CRect替换成SSize,SPoint,SRect，包括消息映射宏的修改。canceled. 2019.5.29
 5、加入动画模块。
 6、调研跨平台支持。
+7、解决root设置margin的问题。
+8、解决xxView::SetAdapter的重入问题。
+9、增加STreeView刷新单一项的问题。
+10、将xxView抽象出一个统一的基类。
+11、实现xxView的多选及框选。
+12、完善向导。
+13、滚动条支持动画显示、隐藏。
+14、完善光位置计算方法。缓存光标矩形，布局变化后，更新矩形。
