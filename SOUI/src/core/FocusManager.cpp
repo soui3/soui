@@ -242,7 +242,7 @@ namespace SOUI
             return TRUE;
         }
         // Process keyboard accelerators.
-        CAccelerator accelerator(vKey,GetKeyState(VK_CONTROL)&0x8000,GetKeyState(VK_MENU)&0x8000,GetKeyState(VK_SHIFT)&0x8000);
+        SAccelerator accelerator(vKey,GetKeyState(VK_CONTROL)&0x8000,GetKeyState(VK_MENU)&0x8000,GetKeyState(VK_SHIFT)&0x8000);
         if(ProcessAccelerator(accelerator))
         {
             // If a shortcut was activated for this keydown message, do not propagate
@@ -366,13 +366,13 @@ namespace SOUI
         focused_backup_ = 0;
     }
 
-    void SFocusManager::RegisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::RegisterAccelerator( const SAccelerator& accelerator, IAcceleratorTarget* target )
     {
         AcceleratorTargetList& targets = accelerators_[accelerator];
         targets.AddHead(target);
     }
 
-    void SFocusManager::UnregisterAccelerator( const CAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::UnregisterAccelerator( const SAccelerator& accelerator, IAcceleratorTarget* target )
     {
         if(!accelerators_.Lookup(accelerator)) return;
         AcceleratorTargetList* targets=&accelerators_[accelerator];
@@ -392,7 +392,7 @@ namespace SOUI
         }
     }
 
-    bool SFocusManager::ProcessAccelerator( const CAccelerator& accelerator )
+    bool SFocusManager::ProcessAccelerator( const SAccelerator& accelerator )
     {
         if(!accelerators_.Lookup(accelerator)) return false;
 

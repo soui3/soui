@@ -7,7 +7,7 @@
 namespace SOUI
 {
 
-	class SOUI_EXP CSimpleWndHelper: public SSingleton2<CSimpleWndHelper>{
+	class SOUI_EXP SNativeWndHelper: public SSingleton2<SNativeWndHelper>{
 		SINGLETON2_TYPE(SINGLETON_SIMPLEWNDHELPER)
     public:
         HANDLE GetHeap(){return m_hHeap;}
@@ -19,8 +19,8 @@ namespace SOUI
         HINSTANCE GetAppInstance(){return m_hInst;}
         ATOM GetSimpleWndAtom(){return m_atom;}
     private:
-        CSimpleWndHelper(HINSTANCE hInst,LPCTSTR pszClassName, BOOL bImeApp);
-        ~CSimpleWndHelper();
+        SNativeWndHelper(HINSTANCE hInst,LPCTSTR pszClassName, BOOL bImeApp);
+        ~SNativeWndHelper();
 
         HANDLE                m_hHeap;
         CRITICAL_SECTION    m_cs;
@@ -109,18 +109,18 @@ struct tagThunk
 #error Only AMD64, ARM and X86 supported
 #endif
 
-class CMessageMap
+class SMessageMap
 {
 public:
     virtual BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
                                       LRESULT& lResult, DWORD dwMsgMapID) = 0;
 };
 
-class  SOUI_EXP CSimpleWnd : public CMessageMap
+class  SOUI_EXP CNativeWnd : public SMessageMap
 {
 public:
-    CSimpleWnd(HWND hWnd=0);
-    virtual ~CSimpleWnd(void);
+    CNativeWnd(HWND hWnd=0);
+    virtual ~CNativeWnd(void);
 
     static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 

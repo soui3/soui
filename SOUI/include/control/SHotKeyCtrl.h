@@ -24,7 +24,7 @@ namespace SOUI
    */
   class SOUI_EXP SHotKeyCtrl 
       : public SWindow
-      , public CAccelerator
+      , public SAccelerator
   {
       SOUI_CLASS_NAME(SHotKeyCtrl, L"hotkey")
   public:

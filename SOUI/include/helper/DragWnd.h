@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "core/SimpleWnd.h"
+#include "core/SNativeWnd.h"
 #include "helper/MemDC.h"
 
 namespace SOUI
 {
 
-class CDragWnd : public CSimpleWnd
+class CDragWnd : public CNativeWnd
 {
 public:
     CDragWnd(void);

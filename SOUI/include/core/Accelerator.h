@@ -21,7 +21,7 @@ namespace SOUI
     * 
     * Describe
     */
-    class SOUI_EXP CAccelerator
+    class SOUI_EXP SAccelerator
     {
     public:
 
@@ -31,7 +31,7 @@ namespace SOUI
          * @param    DWORD dwAccel --  加速键值
          * Describe  
          */    
-        CAccelerator(DWORD dwAccel);
+        SAccelerator(DWORD dwAccel);
 
         /**
          * CAccelerator
@@ -42,14 +42,14 @@ namespace SOUI
          * @param    bool bShift --  与Shilft组合
          * Describe  
          */    
-        CAccelerator(UINT vKey=0,bool bCtrl=false,bool bAlt=false,bool bShift=false);
+        SAccelerator(UINT vKey=0,bool bCtrl=false,bool bAlt=false,bool bShift=false);
 
         /**
          * ~CAccelerator
          * @brief    析构函数
          * Describe  
          */    
-        ~CAccelerator(void);
+        ~SAccelerator(void);
 
 
         /**
@@ -101,7 +101,7 @@ namespace SOUI
     };
 
     template<>
-    class  CElementTraits< CAccelerator > : public CElementTraitsBase< CAccelerator >
+    class  CElementTraits< SAccelerator > : public CElementTraitsBase< SAccelerator >
     {
     public:
         static ULONG Hash(INARGTYPE element ) throw()
@@ -135,7 +135,7 @@ namespace SOUI
          * @return   bool -- 加速键被处理返回true
          * Describe  
          */    
-        virtual bool OnAcceleratorPressed(const CAccelerator& accelerator) = 0;
+        virtual bool OnAcceleratorPressed(const SAccelerator& accelerator) = 0;
     };
 
     /**
@@ -155,11 +155,11 @@ namespace SOUI
         // - the enter key
         // - any F key (F1, F2, F3 ...)
         // - any browser specific keys (as available on special keyboards)
-        virtual void RegisterAccelerator(const CAccelerator& accelerator,
+        virtual void RegisterAccelerator(const SAccelerator& accelerator,
             IAcceleratorTarget* target)=NULL;
 
         // Unregister the specified keyboard accelerator for the specified target.
-        virtual void UnregisterAccelerator(const CAccelerator& accelerator,
+        virtual void UnregisterAccelerator(const SAccelerator& accelerator,
             IAcceleratorTarget* target)=NULL;
 
         // Unregister all keyboard accelerator for the specified target.

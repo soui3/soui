@@ -327,7 +327,7 @@ void SButton::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
     }
 }
 
-bool SButton::OnAcceleratorPressed( const CAccelerator& accelerator )
+bool SButton::OnAcceleratorPressed( const SAccelerator& accelerator )
 {
     if(IsDisabled(TRUE)) 
 		return false;
@@ -349,10 +349,10 @@ BOOL SButton::InitFromXml(pugi::xml_node xmlNode)
 		{
 			SStringT strAccelT=_T("alt+");
 			strAccelT += strText[++pos];
-			m_accel = CAccelerator::TranslateAccelKey(strAccelT);
+			m_accel = SAccelerator::TranslateAccelKey(strAccelT);
 			if (m_accel)
 			{
-				CAccelerator acc(m_accel);
+				SAccelerator acc(m_accel);
 				GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(acc, this);
 			}
 		}
@@ -364,7 +364,7 @@ void SButton::OnDestroy()
 {
     if(m_accel)
     {
-        CAccelerator acc(m_accel);
+        SAccelerator acc(m_accel);
         GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(acc,this);
     }
     StopCurAnimate();
@@ -376,13 +376,13 @@ HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
     SStringT strAccelT=S_CW2T(strAccel);
 	if(m_accel)
 	{
-		CAccelerator acc(m_accel);
+		SAccelerator acc(m_accel);
 		GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(acc,this);
 	}
-    m_accel=CAccelerator::TranslateAccelKey(strAccelT);
+    m_accel=SAccelerator::TranslateAccelKey(strAccelT);
     if(m_accel)
     {
-		CAccelerator acc(m_accel);
+		SAccelerator acc(m_accel);
 		GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(acc,this);
     }
     return S_FALSE;

@@ -206,7 +206,7 @@ protected:
      *
      * Describe  处理加速键响应消息
      */
-    virtual bool OnAcceleratorPressed(const CAccelerator& accelerator);
+    virtual bool OnAcceleratorPressed(const SAccelerator& accelerator);
     virtual BOOL InitFromXml(pugi::xml_node xmlNode);
 protected:
     

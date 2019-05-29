@@ -765,7 +765,7 @@ namespace SOUI
 
 	void SMenuEx::HideMenu(BOOL bUncheckParentItem)
 	{
-		if (!CSimpleWnd::IsWindowVisible()) return;
+		if (!CNativeWnd::IsWindowVisible()) return;
 		HideSubMenu();
 		ShowWindow(SW_HIDE);
 		if (m_pCheckItem)
@@ -898,7 +898,7 @@ namespace SOUI
 			{
 				if (pMenuItem->GetSubMenu() != NULL)
 				{
-					CSimpleWnd::SetTimer(TIMERID_POPSUBMENU, TIME_PUPSUBMENU);
+					CNativeWnd::SetTimer(TIMERID_POPSUBMENU, TIME_PUPSUBMENU);
 					m_pHoverItem = pMenuItem;
 				}
 				HideSubMenu();
@@ -908,7 +908,7 @@ namespace SOUI
 			{
 				if (pMenuItem->GetSubMenu() != NULL)
 				{
-					CSimpleWnd::KillTimer(TIMERID_POPSUBMENU);
+					CNativeWnd::KillTimer(TIMERID_POPSUBMENU);
 					m_pHoverItem = NULL;
 				}
 				return FALSE;
@@ -962,7 +962,7 @@ namespace SOUI
 
 	void SMenuEx::PopupSubMenu(SMenuExItem * pItem, BOOL bCheckFirstItem)
 	{
-		CSimpleWnd::KillTimer(TIMERID_POPSUBMENU);
+		CNativeWnd::KillTimer(TIMERID_POPSUBMENU);
 
 		SMenuEx * pSubMenu = pItem->GetSubMenu();
 		SASSERT(pSubMenu);

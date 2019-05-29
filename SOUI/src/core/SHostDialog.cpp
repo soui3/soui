@@ -38,7 +38,7 @@ namespace SOUI
 			}
 			return 0;
 		}
-        CSimpleWnd::SendMessage(WM_INITDIALOG, (WPARAM)m_hWnd);
+        CNativeWnd::SendMessage(WM_INITDIALOG, (WPARAM)m_hWnd);
         
         if(m_nRetCode == RC_INIT)
         {
@@ -60,7 +60,7 @@ namespace SOUI
             // hide the window before enabling the parent, etc.
             if ( IsWindow() )
             {
-                CSimpleWnd::SetWindowPos(
+                CNativeWnd::SetWindowPos(
                     NULL, 0, 0, 0, 0,
                     SWP_HIDEWINDOW | SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER );
             }
@@ -74,7 +74,7 @@ namespace SOUI
         }
         
         if ( IsWindow() )
-            CSimpleWnd::DestroyWindow();
+            CNativeWnd::DestroyWindow();
        
         return m_nRetCode;
     }
@@ -86,7 +86,7 @@ namespace SOUI
 		{
 			m_nRetCode = nResult;
 			m_MsgLoop->Quit();
-			CSimpleWnd::SetWindowPos(
+			CNativeWnd::SetWindowPos(
 				NULL, 0, 0, 0, 0,
 				SWP_HIDEWINDOW | SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER );
 			PostMessage(WM_NULL);

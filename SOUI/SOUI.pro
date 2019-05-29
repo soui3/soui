@@ -77,7 +77,7 @@ HEADERS += include/SApp.h \
            include/core/SDropTargetDispatcher.h \
            include/core/SHostDialog.h \
            include/core/SHostWnd.h \
-           include/core/SimpleWnd.h \
+           include/core/SNativeWnd.h \
            include/core/SItemPanel.h \
            include/core/SMsgLoop.h \
            include/core/SPanel.h \
@@ -148,6 +148,7 @@ HEADERS += include/SApp.h \
            include/interface/SAccHelper-i.h \
            include/interface/SPathEffect-i.h \
            include/interface/STaskLoop-i.h \
+           include/interface/SIpcObj-i.h \
            include/layout/SLinearLayoutParamStruct.h \
            include/layout/SLinearLayout.h \
            include/layout/SouiLayoutParamStruct.h \
@@ -208,7 +209,7 @@ SOURCES += src/SApp.cpp \
            src/core/SDropTargetDispatcher.cpp \
            src/core/SHostDialog.cpp \
            src/core/shostwnd.cpp \
-           src/core/SimpleWnd.cpp \
+           src/core/SNativeWnd.cpp \
            src/core/SItemPanel.cpp \
            src/core/SMsgLoop.cpp \
            src/core/SPanel.cpp \

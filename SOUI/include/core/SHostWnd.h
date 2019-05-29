@@ -7,7 +7,7 @@
 
 #include "SwndContainerImpl.h"
 
-#include "SimpleWnd.h"
+#include "SNativeWnd.h"
 #include "SDropTargetDispatcher.h"
 #include "event/eventcrack.h"
 #include "interface/stooltip-i.h"
@@ -22,7 +22,7 @@ namespace SOUI
 {
 
     class SHostWnd;
-    class SDummyWnd : public CSimpleWnd
+    class SDummyWnd : public CNativeWnd
     {
     public:
         SDummyWnd(SHostWnd* pOwner):m_pOwner(pOwner)
@@ -117,7 +117,7 @@ namespace SOUI
 
 class SOUI_EXP SHostWnd
     : public SwndContainerImpl
-    , public CSimpleWnd
+    , public CNativeWnd
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
@@ -164,7 +164,7 @@ public:
 public:
     SWindow * GetRoot() const {return (SWindow*)this;}
 
-	CSimpleWnd * GetNative(){return this;}
+	CNativeWnd * GetNative(){return this;}
 
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
     HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <sobject/Sobject.hpp>
-#include "core/SimpleWnd.h"
+#include "core/SNativeWnd.h"
 #include "res.mgr/Sskinpool.h"
 
 namespace SOUI
@@ -183,7 +183,7 @@ public:
     }
 };
 
-class SMenuODWnd : public CSimpleWnd
+class SMenuODWnd : public CNativeWnd
     ,public SOwnerDraw<SMenuODWnd>
 {
     friend class SOwnerDraw<SMenuODWnd>;

@@ -21,9 +21,9 @@ protected:
         CRect rcWindow, rcClient;
         CRgn rgnWindow, rgnMinus, rgnAdd;
 
-        pT->CSimpleWnd::GetWindowRect(rcWindow);
-        pT->CSimpleWnd::GetClientRect(rcClient);
-        pT->CSimpleWnd::ClientToScreen(rcClient);
+        pT->CNativeWnd::GetWindowRect(rcWindow);
+        pT->CNativeWnd::GetClientRect(rcClient);
+        pT->CNativeWnd::ClientToScreen(rcClient);
 
         rcClient.OffsetRect(- rcWindow.TopLeft());
 
@@ -36,7 +36,7 @@ protected:
         rgnWindow.CombineRgn(rgnAdd, RGN_OR);
         rgnAdd.OffsetRgn(0, rcClient.Height() - 3);
         rgnWindow.CombineRgn(rgnAdd, RGN_OR);
-        pT->CSimpleWnd::SetWindowRgn(rgnWindow);
+        pT->CNativeWnd::SetWindowRgn(rgnWindow);
 		pT->SetMsgHandled(FALSE);
         m_sizeWnd = size;
     }

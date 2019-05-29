@@ -54,7 +54,7 @@ namespace SOUI
     BOOL SDropDownWnd::Create(LPCRECT lpRect ,LPVOID lParam,DWORD dwStyle,DWORD dwExStyle)
     {
         HWND hParent = m_pOwner->GetDropDownOwner()->GetContainer()->GetHostHwnd();
-        HWND hWnd=CSimpleWnd::Create(NULL,dwStyle,dwExStyle,lpRect->left,lpRect->top,lpRect->right-lpRect->left,lpRect->bottom-lpRect->top,hParent,0);
+        HWND hWnd=CNativeWnd::Create(NULL,dwStyle,dwExStyle,lpRect->left,lpRect->top,lpRect->right-lpRect->left,lpRect->bottom-lpRect->top,hParent,0);
         if(!hWnd) return FALSE;
         m_pOwner->OnCreateDropDown(this);
         return TRUE;
@@ -63,7 +63,7 @@ namespace SOUI
     void SDropDownWnd::OnLButtonDown( UINT nFlags, CPoint point )
     {
         CRect rcWnd;
-        CSimpleWnd::GetClientRect(&rcWnd);
+        CNativeWnd::GetClientRect(&rcWnd);
         if(!rcWnd.PtInRect(point))
         {
             EndDropDown();
@@ -81,7 +81,7 @@ namespace SOUI
             LRESULT lRes=0;
             HWND hWnd=m_hWnd;
             CRect rcWnd;
-            CSimpleWnd::GetClientRect(&rcWnd);
+            CNativeWnd::GetClientRect(&rcWnd);
             SHostWnd::ProcessWindowMessage(m_hWnd,WM_LBUTTONUP,nFlags,MAKELPARAM(point.x,point.y),lRes);
             if(::IsWindow(hWnd) && !rcWnd.PtInRect(point))
                 EndDropDown();//强制关闭弹出窗口
@@ -102,7 +102,7 @@ namespace SOUI
     {
         if(m_uExitCode!=IDINIT) return;
         m_uExitCode=uCode;
-        CSimpleWnd::DestroyWindow();
+        CNativeWnd::DestroyWindow();
     }
 
     void SDropDownWnd::OnDestroy()
@@ -115,11 +115,11 @@ namespace SOUI
     {
         if(pMsg->message==WM_ACTIVATEAPP)
         {
-            CSimpleWnd::SendMessage(pMsg->message,pMsg->wParam,pMsg->lParam);
+            CNativeWnd::SendMessage(pMsg->message,pMsg->wParam,pMsg->lParam);
         }
         else if(pMsg->message == WM_MOUSEMOVE)
         {//由于窗口显示后就调用了setcapture，导致收不到setcursor消息，这里在WM_MOUSEMOVE消息里模拟一个setcursor消息。
-            CSimpleWnd::SendMessage(WM_SETCURSOR,(WPARAM)m_hWnd,MAKELPARAM(HTCLIENT,WM_MOUSEMOVE));
+            CNativeWnd::SendMessage(WM_SETCURSOR,(WPARAM)m_hWnd,MAKELPARAM(HTCLIENT,WM_MOUSEMOVE));
         }
         return FALSE;
     }
@@ -140,7 +140,7 @@ namespace SOUI
     BOOL SDropDownWnd::OnReleaseSwndCapture()
     {
         BOOL bRet=SHostWnd::OnReleaseSwndCapture();
-        CSimpleWnd::SetCapture();
+        CNativeWnd::SetCapture();
         return bRet;
     }
 

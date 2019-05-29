@@ -4,28 +4,28 @@
 namespace SOUI
 {
 
-    CAccelerator::CAccelerator(UINT vKey,bool bCtrl,bool bAlt,bool bShift):m_wVK(vKey),m_wModifier(0)
+    SAccelerator::SAccelerator(UINT vKey,bool bCtrl,bool bAlt,bool bShift):m_wVK(vKey),m_wModifier(0)
     {
         if(bCtrl) m_wModifier|=MOD_CONTROL;
         if(bAlt) m_wModifier |=MOD_ALT;
         if(bShift) m_wModifier |= MOD_SHIFT;
     }
 
-    CAccelerator::CAccelerator(DWORD dwAccel):m_wVK(LOWORD(dwAccel)),m_wModifier(HIWORD(dwAccel))
+    SAccelerator::SAccelerator(DWORD dwAccel):m_wVK(LOWORD(dwAccel)),m_wModifier(HIWORD(dwAccel))
     {
 
     }
 
-    CAccelerator::~CAccelerator(void)
+    SAccelerator::~SAccelerator(void)
     {
     }
 
-    SStringT CAccelerator::FormatHotkey()
+    SStringT SAccelerator::FormatHotkey()
     {
 		return FormatAccelKey(MAKELONG(m_wVK,m_wModifier));
     }
 
-	WORD CAccelerator::VkFromString(LPCTSTR pszKey)
+	WORD SAccelerator::VkFromString(LPCTSTR pszKey)
 	{
 		WORD wKey = 0;
 		if (_tcsicmp(pszKey, _T("esc")) == 0)
@@ -105,7 +105,7 @@ namespace SOUI
 		return wKey;
 	}
 
-	SStringT CAccelerator::GetKeyName( WORD vk )
+	SStringT SAccelerator::GetKeyName( WORD vk )
     {
         SStringT str;
         switch(vk)
@@ -190,7 +190,7 @@ namespace SOUI
         return str;
     }
 
-	SStringT CAccelerator::FormatAccelKey(DWORD dwAccel)
+	SStringT SAccelerator::FormatAccelKey(DWORD dwAccel)
 	{
 		WORD wModifier = HIWORD(dwAccel);
 		WORD wVk = LOWORD(dwAccel);
@@ -206,7 +206,7 @@ namespace SOUI
 	}
 
 	//将字符串翻译为加速键
-    DWORD CAccelerator::TranslateAccelKey( LPCTSTR pszAccelKey )
+    DWORD SAccelerator::TranslateAccelKey( LPCTSTR pszAccelKey )
     {
         TCHAR szBuf[101]={0};//保证字符串结束有两个结束符
         WORD wModifier=0;

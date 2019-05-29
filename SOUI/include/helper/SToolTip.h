@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 #include "interface/stooltip-i.h"
-#include "core/SimpleWnd.h"
+#include "core/SNativeWnd.h"
 
 namespace SOUI
 {
     class STipCtrl : public IToolTip
-                   , public CSimpleWnd 
+                   , public CNativeWnd 
     {
     public:
         STipCtrl(void);

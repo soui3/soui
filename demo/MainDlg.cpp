@@ -622,9 +622,9 @@ void CMainDlg::OnBtnMsgBox()
     SMessageBox(NULL,_T("this is a message box"),_T("haha"),MB_OK|MB_ICONEXCLAMATION);
     SMessageBox(NULL,_T("this message box includes two buttons"),_T("haha"),MB_YESNO|MB_ICONQUESTION);
 
-	CSimpleWnd::SetTimer(TIMER_QUIT,3000,NULL);//3S后退出APP
+	CNativeWnd::SetTimer(TIMER_QUIT,3000,NULL);//3S后退出APP
     SMessageBox(NULL,_T("this message box includes three buttons. \nthe app will quit after 3 seconds if you keep the msgbox open!"),_T("Alarm"),MB_ABORTRETRYIGNORE|MB_ICONSTOP);
-	CSimpleWnd::KillTimer(TIMER_QUIT);
+	CNativeWnd::KillTimer(TIMER_QUIT);
 }
 
 class SSkiaTestWnd : public SHostWnd
@@ -994,7 +994,7 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 	SetMsgHandled(FALSE);
 	if(idEvent==TIMER_QUIT)
 	{
-		CSimpleWnd::KillTimer(idEvent);
+		CNativeWnd::KillTimer(idEvent);
 		PostQuitMessage(-3);
 	}
 }

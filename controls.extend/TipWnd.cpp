@@ -80,7 +80,7 @@ namespace SOUI{
 		SetMsgHandled(FALSE);
 		if (timerID == TIMER_END_TIP)
 		{
-			CSimpleWnd::DestroyWindow();
+			CNativeWnd::DestroyWindow();
 		}
 
 	}
