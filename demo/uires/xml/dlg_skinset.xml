@@ -1,4 +1,4 @@
-﻿<SOUI trCtx="dlg_set_skin" title="set skin" width="758" height="500" margin="5,5,5,5" resizable="0" translucent="1" appWnd="1" wndType="normal" >
+﻿<SOUI trCtx="dlg_set_skin" title="set skin"  margin="5,5,5,5" resizable="0" translucent="1" appWnd="1" wndType="normal" >
   <style>
     <!--局部style对象-->
     <class name="skin_border" ncSkin="_skin.sys.border" margin-x="1" margin-y="1" />
@@ -27,7 +27,7 @@
     <imglist name="skin_btn_custom" src="img:png_skin_custom" states="3"/>
     <imgframe name="skin_page_icons"  src="img:png_tab_page_icons" margin-x="4" top="4" bottom="15" states="2"/>
   </skin>
-  <root colorBkgnd="#eeeeee" cache="1">
+  <root colorBkgnd="#eeeeee" cache="1" width="758" height="500">
     <window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1">
       <window cache="1" pos="0,0,-0,-0" colorBkgnd="#ffffff" alpha="100"/>
       <caption pos="0,0,-0,30" show="1" font="adding:0" layout="hbox" padding="5,0,5,0" gravity="center">
