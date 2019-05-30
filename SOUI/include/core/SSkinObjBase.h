@@ -26,6 +26,8 @@ namespace SOUI
 
 		int GetIndex(DWORD dwState) const;
 
+		static int GetIndex2(DWORD dwState);
+
 		BOOL Init(pugi::xml_node xmlNode);
 	protected:
 		SMap<DWORD,int> m_mapOfStates;
@@ -56,10 +58,10 @@ namespace SOUI
         virtual void SetAlpha(BYTE byAlpha);
 
         virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
-
         virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState);
 
 		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
+		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState);
 
         virtual SIZE GetSkinSize();
 

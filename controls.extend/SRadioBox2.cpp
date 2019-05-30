@@ -29,7 +29,7 @@ namespace SOUI
             CRect rcIcon=GetClientRect();
             rcIcon.OffsetRect(m_ptIcon);
             rcIcon=CRect(rcIcon.TopLeft(),m_pIcon->GetSkinSize());
-            m_pIcon->Draw(pRT,rcIcon,IIF_STATE3(GetState(),0,1,2));
+            m_pIcon->Draw(pRT,rcIcon, GetState());
         }
         SWindow::OnPaint(pRT);
     }

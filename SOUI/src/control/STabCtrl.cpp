@@ -723,7 +723,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
     if(rcItem.IsRectEmpty()) return;
     if(m_pSkinTab)
         m_pSkinTab->Draw(pRT,rcItem, dwState);
-
+	int iState = SState2Index::GetIndex2(dwState);
     //根据状态从style中获得字体，颜色
     IFontPtr font=m_style.GetTextFont(iState);
     COLORREF crTxt = m_style.GetTextColor(iState);
@@ -739,7 +739,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
         rcIcon.bottom=rcIcon.top+m_pSkinIcon->GetSkinSize().cy;
         int iIcon=GetItem(iItem)->GetIconIndex();
         if(iIcon == -1) iIcon = iItem;
-        m_pSkinIcon->Draw(pRT,rcIcon,iIcon);
+        m_pSkinIcon->Draw2(pRT,rcIcon,iIcon);
     }
 
     if(m_ptText[0].toPixelSize(GetScale()) > 0 && m_ptText[1].toPixelSize(GetScale()) > 0)

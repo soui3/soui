@@ -52,18 +52,23 @@ namespace SOUI
 		return TRUE;
 	}
 
+	int SState2Index::GetIndex2(DWORD dwState)
+	{
+		if (dwState & WndState_Hover)
+			return 1;
+		else if (dwState & (WndState_PushDown | WndState_Check))
+			return 2;
+		else if (dwState & WndState_Disable)
+			return 3;
+		else // WndState_Normal
+			return 0;
+	}
+
 	int SState2Index::GetIndex(DWORD dwState) const
 	{
 		if(m_mapOfStates.IsEmpty())
 		{
-			if(dwState & WndState_Hover)
-				return 1;
-			else if(dwState & (WndState_PushDown|WndState_Check))
-				return 2;
-			else if(dwState & WndState_Disable)
-				return 3;
-			else // WndState_Normal
-				return 0;
+			return GetIndex2(dwState);
 		}else
 		{
 			const SMap<DWORD,int>::CPair *p = m_mapOfStates.Lookup(dwState);
@@ -71,7 +76,6 @@ namespace SOUI
 			return p->m_value;
 		}
 	}
-
 
 	////////////////////////////////////////////////////////////////////////////
 	void SSkinObjBase::OnInitFinished(pugi::xml_node xmlNode)
@@ -132,6 +136,11 @@ namespace SOUI
 	void SSkinObjBase::Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)
 	{
 		//empty
+	}
+
+	void SSkinObjBase::Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState)
+	{
+		Draw2(pRT, rcDraw, iState, GetAlpha());
 	}
 
 	void SSkinObjBase::Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)

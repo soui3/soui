@@ -1382,11 +1382,12 @@ namespace SOUI
 
 	void SWindow::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 	{
-		IFontPtr pFont = GetStyle().GetTextFont(IIF_STATE4(m_dwState,0,1,2,3));
+		int iState = SState2Index::GetIndex2(GetState());
+		IFontPtr pFont = GetStyle().GetTextFont(iState);
 		if(pFont) 
 			pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
 
-		COLORREF crTxt = GetStyle().GetTextColor(IIF_STATE4(m_dwState,0,1,2,3));
+		COLORREF crTxt = GetStyle().GetTextColor(iState);
 		if(crTxt != CR_INVALID)
 			painter.oldTextColor = pRT->SetTextColor(crTxt);
 	}
