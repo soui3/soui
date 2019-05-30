@@ -1963,6 +1963,11 @@ private:
 public:
     SMap( UINT nBins = 17, float fOptimalLoad = 0.75f,
              float fLoThreshold = 0.25f, float fHiThreshold = 2.25f, UINT nBlockSize = 10 );
+	SMap(const SMap&);
+	~SMap();
+	SMap& operator=(const SMap& src);
+
+	void Copy(const SMap & src);
 
     size_t GetCount() const;
     bool IsEmpty() const;
@@ -2031,14 +2036,6 @@ private:
     void RemoveNode( CNode* pNode, CNode* pPrev );
     CNode* FindNextNode( CNode* pNode ) const;
     void UpdateRehashThresholds();
-
-public:
-    ~SMap();
-
-private:
-    // Private to prevent use
-    SMap( const SMap& );
-    SMap& operator=( const SMap& );
 };
 
 
@@ -2289,6 +2286,48 @@ SMap< K, V, KTraits, VTraits >::SMap( UINT nBins, float fOptimalLoad,
 
     SetOptimalLoad( fOptimalLoad, fLoThreshold, fHiThreshold, false );
 }
+
+template< typename K, typename V, class KTraits, class VTraits >
+SMap< K, V, KTraits, VTraits >::SMap(const SMap< K, V, KTraits, VTraits > & src) :
+	m_ppBins(NULL),
+	m_nElements(0),
+	m_nBins(src.m_nBins),
+	m_fOptimalLoad(src.m_fOptimalLoad),
+	m_fLoThreshold(src.m_fLoThreshold),
+	m_fHiThreshold(src.m_fHiThreshold),
+	m_nHiRehashThreshold(src.m_nHiRehashThreshold),
+	m_nLoRehashThreshold(src.m_nLoRehashThreshold),
+	m_nLockCount(0),  // Start unlocked
+	m_nBlockSize(src.m_nBlockSize),
+	m_pBlocks(NULL),
+	m_pFree(NULL)
+{
+	SASSERT(nBins > 0);
+	SASSERT(nBlockSize > 0);
+
+	SetOptimalLoad(m_fOptimalLoad, m_fLoThreshold, m_fHiThreshold, false);
+	Copy(src);
+}
+
+template< typename K, typename V, class KTraits, class VTraits >
+void SMap< K, V, KTraits, VTraits >::Copy(const SMap< K, V, KTraits, VTraits > & src)
+{
+	RemoveAll();
+	SPOSITION pos = src.GetStartPosition();
+	while (pos)
+	{
+		const SMap< K, V, KTraits, VTraits >::CPair * p = src.GetNext(pos);
+		this->SetAt(p->m_key, p->m_value);
+	}
+}
+
+template< typename K, typename V, class KTraits, class VTraits >
+SMap< K, V, KTraits, VTraits >&  SMap< K, V, KTraits, VTraits >::operator=(const SMap< K, V, KTraits, VTraits > & src)
+{
+	Copy(src);
+	return *this;
+}
+
 
 template< typename K, typename V, class KTraits, class VTraits >
 void SMap< K, V, KTraits, VTraits >::SetOptimalLoad( float fOptimalLoad, float fLoThreshold,

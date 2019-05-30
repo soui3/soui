@@ -794,8 +794,7 @@ namespace SOUI
 			rcBtn += CRect(1,1,1,1);
 			m_pNcSkin->Draw(pRT, rcBtn, 1);
 		}
-		int nState = IIF_STATE3(m_dwBtnState, WndState_Normal, WndState_Hover, WndState_PushDown);
-		m_pSkinBtn->Draw(pRT, rcSkin, nState);
+		m_pSkinBtn->Draw(pRT, rcSkin, m_dwBtnState);
 	}
 
 	bool SDateTimePicker::CalcPopupRect(int nWidth, CRect& rcPopup)

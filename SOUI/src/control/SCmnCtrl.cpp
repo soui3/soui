@@ -277,8 +277,7 @@ void SButton::OnPaint(IRenderTarget *pRT)
     if(m_byAlphaAni==0xFF)
     {//不在动画过程中
         m_pBgSkin->Draw(
-            pRT, rcClient,
-            IIF_STATE4(GetState(), 0, 1, 2, 3)
+            pRT, rcClient, GetState()
             );
     }
     else

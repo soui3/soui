@@ -21,6 +21,9 @@ namespace SOUI
 	//////////////////////////////////////////////////////////////////////////
 	class SOUI_EXP SState2Index{
 	public:
+		SState2Index() {};
+		SState2Index(const SState2Index &src);
+
 		int GetIndex(DWORD dwState) const;
 
 		BOOL Init(pugi::xml_node xmlNode);

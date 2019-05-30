@@ -5,6 +5,11 @@ namespace SOUI
 {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// handle state map
+	SState2Index::SState2Index(const SState2Index & src)
+	{
+		m_mapOfStates = src.m_mapOfStates;
+	}
+
 	BOOL SState2Index::Init(pugi::xml_node xmlNode)
 	{
 		const static struct _StateMap{

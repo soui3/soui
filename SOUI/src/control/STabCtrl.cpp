@@ -721,9 +721,8 @@ STabPage* STabCtrl::GetItem( int nIndex )
 void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD dwState )
 {
     if(rcItem.IsRectEmpty()) return;
-    int iState = IIF_STATE3(dwState,WndState_Normal,WndState_Hover,WndState_PushDown);
     if(m_pSkinTab)
-        m_pSkinTab->Draw(pRT,rcItem,iState);
+        m_pSkinTab->Draw(pRT,rcItem, dwState);
 
     //根据状态从style中获得字体，颜色
     IFontPtr font=m_style.GetTextFont(iState);
