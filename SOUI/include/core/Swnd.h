@@ -49,20 +49,45 @@ namespace SOUI
     enum {NormalShow=0,ParentShow=1};    //提供WM_SHOWWINDOW消息识别是父窗口显示还是要显示本窗口
     enum {NormalEnable=0,ParentEnable=1};    //提供WM_ENABLE消息识别是父窗口可用还是直接操作当前窗口
 
-    
-    class STimerID
+	// State Define
+	enum WndState
+	{
+		WndState_Normal = 0x00000000UL,
+		WndState_Hover = 0x00000001UL,
+		WndState_PushDown = 0x00000002UL,
+		WndState_Check = 0x00000004UL,
+		WndState_Invisible = 0x00000008UL,
+		WndState_Disable = 0x00000010UL,
+	};
+
+	class SOUI_EXP SStateHelper {
+	public:
+		static void MarkState(DWORD &dwState, WndState state)
+		{
+			dwState |= state;
+		}
+
+		static void ClearState(DWORD &dwState, WndState state)
+		{
+			dwState &= ~state;
+		}
+
+		static bool TestState(DWORD dwState, WndState state)
+		{
+			return (dwState & state) == state;
+		}
+	};
+
+    class SOUI_EXP STimerID
     {
     public:
-        DWORD    Swnd:24;        //窗口句柄,如果窗口句柄超过24位范围，则不能使用这种方式设置定时器
+        DWORD    swnd:24;        //窗口句柄,如果窗口句柄超过24位范围，则不能使用这种方式设置定时器
         DWORD    uTimerID:7;        //定时器ID，一个窗口最多支持128个定时器。
         DWORD    bSwndTimer:1;    //区别通用定时器的标志，标志为1时，表示该定时器为SWND定时器
 
-        STimerID(SWND hWnd,char id)
+        STimerID(SWND swnd_,char timeId):swnd(swnd_),uTimerID(timeId),bSwndTimer(1)
         {
-            SASSERT(hWnd<0x00FFFFFF && id>=0);
-            bSwndTimer=1;
-            Swnd=hWnd;
-            uTimerID=id;
+            SASSERT(swnd<0x00FFFFFF && timeId >=0);
         }
         STimerID(DWORD dwID)
         {
@@ -306,7 +331,6 @@ namespace SOUI
 
         DWORD GetState(void);
         DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
-
         ISwndContainer *GetContainer();
 		const ISwndContainer* GetContainer() const;
         void SetContainer(ISwndContainer *pContainer);

@@ -21,7 +21,6 @@ namespace SOUI
 			{L"pushdown",WndState_PushDown},
 			{L"disable",WndState_Disable},
 			{L"checked",WndState_Check},
-			{L"focus",WndState_Focus},
 		};
 
 		pugi::xml_node xmlStates = xmlNode.child(L"states");

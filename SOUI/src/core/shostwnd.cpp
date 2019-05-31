@@ -564,7 +564,7 @@ void SHostWnd::OnTimer(UINT_PTR idEvent)
     STimerID sTimerID((DWORD)idEvent);
     if(sTimerID.bSwndTimer)
     {
-        SWindow *pSwnd=SWindowMgr::GetWindow((SWND)sTimerID.Swnd);
+        SWindow *pSwnd=SWindowMgr::GetWindow((SWND)sTimerID.swnd);
         if(pSwnd)
         {
             if(pSwnd==this) OnSwndTimer(sTimerID.uTimerID);//由于DUIWIN采用了ATL一致的消息映射表模式，因此在HOST中不能有DUI的消息映射表（重复会导致SetMsgHandled混乱)

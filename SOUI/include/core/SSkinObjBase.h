@@ -1,23 +1,11 @@
 ﻿#pragma once
 
-#include "interface/Sskinobj-i.h"
+#include <interface/Sskinobj-i.h>
 #include <unknown/obj-ref-impl.hpp>
 #include <souicoll.h>
+#include <core/Swnd.h>
 namespace SOUI
 {
-	// State Define
-	enum
-	{
-		WndState_Normal       = 0x00000000UL,
-		WndState_Hover        = 0x00000001UL,
-		WndState_PushDown     = 0x00000002UL,
-		WndState_Check        = 0x00000004UL,
-		WndState_Invisible    = 0x00000008UL,
-		WndState_Disable      = 0x00000010UL,
-		WndState_Focus        = 0x00000020UL,
-	};
-
-
 	//////////////////////////////////////////////////////////////////////////
 	class SOUI_EXP SState2Index{
 	public:
