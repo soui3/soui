@@ -17,5 +17,5 @@
 16、升级新版本的skia。
 17、支持Direct2D。
 18、Chart控件。
-19、修改ISkinObj接口，增加绘制状态映射为索引的处理。
+19、修改ISkinObj接口，增加绘制状态映射为索引的处理。done 2019.6.2
 20、将visible属性调整为visible,invisible,gone3种，去掉display属性。
