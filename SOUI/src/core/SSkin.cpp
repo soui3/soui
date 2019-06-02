@@ -729,14 +729,11 @@ void SSKinGroup::_Scale(ISkinObj * skinObj, int nScale)
 {
 	__super::_Scale(skinObj, nScale);
 	SSKinGroup *pRet = sobj_cast<SSKinGroup>(skinObj);
-	if (m_skins[0])
-		pRet->m_skins[0] = m_skins[0]->Scale(nScale);
-	if (m_skins[1])
-		pRet->m_skins[1] = m_skins[1]->Scale(nScale);
-	if (m_skins[2])
-		pRet->m_skins[2] = m_skins[2]->Scale(nScale);
-	if (m_skins[3])
-		pRet->m_skins[3] = m_skins[3]->Scale(nScale);
+	for(int i=0;i<ARRAYSIZE(m_skins);i++)
+	{
+		if (!m_skins[i]) continue;
+		pRet->m_skins[i] = m_skins[i]->Scale(nScale);
+	}
 }
 
 /*
