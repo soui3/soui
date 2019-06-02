@@ -21,6 +21,7 @@ namespace SOUI
 		{
 			int iState = xmlState.attribute(L"index").as_int();
 			SStringW strValue = xmlState.attribute(L"value").as_string();
+			strValue.MakeLower();
 			SStringWList lstValues ;
 			size_t nValues = SplitString(strValue,L'|',lstValues);
 			DWORD dwState = WndState_Normal;

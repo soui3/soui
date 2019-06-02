@@ -380,6 +380,10 @@ namespace SOUI
             return m_pszData;
         }
 
+		const tchar * c_str() const{
+			return m_pszData;
+		}
+
         // overloaded assignment
         TStringT& operator=(const TStringT& stringSrc)
         {
