@@ -30,6 +30,7 @@ namespace SOUI
 			}
 
 			m_mapOfStates[dwState] = iState;
+			xmlState = xmlState.next_sibling(L"state");
 		}
 		return TRUE;
 	}
