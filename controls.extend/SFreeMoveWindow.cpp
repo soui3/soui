@@ -217,7 +217,7 @@ namespace SOUI
 			rcMargin.top = rcMargin.bottom;
 			rcWnd.DeflateRect(rcMargin);
 			rcWnd.bottom = rcClient.top;
-			m_pCaptionSkin->Draw(pRT, rcWnd, 0);
+			m_pCaptionSkin->DrawByIndex(pRT, rcWnd, 0);
 		}
 	}
 

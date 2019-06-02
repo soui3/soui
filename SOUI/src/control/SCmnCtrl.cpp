@@ -276,7 +276,7 @@ void SButton::OnPaint(IRenderTarget *pRT)
 
     if(m_byAlphaAni==0xFF)
     {//不在动画过程中
-        m_pBgSkin->Draw(
+        m_pBgSkin->DrawByState(
             pRT, rcClient, GetState()
             );
     }
@@ -286,14 +286,14 @@ void SButton::OnPaint(IRenderTarget *pRT)
         if(GetState()&WndState_Hover)
         {
             //get hover
-            m_pBgSkin->Draw(pRT, rcClient, 0, m_pBgSkin->GetAlpha());
-            m_pBgSkin->Draw(pRT, rcClient, 1, byNewAlpha);
+            m_pBgSkin->DrawByState(pRT, rcClient, WndState_Normal, m_pBgSkin->GetAlpha());
+            m_pBgSkin->DrawByState(pRT, rcClient, WndState_Hover, byNewAlpha);
         }
         else
         {
             //lose hover
-            m_pBgSkin->Draw(pRT, rcClient, 0, m_pBgSkin->GetAlpha());
-            m_pBgSkin->Draw(pRT, rcClient, 1, m_pBgSkin->GetAlpha()-byNewAlpha);
+            m_pBgSkin->DrawByState(pRT, rcClient, WndState_Normal, m_pBgSkin->GetAlpha());
+            m_pBgSkin->DrawByState(pRT, rcClient, WndState_Hover, m_pBgSkin->GetAlpha()-byNewAlpha);
         }
     }
 
@@ -502,7 +502,7 @@ void SImageWnd::OnPaint(IRenderTarget *pRT)
 	}
 	else if (m_pSkin)
 	{
-		m_pSkin->Draw(pRT, rcWnd, m_iFrame);
+		m_pSkin->DrawByState(pRT, rcWnd, m_iFrame);
 	}
 }
 
@@ -598,7 +598,7 @@ SAnimateImgWnd::SAnimateImgWnd()
 void SAnimateImgWnd::OnPaint(IRenderTarget *pRT)
 {
     if (m_pSkin)
-        m_pSkin->Draw(pRT, GetWindowRect(), m_iCurFrame);
+        m_pSkin->DrawByState(pRT, GetWindowRect(), m_iCurFrame);
 }
 
 
@@ -735,7 +735,7 @@ void SProgress::OnPaint(IRenderTarget *pRT)
     
     CRect rcClient;
     GetClientRect(&rcClient);
-    m_pSkinBg->Draw(pRT, rcClient, WndState_Normal);
+    m_pSkinBg->DrawByState(pRT, rcClient, WndState_Normal);
     CRect rcValue=rcClient;
 
     if(IsVertical())
@@ -748,7 +748,7 @@ void SProgress::OnPaint(IRenderTarget *pRT)
     }
     if(m_nValue>m_nMinValue)
     {
-        m_pSkinPos->Draw(pRT, rcValue, WndState_Normal);
+        m_pSkinPos->DrawByState(pRT, rcValue, WndState_Normal);
     }
 
 
@@ -873,7 +873,7 @@ void SCheckBox::GetTextRect( LPRECT pRect )
 void SCheckBox::OnPaint(IRenderTarget *pRT)
 {
     CRect rcCheckBox=GetCheckRect();
-    m_pSkin->Draw(pRT, rcCheckBox, _GetDrawState());
+    m_pSkin->DrawByState(pRT, rcCheckBox, GetState());
     __super::OnPaint(pRT);
 }
 
@@ -882,7 +882,7 @@ void SCheckBox::DrawFocus(IRenderTarget *pRT)
     if(m_pFocusSkin)
     {
         CRect rcCheckBox=GetCheckRect();
-        m_pFocusSkin->Draw(pRT,rcCheckBox,0);
+        m_pFocusSkin->DrawByIndex(pRT,rcCheckBox,0);
     }else
     {
         __super::DrawFocus(pRT);
@@ -899,42 +899,6 @@ CSize SCheckBox::GetDesiredSize(int wid, int hei)
     return szRet;
 }
 
-
-UINT SCheckBox::_GetDrawState()
-{
-    DWORD dwState = GetState();
-    UINT uState = 0;
-
-    if (m_pSkin)
-    {
-        if (dwState & WndState_Check)
-        {
-            if (dwState & WndState_Disable)
-                uState = CBS_CHECKEDDISABLED;
-            else if (dwState & WndState_PushDown)
-                uState = CBS_CHECKEDPRESSED;
-            else if (dwState & WndState_Hover)
-                uState = CBS_CHECKEDHOT;
-            else
-                uState = CBS_CHECKEDNORMAL;
-        }
-        else
-        {
-            if (dwState & WndState_Disable)
-                uState = CBS_UNCHECKEDDISABLED;
-            else if (dwState & WndState_PushDown)
-                uState = CBS_UNCHECKEDPRESSED;
-            else if (dwState & WndState_Hover)
-                uState = CBS_UNCHECKEDHOT;
-            else
-                uState = CBS_UNCHECKEDNORMAL;
-        }
-    }
-
-    --uState;    // 减1
-
-    return uState;
-}
 
 void SCheckBox::OnLButtonUp(UINT nFlags, CPoint point)
 {
@@ -1103,7 +1067,7 @@ void SRadioBox::OnPaint(IRenderTarget *pRT)
 {
     SASSERT(m_pSkin);
     CRect rcRadioBox=GetRadioRect();
-    m_pSkin->Draw(pRT, rcRadioBox, _GetDrawState());
+    m_pSkin->DrawByState(pRT, rcRadioBox, GetState());
     __super::OnPaint(pRT);
 }
 
@@ -1112,7 +1076,7 @@ void SRadioBox::DrawFocus(IRenderTarget *pRT)
     if(m_pFocusSkin && m_bDrawFocusRect && IsFocusable())
 	{
         CRect rcCheckBox=GetRadioRect();
-        m_pFocusSkin->Draw(pRT,rcCheckBox,0);
+        m_pFocusSkin->DrawByIndex(pRT,rcCheckBox,0);
     }else
     {
         __super::DrawFocus(pRT);
@@ -1127,40 +1091,6 @@ CSize SRadioBox::GetDesiredSize(int wid, int hei)
     szRet.cx+=szRaio.cx + m_nRadioBoxSpacing;
     szRet.cy=(std::max)(szRet.cy,szRaio.cy);
     return szRet;
-}
-
-
-UINT SRadioBox::_GetDrawState()
-{
-    DWORD dwState = GetState();
-    UINT uState = 0;
-
-    if (dwState & WndState_Check)
-    {
-        if (dwState & WndState_Disable)
-            uState = RBS_CHECKEDDISABLED;
-        else if (dwState & WndState_PushDown)
-            uState = RBS_CHECKEDPRESSED;
-        else if (dwState & WndState_Hover)
-            uState = RBS_CHECKEDHOT;
-        else
-            uState = RBS_CHECKEDNORMAL;
-    }
-    else
-    {
-        if (dwState & WndState_Disable)
-            uState = RBS_UNCHECKEDDISABLED;
-        else if (dwState & WndState_PushDown)
-            uState = RBS_UNCHECKEDPRESSED;
-        else if (dwState & WndState_Hover)
-            uState = RBS_UNCHECKEDHOT;
-        else
-            uState = RBS_UNCHECKEDNORMAL;
-    }
-
-    --uState;
-
-    return uState;
 }
 
 BOOL SRadioBox::NeedRedrawWhenStateChange()
@@ -1331,11 +1261,7 @@ BOOL SToggle::GetToggle()
 void SToggle::OnPaint(IRenderTarget *pRT)
 {
     SASSERT(m_pSkin);
-    DWORD nState=0;
-    if(GetState()&WndState_PushDown) nState=2;
-    else if(GetState()&WndState_Hover) nState=1;
-    if(m_bToggled) nState+=3;
-    m_pSkin->Draw(pRT,GetWindowRect(),nState);
+    m_pSkin->DrawByState(pRT,GetWindowRect(),GetState());
 }
 
 void SToggle::OnLButtonUp(UINT nFlags,CPoint pt)

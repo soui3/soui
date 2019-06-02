@@ -45,10 +45,9 @@ public:
     
     virtual void OnColorize(COLORREF cr);
 
-	virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
 protected:
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
     virtual UINT GetExpandMode();
 
     SAutoRefPtr<IBitmap> m_pImg;
@@ -81,7 +80,7 @@ public:
 	SSkinImgCenter() {}
 
 protected:
-	virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState, BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -98,9 +97,9 @@ public:
     CRect GetMargin(){return m_rcMargin;}
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
     virtual UINT GetExpandMode();
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
 
     CRect m_rcMargin;
 
@@ -161,7 +160,7 @@ public:
 	virtual ISkinObj * Scale(int nScale);
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
     virtual void OnColorize(COLORREF cr);
     BTNCOLORS   m_colors;
     BTNCOLORS   m_colorsBackup;
@@ -213,7 +212,7 @@ public:
     }
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha);
     virtual void OnColorize(COLORREF cr);
 	virtual ISkinObj * Scale(int nScale);
 
@@ -261,13 +260,11 @@ public:
     //指示滚动条皮肤是否支持显示上下箭头
     virtual BOOL HasArrow(){return TRUE;}
     
-    virtual int GetIdealSize(){
-        if(!m_pImg) return 0;
-        return m_pImg->Width()/9;
-    }
+    virtual int GetIdealSize();
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha){}
+	virtual void _DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha);
     //返回源指定部分在原位图上的位置。
     virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical);
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
@@ -293,7 +290,7 @@ public:
     virtual ~SSkinColorRect();
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha);
 
 	virtual BOOL IgnoreState(){return GetStates()<2;}
 
@@ -452,6 +449,7 @@ public:
 
 	virtual int GetStates(){return 1;}
 
+
 	SOUI_ATTRS_BEGIN()
 		ATTR_ENUM_BEGIN(L"shape",Shape,TRUE)
 			ATTR_ENUM_VALUE(L"rectangle",rectangle)
@@ -462,9 +460,10 @@ public:
 protected:
 	void OnInitFinished(pugi::xml_node xmlNode);
 
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
+
 	virtual void _Scale(ISkinObj *pObj, int nScale);
 
-	virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
 
 	Shape  m_shape;
 
@@ -496,7 +495,7 @@ public:
 	SOUI_ATTRS_END()
 
 protected:
-	virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
 	virtual void _Scale(ISkinObj * skinObj, int nScale);
 	SAutoRefPtr<ISkinObj> m_skins[4];
 };

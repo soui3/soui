@@ -814,7 +814,7 @@ void STreeCtrl::DrawItem(IRenderTarget *pRT, const CRect & rc, HSTREEITEM hItem)
     if (hItem == m_hSelItem)
     {
         if (m_pItemSelSkin != NULL)
-            m_pItemSelSkin->Draw(pRT, rcItemBg, 0);
+            m_pItemSelSkin->DrawByIndex(pRT, rcItemBg, 0);
         else if (CR_INVALID != m_crItemSelBg)
             pRT->FillSolidRect(rcItemBg, m_crItemSelBg);
 
@@ -836,28 +836,28 @@ void STreeCtrl::DrawItem(IRenderTarget *pRT, const CRect & rc, HSTREEITEM hItem)
     if (pItem->bHasChildren &&
         STVIMask_Toggle == (m_uItemMask & STVIMask_Toggle) && !m_bHasLines)
     {
-		int nImage = SState2Index::GetIndex2(pItem->dwToggleState);
+		int nImage = SState2Index::GetDefIndex(pItem->dwToggleState);
         if (!pItem->bCollapsed) nImage += 3;
-        m_pToggleSkin->Draw2(pRT, m_rcToggle, nImage);
+        m_pToggleSkin->DrawByIndex(pRT, m_rcToggle, nImage);
     }
     
     if (STVIMask_CheckBox == (m_uItemMask & STVIMask_CheckBox))
     {
-		int nImage = SState2Index::GetIndex2(pItem->dwCheckBoxState);
+		int nImage = SState2Index::GetDefIndex(pItem->dwCheckBoxState);
         if (pItem->nCheckBoxValue == STVICheckBox_Checked)
             nImage += 3;
         else if (pItem->nCheckBoxValue == STVICheckBox_PartChecked)
             nImage += 6;
-        m_pCheckSkin->Draw2(pRT, m_rcCheckBox, nImage);
+        m_pCheckSkin->DrawByIndex(pRT, m_rcCheckBox, nImage);
     }
     
     if (STVIMask_Icon == (m_uItemMask & STVIMask_Icon) &&
         (pItem->nSelectedImage != -1 || pItem->nImage != -1))
     {
         if (pItem->nSelectedImage != -1 && hItem == m_hSelItem)
-            m_pIconSkin->Draw(pRT, m_rcIcon, pItem->nSelectedImage);
+            m_pIconSkin->DrawByIndex(pRT, m_rcIcon, pItem->nSelectedImage);
         else 
-            m_pIconSkin->Draw(pRT, m_rcIcon, pItem->nImage);        
+            m_pIconSkin->DrawByIndex(pRT, m_rcIcon, pItem->nImage);        
     }
         
     UINT align=DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS;
@@ -894,7 +894,7 @@ void STreeCtrl::DrawLines(IRenderTarget * pRT, const CRect & rc, HSTREEITEM hIte
 		HSTREEITEM hNextSibling = GetNextSiblingItem(hParent);
 		if (hNextSibling)
 		{
-			m_pLineSkin->Draw(pRT, rcLine, line);
+			m_pLineSkin->DrawByIndex(pRT, rcLine, line);
 		}
 		rcLine.OffsetRect(m_nIndent, 0);
 	}
@@ -930,7 +930,7 @@ void STreeCtrl::DrawLines(IRenderTarget * pRT, const CRect & rc, HSTREEITEM hIte
 		else
 			iLine = line_bottom;
 	}
-	m_pLineSkin->Draw(pRT, rcLine, iLine);
+	m_pLineSkin->DrawByIndex(pRT, rcLine, iLine);
 }
 
 int STreeCtrl::ItemHitTest(HSTREEITEM hItem,CPoint &pt) const

@@ -48,7 +48,7 @@ void SDesktopDock::OnPaint(IRenderTarget *pRT)
 
 	for (int i=0; i<MAX_COUNT; i++)
 	{
-		m_pSkin[i]->Draw(pRT,m_RTRect[i],FALSE);
+		m_pSkin[i]->DrawByIndex(pRT,m_RTRect[i],0);
 	}
 
 	AfterPaint(pRT,painter);

@@ -163,7 +163,7 @@ namespace SOUI
         AfterPaint(pRT, painter);
         CRect rcBtn;
         GetDropBtnRect(&rcBtn);
-        m_pSkinBtn->Draw(pRT,rcBtn, m_dwBtnState);
+        m_pSkinBtn->DrawByState(pRT,rcBtn, m_dwBtnState);
     }
 
     void SComboBase::OnLButtonDown( UINT nFlags,CPoint pt )

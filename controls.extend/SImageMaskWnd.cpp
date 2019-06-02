@@ -76,7 +76,7 @@ namespace SOUI
 		SAutoRefPtr<IRenderObj> pOldBmp;
 		pRTDst->SelectObject(m_bmpCache,&pOldBmp);
 		CRect rc(CPoint(0,0),m_bmpCache->Size());
-		pSkin->Draw(pRTDst,&rc,0);
+		pSkin->DrawByIndex(pRTDst,&rc,0);
 		pRTDst->SelectObject(pOldBmp);
 	}
 

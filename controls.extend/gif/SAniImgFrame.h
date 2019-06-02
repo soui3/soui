@@ -126,7 +126,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha=0xFF)
+        virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha=0xFF)
         {
             if(m_nFrames == 0 || !m_pFrames) return;
             if(dwState!=-1) SelectActiveFrame(dwState);

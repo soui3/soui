@@ -359,7 +359,7 @@ void SListBox::DrawItem(IRenderTarget * pRT, CRect & rc, int iItem)
 		pRT->FillSolidRect( rc, crItemBg);
 
 	if (m_pItemSkin != NULL)//有skin，则覆盖背景
-		m_pItemSkin->Draw(pRT, rc, nBgImg);
+		m_pItemSkin->DrawByIndex(pRT, rc, nBgImg);
 
 
     if (CR_INVALID != crText)
@@ -382,7 +382,7 @@ void SListBox::DrawItem(IRenderTarget * pRT, CRect & rc, int iItem)
             nOffsetY = (nItemHei - sizeSkin.cy) / 2;    //y 默认居中
 
         rcIcon.OffsetRect(rc.left + nOffsetX, rc.top + nOffsetY);
-        m_pIconSkin->Draw(pRT, rcIcon, pItem->nImage);
+        m_pIconSkin->DrawByIndex(pRT, rcIcon, pItem->nImage);
     }
 
     UINT align = DT_SINGLELINE;

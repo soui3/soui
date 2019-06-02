@@ -22,14 +22,14 @@ namespace SOUI
             else if(GetState() & WndState_PushDown) nState = 2;
             else if(GetState() & WndState_Hover) nState = 1;
             
-            m_pSkin->Draw(pRT,rc,nState);
+            m_pSkin->DrawByIndex(pRT,rc,nState);
         }
         if(m_pIcon)
         {
             CRect rcIcon=GetClientRect();
             rcIcon.OffsetRect(m_ptIcon);
             rcIcon=CRect(rcIcon.TopLeft(),m_pIcon->GetSkinSize());
-            m_pIcon->Draw(pRT,rcIcon, GetState());
+            m_pIcon->DrawByState(pRT,rcIcon, GetState());
         }
         SWindow::OnPaint(pRT);
     }

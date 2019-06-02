@@ -273,7 +273,7 @@ namespace SOUI
             if(!pItem->IsGroup()) iState += 2;
             CRect rcDraw = rcSwitch;
             rcDraw.DeflateRect((rcSwitch.Size()-m_switchSkin->GetSkinSize())/2);
-            m_switchSkin->Draw(pRT,rcDraw,iState);
+            m_switchSkin->DrawByIndex(pRT,rcDraw,iState);
         }
         
         CRect rcName = rcNameBack;

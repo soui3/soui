@@ -95,7 +95,7 @@ namespace SOUI
 		{
 			rcItem.left = rcItem.right;
 			rcItem.right = rcClient.right;
-			if (m_pSkinItem) m_pSkinItem->Draw(pRT, rcItem, 3);
+			if (m_pSkinItem) m_pSkinItem->DrawByState(pRT, rcItem, WndState_Disable);
 		}
 		AfterPaint(pRT, painter);
 	}
@@ -103,7 +103,7 @@ namespace SOUI
 	void SHeaderCtrl::DrawItem(IRenderTarget * pRT, CRect rcItem, const LPSHDITEM pItem)
 	{
 		if(!pItem->bVisible) return;
-		if (m_pSkinItem) m_pSkinItem->Draw(pRT, rcItem, pItem->state);
+		if (m_pSkinItem) m_pSkinItem->DrawByIndex(pRT, rcItem, pItem->state);
 		pRT->DrawText(pItem->strText.GetText(FALSE), pItem->strText.GetText(FALSE).GetLength(), rcItem, m_style.GetTextAlign());
 		if (pItem->stFlag == ST_NULL || !m_pSkinSort) return;
 		CSize szSort = m_pSkinSort->GetSkinSize();
@@ -115,7 +115,7 @@ namespace SOUI
 		else
 			ptSort.x = rcItem.right - szSort.cx - 2;
 
-		if (m_pSkinSort) m_pSkinSort->Draw(pRT, CRect(ptSort, szSort), pItem->stFlag == ST_UP ? 0 : 1);
+		if (m_pSkinSort) m_pSkinSort->DrawByIndex(pRT, CRect(ptSort, szSort), pItem->stFlag == ST_UP ? 0 : 1);
 	}
 
 	BOOL SHeaderCtrl::DeleteItem(int iItem)
@@ -479,7 +479,7 @@ namespace SOUI
 		items.InsertAt(iDragTo, iDragFrom);
 
 		if (m_pSkinItem)
-			m_pSkinItem->Draw(pRT, rcClient, 0);
+			m_pSkinItem->DrawByIndex(pRT, rcClient, 0);
 		for (UINT i = 0; i < items.GetCount(); i++)
 		{
 			rcItem.left = rcItem.right;

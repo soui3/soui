@@ -284,7 +284,7 @@ void SCalendar::DrawTitle(IRenderTarget *pRT)
    rect.bottom = rect.top + m_nTitleHei.toPixelSize(GetScale());
 
    if(m_pTitleSkin)
-       m_pTitleSkin->Draw(pRT,rect,0);
+       m_pTitleSkin->DrawByIndex(pRT,rect,0);
    else
        pRT->FillSolidRect(&rect,m_crTitleBack);
 
@@ -326,12 +326,12 @@ void SCalendar::DrawDay( IRenderTarget *pRT,CRect & rcDay,WORD iDay )
     COLORREF crTxt=pRT->GetTextColor();
     if(iDay==m_iDay)
     {
-        if(m_pDaySkin) m_pDaySkin->Draw(pRT,rcDay,2);
+        if(m_pDaySkin) m_pDaySkin->DrawByIndex(pRT,rcDay,2);
         else pRT->FillSolidRect(rcDay,m_crDayBack);
         pRT->SetTextColor(m_crDay);
     }else
     {
-        if(m_pDaySkin) m_pDaySkin->Draw(pRT,rcDay,iDay==m_iHoverDay?1:0);
+        if(m_pDaySkin) m_pDaySkin->DrawByIndex(pRT,rcDay,iDay==m_iHoverDay?1:0);
         int iweekday=SCalendarCore::GetDayOfWeek(m_iYear,m_iMonth,iDay);
         if(iweekday==0 || iweekday==6)
             pRT->SetTextColor(m_crWeekend);

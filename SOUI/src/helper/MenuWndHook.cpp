@@ -286,7 +286,7 @@ void SMenuWndHook::OnPrint(HDC dc)
     if(m_strSkinName.IsEmpty()) return;
     ISkinObj *pSkin=GETSKIN(m_strSkinName,100);
     if(!pSkin) return;
-    SSkinImgFrame *pBorderSkin=static_cast<SSkinImgFrame*>(pSkin);
+    SSkinImgList *pBorderSkin=static_cast<SSkinImgList*>(pSkin);
     if(!pBorderSkin) return;
 
     CRect rcClient;
@@ -303,7 +303,7 @@ void SMenuWndHook::OnPrint(HDC dc)
     
     SAutoRefPtr<IRenderTarget> pRT;
     GETRENDERFACTORY->CreateRenderTarget(&pRT,rcWnd.Width(),rcWnd.Height());
-    pBorderSkin->Draw(pRT,rcWnd,0);
+    pBorderSkin->DrawByIndex(pRT,rcWnd,0);
     HDC hmemdc=pRT->GetDC(0);
     ::BitBlt(dc,0,0,rcWnd.Width(),rcWnd.Height(),hmemdc,0,0,SRCCOPY);
     pRT->ReleaseDC(hmemdc);

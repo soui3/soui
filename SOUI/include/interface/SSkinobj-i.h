@@ -42,7 +42,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)=0;
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)=0;
 
         /**
         * Draw
@@ -53,7 +53,7 @@ namespace SOUI
         * @return   void
         * Describe  使用SkinObj的GetAlpha属性绘制
         */
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)=0;
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)=0;
 
 		/**
         * Draw2
@@ -65,7 +65,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */
-		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)=0;
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)=0;
 
 		/**
 		* Draw2
@@ -76,7 +76,7 @@ namespace SOUI
 		* @return   void
 		* Describe  使用SkinObj的GetAlpha属性绘制
 		*/
-		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState) = 0;
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) = 0;
 
         /**
         * GetSkinSize

@@ -14,9 +14,11 @@ namespace SOUI
 
 		int GetIndex(DWORD dwState) const;
 
-		static int GetIndex2(DWORD dwState);
-
 		BOOL Init(pugi::xml_node xmlNode);
+
+		static int GetDefIndex(DWORD dwState);
+
+		static DWORD String2State(const SStringW & strState);
 	protected:
 		SMap<DWORD,int> m_mapOfStates;
 	};
@@ -35,7 +37,7 @@ namespace SOUI
         */    
         BYTE GetAlpha() const;
 
-		int State2Index(DWORD dwState) const;
+		virtual int State2Index(DWORD dwState) const;
         /**
         * SetAlpha
         * @brief    设定skin对象包含透明度
@@ -45,11 +47,11 @@ namespace SOUI
         */    
         virtual void SetAlpha(BYTE byAlpha);
 
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
-        virtual void Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState);
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState);
 
-		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
-		virtual void Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState);
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState);
 
         virtual SIZE GetSkinSize();
 
@@ -75,17 +77,9 @@ namespace SOUI
 
 		virtual void _Scale(ISkinObj *pObj, int nScale);
 
-        /**
-        * _Draw
-        * @brief    Draw函数的实现
-        * @param    IRenderTarget * pRT --  渲染目标
-        * @param    LPCRECT rcDraw --  渲染位置
-        * @param    DWORD dwState --  渲染状态
-        * @param    BYTE byAlpha --  透明度
-        * @return   void
-        * Describe  每一个skin需要实现一个_Draw方法
-        */    
-        virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)=0;
+		virtual void _DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+
+		virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) = 0;
 
         BYTE		m_byAlpha;
         COLORREF    m_crColorize;

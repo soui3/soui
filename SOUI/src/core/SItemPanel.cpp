@@ -371,7 +371,7 @@ SItemPanel * SItemPanel::Create(SWindow *pFrameHost,pugi::xml_node xmlNode,IItem
 //不继承宿主的字体，从指定的字体或者系统字体开始，避免在GetRenderTarget时还需要从宿主窗口到获取当前的文字属性。
 void SItemPanel::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 {
-	int iState = SState2Index::GetIndex2(GetState());
+	int iState = SState2Index::GetDefIndex(GetState());
 	IFontPtr fontText = GetStyle().GetTextFont(iState);
 	COLORREF crText = GetStyle().GetTextColor(iState);
 	if(fontText == NULL)

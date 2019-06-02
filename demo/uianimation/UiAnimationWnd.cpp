@@ -172,7 +172,7 @@ namespace SOUI{
             if (SUCCEEDED(hr))
             {
                 CRect rc(CPoint((int)x,(int)y)+rcClient.TopLeft(),GetSize());
-                m_pImg->Draw(pRT,&rc,0,0xFF);
+                m_pImg->DrawByIndex(pRT,&rc,0,0xFF);
             }
         }
     }

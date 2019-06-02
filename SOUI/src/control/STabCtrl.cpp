@@ -339,7 +339,7 @@ void STabCtrl::OnPaint(IRenderTarget *pRT)
                 rcSplit.left=rcItemPrev.right;
                 rcSplit.right=rcSplit.left + m_nTabInterSize.toPixelSize(GetScale());
             }
-            m_pSkinTabInter->Draw(pRT,rcSplit,0);
+            m_pSkinTabInter->DrawByIndex(pRT,rcSplit,0);
         }
 
         DrawItem(pRT,rcItem,i,dwState);
@@ -350,7 +350,7 @@ void STabCtrl::OnPaint(IRenderTarget *pRT)
     if (m_pSkinFrame)
     {
         CRect rcPage = GetChildrenLayoutRect();
-        m_pSkinFrame->Draw(pRT, rcPage, WndState_Normal);
+        m_pSkinFrame->DrawByState(pRT, rcPage, WndState_Normal);
     }
 
     if(IsFocused() && IsFocusable() && m_bDrawFocusRect)
@@ -722,8 +722,8 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
 {
     if(rcItem.IsRectEmpty()) return;
     if(m_pSkinTab)
-        m_pSkinTab->Draw(pRT,rcItem, dwState);
-	int iState = SState2Index::GetIndex2(dwState);
+        m_pSkinTab->DrawByState(pRT,rcItem, dwState);
+	int iState = SState2Index::GetDefIndex(dwState);
     //根据状态从style中获得字体，颜色
     IFontPtr font=m_style.GetTextFont(iState);
     COLORREF crTxt = m_style.GetTextColor(iState);
@@ -739,7 +739,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
         rcIcon.bottom=rcIcon.top+m_pSkinIcon->GetSkinSize().cy;
         int iIcon=GetItem(iItem)->GetIconIndex();
         if(iIcon == -1) iIcon = iItem;
-        m_pSkinIcon->Draw2(pRT,rcIcon,iIcon);
+        m_pSkinIcon->DrawByIndex(pRT,rcIcon,iIcon);
     }
 
     if(m_ptText[0].toPixelSize(GetScale()) > 0 && m_ptText[1].toPixelSize(GetScale()) > 0)

@@ -132,17 +132,17 @@ void SSliderBar::OnPaint(IRenderTarget * pRT)
     BeforePaint(pRT, painter);
 
     CRect rcRail=GetPartRect(SC_RAILBACK);
-    m_pSkinBg->Draw(pRT,rcRail,0);
+    m_pSkinBg->DrawByIndex(pRT,rcRail,0);
     if(m_nValue!=m_nMinValue)
     {
         CRect rcSel=GetPartRect(SC_SELECT);
-        m_pSkinPos->Draw(pRT,rcSel,0);
+        m_pSkinPos->DrawByIndex(pRT,rcSel,0);
     }
     CRect rcThumb = GetPartRect(SC_THUMB);
     int nState=0;//normal
     if(m_bDrag) nState=2;//pushback
     else if(m_uHtPrev==SC_THUMB) nState=1;//hover
-    m_pSkinThumb->Draw(pRT, rcThumb, nState);
+    m_pSkinThumb->DrawByIndex(pRT, rcThumb, nState);
 
     AfterPaint(pRT, painter);
 }

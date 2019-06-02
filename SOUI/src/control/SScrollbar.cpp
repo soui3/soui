@@ -67,8 +67,8 @@ int SScrollBar::SetPos(int nPos)
 			if (IsVisible())
 			{
 				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-				m_pSkin->Draw(pRT, rcUnion, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, IsVertical()));
-				m_pSkin->Draw(pRT, rcNewThumb, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, IsVertical()));
+				m_pSkin->DrawByState(pRT, rcUnion, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, IsVertical()));
+				m_pSkin->DrawByState(pRT, rcNewThumb, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, IsVertical()));
 				ReleaseRenderTarget(pRT);
 			}         
             m_si.nTrackPos=-1;
@@ -165,15 +165,15 @@ void SScrollBar::OnPaint(IRenderTarget * pRT)
     int nState=IsDisabled(TRUE)?3:0;
     CRect rcDest;
     rcDest=GetPartRect(SB_LINEUP);
-    m_pSkin->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,m_bVertical));
+    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,m_bVertical));
     rcDest=GetPartRect(SB_PAGEUP);
-    m_pSkin->Draw(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,nState,m_bVertical));
+    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,nState,m_bVertical));
     rcDest=GetPartRect(SB_THUMBTRACK);
-    m_pSkin->Draw(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nState,m_bVertical));
+    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nState,m_bVertical));
     rcDest=GetPartRect(SB_PAGEDOWN);
-    m_pSkin->Draw(pRT,rcDest,MAKESBSTATE(SB_PAGEDOWN,nState,m_bVertical));
+    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEDOWN,nState,m_bVertical));
     rcDest=GetPartRect(SB_LINEDOWN);
-    m_pSkin->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,m_bVertical));
+    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,m_bVertical));
 }
 
 void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
@@ -202,7 +202,7 @@ void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
         {
             CRect rc=GetPartRect(m_uClicked);
             IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-            m_pSkin->Draw(pRT,rc,MAKESBSTATE(m_uClicked,SBST_NORMAL,m_bVertical));
+            m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(m_uClicked,SBST_NORMAL,m_bVertical));
             ReleaseRenderTarget(pRT);
         }
         m_uClicked=(UINT)-1;
@@ -228,7 +228,7 @@ void SScrollBar::OnLButtonDown(UINT nFlags, CPoint point)
         {
             CRect rc=GetPartRect(uHit);
             IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-            m_pSkin->Draw(pRT,rc,MAKESBSTATE(uHit,SBST_PUSHDOWN,m_bVertical));
+            m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(uHit,SBST_PUSHDOWN,m_bVertical));
             ReleaseRenderTarget(pRT);
             NotifySbCode(uHit,m_si.nPos);
         }
@@ -270,8 +270,8 @@ void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
             rcUnion.UnionRect(rcOldThumb,rcThumb);
             IRenderTarget *pRT=GetRenderTarget(&rcUnion,OLEDC_PAINTBKGND);
 
-            m_pSkin->Draw(pRT,rcUnion,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,m_bVertical));
-            m_pSkin->Draw(pRT,rcThumb,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,m_bVertical));
+            m_pSkin->DrawByState(pRT,rcUnion,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,m_bVertical));
+            m_pSkin->DrawByState(pRT,rcThumb,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,m_bVertical));
 
             ReleaseRenderTarget(pRT);
             NotifySbCode(SB_THUMBTRACK,m_si.nTrackPos);
@@ -286,14 +286,14 @@ void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
             {
                 CRect rc=GetPartRect(m_uHtPrev);
                 IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-                m_pSkin->Draw(pRT,rc,MAKESBSTATE(m_uHtPrev,SBST_NORMAL,m_bVertical));
+                m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(m_uHtPrev,SBST_NORMAL,m_bVertical));
                 ReleaseRenderTarget(pRT);
             }
             if(uHit!=-1)
             {
                 CRect rc=GetPartRect(uHit);
                 IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-                m_pSkin->Draw(pRT,rc,MAKESBSTATE(uHit,SBST_HOVER,m_bVertical));
+                m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(uHit,SBST_HOVER,m_bVertical));
                 ReleaseRenderTarget(pRT);
             }
             m_uHtPrev=uHit;

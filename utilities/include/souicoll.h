@@ -2302,9 +2302,6 @@ SMap< K, V, KTraits, VTraits >::SMap(const SMap< K, V, KTraits, VTraits > & src)
 	m_pBlocks(NULL),
 	m_pFree(NULL)
 {
-	SASSERT(nBins > 0);
-	SASSERT(nBlockSize > 0);
-
 	SetOptimalLoad(m_fOptimalLoad, m_fLoThreshold, m_fHiThreshold, false);
 	Copy(src);
 }

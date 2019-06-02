@@ -1374,14 +1374,14 @@ namespace SOUI
 				nState=1;
 			}
 			if(nState>=m_pBgSkin->GetStates()) nState=0;
-			m_pBgSkin->Draw(pRT, rcClient, nState); 
+			m_pBgSkin->DrawByIndex(pRT, rcClient, nState); 
 		}
 		return TRUE;
 	}
 
 	void SWindow::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 	{
-		int iState = SState2Index::GetIndex2(GetState());
+		int iState = SState2Index::GetDefIndex(GetState());
 		IFontPtr pFont = GetStyle().GetTextFont(iState);
 		if(pFont) 
 			pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
@@ -1441,7 +1441,7 @@ namespace SOUI
 			if(m_pNcSkin)
 			{
 				if(nState>=m_pNcSkin->GetStates()) nState=0;
-				m_pNcSkin->Draw(pRT,m_rcWindow,nState);
+				m_pNcSkin->DrawByIndex(pRT,m_rcWindow,nState);
 			}
 			else
 			{

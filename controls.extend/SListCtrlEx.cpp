@@ -342,7 +342,7 @@ namespace SOUI
 			pRT->FillSolidRect( rcItem, crItemBg);
 
 		if (m_pItemSkin != NULL)//ÓÐskin£¬Ôò¸²¸Ç±³¾°
-			m_pItemSkin->Draw(pRT, rcItem, nBgImg);
+			m_pItemSkin->DrawByIndex(pRT, rcItem, nBgImg);
 
 		CRect rcCol(rcItem);
 		rcCol.right = rcCol.left;

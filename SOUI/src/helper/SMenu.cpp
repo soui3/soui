@@ -131,7 +131,7 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
         BOOL bSelected = lpDrawItemStruct->itemState & ODS_SELECTED;
         BOOL bChecked = lpDrawItemStruct->itemState & ODS_CHECKED;
         BOOL bRadio = mii.fType&MFT_RADIOCHECK;
-        m_attr->m_pItemSkin->Draw(pRT,rcItem,bSelected?1:0);    //draw background
+        m_attr->m_pItemSkin->DrawByIndex(pRT,rcItem,bSelected?1:0);    //draw background
 
         //draw icon
         CRect rcIcon;
@@ -146,12 +146,12 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
         {
             if(m_attr->m_pCheckSkin)
             {
-                m_attr->m_pCheckSkin->Draw(pRT,rcIcon,bRadio?1:0);
+                m_attr->m_pCheckSkin->DrawByIndex(pRT,rcIcon,bRadio?1:0);
             }
         }
         else if(pdmmi->iIcon!=-1 && m_attr->m_pIconSkin)
         {
-            m_attr->m_pIconSkin->Draw(pRT,rcIcon,pdmmi->iIcon);
+            m_attr->m_pIconSkin->DrawByIndex(pRT,rcIcon,pdmmi->iIcon);
         }
         rcItem.left=rcIcon.right+ iconOffset;
 
@@ -174,13 +174,13 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
             //draw select mask
             CRect rcItem=lpDrawItemStruct->rcItem;
             rcItem.MoveToXY(0,0);
-            m_attr->m_pItemSkin->Draw(pRT,rcItem,2);
+            m_attr->m_pItemSkin->DrawByIndex(pRT,rcItem,2);
         }
     }
     else  //if(strcmp("sep",pXmlItem->Value())==0)
     {
         if(m_attr->m_pSepSkin)
-            m_attr->m_pSepSkin->Draw(pRT,rcItem,0);    //draw seperator
+            m_attr->m_pSepSkin->DrawByIndex(pRT,rcItem,0);    //draw seperator
     }
     rcItem=lpDrawItemStruct->rcItem;
     

@@ -197,7 +197,7 @@ namespace SOUI
 			rcItem.right = rcItem.left + si.cx;
 			rcItem.top += n;
 			rcItem.bottom = rcItem.top + si.cy;
-			m_pSkinPrev->Draw(pRT, rcItem, dwPrevState);
+			m_pSkinPrev->DrawByIndex(pRT, rcItem, dwPrevState);
 		}
 		
 		// 绘制 年月
@@ -233,7 +233,7 @@ namespace SOUI
 			rcItem.top += n;
 			rcItem.bottom = rcItem.top + si.cy;
 			
-			m_pSkinNext->Draw(pRT, rcItem, dwNextState);
+			m_pSkinNext->DrawByIndex(pRT, rcItem, dwNextState);
 		}
 	}
 
@@ -293,7 +293,7 @@ namespace SOUI
 		}
 		
 		if (NULL != m_pSkinDay)
-			m_pSkinDay->Draw(pRT, rcDay, dwState);
+			m_pSkinDay->DrawByIndex(pRT, rcDay, dwState);
 
 		SStringT sDay;
 		sDay.Format(_T("%d"), dayInfo.iDay);
@@ -792,9 +792,9 @@ namespace SOUI
 		if(WndState_Hover == m_dwBtnState)
 		{
 			rcBtn += CRect(1,1,1,1);
-			m_pNcSkin->Draw(pRT, rcBtn, 1);
+			m_pNcSkin->DrawByIndex(pRT, rcBtn, 1);
 		}
-		m_pSkinBtn->Draw(pRT, rcSkin, m_dwBtnState);
+		m_pSkinBtn->DrawByState(pRT, rcSkin, m_dwBtnState);
 	}
 
 	bool SDateTimePicker::CalcPopupRect(int nWidth, CRect& rcPopup)

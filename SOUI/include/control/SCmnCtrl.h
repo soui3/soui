@@ -673,14 +673,6 @@ protected:
     ISkinObj *m_pSkin;   /**< 状态图片资源 */
     ISkinObj *m_pFocusSkin; /**< 焦点状态资源 */
     /**
-     * SCheckBox::_GetDrawState
-     * @brief    获得复选框状态
-     * @return   返回状态值
-     *
-     * Describe  获取复选框状态
-     */
-    UINT _GetDrawState();
-    /**
      * SCheckBox::GetCheckRect
      * @brief    获得复选框矩形
      * @return   返回值CRect矩形框
@@ -838,13 +830,6 @@ public:
     SRadioBox();
 
 protected:
-    /**
-     * SRadioBox::_GetDrawState
-     * @brief    获取绘制状态
-     *
-     * Describe  将状态值转换成子图索引
-     */
-    UINT _GetDrawState(); 
     /**
      * SRadioBox::GetRadioRect
      * @brief    获取radio显示位置

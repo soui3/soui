@@ -103,7 +103,7 @@ namespace SOUI
             RB+= (m_orintation == Vertical)?rcPane.Width():rcPane.Height();
             LT=RB;
             RB+=m_spliterSize;
-            m_pSkinSep->Draw(pRT,rcSep,0);
+            m_pSkinSep->DrawByIndex(pRT,rcSep,0);
         }
     }
 

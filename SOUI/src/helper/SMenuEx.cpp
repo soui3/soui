@@ -279,7 +279,7 @@ namespace SOUI
 			}
 			rc.top += icoY;
 			CRect rcIcon(rc.TopLeft(), pMenuRoot->m_pCheckSkin->GetSkinSize());
-			pMenuRoot->m_pCheckSkin->Draw(pRT, rcIcon, nState);
+			pMenuRoot->m_pCheckSkin->DrawByIndex(pRT, rcIcon, nState);
 		}
 		else if (pMenuRoot->m_pIconSkin)
 		{
@@ -289,7 +289,7 @@ namespace SOUI
 			}
 			rc.top += icoY;
 			CRect rcIcon(rc.TopLeft(), pMenuRoot->m_pIconSkin->GetSkinSize());
-			pMenuRoot->m_pIconSkin->Draw(pRT, rcIcon, m_iIcon);
+			pMenuRoot->m_pIconSkin->DrawByIndex(pRT, rcIcon, m_iIcon);
 		}
 
 		if (m_pSubMenu)
@@ -299,7 +299,7 @@ namespace SOUI
 			rcArrow.left = rcArrow.right - szArrow.cx;
 			rcArrow.DeflateRect(0, (rcArrow.Height() - szArrow.cy) / 2);
 
-			pMenuRoot->m_pArrowSkin->Draw(pRT, rcArrow, (GetState()&WndState_Hover) ? 1 : 0);
+			pMenuRoot->m_pArrowSkin->DrawByIndex(pRT, rcArrow, (GetState()&WndState_Hover) ? 1 : 0);
 		}
 	}
 
@@ -317,7 +317,7 @@ namespace SOUI
 			nState = 1;
 		}
 		if (nState >= m_pBgSkin->GetStates()) nState = 0;
-		m_pBgSkin->Draw(pRT, GetClientRect(), nState);
+		m_pBgSkin->DrawByIndex(pRT, GetClientRect(), nState);
 
 		return TRUE;
 	}
@@ -441,7 +441,7 @@ namespace SOUI
 		BOOL OnEraseBkgnd(IRenderTarget *pRT)
 		{
 			if (!m_pBgSkin) return FALSE;
-			m_pBgSkin->Draw(pRT, GetClientRect(), 0);
+			m_pBgSkin->DrawByIndex(pRT, GetClientRect(), 0);
 			return TRUE;
 		}
 		void OnPaint(SOUI::IRenderTarget * pRT) { (void)pRT; }

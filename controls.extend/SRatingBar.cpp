@@ -47,7 +47,7 @@ namespace SOUI
         
         for(int i=0;i<m_nStars;i++)
         {
-            m_pStar->Draw(pRT,rcStar,bForeground?0:1);
+            m_pStar->DrawByIndex(pRT,rcStar,bForeground?0:1);
             rcStar.OffsetRect(szStar.cx,0);
         }
     }

@@ -299,35 +299,35 @@ void SPanel::OnNcPaint(IRenderTarget *pRT)
     {
         int nState=(IsDisabled(TRUE) || !IsScrollBarEnable(TRUE))?SBST_DISABLE:SBST_INACTIVE;
         rcDest=GetSbPartRect(TRUE,SB_LINEUP);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,TRUE));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,TRUE));
         rcDest=GetSbRailwayRect(TRUE);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_VERT?SBST_HOVER:nState,TRUE));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_VERT?SBST_HOVER:nState,TRUE));
         rcDest=GetSbPartRect(TRUE,SB_THUMBTRACK);
         int nStateThumb = nState;
         if(m_dragSb == DSB_VERT) 
             nStateThumb = SBST_PUSHDOWN;
         else if(m_HitInfo.bVertical && m_HitInfo.uSbCode == SB_THUMBTRACK)
             nStateThumb= SBST_HOVER;
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,TRUE));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,TRUE));
         rcDest=GetSbPartRect(TRUE,SB_LINEDOWN);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,TRUE));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,TRUE));
     }
     if(HasScrollBar(FALSE))
     {
          int nState=(IsDisabled(TRUE) || !IsScrollBarEnable(FALSE))?SBST_DISABLE:SBST_INACTIVE;
          rcDest=GetSbPartRect(FALSE,SB_LINEUP);
-         m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,FALSE));
+         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,FALSE));
          rcDest=GetSbRailwayRect(FALSE);
-         m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_HORZ?SBST_HOVER:nState,FALSE));
+         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_HORZ?SBST_HOVER:nState,FALSE));
          rcDest=GetSbPartRect(FALSE,SB_THUMBTRACK);
          int nStateThumb = nState;
          if(m_dragSb == DSB_HORZ) 
              nStateThumb = SBST_PUSHDOWN;
          else if(!m_HitInfo.bVertical && m_HitInfo.uSbCode == SB_THUMBTRACK)
              nStateThumb= SBST_HOVER;
-         m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,FALSE));
+         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,FALSE));
          rcDest=GetSbPartRect(FALSE,SB_LINEDOWN);
-         m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,FALSE));
+         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,FALSE));
     }
 
     if(HasScrollBar(TRUE) && HasScrollBar(FALSE))
@@ -336,7 +336,7 @@ void SPanel::OnNcPaint(IRenderTarget *pRT)
         __super::GetClientRect(&rcDest);
         rcDest.left=rcDest.right-GetSbWidth();
         rcDest.top=rcDest.bottom-GetSbWidth();
-        m_pSkinSb->Draw(pRT,rcDest,SB_CORNOR);
+        m_pSkinSb->DrawByState(pRT,rcDest,SB_CORNOR);
     }
 }
 
@@ -371,7 +371,7 @@ void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
             {
                 CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
                 SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_PUSHDOWN,m_HitInfo.bVertical));
+                m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_PUSHDOWN,m_HitInfo.bVertical));
                 ReleaseRenderTarget(pRT);
             }
             OnScroll(m_HitInfo.bVertical,m_HitInfo.uSbCode,m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos);
@@ -387,8 +387,8 @@ void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
             CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
             SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSlide,OLEDC_PAINTBKGND,FALSE);
             CRect rcRail = GetSbRailwayRect(m_HitInfo.bVertical);
-            m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
-            m_pSkinSb->Draw(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
+            m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
+            m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
             ReleaseRenderTarget(pRT);
         }
     }
@@ -413,10 +413,10 @@ void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
 			rcRail.DeflateRect(GetSbArrowSize(),0);
 		}
         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
-        m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEDOWN,SBST_NORMAL,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEDOWN,SBST_NORMAL,m_HitInfo.bVertical));
         psi->nTrackPos=-1;
         CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-        m_pSkinSb->Draw(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,m_HitInfo.bVertical));
         ReleaseRenderTarget(pRT);
     }
     else if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
@@ -425,7 +425,7 @@ void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
         {
             CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
             SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-            m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_NORMAL,m_HitInfo.bVertical));
+            m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_NORMAL,m_HitInfo.bVertical));
             ReleaseRenderTarget(pRT);
         }
     }
@@ -489,8 +489,8 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
         }
 
         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
-        m_pSkinSb->Draw(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
-        m_pSkinSb->Draw(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
         ReleaseRenderTarget(pRT);
 
         if(nNewTrackPos!=psi->nTrackPos)
@@ -519,24 +519,24 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                     if(uHit.uSbCode!=SB_LINEUP) 
                     {
                         rc=GetSbPartRect(uHit.bVertical,SB_LINEUP);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_LINEUP,SBST_NORMAL,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_LINEUP,SBST_NORMAL,uHit.bVertical));
                     }
                     rc=GetSbRailwayRect(uHit.bVertical);
-                    m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHit.bVertical));
+                    m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHit.bVertical));
                     if(uHit.uSbCode!=SB_LINEDOWN)
                     {
                         rc=GetSbPartRect(uHit.bVertical,SB_LINEDOWN);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_LINEDOWN,SBST_NORMAL,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_LINEDOWN,SBST_NORMAL,uHit.bVertical));
                     }
                     if(uHit.uSbCode!=SB_THUMBTRACK)
                     {
                         rc=GetSbPartRect(uHit.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHit.bVertical));
                     }
                     if(uHit.uSbCode!=SB_PAGEUP && uHit.uSbCode!=SB_PAGEDOWN)
                     {
                         rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
                     }
                     ReleaseRenderTarget(pRT);
                 }
@@ -548,15 +548,15 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                     {
                         CRect rc=GetSbPartRect(uHitOrig.bVertical,uHitOrig.uSbCode);
                         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(uHitOrig.uSbCode,SBST_NORMAL,uHitOrig.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHitOrig.uSbCode,SBST_NORMAL,uHitOrig.bVertical));
                         ReleaseRenderTarget(pRT);
                     }else if(uHitOrig.uSbCode==SB_THUMBTRACK)
                     {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
                         CRect rc=GetSbRailwayRect(uHitOrig.bVertical);
                         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHitOrig.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHitOrig.bVertical));
                         rc=GetSbPartRect(uHitOrig.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHitOrig.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHitOrig.bVertical));
                         ReleaseRenderTarget(pRT);
                     }
                 }
@@ -566,15 +566,15 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
                     {
                         CRect rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
                         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
                         ReleaseRenderTarget(pRT);
                     }else if(uHit.uSbCode==SB_THUMBTRACK)
                     {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
                         CRect rc=GetSbRailwayRect(uHit.bVertical);
                         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,uHit.bVertical));
                         rc=GetSbPartRect(uHit.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->Draw(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,uHit.bVertical));
+                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,uHit.bVertical));
                         ReleaseRenderTarget(pRT);
                     }
                 }
@@ -596,13 +596,13 @@ void SPanel::OnNcMouseLeave()
         CRect rcSb=GetScrollBarRect(m_HitInfo.bVertical);
         SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSb,OLEDC_PAINTBKGND,FALSE);
         CRect rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_LINEUP);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEUP,SBST_INACTIVE,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,SBST_INACTIVE,m_HitInfo.bVertical));
         rcDest=GetSbRailwayRect(m_HitInfo.bVertical);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,SBST_INACTIVE,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,SBST_INACTIVE,m_HitInfo.bVertical));
         rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,SBST_INACTIVE,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,SBST_INACTIVE,m_HitInfo.bVertical));
         rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_LINEDOWN);
-        m_pSkinSb->Draw(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,SBST_INACTIVE,m_HitInfo.bVertical));
+        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,SBST_INACTIVE,m_HitInfo.bVertical));
         ReleaseRenderTarget(pRT);
     }
     m_HitInfo=uHit;
@@ -703,10 +703,10 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 			rcRail.DeflateRect(GetSbArrowSize(), 0);
 		}
 		SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
-		m_pSkinSb->Draw(pRT, rcRail, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, bVertical));
+		m_pSkinSb->DrawByState(pRT, rcRail, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, bVertical));
 		psi->nTrackPos = -1;
 		CRect rcSlide = GetSbPartRect(bVertical, SB_THUMBTRACK);
-		m_pSkinSb->Draw(pRT, rcSlide, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, bVertical));
+		m_pSkinSb->DrawByState(pRT, rcSlide, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, bVertical));
 		ReleaseRenderTarget(pRT);
 	}
 	Invalidate();

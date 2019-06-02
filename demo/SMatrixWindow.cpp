@@ -66,15 +66,15 @@ namespace SOUI
 			if(m_nRotate<180)
 			{
 				if((m_nRotate%180)>90)
-					m_skinBack->Draw(pRT,rc,0);
+					m_skinBack->DrawByIndex(pRT,rc,0);
 				else
-					m_skinFore->Draw(pRT,rc,0);
+					m_skinFore->DrawByIndex(pRT,rc,0);
 			}else
 			{
 				if((m_nRotate%180)>90)
-					m_skinFore->Draw(pRT,rc,0);
+					m_skinFore->DrawByIndex(pRT,rc,0);
 				else
-					m_skinBack->Draw(pRT,rc,0);
+					m_skinBack->DrawByIndex(pRT,rc,0);
 			}
 			
 			mat.setIdentity();
@@ -166,7 +166,7 @@ void SMatrixWindow::OnPaint(IRenderTarget *pRT)
          .translate(m_fTransX,m_fTransY);
         
         pRT->SetTransform(&m,&m2);
-        m_pBgSkin->Draw(pRT,rc,0);
+        m_pBgSkin->DrawByIndex(pRT,rc,0);
         pRT->SetTransform(&m2);
     }
     AfterPaint(pRT,painter);

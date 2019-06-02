@@ -616,7 +616,7 @@ void SListCtrl::DrawItem(IRenderTarget * pRT, CRect rcItem, int nItem)
 		pRT->FillSolidRect( rcItem, crItemBg);
 
 	if (m_pItemSkin != NULL)//有skin，则覆盖背景
-		m_pItemSkin->Draw(pRT, rcItem, nBgImg); 
+		m_pItemSkin->DrawByIndex(pRT, rcItem, nBgImg); 
 
     //  左边加上空白
 	rcItem.left += ITEM_MARGIN;
@@ -655,7 +655,7 @@ void SListCtrl::DrawItem(IRenderTarget * pRT, CRect rcItem, int nItem)
             CRect rcCheck;
             rcCheck.SetRect(0, 0, sizeSkin.cx, sizeSkin.cy);
             rcCheck.OffsetRect(rcCol.left + nOffsetX, rcCol.top + nOffsetY);
-            m_pCheckSkin->Draw(pRT, rcCheck, lvItem.checked ? 4 : 0);
+            m_pCheckSkin->DrawByIndex(pRT, rcCheck, lvItem.checked ? 4 : 0);
 
             rcCol.left = sizeSkin.cx + 6 + rcCol.left;
         }
@@ -676,7 +676,7 @@ void SListCtrl::DrawItem(IRenderTarget * pRT, CRect rcItem, int nItem)
                 nOffsetY = (m_nItemHeight - sizeSkin.cy) / 2;
 
             rcIcon.OffsetRect(rcCol.left + nOffsetX, rcCol.top + nOffsetY);
-            m_pIconSkin->Draw(pRT, rcIcon, subItem.nImage);
+            m_pIconSkin->DrawByIndex(pRT, rcIcon, subItem.nImage);
         }
 
         UINT align = DT_SINGLELINE;

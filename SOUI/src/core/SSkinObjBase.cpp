@@ -12,50 +12,33 @@ namespace SOUI
 
 	BOOL SState2Index::Init(pugi::xml_node xmlNode)
 	{
-		const static struct _StateMap{
-			LPCWSTR pszName;
-			DWORD   dwValue;
-		}kStateMap []={
-			{L"normal",WndState_Normal},
-			{L"hover",WndState_Hover},
-			{L"pushdown",WndState_PushDown},
-			{L"disable",WndState_Disable},
-			{L"checked",WndState_Check},
-		};
-
 		pugi::xml_node xmlStates = xmlNode.child(L"states");
 		if(!xmlStates) 
 			return FALSE;
 		pugi::xml_node xmlState = xmlStates.child(L"state");
 
-		int iState = 0;
 		while(xmlState)
 		{
+			int iState = xmlState.attribute(L"index").as_int();
+			SStringW strValue = xmlState.attribute(L"value").as_string();
+			SStringWList lstValues ;
+			size_t nValues = SplitString(strValue,L'|',lstValues);
 			DWORD dwState = WndState_Normal;
-			pugi::xml_attribute_iterator it = xmlState.attributes_begin();
-			while(it != xmlState.attributes_end())
+			for(size_t i = 0;i<nValues;i++)
 			{
-				for(int j=0;j<ARRAYSIZE(kStateMap);j++)
-				{
-					if(_wcsicmp(kStateMap[j].pszName,it->name())==0)
-					{
-						dwState |= kStateMap[j].dwValue;
-						break;
-					}
-				}
-				it ++;
+				dwState |= String2State(lstValues[i]);
 			}
+
 			m_mapOfStates[dwState] = iState;
-			iState++;
 		}
 		return TRUE;
 	}
 
-	int SState2Index::GetIndex2(DWORD dwState)
+	int SState2Index::GetDefIndex(DWORD dwState)
 	{
 		if (dwState & WndState_Hover)
 			return 1;
-		else if (dwState & (WndState_PushDown | WndState_Check))
+		else if (dwState & WndState_PushDown)
 			return 2;
 		else if (dwState & WndState_Disable)
 			return 3;
@@ -67,13 +50,39 @@ namespace SOUI
 	{
 		if(m_mapOfStates.IsEmpty())
 		{
-			return GetIndex2(dwState);
+			return GetDefIndex(dwState);
 		}else
 		{
 			const SMap<DWORD,int>::CPair *p = m_mapOfStates.Lookup(dwState);
 			if(!p) return -1;
 			return p->m_value;
 		}
+	}
+
+	DWORD SState2Index::String2State(const SStringW & strState)
+	{
+		const static struct _StateMap{
+			LPCWSTR pszName;
+			DWORD   dwValue;
+		}kStateMap []={
+			{L"normal",WndState_Normal},
+			{L"hover",WndState_Hover},
+			{L"pushdown",WndState_PushDown},
+			{L"disable",WndState_Disable},
+			{L"checked",WndState_Check},
+		};
+		static SMap<SStringW,DWORD> stateMap;
+		static bool bInited = false;
+		if(!bInited)
+		{//init map
+			for(int j=0;j<ARRAYSIZE(kStateMap);j++)
+			{
+				stateMap[kStateMap[j].pszName]=kStateMap[j].dwValue;
+			}
+		}
+		SMap<SStringW,DWORD>::CPair * p = stateMap.Lookup(strState);
+		if(!p) return WndState_Normal;
+		return p->m_value;
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -132,24 +141,30 @@ namespace SOUI
 		return ret;
 	}
 
-	void SSkinObjBase::Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)
+	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState)
 	{
-		//empty
+		DrawByIndex(pRT, rcDraw, iState, GetAlpha());
 	}
 
-	void SSkinObjBase::Draw2(IRenderTarget *pRT, LPCRECT rcDraw, int iState)
+	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)
 	{
-		Draw2(pRT, rcDraw, iState, GetAlpha());
+		_DrawByIndex(pRT, rcDraw, iState, byAlpha);
 	}
 
-	void SSkinObjBase::Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)
+
+	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)
 	{
-		Draw(pRT,rcDraw,dwState,GetAlpha());
+		DrawByState(pRT,rcDraw,dwState,GetAlpha());
 	}
 
-	void SSkinObjBase::Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
+	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
 	{
-		_Draw(pRT,rcDraw,dwState,byAlpha);
+		_DrawByState(pRT,rcDraw,dwState,byAlpha);
+	}
+
+	void SSkinObjBase::_DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
+	{
+		DrawByIndex(pRT,rcDraw,State2Index(dwState),byAlpha);
 	}
 
 	void SSkinObjBase::SetAlpha(BYTE byAlpha)

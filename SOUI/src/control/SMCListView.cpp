@@ -481,7 +481,7 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
             rcItem.bottom += m_lvItemLocator->GetDividerSize();
             if(m_pSkinDivider)
             {//绘制分隔线
-                m_pSkinDivider->Draw(pRT,rcItem,0);
+                m_pSkinDivider->DrawByIndex(pRT,rcItem,0);
             }
         }
 

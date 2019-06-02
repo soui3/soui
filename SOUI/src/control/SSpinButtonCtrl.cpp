@@ -142,22 +142,22 @@ namespace SOUI
 		CRect rcClient = GetClientRect();
 		CRect rcUp = rcClient, rcDown = rcClient;
 		rcUp.bottom = rcDown.top = rcClient.top + rcClient.Height() / 2;
-		int iState = SState2Index::GetIndex2(GetState());
+		int iState = SState2Index::GetDefIndex(GetState());
 		if (m_iActionBtn == ACTION_UP)
 		{
-			m_pUpSkin->Draw2(pRT, rcUp, iState);
-			m_pDownSkin->Draw2(pRT, rcDown, iState != 2 ? iState : 1);
+			m_pUpSkin->DrawByIndex(pRT, rcUp, iState);
+			m_pDownSkin->DrawByIndex(pRT, rcDown, iState != 2 ? iState : 1);
 		}
 		else if(m_iActionBtn == ACTION_DOWN)
 		{
-			m_pUpSkin->Draw2(pRT, rcUp, iState != 2 ? iState : 1);
-			m_pDownSkin->Draw2(pRT, rcDown, iState);
+			m_pUpSkin->DrawByIndex(pRT, rcUp, iState != 2 ? iState : 1);
+			m_pDownSkin->DrawByIndex(pRT, rcDown, iState);
 		}
 		else
 		{
 			iState = iState != 2 ? iState : 0;
-			m_pUpSkin->Draw2(pRT, rcUp, iState);
-			m_pDownSkin->Draw2(pRT, rcDown, iState);
+			m_pUpSkin->DrawByIndex(pRT, rcUp, iState);
+			m_pDownSkin->DrawByIndex(pRT, rcDown, iState);
 		}
 	}
 	void SSpinButtonCtrl::OnTimer(char cTimerId)

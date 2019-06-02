@@ -25,7 +25,7 @@ namespace SOUI
 		pRT->SelectObject(br);
 		pRT->FillEllipse(&rc);
 		pRT->SetXfermode(kSrcIn_Mode);
-		m_pSkin->Draw(pRT, rc, 0);
+		m_pSkin->DrawByIndex(pRT, rc, 0);
 		return (IBitmap*)pRT->GetCurrentObject(OT_BITMAP);
 	}
 
