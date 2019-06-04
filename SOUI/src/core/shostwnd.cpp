@@ -814,7 +814,6 @@ BOOL SHostWnd::OnCreateCaret(SWND swnd, HBITMAP hBmp,int nWidth,int nHeight )
     ::CreateCaret(m_hWnd,hBmp,nWidth,nHeight);
     ::HideCaret(m_hWnd);
     m_caret.Attach(new SCaret(swnd,hBmp,nWidth,nHeight));
-    
     return TRUE;
 }
 
@@ -824,7 +823,8 @@ BOOL SHostWnd::OnShowCaret( BOOL bShow )
     
     if(bShow)
     {
-        SWindow::SetTimer(TIMER_CARET,GetCaretBlinkTime());
+		GETRENDERFACTORY->CreateRegion(&m_caretRgn);
+		SWindow::SetTimer(TIMER_CARET,GetCaretBlinkTime());
         if(!m_bCaretActive)
         {
             _DrawCaret(m_ptCaret,FALSE);
@@ -839,7 +839,8 @@ BOOL SHostWnd::OnShowCaret( BOOL bShow )
             _DrawCaret(m_ptCaret,TRUE);
         }
         m_bCaretActive=FALSE;
-    }
+		m_caretRgn = NULL;
+	}
    return TRUE;
 }
 

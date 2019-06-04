@@ -64,6 +64,8 @@ namespace SOUI
         //重建窗口树的zorder
         virtual void BuildWndTreeZorder();
 
+		virtual bool CalcVisibleRegion(SWND swnd, IRegion *pRgn) const;
+
     public://ITimelineHandler
         virtual void OnNextFrame();
     protected:
@@ -88,7 +90,8 @@ namespace SOUI
 
         void _BuildWndTreeZorder(SWindow *pWnd,UINT &iOrder);
         
-        
+		void _CalcVisibleRegion(const SWindow *pWnd, int zOrder, IRegion *pRgn) const;
+
     protected:
         SWND m_hCapture;
         SWND m_hHover;

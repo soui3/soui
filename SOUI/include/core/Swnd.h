@@ -370,13 +370,9 @@ namespace SOUI
         *
         * Describe  
         */    
-        void GetWindowRect(LPRECT prect);
+        void GetWindowRect(LPRECT prect) const;
 
-        CRect GetWindowRect() {
-            CRect rc;
-            GetWindowRect(&rc);
-            return rc;
-        }
+		CRect GetWindowRect() const;
                 
         /**
         * GetClientRect

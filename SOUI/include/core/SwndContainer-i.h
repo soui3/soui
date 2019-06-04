@@ -115,6 +115,8 @@ namespace SOUI
 
 		virtual int GetScale() const = 0;
 
+		//获取一个窗口的可见区域
+		virtual bool CalcVisibleRegion(SWND swnd, IRegion *pRgn) const = 0;
     };
 
 

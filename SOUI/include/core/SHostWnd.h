@@ -128,7 +128,8 @@ protected:
 
     BOOL                 m_bTrackFlag;          /**< 跟踪鼠标标志 */
 
-    SAutoRefPtr<SCaret>     m_caret;            /**< 光标对象 */
+    SAutoRefPtr<SCaret>     m_caret;            /**<光标对象 */
+	SAutoRefPtr<IRegion>	m_caretRgn;			/**<光标显示区域 */
     BOOL                    m_bCaretShowing;    /**<当前有插入符正在显示*/
     BOOL                    m_bCaretActive;     /**<模拟插入符正在显示标志*/
     CPoint                  m_ptCaret;          /**<插入符位置*/

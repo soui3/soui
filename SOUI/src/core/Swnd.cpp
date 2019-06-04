@@ -123,10 +123,16 @@ namespace SOUI
 	}
 
 
-	void SWindow::GetWindowRect(LPRECT prect)
+	void SWindow::GetWindowRect(LPRECT prect) const
 	{
 		SASSERT(prect);
 		memcpy(prect,&m_rcWindow,sizeof(RECT));
+	}
+
+	CRect SWindow::GetWindowRect() const {
+		CRect rc;
+		GetWindowRect(&rc);
+		return rc;
 	}
 
 	void SWindow::GetClientRect(LPRECT pRect) const
