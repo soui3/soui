@@ -38,14 +38,18 @@ namespace SOUI
 
 	int SState2Index::GetDefIndex(DWORD dwState)
 	{
+		int idx = 0;
 		if (dwState & WndState_Hover)
-			return 1;
+			idx = 1;
 		else if (dwState & WndState_PushDown)
-			return 2;
+			idx = 2;
 		else if (dwState & WndState_Disable)
-			return 3;
+			idx= 3;
 		else // WndState_Normal
-			return 0;
+			idx = 0;
+		if (dwState & WndState_Check)
+			idx += 4;
+		return idx;
 	}
 
 	int SState2Index::GetIndex(DWORD dwState) const
