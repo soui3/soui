@@ -78,8 +78,10 @@ namespace SOUI{
 		}
 	}
 
-	void SCaret::SetVisible(BOOL bVisible)
+	BOOL SCaret::SetVisible(BOOL bVisible)
 	{
+		if (bVisible == m_bVisible)
+			return FALSE;
 		m_bVisible = bVisible;
 
 		m_nWaitFrame = 0;
@@ -87,6 +89,7 @@ namespace SOUI{
 		{
 			m_bDrawCaret = TRUE;
 		}
+		return TRUE;
 	}
 
 	BOOL SCaret::IsVisible() const

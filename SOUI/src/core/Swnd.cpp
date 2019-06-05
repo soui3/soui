@@ -2760,7 +2760,12 @@ namespace SOUI
 
 	void SWindow::ShowCaret(BOOL bShow)
 	{
-		GetContainer()->GetCaret()->SetVisible(bShow);
+		ICaret * pCaret = GetContainer()->GetCaret();
+		if (pCaret->SetVisible(bShow))
+		{
+			CRect rcCaret = pCaret->GetRect();
+			InvalidateRect(rcCaret);
+		}
 	}
 
 	void SWindow::SetCaretPos(int x,int y)

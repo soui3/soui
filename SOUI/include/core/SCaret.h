@@ -12,7 +12,7 @@ namespace SOUI{
 		virtual void Draw(IRenderTarget * pRT) override;
 		virtual BOOL NextFrame() override;
 		virtual void SetPosition(int x, int y) override;
-		virtual void SetVisible(BOOL bVisible) override;
+		virtual BOOL SetVisible(BOOL bVisible) override;
 		virtual BOOL IsVisible() const  override;
 		virtual RECT GetRect() const override;
 	protected:
