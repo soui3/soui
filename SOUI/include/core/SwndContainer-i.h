@@ -13,10 +13,10 @@
 
 #pragma once
 
-#include "event/Events.h"
-#include "SMsgLoop.h"
-#include "interface/SScriptModule-i.h"
-
+#include <event/Events.h>
+#include <core/SMsgLoop.h>
+#include <interface/SScriptModule-i.h>
+#include <interface/scaret-i.h>
 namespace SOUI
 {
 
@@ -80,12 +80,6 @@ namespace SOUI
 
         virtual SWND GetFocus()=0;
 
-        virtual BOOL OnCreateCaret(SWND swnd,HBITMAP hBmp,int nWidth,int nHeight)=0;
-
-        virtual BOOL OnShowCaret(BOOL bShow)=0;
-
-        virtual BOOL OnSetCaretPos(int x,int y)=0;
-
         virtual BOOL UpdateWindow()=0;
 
 		virtual void UpdateTooltip() = 0;
@@ -115,8 +109,7 @@ namespace SOUI
 
 		virtual int GetScale() const = 0;
 
-		//获取一个窗口的可见区域
-		virtual bool CalcVisibleRegion(SWND swnd, IRegion *pRgn) const = 0;
+		virtual ICaret* GetCaret() = 0;
     };
 
 

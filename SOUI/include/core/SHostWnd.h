@@ -128,12 +128,6 @@ protected:
 
     BOOL                 m_bTrackFlag;          /**< 跟踪鼠标标志 */
 
-    SAutoRefPtr<SCaret>     m_caret;            /**<光标对象 */
-	SAutoRefPtr<IRegion>	m_caretRgn;			/**<光标显示区域 */
-    BOOL                    m_bCaretShowing;    /**<当前有插入符正在显示*/
-    BOOL                    m_bCaretActive;     /**<模拟插入符正在显示标志*/
-    CPoint                  m_ptCaret;          /**<插入符位置*/
-
     BOOL                    m_bNeedRepaint;     /**<缓存脏标志*/
     BOOL                    m_bNeedAllRepaint;  /**<缓存全部更新标志*/
 
@@ -196,7 +190,6 @@ public:
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
-    void _DrawCaret(CPoint pt,BOOL bErase);
     void _RestoreClickState();
 protected:
     //////////////////////////////////////////////////////////////////////////
@@ -297,12 +290,6 @@ protected:// IContainer
     virtual BOOL IsTranslucent() const;
     
     virtual BOOL IsSendWheel2Hover() const;
-    
-    virtual BOOL OnCreateCaret(SWND swnd,HBITMAP hBmp,int nWidth,int nHeight);
-
-    virtual BOOL OnShowCaret(BOOL bShow);
-
-    virtual BOOL OnSetCaretPos(int x,int y);
 
     virtual BOOL UpdateWindow();
 

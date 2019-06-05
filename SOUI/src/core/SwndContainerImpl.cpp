@@ -21,6 +21,7 @@ SwndContainerImpl::SwndContainerImpl()
     ,m_bZorderDirty(TRUE)
 {
     SWindow::SetContainer(this);
+	m_caret.Attach(new SCaret());
 }
 
 LRESULT SwndContainerImpl::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -450,6 +451,11 @@ void SwndContainerImpl::BuildWndTreeZorder()
     }
 }
 
+ICaret * SwndContainerImpl::GetCaret()
+{
+	return m_caret;
+}
+
 void SwndContainerImpl::_BuildWndTreeZorder( SWindow *pWnd,UINT & iOrder )
 {
     pWnd->m_uZorder = iOrder++;
@@ -459,41 +465,6 @@ void SwndContainerImpl::_BuildWndTreeZorder( SWindow *pWnd,UINT & iOrder )
         _BuildWndTreeZorder(pChild,iOrder);
         pChild=pChild->GetWindow(GSW_NEXTSIBLING);
     }
-}
-
-
-bool SwndContainerImpl::CalcVisibleRegion(SWND swnd, IRegion *pRgn) const
-{
-	SWindow *pWnd = SWindowMgr::GetWindow(swnd);
-	if (!pWnd)
-		return false;
-	if (pWnd->GetRoot() != this)
-		return false;
-
-	_CalcVisibleRegion(this, pWnd->m_uZorder, pRgn);
-	return true;
-}
-
-void SwndContainerImpl::_CalcVisibleRegion(const SWindow * pWnd, int zOrder, IRegion *pRgn) const
-{
-	if (pWnd->m_uZorder <= zOrder)
-	{
-		CRect rcClient = pWnd->GetClientRect();
-		pRgn->CombineRect(rcClient, RGN_AND);
-	}
-	else
-	{
-		CRect rcWnd = pWnd->GetWindowRect();
-		pRgn->CombineRect(rcWnd, RGN_DIFF);
-	}
-	if (pRgn->IsEmpty())
-		return;
-	SWindow *pChild = pWnd->GetWindow(GSW_FIRSTCHILD);
-	while (pChild && !pRgn->IsEmpty())
-	{
-		_CalcVisibleRegion(pChild, zOrder, pRgn);
-		pChild = pChild->GetWindow(GSW_NEXTSIBLING);
-	}
 }
 
 }//namespace SOUI

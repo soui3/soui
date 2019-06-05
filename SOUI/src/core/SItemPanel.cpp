@@ -209,22 +209,6 @@ BOOL SItemPanel::IsSendWheel2Hover() const
     return m_pFrmHost->GetContainer()->IsSendWheel2Hover();
 }
 
-BOOL SItemPanel::OnCreateCaret(SWND swnd, HBITMAP hBmp,int nWidth,int nHeight )
-{
-    return m_pFrmHost->GetContainer()->OnCreateCaret(swnd,hBmp,nWidth,nHeight);
-}
-
-BOOL SItemPanel::OnShowCaret( BOOL bShow )
-{
-    return m_pFrmHost->GetContainer()->OnShowCaret(bShow);
-}
-
-BOOL SItemPanel::OnSetCaretPos( int x,int y )
-{
-    CRect rcItem=GetItemRect();
-    x+=rcItem.left,y+=rcItem.top;
-    return m_pFrmHost->GetContainer()->OnSetCaretPos(x,y);
-}
 
 BOOL SItemPanel::UpdateWindow()
 {

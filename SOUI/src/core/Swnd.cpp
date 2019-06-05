@@ -1076,6 +1076,10 @@ namespace SOUI
 			&& (!pRgn || pRgn->IsEmpty() || pRgn->RectInRegion(&rcClient)))
 		{//paint client
 			_PaintClient(pRT);
+			if (IsFocused())
+			{//draw caret
+
+			}
 		}
 
 		SPainter painter;
@@ -2751,17 +2755,33 @@ namespace SOUI
 
 	BOOL SWindow::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
 	{
-		return GetContainer()->OnCreateCaret(m_swnd,pBmp,nWid,nHeight);
+		return GetContainer()->GetCaret()->Init(pBmp,nWid,nHeight);
 	}
 
 	void SWindow::ShowCaret(BOOL bShow)
 	{
-		GetContainer()->OnShowCaret(bShow);
+		GetContainer()->GetCaret()->SetVisible(bShow);
 	}
 
 	void SWindow::SetCaretPos(int x,int y)
 	{
-		GetContainer()->OnSetCaretPos(x,y);
+		ICaret * pCaret = GetContainer()->GetCaret();
+		if (pCaret->IsVisible())
+		{
+			{
+				CRect rcCaret = pCaret->GetRect();
+				InvalidateRect(rcCaret);
+			}
+			pCaret->SetPosition(x, y);
+			{
+				CRect rcCaret = pCaret->GetRect();
+				InvalidateRect(rcCaret);
+			}
+		}
+		else
+		{
+			pCaret->SetPosition(x, y);
+		}
 	}
 
 	BOOL SWindow::IsContainPoint(const POINT &pt,BOOL bClientOnly) const

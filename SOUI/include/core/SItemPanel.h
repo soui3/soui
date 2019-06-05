@@ -58,12 +58,6 @@ public://SwndContainerImpl
     virtual BOOL IsTranslucent() const;
     virtual BOOL IsSendWheel2Hover() const;
     
-    virtual BOOL OnCreateCaret(SWND swnd,HBITMAP hBmp,int nWidth,int nHeight);
-
-    virtual BOOL OnShowCaret(BOOL bShow);
-
-    virtual BOOL OnSetCaretPos(int x,int y);
-
     virtual BOOL UpdateWindow();
 
 	virtual void UpdateTooltip();

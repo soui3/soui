@@ -15,6 +15,7 @@
 
 #include "SDropTargetDispatcher.h"
 #include "FocusManager.h"
+#include "scaret.h"
 
 namespace SOUI
 {
@@ -64,8 +65,7 @@ namespace SOUI
         //重建窗口树的zorder
         virtual void BuildWndTreeZorder();
 
-		virtual bool CalcVisibleRegion(SWND swnd, IRegion *pRgn) const;
-
+		virtual ICaret* GetCaret();
     public://ITimelineHandler
         virtual void OnNextFrame();
     protected:
@@ -90,8 +90,6 @@ namespace SOUI
 
         void _BuildWndTreeZorder(SWindow *pWnd,UINT &iOrder);
         
-		void _CalcVisibleRegion(const SWindow *pWnd, int zOrder, IRegion *pRgn) const;
-
     protected:
         SWND m_hCapture;
         SWND m_hHover;
@@ -105,6 +103,7 @@ namespace SOUI
 
         SList<ITimelineHandler*>    m_lstTimelineHandler;
         SList<SWND>                 m_lstTrackMouseEvtWnd;
+		SAutoRefPtr<ICaret>			m_caret;
     };
 
 }//namespace SOUI

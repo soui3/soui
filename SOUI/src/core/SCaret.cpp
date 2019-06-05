@@ -3,62 +3,79 @@
 
 namespace SOUI{
 
-    SCaret::SCaret(SWND swnd,HBITMAP hBmp,int nWidth,int nHeight)
-        :m_owner(swnd)
+    SCaret::SCaret():m_bDrawCaret(false),m_bVisible(FALSE)
     {
-        SAutoRefPtr<IRenderTarget> pRT;
-        GETRENDERFACTORY->CreateRenderTarget(&pRT,nWidth,nHeight);
-        m_bmpCaret = (IBitmap*) pRT->GetCurrentObject(OT_BITMAP);
-        if(hBmp)
-        {
-            //以拉伸方式创建一个插入符位图
-            HDC hdc=pRT->GetDC(0);
-            HDC hdc2=CreateCompatibleDC(hdc);
-            SelectObject(hdc2,hBmp);
+ 
+    }
 
-            BITMAP bm;
-            GetObject(hBmp,sizeof(bm),&bm);
-            StretchBlt(hdc,0,0,nWidth,nHeight,hdc2,0,0,bm.bmWidth,bm.bmHeight,SRCCOPY);
-            DeleteDC(hdc2);
-            pRT->ReleaseDC(hdc);
-        }
-        else
-        {
-            //创建一个黑色插入符的位图
-			CRect rc(0, 0, nWidth, nHeight);
+
+	BOOL SCaret::Init(HBITMAP hBmp, int nWid, int nHei)
+	{
+		m_bDrawCaret = true;
+		SAutoRefPtr<IRenderTarget> pRT;
+		GETRENDERFACTORY->CreateRenderTarget(&pRT, nWid, nHei);
+		m_bmpCaret = (IBitmap*)pRT->GetCurrentObject(OT_BITMAP);
+		if (hBmp)
+		{
+			//以拉伸方式创建一个插入符位图
+			HDC hdc = pRT->GetDC(0);
+			HDC hdc2 = CreateCompatibleDC(hdc);
+			SelectObject(hdc2, hBmp);
+
+			BITMAP bm;
+			GetObject(hBmp, sizeof(bm), &bm);
+			StretchBlt(hdc, 0, 0, nWid, nHei, hdc2, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+			DeleteDC(hdc2);
+			pRT->ReleaseDC(hdc);
+		}
+		else
+		{
+			//创建一个黑色插入符的位图
+			CRect rc(0, 0, nWid, nHei);
 			pRT->FillSolidRect(&rc, RGBA(0, 0, 0, 0xFF));
-        }
-    }
+		}
+		return TRUE;
+	}
 
-    SCaret::~SCaret(void)
-    {
-    }
+	void SCaret::Draw(IRenderTarget * pRT)
+	{
+		if (!m_bVisible)
+			return;
+		if (!m_bDrawCaret)
+			return;
+		if (!m_bmpCaret)
+			return;
+		CRect rcCaret = GetRect();
+		pRT->DrawBitmap(rcCaret, m_bmpCaret, 0, 0);
+	}
 
-    RECT SCaret::Draw(IRenderTarget *pRT,int x, int y,BOOL bErase)
-    {
-        SWindow * pOwner = SWindowMgr::GetWindow(m_owner);
-        SASSERT(pOwner);
-        SASSERT(pOwner->IsFocusable());
-        
-        SAutoRefPtr<IRenderTarget> pRTCaret;
-        GETRENDERFACTORY->CreateRenderTarget(&pRTCaret,0,0);
-        pRTCaret->SelectObject(m_bmpCaret);
+	int SCaret::GoNextState()
+	{
+		m_bDrawCaret = !m_bDrawCaret;
+		return 200;
+	}
 
-        CSize szCaret = m_bmpCaret->Size();
-        CRect rcCaret(CPoint(x,y),szCaret);
-        CRect rcWnd = pOwner->GetClientRect();
-        SWindow *pWnd = pOwner->GetParent();
-        while(pWnd)
-        {
-            CRect rcLimit = pWnd->GetClientRect();
-            rcWnd = rcWnd & rcLimit;
-            pWnd = pWnd->GetParent();
-        }
-        pOwner->GetContainer()->FrameToHost(rcWnd);
-        CRect rcCaretShow = rcCaret & rcWnd;
-        
-        pRT->BitBlt(&rcCaretShow,pRTCaret,rcCaretShow.left - rcCaret.left,rcCaretShow.top - rcCaret.top,DSTINVERT);
-        return rcCaretShow;
-    }
+	void SCaret::SetPosition(int x, int y)
+	{
+		m_ptCaret.x = x;
+		m_ptCaret.y = y;
+	}
+
+	void SCaret::SetVisible(BOOL bVisible)
+	{
+		m_bVisible = bVisible;
+	}
+
+	BOOL SCaret::IsVisible() const
+	{
+		return m_bVisible;
+	}
+
+	RECT SCaret::GetRect() const
+	{
+		CSize szCaret;
+		if (m_bmpCaret) szCaret = m_bmpCaret->Size();
+		return	CRect(m_ptCaret, szCaret);
+	}
 
 }

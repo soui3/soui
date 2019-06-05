@@ -70,7 +70,7 @@ void SHotKeyCtrl::UpdateCaret()
 	else if (uAlign & DT_RIGHT)
 		x = rcClient.right;
 
-    GetContainer()->OnSetCaretPos(x,y);
+	SetCaretPos(x, y);
 }
 
 UINT SHotKeyCtrl::GetTextAlign()
@@ -94,7 +94,7 @@ void SHotKeyCtrl::OnSetFocus(SWND wndOld)
     CreateCaret(NULL,1,szTxt.cy);
 
     UpdateCaret();
-    GetContainer()->OnShowCaret(TRUE);
+    GetContainer()->GetCaret()->SetVisible(true);
     
     __super::OnSetFocus(wndOld);
     
@@ -102,7 +102,7 @@ void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 
 void SHotKeyCtrl::OnKillFocus(SWND wndFocus)
 {
-    GetContainer()->OnShowCaret(FALSE);
+    GetContainer()->GetCaret()->SetVisible(false);
     __super::OnKillFocus(wndFocus);
 }
 

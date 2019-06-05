@@ -11,7 +11,6 @@
 namespace SOUI
 {
 
-#define TIMER_CARET    1
 #define TIMER_NEXTFRAME 2
 #define KConstDummyPaint    0x80000000
 
@@ -101,8 +100,6 @@ CSize SHostWndAttr::GetMinSize(int nScale) const
 SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 : m_strXmlLayout(pszResName)
 , m_bTrackFlag(FALSE)
-, m_bCaretShowing(FALSE)
-, m_bCaretActive(FALSE)
 , m_bNeedRepaint(FALSE)
 , m_bNeedAllRepaint(TRUE)
 , m_pTipCtrl(NULL)
@@ -399,10 +396,8 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
         //清除残留的alpha值
         m_memRT->ClearRect(rcInvalid,0);
 
-        if(m_bCaretActive) _DrawCaret(m_ptCaret,TRUE);//clear old caret 
         BuildWndTreeZorder();
         RedrawRegion(m_memRT, pRgnUpdate);
-        if(m_bCaretActive) _DrawCaret(m_ptCaret,FALSE);//redraw caret 
         
         m_memRT->PopClip();
         
@@ -584,32 +579,9 @@ void SHostWnd::OnTimer(UINT_PTR idEvent)
 
 void SHostWnd::OnSwndTimer( char cTimerID )
 {
-    if(cTimerID==TIMER_CARET)
-    {
-        SASSERT(m_bCaretShowing);
-        _DrawCaret(m_ptCaret,m_bCaretActive);
-        m_bCaretActive=!m_bCaretActive;
-    }else if(cTimerID==TIMER_NEXTFRAME)
+    if(cTimerID==TIMER_NEXTFRAME)
     {
         if(!::IsIconic(m_hWnd)) OnNextFrame();
-    }
-}
-
-void SHostWnd::_DrawCaret(CPoint pt,BOOL bErase)
-{
-    SASSERT(m_caret);
-    RECT rcShowCaret = m_caret->Draw(m_memRT,pt.x,pt.y,bErase);
-    
-    if(!m_hostAttr.m_bTranslucent)
-    {
-        SNativeWnd::InvalidateRect(&rcShowCaret, FALSE);
-    }else if(m_dummyWnd.IsWindow()) 
-    {
-        m_rgnInvalidate->CombineRect(&rcShowCaret,RGN_OR);
-        m_dummyWnd.Invalidate(FALSE);
-    }else
-    {
-        //SASSERT(FALSE);
     }
 }
 
@@ -716,10 +688,6 @@ IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
     
     if(gdcFlags != OLEDC_NODRAW)
     {
-        if(m_bCaretActive)
-        {
-            _DrawCaret(m_ptCaret,TRUE);//clear old caret
-        }
         pRT->BitBlt(&rc,m_memRT,rc.left,rc.top,SRCCOPY);
     }
     return pRT;
@@ -730,10 +698,6 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,DWORD g
     if(gdcFlags != OLEDC_NODRAW)
     {
         m_memRT->BitBlt(&rc,pRT,rc.left,rc.top,SRCCOPY);
-        if(m_bCaretActive)
-        {
-            _DrawCaret(m_ptCaret,FALSE);//restore old caret
-        }
         if(!m_bRendering)
         {
             HDC dc=GetDC();
@@ -808,60 +772,6 @@ BOOL SHostWnd::IsSendWheel2Hover() const
 {
     return m_hostAttr.m_bSendWheel2Hover;
 }
-
-BOOL SHostWnd::OnCreateCaret(SWND swnd, HBITMAP hBmp,int nWidth,int nHeight )
-{
-    ::CreateCaret(m_hWnd,hBmp,nWidth,nHeight);
-    ::HideCaret(m_hWnd);
-    m_caret.Attach(new SCaret(swnd,hBmp,nWidth,nHeight));
-    return TRUE;
-}
-
-BOOL SHostWnd::OnShowCaret( BOOL bShow )
-{    
-    m_bCaretShowing=bShow;
-    
-    if(bShow)
-    {
-		GETRENDERFACTORY->CreateRegion(&m_caretRgn);
-		SWindow::SetTimer(TIMER_CARET,GetCaretBlinkTime());
-        if(!m_bCaretActive)
-        {
-            _DrawCaret(m_ptCaret,FALSE);
-            m_bCaretActive=TRUE;
-        }
-    }
-    else
-    {
-        SWindow::KillTimer(TIMER_CARET);
-        if(m_bCaretActive)
-        {
-            _DrawCaret(m_ptCaret,TRUE);
-        }
-        m_bCaretActive=FALSE;
-		m_caretRgn = NULL;
-	}
-   return TRUE;
-}
-
-BOOL SHostWnd::OnSetCaretPos( int x,int y )
-{
-    if(!m_caret) return FALSE;
-    ::SetCaretPos(x,y);
-    if(m_bCaretShowing && m_bCaretActive)
-    {
-        //clear old caret
-        _DrawCaret(m_ptCaret,TRUE);
-    }
-    m_ptCaret=CPoint(x,y);
-    if(m_bCaretShowing && m_bCaretActive)
-    {
-        //draw new caret
-        _DrawCaret(m_ptCaret,FALSE);
-    }
-    return TRUE;
-}
-
 
 BOOL SHostWnd::UpdateWindow()
 {

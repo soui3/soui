@@ -330,13 +330,15 @@ BOOL STextHost::TxSetTimer( UINT idTimer, UINT uTimeout )
 BOOL STextHost::TxSetCaretPos( INT x, INT y )
 {
     m_ptCaret.x=x,m_ptCaret.y=y;
-    return m_pRichEdit->GetContainer()->OnSetCaretPos(x,y);
+    m_pRichEdit->SetCaretPos(x,y);
+	return TRUE;
 }
 
 BOOL STextHost::TxShowCaret( BOOL fShow )
 {
     if(fShow && !m_fUiActive) return FALSE;
-    return m_pRichEdit->GetContainer()->OnShowCaret(fShow);
+	m_pRichEdit->ShowCaret(fShow);
+	return TRUE;
 }
 
 BOOL STextHost::TxCreateCaret( HBITMAP hbmp, INT xWidth, INT yHeight )
