@@ -913,7 +913,7 @@ namespace SOUI
 
 	BOOL SWindow::NeedRedrawWhenStateChange()
 	{
-		if (m_pBgSkin && !m_pBgSkin->IgnoreState())
+		if (m_pBgSkin && m_pBgSkin->GetStates()>1)
 		{
 			return TRUE;
 		}

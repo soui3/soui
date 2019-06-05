@@ -47,17 +47,15 @@ namespace SOUI
         */    
         virtual void SetAlpha(BYTE byAlpha);
 
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState);
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const;
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState) const;
 
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState);
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const;
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) const;
 
-        virtual SIZE GetSkinSize();
+        virtual SIZE GetSkinSize() const;
 
-        virtual BOOL IgnoreState();
-
-        virtual int GetStates();
+        virtual int GetStates() const;
 
 		virtual int GetScale() const;
 
@@ -77,9 +75,9 @@ namespace SOUI
 
 		virtual void _Scale(ISkinObj *pObj, int nScale);
 
-		virtual void _DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+		virtual void _DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const;
 
-		virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) = 0;
+		virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)  const = 0;
 
         BYTE		m_byAlpha;
         COLORREF    m_crColorize;

@@ -130,45 +130,39 @@ namespace SOUI
 		return m_nScale;
 	}
 
-	int SSkinObjBase::GetStates()
+	int SSkinObjBase::GetStates() const
 	{
 		return 1;
 	}
 
-	BOOL SSkinObjBase::IgnoreState()
-	{
-		return TRUE;
-	}
-
-	SIZE SSkinObjBase::GetSkinSize()
+	SIZE SSkinObjBase::GetSkinSize() const
 	{
 		SIZE ret = {0, 0};
 
 		return ret;
 	}
 
-	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState)
+	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) const
 	{
 		DrawByIndex(pRT, rcDraw, iState, GetAlpha());
 	}
 
-	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)
+	void SSkinObjBase::DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const
 	{
 		_DrawByIndex(pRT, rcDraw, iState, byAlpha);
 	}
 
-
-	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)
+	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState) const
 	{
 		DrawByState(pRT,rcDraw,dwState,GetAlpha());
 	}
 
-	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
+	void SSkinObjBase::DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const
 	{
 		_DrawByState(pRT,rcDraw,dwState,byAlpha);
 	}
 
-	void SSkinObjBase::_DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)
+	void SSkinObjBase::_DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const
 	{
 		DrawByIndex(pRT,rcDraw,State2Index(dwState),byAlpha);
 	}

@@ -31,7 +31,7 @@ namespace SOUI
         * @return   int -- 帧数
         * Describe  
         */    
-        virtual int GetStates(){return m_nFrames;}
+        virtual int GetStates() const {return m_nFrames;}
 
         /**
         * GetSkinSize
@@ -39,7 +39,7 @@ namespace SOUI
         * @return   SIZE -- 图片大小
         * Describe  
         */    
-        virtual SIZE GetSkinSize()
+        virtual SIZE GetSkinSize() const
         {
             SIZE sz={0};
             if(m_nFrames>0 && m_pFrames)
@@ -56,7 +56,7 @@ namespace SOUI
         * @return   long -- 延时时间(*10ms)
         * Describe  
         */    
-        long GetFrameDelay(int iFrame=-1)
+        long GetFrameDelay(int iFrame=-1) const
         {
             if(iFrame==-1) iFrame=m_iFrame;
             long nRet=-1;
@@ -67,7 +67,7 @@ namespace SOUI
             return nRet;
         }
         
-        IBitmap * GetFrameImage(int iFrame=-1)
+        const IBitmap * GetFrameImage(int iFrame=-1) const
         {
             if(iFrame==-1) iFrame=m_iFrame;
             long nRet=-1;
@@ -104,7 +104,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        void SelectActiveFrame(int iFrame)
+        void SelectActiveFrame(int iFrame) const
         {
             if(m_nFrames>1 && iFrame<m_nFrames)
             {
@@ -126,7 +126,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha=0xFF)
+        virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha=0xFF)  const
         {
             if(m_nFrames == 0 || !m_pFrames) return;
             if(dwState!=-1) SelectActiveFrame(dwState);
@@ -135,7 +135,7 @@ namespace SOUI
         }
 
         int m_nFrames;
-        int m_iFrame;
+        mutable int m_iFrame;
 
         SAniImgFrame * m_pFrames;
     };

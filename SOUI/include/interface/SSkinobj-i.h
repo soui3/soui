@@ -42,7 +42,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha)=0;
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const =0;
 
         /**
         * Draw
@@ -53,7 +53,7 @@ namespace SOUI
         * @return   void
         * Describe  使用SkinObj的GetAlpha属性绘制
         */
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState)=0;
+        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState) const =0;
 
 		/**
         * Draw2
@@ -65,7 +65,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)=0;
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const =0;
 
 		/**
 		* Draw2
@@ -76,7 +76,7 @@ namespace SOUI
 		* @return   void
 		* Describe  使用SkinObj的GetAlpha属性绘制
 		*/
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) = 0;
+		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) const = 0;
 
         /**
         * GetSkinSize
@@ -84,14 +84,7 @@ namespace SOUI
         * @return   SIZE -- Skin的默认大小
         * Describe  派生类应该根据skin的特点实现该接口
         */    
-        virtual SIZE GetSkinSize()=0;
-        /**
-        * IgnoreState
-        * @brief    查询skin是否有状态信息
-        * @return   BOOL -- true有状态信息
-        * Describe  
-        */    
-        virtual BOOL IgnoreState()=0;
+        virtual SIZE GetSkinSize() const =0;
 
         /**
         * GetStates
@@ -99,7 +92,7 @@ namespace SOUI
         * @return   int -- 状态数量
         * Describe  默认为1
         */    
-        virtual int GetStates()=0;
+        virtual int GetStates() const=0;
 
         /**
         * GetAlpha

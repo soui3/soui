@@ -27,7 +27,7 @@ SSkinImgList::~SSkinImgList()
 {
 }
 
-SIZE SSkinImgList::GetSkinSize()
+SIZE SSkinImgList::GetSkinSize() const
 {
 	SIZE ret = {0, 0};
 	if(m_pImg)
@@ -39,17 +39,12 @@ SIZE SSkinImgList::GetSkinSize()
 	return ret;
 }
 
-BOOL SSkinImgList::IgnoreState()
-{
-    return GetStates()==1;
-}
-
-int SSkinImgList::GetStates()
+int SSkinImgList::GetStates() const
 {
 	return m_nStates;
 }
 
-void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)
+void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const
 {
 	SIZE sz = GetSkinSize();
 	RECT rcSrc = {0, 0, sz.cx, sz.cy};
@@ -60,7 +55,7 @@ void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, 
 	pRT->DrawBitmapEx(rcDraw ,m_pImg, &rcSrc, GetExpandMode(), byAlpha);
 }
 
-UINT SSkinImgList::GetExpandMode()
+UINT SSkinImgList::GetExpandMode() const
 {
     if(m_bAutoFit)
         return MAKELONG(m_bTile?EM_TILE:EM_STRETCH,m_filterLevel);
@@ -155,7 +150,7 @@ SSkinImgFrame::SSkinImgFrame()
 {
 }
 
-void SSkinImgFrame::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)
+void SSkinImgFrame::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const
 {
     if(!m_pImg) return;
     SIZE sz=GetSkinSize();
@@ -168,7 +163,7 @@ void SSkinImgFrame::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,
     pRT->DrawBitmap9Patch(rcDraw,m_pImg,&rcSour,&m_rcMargin,GetExpandMode(),byAlpha);
 }
 
-UINT SSkinImgFrame::GetExpandMode()
+UINT SSkinImgFrame::GetExpandMode() const
 {
     return MAKELONG(m_bTile?EM_TILE:EM_STRETCH,m_filterLevel);
 }
@@ -205,7 +200,7 @@ SSkinButton::SSkinButton()
     m_colors.m_crDown[3] = (RGB(0x80, 0x80, 0x80));
 }
 
-void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha)
+void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const
 {
 	int nCorner = m_nCornerRadius;
 	if (m_fCornerPercent > 0.0)
@@ -257,12 +252,7 @@ void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,B
     pRT->SelectObject(pOldPen);   
 }
 
-BOOL SSkinButton::IgnoreState()
-{
-    return FALSE;
-}
-
-int SSkinButton::GetStates()
+int SSkinButton::GetStates() const
 {
     return 4;
 }
@@ -318,7 +308,7 @@ SSkinGradation::SSkinGradation()
 {
 }
 
-void SSkinGradation::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha)
+void SSkinGradation::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const
 {
     pRT->GradientFill(prcDraw,m_bVert,m_crFrom,m_crTo,byAlpha);
 }
@@ -353,7 +343,7 @@ SSkinScrollbar::SSkinScrollbar():m_nMargin(0),m_bHasGripper(FALSE),m_bHasInactiv
     
 }
 
-CRect SSkinScrollbar::GetPartRect(int nSbCode, int nState,BOOL bVertical)
+CRect SSkinScrollbar::GetPartRect(int nSbCode, int nState,BOOL bVertical) const
 {
     CSize sz=GetSkinSize();
     CSize szFrame(sz.cx/9,sz.cx/9);
@@ -393,7 +383,7 @@ CRect SSkinScrollbar::GetPartRect(int nSbCode, int nState,BOOL bVertical)
     }
 }
 
-void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha)
+void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const
 {
     if(!m_pImg) return;
     int nSbCode=LOWORD(dwState);
@@ -432,7 +422,7 @@ void SSkinScrollbar::_Scale(ISkinObj *skinObj, int nScale)
 	pRet->m_bHasGripper = m_bHasGripper;
 }
 
-int SSkinScrollbar::GetIdealSize()
+int SSkinScrollbar::GetIdealSize() const
 {
 	if(!m_pImg) return 0;
 	return m_pImg->Width()/9;
@@ -457,7 +447,7 @@ SSkinColorRect::~SSkinColorRect()
 {
 }
 
-void SSkinColorRect::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha)
+void SSkinColorRect::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const
 {
 	if(iState > 3) return;
 
@@ -491,7 +481,7 @@ void SSkinColorRect::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iStat
 	}
 }
 
-int SSkinColorRect::GetStates()
+int SSkinColorRect::GetStates() const
 {
 	int nStates = 4;
 	for(int i=3;i>=0;i--)
@@ -570,7 +560,7 @@ void SSkinShape::_Scale(ISkinObj * pObj, int nScale)
 }
 
 
-SIZE SSkinShape::GetSkinSize()
+SIZE SSkinShape::GetSkinSize() const
 {
 	if (!m_shapeSize) return CSize();
 
@@ -578,7 +568,7 @@ SIZE SSkinShape::GetSkinSize()
 	return szRet;
 }
 
-void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)
+void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const
 {
 	POINT ptConner = {0,0};
 	if(m_cornerSize)
@@ -675,7 +665,7 @@ void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 
 
 
-void SSkinShape::SGradient::Draw(IRenderTarget *pRT, LPCRECT rcDraw, BYTE byAlpha,int nScale)
+void SSkinShape::SGradient::Draw(IRenderTarget *pRT, LPCRECT rcDraw, BYTE byAlpha,int nScale) const
 {
 	pRT->GradientFill2(rcDraw,m_Type,m_crStart,m_crCenter,m_crEnd,m_angle,m_centerX,m_centerY,m_radius.toPixelSize(nScale),byAlpha);
 }
@@ -702,12 +692,12 @@ HRESULT SSkinShape::SCornerSize::OnAttrRadius(const SStringW strValue,BOOL bLoad
 
 //////////////////////////////////////////////////////////////////////////
 // SSKinGroup
-int SSKinGroup::GetStates()
+int SSKinGroup::GetStates() const
 {
 	return 4;
 }
 
-void SSKinGroup::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha)
+void SSKinGroup::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const
 {
 	if((int)iState>= GetStates())
 		return;
@@ -716,7 +706,7 @@ void SSKinGroup::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 	pSkin->DrawByIndex(pRT,rcDraw,0,byAlpha);
 }
 
-SIZE SSKinGroup::GetSkinSize()
+SIZE SSKinGroup::GetSkinSize() const
 {
 	for(int i=0;i<GetStates();i++)
 	{

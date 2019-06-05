@@ -18,11 +18,9 @@ public:
     virtual ~SSkinImgList();
 
 
-    virtual SIZE GetSkinSize();
-
-    virtual BOOL IgnoreState();
+    virtual SIZE GetSkinSize() const;
     
-    virtual int GetStates();
+    virtual int GetStates() const;
 
     virtual void SetStates(int nStates){m_nStates=nStates;}
 
@@ -32,23 +30,23 @@ public:
         return true;
     }
 
-    virtual IBitmap * GetImage()
+    virtual IBitmap * GetImage()  const
     {
         return m_pImg;
     }
 
     virtual void SetTile(BOOL bTile){m_bTile=bTile;}
-    virtual BOOL IsTile(){return m_bTile;}
+    virtual BOOL IsTile()  const {return m_bTile;}
 
     virtual void SetVertical(BOOL bVertical){m_bVertical=bVertical;}
-    virtual BOOL IsVertical(){return m_bVertical;}
+    virtual BOOL IsVertical() const {return m_bVertical;}
     
     virtual void OnColorize(COLORREF cr);
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
-    virtual UINT GetExpandMode();
+    virtual UINT GetExpandMode() const;
 
     SAutoRefPtr<IBitmap> m_pImg;
 	int  m_nStates;				  // skin 状态值 
@@ -97,9 +95,9 @@ public:
     CRect GetMargin(){return m_rcMargin;}
 
 protected:
-    virtual UINT GetExpandMode();
+    virtual UINT GetExpandMode() const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 
     CRect m_rcMargin;
 
@@ -150,17 +148,14 @@ class SOUI_EXP SSkinButton : public SSkinObjBase
 public:
     SSkinButton();
 
-
-    virtual BOOL IgnoreState();
-
-    virtual int GetStates();
+    virtual int GetStates() const;
 
     void SetColors(COLORREF crUp[4],COLORREF crDown[4],COLORREF crBorder[4]);
 
 	virtual ISkinObj * Scale(int nScale);
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
     virtual void OnColorize(COLORREF cr);
     BTNCOLORS   m_colors;
     BTNCOLORS   m_colorsBackup;
@@ -212,7 +207,7 @@ public:
     }
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const;
     virtual void OnColorize(COLORREF cr);
 	virtual ISkinObj * Scale(int nScale);
 
@@ -258,15 +253,15 @@ public:
     SSkinScrollbar();
 
     //指示滚动条皮肤是否支持显示上下箭头
-    virtual BOOL HasArrow(){return TRUE;}
+    virtual BOOL HasArrow() const {return TRUE;}
     
-    virtual int GetIdealSize();
+    virtual int GetIdealSize()  const;
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha){}
-	virtual void _DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const {}
+	virtual void _DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const;
     //返回源指定部分在原位图上的位置。
-    virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical);
+    virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical) const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
 
     int         m_nMargin;
@@ -290,11 +285,8 @@ public:
     virtual ~SSkinColorRect();
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha);
-
-	virtual BOOL IgnoreState(){return GetStates()<2;}
-
-	virtual int GetStates();
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const;
+	virtual int GetStates() const;
 	virtual ISkinObj * Scale(int nScale);
 
     SOUI_ATTRS_BEGIN()
@@ -334,7 +326,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 		}
 
-		void Draw(IRenderTarget *pRT, LPCRECT rcDraw, BYTE byAlpha,int nScale);
+		void Draw(IRenderTarget *pRT, LPCRECT rcDraw, BYTE byAlpha,int nScale) const;
 
 		SOUI_ATTRS_BEGIN()
 			ATTR_ENUM_BEGIN(L"type",GradientType,TRUE)
@@ -399,7 +391,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		SOUI_ATTRS_END()
 
 
-		POINT GetConner(int nScale)
+		POINT GetConner(int nScale) const
 		{
 			POINT pt={m_radiusX.toPixelSize(nScale),m_radiusY.toPixelSize(nScale)};
 			return pt;
@@ -443,9 +435,7 @@ public:
 	SSkinShape();
 
 
-	virtual SIZE GetSkinSize();
-
-	virtual BOOL IgnoreState(){return TRUE;}
+	virtual SIZE GetSkinSize() const;
 
 	virtual int GetStates(){return 1;}
 
@@ -460,7 +450,7 @@ public:
 protected:
 	void OnInitFinished(pugi::xml_node xmlNode);
 
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 
 	virtual void _Scale(ISkinObj *pObj, int nScale);
 
@@ -481,9 +471,8 @@ class SOUI_EXP SSKinGroup : public SSkinObjBase
 SOUI_CLASS_NAME(SSKinGroup,L"group")
 public:
 
-	virtual int GetStates();
-	virtual BOOL IgnoreState(){return FALSE;}
-	virtual SIZE GetSkinSize();
+	virtual int GetStates() const;
+	virtual SIZE GetSkinSize() const;
 
 	
 
@@ -495,7 +484,7 @@ public:
 	SOUI_ATTRS_END()
 
 protected:
-	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha);
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 	virtual void _Scale(ISkinObj * skinObj, int nScale);
 	SAutoRefPtr<ISkinObj> m_skins[4];
 };
