@@ -25,8 +25,8 @@ BOOL ExpLua_Window(lua_State *L)
         lua_tinker::class_def<SWindow>(L,"FindChildByNameW",(SWindow* (SWindow::*)(LPCWSTR,int ))&SWindow::FindChildByName);
  		lua_tinker::class_def<SWindow>(L,"CreateChildrenFromString",(SWindow* (SWindow::*)(LPCWSTR))&SWindow::CreateChildren);
 		lua_tinker::class_def<SWindow>(L,"GetTextAlign",&SWindow::GetTextAlign);
-		lua_tinker::class_def<SWindow>(L,"GetWindowRect",(void (SWindow::*)(LPRECT))&SWindow::GetWindowRect);
-        lua_tinker::class_def<SWindow>(L,"GetWindowRect2",(CRect (SWindow::*)())&SWindow::GetWindowRect);
+		lua_tinker::class_def<SWindow>(L,"GetWindowRect",(void (SWindow::*)(LPRECT) const)&SWindow::GetWindowRect);
+        lua_tinker::class_def<SWindow>(L,"GetWindowRect2",(CRect (SWindow::*)() const)&SWindow::GetWindowRect);
 		lua_tinker::class_def<SWindow>(L,"GetClientRect",(void (SWindow::*)(LPRECT)const)&SWindow::GetClientRect);
         lua_tinker::class_def<SWindow>(L,"GetClientRect2",(CRect (SWindow::*)()const)&SWindow::GetClientRect);
 		lua_tinker::class_def<SWindow>(L,"GetWindowText",&SWindow::GetWindowText);
