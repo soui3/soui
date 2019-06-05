@@ -62,13 +62,15 @@ int SwndStyle::GetStates()
 
 COLORREF SwndStyle::GetTextColor( int iState )
 {
+	iState %= 4;
     if(m_crText[iState]==CR_INVALID) iState=0;
     return m_crText[iState];
 }
 
 IFontPtr SwndStyle::GetTextFont( int iState )
 {
-    if(!m_ftText[iState].GetFontPtr()) iState=0;
+	iState %= 4;
+	if(!m_ftText[iState].GetFontPtr()) iState=0;
     return m_ftText[iState].GetFontPtr();
 }
 
