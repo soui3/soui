@@ -10,7 +10,7 @@ namespace SOUI{
 		// 通过 ICaret 继承
 		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) override;
 		virtual void Draw(IRenderTarget * pRT) override;
-		virtual int GoNextState() override;
+		virtual BOOL NextFrame() override;
 		virtual void SetPosition(int x, int y) override;
 		virtual void SetVisible(BOOL bVisible) override;
 		virtual BOOL IsVisible() const  override;
@@ -20,7 +20,7 @@ namespace SOUI{
 		CPoint	m_ptCaret;							/**< caret position */
 		SAutoRefPtr<IBitmap>    m_bmpCaret;         /**< 模拟插入符 */
 		bool	m_bDrawCaret;						/**< is caret drawing */
-
+		int		m_nWaitFrame;
 	};
 }
 

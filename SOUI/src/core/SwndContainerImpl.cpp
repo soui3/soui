@@ -413,6 +413,11 @@ void SwndContainerImpl::OnNextFrame()
         ITimelineHandler * pHandler=lstCopy.GetNext(pos);
         pHandler->OnNextFrame();
     }
+	if (m_caret->NextFrame())
+	{
+		CRect rcCaret = m_caret->GetRect();
+		InvalidateRect(rcCaret);
+	}
 }
 
 void SwndContainerImpl::OnActivateApp( BOOL bActive, DWORD dwThreadID )

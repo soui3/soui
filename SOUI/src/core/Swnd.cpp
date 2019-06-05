@@ -1078,7 +1078,7 @@ namespace SOUI
 			_PaintClient(pRT);
 			if (IsFocused())
 			{//draw caret
-
+				GetContainer()->GetCaret()->Draw(pRT);
 			}
 		}
 

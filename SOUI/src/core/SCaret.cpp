@@ -3,7 +3,7 @@
 
 namespace SOUI{
 
-    SCaret::SCaret():m_bDrawCaret(false),m_bVisible(FALSE)
+    SCaret::SCaret():m_bDrawCaret(false),m_bVisible(FALSE), m_nWaitFrame(0)
     {
  
     }
@@ -49,21 +49,44 @@ namespace SOUI{
 		pRT->DrawBitmap(rcCaret, m_bmpCaret, 0, 0);
 	}
 
-	int SCaret::GoNextState()
+	BOOL SCaret::NextFrame()
 	{
-		m_bDrawCaret = !m_bDrawCaret;
-		return 200;
+		if (!m_bVisible)
+			return FALSE;
+
+		m_nWaitFrame++;
+		if (m_nWaitFrame%20 == 0)
+		{
+			m_bDrawCaret = !m_bDrawCaret;
+			m_nWaitFrame = 0;
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	void SCaret::SetPosition(int x, int y)
 	{
 		m_ptCaret.x = x;
 		m_ptCaret.y = y;
+		m_nWaitFrame = 0;
+		if (m_bVisible)
+		{
+			m_bDrawCaret = TRUE;
+		}
 	}
 
 	void SCaret::SetVisible(BOOL bVisible)
 	{
 		m_bVisible = bVisible;
+
+		m_nWaitFrame = 0;
+		if (m_bVisible)
+		{
+			m_bDrawCaret = TRUE;
+		}
 	}
 
 	BOOL SCaret::IsVisible() const
