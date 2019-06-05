@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <interface/scaret-i.h>
+#include <interface/sinterpolator-i.h>
 
 namespace SOUI{
     class SOUI_EXP SCaret : public TObjRefImpl<ICaret>
@@ -20,7 +21,11 @@ namespace SOUI{
 		CPoint	m_ptCaret;							/**< caret position */
 		SAutoRefPtr<IBitmap>    m_bmpCaret;         /**< 模拟插入符 */
 		bool	m_bDrawCaret;						/**< is caret drawing */
-		int		m_nWaitFrame;
+		int		m_iFrame;
+		BYTE	m_byAlpha;
+#ifdef ANI_CARET
+		SAutoRefPtr<IInterpolator> m_AniInterpolator;
+#endif
 	};
 }
 

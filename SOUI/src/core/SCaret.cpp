@@ -1,12 +1,17 @@
 ﻿#include "souistd.h"
 #include "core\SCaret.h"
+#include "animator\SInterpolatorImpl.h"
 
 namespace SOUI{
 
-    SCaret::SCaret():m_bDrawCaret(false),m_bVisible(FALSE), m_nWaitFrame(0)
+#define CARET_FRAME_SIZE 30
+
+    SCaret::SCaret():m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
     {
- 
-    }
+#ifdef ANI_CARET
+		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
+#endif
+	}
 
 
 	BOOL SCaret::Init(HBITMAP hBmp, int nWid, int nHei)
@@ -46,32 +51,41 @@ namespace SOUI{
 		if (!m_bmpCaret)
 			return;
 		CRect rcCaret = GetRect();
-		pRT->DrawBitmap(rcCaret, m_bmpCaret, 0, 0);
+		pRT->DrawBitmap(rcCaret, m_bmpCaret, 0, 0,m_byAlpha);
 	}
 
 	BOOL SCaret::NextFrame()
 	{
 		if (!m_bVisible)
 			return FALSE;
+		m_iFrame++;
+#ifdef ANI_CARET
+		if (m_iFrame%CARET_FRAME_SIZE == 0)
+		{
+			m_iFrame = 0;
+		}
+		m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation((1.0f - m_iFrame*1.0f / CARET_FRAME_SIZE)));
+		return TRUE;
 
-		m_nWaitFrame++;
-		if (m_nWaitFrame%20 == 0)
+#else
+		if (m_iFrame%CARET_FRAME_SIZE == 0)
 		{
 			m_bDrawCaret = !m_bDrawCaret;
-			m_nWaitFrame = 0;
+			m_iFrame = 0;
 			return TRUE;
 		}
 		else
 		{
 			return FALSE;
 		}
+#endif
 	}
 
 	void SCaret::SetPosition(int x, int y)
 	{
 		m_ptCaret.x = x;
 		m_ptCaret.y = y;
-		m_nWaitFrame = 0;
+		m_iFrame = 0;
 		if (m_bVisible)
 		{
 			m_bDrawCaret = TRUE;
@@ -84,7 +98,7 @@ namespace SOUI{
 			return FALSE;
 		m_bVisible = bVisible;
 
-		m_nWaitFrame = 0;
+		m_iFrame = 0;
 		if (m_bVisible)
 		{
 			m_bDrawCaret = TRUE;
