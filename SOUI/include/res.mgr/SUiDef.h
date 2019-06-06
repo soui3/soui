@@ -28,6 +28,7 @@ namespace SOUI
 		virtual SNamedString & GetNamedString()  =0;
 		virtual SNamedDimension & GetNamedDimension() = 0;
 		virtual FontInfo & GetDefFontInfo() = 0;
+		virtual pugi::xml_node GetCaretInfo() = 0;
 	};
 
 	typedef BOOL (*FunFontCheck)(const SStringT & strFontName);

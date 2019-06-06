@@ -2,6 +2,7 @@
 <UIDEF>
   <font face="微软雅黑" size="18"/>
 
+  <caret color="rgb(255,0,0)" animate="true" speed="30" interpolator="Accelerate"/>
   <!--2.0重要更新：string,color,skin这3个节点在有src属性时切换到src指定的XML中去加载，style, objattr保持不变-->
   
   <!--定义字符串表-->

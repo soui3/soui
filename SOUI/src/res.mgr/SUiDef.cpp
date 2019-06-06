@@ -55,7 +55,7 @@ namespace SOUI{
 		virtual SNamedDimension & GetNamedDimension() override;
 		virtual SObjDefAttr * GetObjDefAttr() override;
 		virtual FontInfo & GetDefFontInfo()  override;
-
+		virtual pugi::xml_node  GetCaretInfo()  override;
 		virtual void SetSkinPool(SSkinPool * pSkinPool)  override;
 		virtual void SetStylePool(SStylePool * pStylePool) override;
 		virtual void SetObjDefAttr(SObjDefAttr * pObjDefAttr) override;
@@ -73,6 +73,7 @@ namespace SOUI{
 		SNamedDimension namedDim;
 
 		FontInfo	  defFontInfo;
+		pugi::xml_document xmlCaret;
 	};
 
 
@@ -145,12 +146,17 @@ namespace SOUI{
 
 					//parse default Unit
 					pugi::xml_node xmlUnit;
-					xmlUnit = root.child(L"unit", false);
+					xmlUnit = root.child(L"unit");
 					if (xmlUnit)
 					{
 						SStringW unit = xmlUnit.attribute(L"defUnit").as_string(L"dp");
 						SLayoutSize::setDefUnit(unit);
 					}
+
+					xmlCaret.reset();
+					pugi::xml_node xmlCaretNode = root.child(L"caret");
+					if(xmlCaretNode)
+						xmlCaret.append_copy(xmlCaretNode);
 
 					//load named string
 					{
@@ -235,6 +241,11 @@ namespace SOUI{
 	SNamedDimension & SUiDefInfo::GetNamedDimension()   { return namedDim; }
 	SObjDefAttr * SUiDefInfo::GetObjDefAttr()  { return objDefAttr; }
 	FontInfo & SUiDefInfo::GetDefFontInfo()   { return defFontInfo; }
+
+	pugi::xml_node  SUiDefInfo::GetCaretInfo()
+	{
+		return xmlCaret.child(L"caret");
+	}
 
 	void SUiDefInfo::SetSkinPool(SSkinPool * pSkinPool)
 	{

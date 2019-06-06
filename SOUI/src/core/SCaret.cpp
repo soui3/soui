@@ -4,13 +4,10 @@
 
 namespace SOUI{
 
-#define CARET_FRAME_SIZE 30
-
     SCaret::SCaret():m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
+		,m_crCaret(RGBA(0,0,0,255)), m_nFrames(30),m_bAniCaret(FALSE)
     {
-#ifdef ANI_CARET
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
-#endif
 	}
 
 
@@ -37,7 +34,7 @@ namespace SOUI{
 		{
 			//创建一个黑色插入符的位图
 			CRect rc(0, 0, nWid, nHei);
-			pRT->FillSolidRect(&rc, RGBA(0, 0, 0, 0xFF));
+			pRT->FillSolidRect(&rc, m_crCaret);
 		}
 		return TRUE;
 	}
@@ -59,26 +56,28 @@ namespace SOUI{
 		if (!m_bVisible)
 			return FALSE;
 		m_iFrame++;
-#ifdef ANI_CARET
-		if (m_iFrame%CARET_FRAME_SIZE == 0)
+		if (m_bAniCaret)
 		{
-			m_iFrame = 0;
-		}
-		m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation((1.0f - m_iFrame*1.0f / CARET_FRAME_SIZE)));
-		return TRUE;
-
-#else
-		if (m_iFrame%CARET_FRAME_SIZE == 0)
-		{
-			m_bDrawCaret = !m_bDrawCaret;
-			m_iFrame = 0;
+			if (m_iFrame%m_nFrames == 0)
+			{
+				m_iFrame = 0;
+			}
+			m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation((1.0f - m_iFrame*1.0f / m_nFrames)));
 			return TRUE;
 		}
 		else
 		{
-			return FALSE;
+			if (m_iFrame%m_nFrames == 0)
+			{
+				m_bDrawCaret = !m_bDrawCaret;
+				m_iFrame = 0;
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
-#endif
 	}
 
 	void SCaret::SetPosition(int x, int y)
