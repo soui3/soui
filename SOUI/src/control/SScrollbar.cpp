@@ -20,7 +20,7 @@ SScrollBar::SScrollBar()
     , m_bNotify(FALSE)
     , m_uHtPrev((UINT)-1)
     , m_uAllowSize((UINT)-1)
-    , m_bVertical(TRUE)
+    , m_sbPainter(this)
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
     m_si.nTrackPos=-1;
@@ -31,10 +31,11 @@ SScrollBar::~SScrollBar()
 {
 }
 
-BOOL SScrollBar::IsVertical()
+BOOL SScrollBar::IsVertical() const
 {
-    return m_bVertical;
+    return m_sbPainter.IsVertical();
 }
+
 UINT SScrollBar::HitTest(CPoint pt)
 {
     CRect rc;
@@ -162,23 +163,17 @@ void SScrollBar::OnPaint(IRenderTarget * pRT)
 {
     if(!m_pSkin) return;
 
-    int nState=IsDisabled(TRUE)?3:0;
-    CRect rcDest;
-    rcDest=GetPartRect(SB_LINEUP);
-    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,m_bVertical));
-    rcDest=GetPartRect(SB_PAGEUP);
-    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,nState,m_bVertical));
-    rcDest=GetPartRect(SB_THUMBTRACK);
-    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nState,m_bVertical));
-    rcDest=GetPartRect(SB_PAGEDOWN);
-    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEDOWN,nState,m_bVertical));
-    rcDest=GetPartRect(SB_LINEDOWN);
-    m_pSkin->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,m_bVertical));
+	m_sbPainter.OnDraw(pRT,SB_LINEUP);
+	m_sbPainter.OnDraw(pRT,SB_PAGEUP);
+	m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
+	m_sbPainter.OnDraw(pRT,SB_PAGEDOWN);
+	m_sbPainter.OnDraw(pRT,SB_LINEDOWN);
 }
 
 void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
 {
     ReleaseCapture();
+	m_sbPainter.OnMouseUp(point);
     if(m_bDrag)
     {
         m_bDrag=FALSE;
@@ -397,6 +392,40 @@ LRESULT SScrollBar::NotifySbCode(UINT uCode,int nPos)
     evt.nPos=nPos;
     evt.bVertical=IsVertical();
     return FireEvent(evt);
+}
+
+CRect SScrollBar::GetScrollBarRect(bool bVert) const
+{
+	return GetClientRect();
+}
+
+ISkinObj* SScrollBar::GetScrollBarSkin(bool bVert) const
+{
+	return m_pSkin;
+}
+
+const SCROLLINFO * SScrollBar::GetScrollBarInfo(bool bVert) const
+{
+	return &m_si;
+}
+
+int SScrollBar::GetScrollBarArrowSize(bool bVert) const
+{
+	return m_uAllowSize;
+}
+
+void SScrollBar::UpdateScrollBar(bool bVert, int iPart)
+{
+	CRect rc=m_sbPainter.GetPartRect(iPart);
+	IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
+	m_sbPainter.OnDraw(pRT,iPart);
+	ReleaseRenderTarget(pRT);
+
+}
+
+ISwndContainer * SScrollBar::GetScrollBarContainer()
+{
+	return GetContainer();
 }
 
 }//namespace SOUI

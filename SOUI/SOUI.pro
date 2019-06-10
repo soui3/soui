@@ -93,6 +93,7 @@ HEADERS += include/SApp.h \
            include/core/SwndStyle.h \
            include/core/SwndAccessible.h \
            include/core/scaret.h \
+           include/core/sscrollbarpainter.h \
            include/core/SObjectFactory.h \
            include/event/eventcrack.h \
            include/event/Events.h \
@@ -219,6 +220,7 @@ SOURCES += src/SApp.cpp \
            src/core/SwndStyle.cpp \
            src/core/SwndAccessible.cpp \
            src/core/scaret.cpp \
+           src/core/sscrollbarpainter.cpp \
            src/core/SObjectFactory.cpp \
            src/layout/SLinearLayout.cpp \
            src/layout/SouiLayout.cpp \

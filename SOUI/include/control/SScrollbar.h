@@ -11,220 +11,19 @@
  * Describe     
  */
 #pragma once
-#include "core/SWnd.h"
+#include <core/SWnd.h>
+#include <core/SScrollBarPainter.h>
 
 namespace SOUI
 {
-	struct IScrollPainterCallback
-	{
-		virtual CRect GetScrollBarRect(bool bVert) const = 0;
-		virtual ISkinObj* GetScrollBarSkin(bool bVert) const = 0;
-		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const = 0;
-		virtual int GetScrollBarArrowSize(bool bVert) const = 0;
-		virtual void UpdateScrollBar(bool bVert, int iPart) const = 0;
-		virtual ISwndContainer * GetContainer() = 0;
-	};
 
-	class SOUI_EXP SScrollBarPainter : public ITimelineHandler
-	{
-	public:
-		SScrollBarPainter(bool bVert, IScrollPainterCallback *pCB)
-		:m_bVert(bVert),m_pCB(pCB)
-			, m_nSpeed(30), m_iFrame(0)
-			, m_iStep(0), m_iHitPart(-1),m_dwState(0){
-			SASSERT(m_pCB);
-		}
-
-	public:
-		void OnMouseHover(CPoint pt)
-		{
-			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
-			m_iHitPart = HitTest(rc, pt);
-			m_dwState = WndState_Hover;
-			
-			if (!m_interpolator)
-			{
-				m_pCB->UpdateScrollBar(m_bVert,m_iHitPart);
-			}
-			else
-			{
-				m_iFrame = 0;
-				m_iStep = 1;//to show
-				GetContainer()->RegisterTimelineHandler(this);
-			}
-		}
-
-		void OnMouseDown(CPoint pt)
-		{
-			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
-			m_iHitPart = HitTest(rc, pt);
-			m_dwState = WndState_PushDown;
-
-			m_iFrame = m_nSpeed;//stop animate
-			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
-		}
-
-		void OnMouseUp(CPoint pt)
-		{
-			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
-			int iOldHit = m_iHitPart;
-			m_iHitPart = HitTest(rc, pt);
-			m_dwState = m_iHitPart==0? WndState_Normal:WndState_Hover;
-			if(iOldHit != -1)
-			{
-				m_pCB->UpdateScrollBar(m_bVert, iOldHit);
-			}
-			if (m_iHitPart != -1)
-			{
-				m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
-			}
-		}
-
-		void OnMouseMove(CPoint pt)
-		{
-			if (m_dwState != WndState_PushDown)
-			{
-				CRect rc = m_pCB->GetScrollBarRect(m_bVert);
-				int iOldHit = m_iHitPart;
-				m_iHitPart = HitTest(rc, pt);
-				if (iOldHit != m_iHitPart)
-				{
-					if(iOldHit!=-1)
-						m_pCB->UpdateScrollBar(m_bVert, iOldHit);
-					if(m_iHitPart!=-1)
-						m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
-				}
-			}
-		}
-
-		void OnMouseLeave()
-		{
-			int iHitPart = m_iHitPart;
-			m_iHitPart = 0;
-			m_dwState = 0;
-			if (!m_interpolator)
-			{
-				m_pCB->UpdateScrollBar(m_bVert, iHitPart);
-			}
-			else
-			{
-				m_iStep = -1;//to hide
-				GetContainer()->RegisterTimelineHandler(this);
-			}
-		}
-
-		void OnDraw(IRenderTarget *pRT, int iPart)
-		{
-
-		}
-	protected:
-		int HitTest(CRect rc, CPoint pt) const
-		{
-			return 0;
-		}
-
-		ISwndContainer * GetContainer(){
-			return m_pCB->GetContainer();
-		}
-
-		bool IsVertical() const{
-			return m_bVert;
-		}
-
-		CRect GetPartRect(UINT uSBCode)
-		{
-			SASSERT(m_pCB->GetScrollBarSkin(m_bVert));
-			const SCROLLINFO * pSi = m_pCB->GetScrollBarInfo(m_bVert);
-			int nTrackPos=pSi->nTrackPos;
-			int nMax=pSi->nMax;
-			if(nMax<pSi->nMin+(int)pSi->nPage-1) nMax=pSi->nMin+pSi->nPage-1;
-
-			if(nTrackPos==-1)
-				nTrackPos=pSi->nPos;
-			CRect rcAll = m_pCB->GetScrollBarRect(m_bVert);
-			int nLength=(IsVertical()?rcAll.Height():rcAll.Width());
-			
-			int nArrowHei=m_pCB->GetScrollBarArrowSize(m_bVert);
-			int nInterHei=nLength-2*nArrowHei;
-			if(nInterHei<0)
-				nInterHei=0;
-			int    nSlideHei=pSi->nPage*nInterHei/(nMax-pSi->nMin+1);
-			if(nMax==(int)(pSi->nMin+pSi->nPage-1))
-				nSlideHei=nInterHei;
-			if(nSlideHei<THUMB_MINSIZE)
-				nSlideHei=THUMB_MINSIZE;
-			if(nInterHei<THUMB_MINSIZE)
-				nSlideHei=0;
-			int nEmptyHei=nInterHei-nSlideHei;
-			if(nInterHei==0)
-				nArrowHei=nLength/2;
-			CRect rcRet(0,0,rcAll.Width(),nArrowHei);
-			if(uSBCode==SB_LINEUP) goto end;
-			rcRet.top=rcRet.bottom;
-			if((pSi->nMax-pSi->nMin-pSi->nPage+1)==0)
-				rcRet.bottom+=nEmptyHei/2;
-			else
-				rcRet.bottom+=nEmptyHei*nTrackPos/(pSi->nMax-pSi->nMin-pSi->nPage+1);
-			if(uSBCode==SB_PAGEUP) goto end;
-			rcRet.top=rcRet.bottom;
-			rcRet.bottom+=nSlideHei;
-			if(uSBCode==SB_THUMBTRACK) goto end;
-			rcRet.top=rcRet.bottom;
-			rcRet.bottom=nLength-nArrowHei;
-			if(uSBCode==SB_PAGEDOWN) goto end;
-			rcRet.top=rcRet.bottom;
-			rcRet.bottom=nLength;
-			if(uSBCode==SB_LINEDOWN) goto end;
-end:
-			if(!IsVertical())
-			{
-				rcRet.left=rcRet.top;
-				rcRet.right=rcRet.bottom;
-				rcRet.top=0;
-				rcRet.bottom=rcAll.Height();
-			}
-			rcRet.OffsetRect(rcAll.TopLeft());
-			return rcRet;
-		}
-	public:
-		virtual void OnNextFrame()
-		{
-			SASSERT(m_iStep != 0);
-			if (m_iFrame>=0 && m_iFrame < m_nSpeed)
-			{
-				m_iFrame += m_iStep;
-				m_pCB->UpdateScrollBar(m_bVert, -1);
-			}
-			else
-			{
-				m_iStep = 0;
-				GetContainer()->UnregisterTimelineHandler(this);
-			}
-		}
-
-	public:
-		SOUI_ATTRS_BEGIN()
-			ATTR_INT(L"speed",m_nSpeed,FALSE)
-			ATTR_INTERPOLATOR(L"interpolator", m_interpolator,FALSE)
-			ATTR_CHAIN_PTR(m_interpolator,0)
-		SOUI_ATTRS_BREAK()
-	private:
-		IScrollPainterCallback * m_pCB;
-		bool m_bVert;
-		SAutoRefPtr<IInterpolator> m_interpolator; //default to null, which means no animation.
-		int  m_nSpeed;
-		int	 m_iFrame;
-		int  m_iStep;
-		int	 m_iHitPart;
-		DWORD m_dwState;
-	};
 /** 
  * @class     SScrollBar
  * @brief     滚动条
  *
  * Describe   滚动条
  */
-class SOUI_EXP SScrollBar: public SWindow
+class SOUI_EXP SScrollBar: public SWindow, protected IScrollPainterCallback
 {
 // Construction
 public:
@@ -253,7 +52,7 @@ public:
      *
      * Describe  是否是竖直
      */
-    BOOL IsVertical();
+    BOOL IsVertical() const;
 
     /**
      * SScrollBar::HitTest
@@ -296,6 +95,18 @@ public:
 	 */
 	int GetMin();
     
+protected:
+	virtual CRect GetScrollBarRect(bool bVert) const;
+
+	virtual ISkinObj* GetScrollBarSkin(bool bVert) const;
+
+	virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const;
+
+	virtual int GetScrollBarArrowSize(bool bVert) const;
+
+	virtual void UpdateScrollBar(bool bVert, int iPart);
+
+	virtual ISwndContainer * GetScrollBarContainer();
 protected:    
     /**
      * SScrollBar::GetPartRect
@@ -405,13 +216,13 @@ protected:
 
 protected:
     SOUI_ATTRS_BEGIN()
-        ATTR_SKIN(L"skin", m_pSkin, FALSE)
-        ATTR_UINT(L"arrowSize", m_uAllowSize, FALSE)
-        ATTR_INT(L"min", m_si.nMin, FALSE)
-        ATTR_INT(L"max", m_si.nMax, FALSE)
-        ATTR_INT(L"value", m_si.nPos, FALSE)
-        ATTR_INT(L"page", m_si.nPage, FALSE)
-        ATTR_INT(L"vertical", m_bVertical, FALSE)
+        ATTR_SKIN(L"skin", m_pSkin, TRUE)
+        ATTR_UINT(L"arrowSize", m_uAllowSize, TRUE)
+        ATTR_INT(L"min", m_si.nMin, TRUE)
+        ATTR_INT(L"max", m_si.nMax, TRUE)
+        ATTR_INT(L"value", m_si.nPos, TRUE)
+        ATTR_INT(L"page", m_si.nPage, TRUE)
+		ATTR_CHAIN(m_sbPainter,0)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
@@ -436,8 +247,8 @@ protected:
     UINT        m_uClicked;   /**<  */
     BOOL        m_bNotify;    /**<  */
     UINT        m_uHtPrev;    /**<  */
-    BOOL        m_bVertical;  /**< 是否是垂直滚动条 */
     
+	SScrollBarPainter m_sbPainter;
 };
 
 }//namespace SOUI
