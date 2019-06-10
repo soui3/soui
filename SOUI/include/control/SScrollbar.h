@@ -22,15 +22,16 @@ namespace SOUI
 		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const = 0;
 		virtual int GetScrollBarArrowSize(bool bVert) const = 0;
 		virtual void UpdateScrollBar(bool bVert, int iPart) const = 0;
+		virtual ISwndContainer * GetContainer() = 0;
 	};
 
 	class SOUI_EXP SScrollBarPainter : public ITimelineHandler
 	{
 	public:
-		SScrollBarPainter(bool bVert, IScrollPainterCallback *pCB,ISwndContainer *pContainer)
-		:m_bVert(bVert),m_pCB(pCB),m_pContainer(pContainer)
+		SScrollBarPainter(bool bVert, IScrollPainterCallback *pCB)
+		:m_bVert(bVert),m_pCB(pCB)
 			, m_nSpeed(30), m_iFrame(0)
-			, m_iStep(0), m_iHitPart(0),m_dwState(0){
+			, m_iStep(0), m_iHitPart(-1),m_dwState(0){
 			SASSERT(m_pCB);
 		}
 
@@ -49,7 +50,7 @@ namespace SOUI
 			{
 				m_iFrame = 0;
 				m_iStep = 1;//to show
-				m_pContainer->RegisterTimelineHandler(this);
+				GetContainer()->RegisterTimelineHandler(this);
 			}
 		}
 
@@ -69,8 +70,11 @@ namespace SOUI
 			int iOldHit = m_iHitPart;
 			m_iHitPart = HitTest(rc, pt);
 			m_dwState = m_iHitPart==0? WndState_Normal:WndState_Hover;
-			m_pCB->UpdateScrollBar(m_bVert, iOldHit);
-			if (iOldHit != m_iHitPart && m_iHitPart != 0)
+			if(iOldHit != -1)
+			{
+				m_pCB->UpdateScrollBar(m_bVert, iOldHit);
+			}
+			if (m_iHitPart != -1)
 			{
 				m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
 			}
@@ -85,9 +89,9 @@ namespace SOUI
 				m_iHitPart = HitTest(rc, pt);
 				if (iOldHit != m_iHitPart)
 				{
-					if(iOldHit!=0)
+					if(iOldHit!=-1)
 						m_pCB->UpdateScrollBar(m_bVert, iOldHit);
-					if(m_iHitPart!=0)
+					if(m_iHitPart!=-1)
 						m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
 				}
 			}
@@ -105,7 +109,7 @@ namespace SOUI
 			else
 			{
 				m_iStep = -1;//to hide
-				m_pContainer->RegisterTimelineHandler(this);
+				GetContainer()->RegisterTimelineHandler(this);
 			}
 		}
 
@@ -117,6 +121,70 @@ namespace SOUI
 		int HitTest(CRect rc, CPoint pt) const
 		{
 			return 0;
+		}
+
+		ISwndContainer * GetContainer(){
+			return m_pCB->GetContainer();
+		}
+
+		bool IsVertical() const{
+			return m_bVert;
+		}
+
+		CRect GetPartRect(UINT uSBCode)
+		{
+			SASSERT(m_pCB->GetScrollBarSkin(m_bVert));
+			const SCROLLINFO * pSi = m_pCB->GetScrollBarInfo(m_bVert);
+			int nTrackPos=pSi->nTrackPos;
+			int nMax=pSi->nMax;
+			if(nMax<pSi->nMin+(int)pSi->nPage-1) nMax=pSi->nMin+pSi->nPage-1;
+
+			if(nTrackPos==-1)
+				nTrackPos=pSi->nPos;
+			CRect rcAll = m_pCB->GetScrollBarRect(m_bVert);
+			int nLength=(IsVertical()?rcAll.Height():rcAll.Width());
+			
+			int nArrowHei=m_pCB->GetScrollBarArrowSize(m_bVert);
+			int nInterHei=nLength-2*nArrowHei;
+			if(nInterHei<0)
+				nInterHei=0;
+			int    nSlideHei=pSi->nPage*nInterHei/(nMax-pSi->nMin+1);
+			if(nMax==(int)(pSi->nMin+pSi->nPage-1))
+				nSlideHei=nInterHei;
+			if(nSlideHei<THUMB_MINSIZE)
+				nSlideHei=THUMB_MINSIZE;
+			if(nInterHei<THUMB_MINSIZE)
+				nSlideHei=0;
+			int nEmptyHei=nInterHei-nSlideHei;
+			if(nInterHei==0)
+				nArrowHei=nLength/2;
+			CRect rcRet(0,0,rcAll.Width(),nArrowHei);
+			if(uSBCode==SB_LINEUP) goto end;
+			rcRet.top=rcRet.bottom;
+			if((pSi->nMax-pSi->nMin-pSi->nPage+1)==0)
+				rcRet.bottom+=nEmptyHei/2;
+			else
+				rcRet.bottom+=nEmptyHei*nTrackPos/(pSi->nMax-pSi->nMin-pSi->nPage+1);
+			if(uSBCode==SB_PAGEUP) goto end;
+			rcRet.top=rcRet.bottom;
+			rcRet.bottom+=nSlideHei;
+			if(uSBCode==SB_THUMBTRACK) goto end;
+			rcRet.top=rcRet.bottom;
+			rcRet.bottom=nLength-nArrowHei;
+			if(uSBCode==SB_PAGEDOWN) goto end;
+			rcRet.top=rcRet.bottom;
+			rcRet.bottom=nLength;
+			if(uSBCode==SB_LINEDOWN) goto end;
+end:
+			if(!IsVertical())
+			{
+				rcRet.left=rcRet.top;
+				rcRet.right=rcRet.bottom;
+				rcRet.top=0;
+				rcRet.bottom=rcAll.Height();
+			}
+			rcRet.OffsetRect(rcAll.TopLeft());
+			return rcRet;
 		}
 	public:
 		virtual void OnNextFrame()
@@ -130,7 +198,7 @@ namespace SOUI
 			else
 			{
 				m_iStep = 0;
-				m_pContainer->UnregisterTimelineHandler(this);
+				GetContainer()->UnregisterTimelineHandler(this);
 			}
 		}
 
@@ -149,7 +217,6 @@ namespace SOUI
 		int  m_iStep;
 		int	 m_iHitPart;
 		DWORD m_dwState;
-		ISwndContainer * m_pContainer;
 	};
 /** 
  * @class     SScrollBar
