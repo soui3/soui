@@ -15,6 +15,142 @@
 
 namespace SOUI
 {
+	struct IScrollPainterCallback
+	{
+		virtual CRect GetScrollBarRect(bool bVert) const = 0;
+		virtual ISkinObj* GetScrollBarSkin(bool bVert) const = 0;
+		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const = 0;
+		virtual int GetScrollBarArrowSize(bool bVert) const = 0;
+		virtual void UpdateScrollBar(bool bVert, int iPart) const = 0;
+	};
+
+	class SOUI_EXP SScrollBarPainter : public ITimelineHandler
+	{
+	public:
+		SScrollBarPainter(bool bVert, IScrollPainterCallback *pCB,ISwndContainer *pContainer)
+		:m_bVert(bVert),m_pCB(pCB),m_pContainer(pContainer)
+			, m_nSpeed(30), m_iFrame(0)
+			, m_iStep(0), m_iHitPart(0),m_dwState(0){
+			SASSERT(m_pCB);
+		}
+
+	public:
+		void OnMouseHover(CPoint pt)
+		{
+			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
+			m_iHitPart = HitTest(rc, pt);
+			m_dwState = WndState_Hover;
+			
+			if (!m_interpolator)
+			{
+				m_pCB->UpdateScrollBar(m_bVert,m_iHitPart);
+			}
+			else
+			{
+				m_iFrame = 0;
+				m_iStep = 1;//to show
+				m_pContainer->RegisterTimelineHandler(this);
+			}
+		}
+
+		void OnMouseDown(CPoint pt)
+		{
+			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
+			m_iHitPart = HitTest(rc, pt);
+			m_dwState = WndState_PushDown;
+
+			m_iFrame = m_nSpeed;//stop animate
+			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+		}
+
+		void OnMouseUp(CPoint pt)
+		{
+			CRect rc = m_pCB->GetScrollBarRect(m_bVert);
+			int iOldHit = m_iHitPart;
+			m_iHitPart = HitTest(rc, pt);
+			m_dwState = m_iHitPart==0? WndState_Normal:WndState_Hover;
+			m_pCB->UpdateScrollBar(m_bVert, iOldHit);
+			if (iOldHit != m_iHitPart && m_iHitPart != 0)
+			{
+				m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+			}
+		}
+
+		void OnMouseMove(CPoint pt)
+		{
+			if (m_dwState != WndState_PushDown)
+			{
+				CRect rc = m_pCB->GetScrollBarRect(m_bVert);
+				int iOldHit = m_iHitPart;
+				m_iHitPart = HitTest(rc, pt);
+				if (iOldHit != m_iHitPart)
+				{
+					if(iOldHit!=0)
+						m_pCB->UpdateScrollBar(m_bVert, iOldHit);
+					if(m_iHitPart!=0)
+						m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+				}
+			}
+		}
+
+		void OnMouseLeave()
+		{
+			int iHitPart = m_iHitPart;
+			m_iHitPart = 0;
+			m_dwState = 0;
+			if (!m_interpolator)
+			{
+				m_pCB->UpdateScrollBar(m_bVert, iHitPart);
+			}
+			else
+			{
+				m_iStep = -1;//to hide
+				m_pContainer->RegisterTimelineHandler(this);
+			}
+		}
+
+		void OnDraw(IRenderTarget *pRT, int iPart)
+		{
+
+		}
+	protected:
+		int HitTest(CRect rc, CPoint pt) const
+		{
+			return 0;
+		}
+	public:
+		virtual void OnNextFrame()
+		{
+			SASSERT(m_iStep != 0);
+			if (m_iFrame>=0 && m_iFrame < m_nSpeed)
+			{
+				m_iFrame += m_iStep;
+				m_pCB->UpdateScrollBar(m_bVert, -1);
+			}
+			else
+			{
+				m_iStep = 0;
+				m_pContainer->UnregisterTimelineHandler(this);
+			}
+		}
+
+	public:
+		SOUI_ATTRS_BEGIN()
+			ATTR_INT(L"speed",m_nSpeed,FALSE)
+			ATTR_INTERPOLATOR(L"interpolator", m_interpolator,FALSE)
+			ATTR_CHAIN_PTR(m_interpolator,0)
+		SOUI_ATTRS_BREAK()
+	private:
+		IScrollPainterCallback * m_pCB;
+		bool m_bVert;
+		SAutoRefPtr<IInterpolator> m_interpolator; //default to null, which means no animation.
+		int  m_nSpeed;
+		int	 m_iFrame;
+		int  m_iStep;
+		int	 m_iHitPart;
+		DWORD m_dwState;
+		ISwndContainer * m_pContainer;
+	};
 /** 
  * @class     SScrollBar
  * @brief     滚动条
