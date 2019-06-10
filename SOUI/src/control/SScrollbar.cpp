@@ -15,10 +15,9 @@ namespace SOUI
 // SScrollBar
 SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
-    , m_bDrag(FALSE)
-    , m_uClicked((UINT)-1)
-    , m_bNotify(FALSE)
-    , m_uHtPrev((UINT)-1)
+    , m_bDraging(FALSE)
+    , m_iClicked(-1)
+	, m_iHitPrev(-1)
     , m_uAllowSize((UINT)-1)
     , m_sbPainter(this)
 {
@@ -36,22 +35,6 @@ BOOL SScrollBar::IsVertical() const
     return m_sbPainter.IsVertical();
 }
 
-UINT SScrollBar::HitTest(CPoint pt)
-{
-    CRect rc;
-    rc=GetPartRect(SB_LINEUP);
-    if(rc.PtInRect(pt)) return SB_LINEUP;
-    rc=GetPartRect(SB_LINEDOWN);
-    if(rc.PtInRect(pt)) return SB_LINEDOWN;
-    rc=GetPartRect(SB_THUMBTRACK);
-    if(rc.PtInRect(pt)) return SB_THUMBTRACK;
-    rc=GetPartRect(SB_PAGEUP);
-    if(rc.PtInRect(pt)) return SB_PAGEUP;
-    rc=GetPartRect(SB_PAGEDOWN);
-    if(rc.PtInRect(pt)) return SB_PAGEDOWN;
-
-    return (UINT)-1;
-}
 int SScrollBar::SetPos(int nPos)
 {
     if(nPos>(m_si.nMax-(int)m_si.nPage+1)) nPos=(m_si.nMax-m_si.nPage+1);
@@ -60,16 +43,17 @@ int SScrollBar::SetPos(int nPos)
     {
         if(m_si.nTrackPos==-1)
         {
-            CRect rcOldThumb=GetPartRect(SB_THUMBTRACK);
+            CRect rcOldThumb=m_sbPainter.GetPartRect(SB_THUMBTRACK);
             m_si.nTrackPos=nPos;
-            CRect rcNewThumb=GetPartRect(SB_THUMBTRACK);
+            CRect rcNewThumb=m_sbPainter.GetPartRect(SB_THUMBTRACK);
             CRect rcUnion;
             rcUnion.UnionRect(&rcOldThumb,&rcNewThumb);
 			if (IsVisible())
 			{
 				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-				m_pSkin->DrawByState(pRT, rcUnion, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, IsVertical()));
-				m_pSkin->DrawByState(pRT, rcNewThumb, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, IsVertical()));
+				m_sbPainter.OnDraw(pRT,SB_PAGEUP);
+				m_sbPainter.OnDraw(pRT,SB_PAGEDOWN);
+				m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
 				ReleaseRenderTarget(pRT);
 			}         
             m_si.nTrackPos=-1;
@@ -92,61 +76,6 @@ int SScrollBar::GetMax()
 int SScrollBar::GetMin()
 {
 	return m_si.nMin;
-}
-
-// Generated message map functions
-CRect SScrollBar::GetPartRect(UINT uSBCode)
-{
-    SASSERT(m_pSkin);
-    int nTrackPos=m_si.nTrackPos;
-    int nMax=m_si.nMax;
-    if(nMax<m_si.nMin+(int)m_si.nPage-1) nMax=m_si.nMin+m_si.nPage-1;
-
-    if(nTrackPos==-1)
-        nTrackPos=m_si.nPos;
-    CRect rcWnd = GetWindowRect();
-    int nLength=(IsVertical()?rcWnd.Height():rcWnd.Width());
-    int nInterHei=nLength-2*m_uAllowSize;
-    if(nInterHei<0)
-        nInterHei=0;
-    int    nSlideHei=m_si.nPage*nInterHei/(nMax-m_si.nMin+1);
-    if(nMax==(int)(m_si.nMin+m_si.nPage-1))
-        nSlideHei=nInterHei;
-    if(nSlideHei<THUMB_MINSIZE)
-        nSlideHei=THUMB_MINSIZE;
-    if(nInterHei<THUMB_MINSIZE)
-        nSlideHei=0;
-    int nEmptyHei=nInterHei-nSlideHei;
-    int nArrowHei=m_uAllowSize;
-    if(nInterHei==0)
-        nArrowHei=nLength/2;
-    CRect rcRet(0,0,rcWnd.Width(),nArrowHei);
-    if(uSBCode==SB_LINEUP) goto end;
-    rcRet.top=rcRet.bottom;
-    if((m_si.nMax-m_si.nMin-m_si.nPage+1)==0)
-        rcRet.bottom+=nEmptyHei/2;
-    else
-        rcRet.bottom+=nEmptyHei*nTrackPos/(m_si.nMax-m_si.nMin-m_si.nPage+1);
-    if(uSBCode==SB_PAGEUP) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom+=nSlideHei;
-    if(uSBCode==SB_THUMBTRACK) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom=nLength-nArrowHei;
-    if(uSBCode==SB_PAGEDOWN) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom=nLength;
-    if(uSBCode==SB_LINEDOWN) goto end;
-end:
-    if(!IsVertical())
-    {
-        rcRet.left=rcRet.top;
-        rcRet.right=rcRet.bottom;
-        rcRet.top=0;
-        rcRet.bottom=rcWnd.Height();
-    }
-    rcRet.OffsetRect(rcWnd.TopLeft());
-    return rcRet;
 }
 
 void SScrollBar::OnInitFinished(pugi::xml_node xmlNode)
@@ -174,70 +103,48 @@ void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
 {
     ReleaseCapture();
 	m_sbPainter.OnMouseUp(point);
-    if(m_bDrag)
+    if(m_bDraging)
     {
-        m_bDrag=FALSE;
+        m_bDraging=FALSE;
         m_si.nPos=m_si.nTrackPos;
         m_si.nTrackPos=-1;
         OnMouseMove(nFlags,point);
         NotifySbCode(SB_THUMBPOSITION,m_si.nPos);
     }
-    else if(m_uClicked!=-1)
+    else if(m_iClicked!=-1)
     {
-        if(m_bNotify)
-        {
-            KillTimer(TIMERID_NOTIFY1);
-            m_bNotify=FALSE;
-        }
-        else
-        {
-            KillTimer(TIMERID_DELAY1);
-        }
-        if(m_uClicked==SB_LINEUP||m_uClicked==SB_LINEDOWN)
-        {
-            CRect rc=GetPartRect(m_uClicked);
-            IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-            m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(m_uClicked,SBST_NORMAL,m_bVertical));
-            ReleaseRenderTarget(pRT);
-        }
-        m_uClicked=(UINT)-1;
+        m_iClicked=-1;
     }
 }
 
 void SScrollBar::OnLButtonDown(UINT nFlags, CPoint point)
 {
     SetCapture();
-    UINT uHit=HitTest(point);
-    if(uHit==SB_THUMBTRACK)
+	m_sbPainter.OnMouseDown(point);
+	int iHit = m_sbPainter.GetHitPart();
+    if(iHit==SB_THUMBTRACK)
     {
-        m_bDrag=TRUE;
+        m_bDraging=TRUE;
         m_ptDrag=point;
         m_si.nTrackPos=m_si.nPos;
-        m_nDragPos=m_si.nPos;
     }
     else
     {
-        m_uClicked=uHit;
+        m_iClicked=iHit;
 
-        if(uHit==SB_LINEUP || uHit== SB_LINEDOWN)
-        {
-            CRect rc=GetPartRect(uHit);
-            IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-            m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(uHit,SBST_PUSHDOWN,m_bVertical));
-            ReleaseRenderTarget(pRT);
-            NotifySbCode(uHit,m_si.nPos);
-        }
-        else if(uHit == SB_PAGEUP || uHit == SB_PAGEDOWN)
-        {
-            NotifySbCode(uHit,m_si.nPos);
-        }
+		if(iHit == SB_LINEUP || iHit == SB_LINEDOWN
+			|| iHit == SB_PAGEUP || iHit == SB_PAGEDOWN)
+		{
+			NotifySbCode(iHit,m_si.nPos);
+		}
     }
 }
 
 
 void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
 {
-    if(m_bDrag)
+	m_sbPainter.OnMouseMove(point);
+    if(m_bDraging)
     {
         CRect rcWnd = GetWindowRect();
         int nInterHei=(IsVertical()?rcWnd.Height():rcWnd.Width())-2*m_uAllowSize;
@@ -247,7 +154,7 @@ void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
         int nEmptyHei=nInterHei-nSlideHei;
         int nDragLen=IsVertical()?(point.y-m_ptDrag.y):(point.x-m_ptDrag.x);
         int nSlide=(nEmptyHei==0)?0:(nDragLen*(int)(m_si.nMax-m_si.nMin-m_si.nPage+1)/nEmptyHei);
-        int nNewTrackPos=m_nDragPos+nSlide;
+        int nNewTrackPos=m_si.nPos+nSlide;
         if(nNewTrackPos<m_si.nMin)
         {
             nNewTrackPos=m_si.nMin;
@@ -275,13 +182,13 @@ void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
     else
     {
         UINT uHit=HitTest(point);
-        if(uHit!=m_uHtPrev)
+        if(uHit!=m_iHitPrev)
         {
-            if(m_uHtPrev!=-1)
+            if(m_iHitPrev!=-1)
             {
-                CRect rc=GetPartRect(m_uHtPrev);
+                CRect rc=GetPartRect(m_iHitPrev);
                 IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-                m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(m_uHtPrev,SBST_NORMAL,m_bVertical));
+                m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(m_iHitPrev,SBST_NORMAL,m_bVertical));
                 ReleaseRenderTarget(pRT);
             }
             if(uHit!=-1)
@@ -291,19 +198,18 @@ void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
                 m_pSkin->DrawByState(pRT,rc,MAKESBSTATE(uHit,SBST_HOVER,m_bVertical));
                 ReleaseRenderTarget(pRT);
             }
-            m_uHtPrev=uHit;
+            m_iHitPrev=uHit;
         }
     }
 }
 
 void SScrollBar::OnTimer(char nIDEvent)
 {
-    // TODO: Add your message handler code here and/or call default
     if(nIDEvent==TIMERID_NOTIFY1)
     {
-        SASSERT(m_uClicked!=-1 && m_uClicked!=SB_THUMBTRACK);
+        SASSERT(m_iClicked!=-1 && m_iClicked!=SB_THUMBTRACK);
 
-        switch(m_uClicked)
+        switch(m_iClicked)
         {
         case SB_LINEUP:
             if(m_si.nPos==m_si.nMin)
@@ -342,12 +248,9 @@ void SScrollBar::OnTimer(char nIDEvent)
 
 void SScrollBar::OnMouseLeave()
 {
-    if(!m_bDrag)
+    if(!m_bDraging && m_iHitPrev!=-1)
     {
-        if(m_uHtPrev!=-1)
-        {
-            OnMouseMove(0,CPoint(-1,-1));
-        }
+		OnMouseMove(0,CPoint(-1,-1));
     }
 }
 
@@ -385,13 +288,13 @@ LRESULT SScrollBar::OnGetScrollInfo(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return TRUE;
 }
 
-LRESULT SScrollBar::NotifySbCode(UINT uCode,int nPos)
+void SScrollBar::NotifySbCode(int nCode,int nPos)
 {
     EventScroll evt(this);
-    evt.uSbCode=uCode;
+    evt.nSbCode=nCode;
     evt.nPos=nPos;
     evt.bVertical=IsVertical();
-    return FireEvent(evt);
+    FireEvent(evt);
 }
 
 CRect SScrollBar::GetScrollBarRect(bool bVert) const
@@ -426,6 +329,11 @@ void SScrollBar::UpdateScrollBar(bool bVert, int iPart)
 ISwndContainer * SScrollBar::GetScrollBarContainer()
 {
 	return GetContainer();
+}
+
+bool SScrollBar::IsScrollBarEnable(bool bVert) const
+{
+	return !IsDisabled(TRUE);
 }
 
 }//namespace SOUI

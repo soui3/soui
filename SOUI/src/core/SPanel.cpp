@@ -1012,7 +1012,7 @@ BOOL SScrollView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
             
         EventScroll evt(this);
         evt.bVertical = bVertical;
-        evt.uSbCode = uCode;
+        evt.nSbCode = uCode;
         evt.nPos = nPos;
         FireEvent(evt);
     }

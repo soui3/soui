@@ -317,13 +317,13 @@ namespace SOUI
         const SwndStyle& GetStyle() const;
 		SwndStyle& GetStyle();
 
-        BOOL IsChecked();
+        BOOL IsChecked() const;
         void SetCheck(BOOL bCheck);
 
-        BOOL IsDisabled(BOOL bCheckParent = FALSE);
+        BOOL IsDisabled(BOOL bCheckParent = FALSE) const;
         void EnableWindow( BOOL bEnable,BOOL bUpdate=FALSE);
 
-        BOOL IsVisible(BOOL bCheckParent = FALSE);
+        BOOL IsVisible(BOOL bCheckParent = FALSE) const;
         void SetVisible(BOOL bVisible,BOOL bUpdate=FALSE);
 
         void SetOwner(SWindow *pOwner);

@@ -510,18 +510,18 @@ namespace SOUI
 		return TRUE;
 	}
 
-	BOOL SWindow::IsChecked()
+	BOOL SWindow::IsChecked() const
 	{
 		return WndState_Check == (m_dwState & WndState_Check);
 	}
 
-	BOOL SWindow::IsDisabled(BOOL bCheckParent /*= FALSE*/)
+	BOOL SWindow::IsDisabled(BOOL bCheckParent /*= FALSE*/) const
 	{
 		if(bCheckParent) return m_dwState & WndState_Disable;
 		else return m_bDisable;
 	}
 
-	BOOL SWindow::IsVisible(BOOL bCheckParent /*= FALSE*/)
+	BOOL SWindow::IsVisible(BOOL bCheckParent /*= FALSE*/) const
 	{
 		if(bCheckParent) return (0 == (m_dwState & WndState_Invisible));
 		else return m_bVisible;

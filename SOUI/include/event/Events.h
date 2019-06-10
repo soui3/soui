@@ -348,7 +348,7 @@ namespace SOUI
 
 
 	SEVENT_BEGIN_EX(EventScroll, EVT_SCROLL, on_scroll, SOUI_EXP)
-		UINT        uSbCode;
+		int         nSbCode;
 		int         nPos;
 		BOOL        bVertical;
 	SEVENT_END()

@@ -53,14 +53,6 @@ public:
      * Describe  是否是竖直
      */
     BOOL IsVertical() const;
-
-    /**
-     * SScrollBar::HitTest
-     * @brief    测试点
-     *
-     * Describe  测试某个点是否在滚动条上
-     */
-    UINT HitTest(CPoint pt);
     
     /**
      * SScrollBar::SetPos
@@ -107,15 +99,10 @@ protected:
 	virtual void UpdateScrollBar(bool bVert, int iPart);
 
 	virtual ISwndContainer * GetScrollBarContainer();
+
+	virtual bool IsScrollBarEnable(bool bVert) const;
+
 protected:    
-    /**
-     * SScrollBar::GetPartRect
-     * @brief    
-     * @param   UINT uSBCode -- 
-     *
-     * Describe  
-     */
-    CRect GetPartRect(UINT uSBCode);
 
     /**
      * SScrollBar::OnInitFinished
@@ -212,7 +199,7 @@ protected:
      *
      * Describe  自定义消息响应函数 
      */
-    LRESULT NotifySbCode(UINT uCode,int nPos);
+    void NotifySbCode(int nCode,int nPos);
 
 protected:
     SOUI_ATTRS_BEGIN()
@@ -241,12 +228,10 @@ protected:
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */
-    BOOL        m_bDrag;      /**< 是否允许拖动 */
-    CPoint      m_ptDrag;     /**< 拖动坐标 */
-    int         m_nDragPos;   /**< 拖动位置 */
-    UINT        m_uClicked;   /**<  */
-    BOOL        m_bNotify;    /**<  */
-    UINT        m_uHtPrev;    /**<  */
+    BOOL        m_bDraging;   /**< 正在拖动标志 */
+    CPoint      m_ptDrag;     /**< 拖动时点击坐标 */
+    int         m_iClicked;   /**< 点击部位 */
+    UINT        m_iHitPrev;    /**<  */
     
 	SScrollBarPainter m_sbPainter;
 };
