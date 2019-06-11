@@ -456,7 +456,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\core\SScrollBarPainter.cpp"
+				RelativePath=".\src\core\SScrollBarHandler.cpp"
 				>
 			</File>
 			<File
@@ -974,7 +974,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\core\SScrollBarPainter.h"
+				RelativePath=".\include\core\SScrollBarHandler.h"
 				>
 			</File>
 			<File
