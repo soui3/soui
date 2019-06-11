@@ -64,8 +64,8 @@ namespace SOUI
 		CRect rcRet(0,0,rcAll.Width(),nArrowHei);
 		if (iPart == kSbRail)
 		{
-			rcRet.top = rcRet.bottom;
-			rcRet.bottom = rcAll.bottom - nArrowHei;
+			rcRet = CRect(0,0, rcAll.Width(), nLength);
+			rcRet.DeflateRect(0,nArrowHei);
 			goto end;
 		}
 		if(iPart==SB_LINEUP) goto end;
@@ -108,14 +108,28 @@ end:
 
 	int SScrollBarHandler::HitTest(CPoint pt) const
 	{
-		CRect rc = m_pCB->GetScrollBarRect(m_bVert);
-		return 0;
+		static const int parts[] =
+		{
+			SB_LINEUP,
+			SB_PAGEUP,
+			SB_THUMBTRACK,
+			SB_PAGEDOWN,
+			SB_LINEDOWN,
+		};
+		for (int i = 0; i < ARRAYSIZE(parts); i++)
+		{
+			CRect rc = GetPartRect(parts[i]);
+			if (rc.PtInRect(pt))
+				return parts[i];
+		}
+		return -1;
 	}
 
 	void SScrollBarHandler::OnDraw(IRenderTarget *pRT, int iPart) const
 	{
 		CRect rcPart = GetPartRect(iPart);
 		DWORD dwState = GetPartState(iPart);
+		if (iPart == kSbRail) iPart = SB_PAGEUP;
 		m_pCB->GetScrollBarSkin(IsVertical())->DrawByState(pRT,rcPart,MAKESBSTATE(iPart,dwState,IsVertical()),GetAlpha());
 	}
 
@@ -128,24 +142,47 @@ end:
 		}
 		else if (id == IScrollBarHost::Timer_Go)
 		{
-			SASSERT(m_iClickPart != -1 && m_iClickPart == m_iHitPart);
+			SASSERT(m_iClickPart != -1);
 			SASSERT(m_iClickPart != SB_THUMBTRACK);
-			m_pCB->OnScrollCommand(m_bVert, m_iClickPart);
+			if (m_iClickPart == m_iHitPart)
+			{
+				if (m_iClickPart == SB_PAGEUP || m_iClickPart == SB_PAGEDOWN)
+				{
+					int iHitPart = HitTest(m_ptCursor);
+					if (iHitPart == SB_THUMBTRACK)
+						return;
+				}
+				m_pCB->OnScrollCommand(m_bVert, m_iClickPart);
+			}
 		}
 	}
 
 	void SScrollBarHandler::OnMouseHover(CPoint pt)
 	{
-		if (m_iClickPart == -1 && m_interpolator)
+		if (m_iClickPart == SB_THUMBTRACK)
+			return;
+
+		if (m_iClickPart == -1)
 		{
-			m_iFrame = 0;
-			m_fadeMode = FADEIN;//to show
-			GetContainer()->RegisterTimelineHandler(this);
+			if (m_interpolator)
+			{
+				m_iFrame = 0;
+				m_fadeMode = FADEIN;//to show
+				GetContainer()->RegisterTimelineHandler(this);
+			}
+		}
+		else
+		{
+			m_iHitPart = HitTest(pt);//update hit part.
+			m_pCB->UpdateScrollBar(m_bVert, m_iClickPart);
 		}
 	}
 
 	void SScrollBarHandler::OnMouseLeave()
 	{
+		if (m_iClickPart == SB_THUMBTRACK)
+			return;
+
 		int iOldHit = m_iHitPart;
 		m_iHitPart = -1;
 
@@ -161,16 +198,22 @@ end:
 				GetContainer()->RegisterTimelineHandler(this);
 			}
 		}
+		else
+		{
+			m_pCB->UpdateScrollBar(m_bVert, m_iClickPart);
+		}
 	}
 
 	void SScrollBarHandler::OnMouseMove(CPoint pt)
 	{
-		int iOldHit = m_iHitPart;
-		m_iHitPart = HitTest(pt);
+		m_ptCursor = pt;
+		int iNewHit = HitTest(pt);
 		if (m_iClickPart==-1)
 		{
-			if (iOldHit != m_iHitPart)
+			if (iNewHit != m_iHitPart)
 			{
+				int iOldHit = m_iHitPart;
+				m_iHitPart = iNewHit;
 				if(iOldHit!=-1)
 					m_pCB->UpdateScrollBar(m_bVert, iOldHit);
 				if(m_iHitPart!=-1)
@@ -202,8 +245,9 @@ end:
 				m_pCB->OnScrollThumbTrackPos(m_bVert,nNewTrackPos);
 			}
 		}
-		else if (m_iHitPart != iOldHit)
+		else if (m_iHitPart != iNewHit)
 		{
+			m_iHitPart = iNewHit;
 			if (m_iHitPart == m_iClickPart)
 			{
 				m_pCB->OnScrollSetTimer(m_bVert,IScrollBarHost::Timer_Go, IScrollBarHost::kTime_Go);
@@ -212,23 +256,27 @@ end:
 			{
 				m_pCB->OnScrollKillTimer(m_bVert,IScrollBarHost::Timer_Go);
 			}
+			m_pCB->UpdateScrollBar(m_bVert, m_iClickPart);
 		}
 	}
 
 	void SScrollBarHandler::OnMouseUp(CPoint pt)
 	{
 		int iClickPart = m_iClickPart;
+		SASSERT(iClickPart != -1);
 		m_iClickPart = -1;
-		if(iClickPart != -1)
-		{
-			m_pCB->UpdateScrollBar(m_bVert, iClickPart);
-		}
+		m_pCB->UpdateScrollBar(m_bVert, iClickPart);
 		if (m_iHitPart != -1 && m_iHitPart!= iClickPart)
 		{
 			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
 		}
 		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Wait);
 		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Go);
+
+		if (iClickPart == SB_THUMBTRACK)
+			iClickPart = SB_THUMBPOSITION;
+		m_pCB->OnScrollCommand(m_bVert, iClickPart);
+
 		if (m_iHitPart == -1)
 		{//
 			OnMouseLeave();
@@ -284,15 +332,16 @@ end:
 
 	DWORD SScrollBarHandler::GetPartState(int iPart) const
 	{
-		DWORD dwState = SBST_NORMAL;
 		if (iPart == kSbRail)
-			return dwState;
-		if(iPart == m_iHitPart)
-			dwState = SBST_HOVER;
-		else if(iPart == m_iClickPart)
+			return SBST_NORMAL;
+		if (!m_pCB->IsScrollBarEnable(m_bVert))
+			return SBST_INACTIVE;
+
+		DWORD dwState = SBST_NORMAL;
+		if(iPart == m_iClickPart && m_iClickPart == m_iHitPart)
 			dwState = SBST_PUSHDOWN;
-		if(!m_pCB->IsScrollBarEnable(m_bVert))
-			dwState = SBST_INACTIVE;
+		else if(iPart == m_iHitPart)
+			dwState = SBST_HOVER;
 		return dwState;
 	}
 

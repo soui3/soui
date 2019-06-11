@@ -226,11 +226,12 @@ protected:
         ATTR_INT(L"max", m_si.nMax, TRUE)
         ATTR_INT(L"value", m_si.nPos, TRUE)
         ATTR_INT(L"page", m_si.nPage, TRUE)
-		ATTR_CHAIN(m_sbPainter,0)
+		ATTR_CHAIN(m_sbHander,0)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
         MSG_WM_LBUTTONDOWN(OnLButtonDown)
+		MSG_WM_LBUTTONDBLCLK(OnLButtonDown)
         MSG_WM_LBUTTONUP(OnLButtonUp)
         MSG_WM_MOUSEMOVE(OnMouseMove)
         MSG_WM_MOUSELEAVE(OnMouseLeave)
@@ -246,7 +247,7 @@ protected:
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */
-	SScrollBarHandler m_sbPainter;
+	SScrollBarHandler m_sbHander;
 };
 
 }//namespace SOUI

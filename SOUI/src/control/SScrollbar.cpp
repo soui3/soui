@@ -11,7 +11,7 @@ namespace SOUI
 SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
     , m_uAllowSize((UINT)-1)
-    , m_sbPainter(this)
+    , m_sbHander(this)
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
     m_si.nTrackPos=-1;
@@ -24,7 +24,7 @@ SScrollBar::~SScrollBar()
 
 BOOL SScrollBar::IsVertical() const
 {
-    return m_sbPainter.IsVertical();
+    return m_sbHander.IsVertical();
 }
 
 int SScrollBar::SetPos(int nPos)
@@ -35,16 +35,16 @@ int SScrollBar::SetPos(int nPos)
     {
         if(m_si.nTrackPos==-1)
         {
-            CRect rcOldThumb=m_sbPainter.GetPartRect(SB_THUMBTRACK);
+            CRect rcOldThumb=m_sbHander.GetPartRect(SB_THUMBTRACK);
             m_si.nTrackPos=nPos;
-            CRect rcNewThumb=m_sbPainter.GetPartRect(SB_THUMBTRACK);
+            CRect rcNewThumb=m_sbHander.GetPartRect(SB_THUMBTRACK);
             CRect rcUnion;
             rcUnion.UnionRect(&rcOldThumb,&rcNewThumb);
 			if (IsVisible())
 			{
 				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-				m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
-				m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
+				m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+				m_sbHander.OnDraw(pRT,SB_THUMBTRACK);
 				ReleaseRenderTarget(pRT);
 			}         
             m_si.nTrackPos=-1;
@@ -82,43 +82,43 @@ void SScrollBar::OnInitFinished(pugi::xml_node xmlNode)
 void SScrollBar::OnPaint(IRenderTarget * pRT)
 {
     if(!m_pSkin) return;
-	m_sbPainter.OnDraw(pRT,SB_LINEUP);
-	m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
-	m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
-	m_sbPainter.OnDraw(pRT,SB_LINEDOWN);
+	m_sbHander.OnDraw(pRT,SB_LINEUP);
+	m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+	m_sbHander.OnDraw(pRT,SB_THUMBTRACK);
+	m_sbHander.OnDraw(pRT,SB_LINEDOWN);
 }
 
 void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	m_sbPainter.OnMouseUp(point);
+	m_sbHander.OnMouseUp(point);
 	ReleaseCapture();
 }
 
 void SScrollBar::OnLButtonDown(UINT nFlags, CPoint point)
 {
     SetCapture();
-	m_sbPainter.OnMouseDown(point);
+	m_sbHander.OnMouseDown(point);
 }
 
 
 void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
 {
-	m_sbPainter.OnMouseMove(point);
+	m_sbHander.OnMouseMove(point);
 }
 
 void SScrollBar::OnTimer(char nIDEvent)
 {
-	m_sbPainter.OnTimer(nIDEvent);
+	m_sbHander.OnTimer(nIDEvent);
 }
 
 void SScrollBar::OnMouseHover(UINT nFlags, CPoint ptPos)
 {
-	m_sbPainter.OnMouseHover(ptPos);
+	m_sbHander.OnMouseHover(ptPos);
 }
 
 void SScrollBar::OnMouseLeave()
 {
-	m_sbPainter.OnMouseLeave();
+	m_sbHander.OnMouseLeave();
 }
 
 
@@ -166,21 +166,49 @@ void SScrollBar::NotifySbCode(int nCode,int nPos)
 
 void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
 {
-	CRect rcOldThumb = m_sbPainter.GetPartRect(SB_THUMBTRACK);
+	CRect rcOldThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
 	m_si.nTrackPos = nPos;
-	CRect rcThumb = m_sbPainter.GetPartRect(SB_THUMBTRACK);
+	CRect rcThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
 	CRect rcUnion;
 	rcUnion.UnionRect(rcOldThumb, rcThumb);
 	IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-	m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
-	m_sbPainter.OnDraw(pRT, SB_THUMBTRACK);
+	m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+	m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
 	ReleaseRenderTarget(pRT);
 	NotifySbCode(SB_THUMBTRACK, m_si.nTrackPos);
 }
 
 void SScrollBar::OnScrollCommand(bool bVert, int iCmd)
 {
-	NotifySbCode(iCmd, m_si.nPos);
+	int nOldPos = m_si.nPos;
+	switch (iCmd)
+	{
+	case SB_LINEUP: m_si.nPos--; break;
+	case SB_PAGEUP: m_si.nPos -= m_si.nPage; break;
+	case SB_PAGEDOWN:m_si.nPos += m_si.nPage; break;
+	case SB_LINEDOWN: m_si.nPos++; break;
+	case SB_THUMBPOSITION: 
+		if (m_si.nTrackPos != -1)
+		{
+			m_si.nPos = m_si.nTrackPos;
+			m_si.nTrackPos = -1;
+		}
+		break;
+	}
+	if (m_si.nPos < m_si.nMin) m_si.nPos = m_si.nMin;
+	if (m_si.nPos > m_si.nMax - m_si.nPage + 1) m_si.nPos = m_si.nMax - m_si.nPage + 1;
+	if (nOldPos != m_si.nPos)
+	{
+		if (iCmd != SB_THUMBPOSITION)
+		{
+			CRect rcRail = m_sbHander.GetPartRect(SScrollBarHandler::kSbRail);
+			IRenderTarget *pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND);
+			m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+			m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
+			ReleaseRenderTarget(pRT);
+		}
+		NotifySbCode(iCmd, m_si.nPos);
+	}
 }
 
 void SScrollBar::OnScrollSetTimer(bool bVert, char id, UINT uElapse)
@@ -215,9 +243,9 @@ int SScrollBar::GetScrollBarArrowSize(bool bVert) const
 
 void SScrollBar::UpdateScrollBar(bool bVert, int iPart)
 {
-	CRect rc=m_sbPainter.GetPartRect(iPart);
+	CRect rc=m_sbHander.GetPartRect(iPart);
 	IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-	m_sbPainter.OnDraw(pRT,iPart);
+	m_sbHander.OnDraw(pRT,iPart);
 	ReleaseRenderTarget(pRT);
 
 }
