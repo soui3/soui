@@ -243,11 +243,23 @@ int SScrollBar::GetScrollBarArrowSize(bool bVert) const
 
 void SScrollBar::UpdateScrollBar(bool bVert, int iPart)
 {
-	CRect rc=m_sbHander.GetPartRect(iPart);
-	IRenderTarget *pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND);
-	m_sbHander.OnDraw(pRT,iPart);
-	ReleaseRenderTarget(pRT);
-
+	if (iPart == -1)
+	{
+		CRect rc = GetClientRect();
+		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		m_sbHander.OnDraw(pRT, SB_LINEUP);
+		m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
+		m_sbHander.OnDraw(pRT, SB_LINEDOWN);
+		ReleaseRenderTarget(pRT);
+	}
+	else
+	{
+		CRect rc = m_sbHander.GetPartRect(iPart);
+		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		m_sbHander.OnDraw(pRT, iPart);
+		ReleaseRenderTarget(pRT);
+	}
 }
 
 ISwndContainer * SScrollBar::GetScrollBarContainer()

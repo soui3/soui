@@ -194,6 +194,7 @@ end:
 			}
 			else
 			{
+				m_iFrame = m_nSpeed-1;
 				m_fadeMode = FADEOUT;//to hide
 				GetContainer()->RegisterTimelineHandler(this);
 			}
@@ -277,7 +278,7 @@ end:
 			iClickPart = SB_THUMBPOSITION;
 		m_pCB->OnScrollCommand(m_bVert, iClickPart);
 
-		if (m_iHitPart == -1)
+		if (iClickPart != -1)
 		{//
 			OnMouseLeave();
 		}
@@ -287,8 +288,15 @@ end:
 	{
 		m_iClickPart = HitTest(pt);
 		m_ptClick = pt;
-		m_iFrame = m_nSpeed;//stop animate
-		m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+		if (m_fadeMode != FADE_STOP)
+		{
+			m_iFrame = m_nSpeed;//stop animate
+			m_pCB->UpdateScrollBar(m_bVert, -1);
+		}
+		else
+		{
+			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+		}
 		switch (m_iClickPart)
 		{
 		case SB_LINEUP:
