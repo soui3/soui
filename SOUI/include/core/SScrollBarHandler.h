@@ -3,7 +3,7 @@
 namespace SOUI
 {
 
-	struct IScrollPainterCallback
+	struct IScrollBarHost
 	{
 		enum kSbConst{
 			Timer_Wait = 100,
@@ -25,14 +25,14 @@ namespace SOUI
 		virtual void OnScrollKillTimer(bool bVert, char id) = 0;
 	};
 
-	class SOUI_EXP SScrollBarPainter :  ITimelineHandler
+	class SOUI_EXP SScrollBarHandler :  ITimelineHandler
 	{
 	public:
 		enum {
 			kSbRail = 100,
 		};
 
-		SScrollBarPainter(IScrollPainterCallback *pCB);
+		SScrollBarHandler(IScrollBarHost *pCB);
 
 	public:
 		CRect GetPartRect(int iPart) const;
@@ -85,7 +85,7 @@ namespace SOUI
 			FADEIN =1,
 		};
 
-		IScrollPainterCallback * m_pCB;
+		IScrollBarHost * m_pCB;
 		bool m_bVert;
 		SAutoRefPtr<IInterpolator> m_interpolator; //default to null, which means no animation.
 		int  m_nSpeed;

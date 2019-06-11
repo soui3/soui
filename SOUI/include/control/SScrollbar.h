@@ -12,7 +12,7 @@
  */
 #pragma once
 #include <core/SWnd.h>
-#include <core/SScrollBarPainter.h>
+#include <core/SScrollBarHandler.h>
 
 namespace SOUI
 {
@@ -23,7 +23,7 @@ namespace SOUI
  *
  * Describe   滚动条
  */
-class SOUI_EXP SScrollBar: public SWindow, protected IScrollPainterCallback
+class SOUI_EXP SScrollBar: public SWindow, protected IScrollBarHost
 {
 // Construction
 public:
@@ -246,7 +246,7 @@ protected:
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */
-	SScrollBarPainter m_sbPainter;
+	SScrollBarHandler m_sbPainter;
 };
 
 }//namespace SOUI

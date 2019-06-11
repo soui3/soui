@@ -1,9 +1,9 @@
 #include <souistd.h>
-#include <core/SScrollBarPainter.h>
+#include <core/SScrollBarHandler.h>
 
 namespace SOUI
 {
-	SScrollBarPainter::SScrollBarPainter(IScrollPainterCallback *pCB) :m_bVert(false),m_pCB(pCB)
+	SScrollBarHandler::SScrollBarHandler(IScrollBarHost *pCB) :m_bVert(false),m_pCB(pCB)
 		, m_nSpeed(30)
 		, m_iFrame(0)
 		, m_fadeMode(FADE_STOP)
@@ -14,12 +14,12 @@ namespace SOUI
 	}
 
 
-	void SScrollBarPainter::SetVertical(bool bVert)
+	void SScrollBarHandler::SetVertical(bool bVert)
 	{
 		m_bVert = bVert;
 	}
 
-	void SScrollBarPainter::OnNextFrame()
+	void SScrollBarHandler::OnNextFrame()
 	{
 		SASSERT(m_fadeMode != FADE_STOP);
 		if (m_iFrame>=0 && m_iFrame < m_nSpeed)
@@ -34,7 +34,7 @@ namespace SOUI
 		}
 	}
 
-	CRect SScrollBarPainter::GetPartRect(int iPart) const
+	CRect SScrollBarHandler::GetPartRect(int iPart) const
 	{
 		SASSERT(m_pCB->GetScrollBarSkin(m_bVert));
 		const SCROLLINFO * pSi = m_pCB->GetScrollBarInfo(m_bVert);
@@ -96,37 +96,37 @@ end:
 		return rcRet;
 	}
 
-	bool SScrollBarPainter::IsVertical() const
+	bool SScrollBarHandler::IsVertical() const
 	{
 		return m_bVert;
 	}
 
-	ISwndContainer * SScrollBarPainter::GetContainer()
+	ISwndContainer * SScrollBarHandler::GetContainer()
 	{
 		return m_pCB->GetScrollBarContainer();
 	}
 
-	int SScrollBarPainter::HitTest(CPoint pt) const
+	int SScrollBarHandler::HitTest(CPoint pt) const
 	{
 		CRect rc = m_pCB->GetScrollBarRect(m_bVert);
 		return 0;
 	}
 
-	void SScrollBarPainter::OnDraw(IRenderTarget *pRT, int iPart) const
+	void SScrollBarHandler::OnDraw(IRenderTarget *pRT, int iPart) const
 	{
 		CRect rcPart = GetPartRect(iPart);
 		DWORD dwState = GetPartState(iPart);
 		m_pCB->GetScrollBarSkin(IsVertical())->DrawByState(pRT,rcPart,MAKESBSTATE(iPart,dwState,IsVertical()),GetAlpha());
 	}
 
-	void SScrollBarPainter::OnTimer(char id)
+	void SScrollBarHandler::OnTimer(char id)
 	{
-		if (id == IScrollPainterCallback::Timer_Wait)
+		if (id == IScrollBarHost::Timer_Wait)
 		{
-			m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Wait);
-			m_pCB->OnScrollSetTimer(m_bVert, IScrollPainterCallback::Timer_Go, IScrollPainterCallback::kTime_Go);
+			m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Wait);
+			m_pCB->OnScrollSetTimer(m_bVert, IScrollBarHost::Timer_Go, IScrollBarHost::kTime_Go);
 		}
-		else if (id == IScrollPainterCallback::Timer_Go)
+		else if (id == IScrollBarHost::Timer_Go)
 		{
 			SASSERT(m_iClickPart != -1 && m_iClickPart == m_iHitPart);
 			SASSERT(m_iClickPart != SB_THUMBTRACK);
@@ -134,7 +134,7 @@ end:
 		}
 	}
 
-	void SScrollBarPainter::OnMouseHover(CPoint pt)
+	void SScrollBarHandler::OnMouseHover(CPoint pt)
 	{
 		if (m_iClickPart == -1 && m_interpolator)
 		{
@@ -144,7 +144,7 @@ end:
 		}
 	}
 
-	void SScrollBarPainter::OnMouseLeave()
+	void SScrollBarHandler::OnMouseLeave()
 	{
 		int iOldHit = m_iHitPart;
 		m_iHitPart = -1;
@@ -163,7 +163,7 @@ end:
 		}
 	}
 
-	void SScrollBarPainter::OnMouseMove(CPoint pt)
+	void SScrollBarHandler::OnMouseMove(CPoint pt)
 	{
 		int iOldHit = m_iHitPart;
 		m_iHitPart = HitTest(pt);
@@ -206,16 +206,16 @@ end:
 		{
 			if (m_iHitPart == m_iClickPart)
 			{
-				m_pCB->OnScrollSetTimer(m_bVert,IScrollPainterCallback::Timer_Go, IScrollPainterCallback::kTime_Go);
+				m_pCB->OnScrollSetTimer(m_bVert,IScrollBarHost::Timer_Go, IScrollBarHost::kTime_Go);
 			}
 			else
 			{
-				m_pCB->OnScrollKillTimer(m_bVert,IScrollPainterCallback::Timer_Go);
+				m_pCB->OnScrollKillTimer(m_bVert,IScrollBarHost::Timer_Go);
 			}
 		}
 	}
 
-	void SScrollBarPainter::OnMouseUp(CPoint pt)
+	void SScrollBarHandler::OnMouseUp(CPoint pt)
 	{
 		int iClickPart = m_iClickPart;
 		m_iClickPart = -1;
@@ -227,15 +227,15 @@ end:
 		{
 			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
 		}
-		m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Wait);
-		m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Go);
+		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Wait);
+		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Go);
 		if (m_iHitPart == -1)
 		{//
 			OnMouseLeave();
 		}
 	}
 
-	void SScrollBarPainter::OnMouseDown(CPoint pt)
+	void SScrollBarHandler::OnMouseDown(CPoint pt)
 	{
 		m_iClickPart = HitTest(pt);
 		m_ptClick = pt;
@@ -247,13 +247,13 @@ end:
 		case SB_LINEDOWN:
 		case SB_PAGEUP:
 		case SB_PAGEDOWN:
-			m_pCB->OnScrollSetTimer(m_bVert, IScrollPainterCallback::Timer_Wait, IScrollPainterCallback::kTime_Wait);
+			m_pCB->OnScrollSetTimer(m_bVert, IScrollBarHost::Timer_Wait, IScrollBarHost::kTime_Wait);
 			break;
 		}
 	}
 
 
-	BYTE SScrollBarPainter::GetAlpha() const
+	BYTE SScrollBarHandler::GetAlpha() const
 	{
 		if(!m_interpolator)
 			return 0xFF;
@@ -261,7 +261,7 @@ end:
 		return (BYTE)(fProg * 0xFF);
 	}
 
-	int SScrollBarPainter::GetFadeStep() const
+	int SScrollBarHandler::GetFadeStep() const
 	{
 		switch(m_fadeMode)
 		{
@@ -272,17 +272,17 @@ end:
 		}
 	}
 
-	int SScrollBarPainter::GetHitPart() const
+	int SScrollBarHandler::GetHitPart() const
 	{
 		return m_iHitPart;
 	}
 
-	int SScrollBarPainter::GetClickPart() const
+	int SScrollBarHandler::GetClickPart() const
 	{
 		return m_iClickPart;
 	}
 
-	DWORD SScrollBarPainter::GetPartState(int iPart) const
+	DWORD SScrollBarHandler::GetPartState(int iPart) const
 	{
 		DWORD dwState = SBST_NORMAL;
 		if (iPart == kSbRail)

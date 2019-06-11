@@ -43,7 +43,7 @@ int SScrollBar::SetPos(int nPos)
 			if (IsVisible())
 			{
 				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-				m_sbPainter.OnDraw(pRT, SScrollBarPainter::kSbRail);
+				m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
 				m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
 				ReleaseRenderTarget(pRT);
 			}         
@@ -83,7 +83,7 @@ void SScrollBar::OnPaint(IRenderTarget * pRT)
 {
     if(!m_pSkin) return;
 	m_sbPainter.OnDraw(pRT,SB_LINEUP);
-	m_sbPainter.OnDraw(pRT, SScrollBarPainter::kSbRail);
+	m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
 	m_sbPainter.OnDraw(pRT,SB_THUMBTRACK);
 	m_sbPainter.OnDraw(pRT,SB_LINEDOWN);
 }
@@ -172,7 +172,7 @@ void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
 	CRect rcUnion;
 	rcUnion.UnionRect(rcOldThumb, rcThumb);
 	IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-	m_sbPainter.OnDraw(pRT, SScrollBarPainter::kSbRail);
+	m_sbPainter.OnDraw(pRT, SScrollBarHandler::kSbRail);
 	m_sbPainter.OnDraw(pRT, SB_THUMBTRACK);
 	ReleaseRenderTarget(pRT);
 	NotifySbCode(SB_THUMBTRACK, m_si.nTrackPos);
