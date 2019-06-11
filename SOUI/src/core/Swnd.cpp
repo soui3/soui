@@ -1724,7 +1724,7 @@ namespace SOUI
 	{
 	}
 
-	void SWindow::OnMouseHover(WPARAM wParam, CPoint ptPos)
+	void SWindow::OnMouseHover(UINT nFlags, CPoint ptPos)
 	{
 		if(GetCapture()==m_swnd)
 			ModifyState(WndState_PushDown,0,FALSE);

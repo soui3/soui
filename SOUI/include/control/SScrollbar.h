@@ -88,20 +88,27 @@ public:
 	int GetMin();
     
 protected:
-	virtual CRect GetScrollBarRect(bool bVert) const;
+	virtual CRect GetScrollBarRect(bool bVert) const override;
 
-	virtual ISkinObj* GetScrollBarSkin(bool bVert) const;
+	virtual ISkinObj* GetScrollBarSkin(bool bVert) const override;
 
-	virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const;
+	virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const override;
 
-	virtual int GetScrollBarArrowSize(bool bVert) const;
+	virtual int GetScrollBarArrowSize(bool bVert) const override;
 
-	virtual void UpdateScrollBar(bool bVert, int iPart);
+	virtual void UpdateScrollBar(bool bVert, int iPart) override;
 
-	virtual ISwndContainer * GetScrollBarContainer();
+	virtual ISwndContainer * GetScrollBarContainer() override;
 
-	virtual bool IsScrollBarEnable(bool bVert) const;
+	virtual bool IsScrollBarEnable(bool bVert) const override;
 
+	virtual void OnScrollThumbTrackPos(bool bVert, int nPos) override;
+
+	virtual void OnScrollCommand(bool bVert, int iCmd) override;
+
+	virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) override;
+
+	virtual void OnScrollKillTimer(bool bVert, char id) override;
 protected:    
 
     /**
@@ -161,6 +168,16 @@ protected:
      */
     void OnTimer(char nIDEvent) ;
 
+	/**
+	* SScrollBar::OnMouseHover
+	* @param    UINT nFlags --  虚拟键标志
+	* @param    CPoint point -- 坐标
+	* @brief    鼠标进入事件
+	*
+	* Describe  消息响应函数
+	*/
+	void OnMouseHover(UINT nFlags, CPoint ptPos);
+
     /**
      * SScrollBar::OnMouseLeave
      * @brief    鼠标移动事件 
@@ -217,6 +234,7 @@ protected:
         MSG_WM_LBUTTONUP(OnLButtonUp)
         MSG_WM_MOUSEMOVE(OnMouseMove)
         MSG_WM_MOUSELEAVE(OnMouseLeave)
+		MSG_WM_MOUSEHOVER(OnMouseHover)
         MSG_WM_TIMER_EX(OnTimer)
         MSG_WM_PAINT_EX(OnPaint)
         MESSAGE_HANDLER_EX(SBM_SETSCROLLINFO,OnSetScrollInfo)
@@ -228,11 +246,6 @@ protected:
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */
-    BOOL        m_bDraging;   /**< 正在拖动标志 */
-    CPoint      m_ptDrag;     /**< 拖动时点击坐标 */
-    int         m_iClicked;   /**< 点击部位 */
-    UINT        m_iHitPrev;    /**<  */
-    
 	SScrollBarPainter m_sbPainter;
 };
 

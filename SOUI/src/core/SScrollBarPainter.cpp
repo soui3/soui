@@ -62,6 +62,12 @@ namespace SOUI
 		if(nInterHei==0)
 			nArrowHei=nLength/2;
 		CRect rcRet(0,0,rcAll.Width(),nArrowHei);
+		if (iPart == kSbRail)
+		{
+			rcRet.top = rcRet.bottom;
+			rcRet.bottom = rcAll.bottom - nArrowHei;
+			goto end;
+		}
 		if(iPart==SB_LINEUP) goto end;
 		rcRet.top=rcRet.bottom;
 		if((pSi->nMax-pSi->nMin-pSi->nPage+1)==0)
@@ -113,33 +119,98 @@ end:
 		m_pCB->GetScrollBarSkin(IsVertical())->DrawByState(pRT,rcPart,MAKESBSTATE(iPart,dwState,IsVertical()),GetAlpha());
 	}
 
+	void SScrollBarPainter::OnTimer(char id)
+	{
+		if (id == IScrollPainterCallback::Timer_Wait)
+		{
+			m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Wait);
+			m_pCB->OnScrollSetTimer(m_bVert, IScrollPainterCallback::Timer_Go, IScrollPainterCallback::kTime_Go);
+		}
+		else if (id == IScrollPainterCallback::Timer_Go)
+		{
+			SASSERT(m_iClickPart != -1 && m_iClickPart == m_iHitPart);
+			SASSERT(m_iClickPart != SB_THUMBTRACK);
+			m_pCB->OnScrollCommand(m_bVert, m_iClickPart);
+		}
+	}
+
+	void SScrollBarPainter::OnMouseHover(CPoint pt)
+	{
+		if (m_iClickPart == -1 && m_interpolator)
+		{
+			m_iFrame = 0;
+			m_fadeMode = FADEIN;//to show
+			GetContainer()->RegisterTimelineHandler(this);
+		}
+	}
+
 	void SScrollBarPainter::OnMouseLeave()
 	{
 		int iOldHit = m_iHitPart;
 		m_iHitPart = -1;
-		if (!m_interpolator)
+
+		if (m_iClickPart == -1)
 		{
-			if(iOldHit!=-1) m_pCB->UpdateScrollBar(m_bVert, iOldHit);
-		}
-		else
-		{
-			m_fadeMode = FADEOUT;//to hide
-			GetContainer()->RegisterTimelineHandler(this);
+			if (!m_interpolator)
+			{
+				if (iOldHit != -1) m_pCB->UpdateScrollBar(m_bVert, iOldHit);
+			}
+			else
+			{
+				m_fadeMode = FADEOUT;//to hide
+				GetContainer()->RegisterTimelineHandler(this);
+			}
 		}
 	}
 
 	void SScrollBarPainter::OnMouseMove(CPoint pt)
 	{
+		int iOldHit = m_iHitPart;
+		m_iHitPart = HitTest(pt);
 		if (m_iClickPart==-1)
 		{
-			int iOldHit = m_iHitPart;
-			m_iHitPart = HitTest(pt);
 			if (iOldHit != m_iHitPart)
 			{
 				if(iOldHit!=-1)
 					m_pCB->UpdateScrollBar(m_bVert, iOldHit);
 				if(m_iHitPart!=-1)
 					m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
+			}
+		}
+		else if (m_iClickPart == SB_THUMBTRACK)
+		{//draging.
+			CRect rcWnd = m_pCB->GetScrollBarRect(m_bVert);
+			int nInterHei = (IsVertical() ? rcWnd.Height() : rcWnd.Width()) - 2 * m_pCB->GetScrollBarArrowSize(m_bVert);
+			const SCROLLINFO * m_si = m_pCB->GetScrollBarInfo(m_bVert);
+			int    nSlideHei = m_si->nPage*nInterHei / (m_si->nMax - m_si->nMin + 1);
+			if (nSlideHei<THUMB_MINSIZE) nSlideHei = THUMB_MINSIZE;
+			if (nInterHei<THUMB_MINSIZE) nSlideHei = 0;
+			int nEmptyHei = nInterHei - nSlideHei;
+			int nDragLen = IsVertical() ? (pt.y - m_ptClick.y) : (pt.x - m_ptClick.x);
+			int nSlide = (nEmptyHei == 0) ? 0 : (nDragLen*(int)(m_si->nMax - m_si->nMin - m_si->nPage + 1) / nEmptyHei);
+			int nNewTrackPos = m_si->nPos + nSlide;
+			if (nNewTrackPos<m_si->nMin)
+			{
+				nNewTrackPos = m_si->nMin;
+			}
+			else if (nNewTrackPos>(int)(m_si->nMax - m_si->nMin - m_si->nPage + 1))
+			{
+				nNewTrackPos = m_si->nMax - m_si->nMin - m_si->nPage + 1;
+			}
+			if (nNewTrackPos != m_si->nTrackPos)
+			{
+				m_pCB->OnScrollThumbTrackPos(m_bVert,nNewTrackPos);
+			}
+		}
+		else if (m_iHitPart != iOldHit)
+		{
+			if (m_iHitPart == m_iClickPart)
+			{
+				m_pCB->OnScrollSetTimer(m_bVert,IScrollPainterCallback::Timer_Go, IScrollPainterCallback::kTime_Go);
+			}
+			else
+			{
+				m_pCB->OnScrollKillTimer(m_bVert,IScrollPainterCallback::Timer_Go);
 			}
 		}
 	}
@@ -156,31 +227,31 @@ end:
 		{
 			m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
 		}
+		m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Wait);
+		m_pCB->OnScrollKillTimer(m_bVert, IScrollPainterCallback::Timer_Go);
+		if (m_iHitPart == -1)
+		{//
+			OnMouseLeave();
+		}
 	}
 
 	void SScrollBarPainter::OnMouseDown(CPoint pt)
 	{
 		m_iClickPart = HitTest(pt);
-
+		m_ptClick = pt;
 		m_iFrame = m_nSpeed;//stop animate
 		m_pCB->UpdateScrollBar(m_bVert, m_iHitPart);
-	}
-
-	void SScrollBarPainter::OnMouseHover(CPoint pt)
-	{
-		m_iHitPart = HitTest(pt);
-
-		if (!m_interpolator)
+		switch (m_iClickPart)
 		{
-			m_pCB->UpdateScrollBar(m_bVert,m_iHitPart);
-		}
-		else
-		{
-			m_iFrame = 0;
-			m_fadeMode = FADEIN;//to show
-			GetContainer()->RegisterTimelineHandler(this);
+		case SB_LINEUP:
+		case SB_LINEDOWN:
+		case SB_PAGEUP:
+		case SB_PAGEDOWN:
+			m_pCB->OnScrollSetTimer(m_bVert, IScrollPainterCallback::Timer_Wait, IScrollPainterCallback::kTime_Wait);
+			break;
 		}
 	}
+
 
 	BYTE SScrollBarPainter::GetAlpha() const
 	{
@@ -214,6 +285,8 @@ end:
 	DWORD SScrollBarPainter::GetPartState(int iPart) const
 	{
 		DWORD dwState = SBST_NORMAL;
+		if (iPart == kSbRail)
+			return dwState;
 		if(iPart == m_iHitPart)
 			dwState = SBST_HOVER;
 		else if(iPart == m_iClickPart)

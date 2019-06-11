@@ -1230,9 +1230,9 @@ namespace SOUI
 
         void OnRButtonUp(UINT nFlags, CPoint point);
 
-        void OnMouseMove(UINT nFlags,CPoint pt) {}
+		void OnMouseHover(UINT nFlags, CPoint ptPos);
 
-        void OnMouseHover(WPARAM wParam, CPoint ptPos);
+        void OnMouseMove(UINT nFlags,CPoint pt) {}
 
         void OnMouseLeave();
 

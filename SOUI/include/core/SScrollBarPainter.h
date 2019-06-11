@@ -5,6 +5,13 @@ namespace SOUI
 
 	struct IScrollPainterCallback
 	{
+		enum kSbConst{
+			Timer_Wait = 100,
+			Timer_Go = 101,
+			kTime_Wait = 200,
+			kTime_Go = 100,
+		};
+
 		virtual CRect GetScrollBarRect(bool bVert) const = 0;
 		virtual ISkinObj* GetScrollBarSkin(bool bVert) const = 0;
 		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const = 0;
@@ -12,11 +19,19 @@ namespace SOUI
 		virtual void UpdateScrollBar(bool bVert, int iPart) = 0;
 		virtual ISwndContainer * GetScrollBarContainer() = 0;
 		virtual bool IsScrollBarEnable(bool bVert) const = 0;
+		virtual void OnScrollThumbTrackPos(bool bVert,int nPos) = 0;
+		virtual void OnScrollCommand(bool bVert, int iCmd) = 0;
+		virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) = 0;
+		virtual void OnScrollKillTimer(bool bVert, char id) = 0;
 	};
 
 	class SOUI_EXP SScrollBarPainter :  ITimelineHandler
 	{
 	public:
+		enum {
+			kSbRail = 100,
+		};
+
 		SScrollBarPainter(IScrollPainterCallback *pCB);
 
 	public:
@@ -41,6 +56,8 @@ namespace SOUI
 		void OnMouseLeave();
 
 		void OnDraw(IRenderTarget *pRT, int iPart) const;
+
+		void OnTimer(char id);
 	protected:
 		int HitTest(CPoint pt) const;
 
@@ -76,6 +93,7 @@ namespace SOUI
 		FADEMODE m_fadeMode;
 		int	 m_iHitPart;
 		int  m_iClickPart;
+		CPoint m_ptClick;
 	};
 
 
