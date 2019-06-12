@@ -13,7 +13,8 @@
 
 #pragma once
 
-#include "SWnd.h"
+#include <core/SWnd.h>
+#include <core/SScrollBarHandler.h>
 
 namespace SOUI
 {
@@ -37,7 +38,7 @@ namespace SOUI
         return memcmp(&a,&b,sizeof(SBHITINFO))!=0;
     }
 
-    class SOUI_EXP SPanel: public SWindow
+    class SOUI_EXP SPanel: public SWindow, protected IScrollBarHost
     {
         SOUI_CLASS_NAME(SPanel, L"div")
 
@@ -61,13 +62,28 @@ namespace SOUI
 
         BOOL GetScrollRange(BOOL bVertical,    LPINT lpMinPos,    LPINT lpMaxPos);
 
-        BOOL HasScrollBar(BOOL bVertical);
+        BOOL HasScrollBar(BOOL bVertical) const;
 
 
         SBHITINFO HitTest(CPoint pt);
 
         virtual void GetClientRect(LPRECT pRect) const;
         virtual CRect GetClientRect() const;
+	protected:
+		// 通过 IScrollBarHost 继承
+		virtual CRect GetScrollBarRect(bool bVert) const override;
+		virtual ISkinObj * GetScrollBarSkin(bool bVert) const override;
+		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const override;
+		virtual int GetScrollBarArrowSize(bool bVert) const override;
+		virtual void UpdateScrollBar(bool bVert, int iPart) override;
+		virtual ISwndContainer * GetScrollBarContainer() override;
+		virtual bool IsScrollBarEnable(bool bVert) const override;
+		virtual void OnScrollThumbTrackPos(bool bVert, int nPos) override;
+		virtual void OnScrollCommand(bool bVert, int iCmd) override;
+		virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) override;
+		virtual void OnScrollKillTimer(bool bVert, char id) override;
+		virtual const IInterpolator * GetScrollInterpolator() const override;
+		virtual int GetScrollFadeFrames() const override;
     protected:
         CRect GetSbPartRect(BOOL bVertical,UINT uSBCode);
         CRect GetSbRailwayRect(BOOL bVertical);
@@ -105,8 +121,8 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);
 
-		int GetSbArrowSize();
-		int GetSbWidth();
+		int GetSbArrowSize() const;
+		int GetSbWidth() const;
 
         int GetSbSlideLength(BOOL bVertical);
 
@@ -147,6 +163,13 @@ namespace SOUI
         
 		short		 m_zDelta;
         int          m_nScrollSpeed;
+
+		SAutoRefPtr<IInterpolator> m_fadeInterpolator;
+		int			m_fadeFrames;
+
+		SScrollBarHandler	m_sbVert;
+		SScrollBarHandler	m_sbHorz;
+
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"sbSkin",OnAttrScrollbarSkin)
 			ATTR_LAYOUTSIZE(L"sbArrowSize", m_nSbArrowSize, FALSE)
@@ -159,6 +182,10 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"sbRight", m_nSbRight, TRUE)
 			ATTR_LAYOUTSIZE(L"sbTop", m_nSbTop, TRUE)
 			ATTR_LAYOUTSIZE(L"sbBottom", m_nSbBottom, TRUE)
+
+			ATTR_INT(L"fadeSpeed", m_fadeFrames, FALSE)
+			ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator, FALSE)
+			ATTR_CHAIN_PTR(m_fadeInterpolator, 0)
         SOUI_ATTRS_END()
 
         SOUI_MSG_MAP_BEGIN()
@@ -176,7 +203,7 @@ namespace SOUI
             MSG_WM_VSCROLL(OnVScroll)
             MSG_WM_HSCROLL(OnHScroll)
         SOUI_MSG_MAP_END()
-    };
+};
 
     class SOUI_EXP SScrollView : public SPanel
     {

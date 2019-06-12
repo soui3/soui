@@ -34,7 +34,7 @@ namespace SOUI
 			kSbRail = 100,
 		};
 
-		SScrollBarHandler(IScrollBarHost *pCB);
+		SScrollBarHandler(IScrollBarHost *pCB,bool bVert=false);
 
 	public:
 		CRect GetPartRect(int iPart) const;

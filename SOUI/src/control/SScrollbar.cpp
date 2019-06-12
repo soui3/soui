@@ -167,7 +167,7 @@ void SScrollBar::NotifySbCode(int nCode,int nPos)
 
 LRESULT SScrollBar::OnAttrVertical(const SStringW & value, BOOL bLoading)
 {
-	BOOL bVert = STRINGASBOOL(value);
+	bool bVert = STRINGASBOOL(value);
 	m_sbHander.SetVertical(bVert);
 	return bLoading?S_FALSE:S_OK;
 }

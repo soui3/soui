@@ -234,6 +234,7 @@ protected:
 		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
 		ATTR_CUSTOM(L"vertical",OnAttrVertical)
 		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
+		ATTR_CHAIN_PTR(m_fadeInterpolator,0)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()

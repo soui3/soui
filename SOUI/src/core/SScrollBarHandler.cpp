@@ -3,8 +3,8 @@
 
 namespace SOUI
 {
-	SScrollBarHandler::SScrollBarHandler(IScrollBarHost *pCB) 
-		:m_bVert(false)
+	SScrollBarHandler::SScrollBarHandler(IScrollBarHost *pCB, bool bVert)
+		:m_bVert(bVert)
 		,m_pCB(pCB)
 		, m_iFrame(0)
 		, m_fadeMode(FADE_STOP)

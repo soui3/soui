@@ -11,6 +11,106 @@
 namespace SOUI
 {
 
+
+	CRect SPanel::GetScrollBarRect(bool bVert) const
+	{
+		CRect rcSb;
+		if (!HasScrollBar(bVert)) return rcSb;
+
+		SWindow::GetClientRect(&rcSb);
+
+		if (bVert)
+		{
+			rcSb.left = rcSb.right - GetSbWidth();
+		}
+		else
+		{
+			rcSb.top = rcSb.bottom - GetSbWidth();
+		}
+		if (HasScrollBar(!bVert))
+		{
+			if (bVert)
+			{
+				rcSb.bottom -= GetSbWidth();
+			}
+			else
+			{
+				rcSb.right -= GetSbWidth();
+			}
+		}
+
+		if (bVert)
+		{
+			rcSb.top += m_nSbTop.toPixelSize(GetScale());
+			rcSb.bottom -= m_nSbBottom.toPixelSize(GetScale());
+		}
+		else
+		{
+			rcSb.left += m_nSbLeft.toPixelSize(GetScale());
+			rcSb.right -= m_nSbRight.toPixelSize(GetScale());
+		}
+		return rcSb;
+	}
+
+	ISkinObj * SPanel::GetScrollBarSkin(bool bVert) const
+	{
+		return m_pSkinSb;
+	}
+
+	const SCROLLINFO * SPanel::GetScrollBarInfo(bool bVert) const
+	{
+		return bVert?(&m_siVer):(&m_siHoz);
+	}
+
+	int SPanel::GetScrollBarArrowSize(bool bVert) const
+	{
+		return m_nSbWid.toPixelSize(GetScale());
+	}
+
+	void SPanel::UpdateScrollBar(bool bVert, int iPart)
+	{
+	}
+
+	ISwndContainer * SPanel::GetScrollBarContainer()
+	{
+		return GetContainer();
+	}
+
+	bool SPanel::IsScrollBarEnable(bool bVert) const
+	{
+		return !!(m_wBarEnable&(bVert?SSB_VERT:SSB_HORZ));
+	}
+
+	void SPanel::OnScrollThumbTrackPos(bool bVert, int nPos)
+	{
+	}
+
+	void SPanel::OnScrollCommand(bool bVert, int iCmd)
+	{
+	}
+
+	void SPanel::OnScrollSetTimer(bool bVert, char id, UINT uElapse)
+	{
+		if (bVert) id += 2;
+		SetTimer(id, uElapse);
+	}
+
+	void SPanel::OnScrollKillTimer(bool bVert, char id)
+	{
+		if (bVert) id += 2;
+		KillTimer(id);
+	}
+
+	const IInterpolator * SPanel::GetScrollInterpolator() const
+	{
+		return m_fadeInterpolator;
+	}
+
+	int SPanel::GetScrollFadeFrames() const
+	{
+		return m_fadeFrames;
+	}
+
 SPanel::SPanel()
     :m_dragSb(DSB_NULL)
     ,m_wBarVisible(0)
@@ -18,6 +118,8 @@ SPanel::SPanel()
     ,m_dwUpdateInterval(DEF_UPDATEINTERVAL)
     ,m_nScrollSpeed(10)
 	, m_zDelta(0)
+	, m_sbVert(this,true)
+	, m_sbHorz(this,false)
 {
 	m_nSbWid.setInvalid();
 	m_nSbArrowSize.setInvalid();
@@ -140,7 +242,7 @@ BOOL SPanel::GetScrollRange( BOOL bVertical, LPINT lpMinPos, LPINT lpMaxPos )
     return TRUE;
 }
 
-BOOL SPanel::HasScrollBar(BOOL bVertical)
+BOOL SPanel::HasScrollBar(BOOL bVertical) const
 {
     return m_wBarVisible&(bVertical?SSB_VERT:SSB_HORZ);
 }
@@ -815,7 +917,7 @@ void SPanel::OnScaleChanged(int nScale)
 	}
 }
 
-int SPanel::GetSbArrowSize()
+int SPanel::GetSbArrowSize() const
 {
 	if(m_nSbArrowSize.isValid()) return m_nSbArrowSize.toPixelSize(GetScale());
 	SASSERT(m_pSkinSb);
@@ -823,7 +925,7 @@ int SPanel::GetSbArrowSize()
 	return m_pSkinSb->GetIdealSize();
 }
 
-int SPanel::GetSbWidth()
+int SPanel::GetSbWidth() const
 {
 	if(m_nSbWid.isValid()) return m_nSbWid.toPixelSize(GetScale());
 	SASSERT(m_pSkinSb);
