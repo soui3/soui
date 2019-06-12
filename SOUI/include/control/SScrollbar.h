@@ -109,6 +109,9 @@ protected:
 	virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) override;
 
 	virtual void OnScrollKillTimer(bool bVert, char id) override;
+
+	virtual const IInterpolator * GetScrollInterpolator() const override;
+	virtual int GetScrollFadeFrames() const override;
 protected:    
 
     /**
@@ -226,7 +229,8 @@ protected:
         ATTR_INT(L"max", m_si.nMax, TRUE)
         ATTR_INT(L"value", m_si.nPos, TRUE)
         ATTR_INT(L"page", m_si.nPage, TRUE)
-		ATTR_CHAIN(m_sbHander,0)
+		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
+		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
@@ -247,7 +251,12 @@ protected:
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */
+
+	int			m_fadeFrame;
+	SAutoRefPtr<IInterpolator> m_fadeInterpolator;
+
 	SScrollBarHandler m_sbHander;
+
 };
 
 }//namespace SOUI

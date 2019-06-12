@@ -14,7 +14,7 @@ namespace SOUI
 	{
 		SOUI_CLASS_NAME(SLinearInterpolator,L"Linear")
 	public:
-		virtual float getInterpolation(float input);
+		virtual float getInterpolation(float input) const;
 	};
 
 	class SOUI_EXP SAccelerateInterpolator: public SInterpolatorBase
@@ -35,7 +35,7 @@ namespace SOUI
 			 */
 	public: SAccelerateInterpolator(float factor=1.0f);
 
-	public: float getInterpolation(float input);
+	public: float getInterpolation(float input) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"factor",mFactor,FALSE)
@@ -57,7 +57,7 @@ namespace SOUI
 		*/
 	public: SDecelerateInterpolator(float factor=1.0f);
 
-	public: float getInterpolation(float input);
+	public: float getInterpolation(float input) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"factor",mFactor,FALSE)
@@ -68,7 +68,7 @@ namespace SOUI
 	{
 		SOUI_CLASS_NAME(SAccelerateDecelerateInterpolator,L"AccelerateDecelerate")
 	public:
-		float getInterpolation(float input);
+		float getInterpolation(float input) const;
 	};
 
 	class SOUI_EXP SAnticipateInterpolator: public SInterpolatorBase {
@@ -86,7 +86,7 @@ namespace SOUI
 	public: SAnticipateInterpolator(float tension);
 
 
-	public: float getInterpolation(float t);
+	public: float getInterpolation(float t) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"tension",mTension,FALSE)
@@ -117,7 +117,7 @@ namespace SOUI
 	private: float getTensionMulti() const{
 				 return mTension*mExtraTension;
 			 }
-	public: float getInterpolation(float t);
+	public: float getInterpolation(float t) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"tension",mTension,FALSE)
@@ -132,7 +132,7 @@ namespace SOUI
 
 	private: static float bounce(float t);
 
-	public: float getInterpolation(float t);
+	public: float getInterpolation(float t) const;
 
 	};
 
@@ -145,7 +145,7 @@ namespace SOUI
 	public: SCycleInterpolator(float cycles=1.0f);
 
 
-	public: float getInterpolation(float input);
+	public: float getInterpolation(float input) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"cycles",mCycles,FALSE)
@@ -167,7 +167,7 @@ namespace SOUI
 	public: SOvershootInterpolator(float tension=2.0f);
 
 
-	public: float getInterpolation(float t);
+	public: float getInterpolation(float t) const;
 
 			SOUI_ATTRS_BEGIN()
 				ATTR_FLOAT(L"tension",mTension,FALSE)

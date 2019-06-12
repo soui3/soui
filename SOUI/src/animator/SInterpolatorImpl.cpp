@@ -11,14 +11,14 @@ namespace SOUI
 	static const float PI= 3.1415926f;
 
 	//////////////////////////////////////////////////////////////////////////
-	float SLinearInterpolator::getInterpolation(float input)
+	float SLinearInterpolator::getInterpolation(float input) const
 	{
 		return input;
 	}
 
 
 	//////////////////////////////////////////////////////////////////////////
-	float SAccelerateInterpolator::getInterpolation(float input)
+	float SAccelerateInterpolator::getInterpolation(float input) const
 	{
 		if (SLayoutSize::fequal(mFactor , 1.0f)) {
 			return input * input;
@@ -35,7 +35,7 @@ namespace SOUI
 
 	//////////////////////////////////////////////////////////////////////////
 
-	float SDecelerateInterpolator::getInterpolation(float input)
+	float SDecelerateInterpolator::getInterpolation(float input) const
 	{
 		float result;
 		if (SLayoutSize::fequal(mFactor , 1.0f)) {
@@ -51,14 +51,14 @@ namespace SOUI
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	float SAccelerateDecelerateInterpolator::getInterpolation(float input)
+	float SAccelerateDecelerateInterpolator::getInterpolation(float input) const
 	{
 		return (float)(cos((input + 1) * PI) / 2.0f) + 0.5f;
 	}
 
 
 	//////////////////////////////////////////////////////////////////////////
-	float SAnticipateInterpolator::getInterpolation(float t)
+	float SAnticipateInterpolator::getInterpolation(float t) const
 	{
 		// a(t) = t * t * ((tension + 1) * t - tension)
 		return t * t * ((mTension + 1) * t - mTension);
@@ -74,7 +74,7 @@ namespace SOUI
 
 
 	//////////////////////////////////////////////////////////////////////////
-	float SAnticipateOvershootInterpolator::getInterpolation(float t)
+	float SAnticipateOvershootInterpolator::getInterpolation(float t) const
 	{
 		// a(t, s) = t * t * ((s + 1) * t - s)
 		// o(t, s) = t * t * ((s + 1) * t + s)
@@ -101,7 +101,7 @@ namespace SOUI
 
 
 	//////////////////////////////////////////////////////////////////////////
-	float SBounceInterpolator::getInterpolation(float t)
+	float SBounceInterpolator::getInterpolation(float t) const
 	{
 		// _b(t) = t * t * 8
 		// bs(t) = _b(t) for t < 0.3535
@@ -123,7 +123,7 @@ namespace SOUI
 
 
 	//////////////////////////////////////////////////////////////////////////
-	float SCycleInterpolator::getInterpolation(float input)
+	float SCycleInterpolator::getInterpolation(float input) const
 	{
 		return (float)(sin(2 * mCycles * PI * input));
 	}
@@ -134,7 +134,7 @@ namespace SOUI
 
 	//////////////////////////////////////////////////////////////////////////
 
-	float SOvershootInterpolator::getInterpolation(float t)
+	float SOvershootInterpolator::getInterpolation(float t) const
 	{
 		// _o(t) = t * t * ((tension + 1) * t + tension)
 		// o(t) = _o(t - 1) + 1

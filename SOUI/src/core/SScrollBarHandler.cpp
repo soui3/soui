@@ -3,8 +3,9 @@
 
 namespace SOUI
 {
-	SScrollBarHandler::SScrollBarHandler(IScrollBarHost *pCB) :m_bVert(false),m_pCB(pCB)
-		, m_nSpeed(30)
+	SScrollBarHandler::SScrollBarHandler(IScrollBarHost *pCB) 
+		:m_bVert(false)
+		,m_pCB(pCB)
 		, m_iFrame(0)
 		, m_fadeMode(FADE_STOP)
 		, m_iHitPart(-1)
@@ -22,7 +23,7 @@ namespace SOUI
 	void SScrollBarHandler::OnNextFrame()
 	{
 		SASSERT(m_fadeMode != FADE_STOP);
-		if (m_iFrame>=0 && m_iFrame < m_nSpeed)
+		if (m_iFrame>=0 && m_iFrame < m_pCB->GetScrollFadeFrames())
 		{
 			m_iFrame += GetFadeStep();
 			m_pCB->UpdateScrollBar(m_bVert, -1);
@@ -106,6 +107,11 @@ end:
 		return m_pCB->GetScrollBarContainer();
 	}
 
+	const IInterpolator * SScrollBarHandler::GetInterpolator() const
+	{
+		return m_pCB->GetScrollInterpolator();;
+	}
+
 	int SScrollBarHandler::HitTest(CPoint pt) const
 	{
 		static const int parts[] =
@@ -164,7 +170,7 @@ end:
 
 		if (m_iClickPart == -1)
 		{
-			if (m_interpolator)
+			if (GetInterpolator())
 			{
 				m_iFrame = 0;
 				m_fadeMode = FADEIN;//to show
@@ -188,13 +194,13 @@ end:
 
 		if (m_iClickPart == -1)
 		{
-			if (!m_interpolator)
+			if (!GetInterpolator())
 			{
 				if (iOldHit != -1) m_pCB->UpdateScrollBar(m_bVert, iOldHit);
 			}
 			else
 			{
-				m_iFrame = m_nSpeed-1;
+				m_iFrame = m_pCB->GetScrollFadeFrames() -1;
 				m_fadeMode = FADEOUT;//to hide
 				GetContainer()->RegisterTimelineHandler(this);
 			}
@@ -290,7 +296,7 @@ end:
 		m_ptClick = pt;
 		if (m_fadeMode != FADE_STOP)
 		{
-			m_iFrame = m_nSpeed;//stop animate
+			m_iFrame = m_pCB->GetScrollFadeFrames();//stop animate
 			m_pCB->UpdateScrollBar(m_bVert, -1);
 		}
 		else
@@ -311,9 +317,9 @@ end:
 
 	BYTE SScrollBarHandler::GetAlpha() const
 	{
-		if(!m_interpolator)
+		if(!GetInterpolator())
 			return 0xFF;
-		float fProg = m_interpolator->getInterpolation(m_iFrame*1.0f/m_nSpeed);
+		float fProg = GetInterpolator()->getInterpolation(m_iFrame*1.0f/ m_pCB->GetScrollFadeFrames());
 		return (BYTE)(fProg * 0xFF);
 	}
 

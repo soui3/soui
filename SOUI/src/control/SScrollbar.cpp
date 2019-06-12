@@ -11,6 +11,7 @@ namespace SOUI
 SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
     , m_uAllowSize((UINT)-1)
+	, m_fadeFrame(30)
     , m_sbHander(this)
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
@@ -164,6 +165,7 @@ void SScrollBar::NotifySbCode(int nCode,int nPos)
     FireEvent(evt);
 }
 
+
 void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
 {
 	CRect rcOldThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
@@ -239,6 +241,17 @@ const SCROLLINFO * SScrollBar::GetScrollBarInfo(bool bVert) const
 int SScrollBar::GetScrollBarArrowSize(bool bVert) const
 {
 	return m_uAllowSize;
+}
+
+
+const IInterpolator * SScrollBar::GetScrollInterpolator() const
+{
+	return m_fadeInterpolator;
+}
+
+int SScrollBar::GetScrollFadeFrames() const
+{
+	return m_fadeFrame;
 }
 
 void SScrollBar::UpdateScrollBar(bool bVert, int iPart)

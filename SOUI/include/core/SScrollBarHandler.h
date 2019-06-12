@@ -23,6 +23,8 @@ namespace SOUI
 		virtual void OnScrollCommand(bool bVert, int iCmd) = 0;
 		virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) = 0;
 		virtual void OnScrollKillTimer(bool bVert, char id) = 0;
+		virtual const IInterpolator * GetScrollInterpolator() const = 0;
+		virtual int  GetScrollFadeFrames() const = 0;
 	};
 
 	class SOUI_EXP SScrollBarHandler :  ITimelineHandler
@@ -63,6 +65,8 @@ namespace SOUI
 
 		ISwndContainer * GetContainer();
 
+		const IInterpolator * GetInterpolator() const;
+
 		BYTE GetAlpha() const;
 
 		int GetFadeStep() const;
@@ -71,13 +75,6 @@ namespace SOUI
 	protected:
 		virtual void OnNextFrame();
 
-	public:
-		SOUI_ATTRS_BEGIN()
-			ATTR_INT(L"speed",m_nSpeed,FALSE)
-			ATTR_BOOL(L"vertical", m_bVert, TRUE)
-			ATTR_INTERPOLATOR(L"interpolator", m_interpolator,FALSE)
-			ATTR_CHAIN_PTR(m_interpolator,0)
-		SOUI_ATTRS_BREAK()
 	private:
 		enum FADEMODE{
 			FADEOUT=-1,
@@ -87,8 +84,6 @@ namespace SOUI
 
 		IScrollBarHost * m_pCB;
 		bool m_bVert;
-		SAutoRefPtr<IInterpolator> m_interpolator; //default to null, which means no animation.
-		int  m_nSpeed;
 		int	 m_iFrame;
 		FADEMODE m_fadeMode;
 		int	 m_iHitPart;
