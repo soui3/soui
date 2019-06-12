@@ -289,9 +289,12 @@ end:
 		}
 	}
 
-	void SScrollBarHandler::OnMouseDown(CPoint pt)
+	bool SScrollBarHandler::OnMouseDown(CPoint pt)
 	{
-		m_iClickPart = HitTest(pt);
+		int iClickPart = HitTest(pt);
+		if (iClickPart == -1)
+			return false;
+		m_iClickPart = iClickPart;
 		m_ptClick = pt;
 		if (m_fadeMode != FADE_STOP)
 		{
@@ -311,6 +314,7 @@ end:
 			m_pCB->OnScrollSetTimer(m_bVert, IScrollBarHost::Timer_Wait, IScrollBarHost::kTime_Wait);
 			break;
 		}
+		return true;
 	}
 
 

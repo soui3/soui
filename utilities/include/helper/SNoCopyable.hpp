@@ -1,6 +1,4 @@
 #pragma once
-#include <utilities-def.h>
-
 namespace SOUI
 {
 	/**

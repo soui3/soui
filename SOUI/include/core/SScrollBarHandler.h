@@ -1,5 +1,4 @@
 #pragma once
-
 namespace SOUI
 {
 
@@ -29,6 +28,9 @@ namespace SOUI
 
 	class SOUI_EXP SScrollBarHandler :  ITimelineHandler
 	{
+	private:
+		SScrollBarHandler(const SScrollBarHandler &);
+		const SScrollBarHandler &operator=(const SScrollBarHandler &);
 	public:
 		enum {
 			kSbRail = 100,
@@ -49,7 +51,7 @@ namespace SOUI
 
 		void OnMouseHover(CPoint pt);
 
-		void OnMouseDown(CPoint pt);
+		bool OnMouseDown(CPoint pt);
 
 		void OnMouseUp(CPoint pt);
 
@@ -60,8 +62,10 @@ namespace SOUI
 		void OnDraw(IRenderTarget *pRT, int iPart) const;
 
 		void OnTimer(char id);
-	protected:
+
 		int HitTest(CPoint pt) const;
+
+	protected:
 
 		ISwndContainer * GetContainer();
 

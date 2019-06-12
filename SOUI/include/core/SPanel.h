@@ -64,9 +64,6 @@ namespace SOUI
 
         BOOL HasScrollBar(BOOL bVertical) const;
 
-
-        SBHITINFO HitTest(CPoint pt);
-
         virtual void GetClientRect(LPRECT pRect) const;
         virtual CRect GetClientRect() const;
 	protected:
@@ -85,10 +82,6 @@ namespace SOUI
 		virtual const IInterpolator * GetScrollInterpolator() const override;
 		virtual int GetScrollFadeFrames() const override;
     protected:
-        CRect GetSbPartRect(BOOL bVertical,UINT uSBCode);
-        CRect GetSbRailwayRect(BOOL bVertical);
-        CRect GetScrollBarRect(BOOL bVertical);
-
         int OnCreate(LPVOID);
 
         void OnNcPaint(IRenderTarget *pRT);
@@ -121,12 +114,9 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);
 
+	protected:
 		int GetSbArrowSize() const;
 		int GetSbWidth() const;
-
-        int GetSbSlideLength(BOOL bVertical);
-
-        CRect GetSbSlideRectByPos(BOOL bVertical,int nPos);
 
         void ScrollUpdate();
 
@@ -169,7 +159,7 @@ namespace SOUI
 
 		SScrollBarHandler	m_sbVert;
 		SScrollBarHandler	m_sbHorz;
-
+		
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"sbSkin",OnAttrScrollbarSkin)
 			ATTR_LAYOUTSIZE(L"sbArrowSize", m_nSbArrowSize, FALSE)

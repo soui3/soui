@@ -91,13 +91,11 @@ namespace SOUI
 
 	void SPanel::OnScrollSetTimer(bool bVert, char id, UINT uElapse)
 	{
-		if (bVert) id += 2;
 		SetTimer(id, uElapse);
 	}
 
 	void SPanel::OnScrollKillTimer(bool bVert, char id)
 	{
-		if (bVert) id += 2;
 		KillTimer(id);
 	}
 
@@ -248,142 +246,6 @@ BOOL SPanel::HasScrollBar(BOOL bVertical) const
 }
 
 
-CRect SPanel::GetSbPartRect(BOOL bVertical,UINT uSBCode)
-{
-    SASSERT(m_pSkinSb);
-    CRect rcSb=GetScrollBarRect(bVertical);
-    if(rcSb.IsRectEmpty()) 
-		return rcSb;
-	
-    SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
-    if(psi->nMax < psi->nMin)
-        return CRect();
-    __int64 nTrackPos=psi->nTrackPos;
-    int nMax=psi->nMax;
-    if(nMax<psi->nMin+(int)psi->nPage-1) nMax=psi->nMin+psi->nPage-1;
-
-    if(nTrackPos==-1)
-        nTrackPos=psi->nPos;
-    int nLength=(bVertical?rcSb.Height():rcSb.Width());
-    int nInterHei=nLength-2*GetSbArrowSize();
-    if(nInterHei<0)
-        nInterHei=0;
-    int    nSlideHei=psi->nPage*nInterHei/(nMax-psi->nMin+1);
-    if(nMax==(int)(psi->nMin+psi->nPage-1))
-        nSlideHei=nInterHei;
-    if(nSlideHei<THUMB_MINSIZE)
-        nSlideHei=THUMB_MINSIZE;
-    if(nInterHei<THUMB_MINSIZE)
-        nSlideHei=0;
-    int nEmptyHei=nInterHei-nSlideHei;
-    int nArrowHei=GetSbArrowSize();
-    if(nInterHei==0)
-        nArrowHei=nLength/2;
-
-    CRect rcRet(0,0,rcSb.Width(),nArrowHei);
-    if(uSBCode==SB_LINEUP) goto end;
-    rcRet.top=rcRet.bottom;
-    if((psi->nMax-psi->nMin-psi->nPage+1)==0)
-        rcRet.bottom+=nEmptyHei/2;
-    else
-        rcRet.bottom+=(long)(nEmptyHei*nTrackPos/(psi->nMax-psi->nMin-psi->nPage+1));
-    if(uSBCode==SB_PAGEUP) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom+=nSlideHei;
-    if(uSBCode==SB_THUMBTRACK) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom=nLength-nArrowHei;
-    if(uSBCode==SB_PAGEDOWN) goto end;
-    rcRet.top=rcRet.bottom;
-    rcRet.bottom=nLength;
-    if(uSBCode==SB_LINEDOWN) goto end;
-end:
-    if(!bVertical)
-    {
-        rcRet.left=rcRet.top;
-        rcRet.right=rcRet.bottom;
-        rcRet.top=0;
-        rcRet.bottom=rcSb.Height();	
-    }
-    rcRet.OffsetRect(rcSb.TopLeft());
-    return rcRet;
-}
-
-CRect SPanel::GetSbRailwayRect( BOOL bVertical )
-{
-    SASSERT(m_pSkinSb);
-    CRect rcSb=GetScrollBarRect(bVertical);
-    if(rcSb.IsRectEmpty()) return rcSb;
-
-    if(bVertical)
-    {
-        rcSb.DeflateRect(0,GetSbArrowSize());
-    }else
-    {
-        rcSb.DeflateRect(GetSbArrowSize(),0);
-    }
-    return rcSb;
-}
-
-CRect SPanel::GetScrollBarRect(BOOL bVertical)
-{
-    CRect rcSb;
-    if(!HasScrollBar(bVertical)) return rcSb;
-
-    SWindow::GetClientRect(&rcSb);
-
-    if(bVertical)
-    {
-        rcSb.left=rcSb.right-GetSbWidth();
-    }
-    else
-    {
-        rcSb.top=rcSb.bottom-GetSbWidth();
-    }
-    if(HasScrollBar(!bVertical))
-    {
-        if(bVertical)
-        {
-            rcSb.bottom-=GetSbWidth();
-        }
-        else
-        {
-            rcSb.right-=GetSbWidth();
-        }
-    }
-
-	if(bVertical)
-	{
-		rcSb.top += m_nSbTop.toPixelSize(GetScale());
-		rcSb.bottom -= m_nSbBottom.toPixelSize(GetScale());
-	}
-	else
-	{
-		rcSb.left += m_nSbLeft.toPixelSize(GetScale());
-		rcSb.right -= m_nSbRight.toPixelSize(GetScale());
-	}
-    return rcSb;
-}
-
-SBHITINFO SPanel::HitTest(CPoint pt)
-{
-    SBHITINFO hi= {(DWORD)-1,(DWORD)0};
-    CRect rcSbVer=GetScrollBarRect(TRUE);
-    CRect rcSbHoz=GetScrollBarRect(FALSE);
-    if(rcSbHoz.PtInRect(pt)) hi.bVertical=FALSE;
-    else if(rcSbVer.PtInRect(pt)) hi.bVertical=TRUE;
-    else return hi;
-
-    if(GetSbPartRect(hi.bVertical,SB_LINEUP).PtInRect(pt)) hi.uSbCode=SB_LINEUP;
-    else if(GetSbPartRect(hi.bVertical,SB_LINEDOWN).PtInRect(pt)) hi.uSbCode= SB_LINEDOWN;
-    else if(GetSbPartRect(hi.bVertical,SB_THUMBTRACK).PtInRect(pt)) hi.uSbCode= SB_THUMBTRACK;
-    else if(GetSbPartRect(hi.bVertical,SB_PAGEUP).PtInRect(pt)) hi.uSbCode= SB_PAGEUP;
-    else if(GetSbPartRect(hi.bVertical,SB_PAGEDOWN).PtInRect(pt)) hi.uSbCode= SB_PAGEDOWN;
-
-    return hi;
-
-}
-
 int SPanel::OnCreate(LPVOID)
 {
     int nRet=__super::OnCreate(NULL);
@@ -399,37 +261,17 @@ void SPanel::OnNcPaint(IRenderTarget *pRT)
     //绘制滚动条
     if(HasScrollBar(TRUE))
     {
-        int nState=(IsDisabled(TRUE) || !IsScrollBarEnable(TRUE))?SBST_DISABLE:SBST_INACTIVE;
-        rcDest=GetSbPartRect(TRUE,SB_LINEUP);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,TRUE));
-        rcDest=GetSbRailwayRect(TRUE);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_VERT?SBST_HOVER:nState,TRUE));
-        rcDest=GetSbPartRect(TRUE,SB_THUMBTRACK);
-        int nStateThumb = nState;
-        if(m_dragSb == DSB_VERT) 
-            nStateThumb = SBST_PUSHDOWN;
-        else if(m_HitInfo.bVertical && m_HitInfo.uSbCode == SB_THUMBTRACK)
-            nStateThumb= SBST_HOVER;
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,TRUE));
-        rcDest=GetSbPartRect(TRUE,SB_LINEDOWN);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,TRUE));
+		m_sbVert.OnDraw(pRT, SB_LINEUP);
+		m_sbVert.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbVert.OnDraw(pRT, SB_THUMBTRACK);
+		m_sbVert.OnDraw(pRT, SB_LINEDOWN);
     }
     if(HasScrollBar(FALSE))
     {
-         int nState=(IsDisabled(TRUE) || !IsScrollBarEnable(FALSE))?SBST_DISABLE:SBST_INACTIVE;
-         rcDest=GetSbPartRect(FALSE,SB_LINEUP);
-         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,nState,FALSE));
-         rcDest=GetSbRailwayRect(FALSE);
-         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,m_dragSb==DSB_HORZ?SBST_HOVER:nState,FALSE));
-         rcDest=GetSbPartRect(FALSE,SB_THUMBTRACK);
-         int nStateThumb = nState;
-         if(m_dragSb == DSB_HORZ) 
-             nStateThumb = SBST_PUSHDOWN;
-         else if(!m_HitInfo.bVertical && m_HitInfo.uSbCode == SB_THUMBTRACK)
-             nStateThumb= SBST_HOVER;
-         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,nStateThumb,FALSE));
-         rcDest=GetSbPartRect(FALSE,SB_LINEDOWN);
-         m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,nState,FALSE));
+		m_sbHorz.OnDraw(pRT, SB_LINEUP);
+		m_sbHorz.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbHorz.OnDraw(pRT, SB_THUMBTRACK);
+		m_sbHorz.OnDraw(pRT, SB_LINEDOWN);
     }
 
     if(HasScrollBar(TRUE) && HasScrollBar(FALSE))
@@ -463,251 +305,72 @@ BOOL SPanel::OnNcHitTest(CPoint pt)
 
 void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
 {
-    m_HitInfo=HitTest(point);
-    if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
-    {
-        SetCapture();
-        if(m_HitInfo.uSbCode!=SB_THUMBTRACK)
-        {
-            if(m_HitInfo.uSbCode==SB_LINEUP || m_HitInfo.uSbCode== SB_LINEDOWN)
-            {
-                CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-                SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_PUSHDOWN,m_HitInfo.bVertical));
-                ReleaseRenderTarget(pRT);
-            }
-            OnScroll(m_HitInfo.bVertical,m_HitInfo.uSbCode,m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos);
-            SetTimer(TIMER_SBWAIT,500);
-        }
-        else
-        {
-            m_dragSb = m_HitInfo.bVertical?DSB_VERT:DSB_HORZ;
-            m_ptDragSb=point;
-            m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
-            m_dwUpdateTime=GetTickCount()-m_dwUpdateInterval;//让第一次滚动消息能够即时刷新
-
-            CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-            SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSlide,OLEDC_PAINTBKGND,FALSE);
-            CRect rcRail = GetSbRailwayRect(m_HitInfo.bVertical);
-            m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
-            m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
-            ReleaseRenderTarget(pRT);
-        }
-    }
+	SetCapture();
+	if (m_sbVert.OnMouseDown(point))
+		m_dragSb = DSB_VERT;
+	else if (m_sbHorz.OnMouseDown(point))
+		m_dragSb = DSB_HORZ;
 }
 
 void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
 {
-    ReleaseCapture();
     if(m_dragSb!=DSB_NULL)
     {
+		if (m_dragSb == DSB_VERT)
+			m_sbVert.OnMouseUp(pt);
+		else
+			m_sbHorz.OnMouseUp(pt);
         m_dragSb=DSB_NULL;
-        SCROLLINFO *psi=m_HitInfo.bVertical?(&m_siVer):(&m_siHoz);
-        if(psi->nTrackPos!=-1) OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
-
-        CRect rcRail=GetScrollBarRect(m_HitInfo.bVertical);
-        if(m_HitInfo.bVertical)
-		{
-			rcRail.DeflateRect(0,GetSbArrowSize());
-		}
-        else
-		{
-			rcRail.DeflateRect(GetSbArrowSize(),0);
-		}
-        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
-        m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEDOWN,SBST_NORMAL,m_HitInfo.bVertical));
-        psi->nTrackPos=-1;
-        CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-        m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,m_HitInfo.bVertical));
-        ReleaseRenderTarget(pRT);
     }
-    else if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
-    {
-        if(m_HitInfo.uSbCode==SB_LINEUP||m_HitInfo.uSbCode==SB_LINEDOWN)
-        {
-            CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-            SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-            m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(m_HitInfo.uSbCode,SBST_NORMAL,m_HitInfo.bVertical));
-            ReleaseRenderTarget(pRT);
-        }
-    }
-    KillTimer(TIMER_SBWAIT);
-    KillTimer(TIMER_SBGO);
-    m_HitInfo.uSbCode=(DWORD)-1;
-    OnNcMouseMove(nFlags,pt);
+	ReleaseCapture();
 }
 
 void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
 {
     if(m_dragSb!=DSB_NULL)
     {
-        if(m_HitInfo.uSbCode!=SB_THUMBTRACK) return;
-        CRect rcSb=GetScrollBarRect(m_HitInfo.bVertical);
-        CRect rcRail=rcSb;
-        if(m_HitInfo.bVertical)
+		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		CRect rcSb = GetScrollBarRect(m_dragSb == DSB_VERT);
+		bool bInSbNew = rcSb.PtInRect(point);
+		bool bInSbOld = sbHandler.GetHitPart() != -1;
+		if (bInSbNew != bInSbOld)
 		{
-			rcRail.DeflateRect(0,GetSbArrowSize());
+			if (bInSbOld)
+				sbHandler.OnMouseLeave();
+			else
+				sbHandler.OnMouseHover(point);
 		}
-		else
-		{
-			rcRail.DeflateRect(GetSbArrowSize(),0);
-		}
-
-        int nInterHei=m_HitInfo.bVertical?rcRail.Height():rcRail.Width();
-        SCROLLINFO *psi=m_HitInfo.bVertical?(&m_siVer):(&m_siHoz);
-
-        int    nSlideLen=GetSbSlideLength(m_HitInfo.bVertical);
-        int nEmptyHei=nInterHei-nSlideLen;
-
-        int nDragLen=m_HitInfo.bVertical?(point.y-m_ptDragSb.y):(point.x-m_ptDragSb.x);
-
-        int nSlide=(nEmptyHei==0)?0:(nDragLen*(__int64)(psi->nMax-psi->nMin-psi->nPage+1)/nEmptyHei);//防止溢出,需要使用__int64
-        int nNewTrackPos=m_nDragPos+nSlide;
-        if(nNewTrackPos<psi->nMin)
-        {
-            nNewTrackPos=psi->nMin;
-        }
-        else if(nNewTrackPos>(int)(psi->nMax-psi->nMin-psi->nPage+1))
-        {
-            nNewTrackPos=psi->nMax-psi->nMin-psi->nPage+1;
-        }
-
-        CRect rcSlide=GetSbSlideRectByPos(m_HitInfo.bVertical,m_nDragPos);
-        if(m_HitInfo.bVertical)
-        {
-            if(nDragLen>0 && nDragLen>rcRail.bottom-rcSlide.bottom)
-                nDragLen=rcRail.bottom-rcSlide.bottom;
-            if(nDragLen<0 && nDragLen<rcRail.top-rcSlide.top)
-                nDragLen=rcRail.top-rcSlide.top;
-            rcSlide.OffsetRect(0,nDragLen);
-        }
-        else
-        {
-            if(nDragLen>0 && nDragLen>rcRail.right-rcSlide.right)
-                nDragLen=rcRail.right-rcSlide.right;
-            if(nDragLen<0 && nDragLen<rcRail.left-rcSlide.left)
-                nDragLen=rcRail.left-rcSlide.left;
-            rcSlide.OffsetRect(nDragLen,0);
-        }
-
-        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcRail,OLEDC_PAINTBKGND,FALSE);
-        m_pSkinSb->DrawByState(pRT,rcRail,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,m_HitInfo.bVertical));
-        m_pSkinSb->DrawByState(pRT,rcSlide,MAKESBSTATE(SB_THUMBTRACK,SBST_PUSHDOWN,m_HitInfo.bVertical));
-        ReleaseRenderTarget(pRT);
-
-        if(nNewTrackPos!=psi->nTrackPos)
-        {
-            psi->nTrackPos=nNewTrackPos;
-            OnScroll(m_HitInfo.bVertical,SB_THUMBTRACK,psi->nTrackPos);
-        }
+		sbHandler.OnMouseMove(point);
     }
     else
     {
-        SBHITINFO uHit=HitTest(point);
-        SBHITINFO uHitOrig=m_HitInfo;//备份出来，防止在其它过程中修改
-
-        if(uHit.uSbCode==WORD(-1))
-            OnNcMouseLeave();
-        else if(uHit != uHitOrig)
-        {
-            if(uHitOrig.uSbCode==WORD(-1) || uHitOrig.bVertical != uHit.bVertical)
-            {//鼠标进入当前滚动条
-                if(uHitOrig.uSbCode!=WORD(-1))
-                    OnNcMouseLeave();//切换滚动条，源滚动条失活
-                if(IsScrollBarEnable(uHit.bVertical))
-                {
-                    CRect rc=GetScrollBarRect(uHit.bVertical);
-                    SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                    if(uHit.uSbCode!=SB_LINEUP) 
-                    {
-                        rc=GetSbPartRect(uHit.bVertical,SB_LINEUP);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_LINEUP,SBST_NORMAL,uHit.bVertical));
-                    }
-                    rc=GetSbRailwayRect(uHit.bVertical);
-                    m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHit.bVertical));
-                    if(uHit.uSbCode!=SB_LINEDOWN)
-                    {
-                        rc=GetSbPartRect(uHit.bVertical,SB_LINEDOWN);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_LINEDOWN,SBST_NORMAL,uHit.bVertical));
-                    }
-                    if(uHit.uSbCode!=SB_THUMBTRACK)
-                    {
-                        rc=GetSbPartRect(uHit.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHit.bVertical));
-                    }
-                    if(uHit.uSbCode!=SB_PAGEUP && uHit.uSbCode!=SB_PAGEDOWN)
-                    {
-                        rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
-                    }
-                    ReleaseRenderTarget(pRT);
-                }
-            }else
-            {//鼠标在当前滚动条内移动
-                if(IsScrollBarEnable(uHitOrig.bVertical))
-                {
-                    if(uHitOrig.uSbCode==SB_LINEUP || uHitOrig.uSbCode==SB_LINEDOWN)
-                    {
-                        CRect rc=GetSbPartRect(uHitOrig.bVertical,uHitOrig.uSbCode);
-                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHitOrig.uSbCode,SBST_NORMAL,uHitOrig.bVertical));
-                        ReleaseRenderTarget(pRT);
-                    }else if(uHitOrig.uSbCode==SB_THUMBTRACK)
-                    {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
-                        CRect rc=GetSbRailwayRect(uHitOrig.bVertical);
-                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_HOVER,uHitOrig.bVertical));
-                        rc=GetSbPartRect(uHitOrig.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_NORMAL,uHitOrig.bVertical));
-                        ReleaseRenderTarget(pRT);
-                    }
-                }
-                if(uHit.uSbCode!=WORD(-1) && IsScrollBarEnable(uHit.bVertical))
-                {
-                    if(uHit.uSbCode==SB_LINEUP || uHit.uSbCode==SB_LINEDOWN)
-                    {
-                        CRect rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
-                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(uHit.uSbCode,SBST_HOVER,uHit.bVertical));
-                        ReleaseRenderTarget(pRT);
-                    }else if(uHit.uSbCode==SB_THUMBTRACK)
-                    {//需要先画轨道，再画拖动条,以处理拖动条可能出现的半透明
-                        CRect rc=GetSbRailwayRect(uHit.bVertical);
-                        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rc,OLEDC_PAINTBKGND,FALSE);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_PAGEUP,SBST_NORMAL,uHit.bVertical));
-                        rc=GetSbPartRect(uHit.bVertical,SB_THUMBTRACK);
-                        m_pSkinSb->DrawByState(pRT,rc,MAKESBSTATE(SB_THUMBTRACK,SBST_HOVER,uHit.bVertical));
-                        ReleaseRenderTarget(pRT);
-                    }
-                }
-            }
-
-            m_HitInfo=uHit;
-        }
+		if (m_sbVert.HitTest(point) != -1)
+		{
+			m_sbVert.OnMouseMove(point);
+		}
+		else if (m_sbHorz.HitTest(point) != -1)
+		{
+			m_sbHorz.OnMouseMove(point);
+		}
     }
 }
 
 void SPanel::OnNcMouseLeave()
 {
-    if(m_dragSb!=DSB_NULL || m_HitInfo.uSbCode==WORD(-1) || !IsVisible(TRUE)) return;
-
-    SBHITINFO uHit= {(DWORD)-1,(DWORD)0};
-
-    if(IsScrollBarEnable(m_HitInfo.bVertical))
+    if(m_HitInfo.uSbCode==WORD(-1)) 
+		return;
+	if (m_dragSb != DSB_NULL)
+	{
+		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		sbHandler.OnMouseLeave();
+	}
+    else if(IsScrollBarEnable(m_HitInfo.bVertical))
     {
-        CRect rcSb=GetScrollBarRect(m_HitInfo.bVertical);
-        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcSb,OLEDC_PAINTBKGND,FALSE);
-        CRect rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_LINEUP);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEUP,SBST_INACTIVE,m_HitInfo.bVertical));
-        rcDest=GetSbRailwayRect(m_HitInfo.bVertical);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_PAGEUP,SBST_INACTIVE,m_HitInfo.bVertical));
-        rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_THUMBTRACK,SBST_INACTIVE,m_HitInfo.bVertical));
-        rcDest=GetSbPartRect(m_HitInfo.bVertical,SB_LINEDOWN);
-        m_pSkinSb->DrawByState(pRT,rcDest,MAKESBSTATE(SB_LINEDOWN,SBST_INACTIVE,m_HitInfo.bVertical));
-        ReleaseRenderTarget(pRT);
+		SScrollBarHandler & sbHandler = m_HitInfo.bVertical ? m_sbVert : m_sbHorz;
+		sbHandler.OnMouseLeave();
     }
-    m_HitInfo=uHit;
+	SBHITINFO uHit = { (DWORD)-1,(DWORD)0 };
+	m_HitInfo=uHit;
 }
 
 //滚动条显示或者隐藏时发送该消息
@@ -795,64 +458,26 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 	psi->nPos = nNewPos;
 	if (uCode != SB_THUMBTRACK && IsVisible(TRUE) && IsScrollBarEnable(bVertical))
 	{
-		CRect rcRail = GetScrollBarRect(bVertical);
-		if (bVertical)
-		{
-			rcRail.DeflateRect(0, GetSbArrowSize());
-		}
-		else
-		{
-			rcRail.DeflateRect(GetSbArrowSize(), 0);
-		}
+		SScrollBarHandler& sbHandler = bVertical ? m_sbVert : m_sbHorz;
+		CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
 		SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
-		m_pSkinSb->DrawByState(pRT, rcRail, MAKESBSTATE(SB_PAGEDOWN, SBST_NORMAL, bVertical));
-		psi->nTrackPos = -1;
-		CRect rcSlide = GetSbPartRect(bVertical, SB_THUMBTRACK);
-		m_pSkinSb->DrawByState(pRT, rcSlide, MAKESBSTATE(SB_THUMBTRACK, SBST_NORMAL, bVertical));
+		sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);
 	}
 	Invalidate();
 	return TRUE;
 }
 
-int SPanel::GetSbSlideLength(BOOL bVertical)
-{
-    SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
-    CRect rcSb=GetScrollBarRect(bVertical);
-    int nInterHei=(bVertical?rcSb.Height():rcSb.Width())- 2*GetSbArrowSize();
-
-    int    nSlideHei=psi->nPage*nInterHei/(psi->nMax-psi->nMin+1);
-    if(nSlideHei<THUMB_MINSIZE) nSlideHei=THUMB_MINSIZE;
-    if(nInterHei<THUMB_MINSIZE) nSlideHei=0;
-
-    return nSlideHei;
-}
-
-CRect SPanel::GetSbSlideRectByPos(BOOL bVertical,int nPos)
-{
-    SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
-    int nOldPos=psi->nTrackPos;
-    psi->nTrackPos=nPos;
-    CRect rcRet=GetSbPartRect(bVertical,SB_THUMBTRACK);
-    psi->nTrackPos=nOldPos;
-    return rcRet;
-}
-
 void SPanel::OnTimer( char cTimerID )
 {
-    if(cTimerID==TIMER_SBWAIT)
-    {
-        KillTimer(cTimerID);
-        SetTimer(TIMER_SBGO,50);
-        OnTimer(TIMER_SBGO);
-    }
-    else if(cTimerID==TIMER_SBGO)
-    {
-        if(m_HitInfo.uSbCode>=SB_LINEUP && m_HitInfo.uSbCode<=SB_PAGEDOWN)
-        {
-            OnScroll(m_HitInfo.bVertical,m_HitInfo.uSbCode,0);
-        }
-    }
+	if (cTimerID == IScrollBarHost::kTime_Go ||
+		cTimerID == IScrollBarHost::kTime_Wait)
+	{
+		SASSERT(m_dragSb != DSB_NULL);
+		SScrollBarHandler& sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		sbHandler.OnTimer(cTimerID);
+	}
 }
 
 void SPanel::ScrollUpdate()
