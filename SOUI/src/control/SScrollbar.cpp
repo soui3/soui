@@ -165,6 +165,13 @@ void SScrollBar::NotifySbCode(int nCode,int nPos)
     FireEvent(evt);
 }
 
+LRESULT SScrollBar::OnAttrVertical(const SStringW & value, BOOL bLoading)
+{
+	BOOL bVert = STRINGASBOOL(value);
+	m_sbHander.SetVertical(bVert);
+	return bLoading?S_FALSE:S_OK;
+}
+
 
 void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
 {
@@ -198,7 +205,7 @@ void SScrollBar::OnScrollCommand(bool bVert, int iCmd)
 		break;
 	}
 	if (m_si.nPos < m_si.nMin) m_si.nPos = m_si.nMin;
-	if (m_si.nPos > m_si.nMax - m_si.nPage + 1) m_si.nPos = m_si.nMax - m_si.nPage + 1;
+	if (m_si.nPos > m_si.nMax - (int)m_si.nPage + 1) m_si.nPos = m_si.nMax - (int)m_si.nPage + 1;
 	if (nOldPos != m_si.nPos)
 	{
 		if (iCmd != SB_THUMBPOSITION)

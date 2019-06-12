@@ -222,6 +222,8 @@ protected:
     void NotifySbCode(int nCode,int nPos);
 
 protected:
+	LRESULT OnAttrVertical(const SStringW &value, BOOL bLoading);
+
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"skin", m_pSkin, TRUE)
         ATTR_UINT(L"arrowSize", m_uAllowSize, TRUE)
@@ -230,6 +232,7 @@ protected:
         ATTR_INT(L"value", m_si.nPos, TRUE)
         ATTR_INT(L"page", m_si.nPage, TRUE)
 		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
+		ATTR_CUSTOM(L"vertical",OnAttrVertical)
 		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
     SOUI_ATTRS_END()
 

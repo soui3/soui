@@ -251,6 +251,7 @@ end:
 			{
 				m_pCB->OnScrollThumbTrackPos(m_bVert,nNewTrackPos);
 			}
+			m_iHitPart = iNewHit;
 		}
 		else if (m_iHitPart != iNewHit)
 		{
@@ -280,12 +281,10 @@ end:
 		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Wait);
 		m_pCB->OnScrollKillTimer(m_bVert, IScrollBarHost::Timer_Go);
 
-		if (iClickPart == SB_THUMBTRACK)
-			iClickPart = SB_THUMBPOSITION;
-		m_pCB->OnScrollCommand(m_bVert, iClickPart);
+		m_pCB->OnScrollCommand(m_bVert, iClickPart== SB_THUMBTRACK? SB_THUMBPOSITION:iClickPart);
 
-		if (iClickPart != -1)
-		{//
+		if (iClickPart != -1 && m_iHitPart==-1)
+		{
 			OnMouseLeave();
 		}
 	}
@@ -352,7 +351,8 @@ end:
 			return SBST_INACTIVE;
 
 		DWORD dwState = SBST_NORMAL;
-		if(iPart == m_iClickPart && m_iClickPart == m_iHitPart)
+		if(iPart == m_iClickPart && 
+			(m_iClickPart == m_iHitPart || m_iClickPart == SB_THUMBTRACK))
 			dwState = SBST_PUSHDOWN;
 		else if(iPart == m_iHitPart)
 			dwState = SBST_HOVER;
