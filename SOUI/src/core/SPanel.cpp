@@ -316,11 +316,9 @@ void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
 {
     if(m_dragSb!=DSB_NULL)
     {
-		if (m_dragSb == DSB_VERT)
-			m_sbVert.OnMouseUp(pt);
-		else
-			m_sbHorz.OnMouseUp(pt);
-        m_dragSb=DSB_NULL;
+		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		sbHandler.OnMouseUp(pt);
+		m_dragSb=DSB_NULL;
     }
 	ReleaseCapture();
 }

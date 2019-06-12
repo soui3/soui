@@ -130,11 +130,12 @@ namespace SOUI
 		SLayoutSize    m_nSbWid;
 
 	protected:
+		CRect		   m_rcClient;
+
 		SLayoutSize	   m_nSbLeft;   //滚动条距离左边距离
 		SLayoutSize    m_nSbRight;  //滚动条距离边边距离
 		SLayoutSize	   m_nSbTop;    //滚动条距离上边距离
 		SLayoutSize    m_nSbBottom; //滚动条距离下边距离
-        CPoint         m_ptDragSb;
         
         enum {
         DSB_NULL=0,
@@ -142,11 +143,11 @@ namespace SOUI
         DSB_HORZ,
         }           m_dragSb;
         SBHITINFO        m_HitInfo;
-        int            m_nDragPos;
 
-        CRect        m_rcClient;
-        int            m_wBarVisible;    //滚动条显示信息
-        int            m_wBarEnable;    //滚动条可操作信息
+        UINT           m_wBarVisible;    //滚动条显示信息
+		UINT           m_wBarEnable;    //滚动条可操作信息
+		SScrollBarHandler	m_sbVert;
+		SScrollBarHandler	m_sbHorz;
 
         DWORD        m_dwUpdateTime;    //记录调用UpdateSWindow的时间
         DWORD        m_dwUpdateInterval;
@@ -157,8 +158,6 @@ namespace SOUI
 		SAutoRefPtr<IInterpolator> m_fadeInterpolator;
 		int			m_fadeFrames;
 
-		SScrollBarHandler	m_sbVert;
-		SScrollBarHandler	m_sbHorz;
 		
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"sbSkin",OnAttrScrollbarSkin)
