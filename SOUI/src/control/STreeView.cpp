@@ -556,7 +556,7 @@ namespace SOUI
 	    //滚动视图
         int nPos = m_tvItemLocator->Item2Position(hItem);
         int nHeight = m_tvItemLocator->GetItemHeight(hItem);
-        if(nPos + nHeight <= m_siVer.nPos)// && nPos < m_siVer.nPos + m_siVer.nPage) 
+        if(nPos + nHeight <= m_siVer.nPos) 
         {
             OnScroll(TRUE,SB_THUMBPOSITION,nPos);
         }
@@ -567,7 +567,7 @@ namespace SOUI
         int nIndent = m_tvItemLocator->GetItemIndent(hItem);
         int nWidth = m_tvItemLocator->GetItemWidth(hItem);
         
-        if(nIndent + nWidth <= m_siVer.nPos)
+        if(nIndent + nWidth <= m_siHoz.nPos)
         {
             OnScroll(FALSE,SB_THUMBPOSITION,nIndent);        
         }else if(nIndent < m_siHoz.nPos + (int)m_siHoz.nPage)

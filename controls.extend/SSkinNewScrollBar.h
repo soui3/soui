@@ -24,8 +24,8 @@ public:
     }
 
     //不支持显示上下箭头
-    virtual BOOL HasArrow(){return FALSE;}
-    virtual int GetIdealSize(){
+    virtual BOOL HasArrow()const override{return FALSE;}
+    virtual int GetIdealSize() const override{
         SASSERT(m_pImgHorz && m_pImgVert);
         return m_pImgVert->Width()/m_nStates;
     }
@@ -34,7 +34,7 @@ protected:
 
 	}
 
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha)
+    virtual void _DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const override
     {
         if(!m_pImgHorz || !m_pImgVert) return;
         int nSbCode=LOWORD(dwState);
@@ -58,7 +58,7 @@ protected:
 
 
     //返回源指定部分在原位图上的位置。
-    virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical)
+    virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical) const  override
     {
         CRect rc;
         if(

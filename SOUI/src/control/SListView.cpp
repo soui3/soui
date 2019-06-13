@@ -248,7 +248,7 @@ namespace SOUI
     BOOL SListView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
     {
         int nOldPos = m_siVer.nPos;
-        __super::OnScroll(bVertical, uCode, nPos);
+        SPanel::OnScroll(bVertical, uCode, nPos);
         int nNewPos = m_siVer.nPos;
         if(nOldPos != nNewPos)
         {

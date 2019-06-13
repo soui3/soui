@@ -83,7 +83,7 @@ namespace SOUI
 			sbHandler.OnDraw(pRT, SB_LINEDOWN);
 			ReleaseRenderTarget(pRT);
 		}
-		if (iPart == SB_THUMBTRACK)
+		else if (iPart == SB_THUMBTRACK)
 		{
 			CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
 			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
@@ -162,6 +162,7 @@ SPanel::SPanel()
 	, m_zDelta(0)
 	, m_sbVert(this,true)
 	, m_sbHorz(this,false)
+	, m_fadeFrames(20)
 {
 	m_nSbWid.setInvalid();
 	m_nSbArrowSize.setInvalid();
@@ -481,11 +482,6 @@ BOOL SPanel::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 {
-	if (uCode == SB_THUMBTRACK)
-	{
-		Invalidate();
-		return TRUE;
-	}
     SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
     int nNewPos=psi->nPos;
     switch(uCode)
@@ -502,6 +498,9 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
     case SB_PAGEDOWN:
         nNewPos+=psi->nPage;
         break;
+	case SB_THUMBTRACK:
+		nNewPos = nPos;
+		break;
     case SB_THUMBPOSITION:
         nNewPos=nPos;
 		psi->nTrackPos = -1;
@@ -522,7 +521,7 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 		return FALSE;
 
 	psi->nPos = nNewPos;
-	if (IsVisible(TRUE) && HasScrollBar(bVertical))
+	if (IsVisible(TRUE) && HasScrollBar(bVertical) && uCode != SB_THUMBTRACK)
 	{
 		OnScrollUpdatePart(!!bVertical, SB_THUMBTRACK);
 	}

@@ -10,6 +10,7 @@ namespace SOUI
 		, m_fadeMode(FADE_STOP)
 		, m_iHitPart(-1)
 		, m_iClickPart(-1)
+		, m_nClickPos(-1)
 	{
 		SASSERT(m_pSbHost);
 	}
@@ -39,7 +40,7 @@ namespace SOUI
 	{
 		SASSERT(m_pSbHost->GetScrollBarSkin(m_bVert));
 		const SCROLLINFO * pSi = m_pSbHost->GetScrollBarInfo(m_bVert);
-		int nTrackPos=pSi->nTrackPos;
+		__int64 nTrackPos=pSi->nTrackPos;
 		int nMax=pSi->nMax;
 		if(nMax<pSi->nMin+(int)pSi->nPage-1) nMax=pSi->nMin+pSi->nPage-1;
 
@@ -47,6 +48,8 @@ namespace SOUI
 			nTrackPos=pSi->nPos;
 		CRect rcAll = m_pSbHost->GetScrollBarRect(m_bVert);
 		int nLength=(IsVertical()?rcAll.Height():rcAll.Width());
+		if(nLength<=0)
+			return CRect();
 
 		int nArrowHei=m_pSbHost->GetScrollBarArrowSize(m_bVert);
 		int nInterHei=nLength-2*nArrowHei;
@@ -74,7 +77,7 @@ namespace SOUI
 		if((pSi->nMax-pSi->nMin-pSi->nPage+1)==0)
 			rcRet.bottom+=nEmptyHei/2;
 		else
-			rcRet.bottom+=nEmptyHei*nTrackPos/(pSi->nMax-pSi->nMin-pSi->nPage+1);
+			rcRet.bottom+=(int)(nEmptyHei*nTrackPos/(pSi->nMax-pSi->nMin-pSi->nPage+1));
 		if(iPart==SB_PAGEUP) goto end;
 		rcRet.top=rcRet.bottom;
 		rcRet.bottom+=nSlideHei;
@@ -241,23 +244,23 @@ end:
 		{//draging.
 			CRect rcWnd = m_pSbHost->GetScrollBarRect(m_bVert);
 			int nInterHei = (IsVertical() ? rcWnd.Height() : rcWnd.Width()) - 2 * m_pSbHost->GetScrollBarArrowSize(m_bVert);
-			const SCROLLINFO * m_si = m_pSbHost->GetScrollBarInfo(m_bVert);
-			int    nSlideHei = m_si->nPage*nInterHei / (m_si->nMax - m_si->nMin + 1);
+			const SCROLLINFO * psi = m_pSbHost->GetScrollBarInfo(m_bVert);
+			int    nSlideHei = psi->nPage*nInterHei / (psi->nMax - psi->nMin + 1);
 			if (nSlideHei<THUMB_MINSIZE) nSlideHei = THUMB_MINSIZE;
 			if (nInterHei<THUMB_MINSIZE) nSlideHei = 0;
 			int nEmptyHei = nInterHei - nSlideHei;
 			int nDragLen = IsVertical() ? (pt.y - m_ptClick.y) : (pt.x - m_ptClick.x);
-			int nSlide = (nEmptyHei == 0) ? 0 : (nDragLen*(int)(m_si->nMax - m_si->nMin - m_si->nPage + 1) / nEmptyHei);
-			int nNewTrackPos = m_si->nPos + nSlide;
-			if (nNewTrackPos<m_si->nMin)
+			int nSlide = (nEmptyHei == 0) ? 0 : (nDragLen*(__int64)(psi->nMax - psi->nMin - psi->nPage + 1) / nEmptyHei);
+			int nNewTrackPos = m_nClickPos + nSlide;
+			if (nNewTrackPos<psi->nMin)
 			{
-				nNewTrackPos = m_si->nMin;
+				nNewTrackPos = psi->nMin;
 			}
-			else if (nNewTrackPos>(int)(m_si->nMax - m_si->nMin - m_si->nPage + 1))
+			else if (nNewTrackPos>(int)(psi->nMax - psi->nMin - psi->nPage + 1))
 			{
-				nNewTrackPos = m_si->nMax - m_si->nMin - m_si->nPage + 1;
+				nNewTrackPos = psi->nMax - psi->nMin - psi->nPage + 1;
 			}
-			if (nNewTrackPos != m_si->nTrackPos)
+			if (nNewTrackPos != psi->nTrackPos)
 			{
 				m_pSbHost->OnScrollUpdateThumbTrack(m_bVert,nNewTrackPos);
 			}
@@ -286,6 +289,7 @@ end:
 		int iClickPart = m_iClickPart;
 		SASSERT(iClickPart != -1);
 		m_iClickPart = -1;
+		m_nClickPos = -1;
 		m_pSbHost->OnScrollUpdatePart(m_bVert, iClickPart);
 		if (m_iHitPart != -1 && m_iHitPart!= iClickPart)
 		{
@@ -328,6 +332,8 @@ end:
 		const SCROLLINFO * psi = m_pSbHost->GetScrollBarInfo(m_bVert);
 		if(iClickPart != SB_THUMBTRACK)
 			m_pSbHost->OnScrollCommand(m_bVert, iClickPart, 0);
+
+		m_nClickPos = psi->nPos;
 
 		switch (m_iClickPart)
 		{

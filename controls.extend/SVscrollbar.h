@@ -18,14 +18,14 @@ public:
 	}
 
 	//不支持显示上下箭头
-	virtual BOOL HasArrow(){return FALSE;}
-	virtual int GetIdealSize(){
+	virtual BOOL HasArrow()const override {return FALSE;}
+	virtual int GetIdealSize() const override{
         if(!GetImage()) return 0;
         return GetImage()->Width()/m_nStates;
 	}
 protected:
 	//返回源指定部分在原位图上的位置。
-	virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical)
+	virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical) const  override
 	{
 		CRect rc;
 		if(!bVertical 

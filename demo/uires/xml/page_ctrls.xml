@@ -99,7 +99,7 @@
       </mclistview>
     </page>
     <page title="listview(fix)">
-      <listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1">
+      <listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1"  fadeInterpolator="Accelerate">
         <template itemHeight="50" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1">
           <button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
           <animateimg pos="[10,{0" skin="skin_busy" name="ani_test" tip="animateimg is used here" msgTransparent="0" />
@@ -119,8 +119,8 @@
         </template>
       </listview>
     </page>
-    <page title="listview(flex)">
-      <listview pos="5,0,-5,-5" name="lv_test_flex" dividerSize="5">
+    <page title="listview(flex)"  fadeInterpolator="Accelerate">
+      <listview pos="5,0,-5,-5" name="lv_test_flex" dividerSize="5"  fadeInterpolator="Accelerate">
         <template defHeight="50" oddHeight="50" evenHeight="60" evenSelHeight="90">
           <itemOdd colorHover="#cccccc" colorSelected="#0000ff">
             <button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
@@ -139,7 +139,7 @@
 
     </page>
     <page title="tileview">
-      <tileview pos="5,0,-5,-5" name="lv_test_tile" wantTab="1" marginSize="5" colorBkgnd="#FFFFFF">
+      <tileview pos="5,0,-5,-5" name="lv_test_tile" wantTab="1" marginSize="5" colorBkgnd="#FFFFFF"  fadeInterpolator="Accelerate">
         <template itemHeight="130" itemWidth="135" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1" skin="skin_item_bk">
           <img pos="|0,0,@100,@100" offset="-0.5,0" name="img_file_icon"/>
           <button pos="|0,[5,@115,@22" offset="-0.5,0" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
@@ -147,7 +147,7 @@
       </tileview>
     </page>
     <page title="mclistviewex">
-      <mclistviewex name="musiclist" headerHeight="48" colorSwapLine="rgb(0,0,255)" colorDropBk="rgb(0,0,255)" pos="20,20,-20,-20" sbTop="48">
+      <mclistviewex name="musiclist" headerHeight="48" colorSwapLine="rgb(0,0,255)" colorDropBk="rgb(0,0,255)" pos="20,20,-20,-20" sbTop="48"  fadeInterpolator="Accelerate">
         <header2 align="center" matchParent="1" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" cursor="hand" itemSwapEnable="1" sortHeader="0" colorText="#000000ff">
           <items>
             <item width="150">歌曲</item>
@@ -212,7 +212,7 @@
         <button name="btn_richedit_open" pos="[5,0,@120,@25">open from rtf</button>
         <button name="btn_richedit_save" pos="[5,0,@120,@25">save to rtf</button>
       </window>
-      <chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" enableDragdrop="1" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1"  autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test"/>
+      <chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" fadeInterpolator="Accelerate" enableDragdrop="1" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1"  autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test"/>
     </page>
     <page title="buttons" >
       <imgbtn name="btn_msgbox" pos="10,40" width="200" height="40" accel="ctrl+alt+f9" font="bold:1" skin="win10btn" animate="1">show msg box</imgbtn>

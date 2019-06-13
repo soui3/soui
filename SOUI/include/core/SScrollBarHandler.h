@@ -94,6 +94,7 @@ namespace SOUI
 		int  m_iClickPart;
 		CPoint m_ptClick;
 		CPoint m_ptCursor;
+		int  m_nClickPos;
 	};
 
 
