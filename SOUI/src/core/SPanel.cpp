@@ -83,7 +83,7 @@ namespace SOUI
 			sbHandler.OnDraw(pRT, SB_LINEDOWN);
 			ReleaseRenderTarget(pRT);
 		}
-		if (iPart == SB_THUMBTRACK)
+		else if (iPart == SB_THUMBTRACK)
 		{
 			CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
 			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
@@ -162,6 +162,7 @@ SPanel::SPanel()
 	, m_zDelta(0)
 	, m_sbVert(this,true)
 	, m_sbHorz(this,false)
+	, m_fadeFrames(20)
 {
 	m_nSbWid.setInvalid();
 	m_nSbArrowSize.setInvalid();

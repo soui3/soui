@@ -47,6 +47,8 @@ namespace SOUI
 			nTrackPos=pSi->nPos;
 		CRect rcAll = m_pSbHost->GetScrollBarRect(m_bVert);
 		int nLength=(IsVertical()?rcAll.Height():rcAll.Width());
+		if(nLength<=0)
+			return CRect();
 
 		int nArrowHei=m_pSbHost->GetScrollBarArrowSize(m_bVert);
 		int nInterHei=nLength-2*nArrowHei;
