@@ -173,7 +173,7 @@ LRESULT SScrollBar::OnAttrVertical(const SStringW & value, BOOL bLoading)
 }
 
 
-void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
+void SScrollBar::OnScrollUpdateThumbTrack(bool bVert, int nPos)
 {
 	CRect rcOldThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
 	m_si.nTrackPos = nPos;
@@ -187,7 +187,7 @@ void SScrollBar::OnScrollThumbTrackPos(bool bVert, int nPos)
 	NotifySbCode(SB_THUMBTRACK, m_si.nTrackPos);
 }
 
-void SScrollBar::OnScrollCommand(bool bVert, int iCmd)
+void SScrollBar::OnScrollCommand(bool bVert, int iCmd, int nPos)
 {
 	int nOldPos = m_si.nPos;
 	switch (iCmd)
@@ -197,26 +197,16 @@ void SScrollBar::OnScrollCommand(bool bVert, int iCmd)
 	case SB_PAGEDOWN:m_si.nPos += m_si.nPage; break;
 	case SB_LINEDOWN: m_si.nPos++; break;
 	case SB_THUMBPOSITION: 
-		if (m_si.nTrackPos != -1)
-		{
-			m_si.nPos = m_si.nTrackPos;
-			m_si.nTrackPos = -1;
-		}
+		m_si.nPos = nPos;
+		m_si.nTrackPos = -1;
 		break;
 	}
 	if (m_si.nPos < m_si.nMin) m_si.nPos = m_si.nMin;
 	if (m_si.nPos > m_si.nMax - (int)m_si.nPage + 1) m_si.nPos = m_si.nMax - (int)m_si.nPage + 1;
 	if (nOldPos != m_si.nPos)
 	{
-		if (iCmd != SB_THUMBPOSITION)
-		{
-			CRect rcRail = m_sbHander.GetPartRect(SScrollBarHandler::kSbRail);
-			IRenderTarget *pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND);
-			m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-			m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
-			ReleaseRenderTarget(pRT);
-		}
 		NotifySbCode(iCmd, m_si.nPos);
+		OnScrollUpdatePart(bVert, SB_THUMBTRACK);
 	}
 }
 
@@ -261,16 +251,24 @@ int SScrollBar::GetScrollFadeFrames() const
 	return m_fadeFrame;
 }
 
-void SScrollBar::UpdateScrollBar(bool bVert, int iPart)
+void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 {
 	if (iPart == -1)
 	{
-		CRect rc = GetClientRect();
+		CRect rc = GetScrollBarRect(bVert);
 		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
 		m_sbHander.OnDraw(pRT, SB_LINEUP);
 		m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
 		m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
 		m_sbHander.OnDraw(pRT, SB_LINEDOWN);
+		ReleaseRenderTarget(pRT);
+	}
+	else if (iPart == SB_THUMBTRACK)
+	{
+		CRect rc = m_sbHander.GetPartRect(SScrollBarHandler::kSbRail);
+		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);
 	}
 	else

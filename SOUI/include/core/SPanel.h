@@ -19,24 +19,12 @@
 namespace SOUI
 {
 
-#define SSB_NULL    0
-#define SSB_HORZ    1
-#define SSB_VERT    2
-#define SSB_BOTH    (SSB_HORZ|SSB_VERT)
-#define TIMER_SBWAIT    1        //启动连续滚动的定时器
-#define TIMER_SBGO    2        //连续滚动的定时器
-
-
-    typedef struct tagSBHITINFO
-    {
-        DWORD uSbCode:16;   //HIT位置
-        DWORD bVertical:16; //是否为vertical
-    } SBHITINFO,*PSBHITINFO;
-
-    inline bool operator !=(const SBHITINFO &a, const SBHITINFO &b)
-    {
-        return memcmp(&a,&b,sizeof(SBHITINFO))!=0;
-    }
+	enum SbID {
+		SSB_NULL = 0,
+		SSB_HORZ = 1,
+		SSB_VERT = 2,
+		SSB_BOTH = (SSB_HORZ | SSB_VERT),
+	};
 
     class SOUI_EXP SPanel: public SWindow, protected IScrollBarHost
     {
@@ -72,11 +60,11 @@ namespace SOUI
 		virtual ISkinObj * GetScrollBarSkin(bool bVert) const override;
 		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const override;
 		virtual int GetScrollBarArrowSize(bool bVert) const override;
-		virtual void UpdateScrollBar(bool bVert, int iPart) override;
+		virtual void OnScrollUpdatePart(bool bVert, int iPart) override;
 		virtual ISwndContainer * GetScrollBarContainer() override;
 		virtual bool IsScrollBarEnable(bool bVert) const override;
-		virtual void OnScrollThumbTrackPos(bool bVert, int nPos) override;
-		virtual void OnScrollCommand(bool bVert, int iCmd) override;
+		virtual void OnScrollUpdateThumbTrack(bool bVert, int nPos) override;
+		virtual void OnScrollCommand(bool bVert, int iCmd, int nPos) override;
 		virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) override;
 		virtual void OnScrollKillTimer(bool bVert, char id) override;
 		virtual const IInterpolator * GetScrollInterpolator() const override;
@@ -106,6 +94,8 @@ namespace SOUI
 
         void OnShowWindow(BOOL bShow, UINT nStatus);
         
+		void OnEnable(BOOL bEnable, UINT uStatus);
+
         void OnVScroll(UINT nSBCode, UINT nPos, HWND);
         void OnHScroll(UINT nSBCode, UINT nPos, HWND);
     protected:
@@ -115,7 +105,6 @@ namespace SOUI
         virtual void OnScaleChanged(int nScale);
 
 	protected:
-		int GetSbArrowSize() const;
 		int GetSbWidth() const;
 
         void ScrollUpdate();
@@ -137,12 +126,7 @@ namespace SOUI
 		SLayoutSize	   m_nSbTop;    //滚动条距离上边距离
 		SLayoutSize    m_nSbBottom; //滚动条距离下边距离
         
-        enum {
-        DSB_NULL=0,
-        DSB_VERT,
-        DSB_HORZ,
-        }           m_dragSb;
-        SBHITINFO        m_HitInfo;
+        SbID		   m_dragSb,m_hitSb;
 
         UINT           m_wBarVisible;    //滚动条显示信息
 		UINT           m_wBarEnable;    //滚动条可操作信息
@@ -189,6 +173,7 @@ namespace SOUI
             MSG_WM_MOUSEWHEEL(OnMouseWheel)
             MSG_WM_TIMER_EX(OnTimer)
             MSG_WM_SHOWWINDOW(OnShowWindow)
+			MSG_WM_ENABLE_EX(OnEnable)
             MSG_WM_VSCROLL(OnVScroll)
             MSG_WM_HSCROLL(OnHScroll)
         SOUI_MSG_MAP_END()

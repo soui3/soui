@@ -15,11 +15,11 @@ namespace SOUI
 		virtual ISkinObj* GetScrollBarSkin(bool bVert) const = 0;
 		virtual const SCROLLINFO * GetScrollBarInfo(bool bVert) const = 0;
 		virtual int GetScrollBarArrowSize(bool bVert) const = 0;
-		virtual void UpdateScrollBar(bool bVert, int iPart) = 0;
+		virtual void OnScrollUpdatePart(bool bVert, int iPart) = 0;
+		virtual void OnScrollUpdateThumbTrack(bool bVert, int nPos) = 0;
 		virtual ISwndContainer * GetScrollBarContainer() = 0;
 		virtual bool IsScrollBarEnable(bool bVert) const = 0;
-		virtual void OnScrollThumbTrackPos(bool bVert,int nPos) = 0;
-		virtual void OnScrollCommand(bool bVert, int iCmd) = 0;
+		virtual void OnScrollCommand(bool bVert, int iCmd,int nPos) = 0;
 		virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) = 0;
 		virtual void OnScrollKillTimer(bool bVert, char id) = 0;
 		virtual const IInterpolator * GetScrollInterpolator() const = 0;
@@ -86,7 +86,7 @@ namespace SOUI
 			FADEIN =1,
 		};
 
-		IScrollBarHost * m_pCB;
+		IScrollBarHost * m_pSbHost;
 		bool m_bVert;
 		int	 m_iFrame;
 		FADEMODE m_fadeMode;

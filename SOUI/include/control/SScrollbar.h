@@ -96,15 +96,15 @@ protected:
 
 	virtual int GetScrollBarArrowSize(bool bVert) const override;
 
-	virtual void UpdateScrollBar(bool bVert, int iPart) override;
+	virtual void OnScrollUpdatePart(bool bVert, int iPart) override;
 
 	virtual ISwndContainer * GetScrollBarContainer() override;
 
 	virtual bool IsScrollBarEnable(bool bVert) const override;
 
-	virtual void OnScrollThumbTrackPos(bool bVert, int nPos) override;
+	virtual void OnScrollUpdateThumbTrack(bool bVert, int nPos) override;
 
-	virtual void OnScrollCommand(bool bVert, int iCmd) override;
+	virtual void OnScrollCommand(bool bVert, int iCmd, int nPos) override;
 
 	virtual void OnScrollSetTimer(bool bVert, char id, UINT uElapse) override;
 

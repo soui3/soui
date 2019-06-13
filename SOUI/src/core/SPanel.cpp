@@ -64,11 +64,40 @@ namespace SOUI
 
 	int SPanel::GetScrollBarArrowSize(bool bVert) const
 	{
-		return m_nSbWid.toPixelSize(GetScale());
+		if (m_nSbArrowSize.isValid()) return m_nSbArrowSize.toPixelSize(GetScale());
+		SASSERT(m_pSkinSb);
+		if (!m_pSkinSb->HasArrow()) return 0;
+		return m_pSkinSb->GetIdealSize();
 	}
 
-	void SPanel::UpdateScrollBar(bool bVert, int iPart)
+	void SPanel::OnScrollUpdatePart(bool bVert, int iPart)
 	{
+		SScrollBarHandler & sbHandler = bVert ? m_sbVert : m_sbHorz;
+		if (iPart == -1)
+		{
+			CRect rc = GetScrollBarRect(bVert);
+			IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND,FALSE);
+			sbHandler.OnDraw(pRT, SB_LINEUP);
+			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+			sbHandler.OnDraw(pRT, SB_THUMBTRACK);
+			sbHandler.OnDraw(pRT, SB_LINEDOWN);
+			ReleaseRenderTarget(pRT);
+		}
+		if (iPart == SB_THUMBTRACK)
+		{
+			CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
+			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
+			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+			sbHandler.OnDraw(pRT, SB_THUMBTRACK);
+			ReleaseRenderTarget(pRT);
+		}
+		else
+		{
+			CRect rcPart = sbHandler.GetPartRect(iPart);
+			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcPart, OLEDC_PAINTBKGND, FALSE);
+			sbHandler.OnDraw(pRT, iPart);
+			ReleaseRenderTarget(pRT);
+		}
 	}
 
 	ISwndContainer * SPanel::GetScrollBarContainer()
@@ -81,12 +110,26 @@ namespace SOUI
 		return !!(m_wBarEnable&(bVert?SSB_VERT:SSB_HORZ));
 	}
 
-	void SPanel::OnScrollThumbTrackPos(bool bVert, int nPos)
+	void SPanel::OnScrollUpdateThumbTrack(bool bVert, int nPos)
 	{
+		SScrollBarHandler &sbHandler = bVert ? m_sbVert : m_sbHorz;
+		SCROLLINFO &si = bVert ? m_siVer : m_siHoz;
+		CRect rcOldThumb = sbHandler.GetPartRect(SB_THUMBTRACK);
+		si.nTrackPos = nPos;
+		CRect rcThumb = sbHandler.GetPartRect(SB_THUMBTRACK);
+		CRect rcUnion;
+		rcUnion.UnionRect(rcOldThumb, rcThumb);
+		IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND,FALSE);
+		sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		sbHandler.OnDraw(pRT, SB_THUMBTRACK);
+		ReleaseRenderTarget(pRT);
+		OnScroll(bVert, SB_THUMBTRACK, nPos);
 	}
 
-	void SPanel::OnScrollCommand(bool bVert, int iCmd)
+	void SPanel::OnScrollCommand(bool bVert, int iCmd, int nPos)
 	{
+		SASSERT(iCmd != SB_THUMBTRACK);
+		OnScroll(bVert, iCmd, nPos);
 	}
 
 	void SPanel::OnScrollSetTimer(bool bVert, char id, UINT uElapse)
@@ -110,7 +153,8 @@ namespace SOUI
 	}
 
 SPanel::SPanel()
-    :m_dragSb(DSB_NULL)
+    :m_dragSb(SSB_NULL)
+	,m_hitSb(SSB_NULL)
     ,m_wBarVisible(0)
     ,m_wBarEnable(SSB_BOTH)
     ,m_dwUpdateInterval(DEF_UPDATEINTERVAL)
@@ -128,10 +172,8 @@ SPanel::SPanel()
 
     memset(&m_siHoz,0,sizeof(SCROLLINFO));
     memset(&m_siVer,0,sizeof(SCROLLINFO));
-    m_HitInfo.uSbCode=(DWORD)-1;
     m_siHoz.nTrackPos=(DWORD)-1;
     m_siVer.nTrackPos=(DWORD)-1;
-    
 }
 
 BOOL SPanel::ShowScrollBar( int wBar, BOOL bShow )
@@ -201,7 +243,7 @@ BOOL SPanel::SetScrollPos(BOOL bVertical, int nNewPos,BOOL bRedraw)
 	{
 		if (bRedraw)
 		{
-			CRect rcSb = GetScrollBarRect(bVertical);
+			CRect rcSb = GetScrollBarRect(!!bVertical);
 			InvalidateRect(rcSb);
 		}
 		Invalidate();
@@ -211,7 +253,8 @@ BOOL SPanel::SetScrollPos(BOOL bVertical, int nNewPos,BOOL bRedraw)
 
 int SPanel::GetScrollPos(BOOL bVertical)
 {
-    return bVertical?m_siVer.nPos:m_siHoz.nPos;
+	SCROLLINFO &si = bVertical ? m_siVer : m_siHoz;
+	return si.nTrackPos != -1 ? si.nTrackPos : si.nPos;
 }
 
 
@@ -226,7 +269,7 @@ BOOL SPanel::SetScrollRange( BOOL bVertical,int nMinPos,int nMaxPos,BOOL bRedraw
 
     if(bRedraw)
     {
-        CRect rcSb=GetScrollBarRect(bVertical);
+        CRect rcSb=GetScrollBarRect(!!bVertical);
         InvalidateRect(rcSb);
     }
     return TRUE;
@@ -299,7 +342,7 @@ CRect SPanel::GetClientRect() const
 
 BOOL SPanel::OnNcHitTest(CPoint pt)
 {
-    if(m_dragSb!=DSB_NULL) return TRUE;
+    if(m_dragSb!=SSB_NULL) return TRUE;
     return !m_rcClient.PtInRect(pt);
 }
 
@@ -307,30 +350,33 @@ void SPanel::OnNcLButtonDown(UINT nFlags, CPoint point)
 {
 	SetCapture();
 	if (m_sbVert.OnMouseDown(point))
-		m_dragSb = DSB_VERT;
+		m_dragSb = SSB_VERT;
 	else if (m_sbHorz.OnMouseDown(point))
-		m_dragSb = DSB_HORZ;
+		m_dragSb = SSB_HORZ;
+	else
+		m_dragSb = SSB_NULL;
 }
 
 void SPanel::OnNcLButtonUp(UINT nFlags,CPoint pt)
 {
-    if(m_dragSb!=DSB_NULL)
+    if(m_dragSb!=SSB_NULL)
     {
-		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		SScrollBarHandler & sbHandler = m_dragSb == SSB_VERT ? m_sbVert : m_sbHorz;
 		sbHandler.OnMouseUp(pt);
-		m_dragSb=DSB_NULL;
-    }
+		m_dragSb=SSB_NULL;
+		OnNcMouseMove(nFlags, pt);
+	}
 	ReleaseCapture();
 }
 
 void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
 {
-    if(m_dragSb!=DSB_NULL)
+    if(m_dragSb!=SSB_NULL)
     {
-		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
-		CRect rcSb = GetScrollBarRect(m_dragSb == DSB_VERT);
-		bool bInSbNew = rcSb.PtInRect(point);
-		bool bInSbOld = sbHandler.GetHitPart() != -1;
+		SScrollBarHandler & sbHandler = m_dragSb == SSB_VERT ? m_sbVert : m_sbHorz;
+		CRect rcSb = GetScrollBarRect(m_dragSb == SSB_VERT);
+		BOOL bInSbNew = rcSb.PtInRect(point);
+		BOOL bInSbOld = sbHandler.GetHitPart() != -1;
 		if (bInSbNew != bInSbOld)
 		{
 			if (bInSbOld)
@@ -339,36 +385,56 @@ void SPanel::OnNcMouseMove(UINT nFlags, CPoint point)
 				sbHandler.OnMouseHover(point);
 		}
 		sbHandler.OnMouseMove(point);
+
+		m_hitSb = bInSbNew ? m_dragSb : SSB_NULL;
     }
     else
     {
 		if (m_sbVert.HitTest(point) != -1)
 		{
-			m_sbVert.OnMouseMove(point);
+			if (m_hitSb == SSB_NULL)
+				m_sbVert.OnMouseHover(point);
+			else 
+				m_sbVert.OnMouseMove(point);
+			m_hitSb = SSB_VERT;
 		}
 		else if (m_sbHorz.HitTest(point) != -1)
 		{
-			m_sbHorz.OnMouseMove(point);
+			if (m_hitSb == SSB_NULL)
+				m_sbHorz.OnMouseHover(point);
+			else
+				m_sbHorz.OnMouseMove(point);
+			m_hitSb = SSB_HORZ;
+		}
+		else 
+		{
+			if (m_hitSb != SSB_NULL)
+			{
+				SScrollBarHandler & sbHandler = m_hitSb == SSB_VERT ? m_sbVert : m_sbHorz;
+				sbHandler.OnMouseLeave();
+			}
+			m_hitSb = SSB_NULL;
 		}
     }
 }
 
 void SPanel::OnNcMouseLeave()
 {
-    if(m_HitInfo.uSbCode==WORD(-1)) 
-		return;
-	if (m_dragSb != DSB_NULL)
+	if (m_dragSb != SSB_NULL)
 	{
-		SScrollBarHandler & sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
-		sbHandler.OnMouseLeave();
+		if (m_hitSb == m_dragSb)
+		{
+			SScrollBarHandler & sbHandler = m_dragSb == SSB_VERT ? m_sbVert : m_sbHorz;
+			sbHandler.OnMouseLeave();
+			m_hitSb = SSB_NULL;
+		}
 	}
-    else if(IsScrollBarEnable(m_HitInfo.bVertical))
+    else if(m_hitSb != SSB_NULL)
     {
-		SScrollBarHandler & sbHandler = m_HitInfo.bVertical ? m_sbVert : m_sbHorz;
+		SScrollBarHandler & sbHandler = m_hitSb == SSB_VERT ? m_sbVert : m_sbHorz;
 		sbHandler.OnMouseLeave();
+		m_hitSb = SSB_NULL;
     }
-	SBHITINFO uHit = { (DWORD)-1,(DWORD)0 };
-	m_HitInfo=uHit;
 }
 
 //滚动条显示或者隐藏时发送该消息
@@ -413,9 +479,13 @@ BOOL SPanel::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     return FALSE;
 }
 
-
 BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 {
+	if (uCode == SB_THUMBTRACK)
+	{
+		Invalidate();
+		return TRUE;
+	}
     SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
     int nNewPos=psi->nPos;
     switch(uCode)
@@ -432,11 +502,9 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
     case SB_PAGEDOWN:
         nNewPos+=psi->nPage;
         break;
-    case SB_THUMBTRACK:
-        nNewPos=nPos;
-        break;
     case SB_THUMBPOSITION:
         nNewPos=nPos;
+		psi->nTrackPos = -1;
         break;
     case SB_TOP:
         nNewPos = psi->nMin;
@@ -454,14 +522,9 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 		return FALSE;
 
 	psi->nPos = nNewPos;
-	if (uCode != SB_THUMBTRACK && IsVisible(TRUE) && IsScrollBarEnable(bVertical))
+	if (IsVisible(TRUE) && HasScrollBar(bVertical))
 	{
-		SScrollBarHandler& sbHandler = bVertical ? m_sbVert : m_sbHorz;
-		CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
-		SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
-		sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
-		sbHandler.OnDraw(pRT, SB_THUMBTRACK);
-		ReleaseRenderTarget(pRT);
+		OnScrollUpdatePart(!!bVertical, SB_THUMBTRACK);
 	}
 	Invalidate();
 	return TRUE;
@@ -469,11 +532,11 @@ BOOL SPanel::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 
 void SPanel::OnTimer( char cTimerID )
 {
-	if (cTimerID == IScrollBarHost::kTime_Go ||
-		cTimerID == IScrollBarHost::kTime_Wait)
+	if (cTimerID == IScrollBarHost::Timer_Go ||
+		cTimerID == IScrollBarHost::Timer_Wait)
 	{
-		SASSERT(m_dragSb != DSB_NULL);
-		SScrollBarHandler& sbHandler = m_dragSb == DSB_VERT ? m_sbVert : m_sbHorz;
+		SASSERT(m_dragSb != SSB_NULL);
+		SScrollBarHandler& sbHandler = m_dragSb == SSB_VERT ? m_sbVert : m_sbHorz;
 		sbHandler.OnTimer(cTimerID);
 	}
 }
@@ -490,11 +553,20 @@ void SPanel::ScrollUpdate()
 
 void SPanel::OnShowWindow( BOOL bShow, UINT nStatus )
 {
-    if(!bShow && m_dragSb!=DSB_NULL)
-    {//隐藏窗口时正有可能正在拖动滚动条，需要处理一下。
-        OnNcLButtonUp(0,CPoint());
-    }
-    __super::OnShowWindow(bShow,nStatus);
+    SWindow::OnShowWindow(bShow,nStatus);
+	if (!IsVisible(TRUE) && m_dragSb != SSB_NULL)
+	{//隐藏窗口时正有可能正在拖动滚动条，需要处理一下。
+		OnNcLButtonUp(0, CPoint(-1, -1));
+	}
+}
+
+void SPanel::OnEnable(BOOL bEnable, UINT uStatus)
+{
+	SWindow::OnEnable(bEnable, uStatus);
+	if (IsDisabled(TRUE) && m_dragSb != SSB_NULL)
+	{
+		OnNcLButtonUp(0, CPoint(-1, -1));
+	}
 }
 
 HRESULT SPanel::OnAttrScrollbarSkin( SStringW strValue,BOOL bLoading )
@@ -538,14 +610,6 @@ void SPanel::OnScaleChanged(int nScale)
 		m_pSkinSb = (SSkinScrollbar*)pSkin;
 		SSendMessage(WM_NCCALCSIZE);
 	}
-}
-
-int SPanel::GetSbArrowSize() const
-{
-	if(m_nSbArrowSize.isValid()) return m_nSbArrowSize.toPixelSize(GetScale());
-	SASSERT(m_pSkinSb);
-	if(!m_pSkinSb->HasArrow()) return 0;
-	return m_pSkinSb->GetIdealSize();
 }
 
 int SPanel::GetSbWidth() const
@@ -596,8 +660,10 @@ void SScrollView::SetViewOrigin(CPoint pt)
     if(m_ptOrigin==pt) return;
     CPoint ptOld=m_ptOrigin;
     m_ptOrigin=pt;
-    SetScrollPos(FALSE,m_ptOrigin.x,TRUE);
-    SetScrollPos(TRUE,m_ptOrigin.y,TRUE);
+	if(GetScrollPos(FALSE) != pt.x)
+		SetScrollPos(FALSE,m_ptOrigin.x,TRUE);
+	if(GetScrollPos(TRUE) != pt.y)
+		SetScrollPos(TRUE,m_ptOrigin.y,TRUE);
 
 	m_layoutDirty = dirty_self;
 
