@@ -298,6 +298,13 @@ int SPanel::OnCreate(LPVOID)
     return 0;
 }
 
+void SPanel::OnDestroy()
+{
+	m_sbHorz.OnDestroy();
+	m_sbVert.OnDestroy();
+	SWindow::OnDestroy();
+}
+
 void SPanel::OnNcPaint(IRenderTarget *pRT)
 {
     __super::OnNcPaint(pRT);

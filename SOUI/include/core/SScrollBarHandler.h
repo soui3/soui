@@ -63,6 +63,8 @@ namespace SOUI
 
 		void OnTimer(char id);
 
+		void OnDestroy();
+
 		int HitTest(CPoint pt) const;
 
 	protected:

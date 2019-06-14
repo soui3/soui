@@ -167,6 +167,15 @@ end:
 		}
 	}
 
+	void SScrollBarHandler::OnDestroy()
+	{
+		if (m_fadeMode != FADE_STOP)
+		{
+			m_fadeMode = FADE_STOP;
+			GetContainer()->UnregisterTimelineHandler(this);
+		}
+	}
+
 	void SScrollBarHandler::OnMouseHover(CPoint pt)
 	{
 		if (!m_pSbHost->IsScrollBarEnable(m_bVert))

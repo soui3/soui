@@ -12,7 +12,7 @@ SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
     , m_uAllowSize((UINT)-1)
 	, m_fadeFrame(30)
-    , m_sbHander(this)
+    , m_sbHandler(this)
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
     m_si.nTrackPos=-1;
@@ -25,7 +25,7 @@ SScrollBar::~SScrollBar()
 
 BOOL SScrollBar::IsVertical() const
 {
-    return m_sbHander.IsVertical();
+    return m_sbHandler.IsVertical();
 }
 
 int SScrollBar::SetPos(int nPos)
@@ -36,16 +36,16 @@ int SScrollBar::SetPos(int nPos)
     {
         if(m_si.nTrackPos==-1)
         {
-            CRect rcOldThumb=m_sbHander.GetPartRect(SB_THUMBTRACK);
+            CRect rcOldThumb=m_sbHandler.GetPartRect(SB_THUMBTRACK);
             m_si.nTrackPos=nPos;
-            CRect rcNewThumb=m_sbHander.GetPartRect(SB_THUMBTRACK);
+            CRect rcNewThumb=m_sbHandler.GetPartRect(SB_THUMBTRACK);
             CRect rcUnion;
             rcUnion.UnionRect(&rcOldThumb,&rcNewThumb);
 			if (IsVisible())
 			{
 				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-				m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-				m_sbHander.OnDraw(pRT,SB_THUMBTRACK);
+				m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+				m_sbHandler.OnDraw(pRT,SB_THUMBTRACK);
 				ReleaseRenderTarget(pRT);
 			}         
             m_si.nTrackPos=-1;
@@ -83,43 +83,43 @@ void SScrollBar::OnInitFinished(pugi::xml_node xmlNode)
 void SScrollBar::OnPaint(IRenderTarget * pRT)
 {
     if(!m_pSkin) return;
-	m_sbHander.OnDraw(pRT,SB_LINEUP);
-	m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-	m_sbHander.OnDraw(pRT,SB_THUMBTRACK);
-	m_sbHander.OnDraw(pRT,SB_LINEDOWN);
+	m_sbHandler.OnDraw(pRT,SB_LINEUP);
+	m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+	m_sbHandler.OnDraw(pRT,SB_THUMBTRACK);
+	m_sbHandler.OnDraw(pRT,SB_LINEDOWN);
 }
 
 void SScrollBar::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	m_sbHander.OnMouseUp(point);
+	m_sbHandler.OnMouseUp(point);
 	ReleaseCapture();
 }
 
 void SScrollBar::OnLButtonDown(UINT nFlags, CPoint point)
 {
     SetCapture();
-	m_sbHander.OnMouseDown(point);
+	m_sbHandler.OnMouseDown(point);
 }
 
 
 void SScrollBar::OnMouseMove(UINT nFlags, CPoint point)
 {
-	m_sbHander.OnMouseMove(point);
+	m_sbHandler.OnMouseMove(point);
 }
 
 void SScrollBar::OnTimer(char nIDEvent)
 {
-	m_sbHander.OnTimer(nIDEvent);
+	m_sbHandler.OnTimer(nIDEvent);
 }
 
 void SScrollBar::OnMouseHover(UINT nFlags, CPoint ptPos)
 {
-	m_sbHander.OnMouseHover(ptPos);
+	m_sbHandler.OnMouseHover(ptPos);
 }
 
 void SScrollBar::OnMouseLeave()
 {
-	m_sbHander.OnMouseLeave();
+	m_sbHandler.OnMouseLeave();
 }
 
 
@@ -156,6 +156,12 @@ LRESULT SScrollBar::OnGetScrollInfo(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return TRUE;
 }
 
+void SScrollBar::OnDestroy()
+{
+	m_sbHandler.OnDestroy();
+	SWindow::OnDestroy();
+}
+
 void SScrollBar::NotifySbCode(int nCode,int nPos)
 {
     EventScroll evt(this);
@@ -168,21 +174,21 @@ void SScrollBar::NotifySbCode(int nCode,int nPos)
 LRESULT SScrollBar::OnAttrVertical(const SStringW & value, BOOL bLoading)
 {
 	bool bVert = STRINGASBOOL(value);
-	m_sbHander.SetVertical(bVert);
+	m_sbHandler.SetVertical(bVert);
 	return bLoading?S_FALSE:S_OK;
 }
 
 
 void SScrollBar::OnScrollUpdateThumbTrack(bool bVert, int nPos)
 {
-	CRect rcOldThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
+	CRect rcOldThumb = m_sbHandler.GetPartRect(SB_THUMBTRACK);
 	m_si.nTrackPos = nPos;
-	CRect rcThumb = m_sbHander.GetPartRect(SB_THUMBTRACK);
+	CRect rcThumb = m_sbHandler.GetPartRect(SB_THUMBTRACK);
 	CRect rcUnion;
 	rcUnion.UnionRect(rcOldThumb, rcThumb);
 	IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
-	m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-	m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
+	m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+	m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 	ReleaseRenderTarget(pRT);
 	NotifySbCode(SB_THUMBTRACK, m_si.nTrackPos);
 }
@@ -257,25 +263,25 @@ void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 	{
 		CRect rc = GetScrollBarRect(bVert);
 		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
-		m_sbHander.OnDraw(pRT, SB_LINEUP);
-		m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-		m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
-		m_sbHander.OnDraw(pRT, SB_LINEDOWN);
+		m_sbHandler.OnDraw(pRT, SB_LINEUP);
+		m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
+		m_sbHandler.OnDraw(pRT, SB_LINEDOWN);
 		ReleaseRenderTarget(pRT);
 	}
 	else if (iPart == SB_THUMBTRACK)
 	{
-		CRect rc = m_sbHander.GetPartRect(SScrollBarHandler::kSbRail);
+		CRect rc = m_sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
 		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
-		m_sbHander.OnDraw(pRT, SScrollBarHandler::kSbRail);
-		m_sbHander.OnDraw(pRT, SB_THUMBTRACK);
+		m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);
 	}
 	else
 	{
-		CRect rc = m_sbHander.GetPartRect(iPart);
+		CRect rc = m_sbHandler.GetPartRect(iPart);
 		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
-		m_sbHander.OnDraw(pRT, iPart);
+		m_sbHandler.OnDraw(pRT, iPart);
 		ReleaseRenderTarget(pRT);
 	}
 }

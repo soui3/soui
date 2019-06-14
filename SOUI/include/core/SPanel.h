@@ -69,35 +69,7 @@ namespace SOUI
 		virtual void OnScrollKillTimer(bool bVert, char id) override;
 		virtual const IInterpolator * GetScrollInterpolator() const override;
 		virtual int GetScrollFadeFrames() const override;
-    protected:
-        int OnCreate(LPVOID);
 
-        void OnNcPaint(IRenderTarget *pRT);
-
-        virtual BOOL OnNcHitTest(CPoint pt);
-
-        void OnNcLButtonDown(UINT nFlags, CPoint point);
-
-        void OnNcLButtonUp(UINT nFlags,CPoint pt);
-
-        void OnNcMouseMove(UINT nFlags, CPoint point) ;
-
-
-        void OnNcMouseLeave();
-
-        //滚动条显示或者隐藏时发送该消息
-        LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
-
-        BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-
-        void OnTimer(char cTimerID);
-
-        void OnShowWindow(BOOL bShow, UINT nStatus);
-        
-		void OnEnable(BOOL bEnable, UINT uStatus);
-
-        void OnVScroll(UINT nSBCode, UINT nPos, HWND);
-        void OnHScroll(UINT nSBCode, UINT nPos, HWND);
     protected:
         virtual int  GetScrollLineSize(BOOL bVertical);
         virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
@@ -156,13 +128,46 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"sbTop", m_nSbTop, TRUE)
 			ATTR_LAYOUTSIZE(L"sbBottom", m_nSbBottom, TRUE)
 
-			ATTR_INT(L"fadeSpeed", m_fadeFrames, FALSE)
-			ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator, FALSE)
+			ATTR_INT(L"sbFadeSpeed", m_fadeFrames, FALSE)
+			ATTR_INTERPOLATOR(L"sbFadeInterpolator", m_fadeInterpolator, FALSE)
 			ATTR_CHAIN_PTR(m_fadeInterpolator, 0)
         SOUI_ATTRS_END()
 
+	protected:
+		int OnCreate(LPVOID);
+
+		void OnDestroy();
+		
+		void OnNcPaint(IRenderTarget *pRT);
+
+		virtual BOOL OnNcHitTest(CPoint pt);
+
+		void OnNcLButtonDown(UINT nFlags, CPoint point);
+
+		void OnNcLButtonUp(UINT nFlags, CPoint pt);
+
+		void OnNcMouseMove(UINT nFlags, CPoint point);
+
+
+		void OnNcMouseLeave();
+
+		//滚动条显示或者隐藏时发送该消息
+		LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
+
+		BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+
+		void OnTimer(char cTimerID);
+
+		void OnShowWindow(BOOL bShow, UINT nStatus);
+
+		void OnEnable(BOOL bEnable, UINT uStatus);
+
+		void OnVScroll(UINT nSBCode, UINT nPos, HWND);
+		void OnHScroll(UINT nSBCode, UINT nPos, HWND);
+
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
+			MSG_WM_DESTROY(OnDestroy)
             MSG_WM_NCPAINT_EX(OnNcPaint)
             MSG_WM_NCCALCSIZE(OnNcCalcSize)
             MSG_WM_NCLBUTTONDOWN(OnNcLButtonDown)

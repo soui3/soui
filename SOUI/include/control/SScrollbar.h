@@ -124,6 +124,33 @@ protected:
     virtual void OnInitFinished(pugi::xml_node xmlNode);
 
     /**
+     * SScrollBar::NotifySbCode
+     * @brief    通知 
+     * @param    UINT uCode  -- 消息码
+     * @param    int nPos  -- 坐标
+     *
+     * Describe  自定义消息响应函数 
+     */
+    void NotifySbCode(int nCode,int nPos);
+
+protected:
+	LRESULT OnAttrVertical(const SStringW &value, BOOL bLoading);
+
+    SOUI_ATTRS_BEGIN()
+        ATTR_SKIN(L"skin", m_pSkin, TRUE)
+        ATTR_UINT(L"arrowSize", m_uAllowSize, TRUE)
+        ATTR_INT(L"min", m_si.nMin, TRUE)
+        ATTR_INT(L"max", m_si.nMax, TRUE)
+        ATTR_INT(L"value", m_si.nPos, TRUE)
+        ATTR_INT(L"page", m_si.nPage, TRUE)
+		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
+		ATTR_CUSTOM(L"vertical",OnAttrVertical)
+		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
+		ATTR_CHAIN_PTR(m_fadeInterpolator,0)
+    SOUI_ATTRS_END()
+
+protected:
+	/**
      * SScrollBar::OnPaint
      * @brief    绘制
      * @param    IRenderTarget * pRT  -- 绘画设备
@@ -211,31 +238,7 @@ protected:
      */
     LRESULT OnGetScrollInfo(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    /**
-     * SScrollBar::NotifySbCode
-     * @brief    通知 
-     * @param    UINT uCode  -- 消息码
-     * @param    int nPos  -- 坐标
-     *
-     * Describe  自定义消息响应函数 
-     */
-    void NotifySbCode(int nCode,int nPos);
-
-protected:
-	LRESULT OnAttrVertical(const SStringW &value, BOOL bLoading);
-
-    SOUI_ATTRS_BEGIN()
-        ATTR_SKIN(L"skin", m_pSkin, TRUE)
-        ATTR_UINT(L"arrowSize", m_uAllowSize, TRUE)
-        ATTR_INT(L"min", m_si.nMin, TRUE)
-        ATTR_INT(L"max", m_si.nMax, TRUE)
-        ATTR_INT(L"value", m_si.nPos, TRUE)
-        ATTR_INT(L"page", m_si.nPage, TRUE)
-		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
-		ATTR_CUSTOM(L"vertical",OnAttrVertical)
-		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
-		ATTR_CHAIN_PTR(m_fadeInterpolator,0)
-    SOUI_ATTRS_END()
+	void OnDestroy();
 
     SOUI_MSG_MAP_BEGIN()
         MSG_WM_LBUTTONDOWN(OnLButtonDown)
@@ -246,6 +249,7 @@ protected:
 		MSG_WM_MOUSEHOVER(OnMouseHover)
         MSG_WM_TIMER_EX(OnTimer)
         MSG_WM_PAINT_EX(OnPaint)
+		MSG_WM_DESTROY(OnDestroy)
         MESSAGE_HANDLER_EX(SBM_SETSCROLLINFO,OnSetScrollInfo)
         MESSAGE_HANDLER_EX(SBM_GETSCROLLINFO,OnGetScrollInfo)
     SOUI_MSG_MAP_END()
@@ -259,7 +263,7 @@ protected:
 	int			m_fadeFrame;
 	SAutoRefPtr<IInterpolator> m_fadeInterpolator;
 
-	SScrollBarHandler m_sbHander;
+	SScrollBarHandler m_sbHandler;
 
 };
 
