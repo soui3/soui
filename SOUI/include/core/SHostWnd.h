@@ -215,9 +215,6 @@ protected:
 
     void OnTimer(UINT_PTR idEvent);
 
-    void OnSwndTimer(char cTimerID);
-
-
     LRESULT OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     LRESULT OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -304,6 +301,8 @@ protected:// IContainer
     virtual IScriptModule * GetScriptModule();
 
 	virtual int GetScale() const;
+protected:
+	virtual void OnNextFrame() override;
 protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);

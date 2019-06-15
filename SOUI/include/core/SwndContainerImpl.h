@@ -13,9 +13,10 @@
 
 #pragma  once
 
-#include "SDropTargetDispatcher.h"
-#include "FocusManager.h"
-#include "scaret.h"
+#include <core/SDropTargetDispatcher.h>
+#include <core/FocusManager.h>
+#include <core/scaret.h>
+#include <core/STimerlineHandlerMgr.h>
 
 namespace SOUI
 {
@@ -101,9 +102,10 @@ namespace SOUI
 
         BOOL        m_bZorderDirty;
 
-        SList<ITimelineHandler*>    m_lstTimelineHandler;
         SList<SWND>                 m_lstTrackMouseEvtWnd;
 		SAutoRefPtr<ICaret>			m_caret;
+
+		STimerlineHandlerMgr	    m_timelineHandlerMgr;
     };
 
 }//namespace SOUI

@@ -4,7 +4,9 @@
 
 namespace SOUI{
 
-    SCaret::SCaret():m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
+    SCaret::SCaret(ISwndContainer *pContainer)
+		:m_pContainer(pContainer)
+		,m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
 		,m_crCaret(RGBA(0,0,0,255)), m_nFrames(30),m_bAniCaret(FALSE)
     {
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
@@ -51,10 +53,10 @@ namespace SOUI{
 		pRT->DrawBitmap(rcCaret, m_bmpCaret, 0, 0,m_byAlpha);
 	}
 
-	BOOL SCaret::NextFrame()
+	void SCaret::OnNextFrame()
 	{
 		if (!m_bVisible)
-			return FALSE;
+			return;
 		m_iFrame++;
 		if (m_bAniCaret)
 		{
@@ -63,7 +65,7 @@ namespace SOUI{
 				m_iFrame = 0;
 			}
 			m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation((1.0f - m_iFrame*1.0f / m_nFrames)));
-			return TRUE;
+			m_pContainer->OnRedraw(GetRect());
 		}
 		else
 		{
@@ -71,11 +73,7 @@ namespace SOUI{
 			{
 				m_bDrawCaret = !m_bDrawCaret;
 				m_iFrame = 0;
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
+				m_pContainer->OnRedraw(GetRect());
 			}
 		}
 	}

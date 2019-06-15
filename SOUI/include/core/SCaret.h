@@ -7,16 +7,18 @@ namespace SOUI{
     {
 		SOUI_CLASS_NAME_EX(SCaret,L"caret", None)
     public:
-        SCaret();
+        SCaret(ISwndContainer *pContainer);
 	public:
 		// 通过 ICaret 继承
 		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) override;
 		virtual void Draw(IRenderTarget * pRT) override;
-		virtual BOOL NextFrame() override;
 		virtual void SetPosition(int x, int y) override;
 		virtual BOOL SetVisible(BOOL bVisible) override;
 		virtual BOOL IsVisible() const  override;
 		virtual RECT GetRect() const override;
+
+	public:
+		virtual void OnNextFrame() override;
 
 	public:
 		SOUI_ATTRS_BEGIN()
@@ -38,6 +40,7 @@ namespace SOUI{
 		COLORREF m_crCaret;
 		int		m_nFrames;
 		SAutoRefPtr<IInterpolator> m_AniInterpolator;
+		ISwndContainer*			m_pContainer;
 	};
 }
 

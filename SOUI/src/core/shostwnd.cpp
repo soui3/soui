@@ -7,6 +7,7 @@
 #include "helper/SplitString.h"
 
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
+#include <core/SAnimatorPulse.h>
 
 namespace SOUI
 {
@@ -562,8 +563,7 @@ void SHostWnd::OnTimer(UINT_PTR idEvent)
         SWindow *pSwnd=SWindowMgr::GetWindow((SWND)sTimerID.swnd);
         if(pSwnd)
         {
-            if(pSwnd==this) OnSwndTimer(sTimerID.uTimerID);//由于DUIWIN采用了ATL一致的消息映射表模式，因此在HOST中不能有DUI的消息映射表（重复会导致SetMsgHandled混乱)
-            else pSwnd->SSendMessage(WM_TIMER,sTimerID.uTimerID,0);
+            pSwnd->SSendMessage(WM_TIMER,sTimerID.uTimerID,0);
         }
         else
         {
@@ -577,13 +577,6 @@ void SHostWnd::OnTimer(UINT_PTR idEvent)
     }
 }
 
-void SHostWnd::OnSwndTimer( char cTimerID )
-{
-    if(cTimerID==TIMER_NEXTFRAME)
-    {
-        if(!::IsIconic(m_hWnd)) OnNextFrame();
-    }
-}
 
 LRESULT SHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -1148,17 +1141,37 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 
 BOOL SHostWnd::RegisterTimelineHandler( ITimelineHandler *pHandler )
 {
+	bool bEmpty1=m_timelineHandlerMgr.IsEmpty();
     BOOL bRet = SwndContainerImpl::RegisterTimelineHandler(pHandler);
-    if(bRet && m_lstTimelineHandler.GetCount()==1) SWindow::SetTimer(TIMER_NEXTFRAME,10);
+	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
+	if(bEmpty1 && !bEmpty2)
+	{
+		SAnimatorPulse::getSingletonPtr()->RegisterTimelineHandler(this);
+	}
     return bRet;
 }
 
 BOOL SHostWnd::UnregisterTimelineHandler( ITimelineHandler *pHandler )
 {
-    BOOL bRet=SwndContainerImpl::UnregisterTimelineHandler(pHandler);
-    if(bRet && m_lstTimelineHandler.IsEmpty()) SWindow::KillTimer(TIMER_NEXTFRAME);
+	bool bEmpty1=m_timelineHandlerMgr.IsEmpty();
+	BOOL bRet = SwndContainerImpl::UnregisterTimelineHandler(pHandler);
+	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
+	if(!bEmpty1 && bEmpty2)
+	{
+		SAnimatorPulse::getSingletonPtr()->UnregisterTimelineHandler(this);
+	}
     return bRet;
 }
+
+
+void SHostWnd::OnNextFrame()
+{
+	if(!IsIconic())
+	{
+		SwndContainerImpl::OnNextFrame();
+	}
+}
+
 
 const SStringW & SHostWnd::GetTranslatorContext() const
 {

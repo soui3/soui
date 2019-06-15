@@ -17,6 +17,8 @@
 #include <core/SMsgLoop.h>
 #include <interface/SScriptModule-i.h>
 #include <interface/scaret-i.h>
+#include <interface/STimelineHandler-i.h>
+
 namespace SOUI
 {
 
@@ -25,17 +27,6 @@ namespace SOUI
     enum{
     ZORDER_MIN  = 0,
     ZORDER_MAX  = (UINT)-1,
-    };
-    
-    /**
-    * @struct     ITimelineHandler
-    * @brief      时间轴处理接口
-    * 
-    * Describe    
-    */
-    struct ITimelineHandler
-    {
-        virtual void OnNextFrame()=0;
     };
 
     /**

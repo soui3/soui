@@ -21,7 +21,7 @@ SwndContainerImpl::SwndContainerImpl()
     ,m_bZorderDirty(TRUE)
 {
     SWindow::SetContainer(this);
-	m_caret.Attach(new SCaret());
+	m_caret.Attach(new SCaret(this));
 	pugi::xml_node xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
 	if (xmlCaret)
 	{
@@ -391,39 +391,6 @@ void SwndContainerImpl::OnActivate( UINT nState )
     }
 }
 
-BOOL SwndContainerImpl::RegisterTimelineHandler( ITimelineHandler *pHandler )
-{
-    SPOSITION pos=m_lstTimelineHandler.Find(pHandler);
-    if(pos) return FALSE;
-    m_lstTimelineHandler.AddTail(pHandler);
-    return TRUE;
-}
-
-BOOL SwndContainerImpl::UnregisterTimelineHandler( ITimelineHandler *pHandler )
-{
-    SPOSITION pos=m_lstTimelineHandler.Find(pHandler);
-    if(!pos) return FALSE;
-    m_lstTimelineHandler.RemoveAt(pos);
-    return TRUE;
-}
-
-void SwndContainerImpl::OnNextFrame()
-{
-    if(!IsVisible(TRUE)) return;
-    
-    SList<ITimelineHandler*> lstCopy = m_lstTimelineHandler;
-    SPOSITION pos=lstCopy.GetHeadPosition();
-    while(pos)
-    {
-        ITimelineHandler * pHandler=lstCopy.GetNext(pos);
-        pHandler->OnNextFrame();
-    }
-	if (m_caret->NextFrame())
-	{
-		CRect rcCaret = m_caret->GetRect();
-		InvalidateRect(rcCaret);
-	}
-}
 
 void SwndContainerImpl::OnActivateApp( BOOL bActive, DWORD dwThreadID )
 {
@@ -475,6 +442,24 @@ void SwndContainerImpl::_BuildWndTreeZorder( SWindow *pWnd,UINT & iOrder )
         _BuildWndTreeZorder(pChild,iOrder);
         pChild=pChild->GetWindow(GSW_NEXTSIBLING);
     }
+}
+
+BOOL SwndContainerImpl::RegisterTimelineHandler(ITimelineHandler *pHandler)
+{
+	return m_timelineHandlerMgr.RegisterTimelineHandler(pHandler);
+}
+
+BOOL SwndContainerImpl::UnregisterTimelineHandler(ITimelineHandler *pHandler)
+{
+	return m_timelineHandlerMgr.UnregisterTimelineHandler(pHandler);
+}
+
+void SwndContainerImpl::OnNextFrame()
+{
+	if(!IsVisible(FALSE))
+		return;
+	m_timelineHandlerMgr.OnNextFrame();
+	m_caret->OnNextFrame();
 }
 
 }//namespace SOUI
