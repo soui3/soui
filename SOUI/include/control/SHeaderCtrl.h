@@ -103,7 +103,9 @@ namespace SOUI
        *
        * Describe  获得新项  
        */      
-      BOOL GetItem(int iItem,SHDITEM *pItem);
+      BOOL GetItem(int iItem,SHDITEM *pItem) const;
+
+	  BOOL SetItem(int iItem, const SHDITEM *pItem);
 
       /**
        * SHeaderCtrl::GetItemCount

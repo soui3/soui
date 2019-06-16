@@ -964,4 +964,9 @@ int SListCtrl::GetLastCheckedItem()
     return ret;
 }
 
+SHeaderCtrl * SListCtrl::GetHeaderCtrl() const
+{
+	return m_pHeader;
+}
+
 }//end of namespace 

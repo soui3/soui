@@ -51,7 +51,7 @@ namespace SOUI
         *
         * Describe  插入一列
         */
-        int             InsertColumn(int nIndex, LPCTSTR pszText, int nWidth, LPARAM lParam=0);
+        int  InsertColumn(int nIndex, LPCTSTR pszText, int nWidth, LPARAM lParam=0);
 
         void DeleteColumn( int iCol );
 
@@ -78,6 +78,7 @@ namespace SOUI
         int  GetSel()const{return m_iSelItem;}
         SItemPanel * HitTest(CPoint & pt);
 
+		SHeaderCtrl * GetHeaderCtrl() const;
     protected:
         virtual void OnItemSetCapture(SItemPanel *pItem,BOOL bCapture);
         virtual BOOL OnItemGetRect(SItemPanel *pItem,CRect &rcItem);

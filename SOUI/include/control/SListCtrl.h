@@ -274,23 +274,7 @@ namespace SOUI
         */
         void            DeleteAllItems();
 
-        /**
-        * SListCtrl::CreateChildren
-        * @brief    创建新项
-        * @param    pugi::xml_node xmlNode -- xml文件
-        *
-        * Describe  通过解析xml文件创建
-        */
-        virtual BOOL    CreateChildren(pugi::xml_node xmlNode);
 
-        /**
-        * SListCtrl::HitTest
-        * @brief    获取鼠标相关信息
-        * @param    CPoint &pt -- 坐标
-        *
-        * Describe  
-        */
-        int             HitTest(const CPoint& pt);
         /**
         * SListCtrl::SortItems
         * @brief    排序
@@ -332,6 +316,7 @@ namespace SOUI
         */
         int             GetCheckedItemCount();
 
+		SHeaderCtrl * GetHeaderCtrl() const;
 
         int             GetFirstCheckedItem();
         int             GetLastCheckedItem();
@@ -339,6 +324,25 @@ namespace SOUI
         VOID            EnableCheckBox(BOOL enable) { m_bCheckBox = enable; }
         VOID            EnableHotTrack(BOOL enable) { m_bHotTrack = enable; }
     protected:
+
+		/**
+        * SListCtrl::CreateChildren
+        * @brief    创建新项
+        * @param    pugi::xml_node xmlNode -- xml文件
+        *
+        * Describe  通过解析xml文件创建
+        */
+        virtual BOOL    CreateChildren(pugi::xml_node xmlNode);
+
+        /**
+        * SListCtrl::HitTest
+        * @brief    获取鼠标相关信息
+        * @param    CPoint &pt -- 坐标
+        *
+        * Describe  
+        */
+        int             HitTest(const CPoint& pt);
+
         /**
         * SListCtrl::GetTopIndex
         * @brief    获取置顶项选项索引

@@ -62,7 +62,7 @@ namespace SOUI
 		return iItem;
 	}
 
-	BOOL SHeaderCtrl::GetItem(int iItem, SHDITEM *pItem)
+	BOOL SHeaderCtrl::GetItem(int iItem, SHDITEM *pItem) const
 	{
 		if ((UINT)iItem >= m_arrItems.GetCount()) return FALSE;
 		if (pItem->mask & SHDI_TEXT)
@@ -73,6 +73,21 @@ namespace SOUI
 		if (pItem->mask & SHDI_LPARAM) pItem->lParam = m_arrItems[iItem].lParam;
 		if (pItem->mask & SHDI_SORTFLAG) pItem->stFlag = m_arrItems[iItem].stFlag;
 		if (pItem->mask & SHDI_ORDER) pItem->iOrder = m_arrItems[iItem].iOrder;
+		return TRUE;
+	}
+
+	BOOL SHeaderCtrl::SetItem(int iItem, const SHDITEM *pItem)
+	{
+		if ((UINT)iItem >= m_arrItems.GetCount()) return FALSE;
+		
+		SHDITEM & item = m_arrItems[iItem];
+
+		if (pItem->mask & SHDI_TEXT)
+		{
+			item.strText.SetText(pItem->strText.GetText(FALSE));
+		}
+		if (pItem->mask & SHDI_WIDTH) item.cx = pItem->cx;
+		if (pItem->mask & SHDI_LPARAM) item.lParam = pItem->lParam;
 		return TRUE;
 	}
 

@@ -1216,4 +1216,9 @@ void SMCListView::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 }
 
+SHeaderCtrl * SMCListView::GetHeaderCtrl() const
+{
+	return m_pHeader;
+}
+
 }//end of namespace 
