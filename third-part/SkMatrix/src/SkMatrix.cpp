@@ -30,6 +30,11 @@ static inline float SkDoubleToFloat(double x) {
     return static_cast<float>(x);
 }
 
+SkMatrix::SkMatrix(const float data[9])
+{
+	memcpy(fMat,data,9*sizeof(float));
+}
+
 /*      [scale-x    skew-x      trans-x]   [X]   [X']
         [skew-y     scale-y     trans-y] * [Y] = [Y']
         [persp-0    persp-1     persp-2]   [1]   [1 ]
@@ -1655,6 +1660,19 @@ void SkMatrix::SetData(const float fMat[9])
 {
 	memcpy(this->fMat, fMat, sizeof(this->fMat));
 	this->setTypeMask(kUnknown_Mask);
+}
+
+
+void SkMatrix::Clear()
+{
+	reset();
+}
+
+
+void SkMatrix::Concat(const IxForm * src)
+{
+	SkMatrix mSrc(src->GetData());
+	postConcat(mSrc);
 }
 
 }//end of namespace SOUI

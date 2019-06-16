@@ -29,6 +29,12 @@ typedef SkScalar SkPersp;
 */
 class SK_API SkMatrix : public SOUI::IxForm{
 public:
+	SkMatrix(){
+		reset();
+	}
+	SkMatrix(const float data[9]);
+
+public:
 	virtual float GetScaleX() const;
 
 	virtual float GetScaleY() const;
@@ -73,6 +79,9 @@ public:
 
 	virtual void SetData(const float fMat[9]);
 
+	virtual void Clear();
+
+	virtual void Concat(const IxForm * src);
 public:
     /** Enum of bit fields for the mask return by getType().
         Use this to identify the complexity of the matrix.
@@ -714,6 +723,7 @@ private:
 public:
 	static float SkScalarSinCos(float radians, float* cosValue);
 };
+
 
 }//end of namespace SOUI
 

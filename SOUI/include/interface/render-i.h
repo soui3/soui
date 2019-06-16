@@ -538,6 +538,9 @@ namespace SOUI
 		virtual void SetPersp2(float v) = 0;
 		virtual void SetValue(Index index, float v) = 0;
 		virtual void SetData(const float fMat[9]) = 0;
+
+		virtual void Clear() = 0;
+		virtual void Concat(const IxForm * src) = 0;
 	};
 
 	struct IPath : IRenderObj

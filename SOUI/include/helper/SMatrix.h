@@ -39,6 +39,9 @@ namespace SOUI
 		virtual void SetPersp2(float v) ;
 		virtual void SetValue(Index idx, float v);
 		virtual void SetData(const float fMat[9]);
+
+		virtual void Clear();
+		virtual void Concat(const IxForm * src);
     public:
         bool operator==(const SMatrix &src) const;
         bool operator!=(const SMatrix &src) const;
@@ -52,7 +55,6 @@ namespace SOUI
         void setMatrix(FLOAT m11, FLOAT m12, FLOAT m21, FLOAT m22, FLOAT dx, FLOAT dy);
 
 
-        void reset();
 
         bool isIdentity() const;
 

@@ -13,7 +13,7 @@ namespace SOUI
 
 	SMatrix::SMatrix()
     {
-		reset();
+		Clear();
     }
 
     SMatrix::SMatrix(const SMatrix & src)
@@ -44,7 +44,7 @@ namespace SOUI
 		m_mat[kMPersp2] = 1.0f;
     }
 
-    void SMatrix::reset()
+    void SMatrix::Clear()
     {
 		memset(m_mat,0,sizeof(m_mat));
 		m_mat[kMScaleX] = m_mat[kMScaleY] = m_mat[kMPersp2] = 1.0f;
@@ -265,7 +265,7 @@ namespace SOUI
         if (dtr == 0.0) {
             if (invertible)
                 *invertible = false;                // singular matrix
-            pOut->reset();
+            pOut->Clear();
         }
         else {                                        // invertible matrix
             if (invertible)
@@ -322,20 +322,7 @@ namespace SOUI
 
     SMatrix &SMatrix::operator *=(const SMatrix &src)
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        FLOAT tm11 = eM11*src.eM11 + eM12*src.eM21;
-        FLOAT tm12 = eM11*src.eM12 + eM12*src.eM22;
-        FLOAT tm21 = eM21*src.eM11 + eM22*src.eM21;
-        FLOAT tm22 = eM21*src.eM12 + eM22*src.eM22;
-
-        FLOAT tdx  = eDx*src.eM11  + eDy*src.eM21 + src.eDx;
-        FLOAT tdy =  eDx*src.eM12  + eDy*src.eM22 + src.eDy;
-
-        eM11 = tm11; eM12 = tm12;
-        eM21 = tm21; eM22 = tm22;
-        eDx = tdx; eDy = tdy;
+		Concat(&src);
         return *this;
     }
 
@@ -354,14 +341,14 @@ namespace SOUI
 		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
 			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
 			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        FLOAT tm11 = eM11*m.eM11 + eM12*m.eM21;
-        FLOAT tm12 = eM11*m.eM12 + eM12*m.eM22;
-        FLOAT tm21 = eM21*m.eM11 + eM22*m.eM21;
-        FLOAT tm22 = eM21*m.eM12 + eM22*m.eM22;
+		FLOAT tm11 = eM11*m.eM11 + eM12*m.eM21;
+		FLOAT tm12 = eM11*m.eM12 + eM12*m.eM22;
+		FLOAT tm21 = eM21*m.eM11 + eM22*m.eM21;
+		FLOAT tm22 = eM21*m.eM12 + eM22*m.eM22;
 
-        FLOAT tdx  = eDx*m.eM11  + eDy*m.eM21 + m.eDx;
-        FLOAT tdy =  eDx*m.eM12  + eDy*m.eM22 + m.eDy;
-        return SMatrix(tm11, tm12, tm21, tm22, tdx, tdy);
+		FLOAT tdx  = eDx*m.eM11  + eDy*m.eM21 + m.eDx;
+		FLOAT tdy =  eDx*m.eM12  + eDy*m.eM22 + m.eDy;
+		return SMatrix(tm11, tm12, tm21, tm22, tdx, tdy);
     }
 
     /*!
@@ -388,5 +375,23 @@ namespace SOUI
 			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
         return eM11*eM22 - eM12*eM21;
     }
+
+	void SMatrix::Concat(const IxForm * src)
+	{
+		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
+			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
+			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
+		FLOAT tm11 = eM11*src->GetScaleX() + eM12*src->GetSkewX();
+		FLOAT tm12 = eM11*src->GetSkewY() + eM12*src->GetScaleY();
+		FLOAT tm21 = eM21*src->GetScaleX() + eM22*src->GetSkewX();
+		FLOAT tm22 = eM21*src->GetSkewY() + eM22*src->GetScaleY();
+
+		FLOAT tdx  = eDx*src->GetScaleX()  + eDy*src->GetSkewX() + src->GetTranslateX();
+		FLOAT tdy =  eDx*src->GetSkewY()  + eDy*src->GetScaleY() + src->GetTranslateY();
+
+		eM11 = tm11; eM12 = tm12;
+		eM21 = tm21; eM22 = tm22;
+		eDx = tdx; eDy = tdy;
+	}
 
 }
