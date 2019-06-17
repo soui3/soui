@@ -776,6 +776,69 @@ namespace SOUI
         SWND SetCapture();
         BOOL ReleaseCapture();
 
+	public:
+
+		/**
+		* Sets the next animation to play for this view.
+		* If you want the animation to play immediately, use
+		* {@link #startAnimation(android.view.animation.Animation)} instead.
+		* This method provides allows fine-grained
+		* control over the start time and invalidation, but you
+		* must make sure that 1) the animation has a start time set, and
+		* 2) the view's parent (which controls animations on its children)
+		* will be invalidated when the animation is supposed to
+		* start.
+		*
+		* @param animation The next animation, or null.
+		*/
+		void SetAnimation(Animation animation) {
+			//mCurrentAnimation = animation;
+
+			//if (animation != null) {
+			//	// If the screen is off assume the animation start time is now instead of
+			//	// the next frame we draw. Keeping the START_ON_FIRST_FRAME start time
+			//	// would cause the animation to start when the screen turns back on
+			//	if (mAttachInfo != null && mAttachInfo.mDisplayState == Display.STATE_OFF
+			//		&& animation.getStartTime() == Animation.START_ON_FIRST_FRAME) {
+			//		animation.setStartTime(AnimationUtils.currentAnimationTimeMillis());
+			//	}
+			//	animation.reset();
+			//}
+		}
+
+		/**
+		* Get the animation currently associated with this view.
+		*
+		* @return The animation that is currently playing or
+		*         scheduled to play for this view.
+		*/
+		Animation * GetAnimation() {
+			return NULL;
+		}
+
+		/**
+		* Start the specified animation now.
+		*
+		* @param animation the animation to start now
+		*/
+		void StartAnimation(Animation animation) {
+			//animation.setStartTime(Animation.START_ON_FIRST_FRAME);
+			//setAnimation(animation);
+			//invalidateParentCaches();
+			//invalidate(true);
+		}
+
+		/**
+		* Cancels any animations for this view.
+		*/
+		void ClearAnimation() {
+			//if (mCurrentAnimation != null) {
+			//	mCurrentAnimation.detach();
+			//}
+			//mCurrentAnimation = null;
+			//invalidateParentIfNeeded();
+		}
+
     public:// Virtual functions
 
 		virtual int GetScale() const;
