@@ -33,6 +33,7 @@ static inline float SkDoubleToFloat(double x) {
 SkMatrix::SkMatrix(const float data[9])
 {
 	memcpy(fMat,data,9*sizeof(float));
+	setTypeMask(kUnknown_Mask);
 }
 
 /*      [scale-x    skew-x      trans-x]   [X]   [X']
@@ -1673,6 +1674,11 @@ void SkMatrix::Concat(const IxForm * src)
 {
 	SkMatrix mSrc(src->GetData());
 	postConcat(mSrc);
+}
+
+SOUI::IxForm * SkMatrix::Clone() const
+{
+	return new SkMatrix(fMat);
 }
 
 }//end of namespace SOUI

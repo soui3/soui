@@ -501,7 +501,7 @@ namespace SOUI
         virtual void SetRgn(const HRGN hRgn) = 0;
     };
 
-	struct IxForm
+	struct IxForm : IObjRef
 	{
 		enum Index{
 			kMScaleX = 0,
@@ -541,6 +541,7 @@ namespace SOUI
 
 		virtual void Clear() = 0;
 		virtual void Concat(const IxForm * src) = 0;
+		virtual IxForm * Clone() const = 0;
 	};
 
 	struct IPath : IRenderObj

@@ -13,6 +13,7 @@
 #include "SkRect.h"
 
 #include <interface/render-i.h>
+#include <unknown/obj-ref-impl.hpp>
 
 namespace SOUI{
 // TODO: can we remove these 3 (need to check chrome/android)
@@ -27,7 +28,7 @@ typedef SkScalar SkPersp;
     using either reset() - to construct an identity matrix, or one of the set
     functions (e.g. setTranslate, setRotate, etc.).
 */
-class SK_API SkMatrix : public SOUI::IxForm{
+class SK_API SkMatrix : public SOUI::TObjRefImpl<SOUI::IxForm>{
 public:
 	SkMatrix(){
 		reset();
@@ -82,6 +83,8 @@ public:
 	virtual void Clear();
 
 	virtual void Concat(const IxForm * src);
+
+	virtual SOUI::IxForm * Clone() const;
 public:
     /** Enum of bit fields for the mask return by getType().
         Use this to identify the complexity of the matrix.

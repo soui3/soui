@@ -394,4 +394,8 @@ namespace SOUI
 		eDx = tdx; eDy = tdy;
 	}
 
+	IxForm * SMatrix::Clone() const
+	{
+		return new SMatrix(m_mat);
+	}
 }

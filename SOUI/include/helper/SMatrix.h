@@ -1,11 +1,12 @@
 ﻿#pragma once
 
 #include <interface/render-i.h>
+#include <unknown/obj-ref-impl.hpp>
 
 namespace SOUI
 {
     
-    class SOUI_EXP SMatrix : public IxForm
+    class SOUI_EXP SMatrix : public TObjRefImpl<IxForm>
     {
 	protected:
 		float m_mat[9];
@@ -42,6 +43,7 @@ namespace SOUI
 
 		virtual void Clear();
 		virtual void Concat(const IxForm * src);
+		virtual IxForm *Clone() const;
     public:
         bool operator==(const SMatrix &src) const;
         bool operator!=(const SMatrix &src) const;
