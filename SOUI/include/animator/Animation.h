@@ -24,6 +24,7 @@
 #include <interface/sinterpolator-i.h>
 #include <unknown/obj-ref-impl.hpp>
 #include <animator/SInterpolatorImpl.h>
+#include <animator/Transformation.h>
 
 namespace SOUI{
 	class Animation {
@@ -188,7 +189,7 @@ namespace SOUI{
 	private: bool mMore;
 	private: bool mOneMoreTime;
 
-	private: IxForm * mTransformation;
+	private: Transformation  mTransformation;
 
 			 /**
 			 * Indicates whether the animation transformation should be applied before the
@@ -237,7 +238,7 @@ namespace SOUI{
 				mFillAfter = false;
 
 				mFillEnabled = false;    
-				mTransformation= NULL;
+				mTransformation.clear();
 				ensureInterpolator();
 			}
 
@@ -302,6 +303,20 @@ namespace SOUI{
 				mStartOffset = (long) (mStartOffset * scale);
 			}
 
+	public: void setFillBefore(bool bFill)
+	{
+		mFillBefore = bFill;
+	}
+
+	public: void setFillAfter(bool bFill)
+	{
+		mFillAfter = bFill;
+	}
+
+	public: void setStartOffset(long offset)
+	{
+		mStartOffset = offset;
+	}
 			/**
 			* When this animation should start. When the start time is set to
 			* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
@@ -495,7 +510,23 @@ namespace SOUI{
 	public: long computeDurationHint() {
 				return (getStartOffset() + getDuration()) * (getRepeatCount() + 1);
 			}
-
+	/**
+     * Gets the transformation to apply at a specified point in time. Implementations of this
+     * method should always replace the specified Transformation or document they are doing
+     * otherwise.
+     *
+     * @param currentTime Where we are in the animation. This is wall clock time.
+     * @param outTransformation A transformation object that is provided by the
+     *        caller and will be filled in by the animation.
+     * @param scale Scaling factor to apply to any inputs to the transform operation, such
+     *        pivot points being rotated or scaled around.
+     * @return True if the animation is still running
+     */
+	public: bool getTransformation(long currentTime, Transformation & outTransformation,
+            float scale) {
+        mScaleFactor = scale;
+        return getTransformation(currentTime, outTransformation);
+    }
 			/**
 			* Gets the transformation to apply at a specified point in time. Implementations of this
 			* method should always replace the specified Transformation or document they are doing
@@ -506,7 +537,7 @@ namespace SOUI{
 			*        caller and will be filled in by the animation.
 			* @return True if the animation is still running
 			*/
-	public: bool getTransformation(long currentTime, IxForm * outTransformation) {
+	public: bool getTransformation(long currentTime, Transformation & outTransformation) {
 				if (mStartTime == -1) {
 					mStartTime = currentTime;
 				}
@@ -595,24 +626,6 @@ namespace SOUI{
 				 }
 			 }
 
-			 /**
-			 * Gets the transformation to apply at a specified point in time. Implementations of this
-			 * method should always replace the specified Transformation or document they are doing
-			 * otherwise.
-			 *
-			 * @param currentTime Where we are in the animation. This is wall clock time.
-			 * @param outTransformation A transformation object that is provided by the
-			 *        caller and will be filled in by the animation.
-			 * @param scale Scaling factor to apply to any inputs to the transform operation, such
-			 *        pivot points being rotated or scaled around.
-			 * @return True if the animation is still running
-			 */
-	public: bool getTransformation(long currentTime, IxForm * outTransformation,
-				float scale) {
-					mScaleFactor = scale;
-					return getTransformation(currentTime, outTransformation);
-			}
-
 			/**
 			* <p>Indicates whether this animation has started or not.</p>
 			*
@@ -643,7 +656,7 @@ namespace SOUI{
 			*        transforms.
 			*/
 	protected:
-		virtual void applyTransformation(float interpolatedTime, IxForm * t) {
+		virtual void applyTransformation(float interpolatedTime, const Transformation & t) {
 		}
 
 		/**
@@ -670,12 +683,13 @@ namespace SOUI{
 			   }
 
 
-			   /**
+	public:
+		/**
 			   * Return true if this animation changes the view's alpha property.
 			   * 
 			   * @hide
 			   */
-	public: bool hasAlpha() {
+		virtual bool hasAlpha() const{
 				return false;
 			}
 

@@ -45,7 +45,7 @@
 
 namespace SOUI{
 
-	class AnimationSet : public: Animation {
+	class AnimationSet : public Animation {
 		enum{
 			PROPERTY_FILL_AFTER_MASK         = 0x1,
 			PROPERTY_FILL_BEFORE_MASK        = 0x2,
@@ -64,12 +64,9 @@ namespace SOUI{
 
 		SArray<Animation> mAnimations;
 
-		IxForm * mTempTransformation;
+		Transformation  mTempTransformation;
 
 		long mLastEnd;
-
-		long[] mStoredOffsets;
-
 
 		/**
 		* Constructor to use when building an AnimationSet from code
@@ -139,7 +136,7 @@ namespace SOUI{
 
 					int count = mAnimations.GetCount();
 					for (int i = 0; i < count; i++) {
-						if (mAnimations.GetAt(i)->hasAlpha()) {
+						if (mAnimations.GetAt(i).hasAlpha()) {
 							mHasAlpha = true;
 							break;
 						}
@@ -167,7 +164,7 @@ namespace SOUI{
 			* that they were added
 			* @param a Animation to add.
 			*/
-	public: void addAnimation(Animation * a) {
+	public: void addAnimation(Animation  a) {
 				mAnimations.Add(a);
 
 				if ((mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK) {
@@ -196,8 +193,8 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					Animation * a = animations[i];
-					a->setStartTime(startTimeMillis);
+					Animation & a = mAnimations[i];
+					a.setStartTime(startTimeMillis);
 				}
 			}
 
@@ -207,21 +204,11 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					Animation *a = animations.GetAt(i);
+					Animation &a = mAnimations.GetAt(i);
 					startTime = smin(startTime, a.getStartTime());
 				}
 
 				return startTime;
-			}
-
-	public: void restrictDuration(long durationMillis) {
-				Animation::restrictDuration(durationMillis);
-
-				int count = mAnimations.GetCount();
-
-				for (int i = 0; i < count; i++) {
-					animations[i]->restrictDuration(durationMillis);
-				}
 			}
 
 			/**
@@ -239,7 +226,7 @@ namespace SOUI{
 					duration = mDuration;
 				} else {
 					for (int i = 0; i < count; i++) {
-						duration = smax(duration, mAnimations[i]->getDuration());
+						duration = smax(duration, mAnimations[i].getDuration());
 					}
 				}
 
@@ -256,39 +243,13 @@ namespace SOUI{
 				long duration = 0;
 				int count = mAnimations.GetCount();
 				for (int i = count - 1; i >= 0; --i) {
-					long d = mAnimations[i]->computeDurationHint();
+					long d = mAnimations[i].computeDurationHint();
 					if (d > duration) duration = d;
 				}
 				return duration;
 			}
 
-			/**
-			* @hide
-			*/
-	public: void initializeInvalidateRegion(int left, int top, int right, int bottom) {
-				//RectF region = mPreviousRegion;
-				//region.set(left, top, right, bottom);
-				//region.inset(-1.0f, -1.0f);
 
-				//if (mFillBefore) {
-				//    int count = mAnimations.size();
-				//    ArrayList<Animation> animations = mAnimations;
-				//    Transformation temp = mTempTransformation;
-
-				//    Transformation previousTransformation = mPreviousTransformation;
-
-				//    for (int i = count - 1; i >= 0; --i) {
-				//        Animation a = animations.get(i);
-				//        if (!a.isFillEnabled() || a.getFillBefore() || a.getStartOffset() == 0) {
-				//            temp.clear();
-				//            Interpolator interpolator = a.mInterpolator;
-				//            a.applyTransformation(interpolator != null ? interpolator.getInterpolation(0.0f)
-				//                    : 0.0f, temp);
-				//            previousTransformation.compose(temp);
-				//        }
-				//    }
-				//}
-			}
 
 			/**
 			* The transformation of an animation set is the concatenation of all of its
@@ -296,22 +257,22 @@ namespace SOUI{
 			* 
 			* @see android.view.animation.Animation#getTransformation
 			*/
-	public: boolean getTransformation(long currentTime, IxForm *t) {
+	public: boolean getTransformation(long currentTime, Transformation &t) {
 				int count = mAnimations.GetCount();
-				IxForm * temp = mTempTransformation;
+				Transformation temp = mTempTransformation;
 
 				boolean more = false;
 				boolean started = false;
 				boolean ended = true;
 
-				t->Clear();
+				t.clear();
 
 				for (int i = count - 1; i >= 0; --i) {
-					Animation *a = mAnimations[i];
+					Animation & a = mAnimations[i];
 
-					temp->Clear();
-					more = a->getTransformation(currentTime, temp, getScaleFactor()) || more;
-					t->Concat(temp);
+					temp.clear();
+					more = a.getTransformation(currentTime, temp, getScaleFactor()) || more;
+					t.compose(temp);
 
 					started = started || a.hasStarted();
 					ended = a.hasEnded() && ended;
@@ -319,14 +280,14 @@ namespace SOUI{
 
 				if (started && !mStarted) {
 					if (mListener != NULL) {
-						mListener.onAnimationStart(this);
+						mListener->onAnimationStart(this);
 					}
 					mStarted = true;
 				}
 
 				if (ended != mEnded) {
 					if (mListener != NULL) {
-						mListener.onAnimationEnd(this);
+						mListener->onAnimationEnd(this);
 					}
 					mEnded = ended;
 				}
@@ -340,7 +301,7 @@ namespace SOUI{
 	public: void scaleCurrentDuration(float scale) {
 				int count = mAnimations.GetCount();
 				for (int i = 0; i < count; i++) {
-					mAnimations[i]->scaleCurrentDuration(scale);
+					mAnimations[i].scaleCurrentDuration(scale);
 				}
 			}
 
@@ -409,7 +370,6 @@ namespace SOUI{
 				//}
 			}
 
-			@Override
 	public: void reset() {
 				Animation::reset();
 				restoreChildrenStartOffset();
@@ -430,13 +390,6 @@ namespace SOUI{
 				//}
 			}
 
-			/**
-			* @return All the child animations in this AnimationSet. Note that
-			* this may include other AnimationSets, which are not expanded.
-			*/
-			//     public: List<Animation> getAnimations() {
-			//         return mAnimations;
-			//     }
 	};
 
 }
