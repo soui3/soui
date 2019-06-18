@@ -21,6 +21,8 @@
 #include "interface/slog-i.h"
 #include "interface/SAttrStorage-i.h"
 #include "interface/sinterpolator-i.h"
+#include "interface/Animation-i.h"
+
 #include "control/RealWndHandler-i.h"
 
 #include "res.mgr/SResProviderMgr.h"
@@ -303,6 +305,7 @@ public:
 	virtual SWindow * CreateWindowByName(LPCWSTR pszWndClass) const;
 	virtual ISkinObj * CreateSkinByName(LPCWSTR pszSkinClass) const;
 	virtual IInterpolator * CreateInterpolatorByName(LPCWSTR pszName) const;
+	virtual IAnimation * CreateAnimationByName(LPCWSTR pszName) const;
 
 	virtual IAccProxy * CreateAccProxy(SWindow* pWnd) const;
 	virtual IAccessible * CreateAccessible(SWindow *pWnd) const;

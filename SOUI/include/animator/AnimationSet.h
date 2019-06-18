@@ -64,8 +64,6 @@ namespace SOUI{
 
 		SArray<Animation> mAnimations;
 
-		Transformation  mTempTransformation;
-
 		long mLastEnd;
 
 		/**
@@ -117,7 +115,7 @@ namespace SOUI{
 				Animation::setFillBefore(fillBefore);
 			}
 
-	public: void setRepeatMode(int repeatMode) {
+	public: void setRepeatMode(RepeatMode repeatMode) {
 				mFlags |= PROPERTY_REPEAT_MODE_MASK;
 				Animation::setRepeatMode(repeatMode);
 			}
@@ -257,9 +255,8 @@ namespace SOUI{
 			* 
 			* @see android.view.animation.Animation#getTransformation
 			*/
-	public: boolean getTransformation(long currentTime, Transformation &t) {
+	public: bool getTransformation(long currentTime, Transformation &t) {
 				int count = mAnimations.GetCount();
-				Transformation temp = mTempTransformation;
 
 				boolean more = false;
 				boolean started = false;
@@ -270,7 +267,7 @@ namespace SOUI{
 				for (int i = count - 1; i >= 0; --i) {
 					Animation & a = mAnimations[i];
 
-					temp.clear();
+					Transformation temp;
 					more = a.getTransformation(currentTime, temp, getScaleFactor()) || more;
 					t.compose(temp);
 

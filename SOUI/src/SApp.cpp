@@ -513,6 +513,11 @@ IInterpolator * SApplication::CreateInterpolatorByName(LPCWSTR pszName) const
 	return (IInterpolator*)CreateObject(SObjectInfo(pszName, Interpolator));
 }
 
+IAnimation * SApplication::CreateAnimationByName(LPCWSTR pszName) const
+{
+	return NULL;
+}
+
 void SApplication::SetLogManager(ILog4zManager * pLogMgr)
 {
     m_logManager = pLogMgr;

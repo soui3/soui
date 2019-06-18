@@ -791,20 +791,7 @@ namespace SOUI
 		*
 		* @param animation The next animation, or null.
 		*/
-		void SetAnimation(Animation animation) {
-			//mCurrentAnimation = animation;
-
-			//if (animation != null) {
-			//	// If the screen is off assume the animation start time is now instead of
-			//	// the next frame we draw. Keeping the START_ON_FIRST_FRAME start time
-			//	// would cause the animation to start when the screen turns back on
-			//	if (mAttachInfo != null && mAttachInfo.mDisplayState == Display.STATE_OFF
-			//		&& animation.getStartTime() == Animation.START_ON_FIRST_FRAME) {
-			//		animation.setStartTime(AnimationUtils.currentAnimationTimeMillis());
-			//	}
-			//	animation.reset();
-			//}
-		}
+		void SetAnimation(IAnimation * animation);
 
 		/**
 		* Get the animation currently associated with this view.
@@ -812,31 +799,27 @@ namespace SOUI
 		* @return The animation that is currently playing or
 		*         scheduled to play for this view.
 		*/
-		Animation * GetAnimation() {
-			return NULL;
-		}
+		IAnimation * GetAnimation();
 
 		/**
 		* Start the specified animation now.
 		*
 		* @param animation the animation to start now
 		*/
-		void StartAnimation(Animation animation) {
-			//animation.setStartTime(Animation.START_ON_FIRST_FRAME);
-			//setAnimation(animation);
-			//invalidateParentCaches();
-			//invalidate(true);
-		}
+		void StartAnimation(IAnimation * animation);
 
 		/**
 		* Cancels any animations for this view.
 		*/
 		void ClearAnimation() {
-			//if (mCurrentAnimation != null) {
-			//	mCurrentAnimation.detach();
-			//}
-			//mCurrentAnimation = null;
-			//invalidateParentIfNeeded();
+			if (m_animation)
+			{
+				if (m_animation->hasStarted())
+				{
+					Invalidate();
+				}
+				m_animation = NULL;
+			}
 		}
 
     public:// Virtual functions
@@ -1458,6 +1441,7 @@ namespace SOUI
 
 		COLORREF			m_crColorize;		/**< 调色值 */
 
+		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
 
         typedef struct GETRTDATA
         {

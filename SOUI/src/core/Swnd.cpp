@@ -2064,6 +2064,54 @@ namespace SOUI
 		return GetContainer()->OnReleaseSwndCapture();
 	}
 
+	/**
+	* Sets the next animation to play for this view.
+	* If you want the animation to play immediately, use
+	* {@link #startAnimation(android.view.animation.Animation)} instead.
+	* This method provides allows fine-grained
+	* control over the start time and invalidation, but you
+	* must make sure that 1) the animation has a start time set, and
+	* 2) the view's parent (which controls animations on its children)
+	* will be invalidated when the animation is supposed to
+	* start.
+	*
+	* @param animation The next animation, or null.
+	*/
+
+	void SWindow::SetAnimation(IAnimation * animation) {
+		m_animation = animation;
+		if (m_animation)
+		{
+			if (m_animation->getStartTime() == IAnimation::START_ON_FIRST_FRAME)
+			{
+				m_animation->startNow();
+			}
+		}
+	}
+
+	/**
+	* Get the animation currently associated with this view.
+	*
+	* @return The animation that is currently playing or
+	*         scheduled to play for this view.
+	*/
+
+	IAnimation * SWindow::GetAnimation() {
+		return m_animation;
+	}
+
+	/**
+	* Start the specified animation now.
+	*
+	* @param animation the animation to start now
+	*/
+
+	void SWindow::StartAnimation(IAnimation * animation) {
+		SASSERT(animation);
+		animation->setStartTime(IAnimation::START_ON_FIRST_FRAME);
+		SetAnimation(animation);
+	}
+
 	void SWindow::SetFocus()
 	{
 		if(!IsVisible(TRUE) || IsDisabled(TRUE) && IsFocusable()) return;
