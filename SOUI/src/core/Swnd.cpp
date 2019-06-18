@@ -2986,6 +2986,21 @@ namespace SOUI
 			return m_strTrCtx;
 	}
 
+
+	/**
+	* Cancels any animations for this view.
+	*/
+	void SWindow::ClearAnimation() {
+		if (m_animation)
+		{
+			if (m_animation->hasStarted())
+			{
+				m_animation->cancel();
+			}
+			m_animation = NULL;
+		}
+	}
+
 	int SWindow::GetScale() const
 	{
 		return GetContainer()?GetContainer()->GetScale():100;

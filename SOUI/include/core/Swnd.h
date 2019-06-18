@@ -816,7 +816,7 @@ namespace SOUI
 			{
 				if (m_animation->hasStarted())
 				{
-					Invalidate();
+					m_animation->cancel();
 				}
 				m_animation = NULL;
 			}
