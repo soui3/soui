@@ -115,7 +115,7 @@ namespace SOUI{
 				Animation::setFillBefore(fillBefore);
 			}
 
-	public: void setRepeatMode(int repeatMode) {
+	public: void setRepeatMode(RepeatMode repeatMode) {
 				mFlags |= PROPERTY_REPEAT_MODE_MASK;
 				Animation::setRepeatMode(repeatMode);
 			}

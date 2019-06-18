@@ -25,9 +25,12 @@
 #include <unknown/obj-ref-impl.hpp>
 #include <animator/SInterpolatorImpl.h>
 #include <animator/Transformation.h>
+#include <sobject/sobject.hpp>
+#include <SApp.h>
 
 namespace SOUI {
-	class Animation : public TObjRefImpl<IAnimation> {
+	class Animation : public TObjRefImpl<SObjectImpl<IAnimation>> {
+		SOUI_CLASS_NAME_EX(Animation,L"animation", AnimationObj)
 	protected:
 		/**
 		* Set by {@link #getTransformation(long, Transformation)} when the animation ends.
@@ -139,24 +142,19 @@ namespace SOUI {
 			reset();
 		}
 
-
-		void copy(const IAnimation *_src)
+		void copy(const IAnimation *src)
 		{
-			Animation * src = (Animation *)_src;
 			mEnded = false;
-
 			mStarted = false;
 
 			mStartTime = src->getStartTime();
-
 			mStartOffset = src->getStartOffset();
 			mDuration = src->getDuration();
 			mRepeatCount = src->getRepeatCount();
 			mRepeated = 0;
 			mRepeatMode = src->getRepeatMode();
 			mListener = NULL;
-			mScaleFactor = src->getScaleFactor();
-
+			mScaleFactor = 1.0f;
 
 			mMore = true;
 			mOneMoreTime = true;
@@ -167,9 +165,12 @@ namespace SOUI {
 			mFillAfter = src->getFillAfter();
 
 			mFillEnabled = src->isFillEnabled();
+
+			mInterpolator = src->getInterpolator();
 		}
+
 		IAnimation * clone() const {
-			Animation *pRet = new Animation();
+			IAnimation *pRet = SApplication::getSingletonPtr()->CreateAnimationByName(GetClassName());
 			pRet->copy(this);
 			return pRet;
 		}
