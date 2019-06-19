@@ -437,12 +437,12 @@ void STileView::OnItemRequestRelayout(SItemPanel *pItem)
     //pItem->UpdateChildrenPosition();
 }
 
-BOOL STileView::IsItemRedrawDelay()
+BOOL STileView::IsItemRedrawDelay() const
 {
     return TRUE;
 }
 
-CRect STileView::CalcItemDrawRect(int iItem)
+CRect STileView::CalcItemDrawRect(int iItem) const
 {
     //相对整个窗体的实际绘制位置
     int nOffset = m_tvItemLocator->Item2Position(iItem) - m_siVer.nPos;
@@ -456,7 +456,7 @@ CRect STileView::CalcItemDrawRect(int iItem)
     return rcItem;
 }
 
-BOOL STileView::OnItemGetRect(SItemPanel *pItem, CRect &rcItem)
+BOOL STileView::OnItemGetRect(const SItemPanel *pItem, CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
     rcItem = CalcItemDrawRect(iPosition);

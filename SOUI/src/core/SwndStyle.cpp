@@ -31,7 +31,7 @@ SwndStyle::SwndStyle()
     }
 }
 
-UINT SwndStyle::GetTextAlign()
+UINT SwndStyle::GetTextAlign() const
 {
     if(m_nTextAlign) return m_nTextAlign;
     UINT uRet=0;

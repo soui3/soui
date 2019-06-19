@@ -30,7 +30,7 @@ namespace SOUI
 
         virtual CSize GetDesiredSize(int wid, int hei);
 
-        virtual void GetTextRect(LPRECT pRect);
+        virtual void GetTextRect(LPRECT pRect) const;
 
 
     protected:

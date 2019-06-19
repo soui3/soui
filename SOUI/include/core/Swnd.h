@@ -361,7 +361,7 @@ namespace SOUI
         *
         * Describe  获得文本的对齐标志
         */
-        UINT GetTextAlign();    
+        UINT GetTextAlign() const;    
 
         /**
         * GetWindowRect
@@ -453,7 +453,7 @@ namespace SOUI
          * @return   SWindow * -- root window
          * Describe  
          */    
-        SWindow * GetRoot(){return GetTopLevelParent();}
+        SWindow * GetRoot() const {return GetTopLevelParent();}
         
         /**
          * IsDesendant
@@ -811,16 +811,7 @@ namespace SOUI
 		/**
 		* Cancels any animations for this view.
 		*/
-		void ClearAnimation() {
-			if (m_animation)
-			{
-				if (m_animation->hasStarted())
-				{
-					m_animation->cancel();
-				}
-				m_animation = NULL;
-			}
-		}
+		void ClearAnimation();
 
     public:// Virtual functions
 
@@ -941,7 +932,7 @@ namespace SOUI
         *
         * Describe  通常是客户区，但是tab,group这样的控件不一样
         */
-        virtual CRect GetChildrenLayoutRect();
+        virtual CRect GetChildrenLayoutRect() const;
 
         /**
         * GetDesiredSize

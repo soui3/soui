@@ -51,7 +51,7 @@ namespace SOUI
         
         virtual BOOL IsSendWheel2Hover() const =0;
         
-        virtual CRect GetContainerRect()=0;
+        virtual CRect GetContainerRect() const =0;
 
         virtual IRenderTarget * OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)=0;
 
@@ -76,7 +76,7 @@ namespace SOUI
 		virtual void UpdateTooltip() = 0;
         
         //将当前Frame的矩形坐标转换成最终Host的坐标
-        virtual void FrameToHost(RECT & rc) = 0;
+        virtual void FrameToHost(RECT & rc) const = 0;
                 
         virtual IAcceleratorMgr* GetAcceleratorMgr()=0;
 

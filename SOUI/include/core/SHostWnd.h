@@ -268,7 +268,7 @@ protected:// IContainer
 
     virtual BOOL OnFireEvent(EventArgs &evt);
 
-    virtual CRect GetContainerRect();
+    virtual CRect GetContainerRect() const;
 
     virtual HWND GetHostHwnd();
 

@@ -371,7 +371,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     }
 
     CRect rcInvalid;
-
+	CRect rcWnd = GetWindowRect();
     if (m_bNeedRepaint)
     {
         m_bNeedRepaint = FALSE;
@@ -387,11 +387,11 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
         if (!pRgnUpdate->IsEmpty())
         {
             pRgnUpdate->GetRgnBox(&rcInvalid);
-			rcInvalid.IntersectRect(rcInvalid,m_rcWindow);
+			rcInvalid.IntersectRect(rcInvalid, rcWnd);
             m_memRT->PushClipRegion(pRgnUpdate,RGN_COPY);
         }else
         {
-            rcInvalid=m_rcWindow;
+            rcInvalid= rcWnd;
             m_memRT->PushClipRect(&rcInvalid,RGN_COPY);
         }
         //清除残留的alpha值
@@ -412,7 +412,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     
     if(uFlags != KConstDummyPaint) //由系统发的WM_PAINT或者WM_PRINT产生的重绘请求
     {
-        rcInvalid = m_rcWindow;
+        rcInvalid = rcWnd;
     }
     
     //渲染非背景混合窗口,设置m_bRending=TRUE以保证只执行一次UpdateHost
@@ -663,9 +663,9 @@ BOOL SHostWnd::OnFireEvent(EventArgs &evt)
     return _HandleEvent(&evt);
 }
 
-CRect SHostWnd::GetContainerRect()
+CRect SHostWnd::GetContainerRect() const
 {
-    return m_rcWindow;
+    return GetWindowRect();
 }
 
 HWND SHostWnd::GetHostHwnd()
@@ -887,10 +887,10 @@ UINT SHostWnd::OnWndNcHitTest(CPoint point)
     {
         ScreenToClient(&point);
 		CRect rcMargin = m_hostAttr.GetMargin(GetScale());
-
-        if (point.x > m_rcWindow.right - rcMargin.right)
+		CRect rcWnd = GetWindowRect();
+        if (point.x > rcWnd.right - rcMargin.right)
         {
-            if (point.y > m_rcWindow.bottom - rcMargin.bottom)
+            if (point.y > rcWnd.bottom - rcMargin.bottom)
             {
                 return HTBOTTOMRIGHT;
             }
@@ -902,7 +902,7 @@ UINT SHostWnd::OnWndNcHitTest(CPoint point)
         }
         else if (point.x < rcMargin.left)
         {
-            if (point.y > m_rcWindow.bottom - rcMargin.bottom)
+            if (point.y > rcWnd.bottom - rcMargin.bottom)
             {
                 return HTBOTTOMLEFT;
             }
@@ -912,7 +912,7 @@ UINT SHostWnd::OnWndNcHitTest(CPoint point)
             }
             return HTLEFT;
         }
-        else if (point.y > m_rcWindow.bottom - rcMargin.bottom)
+        else if (point.y > rcWnd.bottom - rcMargin.bottom)
         {
             return HTBOTTOM;
         }

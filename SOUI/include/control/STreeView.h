@@ -174,8 +174,8 @@ namespace SOUI
 		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
 	
 		virtual void OnItemSetCapture(SItemPanel *pItem,BOOL bCapture); //设置or释放鼠标捕获
-		virtual BOOL OnItemGetRect(SItemPanel *pItem,CRect &rcItem);    //获得表项的显示位置
-		virtual BOOL IsItemRedrawDelay();                               //指示表项的更新方式
+		virtual BOOL OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const;    //获得表项的显示位置
+		virtual BOOL IsItemRedrawDelay() const;                               //指示表项的更新方式
 		virtual void OnItemRequestRelayout(SItemPanel *pItem);          //列表项请求重新布局
 	protected:
 
@@ -184,7 +184,6 @@ namespace SOUI
 
 
 		void RedrawItem(SItemPanel *pItem);
-		void _SetSel(int iItem,BOOL bNotify, SWND hHitWnd);
 		SItemPanel * GetItemPanel(HTREEITEM hItem);
 
 		void DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam);

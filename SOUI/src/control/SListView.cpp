@@ -453,12 +453,12 @@ namespace SOUI
         //pItem->UpdateChildrenPosition();
     }
 
-    BOOL SListView::IsItemRedrawDelay()
+    BOOL SListView::IsItemRedrawDelay() const
     {
         return TRUE;
     }
 
-    BOOL SListView::OnItemGetRect(SItemPanel *pItem,CRect &rcItem)
+    BOOL SListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
     {
         int iPosition = (int)pItem->GetItemIndex();
         int nOffset = m_lvItemLocator->Item2Position(iPosition)-m_siVer.nPos;

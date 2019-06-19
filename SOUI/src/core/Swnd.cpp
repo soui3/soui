@@ -117,7 +117,7 @@ namespace SOUI
 
 
 	// Get align
-	UINT SWindow::GetTextAlign()
+	UINT SWindow::GetTextAlign() const
 	{
 		return GetStyle().GetTextAlign() ;
 	}
@@ -126,19 +126,18 @@ namespace SOUI
 	void SWindow::GetWindowRect(LPRECT prect) const
 	{
 		SASSERT(prect);
-		memcpy(prect,&m_rcWindow,sizeof(RECT));
+		CRect rcWnd = GetWindowRect();
+		memcpy(prect,&rcWnd,sizeof(RECT));
 	}
 
 	CRect SWindow::GetWindowRect() const {
-		CRect rc;
-		GetWindowRect(&rc);
-		return rc;
+		return m_rcWindow;
 	}
 
 	void SWindow::GetClientRect(LPRECT pRect) const
 	{
 		SASSERT(pRect);
-		CRect rc = m_rcWindow;
+		CRect rc = GetWindowRect();
 		rc.DeflateRect(GetStyle().GetMargin());
 		*pRect=rc;
 	}
@@ -159,7 +158,7 @@ namespace SOUI
 	{
 		tipInfo.swnd = m_swnd;
 		tipInfo.dwCookie = 0;
-		tipInfo.rcTarget = m_rcWindow;
+		tipInfo.rcTarget = GetWindowRect();
 
 		EventSwndUpdateTooltip evt(this);
 		evt.bUpdated = FALSE;
@@ -319,7 +318,7 @@ namespace SOUI
 		m_dwState = dwNewState;
 
 		OnStateChanged(dwOldState,dwNewState);
-		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(m_rcWindow);
+		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetWindowRect());
 		return dwOldState;
 	}
 
@@ -530,15 +529,15 @@ namespace SOUI
 	//因为NotifyInvalidateRect只有窗口可见时再通知刷新，这里在窗口可见状态改变前后都执行一次通知。
 	void SWindow::SetVisible(BOOL bVisible,BOOL bUpdate/*=FALSE*/)
 	{
-		if(bUpdate) InvalidateRect(m_rcWindow);
+		if(bUpdate) InvalidateRect(GetWindowRect());
 		SSendMessage(WM_SHOWWINDOW,bVisible);
-		if(bUpdate) InvalidateRect(m_rcWindow);
+		if(bUpdate) InvalidateRect(GetWindowRect());
 	}
 
 	void SWindow::EnableWindow( BOOL bEnable,BOOL bUpdate)
 	{
 		SSendMessage(WM_ENABLE,bEnable);
-		if(bUpdate) InvalidateRect(m_rcWindow);
+		if(bUpdate) InvalidateRect(GetWindowRect());
 	}
 
 	void SWindow::SetCheck(BOOL bCheck)
@@ -928,7 +927,7 @@ namespace SOUI
 			IRenderTarget *pRTCache=m_cachedRT;
 			if(pRTCache)
 			{//在窗口正在创建的时候进来pRTCache可能为NULL
-				CRect rcWnd=m_rcWindow;
+				CRect rcWnd=GetWindowRect();
 				if(IsCacheDirty())
 				{
 					pRTCache->ClearRect(&rcWnd,0);
@@ -1011,9 +1010,9 @@ namespace SOUI
 		rgn->CombineRect(&rcClient,RGN_DIFF);
 		if(m_rgnWnd)
 		{
-			m_rgnWnd->Offset(m_rcWindow.TopLeft());
+			m_rgnWnd->Offset(GetWindowRect().TopLeft());
 			rgn->CombineRgn(m_rgnWnd,RGN_AND);
-			m_rgnWnd->Offset(-m_rcWindow.TopLeft());
+			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
 		}
 		IRenderTarget *pRT=GetRenderTarget(OLEDC_OFFSCREEN,rgn);//不自动画背景
 
@@ -1063,9 +1062,9 @@ namespace SOUI
 
 		if(m_rgnWnd)
 		{
-			m_rgnWnd->Offset(m_rcWindow.TopLeft());
+			m_rgnWnd->Offset(GetWindowRect().TopLeft());
 			pRT->PushClipRegion(m_rgnWnd);
-			m_rgnWnd->Offset(-m_rcWindow.TopLeft());
+			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
 		}
 		if(IsClipClient())
 		{
@@ -1137,7 +1136,7 @@ namespace SOUI
 		if(pRTBack)
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
 			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
-			pRTBack->AlphaBlend(&m_rcWindow,pRT,&m_rcWindow,GetStyle().m_byAlpha);
+			pRTBack->AlphaBlend(&GetWindowRect(),pRT,&GetWindowRect(),GetStyle().m_byAlpha);
 
 			SAutoRefPtr<IFont> curFont;
 			HRESULT hr = pRT->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
@@ -1183,7 +1182,7 @@ namespace SOUI
 			InvalidateRect(rect);
 		}else
 		{
-			InvalidateRect(m_rcWindow);
+			InvalidateRect(GetWindowRect());
 		}
 	}
 
@@ -1193,7 +1192,7 @@ namespace SOUI
 		if(bFromThis) MarkCacheDirty(true);
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
 		//只能更新窗口有效区域
-		CRect rcIntersect = rect & m_rcWindow;
+		CRect rcIntersect = rect & GetWindowRect();
 		if(rcIntersect.IsRectEmpty()) return;
 
 		if(!GetStyle().m_bBkgndBlend)
@@ -1203,11 +1202,14 @@ namespace SOUI
 				GETRENDERFACTORY->CreateRegion(&m_invalidRegion);
 			}
 			m_invalidRegion->CombineRect(rcIntersect,RGN_OR);
+			//todo:hjx
 			::SendMessage(GetContainer()->GetHostHwnd(),UM_UPDATESWND,(WPARAM)m_swnd,0);//请求刷新窗口
 		}else
 		{
 			if(GetParent())
 			{
+				CPoint pt = GetParent()->GetChildrenLayoutRect().TopLeft();
+				rcIntersect.OffsetRect(pt);
 				GetParent()->InvalidateRect(rcIntersect,FALSE);
 			}else
 			{
@@ -1451,14 +1453,14 @@ namespace SOUI
 			if(m_pNcSkin)
 			{
 				if(nState>=m_pNcSkin->GetStates()) nState=0;
-				m_pNcSkin->DrawByIndex(pRT,m_rcWindow,nState);
+				m_pNcSkin->DrawByIndex(pRT,GetWindowRect(),nState);
 			}
 			else
 			{
 				COLORREF crBg = GetStyle().m_crBorder;
 				if (CR_INVALID != crBg)
 				{
-					pRT->FillSolidRect(&m_rcWindow,crBg);
+					pRT->FillSolidRect(&GetWindowRect(),crBg);
 				}
 			}
 			pRT->PopClip();
@@ -1703,7 +1705,7 @@ namespace SOUI
 		if(!(GetState()&WndState_PushDown)) return;
 
 		ModifyState(0, WndState_PushDown,TRUE);
-		if(!m_rcWindow.PtInRect(pt)) return;
+		if(!GetWindowRect().PtInRect(pt)) return;
 
 		EventLButtonUp evtLButtonUp(this);
 		evtLButtonUp.pt = pt;
@@ -1751,7 +1753,7 @@ namespace SOUI
 		return bRet;
 	}
 
-	CRect SWindow::GetChildrenLayoutRect()
+	CRect SWindow::GetChildrenLayoutRect() const
 	{
 		CRect rcRet;
 		GetClientRect(rcRet);
@@ -1846,7 +1848,7 @@ namespace SOUI
 	{
 		EventSetFocus evt(this);
 		FireEvent(evt);
-		InvalidateRect(m_rcWindow);
+		InvalidateRect(GetWindowRect());
 		accNotifyEvent(EVENT_OBJECT_FOCUS);
 	}
 
@@ -1854,7 +1856,7 @@ namespace SOUI
 	{
 		EventKillFocus evt(this);
 		FireEvent(evt);
-		InvalidateRect(m_rcWindow);
+		InvalidateRect(GetWindowRect());
 	}
 
 	LRESULT SWindow::OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2181,7 +2183,7 @@ namespace SOUI
 
 	void SWindow::PaintBackground(IRenderTarget *pRT,LPRECT pRc )
 	{
-		CRect rcDraw=m_rcWindow;
+		CRect rcDraw=GetWindowRect();
 		if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 		pRT->PushClipRect(&rcDraw,RGN_AND);
 
@@ -2200,7 +2202,7 @@ namespace SOUI
 
 	void SWindow::PaintForeground( IRenderTarget *pRT,LPRECT pRc )
 	{
-		CRect rcDraw=m_rcWindow;
+		CRect rcDraw=GetWindowRect();
 		if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
@@ -2214,7 +2216,7 @@ namespace SOUI
 	}
 	void SWindow::PaintForeground2(IRenderTarget *pRT, LPRECT pRc)
 	{
-		CRect rcDraw = m_rcWindow;
+		CRect rcDraw = GetWindowRect();
 		if (pRc) rcDraw.IntersectRect(rcDraw, pRc);
 		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
@@ -2568,12 +2570,12 @@ namespace SOUI
 		{
 			if(!m_cachedRT)
 			{
-				GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,m_rcWindow.Width(),m_rcWindow.Height());
+				GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,GetWindowRect().Width(),GetWindowRect().Height());
 			}else
 			{
-				m_cachedRT->Resize(m_rcWindow.Size());
+				m_cachedRT->Resize(GetWindowRect().Size());
 			}
-			m_cachedRT->SetViewportOrg(-m_rcWindow.TopLeft());
+			m_cachedRT->SetViewportOrg(-GetWindowRect().TopLeft());
 
 			MarkCacheDirty(true);
 		}
@@ -2581,12 +2583,12 @@ namespace SOUI
 		{
 			if(!m_layeredRT)
 			{
-				GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,m_rcWindow.Width(),m_rcWindow.Height());
+				GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,GetWindowRect().Width(),GetWindowRect().Height());
 			}else
 			{
-				m_layeredRT->Resize(m_rcWindow.Size());
+				m_layeredRT->Resize(GetWindowRect().Size());
 			}
-			m_layeredRT->SetViewportOrg(-m_rcWindow.TopLeft());
+			m_layeredRT->SetViewportOrg(-GetWindowRect().TopLeft());
 		}
 
 		EventSwndSize evt(this);
@@ -2598,8 +2600,8 @@ namespace SOUI
 	{
 		if(IsDrawToCache() && !m_cachedRT)
 		{
-			GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,m_rcWindow.Width(),m_rcWindow.Height());
-			m_cachedRT->SetViewportOrg(-m_rcWindow.TopLeft());
+			GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,GetWindowRect().Width(),GetWindowRect().Height());
+			m_cachedRT->SetViewportOrg(-GetWindowRect().TopLeft());
 			MarkCacheDirty(true);
 		}
 		if(!IsDrawToCache() && m_cachedRT)
@@ -2635,8 +2637,8 @@ namespace SOUI
 	{
 		if(IsLayeredWindow() && !m_layeredRT)
 		{
-			GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,m_rcWindow.Width(),m_rcWindow.Height());
-			m_layeredRT->SetViewportOrg(-m_rcWindow.TopLeft());
+			GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,GetWindowRect().Width(),GetWindowRect().Height());
+			m_layeredRT->SetViewportOrg(-GetWindowRect().TopLeft());
 		}
 		if(!IsLayeredWindow() && m_layeredRT)
 		{
@@ -2846,12 +2848,12 @@ namespace SOUI
 			bRet = rcClient.PtInRect(pt);
 		}else
 		{
-			bRet = m_rcWindow.PtInRect(pt);
+			bRet = GetWindowRect().PtInRect(pt);
 		}
 		if(m_rgnWnd)
 		{
 			CPoint ptTmp = pt;
-			ptTmp -= m_rcWindow.TopLeft();
+			ptTmp -= GetWindowRect().TopLeft();
 			bRet = m_rgnWnd->PtInRegion(ptTmp);
 		}
 		return bRet;

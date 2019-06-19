@@ -121,7 +121,7 @@ BOOL SItemPanel::OnFireEvent(EventArgs &evt)
     return m_pFrmHost->FireEvent(evt2);
 }
 
-CRect SItemPanel::GetContainerRect()
+CRect SItemPanel::GetContainerRect() const
 {
     CRect rcItem;
     m_pItemContainer->OnItemGetRect(this,rcItem);
@@ -274,7 +274,7 @@ BOOL SItemPanel::NeedRedrawWhenStateChange()
     return TRUE;
 }
 
-CRect SItemPanel::GetItemRect()
+CRect SItemPanel::GetItemRect() const
 {
     CRect rcItem;
     m_pItemContainer->OnItemGetRect(this,rcItem);
@@ -333,7 +333,7 @@ IScriptModule * SItemPanel::GetScriptModule()
     return m_pFrmHost->GetContainer()->GetScriptModule();
 }
 
-void SItemPanel::FrameToHost(RECT & rc)
+void SItemPanel::FrameToHost(RECT & rc) const
 {
     CRect rcItem = GetItemRect();
     ::OffsetRect(&rc,rcItem.left,rcItem.top);

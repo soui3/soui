@@ -368,7 +368,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(int wid, int hei);
+    virtual CSize GetDesiredSize(int wid, int hei) ;
 
 	int m_iTile;	//绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺
     BOOL m_bManaged;  /**< 是否要自动释放当前的m_pSkin对象 */
@@ -543,7 +543,7 @@ public:
      *
      * Describe  获取进度值
      */  
-    BOOL IsVertical(){return m_bVertical;}
+    BOOL IsVertical() const{return m_bVertical;}
 protected:
     /**
      * SProgress::GetDesiredSize
@@ -1044,7 +1044,7 @@ public:
     SGroup();
 
 protected:
-    virtual CRect GetChildrenLayoutRect();
+    virtual CRect GetChildrenLayoutRect() const;
 	virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
 
     void OnPaint(IRenderTarget *pRT);

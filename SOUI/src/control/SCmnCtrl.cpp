@@ -1365,7 +1365,7 @@ void SGroup::OnPaint(IRenderTarget *pRT)
     AfterPaint(pRT, painter);
 }
 
-CRect SGroup::GetChildrenLayoutRect()
+CRect SGroup::GetChildrenLayoutRect() const
 {
     CRect rcLayout = SWindow::GetChildrenLayoutRect();
     rcLayout.top += m_nHeaderHeight.toPixelSize(GetScale());

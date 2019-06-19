@@ -205,7 +205,7 @@ namespace SOUI
         virtual void OnViewSizeChanged(CSize szOld,CSize szNew);
         virtual void OnViewOriginChanged(CPoint ptOld,CPoint ptNew);
     protected:
-        virtual CRect GetChildrenLayoutRect();
+        virtual CRect GetChildrenLayoutRect() const;
 
         virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 

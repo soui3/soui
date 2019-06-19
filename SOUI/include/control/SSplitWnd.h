@@ -171,7 +171,7 @@ public:
     void RemoveItem( SSplitPane * pane );
 
 protected:
-	virtual CRect GetChildrenLayoutRect();
+	virtual CRect GetChildrenLayoutRect() const;
 	
 	/**
      * SSplitWnd::UpdateChildrenPosition

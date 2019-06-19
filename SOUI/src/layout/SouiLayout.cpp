@@ -792,7 +792,6 @@ namespace SOUI{
 		while(pos)
 		{
 			WndPos wp = lstWndPos.GetNext(pos);
-			wp.rc.OffsetRect(rcParent.TopLeft());
 			wp.pWnd->OnRelayout(wp.rc);
 		}
 	}

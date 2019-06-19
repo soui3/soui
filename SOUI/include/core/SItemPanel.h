@@ -17,8 +17,8 @@ class SItemPanel;
 struct IItemContainer
 {
     virtual void OnItemSetCapture(SItemPanel *pItem,BOOL bCapture)=0; //设置or释放鼠标捕获
-    virtual BOOL OnItemGetRect(SItemPanel *pItem,CRect &rcItem)=0;    //获得表项的显示位置
-    virtual BOOL IsItemRedrawDelay()=0;                               //指示表项的更新方式
+    virtual BOOL OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const=0;    //获得表项的显示位置
+    virtual BOOL IsItemRedrawDelay() const=0;                               //指示表项的更新方式
     virtual void OnItemRequestRelayout(SItemPanel *pItem)=0;          //列表项请求重新布局
 };
 
@@ -41,7 +41,7 @@ public://SwndContainerImpl
 
     virtual BOOL OnFireEvent(EventArgs &evt);
 
-    virtual CRect GetContainerRect();
+    virtual CRect GetContainerRect() const;
 
     virtual IRenderTarget * OnGetRenderTarget(const CRect & rc ,DWORD gdcFlags);
 
@@ -54,7 +54,7 @@ public://SwndContainerImpl
     virtual SWND OnSetSwndCapture(SWND swnd);
     virtual HWND GetHostHwnd();
     virtual const SStringW & GetTranslatorContext() const;
-    virtual void FrameToHost(RECT & rc);
+    virtual void FrameToHost(RECT & rc) const;
     virtual BOOL IsTranslucent() const;
     virtual BOOL IsSendWheel2Hover() const;
     
@@ -83,12 +83,12 @@ public://SWindow
     virtual BOOL IsLayeredWindow() const {return FALSE;}
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable);
     
-    CRect GetItemRect();
+    CRect GetItemRect() const;
     void SetItemCapture(BOOL bCapture);
     void SetItemData(LPARAM dwData);
     LPARAM GetItemData();
 
-    LPARAM GetItemIndex(){return m_lpItemIndex;}
+    LPARAM GetItemIndex()const {return m_lpItemIndex;}
     void SetItemIndex(LPARAM lp){m_lpItemIndex=lp;}
 
     void OnShowWindow(BOOL bShow, UINT nStatus);

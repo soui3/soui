@@ -43,7 +43,7 @@ namespace SOUI
 
         virtual SWND OnSetSwndCapture(SWND swnd);
         virtual void OnSetSwndFocus(SWND swnd);
-        virtual void FrameToHost(RECT & rc){}
+        virtual void FrameToHost(RECT & rc) const{}
         virtual SWND OnGetSwndCapture();
 
         virtual SWND GetFocus();

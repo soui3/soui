@@ -913,7 +913,7 @@ namespace SOUI
 
 	}
 
-	BOOL STreeView::OnItemGetRect( SItemPanel *pItem,CRect &rcItem )
+	BOOL STreeView::OnItemGetRect(const  SItemPanel *pItem,CRect &rcItem ) const
 	{
         HTREEITEM hItem = (HTREEITEM)pItem->GetItemIndex();
 		if(m_pVisibleMap->Lookup(hItem) == NULL) return FALSE;
@@ -927,7 +927,7 @@ namespace SOUI
         return TRUE;
 	}
 
-	BOOL STreeView::IsItemRedrawDelay()
+	BOOL STreeView::IsItemRedrawDelay() const
 	{
 		return TRUE;
 	}

@@ -48,7 +48,7 @@ public:
     DWORD    m_bTrackMouseEvent:1;  /**<监视鼠标进入及移出消息 */
     DWORD    m_bBkgndBlend:1;       /**<渲染窗口内容和背景混合标志 */
 
-    UINT GetTextAlign();
+    UINT GetTextAlign() const;
     int GetStates();
     COLORREF GetTextColor(int iState);
     IFontPtr GetTextFont(int iState);

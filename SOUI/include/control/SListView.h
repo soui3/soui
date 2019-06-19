@@ -36,8 +36,8 @@ namespace SOUI
         SItemPanel * HitTest(CPoint & pt);
     protected:
         virtual void OnItemSetCapture(SItemPanel *pItem,BOOL bCapture);
-        virtual BOOL OnItemGetRect(SItemPanel *pItem,CRect &rcItem);
-        virtual BOOL IsItemRedrawDelay();
+        virtual BOOL OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const;
+        virtual BOOL IsItemRedrawDelay() const;
         virtual void OnItemRequestRelayout(SItemPanel *pItem);
         
     protected:

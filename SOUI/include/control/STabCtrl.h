@@ -323,7 +323,7 @@ namespace SOUI
         *
         * Describe  
         */
-        virtual CRect GetChildrenLayoutRect();
+        virtual CRect GetChildrenLayoutRect() const;
         
         /**
          * GetTitleRect

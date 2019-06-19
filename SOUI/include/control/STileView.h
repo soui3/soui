@@ -43,8 +43,8 @@ public:
 
 protected:
     virtual void OnItemSetCapture(SItemPanel *pItem, BOOL bCapture);
-    virtual BOOL OnItemGetRect(SItemPanel *pItem, CRect &rcItem);
-    virtual BOOL IsItemRedrawDelay();
+    virtual BOOL OnItemGetRect(const SItemPanel *pItem, CRect &rcItem) const;
+    virtual BOOL IsItemRedrawDelay() const;
     virtual void OnItemRequestRelayout(SItemPanel *pItem);
     
 protected:
@@ -70,7 +70,7 @@ protected:
     void UpdateScrollBar();
     void RedrawItem(SItemPanel *pItem);
     SItemPanel *GetItemPanel(int iItem);
-    CRect CalcItemDrawRect(int iItem);//计算item实际绘制的位置
+    CRect CalcItemDrawRect(int iItem) const;//计算item实际绘制的位置
     
     void UpdateVisibleItems();
 	void UpdateVisibleItem(int iItem);

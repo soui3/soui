@@ -727,19 +727,19 @@ void SMCListView::OnItemRequestRelayout(SItemPanel *pItem)
 
 }
 
-BOOL SMCListView::IsItemRedrawDelay()
+BOOL SMCListView::IsItemRedrawDelay() const
 {
     return TRUE;
 }
 
-BOOL SMCListView::OnItemGetRect(SItemPanel *pItem,CRect &rcItem)
+BOOL SMCListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
     rcItem = _OnItemGetRect(iPosition);
     return TRUE;
 }
 
-CRect SMCListView::_OnItemGetRect(int iPosition)
+CRect SMCListView::_OnItemGetRect(int iPosition) const
 {
     int nOffset = m_lvItemLocator->Item2Position(iPosition)-m_siVer.nPos;
     CRect rcItem = GetClientRect();
