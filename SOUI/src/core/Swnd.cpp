@@ -1208,8 +1208,6 @@ namespace SOUI
 		{
 			if(GetParent())
 			{
-				CPoint pt = GetParent()->GetChildrenLayoutRect().TopLeft();
-				rcIntersect.OffsetRect(pt);
 				GetParent()->InvalidateRect(rcIntersect,FALSE);
 			}else
 			{
