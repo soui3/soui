@@ -371,7 +371,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     }
 
     CRect rcInvalid;
-	CRect rcWnd = GetWindowRect();
+	CRect rcWnd = SWindow::GetWindowRect();
     if (m_bNeedRepaint)
     {
         m_bNeedRepaint = FALSE;
@@ -665,7 +665,7 @@ BOOL SHostWnd::OnFireEvent(EventArgs &evt)
 
 CRect SHostWnd::GetContainerRect() const
 {
-    return GetWindowRect();
+	return SWindow::GetWindowRect();
 }
 
 HWND SHostWnd::GetHostHwnd()
@@ -887,7 +887,7 @@ UINT SHostWnd::OnWndNcHitTest(CPoint point)
     {
         ScreenToClient(&point);
 		CRect rcMargin = m_hostAttr.GetMargin(GetScale());
-		CRect rcWnd = GetWindowRect();
+		CRect rcWnd = SWindow::GetWindowRect();
         if (point.x > rcWnd.right - rcMargin.right)
         {
             if (point.y > rcWnd.bottom - rcMargin.bottom)
