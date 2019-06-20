@@ -58,6 +58,12 @@ namespace SOUI
 		    && SLayoutSize::fequal(m_mat[kMPersp0],0.0f) && SLayoutSize::fequal(m_mat[kMPersp1],0.0f) && SLayoutSize::fequal(m_mat[kMPersp2],1.0f);
     }
 
+	void SMatrix::VerifyPersps(const SMatrix *src) const
+	{
+		SASSERT(SLayoutSize::fequal(src->m_mat[kMPersp0], 0.0f)
+			&& SLayoutSize::fequal(src->m_mat[kMPersp1], 0.0f)
+			&& SLayoutSize::fequal(src->m_mat[kMPersp2], 1.0f));
+	}
 
 	float SMatrix::GetScaleX() const
 	{
@@ -178,9 +184,7 @@ namespace SOUI
 
     SMatrix & SMatrix::translate(FLOAT dx, FLOAT dy)
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
+		VerifyPersps(this);
         eDx += dx*eM11 + dy*eM21;
         eDy += dy*eM22 + dx*eM12;
         return *this;
@@ -188,10 +192,8 @@ namespace SOUI
 
     SMatrix & SMatrix::scale(FLOAT sx, FLOAT sy)
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        eM11 *= sx;
+		VerifyPersps(this);
+		eM11 *= sx;
         eM12 *= sx;
         eM21 *= sy;
         eM22 *= sy;
@@ -200,9 +202,7 @@ namespace SOUI
 
 	SMatrix & SMatrix::setScale(FLOAT sx, FLOAT sy, FLOAT px, FLOAT py)
 	{
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
+		VerifyPersps(this);
 		eM11 = sx;
 		eM22 = sy;
 		eDx = px - sx * px;
@@ -214,10 +214,8 @@ namespace SOUI
 
     SMatrix & SMatrix::shear(FLOAT sh, FLOAT sv)
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        FLOAT tm11 = sv*eM21;
+		VerifyPersps(this);
+		FLOAT tm11 = sv*eM21;
         FLOAT tm12 = sv*eM22;
         FLOAT tm21 = sh*eM11;
         FLOAT tm22 = sh*eM12;
@@ -230,10 +228,8 @@ namespace SOUI
 
     SMatrix & SMatrix::rotate(FLOAT a)
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        FLOAT sina = 0;
+		VerifyPersps(this);
+		FLOAT sina = 0;
         FLOAT cosa = 0;
 		if (SLayoutSize::fequal(a , 90.0f) || SLayoutSize::fequal(a,-270.0f))
             sina = 1.f;
@@ -255,13 +251,19 @@ namespace SOUI
         return *this;
     }
 
+	SMatrix & SMatrix::setRotate(FLOAT a, FLOAT px, FLOAT py)
+	{
+		VerifyPersps(this);
+		translate(-px, -py);
+		rotate(a);
+		translate(px, py);
+		return *this;
+	}
 
     void SMatrix::inverted(SMatrix *pOut, bool *invertible) const
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        FLOAT dtr = determinant();
+		VerifyPersps(this);
+		FLOAT dtr = determinant();
         if (dtr == 0.0) {
             if (invertible)
                 *invertible = false;                // singular matrix
@@ -338,9 +340,7 @@ namespace SOUI
 
     SMatrix SMatrix::operator *(const SMatrix &m) const
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
+		VerifyPersps(this);
 		FLOAT tm11 = eM11*m.eM11 + eM12*m.eM21;
 		FLOAT tm12 = eM11*m.eM12 + eM12*m.eM22;
 		FLOAT tm21 = eM21*m.eM11 + eM22*m.eM21;
@@ -370,17 +370,13 @@ namespace SOUI
 
     FLOAT SMatrix::determinant() const
     {
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
-        return eM11*eM22 - eM12*eM21;
+		VerifyPersps(this);
+		return eM11*eM22 - eM12*eM21;
     }
 
 	void SMatrix::Concat(const IxForm * src)
 	{
-		SASSERT(SLayoutSize::fequal(m_mat[kMPersp0],0.0f) 
-			&& SLayoutSize::fequal(m_mat[kMPersp1],0.0f)
-			&& SLayoutSize::fequal(m_mat[kMPersp2],1.0f));
+		VerifyPersps(this);
 		FLOAT tm11 = eM11*src->GetScaleX() + eM12*src->GetSkewX();
 		FLOAT tm12 = eM11*src->GetSkewY() + eM12*src->GetScaleY();
 		FLOAT tm21 = eM21*src->GetScaleX() + eM22*src->GetSkewX();

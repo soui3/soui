@@ -53,10 +53,10 @@ namespace SOUI
 
         SMatrix &operator=(const SMatrix &src);
 
+	protected:
+		void VerifyPersps(const SMatrix *src) const;
     public:
         void setMatrix(FLOAT m11, FLOAT m12, FLOAT m21, FLOAT m22, FLOAT dx, FLOAT dy);
-
-
 
         bool isIdentity() const;
 
@@ -73,6 +73,8 @@ namespace SOUI
         SMatrix & shear(FLOAT sh, FLOAT sv);
 
         SMatrix & rotate(FLOAT a);
+
+		SMatrix & setRotate(FLOAT a, FLOAT px, FLOAT py);
 
         void inverted(SMatrix *pOut, bool *invertible = 0) const;
 

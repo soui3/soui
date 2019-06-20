@@ -130,6 +130,10 @@ public:
     const SMatrix & getMatrix() const {
         return mMatrix;
     }
+
+	SMatrix & getMatrix() {
+		return mMatrix;
+	}
     
     /**
      * Sets the degree of transparency
