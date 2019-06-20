@@ -47,7 +47,6 @@
 		<file name="template_calendar" path="xml\calendar.xml" />
 		<file name="dlg_skiatext" path="xml\dlg_skiatext.xml" />
 		<file name="page_treeview" path="xml\page_treeview.xml" />
-		<file name="dlg_clock" path="xml\dlg_clock.xml" />
 		<file name="dlg_set_skin" path="xml\dlg_skinset.xml" />
 		<file name="dlg_tip" path="xml\dlg_tip.xml" />
 		<file name="dlg_wrap_content" path="xml\dlg_wrap_content.xml" />

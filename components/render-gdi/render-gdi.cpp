@@ -1093,34 +1093,35 @@ namespace SOUI
         return S_OK;
     }
 
-    HRESULT SRenderTarget_GDI::SetTransform(const IxForm * pXForm,IxForm *pOldXFrom/*=NULL*/)
+    HRESULT SRenderTarget_GDI::SetTransform(const float matrix[9], float oldMatrix[9])
     {
-		XFORM xForm = {pXForm->GetScaleX(),pXForm->GetSkewY(),pXForm->GetSkewX(),pXForm->GetScaleY(),pXForm->GetTranslateX(),pXForm->GetTranslateY()};
-        if(pOldXFrom)
+		XFORM xForm = { matrix[IxForm::kMScaleX],matrix[IxForm::kMSkewY],
+			matrix[IxForm::kMSkewX],matrix[IxForm::kMScaleY],
+			matrix[IxForm::kMTransX],matrix[IxForm::kMTransY] };
+        if(oldMatrix)
         {
-			GetTransform(pOldXFrom);
+			GetTransform(oldMatrix);
         }
         return ::SetWorldTransform(m_hdc,&xForm)?S_OK:E_FAIL;
     }
 
-    HRESULT SRenderTarget_GDI::GetTransform(IxForm * pXForm) const
+    HRESULT SRenderTarget_GDI::GetTransform( float matrix[9]) const
     {
-		SASSERT(pXForm);
+		SASSERT(matrix);
 		XFORM xForm;
 		if(!::GetWorldTransform(m_hdc,&xForm))
 			return E_FAIL;
 
-		pXForm->SetScaleX(xForm.eM11); 
-		pXForm->SetSkewX(xForm.eM21);
-		pXForm->SetTranslateX(xForm.eDx);
+		matrix[IxForm::kMScaleX]=xForm.eM11; 
+		matrix[IxForm::kMSkewX]=xForm.eM21;
+		matrix[IxForm::kMTransX]=xForm.eDx;
+		matrix[IxForm::kMSkewY]=xForm.eM12;		
+		matrix[IxForm::kMScaleY]=xForm.eM22;
+		matrix[IxForm::kMTransY] = xForm.eDy;
 
-		pXForm->SetSkewY(xForm.eM12);
-		pXForm->SetScaleY(xForm.eM22);
-		pXForm->SetTranslateY(xForm.eDy);
-
-		pXForm->SetPersp0(0.0f);
-		pXForm->SetPersp1(0.0f);
-		pXForm->SetPersp2(1.0f);
+		matrix[IxForm::kMPersp0] = 0.0f;
+		matrix[IxForm::kMPersp1] = 0.0f;
+		matrix[IxForm::kMPersp2] = 1.0f;
 		return S_OK;
 	}
 

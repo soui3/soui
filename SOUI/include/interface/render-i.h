@@ -1151,7 +1151,7 @@ namespace SOUI
          *
          * Describe  
          */
-        virtual HRESULT SetTransform(const IxForm * pXForm,IxForm *pOldXFrom=NULL) = 0;
+        virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]=NULL) = 0;
 
         /**
          * SetTransform
@@ -1161,7 +1161,7 @@ namespace SOUI
          *
          * Describe  
          */        
-        virtual HRESULT GetTransform(IxForm * pXForm) const = 0;
+        virtual HRESULT GetTransform(float matrix[9]) const = 0;
         
         /**
          * QueryInterface

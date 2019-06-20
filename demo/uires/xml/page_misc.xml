@@ -73,6 +73,13 @@
           </window>
           <s3dview name="3d_test" size="-2,0" weight="1" skin_fore="skin_avatar_low" skin_back="skin_bkgnd" clipClient="1"/>
         </page>
+        <page title="clock">
+          <clock pos="|0,|0,@-1,@-1" offset="-0.5,-0.5" skin="clock.background" name="clock_main" msgTransparent="1"
+            pointer_hour="img.clock:pointer_hour"
+            pointer_minute="img.clock:pointer_minute"
+            pointer_second="img.clock:pointer_second"
+	        />
+        </page>
       </tabctrl>
       
     </page>

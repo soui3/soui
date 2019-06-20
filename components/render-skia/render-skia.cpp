@@ -1232,34 +1232,33 @@ namespace SOUI
         return E_NOINTERFACE;
     }
 
-    HRESULT SRenderTarget_Skia::SetTransform(const IxForm * pXForm,IxForm *pOldXFrom)
+    HRESULT SRenderTarget_Skia::SetTransform(const float matrix[9], float oldMatrix[9])
     {
-        SASSERT(pXForm);
-        if(pOldXFrom) GetTransform(pOldXFrom);
+        SASSERT(matrix);
+        if(oldMatrix) GetTransform(oldMatrix);
         SkMatrix m;
-		m.setAll(pXForm->GetScaleX(),pXForm->GetSkewX(),pXForm->GetTranslateX(),
-			pXForm->GetSkewY(),pXForm->GetScaleY(),pXForm->GetTranslateY(),
-			pXForm->GetPersp0(),pXForm->GetPersp1(),pXForm->GetPersp2()
+		m.setAll(matrix[IxForm::kMScaleX], matrix[IxForm::kMSkewX],matrix[IxForm::kMTransX],
+			matrix[IxForm::kMSkewY],matrix[IxForm::kMScaleY],matrix[IxForm::kMTransY],
+			matrix[IxForm::kMPersp0], matrix[IxForm::kMPersp1], matrix[IxForm::kMPersp2]
 			);
         m_SkCanvas->setMatrix(m);
         return S_OK;
     }
 
-    HRESULT SRenderTarget_Skia::GetTransform(IxForm * pXForm) const
+    HRESULT SRenderTarget_Skia::GetTransform(float matrix[9]) const
     {
-        SASSERT(pXForm);
-        const SkMatrix m = m_SkCanvas->getTotalMatrix();
-        pXForm->SetScaleX(m.getScaleX()); 
-        pXForm->SetSkewX(m.getSkewX());
-        pXForm->SetTranslateX(m.getTranslateX());
-        
-        pXForm->SetSkewY(m.getSkewY());
-        pXForm->SetScaleY(m.getScaleY());
-        pXForm->SetTranslateY(m.getTranslateY());
+        SASSERT(matrix);
+        const SkMatrix & m = m_SkCanvas->getTotalMatrix();
+		matrix[IxForm::kMScaleX] = m.getScaleX();
+		matrix[IxForm::kMSkewX] = m.getSkewX();
+		matrix[IxForm::kMTransX] = m.getTranslateX();
+		matrix[IxForm::kMSkewY] = m.getSkewY();
+		matrix[IxForm::kMScaleY] = m.getScaleY();
+		matrix[IxForm::kMTransY] = m.getTranslateY();
+		matrix[IxForm::kMPersp0] = m.getPerspX();
+		matrix[IxForm::kMPersp1] = m.getPerspY();
+		matrix[IxForm::kMPersp2] = m.get(SkMatrix::kMPersp2);
 
-		pXForm->SetPersp0(m.getPerspX());
-		pXForm->SetPersp1(m.getPerspY());
-		pXForm->SetPersp2(m.get(SkMatrix::kMPersp2));
         return S_OK;
     }
 

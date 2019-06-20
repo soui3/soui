@@ -178,7 +178,6 @@ protected:
     void OnMatrixWindowReNotify(EventArgs *pEvt);
 
     void OnBtnCreateChildren();
-    void OnBtnClock();
     void OnBtnSkin();
 	void OnInitListBox();
 
@@ -236,7 +235,6 @@ protected:
         EVENT_NAME_COMMAND(R.name.btn_menu,OnBtnMenu)
         EVENT_NAME_COMMAND(R.name.btn_webkit_go,OnBtnWebkitGo)
         EVENT_ID_COMMAND(R.id.btn_createchildren,OnBtnCreateChildren)
-        EVENT_ID_COMMAND(R.id.btn_clock,OnBtnClock)
 		EVENT_ID_COMMAND(R.id.btn_init_listbox,OnInitListBox)
 		EVENT_ID_COMMAND(R.id.btn_skin,OnBtnSkin)
 		EVENT_ID_COMMAND(R.id.btn_start_notify_thread,OnBtnStartNotifyThread)

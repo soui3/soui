@@ -28,25 +28,25 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
 
     {
         double angle = GetHourAngle(last_refresh_time.wHour,last_refresh_time.wMinute);
-        SMatrix form = InitMatrix(angle,  center);
-        pRT->SetTransform(&form, NULL);
+        SMatrix matrix = InitMatrix(angle,  center);
+        pRT->SetTransform(matrix.GetData(), NULL);
         pRT->DrawBitmapEx(rcDraw, pointer_hour, &rcSrc, EM_STRETCH, 255);
     }
 
     {
         double angle = GetMinuteSecondAngle(last_refresh_time.wMinute);
-        SMatrix form = InitMatrix(angle, center);
-        pRT->SetTransform(&form, NULL);
+        SMatrix matrix = InitMatrix(angle, center);
+        pRT->SetTransform(matrix.GetData(), NULL);
         pRT->DrawBitmapEx(rcDraw, pointer_minute, &rcSrc, EM_STRETCH, 255);
     }
 
     {
         double angle = GetMinuteSecondAngle(last_refresh_time.wSecond);
-        SMatrix form = InitMatrix(angle, center);
-        pRT->SetTransform(&form, NULL);
+        SMatrix matrix = InitMatrix(angle, center);
+        pRT->SetTransform(matrix.GetData(), NULL);
         pRT->DrawBitmapEx(rcDraw, pointer_second, &rcSrc, EM_STRETCH, 255);
     }
-	pRT->SetTransform(&SMatrix());
+	pRT->SetTransform(SMatrix().GetData());
 }
 
 SMatrix SClock::InitMatrix(double angle, CPoint &center)

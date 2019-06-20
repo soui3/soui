@@ -60,7 +60,7 @@ namespace SOUI
 			mat.preTranslate(-wid,-hei);
 			mat.postTranslate(wid,hei);
 
-			pRT->SetTransform(&mat);
+			pRT->SetTransform(mat.GetData());
 			//[0,90) [180,270)=> fore
 			int nRotate = (int)m_nRotate;
 			if(m_nRotate<180)
@@ -78,7 +78,7 @@ namespace SOUI
 			}
 			
 			mat.setIdentity();
-			pRT->SetTransform(&mat);
+			pRT->SetTransform(mat.GetData());
 		}
 		AfterPaint(pRT,painter);
 	}
@@ -158,16 +158,16 @@ void SMatrixWindow::OnPaint(IRenderTarget *pRT)
         pRT->DrawText(_T("没有指定skin对象"),-1,rc,DT_SINGLELINE|DT_VCENTER|DT_VCENTER);
     }else
     {
-        SMatrix m,m2;
-		
+        SMatrix m;
+		float m2[9];
          m.rotate(m_fRotate)
          .scale(m_fScaleX,m_fScaleY)
          .shear(m_fSkewX,m_fSkewY)
          .translate(m_fTransX,m_fTransY);
         
-        pRT->SetTransform(&m,&m2);
+        pRT->SetTransform(m.GetData(),m2);
         m_pBgSkin->DrawByIndex(pRT,rc,0);
-        pRT->SetTransform(&m2);
+        pRT->SetTransform(m2);
     }
     AfterPaint(pRT,painter);
 }

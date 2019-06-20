@@ -462,9 +462,9 @@ namespace SOUI
 
         virtual HRESULT QueryInterface(REFGUID iid,IObjRef ** ppObj);
         
-        virtual HRESULT SetTransform(const IxForm * pXForm,IxForm *pOldXFrom=NULL);
+        virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]);
 
-        virtual HRESULT GetTransform(IxForm * pXForm) const;
+        virtual HRESULT GetTransform(float matrix[9]) const;
 
 		virtual COLORREF GetPixel( int x, int y );
 

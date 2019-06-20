@@ -92,4 +92,7 @@
 	<imgframe name="skin_btn_skin1_png" src="IMGX:btn_skin1_png" states="4" autoFit="1" margin-x="1" margin-y="1" />
   <imglist name="skin_icons"	src="imgx:icons.png" states="11"/>
   <imgframe name="skin_category" src="imgx:btn_catetory.png" states="3" margin="3,3,3,3"/>
+
+  <imglist name="clock.background" src="img.clock:background"/>
+
 </skin>

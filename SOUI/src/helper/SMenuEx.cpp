@@ -67,7 +67,6 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"itemHeight", m_nItemHei, FALSE)
 			ATTR_CUSTOM(L"iconPos", OnAttrIconPos)
 			ATTR_SKIN(L"iconSkin", m_pIconSkin, FALSE)
-			//ATTR_LAYOUTSIZE4(L"margin", m_rcMargin,FALSE)
 			ATTR_LAYOUTSIZE(L"iconBarWidth", m_nIconBarWidth, FALSE)
 			ATTR_LAYOUTSIZE(L"textOffset", m_nTextOffset, FALSE)
 			ATTR_LAYOUTSIZE(L"minWidth", m_nMinWidth, FALSE)

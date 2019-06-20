@@ -851,12 +851,6 @@ void CMainDlg::OnBtnCreateChildren()
     pContainer->CreateChildren(strXml);
 }
 
-void CMainDlg::OnBtnClock()
-{
-    SHostDialog dlgClock(UIRES.LAYOUT.dlg_clock);
-    dlgClock.DoModal();
-}
-
 void CMainDlg::OnInitListBox()
 {
 	SListBox *pLb = FindChildByID2<SListBox>(R.id.lb_test);
