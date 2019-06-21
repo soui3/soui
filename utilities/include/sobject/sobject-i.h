@@ -77,7 +77,7 @@ namespace SOUI
 		Skin,
 		Layout,
 		Interpolator,
-		AnimationObj,
+		Animation,
 	};
 
 	/**

@@ -24,7 +24,7 @@ namespace SOUI {
 	 * the default rotation point.
 	 *
 	 */
-	class RotateAnimation : public Animation {
+	class SRotateAnimation : public SAnimation {
 		private:float mFromDegrees;
 		private:float mToDegrees;
 
@@ -47,7 +47,7 @@ namespace SOUI {
 		 *
 		 * @param toDegrees Rotation offset to apply at the end of the animation.
 		 */
-		public:RotateAnimation(float fromDegrees, float toDegrees) {
+		public:SRotateAnimation(float fromDegrees=0.0f, float toDegrees=0.0f) {
 			mFromDegrees = fromDegrees;
 			mToDegrees = toDegrees;
 			mPivotX = 0.0f;
@@ -69,7 +69,7 @@ namespace SOUI {
 		 *        being rotated, specified as an absolute number where 0 is the top
 		 *        edge.
 		 */
-		public:RotateAnimation(float fromDegrees, float toDegrees, float pivotX, float pivotY) {
+		public:SRotateAnimation(float fromDegrees, float toDegrees, float pivotX, float pivotY) {
 			mFromDegrees = fromDegrees;
 			mToDegrees = toDegrees;
 
@@ -105,7 +105,7 @@ namespace SOUI {
 		 *        pivotYType is ABSOLUTE, or a percentage (where 1.0 is 100%)
 		 *        otherwise.
 		 */
-		public:RotateAnimation(float fromDegrees, float toDegrees, int pivotXType, float pivotXValue,
+		public:SRotateAnimation(float fromDegrees, float toDegrees, int pivotXType, float pivotXValue,
 			int pivotYType, float pivotYValue) {
 			mFromDegrees = fromDegrees;
 			mToDegrees = toDegrees;
@@ -143,7 +143,7 @@ namespace SOUI {
 		}
 
 		public:void initialize(int width, int height, int parentWidth, int parentHeight) {
-			Animation::reset();
+			SAnimation::reset();
 			mPivotX = resolveSize(mPivotXType, mPivotXValue, width, parentWidth);
 			mPivotY = resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
 		}

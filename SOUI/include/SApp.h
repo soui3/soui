@@ -68,6 +68,7 @@ interface SOUI_EXP ISystemObjectRegister
 	virtual void RegisterSkins(SObjectFactoryMgr *objFactory)  {}
 	virtual void RegisterWindows(SObjectFactoryMgr *objFactory)  {}
 	virtual void RegisterInterpolator(SObjectFactoryMgr *objFactory) {}
+	virtual void RegisterAnimation(SObjectFactoryMgr *objFactory) {}
 };
 
 class SOUI_EXP SObjectDefaultRegister : public ISystemObjectRegister
@@ -77,6 +78,7 @@ public:
 	void RegisterSkins(SObjectFactoryMgr *objFactory);
 	void RegisterLayouts(SObjectFactoryMgr *objFactory);
 	void RegisterInterpolator(SObjectFactoryMgr *objFactory);
+	void RegisterAnimation(SObjectFactoryMgr *objFactory);
 };
 
 

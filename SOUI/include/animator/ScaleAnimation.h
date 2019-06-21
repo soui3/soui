@@ -20,7 +20,7 @@ namespace SOUI {
 	 * to use for the center of scaling.
 	 *
 	 */
-	class ScaleAnimation : public Animation {
+	class SScaleAnimation : public SAnimation {
 	public:
 		private: float mFromX;
 		private: float mToX;
@@ -56,7 +56,7 @@ namespace SOUI {
 		 *        animation
 		 * @param toY Vertical scaling factor to apply at the end of the animation
 		 */
-		public: ScaleAnimation(float fromX, float toX, float fromY, float toY) {
+		public: SScaleAnimation(float fromX=0.0f, float toX = 0.0f, float fromY = 0.0f, float toY = 0.0f) {
 			mFromX = fromX;
 			mToX = toX;
 			mFromY = fromY;
@@ -81,7 +81,7 @@ namespace SOUI {
 		 *        being scaled, specified as an absolute number where 0 is the top
 		 *        edge. (This point remains fixed while the object changes size.)
 		 */
-		public: ScaleAnimation(float fromX, float toX, float fromY, float toY,
+		public: SScaleAnimation(float fromX, float toX, float fromY, float toY,
 			float pivotX, float pivotY) {
 			mFromX = fromX;
 			mToX = toX;
@@ -121,7 +121,7 @@ namespace SOUI {
 		 *        size.) This value can either be an absolute number if pivotYType
 		 *        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		 */
-		public: ScaleAnimation(float fromX, float toX, float fromY, float toY,
+		public: SScaleAnimation(float fromX, float toX, float fromY, float toY,
 			int pivotXType, float pivotXValue, int pivotYType, float pivotYValue) {
 			mFromX = fromX;
 			mToX = toX;
@@ -189,7 +189,7 @@ namespace SOUI {
 		}
 
 		public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-			Animation::reset();
+			SAnimation::reset();
 
 			mFromX = resolveScale(mFromX, mFromXType, mFromXData, width, parentWidth);
 			mToX = resolveScale(mToX, mToXType, mToXData, width, parentWidth);

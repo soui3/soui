@@ -29,8 +29,8 @@
 #include <SApp.h>
 
 namespace SOUI {
-	class Animation : public TObjRefImpl<SObjectImpl<IAnimation>> {
-		SOUI_CLASS_NAME_EX(Animation,L"animation", AnimationObj)
+	class SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
+		SOUI_CLASS_NAME_EX(SAnimation,L"animation", Animation)
 	protected:
 		/**
 		* Set by {@link #getTransformation(long, Transformation)} when the animation ends.
@@ -138,7 +138,7 @@ namespace SOUI {
 			 * fillBefore set to true and fillAfter set to false
 			 */
 	public:
-		Animation() {
+		SAnimation() {
 			reset();
 		}
 

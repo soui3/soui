@@ -23,7 +23,7 @@ namespace SOUI {
 	 * sample code.
 	 *
 	 */
-	class TranslateAnimation : public Animation {
+	class STranslateAnimation : public SAnimation {
 		private: int mFromXType = ABSOLUTE;
 		private: int mToXType = ABSOLUTE;
 
@@ -60,7 +60,7 @@ namespace SOUI {
 		 * @param toYDelta Change in Y coordinate to apply at the end of the
 		 *        animation
 		 */
-		public: TranslateAnimation(float fromXDelta, float toXDelta, float fromYDelta, float toYDelta) {
+		public: STranslateAnimation(float fromXDelta=0.0f, float toXDelta=0.0f, float fromYDelta=0.0f, float toYDelta=0.0f) {
 			mFromXValue = fromXDelta;
 			mToXValue = toXDelta;
 			mFromYValue = fromYDelta;
@@ -100,7 +100,7 @@ namespace SOUI {
 		 *        animation. This value can either be an absolute number if toYType
 		 *        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		 */
-		public: TranslateAnimation(int fromXType, float fromXValue, int toXType, float toXValue,
+		public: STranslateAnimation(int fromXType, float fromXValue, int toXType, float toXValue,
 			int fromYType, float fromYValue, int toYType, float toYValue) {
 
 			mFromXValue = fromXValue;
@@ -128,7 +128,7 @@ namespace SOUI {
 		}
 
 		public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-			Animation::reset();
+			SAnimation::reset();
 			mFromXDelta = resolveSize(mFromXType, mFromXValue, width, parentWidth);
 			mToXDelta = resolveSize(mToXType, mToXValue, width, parentWidth);
 			mFromYDelta = resolveSize(mFromYType, mFromYValue, height, parentHeight);

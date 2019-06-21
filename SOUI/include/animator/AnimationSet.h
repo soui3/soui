@@ -45,7 +45,7 @@
 
 namespace SOUI{
 
-	class AnimationSet : public Animation {
+	class SAnimationSet : public SAnimation {
 		enum{
 			PROPERTY_FILL_AFTER_MASK         = 0x1,
 			PROPERTY_FILL_BEFORE_MASK        = 0x2,
@@ -59,10 +59,10 @@ namespace SOUI{
 
 	private:
 		int mFlags = 0;
-		boolean mDirty;
-		boolean mHasAlpha;
+		bool mDirty;
+		bool mHasAlpha;
 
-		SArray<Animation> mAnimations;
+		SArray<SAnimation> mAnimations;
 
 		long mLastEnd;
 
@@ -73,7 +73,7 @@ namespace SOUI{
 		*        should use the interpolator associated with this AnimationSet.
 		*        Pass false if each animation should use its own interpolator.
 		*/
-	public: AnimationSet(boolean shareInterpolator) {
+	public: SAnimationSet(bool shareInterpolator=true) {
 				setFlag(PROPERTY_SHARE_INTERPOLATOR_MASK, shareInterpolator);
 				init();
 			}
@@ -93,7 +93,7 @@ namespace SOUI{
 			//    return animation;
 			//}
 
-	private: void setFlag(int mask, boolean value) {
+	private: void setFlag(int mask, bool value) {
 				 if (value) {
 					 mFlags |= mask;
 				 } else {
@@ -105,30 +105,30 @@ namespace SOUI{
 				 mStartTime = 0;
 			 }
 
-	public: void setFillAfter(boolean fillAfter) {
+	public: void setFillAfter(bool fillAfter) {
 				mFlags |= PROPERTY_FILL_AFTER_MASK;
-				Animation::setFillAfter(fillAfter);
+				SAnimation::setFillAfter(fillAfter);
 			}
 
-	public: void setFillBefore(boolean fillBefore) {
+	public: void setFillBefore(bool fillBefore) {
 				mFlags |= PROPERTY_FILL_BEFORE_MASK;
-				Animation::setFillBefore(fillBefore);
+				SAnimation::setFillBefore(fillBefore);
 			}
 
 	public: void setRepeatMode(RepeatMode repeatMode) {
 				mFlags |= PROPERTY_REPEAT_MODE_MASK;
-				Animation::setRepeatMode(repeatMode);
+				SAnimation::setRepeatMode(repeatMode);
 			}
 
 	public: void setStartOffset(long startOffset) {
 				mFlags |= PROPERTY_START_OFFSET_MASK;
-				Animation::setStartOffset(startOffset);
+				SAnimation::setStartOffset(startOffset);
 			}
 
 			/**
 			* @hide
 			*/
-	public: boolean hasAlpha() {
+	public: bool hasAlpha() {
 				if (mDirty) {
 					mDirty = mHasAlpha = false;
 
@@ -152,7 +152,7 @@ namespace SOUI{
 			*/
 	public: void setDuration(long durationMillis) {
 				mFlags |= PROPERTY_DURATION_MASK;
-				Animation::setDuration(durationMillis);
+				SAnimation::setDuration(durationMillis);
 				mLastEnd = mStartOffset + mDuration;
 			}
 
@@ -162,7 +162,7 @@ namespace SOUI{
 			* that they were added
 			* @param a Animation to add.
 			*/
-	public: void addAnimation(Animation  a) {
+	public: void addAnimation(SAnimation  a) {
 				mAnimations.Add(a);
 
 				if ((mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK) {
@@ -186,12 +186,12 @@ namespace SOUI{
 			* @see android.view.animation.Animation#setStartTime(long)
 			*/
 	public: void setStartTime(long startTimeMillis) {
-				Animation::setStartTime(startTimeMillis);
+				SAnimation::setStartTime(startTimeMillis);
 
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					Animation & a = mAnimations[i];
+					SAnimation & a = mAnimations[i];
 					a.setStartTime(startTimeMillis);
 				}
 			}
@@ -202,7 +202,7 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					Animation &a = mAnimations.GetAt(i);
+					SAnimation &a = mAnimations.GetAt(i);
 					startTime = smin(startTime, a.getStartTime());
 				}
 
@@ -219,7 +219,7 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 				long duration = 0;
 
-				boolean durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
+				bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
 				if (durationSet) {
 					duration = mDuration;
 				} else {
@@ -258,14 +258,14 @@ namespace SOUI{
 	public: bool getTransformation(long currentTime, Transformation &t) {
 				int count = mAnimations.GetCount();
 
-				boolean more = false;
-				boolean started = false;
-				boolean ended = true;
+				bool more = false;
+				bool started = false;
+				bool ended = true;
 
 				t.clear();
 
 				for (int i = count - 1; i >= 0; --i) {
-					Animation & a = mAnimations[i];
+					SAnimation & a = mAnimations[i];
 
 					Transformation temp;
 					more = a.getTransformation(currentTime, temp, getScaleFactor()) || more;
@@ -308,13 +308,13 @@ namespace SOUI{
 	public: void initialize(int width, int height, int parentWidth, int parentHeight) {
 				//        Animation::initialize(width, height, parentWidth, parentHeight);
 
-				boolean durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
-				boolean fillAfterSet = (mFlags & PROPERTY_FILL_AFTER_MASK) == PROPERTY_FILL_AFTER_MASK;
-				boolean fillBeforeSet = (mFlags & PROPERTY_FILL_BEFORE_MASK) == PROPERTY_FILL_BEFORE_MASK;
-				boolean repeatModeSet = (mFlags & PROPERTY_REPEAT_MODE_MASK) == PROPERTY_REPEAT_MODE_MASK;
-				boolean shareInterpolator = (mFlags & PROPERTY_SHARE_INTERPOLATOR_MASK)
+				bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
+				bool fillAfterSet = (mFlags & PROPERTY_FILL_AFTER_MASK) == PROPERTY_FILL_AFTER_MASK;
+				bool fillBeforeSet = (mFlags & PROPERTY_FILL_BEFORE_MASK) == PROPERTY_FILL_BEFORE_MASK;
+				bool repeatModeSet = (mFlags & PROPERTY_REPEAT_MODE_MASK) == PROPERTY_REPEAT_MODE_MASK;
+				bool shareInterpolator = (mFlags & PROPERTY_SHARE_INTERPOLATOR_MASK)
 					== PROPERTY_SHARE_INTERPOLATOR_MASK;
-				boolean startOffsetSet = (mFlags & PROPERTY_START_OFFSET_MASK)
+				bool startOffsetSet = (mFlags & PROPERTY_START_OFFSET_MASK)
 					== PROPERTY_START_OFFSET_MASK;
 
 				if (shareInterpolator) {
@@ -325,8 +325,8 @@ namespace SOUI{
 				//int count = children.size();
 
 				//long duration = mDuration;
-				//boolean fillAfter = mFillAfter;
-				//boolean fillBefore = mFillBefore;
+				//bool fillAfter = mFillAfter;
+				//bool fillBefore = mFillBefore;
 				//int repeatMode = mRepeatMode;
 				//Interpolator interpolator = mInterpolator;
 				//long startOffset = mStartOffset;
@@ -368,7 +368,7 @@ namespace SOUI{
 			}
 
 	public: void reset() {
-				Animation::reset();
+				SAnimation::reset();
 				restoreChildrenStartOffset();
 			}
 

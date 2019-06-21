@@ -30,6 +30,13 @@
 #include "msaa/SAccProxyWindow.h"
 #include "msaa/SAccProxyCmnCtrl.h"
 
+#include "animator/Animation.h"
+#include "animator/AnimationSet.h"
+#include "animator/ScaleAnimation.h"
+#include "animator/RotateAnimation.h"
+#include "animator/AlphaAnimation.h"
+#include "animator/TranslateAnimation.h"
+
 namespace SOUI
 {
 
@@ -179,6 +186,16 @@ void SObjectDefaultRegister::RegisterInterpolator(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SBounceInterpolator>();
 	objFactory->TplRegisterFactory<SCycleInterpolator>();
 	objFactory->TplRegisterFactory<SOvershootInterpolator>();
+}
+
+void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory)
+{
+	objFactory->TplRegisterFactory<SAnimation>();
+	objFactory->TplRegisterFactory<SAnimationSet>();
+	objFactory->TplRegisterFactory<SAlphaAnimation>();
+	objFactory->TplRegisterFactory<SScaleAnimation>();
+	objFactory->TplRegisterFactory<SRotateAnimation>();
+	objFactory->TplRegisterFactory<STranslateAnimation>();
 }
 //////////////////////////////////////////////////////////////////////////
 // SApplication
@@ -515,7 +532,7 @@ IInterpolator * SApplication::CreateInterpolatorByName(LPCWSTR pszName) const
 
 IAnimation * SApplication::CreateAnimationByName(LPCWSTR pszName) const
 {
-	return NULL;
+	return (IAnimation*)CreateObject(SObjectInfo(pszName, Animation));
 }
 
 void SApplication::SetLogManager(ILog4zManager * pLogMgr)

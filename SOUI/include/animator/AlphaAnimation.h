@@ -24,7 +24,7 @@ namespace SOUI {
  * changing the alpha property of a {@link Transformation}
  *
  */
-class AlphaAnimation: public Animation {
+class SAlphaAnimation: public SAnimation {
 private:
 	float mFromAlpha;
     float mToAlpha;
@@ -37,7 +37,7 @@ private:
      * @param toAlpha Ending alpha value for the animation.
      */
 public:
-	AlphaAnimation(float fromAlpha, float toAlpha) {
+	SAlphaAnimation(float fromAlpha=0.0f, float toAlpha=0.0f) {
         mFromAlpha = fromAlpha;
         mToAlpha = toAlpha;
     }
@@ -46,7 +46,7 @@ public:
      * Changes the alpha property of the supplied {@link Transformation}
      */
 protected:
-	void applyTransformation(float interpolatedTime, IxForm * t) {
+	void applyTransformation(float interpolatedTime, Transformation & t) {
         float alpha = mFromAlpha;
         t.setAlpha(alpha + ((mToAlpha - alpha) * interpolatedTime));
     }
