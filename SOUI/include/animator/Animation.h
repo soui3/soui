@@ -29,7 +29,7 @@
 #include <SApp.h>
 
 namespace SOUI {
-	class SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
+	class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
 		SOUI_CLASS_NAME_EX(SAnimation,L"animation", Animation)
 	protected:
 		/**

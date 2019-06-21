@@ -24,7 +24,9 @@ namespace SOUI {
 	 * the default rotation point.
 	 *
 	 */
-	class SRotateAnimation : public SAnimation {
+	class SOUI_EXP SRotateAnimation : public SAnimation {
+		SOUI_CLASS_NAME(SRotateAnimation, L"rotate")
+	
 		private:float mFromDegrees;
 		private:float mToDegrees;
 

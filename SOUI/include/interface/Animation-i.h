@@ -27,7 +27,7 @@
 #include <sobject/sobject-i.h>
 
 namespace SOUI {
-	struct IAnimation : IObjRef , IObject {
+	struct SOUI_EXP IAnimation : IObjRef , IObject {
 		/**
 		* <p>An animation listener receives notifications from an animation.
 		* Notifications indicate animation related events, such as the end or the

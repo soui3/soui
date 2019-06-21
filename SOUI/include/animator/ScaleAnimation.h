@@ -20,8 +20,9 @@ namespace SOUI {
 	 * to use for the center of scaling.
 	 *
 	 */
-	class SScaleAnimation : public SAnimation {
-	public:
+	class SOUI_EXP SScaleAnimation : public SAnimation {
+	SOUI_CLASS_NAME(SScaleAnimation,L"scale")
+
 		private: float mFromX;
 		private: float mToX;
 		private: float mFromY;

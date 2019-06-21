@@ -24,7 +24,8 @@ namespace SOUI {
  * changing the alpha property of a {@link Transformation}
  *
  */
-class SAlphaAnimation: public SAnimation {
+class SOUI_EXP SAlphaAnimation: public SAnimation {
+	SOUI_CLASS_NAME(SAlphaAnimation, L"alpha")
 private:
 	float mFromAlpha;
     float mToAlpha;

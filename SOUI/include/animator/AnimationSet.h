@@ -45,7 +45,8 @@
 
 namespace SOUI{
 
-	class SAnimationSet : public SAnimation {
+	class SOUI_EXP SAnimationSet : public SAnimation {
+		SOUI_CLASS_NAME(SAnimationSet,L"set")
 		enum{
 			PROPERTY_FILL_AFTER_MASK         = 0x1,
 			PROPERTY_FILL_BEFORE_MASK        = 0x2,

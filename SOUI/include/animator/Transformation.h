@@ -25,7 +25,7 @@ namespace SOUI
  * one point in time of an Animation.
  *
  */
-class Transformation {
+class SOUI_EXP Transformation {
 public:
 enum{
     /**

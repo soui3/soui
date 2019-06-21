@@ -23,7 +23,9 @@ namespace SOUI {
 	 * sample code.
 	 *
 	 */
-	class STranslateAnimation : public SAnimation {
+	class SOUI_EXP STranslateAnimation : public SAnimation {
+		SOUI_CLASS_NAME(STranslateAnimation,L"Translate")
+
 		private: int mFromXType = ABSOLUTE;
 		private: int mToXType = ABSOLUTE;
 
