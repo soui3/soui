@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SAniWindow.h"
-#include <animator/SInterpolatorImpl.h>
+#include <animation/SInterpolatorImpl.h>
 namespace SOUI
 {
 	SAniWindow::SAniWindow(void):m_nSteps(20),m_iAniStep(0),m_aniMode(AM_NONE), m_bSaveSize(true),m_bEnableAni(true)

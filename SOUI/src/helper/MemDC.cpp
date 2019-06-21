@@ -3,7 +3,7 @@
 namespace SOUI
 {
 
-CMemDC::CMemDC()
+SMemDC::SMemDC()
     :m_bBmpOwner(FALSE)
     ,m_bHasBitmap(FALSE)
     ,m_hOldBmp(NULL)
@@ -11,7 +11,7 @@ CMemDC::CMemDC()
 {
 }
 
-CMemDC::CMemDC( HDC hdc, const CRect & rc )
+SMemDC::SMemDC( HDC hdc, const CRect & rc )
     :m_bBmpOwner(FALSE)
     ,m_bHasBitmap(FALSE)
     ,m_hOldBmp(NULL)
@@ -19,7 +19,7 @@ CMemDC::CMemDC( HDC hdc, const CRect & rc )
     InitDC(hdc,rc);
 }
 
-CMemDC::CMemDC( HDC hdc,HBITMAP hBmp)
+SMemDC::SMemDC( HDC hdc,HBITMAP hBmp)
     :m_bBmpOwner(FALSE)
     ,m_bHasBitmap(TRUE)
 {
@@ -32,12 +32,12 @@ CMemDC::CMemDC( HDC hdc,HBITMAP hBmp)
     ::SetViewportOrgEx(m_hDC,0,0,NULL);
 }
 
-CMemDC::~CMemDC(void)
+SMemDC::~SMemDC(void)
 {
     DeleteDC();
 }
 
-HBITMAP CMemDC::SelectBitmap( HBITMAP hBmp )
+HBITMAP SMemDC::SelectBitmap( HBITMAP hBmp )
 {
     SASSERT(m_hDC);
     if(hBmp)
@@ -62,7 +62,7 @@ HBITMAP CMemDC::SelectBitmap( HBITMAP hBmp )
     }
 }
 
-void CMemDC::DeleteDC()
+void SMemDC::DeleteDC()
 {
     if(m_hDC && m_hOldBmp)
     {
@@ -74,7 +74,7 @@ void CMemDC::DeleteDC()
     m_bBmpOwner=FALSE;
 }
 
-BOOL CMemDC::InitDC( HDC hdc,const CRect &rc )
+BOOL SMemDC::InitDC( HDC hdc,const CRect &rc )
 {
     if(m_hDC) return FALSE;
     m_hDC=::CreateCompatibleDC(hdc);

@@ -7,7 +7,7 @@
 #include "helper/SplitString.h"
 
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
-#include <core/SAnimatorPulse.h>
+#include <core/SanimationPulse.h>
 
 namespace SOUI
 {
@@ -1146,7 +1146,7 @@ BOOL SHostWnd::RegisterTimelineHandler( ITimelineHandler *pHandler )
 	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
 	if(bEmpty1 && !bEmpty2)
 	{
-		SAnimatorPulse::getSingletonPtr()->RegisterTimelineHandler(this);
+		SAnimationPulse::getSingletonPtr()->RegisterTimelineHandler(this);
 	}
     return bRet;
 }
@@ -1158,7 +1158,7 @@ BOOL SHostWnd::UnregisterTimelineHandler( ITimelineHandler *pHandler )
 	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
 	if(!bEmpty1 && bEmpty2)
 	{
-		SAnimatorPulse::getSingletonPtr()->UnregisterTimelineHandler(this);
+		SAnimationPulse::getSingletonPtr()->UnregisterTimelineHandler(this);
 	}
     return bRet;
 }

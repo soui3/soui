@@ -1,6 +1,6 @@
 ﻿#include "souistd.h"
 #include "core\SCaret.h"
-#include "animator\SInterpolatorImpl.h"
+#include "animation\SInterpolatorImpl.h"
 
 namespace SOUI{
 

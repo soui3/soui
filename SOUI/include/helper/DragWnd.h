@@ -1,16 +1,15 @@
 ﻿#pragma once
 
 #include "core/SNativeWnd.h"
-#include "helper/MemDC.h"
 
 namespace SOUI
 {
 
-class CDragWnd : public SNativeWnd
+class SDragWnd : public SNativeWnd
 {
 public:
-    CDragWnd(void);
-    ~CDragWnd(void);
+    SDragWnd(void);
+    ~SDragWnd(void);
 
     static BOOL BeginDrag(HBITMAP hBmp,POINT ptHot ,COLORREF crKey, BYTE byAlpha,DWORD dwFlags);
     static void DragMove(POINT pt);
@@ -19,14 +18,14 @@ protected:
 
     void OnPaint(HDC dc);
 
-    BEGIN_MSG_MAP_EX(CDragWnd)
+    BEGIN_MSG_MAP_EX(SDragWnd)
         MSG_WM_PAINT(OnPaint)
     END_MSG_MAP()
 
     CPoint m_ptHot;
     HBITMAP m_bmp;
 
-    static CDragWnd * s_pCurDragWnd;
+    static SDragWnd * s_pCurDragWnd;
 };
 
 }//end of namespace

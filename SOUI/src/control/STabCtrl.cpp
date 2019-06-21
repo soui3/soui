@@ -1,6 +1,6 @@
 ﻿#include "souistd.h"
 #include "control/Stabctrl.h"
-#include "animator/SInterpolatorImpl.h"
+#include "animation/SInterpolatorImpl.h"
 #include <algorithm>
 
 namespace SOUI
@@ -247,7 +247,7 @@ namespace SOUI
 		{
 			SWindow::OnSize(fType, sz);
 			if (!m_memRT) return;
-			//resize slidewnd as animitor running, just stop the animator
+			//resize slidewnd as animitor running, just stop the animation
 			Stop();
 		}
 
@@ -294,7 +294,7 @@ STabCtrl::STabCtrl() : m_nCurrentPage(0)
 	m_szTab[0] = m_szTab[1] = SLayoutSize(-1.f, SLayoutSize::px);
 
     m_bFocusable=TRUE;
-	//create a linear animator interpolator
+	//create a linear animation interpolator
 	m_aniInterpolator.Attach(SApplication::getSingleton().CreateInterpolatorByName(SLinearInterpolator::GetClassName()));
 
     m_evtSet.addEvent(EVENTID(EventTabSelChanging));

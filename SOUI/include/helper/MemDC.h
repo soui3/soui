@@ -3,13 +3,13 @@
 namespace SOUI
 {
 
-class SOUI_EXP CMemDC
+class SOUI_EXP SMemDC
 {
 public:
-    CMemDC();
-    CMemDC(HDC hdc, const CRect & rc);
-    CMemDC(HDC hdc, HBITMAP hBmp);
-    ~CMemDC(void);
+    SMemDC();
+    SMemDC(HDC hdc, const CRect & rc);
+    SMemDC(HDC hdc, HBITMAP hBmp);
+    ~SMemDC(void);
 
     HBITMAP SelectBitmap(HBITMAP hBmp);
 

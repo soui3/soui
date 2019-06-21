@@ -229,7 +229,7 @@ namespace SOUI
 			{//拖动表头项
 				if (m_bItemSwapEnable)
 				{
-					CDragWnd::EndDrag();
+					SDragWnd::EndDrag();
 					DeleteObject(m_hDragImg);
 					m_hDragImg = NULL;
 
@@ -295,7 +295,7 @@ namespace SOUI
 					DrawDraggingState(m_dwDragTo);
 					m_hDragImg = CreateDragImage(LOWORD(m_dwHitTest));
 					CPoint pt = m_ptClick - rcItem.TopLeft();
-					CDragWnd::BeginDrag(m_hDragImg, pt, 0, 128, LWA_ALPHA | LWA_COLORKEY);
+					SDragWnd::BeginDrag(m_hDragImg, pt, 0, 128, LWA_ALPHA | LWA_COLORKEY);
 					m_bDragging = TRUE;
 				}
 			}
@@ -311,7 +311,7 @@ namespace SOUI
 						m_dwDragTo = dwDragTo;
 						DrawDraggingState(dwDragTo);
 					}
-					CDragWnd::DragMove(pt2);
+					SDragWnd::DragMove(pt2);
 				}
 			}
 			else if (m_dwHitTest != -1)
@@ -533,7 +533,7 @@ namespace SOUI
 			}
 			m_dwHitTest = (DWORD)-1;
 
-			CDragWnd::EndDrag();
+			SDragWnd::EndDrag();
 			DeleteObject(m_hDragImg);
 			m_hDragImg = NULL;
 			m_bDragging = FALSE;

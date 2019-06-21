@@ -5,16 +5,16 @@
 
 namespace SOUI
 {
-	class SAnimatorPulse : public SSingleton2<SAnimatorPulse>
+	class SAnimationPulse : public SSingleton2<SAnimationPulse>
 	{
-		SINGLETON2_TYPE(SINGLETON_ANIMATORPLUS)
+		SINGLETON2_TYPE(SINGLETON_ANIMATIONPULSE)
 	public:
 		enum {
 			kPulseSpan = 10,
 		};
 
-		SAnimatorPulse(void);
-		~SAnimatorPulse(void);
+		SAnimationPulse(void);
+		~SAnimationPulse(void);
 
 		bool RegisterTimelineHandler(ITimelineHandler *pHandler);
 

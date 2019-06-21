@@ -1,20 +1,20 @@
 ﻿#include "souistd.h"
 #include "helper/DragWnd.h"
-
+#include "helper/MemDC.h"
 namespace SOUI
 {
 
-CDragWnd * CDragWnd:: s_pCurDragWnd=NULL;
+SDragWnd * SDragWnd:: s_pCurDragWnd=NULL;
 
-CDragWnd::CDragWnd(void):m_bmp(NULL)
+SDragWnd::SDragWnd(void):m_bmp(NULL)
 {
 }
 
-CDragWnd::~CDragWnd(void)
+SDragWnd::~SDragWnd(void)
 {
 }
 
-void CDragWnd::OnPaint( HDC dc )
+void SDragWnd::OnPaint( HDC dc )
 {
     PAINTSTRUCT ps;
     dc = ::BeginPaint(m_hWnd,&ps);
@@ -31,10 +31,10 @@ void CDragWnd::OnPaint( HDC dc )
     ::EndPaint(m_hWnd,&ps);
 }
 
-BOOL CDragWnd::BeginDrag( HBITMAP hBmp,POINT ptHot ,COLORREF crKey, BYTE byAlpha,DWORD dwFlags)
+BOOL SDragWnd::BeginDrag( HBITMAP hBmp,POINT ptHot ,COLORREF crKey, BYTE byAlpha,DWORD dwFlags)
 {
     if(s_pCurDragWnd) return FALSE;
-    s_pCurDragWnd=new CDragWnd;
+    s_pCurDragWnd=new SDragWnd;
     BITMAP bm;
     GetObject(hBmp,sizeof(bm),&bm);
 
@@ -50,7 +50,7 @@ BOOL CDragWnd::BeginDrag( HBITMAP hBmp,POINT ptHot ,COLORREF crKey, BYTE byAlpha
     if(bm.bmBitsPixel==32)
     {
         HDC dc=s_pCurDragWnd->GetDC();
-        CMemDC memdc(dc,hBmp);
+        SMemDC memdc(dc,hBmp);
         BLENDFUNCTION bf={AC_SRC_OVER,0,byAlpha,AC_SRC_ALPHA};
 		CPoint pt(0, 0);
 		CSize sz(bm.bmWidth, bm.bmHeight);
@@ -68,13 +68,13 @@ BOOL CDragWnd::BeginDrag( HBITMAP hBmp,POINT ptHot ,COLORREF crKey, BYTE byAlpha
 }
 
 
-void CDragWnd::DragMove( POINT pt )
+void SDragWnd::DragMove( POINT pt )
 {
     SASSERT(s_pCurDragWnd);
     s_pCurDragWnd->SetWindowPos(HWND_TOPMOST,pt.x-s_pCurDragWnd->m_ptHot.x,pt.y-s_pCurDragWnd->m_ptHot.y,0,0,SWP_NOSIZE|SWP_NOSENDCHANGING|SWP_NOOWNERZORDER|SWP_SHOWWINDOW|SWP_NOACTIVATE);
 }
 
-void CDragWnd::EndDrag()
+void SDragWnd::EndDrag()
 {
     SASSERT(s_pCurDragWnd);
     s_pCurDragWnd->DestroyWindow();

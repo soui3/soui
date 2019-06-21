@@ -23,8 +23,8 @@
 
 #include <interface/Animation-i.h>
 #include <unknown/obj-ref-impl.hpp>
-#include <animator/SInterpolatorImpl.h>
-#include <animator/Transformation.h>
+#include <animation/SInterpolatorImpl.h>
+#include <animation/Transformation.h>
 #include <sobject/sobject.hpp>
 #include <SApp.h>
 

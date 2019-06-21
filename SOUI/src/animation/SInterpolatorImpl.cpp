@@ -1,5 +1,5 @@
 ﻿#include "souistd.h"
-#include "animator\SInterpolatorImpl.h"
+#include "animation\SInterpolatorImpl.h"
 #include "layout/SLayoutSize.h" //for SLayoutSize::fequal
 #pragma warning (push)
 #pragma warning (disable: 4985) // disable the warning message during the include

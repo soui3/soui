@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <animator/Animation.h>
+#include <animation/Animation.h>
 
 namespace SOUI {
 	/**

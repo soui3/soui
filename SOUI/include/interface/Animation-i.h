@@ -23,7 +23,7 @@
 
 #include <interface/sinterpolator-i.h>
 #include <unknown/obj-ref-i.h>
-#include <animator/Transformation.h>
+#include <animation/Transformation.h>
 #include <sobject/sobject-i.h>
 
 namespace SOUI {

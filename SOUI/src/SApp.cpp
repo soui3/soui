@@ -23,19 +23,19 @@
 #include "layout/SouiLayout.h"
 #include "layout/SLinearLayout.h"
 #include "layout/SGridLayout.h"
-#include "animator/SInterpolatorImpl.h"
+#include "animation/SInterpolatorImpl.h"
 #include "core/SwndAccessible.h"
-#include "core/SAnimatorPulse.h"
+#include "core/SanimationPulse.h"
 
 #include "msaa/SAccProxyWindow.h"
 #include "msaa/SAccProxyCmnCtrl.h"
 
-#include "animator/Animation.h"
-#include "animator/AnimationSet.h"
-#include "animator/ScaleAnimation.h"
-#include "animator/RotateAnimation.h"
-#include "animator/AlphaAnimation.h"
-#include "animator/TranslateAnimation.h"
+#include "animation/Animation.h"
+#include "animation/AnimationSet.h"
+#include "animation/ScaleAnimation.h"
+#include "animation/RotateAnimation.h"
+#include "animation/AlphaAnimation.h"
+#include "animation/TranslateAnimation.h"
 
 namespace SOUI
 {
@@ -248,7 +248,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 	m_pSingletons[STextServiceHelper::GetType()] = new STextServiceHelper();
 	m_pSingletons[SRicheditMenuDef::GetType()] = new SRicheditMenuDef();
 	m_pSingletons[SNativeWndHelper::GetType()] =   new SNativeWndHelper(hInst, pszHostClassName, bImeApp);
-	m_pSingletons[SAnimatorPulse::GetType()] = new SAnimatorPulse();
+	m_pSingletons[SAnimationPulse::GetType()] = new SAnimationPulse();
 }
 
 #define DELETE_SINGLETON(x) \
@@ -257,7 +257,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 
 void SApplication::_DestroySingletons()
 {
-	DELETE_SINGLETON(SAnimatorPulse);
+	DELETE_SINGLETON(SAnimationPulse);
 	DELETE_SINGLETON(SNativeWndHelper);
 	DELETE_SINGLETON(SRicheditMenuDef);
 	DELETE_SINGLETON(STextServiceHelper);
