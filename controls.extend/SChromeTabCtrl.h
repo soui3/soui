@@ -68,7 +68,7 @@ namespace SOUI
         int iOrder;        
     };
 
-    class SChromeTabCtrl : public SWindow, public ITimelineHandler
+    class SChromeTabCtrl : public SWindow
     {
         SOUI_CLASS_NAME(SChromeTabCtrl,L"chromeTabCtrl")
         friend class SChromeTab;

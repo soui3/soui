@@ -152,7 +152,6 @@ protected:
  */
 class SOUI_EXP SButton : public SWindow
     , public IAcceleratorTarget
-    , public ITimelineHandler
 {
     SOUI_CLASS_NAME(SButton, L"button")
 public:
@@ -396,7 +395,7 @@ protected:
  * 
  * Describe    此窗口支持动画效果
  */
-class SOUI_EXP SAnimateImgWnd : public SWindow, public ITimelineHandler
+class SOUI_EXP SAnimateImgWnd : public SWindow
 {
     SOUI_CLASS_NAME(SAnimateImgWnd, L"animateimg")
 public:    

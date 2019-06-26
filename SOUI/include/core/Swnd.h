@@ -203,6 +203,7 @@ namespace SOUI
 		, public SMsgHandleState
 		, public ITrCtxProvider
         , public TObjRefImpl2<IObjRef,SWindow>
+		, public ITimelineHandler
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
         friend class SwndLayoutBuilder;
@@ -1015,6 +1016,9 @@ namespace SOUI
         virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
         virtual void ShowCaret(BOOL bShow);   
         virtual void SetCaretPos(int x,int y); 
+
+	public:
+		virtual void OnNextFrame() override {}
     public://render相关方法
         /**
         * RedrawRegion
