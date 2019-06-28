@@ -14,12 +14,6 @@ SOUI是目前为数不多的轻量级可快速开发window桌面程序开源Dire
 - https://github.com/soui-demo
 * 每一个Demo一个单独的仓库，自己分别clone就好了。如果想一次拉取所有demo,可以直接运行SOUI仓库代码下的clone_demos.bat来clone，当然前提是已经安装了git命令行工具。
 
-### 原仓库Git下载地址
-
-- [国内Git下载站点](https://gitee.com/setoutsoft/soui.backup)
-
-- [国外Git下载站点](https://github.com/SOUI2/soui.backup)
-
 ### 编译
 - SOUI提供了多种编译方式包括qmake,cmake,nmake等等.我们推荐使用qmake方式生成符合自己的Visual Studio 版本项目工程文件,当然,如果你有兴趣也可以尝试cmake与nmake两种方式
 * #### `qmake`(推荐)
@@ -52,4 +46,4 @@ SOUI是目前为数不多的轻量级可快速开发window桌面程序开源Dire
 - 教学[视频](http://my.tv.sohu.com/pl/9259542/89333168.shtml)
 
 ### 捐献
-- 支付宝帐号![img](https://github.com/SOUI2/soui/blob/master/doc/alipay.png) 微信帐号![img](https://github.com/SOUI2/soui/blob/master/doc/wechat.png) 
+- 支付宝帐号![img](doc/alipay.png) 微信帐号![img](doc/wechat.png) 
