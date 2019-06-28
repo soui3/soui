@@ -42,6 +42,7 @@ namespace SOUI
 		
 		void Copy(SMenuExRoot* pNewMenuExRoot)
 		{
+			pNewMenuExRoot->m_pNcSkin = m_pNcSkin;
 			pNewMenuExRoot->m_pItemSkin = m_pItemSkin;
 			pNewMenuExRoot->m_pIconSkin = m_pIconSkin;
 			pNewMenuExRoot->m_pCheckSkin = m_pCheckSkin;
