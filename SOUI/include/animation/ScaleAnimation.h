@@ -28,20 +28,20 @@ namespace SOUI {
 		private: float mFromY;
 		private: float mToY;
 
-		private: int mFromXType = ABSOLUTE_VALUE;
-		private: int mToXType = ABSOLUTE_VALUE;
-		private: int mFromYType = ABSOLUTE_VALUE;
-		private: int mToYType = ABSOLUTE_VALUE;
+		private: int mFromXType;
+		private: int mToXType;
+		private: int mFromYType;
+		private: int mToYType;
 
-		private: int mFromXData = 0;
-		private: int mToXData = 0;
-		private: int mFromYData = 0;
-		private: int mToYData = 0;
+		private: int mFromXData;
+		private: int mToXData;
+		private: int mFromYData;
+		private: int mToYData;
 
-		private: int mPivotXType = ABSOLUTE;
-		private: int mPivotYType = ABSOLUTE;
-		private: float mPivotXValue = 0.0f;
-		private: float mPivotYValue = 0.0f;
+		private: int mPivotXType;
+		private: int mPivotYType;
+		private: float mPivotXValue;
+		private: float mPivotYValue;
 
 		private: float mPivotX;
 		private: float mPivotY;

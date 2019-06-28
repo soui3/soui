@@ -30,10 +30,10 @@ namespace SOUI {
 		private:float mFromDegrees;
 		private:float mToDegrees;
 
-		private:int mPivotXType = ABSOLUTE;
-		private:int mPivotYType = ABSOLUTE;
-		private:float mPivotXValue = 0.0f;
-		private:float mPivotYValue = 0.0f;
+		private:int mPivotXType;
+		private:int mPivotYType;
+		private:float mPivotXValue;
+		private:float mPivotYValue;
 
 		private:float mPivotX;
 		private:float mPivotY;
