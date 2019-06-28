@@ -210,6 +210,18 @@ namespace SOUI
         friend class SHostWnd;
         friend class SwndContainerImpl;
         friend class FocusSearch;
+
+		class SAnimationHandler : public ITimelineHandler {
+			SWindow * m_pOwner;
+			long m_aniTime;
+		public:
+			SAnimationHandler(SWindow *pOwner):m_pOwner(pOwner),m_aniTime(-1)
+			{
+			}
+		protected:
+			void OnNextFrame() override;
+		};
+
     public:
         SWindow();
 
@@ -813,7 +825,10 @@ namespace SOUI
 		*/
 		void ClearAnimation();
 
-    public:// Virtual functions
+	protected:
+		virtual void OnAnimationStart();
+		virtual void OnAnimationStop();
+	public:// Virtual functions
 
 		virtual int GetScale() const;
 
@@ -1433,7 +1448,7 @@ namespace SOUI
 		COLORREF			m_crColorize;		/**< 调色值 */
 
 		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
-
+		SAnimationHandler	m_animationHandler;
         typedef struct GETRTDATA
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */

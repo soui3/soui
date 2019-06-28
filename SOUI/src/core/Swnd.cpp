@@ -5,6 +5,8 @@
 #include "layout/SouiLayout.h"
 #include "interface/sacchelper-i.h"
 #include "helper/SwndFinder.h"
+#include "animation/Transformation.h"
+#include "core/SAnimationPulse.h"
 
 namespace SOUI
 {
@@ -72,6 +74,7 @@ namespace SOUI
 		, m_crColorize(0)
 		, m_strText(this)
 		, m_strToolTipText(this)
+		, m_animationHandler(this)
 #ifdef _DEBUG
 		, m_nMainThreadId( ::GetCurrentThreadId() ) // 初始化对象的线程不一定是主线程
 #endif
@@ -1327,6 +1330,7 @@ namespace SOUI
 
 	void SWindow::OnDestroy()
 	{
+		ClearAnimation();
 		EventSwndDestroy evt(this);
 		FireEvent(evt);
 		accNotifyEvent(EVENT_OBJECT_DESTROY);
@@ -2086,6 +2090,11 @@ namespace SOUI
 			{
 				m_animation->startNow();
 			}
+			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
+		}
+		else
+		{
+			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		}
 	}
 
@@ -2110,6 +2119,21 @@ namespace SOUI
 		SASSERT(animation);
 		animation->setStartTime(IAnimation::START_ON_FIRST_FRAME);
 		SetAnimation(animation);
+	}
+
+	/**
+	* Cancels any animations for this view.
+	*/
+	void SWindow::ClearAnimation() {
+		if (m_animation)
+		{
+			if (m_animation->hasStarted())
+			{
+				m_animation->cancel();
+			}
+			m_animation = NULL;
+			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
+		}
 	}
 
 	void SWindow::SetFocus()
@@ -2986,21 +3010,6 @@ namespace SOUI
 			return m_strTrCtx;
 	}
 
-
-	/**
-	* Cancels any animations for this view.
-	*/
-	void SWindow::ClearAnimation() {
-		if (m_animation)
-		{
-			if (m_animation->hasStarted())
-			{
-				m_animation->cancel();
-			}
-			m_animation = NULL;
-		}
-	}
-
 	int SWindow::GetScale() const
 	{
 		return GetContainer()?GetContainer()->GetScale():100;
@@ -3066,5 +3075,49 @@ namespace SOUI
 		return true;
 	}
 
+	void SWindow::OnAnimationStart()
+	{
+	}
+
+	void SWindow::OnAnimationStop()
+	{
+		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
+	}
+
+	void SWindow::SAnimationHandler::OnNextFrame()
+	{
+		IAnimation *pAni = m_pOwner->GetAnimation();
+		SASSERT(pAni);
+		long tm = pAni->getStartTime();
+		if (tm > 0)
+		{//scheduled animation
+			tm -= SAnimationPulse::kPulseSpan;
+			pAni->setStartTime(tm);
+			if (tm < 0)
+			{
+				pAni->startNow();
+				m_aniTime = 0;
+				m_pOwner->OnAnimationStart();
+			}
+		}
+		else
+		{
+			m_aniTime += SAnimationPulse::kPulseSpan;
+		}
+		if(m_aniTime>=0)
+		{
+			Transformation transform;
+			bool bMore = pAni->getTransformation(m_aniTime, transform);
+			if(!bMore)
+			{//animation stoped.
+				m_aniTime = -1;
+				m_pOwner->OnAnimationStop();
+			}
+			else
+			{//update ui
+
+			}
+		}
+	}
 
 }//namespace SOUI
