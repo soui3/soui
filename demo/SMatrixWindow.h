@@ -2,7 +2,7 @@
 #include <helper/SMatrix.h>
 namespace SOUI
 {
-	class S3DView : public SWindow
+	class S3DView : public SWindow,public ITimelineHandler
 	{
 		SOUI_CLASS_NAME(S3DView,L"S3DView")
 

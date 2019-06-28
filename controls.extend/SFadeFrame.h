@@ -4,7 +4,7 @@
 
 namespace SOUI
 {
-    class SFadeFrame : public SWindow, public SAnimator
+    class SFadeFrame : public SWindow, public SAnimator, public ITimelineHandler
     {
         SOUI_CLASS_NAME(SFadeFrame,L"fadeframe")
     public:

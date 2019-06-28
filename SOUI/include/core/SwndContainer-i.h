@@ -35,7 +35,7 @@ namespace SOUI
     * 
     * Describe    
     */
-    struct ISwndContainer
+    struct ISwndContainer : public ITimelineHandler
     {
         virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget)=0;
 

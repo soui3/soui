@@ -6,7 +6,7 @@
 namespace SOUI
 {
 
-	class STabSlider : public SWindow
+	class STabSlider : public SWindow, public ITimelineHandler
 	{
 		SOUI_CLASS_NAME(STabSlider, L"tabslider")
 

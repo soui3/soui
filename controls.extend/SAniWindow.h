@@ -3,7 +3,7 @@
 namespace SOUI
 {
 
-	class SAniWindow : public SWindow
+	class SAniWindow : public SWindow, protected ITimelineHandler
 	{
 		SOUI_CLASS_NAME(SAniWindow,L"AniWindow")
 	public:
