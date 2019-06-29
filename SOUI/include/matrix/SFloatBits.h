@@ -7,10 +7,10 @@
  */
 
 
-#ifndef SkFloatBits_DEFINED
-#define SkFloatBits_DEFINED
+#ifndef _SFloatBits_DEFINED_
+#define _SFloatBits_DEFINED_
 
-#include "SkTypes.h"
+#include "STypes.h"
 
 namespace SOUI{
 /** Convert a sign-bit int (i.e. float interpreted as int) into a 2s compliement

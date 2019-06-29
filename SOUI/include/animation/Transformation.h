@@ -16,7 +16,7 @@
 
 #pragma once
 #include <interface/render-i.h>
-#include <helper/SMatrix.h>
+#include <matrix/SMatrix.h>
 
 namespace SOUI
 {
@@ -150,6 +150,16 @@ public:
         return mAlpha;
     }
 
+
+	bool hasAlpha() const
+	{
+		return getTransformationType() & TYPE_ALPHA;
+	}
+
+	bool hasMatrix() const
+	{
+		return getTransformationType() & TYPE_MATRIX;
+	}
 };
 
 }

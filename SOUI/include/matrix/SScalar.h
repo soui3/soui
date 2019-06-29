@@ -5,10 +5,10 @@
  * found in the LICENSE file.
  */
 
-#ifndef SkScalar_DEFINED
-#define SkScalar_DEFINED
+#ifndef _SScalar_DEFINED_
+#define _SScalar_DEFINED_
 
-#include "SkTypes.h"
+#include "STypes.h"
 #include <math.h>
 
 #define sk_float_sqrt(x)        sqrtf(x)
@@ -26,37 +26,36 @@
 //#define sk_float_rsqrt(x)		sqrt(x)
 //#define SK_SUPPORT_DEPRECATED_SCALARROUND
 
-typedef float   SkScalar;
 
-/** SK_Scalar1 is defined to be 1.0 represented as an SkScalar
+/** SK_Scalar1 is defined to be 1.0 represented as an float
 */
 #define SK_Scalar1              (1.0f)
-/** SK_Scalar1 is defined to be 1/2 represented as an SkScalar
+/** SK_Scalar1 is defined to be 1/2 represented as an float
 */
 #define SK_ScalarHalf           (0.5f)
-/** SK_ScalarInfinity is defined to be infinity as an SkScalar
+/** SK_ScalarInfinity is defined to be infinity as an float
 */
 #define SK_ScalarInfinity       SK_FloatInfinity
-/** SK_ScalarNegativeInfinity is defined to be negative infinity as an SkScalar
+/** SK_ScalarNegativeInfinity is defined to be negative infinity as an float
 */
 #define SK_ScalarNegativeInfinity       SK_FloatNegativeInfinity
-/** SK_ScalarMax is defined to be the largest value representable as an SkScalar
+/** SK_ScalarMax is defined to be the largest value representable as an float
 */
 #define SK_ScalarMax            (3.402823466e+38f)
-/** SK_ScalarMin is defined to be the smallest value representable as an SkScalar
+/** SK_ScalarMin is defined to be the smallest value representable as an float
 */
 #define SK_ScalarMin            (-SK_ScalarMax)
-/** SK_ScalarNaN is defined to be 'Not a Number' as an SkScalar
+/** SK_ScalarNaN is defined to be 'Not a Number' as an float
 */
 #define SK_ScalarNaN            SK_FloatNaN
 
-/** SkIntToScalar(n) returns its integer argument as an SkScalar
+/** SkIntToScalar(n) returns its integer argument as an float
 */
 #define SkIntToScalar(n)        ((float)(n))
-/** SkFixedToScalar(n) returns its SkFixed argument as an SkScalar
+/** SkFixedToScalar(n) returns its SkFixed argument as an float
 */
 #define SkFixedToScalar(x)      SkFixedToFloat(x)
-/** SkScalarToFixed(n) returns its SkScalar argument as an SkFixed
+/** SkScalarToFixed(n) returns its float argument as an SkFixed
 */
 #define SkScalarToFixed(x)      SkFloatToFixed(x)
 
@@ -86,7 +85,7 @@ typedef float   SkScalar;
 #define SK_ANNOTATE_UNPROTECTED_WRITE(ptr, val) *(ptr) = (val)
 
 
-/** Returns the absolute value of the specified SkScalar
+/** Returns the absolute value of the specified float
 */
 #define SkScalarAbs(x)          sk_float_abs(x)
 /** Return x with the sign of y
@@ -95,7 +94,7 @@ typedef float   SkScalar;
 /** Returns the product of two SkScalars
 */
 #define SkScalarMul(a, b)       ((float)(a) * (b))
-/** Returns the product of two SkScalars plus a third SkScalar
+/** Returns the product of two SkScalars plus a third float
 */
 #define SkScalarMulAdd(a, b, c) ((float)(a) * (b) + (c))
 /** Returns the quotient of two SkScalars (a/b)
@@ -107,11 +106,11 @@ typedef float   SkScalar;
 /** Returns the product of the first two arguments, divided by the third argument
 */
 #define SkScalarMulDiv(a, b, c) ((float)(a) * (b) / (c))
-/** Returns the multiplicative inverse of the SkScalar (1/x)
+/** Returns the multiplicative inverse of the float (1/x)
 */
 #define SkScalarInvert(x)       (SK_Scalar1 / (x))
 #define SkScalarFastInvert(x)   (SK_Scalar1 / (x))
-/** Returns the square root of the SkScalar
+/** Returns the square root of the float
 */
 #define SkScalarSqrt(x)         sk_float_sqrt(x)
 /** Returns b to the e
@@ -120,7 +119,7 @@ typedef float   SkScalar;
 /** Returns the average of two SkScalars (a+b)/2
 */
 #define SkScalarAve(a, b)       (((a) + (b)) * 0.5f)
-/** Returns one half of the specified SkScalar
+/** Returns one half of the specified float
 */
 #define SkScalarHalf(a)         ((a) * 0.5f)
 
@@ -149,19 +148,19 @@ namespace SOUI{
  *  extra precision is known to be valuable.
  *
  *  In particular, this catches the following case:
- *      SkScalar x = 0.49999997;
+ *      float x = 0.49999997;
  *      int ix = SkScalarRoundToInt(x);
- *      SkASSERT(0 == ix);    // <--- fails
+ *      SASSERT(0 == ix);    // <--- fails
  *      ix = SkDScalarRoundToInt(x);
- *      SkASSERT(0 == ix);    // <--- succeeds
+ *      SASSERT(0 == ix);    // <--- succeeds
  */
-inline int SkDScalarRoundToInt(SkScalar x) {
+inline int SkDScalarRoundToInt(float x) {
     double xx = x;
     xx += 0.5;
     return (int)floor(xx);
 }
-inline SkScalar SkMaxScalar(SkScalar a, SkScalar b) { return a > b ? a : b; }
-inline SkScalar SkMinScalar(SkScalar a, SkScalar b) { return a < b ? a : b; }
+inline float SkMaxScalar(float a, float b) { return a > b ? a : b; }
+inline float SkMinScalar(float a, float b) { return a < b ? a : b; }
 
 /** SkScalarIsNaN(n) returns true if argument is not a number
 */
@@ -181,19 +180,19 @@ inline bool SkScalarIsFinite(float x) {
 
 /** Returns the value pinned between 0 and max inclusive
 */
-inline SkScalar SkScalarClampMax(SkScalar x, SkScalar max) {
+inline float SkScalarClampMax(float x, float max) {
 	return x < 0 ? 0 : x > max ? max : x;
 }
 /** Returns the value pinned between min and max inclusive
 */
-inline SkScalar SkScalarPin(SkScalar x, SkScalar min, SkScalar max) {
+inline float SkScalarPin(float x, float min, float max) {
 	return x < min ? min : x > max ? max : x;
 }
-/** Returns the specified SkScalar squared (x*x)
+/** Returns the specified float squared (x*x)
 */
-inline SkScalar SkScalarSquare(SkScalar x) { return x * x; }
+inline float SkScalarSquare(float x) { return x * x; }
 
-inline bool SkScalarIsInt(SkScalar x) {
+inline bool SkScalarIsInt(float x) {
     return x == (float)(int)x;
 }
 
@@ -203,26 +202,26 @@ inline bool SkScalarIsInt(SkScalar x) {
  *   0 if x == 0
  *   1 if x > 0
  */
-inline int SkScalarSignAsInt(SkScalar x) {
+inline int SkScalarSignAsInt(float x) {
     return x < 0 ? -1 : (x > 0);
 }
 
 // Scalar result version of above
-inline SkScalar SkScalarSignAsScalar(SkScalar x) {
+inline float SkScalarSignAsScalar(float x) {
     return x < 0 ? -SK_Scalar1 : ((x > 0) ? SK_Scalar1 : 0);
 }
 
 #define SK_ScalarNearlyZero         (SK_Scalar1 / (1 << 12))
 
-inline bool SkScalarNearlyZero(SkScalar x,
-                                    SkScalar tolerance = SK_ScalarNearlyZero) {
-    SkASSERT(tolerance >= 0);
+inline bool SkScalarNearlyZero(float x,
+                                    float tolerance = SK_ScalarNearlyZero) {
+    SASSERT(tolerance >= 0);
     return SkScalarAbs(x) <= tolerance;
 }
 
-inline bool SkScalarNearlyEqual(SkScalar x, SkScalar y,
-                                     SkScalar tolerance = SK_ScalarNearlyZero) {
-    SkASSERT(tolerance >= 0);
+inline bool SkScalarNearlyEqual(float x, float y,
+                                     float tolerance = SK_ScalarNearlyZero) {
+    SASSERT(tolerance >= 0);
     return SkScalarAbs(x-y) <= tolerance;
 }
 
@@ -232,8 +231,8 @@ inline bool SkScalarNearlyEqual(SkScalar x, SkScalar y,
     else interpolate.
     t must be [0..SK_Scalar1]
 */
-inline SkScalar SkScalarInterp(SkScalar A, SkScalar B, SkScalar t) {
-    SkASSERT(t >= 0 && t <= SK_Scalar1);
+inline float SkScalarInterp(float A, float B, float t) {
+    SASSERT(t >= 0 && t <= SK_Scalar1);
     return A + (B - A) * t;
 }
 
@@ -241,8 +240,8 @@ inline SkScalar SkScalarInterp(SkScalar A, SkScalar B, SkScalar t) {
 /*
  *  Helper to compare an array of scalars.
  */
-inline bool SkScalarsEqual(const SkScalar a[], const SkScalar b[], int n) {
-    SkASSERT(n >= 0);
+inline bool SkScalarsEqual(const float a[], const float b[], int n) {
+    SASSERT(n >= 0);
     for (int i = 0; i < n; ++i) {
         if (a[i] != b[i]) {
             return false;

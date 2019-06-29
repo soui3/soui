@@ -214,10 +214,10 @@ namespace SOUI
 		class SAnimationHandler : public ITimelineHandler {
 			SWindow * m_pOwner;
 			long m_aniTime;
+			Transformation m_transform;
 		public:
-			SAnimationHandler(SWindow *pOwner):m_pOwner(pOwner),m_aniTime(-1)
-			{
-			}
+			SAnimationHandler(SWindow *pOwner);
+			Transformation GetTransformation() const;
 		protected:
 			void OnNextFrame() override;
 		};
@@ -828,6 +828,7 @@ namespace SOUI
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();
+		virtual void OnAnimationInvalidate();
 	public:// Virtual functions
 
 		virtual int GetScale() const;

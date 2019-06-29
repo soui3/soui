@@ -3084,6 +3084,40 @@ namespace SOUI
 		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
+	void SWindow::OnAnimationInvalidate()
+	{
+		SASSERT(m_animation);
+		CRect rcWnd = GetWindowRect();
+		if (m_animation->hasStarted())
+		{
+			Transformation xform = m_animationHandler.GetTransformation();
+			if (xform.hasMatrix())
+			{
+				const SMatrix & mtx = xform.getMatrix();
+				
+			}
+			else
+			{
+				InvalidateRect(rcWnd);
+			}
+		}
+		else if(m_animation->hasEnded())
+		{
+			InvalidateRect(rcWnd);
+		}
+	}
+
+	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 
+		:m_pOwner(pOwner)
+		, m_aniTime(-1)
+	{
+	}
+
+	Transformation SWindow::SAnimationHandler::GetTransformation() const
+	{
+		return m_transform;
+	}
+
 	void SWindow::SAnimationHandler::OnNextFrame()
 	{
 		IAnimation *pAni = m_pOwner->GetAnimation();
@@ -3106,17 +3140,14 @@ namespace SOUI
 		}
 		if(m_aniTime>=0)
 		{
-			Transformation transform;
-			bool bMore = pAni->getTransformation(m_aniTime, transform);
+			m_pOwner->OnAnimationInvalidate();
+			bool bMore = pAni->getTransformation(m_aniTime, m_transform);
 			if(!bMore)
 			{//animation stoped.
 				m_aniTime = -1;
 				m_pOwner->OnAnimationStop();
 			}
-			else
-			{//update ui
-
-			}
+			m_pOwner->OnAnimationInvalidate();
 		}
 	}
 

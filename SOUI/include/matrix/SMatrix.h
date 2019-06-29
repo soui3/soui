@@ -7,19 +7,14 @@
  */
 
 
-#ifndef SkMatrix_DEFINED
-#define SkMatrix_DEFINED
+#ifndef _SMatrix_DEFINED_
+#define _SMatrix_DEFINED_
 
-#include "SkRect.h"
+#include "SRect.h"
 
 #include <interface/render-i.h>
-#include <unknown/obj-ref-impl.hpp>
 
 namespace SOUI{
-// TODO: can we remove these 3 (need to check chrome/android)
-typedef SkScalar SkPersp;
-#define SkScalarToPersp(x) (x)
-#define SkPerspToScalar(x) (x)
 
 /** \class SkMatrix
 
@@ -28,12 +23,12 @@ typedef SkScalar SkPersp;
     using either reset() - to construct an identity matrix, or one of the set
     functions (e.g. setTranslate, setRotate, etc.).
 */
-class SK_API SkMatrix : public SOUI::TObjRefImpl<SOUI::IxForm>{
+class SOUI_EXP SMatrix : public IxForm{
 public:
-	SkMatrix(){
+	SMatrix(){
 		reset();
 	}
-	SkMatrix(const float data[9]);
+	SMatrix(const float data[9]);
 
 public:
 	virtual float GetScaleX() const;
@@ -84,7 +79,42 @@ public:
 
 	virtual void Concat(const IxForm * src);
 
-	virtual SOUI::IxForm * Clone() const;
+public:
+	SMatrix &operator*=(const SMatrix &src);
+	SMatrix operator*(const SMatrix &src) const;
+
+	SMatrix &operator=(const SMatrix &src);
+
+	friend bool operator==(const SMatrix& a, const SMatrix& b);
+	friend bool operator!=(const SMatrix& a, const SMatrix& b) {
+		return !(a == b);
+	}
+
+public:
+	SMatrix & translate(float dx, float dy)
+	{
+		setTranslate(dx, dy);
+		return *this;
+	}
+
+	SMatrix & scale(float sx, float sy)
+	{
+		setScale(sx, sy);
+		return *this;
+	}
+
+	SMatrix & shear(float sh, float sv)
+	{
+		setSkew(sh, sv);
+		return *this;
+	}
+
+	SMatrix & rotate(float deg)
+	{
+		setRotate(deg);
+		return *this;
+	}
+
 public:
     /** Enum of bit fields for the mask return by getType().
         Use this to identify the complexity of the matrix.
@@ -145,13 +175,13 @@ public:
     /** Returns true if the matrix contains only translation, rotation/reflection or uniform scale
         Returns false if other transformation types are included or is degenerate
      */
-    bool isSimilarity(SkScalar tol = SK_ScalarNearlyZero) const;
+    bool isSimilarity(float tol = SK_ScalarNearlyZero) const;
 
     /** Returns true if the matrix contains only translation, rotation/reflection or scale
         (non-uniform scale is allowed).
         Returns false if other transformation types are included or is degenerate
      */
-    bool preservesRightAngles(SkScalar tol = SK_ScalarNearlyZero) const;
+    bool preservesRightAngles(float tol = SK_ScalarNearlyZero) const;
 
     /** Affine arrays are in column major order
         because that's how PDF and XPS like it.
@@ -165,24 +195,24 @@ public:
         kATransY
     };
 
-    SkScalar operator[](int index) const {
-        SkASSERT((unsigned)index < 9);
+    float operator[](int index) const {
+        SASSERT((unsigned)index < 9);
         return fMat[index];
     }
 
-    SkScalar get(int index) const {
-        SkASSERT((unsigned)index < 9);
+    float get(int index) const {
+        SASSERT((unsigned)index < 9);
         return fMat[index];
     }
 
-    SkScalar& operator[](int index) {
-        SkASSERT((unsigned)index < 9);
+    float& operator[](int index) {
+        SASSERT((unsigned)index < 9);
         this->setTypeMask(kUnknown_Mask);
         return fMat[index];
     }
 
-    void set(int index, SkScalar value) {
-        SkASSERT((unsigned)index < 9);
+    void set(int index, float value) {
+        SASSERT((unsigned)index < 9);
         fMat[index] = value;
         this->setTypeMask(kUnknown_Mask);
     }
@@ -196,17 +226,17 @@ public:
 
     /** Set the matrix to translate by (dx, dy).
     */
-    void setTranslate(SkScalar dx, SkScalar dy);
-    void setTranslate(const SkVector& v) { this->setTranslate(v.fX, v.fY); }
+    void setTranslate(float dx, float dy);
+    void setTranslate(const SVector2D& v) { this->setTranslate(v.fX, v.fY); }
 
     /** Set the matrix to scale by sx and sy, with a pivot point at (px, py).
         The pivot point is the coordinate that should remain unchanged by the
         specified transformation.
     */
-    void setScale(SkScalar sx, SkScalar sy, SkScalar px, SkScalar py);
+    void setScale(float sx, float sy, float px, float py);
     /** Set the matrix to scale by sx and sy.
     */
-    void setScale(SkScalar sx, SkScalar sy);
+    void setScale(float sx, float sy);
     /** Set the matrix to scale by 1/divx and 1/divy. Returns false and doesn't
         touch the matrix if either divx or divy is zero.
     */
@@ -215,78 +245,78 @@ public:
         pivot point at (px, py). The pivot point is the coordinate that should
         remain unchanged by the specified transformation.
     */
-    void setRotate(SkScalar degrees, SkScalar px, SkScalar py);
+    void setRotate(float degrees, float px, float py);
     /** Set the matrix to rotate about (0,0) by the specified number of degrees.
     */
-    void setRotate(SkScalar degrees);
+    void setRotate(float degrees);
     /** Set the matrix to rotate by the specified sine and cosine values, with
         a pivot point at (px, py). The pivot point is the coordinate that
         should remain unchanged by the specified transformation.
     */
-    void setSinCos(SkScalar sinValue, SkScalar cosValue,
-                   SkScalar px, SkScalar py);
+    void setSinCos(float sinValue, float cosValue,
+                   float px, float py);
     /** Set the matrix to rotate by the specified sine and cosine values.
     */
-    void setSinCos(SkScalar sinValue, SkScalar cosValue);
+    void setSinCos(float sinValue, float cosValue);
     /** Set the matrix to skew by sx and sy, with a pivot point at (px, py).
         The pivot point is the coordinate that should remain unchanged by the
         specified transformation.
     */
-    void setSkew(SkScalar kx, SkScalar ky, SkScalar px, SkScalar py);
+    void setSkew(float kx, float ky, float px, float py);
     /** Set the matrix to skew by sx and sy.
     */
-    void setSkew(SkScalar kx, SkScalar ky);
+    void setSkew(float kx, float ky);
     /** Set the matrix to the concatenation of the two specified matrices.
         Either of the two matrices may also be the target matrix.
         *this = a * b;
     */
-    void setConcat(const SkMatrix& a, const SkMatrix& b);
+    void setConcat(const SMatrix& a, const SMatrix& b);
 
     /** Preconcats the matrix with the specified translation.
         M' = M * T(dx, dy)
     */
-    void preTranslate(SkScalar dx, SkScalar dy);
+    void preTranslate(float dx, float dy);
     /** Preconcats the matrix with the specified scale.
         M' = M * S(sx, sy, px, py)
     */
-    void preScale(SkScalar sx, SkScalar sy, SkScalar px, SkScalar py);
+    void preScale(float sx, float sy, float px, float py);
     /** Preconcats the matrix with the specified scale.
         M' = M * S(sx, sy)
     */
-    void preScale(SkScalar sx, SkScalar sy);
+    void preScale(float sx, float sy);
     /** Preconcats the matrix with the specified rotation.
         M' = M * R(degrees, px, py)
     */
-    void preRotate(SkScalar degrees, SkScalar px, SkScalar py);
+    void preRotate(float degrees, float px, float py);
     /** Preconcats the matrix with the specified rotation.
         M' = M * R(degrees)
     */
-    void preRotate(SkScalar degrees);
+    void preRotate(float degrees);
     /** Preconcats the matrix with the specified skew.
         M' = M * K(kx, ky, px, py)
     */
-    void preSkew(SkScalar kx, SkScalar ky, SkScalar px, SkScalar py);
+    void preSkew(float kx, float ky, float px, float py);
     /** Preconcats the matrix with the specified skew.
         M' = M * K(kx, ky)
     */
-    void preSkew(SkScalar kx, SkScalar ky);
+    void preSkew(float kx, float ky);
     /** Preconcats the matrix with the specified matrix.
         M' = M * other
     */
-    void preConcat(const SkMatrix& other);
+    void preConcat(const SMatrix& other);
 
     /** Postconcats the matrix with the specified translation.
         M' = T(dx, dy) * M
     */
-    void postTranslate(SkScalar dx, SkScalar dy);
+    void postTranslate(float dx, float dy);
     /** Postconcats the matrix with the specified scale.
         M' = S(sx, sy, px, py) * M
     */
-    void postScale(SkScalar sx, SkScalar sy, SkScalar px, SkScalar py);
+    void postScale(float sx, float sy, float px, float py);
     /** Postconcats the matrix with the specified scale.
         M' = S(sx, sy) * M
     */
-    void postScale(SkScalar sx, SkScalar sy);
+    void postScale(float sx, float sy);
     /** Postconcats the matrix by dividing it by the specified integers.
         M' = S(1/divx, 1/divy, 0, 0) * M
     */
@@ -294,23 +324,23 @@ public:
     /** Postconcats the matrix with the specified rotation.
         M' = R(degrees, px, py) * M
     */
-    void postRotate(SkScalar degrees, SkScalar px, SkScalar py);
+    void postRotate(float degrees, float px, float py);
     /** Postconcats the matrix with the specified rotation.
         M' = R(degrees) * M
     */
-    void postRotate(SkScalar degrees);
+    void postRotate(float degrees);
     /** Postconcats the matrix with the specified skew.
         M' = K(kx, ky, px, py) * M
     */
-    void postSkew(SkScalar kx, SkScalar ky, SkScalar px, SkScalar py);
+    void postSkew(float kx, float ky, float px, float py);
     /** Postconcats the matrix with the specified skew.
         M' = K(kx, ky) * M
     */
-    void postSkew(SkScalar kx, SkScalar ky);
+    void postSkew(float kx, float ky);
     /** Postconcats the matrix with the specified matrix.
         M' = other * M
     */
-    void postConcat(const SkMatrix& other);
+    void postConcat(const SMatrix& other);
 
     enum ScaleToFit {
         /**
@@ -348,7 +378,7 @@ public:
         @param stf the ScaleToFit option
         @return true if the matrix can be represented by the rectangle mapping.
     */
-    bool setRectToRect(const SkRect& src, const SkRect& dst, ScaleToFit stf);
+    bool setRectToRect(const SRect& src, const SRect& dst, ScaleToFit stf);
 
     /** Set the matrix such that the specified src points would map to the
         specified dst points. count must be within [0..4].
@@ -357,13 +387,13 @@ public:
         @param count The number of points to use for the transformation
         @return true if the matrix was set to the specified transformation
     */
-    bool setPolyToPoly(const SkPoint src[], const SkPoint dst[], int count);
+    bool setPolyToPoly(const SPoint src[], const SPoint dst[], int count);
 
     /** If this matrix can be inverted, return true and if inverse is not null,
         set inverse to be the inverse of this matrix. If this matrix cannot be
         inverted, ignore inverse and return false
     */
-    bool SK_WARN_UNUSED_RESULT invert(SkMatrix* inverse) const {
+    bool invert(SMatrix* inverse) const {
         // Allow the trivial case to be inlined.
         if (this->isIdentity()) {
             if (inverse) {
@@ -379,14 +409,14 @@ public:
         @param affine  The array to fill with affine identity values.
         Must not be NULL.
     */
-    static void SetAffineIdentity(SkScalar affine[6]);
+    static void SetAffineIdentity(float affine[6]);
 
     /** Fills the passed array with the affine values in column major order.
         If the matrix is a perspective transform, returns false
         and does not change the passed array.
         @param affine  The array to fill with affine values. Ignored if NULL.
     */
-    bool asAffine(SkScalar affine[6]) const;
+    bool asAffine(float affine[6]) const;
 
     /** Apply this matrix to the array of points specified by src, and write
         the transformed points into the array of points specified by dst.
@@ -398,7 +428,7 @@ public:
         @param count The number of points in src to read, and then transform
                      into dst.
     */
-    void mapPoints(SkPoint dst[], const SkPoint src[], int count) const;
+    void mapPoints(SPoint dst[], const SPoint src[], int count) const;
 
     /** Apply this matrix to the array of points, overwriting it with the
         transformed values.
@@ -407,32 +437,32 @@ public:
                     count entries
         @param count The number of points in pts.
     */
-    void mapPoints(SkPoint pts[], int count) const {
+    void mapPoints(SPoint pts[], int count) const {
         this->mapPoints(pts, pts, count);
     }
 
     /** Like mapPoints but with custom byte stride between the points. Stride
-     *  should be a multiple of sizeof(SkScalar).
+     *  should be a multiple of sizeof(float).
      */
-    void mapPointsWithStride(SkPoint pts[], size_t stride, int count) const {
-        SkASSERT(stride >= sizeof(SkPoint));
-        SkASSERT(0 == stride % sizeof(SkScalar));
+    void mapPointsWithStride(SPoint pts[], size_t stride, int count) const {
+        SASSERT(stride >= sizeof(SPoint));
+        SASSERT(0 == stride % sizeof(float));
         for (int i = 0; i < count; ++i) {
             this->mapPoints(pts, pts, 1);
-            pts = (SkPoint*)((intptr_t)pts + stride);
+            pts = (SPoint*)((intptr_t)pts + stride);
         }
     }
 
     /** Like mapPoints but with custom byte stride between the points.
     */
-    void mapPointsWithStride(SkPoint dst[], SkPoint src[],
+    void mapPointsWithStride(SPoint dst[], SPoint src[],
                              size_t stride, int count) const {
-        SkASSERT(stride >= sizeof(SkPoint));
-        SkASSERT(0 == stride % sizeof(SkScalar));
+        SASSERT(stride >= sizeof(SPoint));
+        SASSERT(0 == stride % sizeof(float));
         for (int i = 0; i < count; ++i) {
             this->mapPoints(dst, src, 1);
-            src = (SkPoint*)((intptr_t)src + stride);
-            dst = (SkPoint*)((intptr_t)dst + stride);
+            src = (SPoint*)((intptr_t)src + stride);
+            dst = (SPoint*)((intptr_t)dst + stride);
         }
     }
 
@@ -447,10 +477,10 @@ public:
         @param count The number of triples (homogeneous points) in src to read,
                      and then transform into dst.
     */
-    void mapHomogeneousPoints(SkScalar dst[], const SkScalar src[], int count) const;
+    void mapHomogeneousPoints(float dst[], const float src[], int count) const;
 
-    void mapXY(SkScalar x, SkScalar y, SkPoint* result) const {
-        SkASSERT(result);
+    void mapXY(float x, float y, SPoint* result) const {
+        SASSERT(result);
         this->getMapXYProc()(*this, x, y, result);
     }
 
@@ -464,7 +494,7 @@ public:
         @param count The number of vectors in src to read, and then transform
                      into dst.
     */
-    void mapVectors(SkVector dst[], const SkVector src[], int count) const;
+    void mapVectors(SVector2D dst[], const SVector2D src[], int count) const;
 
     /** Apply this matrix to the array of vectors specified by src, and write
         the transformed vectors into the array of vectors specified by dst.
@@ -473,7 +503,7 @@ public:
                     count entries
         @param count The number of vectors in vecs.
     */
-    void mapVectors(SkVector vecs[], int count) const {
+    void mapVectors(SVector2D vecs[], int count) const {
         this->mapVectors(vecs, vecs, count);
     }
 
@@ -484,7 +514,7 @@ public:
         @param src  The original rectangle to be transformed.
         @return the result of calling rectStaysRect()
     */
-    bool mapRect(SkRect* dst, const SkRect& src) const;
+    bool mapRect(SRect* dst, const SRect& src) const;
 
     /** Apply this matrix to the rectangle, and write the transformed rectangle
         back into it. This is accomplished by transforming the 4 corners of
@@ -492,7 +522,7 @@ public:
         @param rect The rectangle to transform.
         @return the result of calling rectStaysRect()
     */
-    bool mapRect(SkRect* rect) const {
+    bool mapRect(SRect* rect) const {
         return this->mapRect(rect, *rect);
     }
 
@@ -502,7 +532,7 @@ public:
         @param dst  Where the transformed quad is written.
         @param rect The original rectangle to be transformed.
     */
-    void mapRectToQuad(SkPoint dst[4], const SkRect& rect) const {
+    void mapRectToQuad(SPoint dst[4], const SRect& rect) const {
         // This could potentially be faster if we only transformed each x and y of the rect once.
         rect.toQuad(dst);
         this->mapPoints(dst, 4);
@@ -512,13 +542,13 @@ public:
         this matrix. NOTE: in perspective this value assumes the circle
         has its center at the origin.
     */
-    SkScalar mapRadius(SkScalar radius) const;
+    float mapRadius(float radius) const;
 
-    typedef void (*MapXYProc)(const SkMatrix& mat, SkScalar x, SkScalar y,
-                                 SkPoint* result);
+    typedef void (*MapXYProc)(const SMatrix& mat, float x, float y,
+                                 SPoint* result);
 
     static MapXYProc GetMapXYProc(TypeMask mask) {
-        SkASSERT((mask & ~kAllMasks) == 0);
+        SASSERT((mask & ~kAllMasks) == 0);
         return gMapXYProcs[mask & kAllMasks];
     }
 
@@ -526,11 +556,11 @@ public:
         return GetMapXYProc(this->getType());
     }
 
-    typedef void (*MapPtsProc)(const SkMatrix& mat, SkPoint dst[],
-                                  const SkPoint src[], int count);
+    typedef void (*MapPtsProc)(const SMatrix& mat, SPoint dst[],
+                                  const SPoint src[], int count);
 
     static MapPtsProc GetMapPtsProc(TypeMask mask) {
-        SkASSERT((mask & ~kAllMasks) == 0);
+        SASSERT((mask & ~kAllMasks) == 0);
         return gMapPtsProcs[mask & kAllMasks];
     }
 
@@ -546,30 +576,14 @@ public:
      *  while according to strict the strict == test a matrix with a NaN value
      *  is equal to nothing, including itself.
      */
-    bool cheapEqualTo(const SkMatrix& m) const {
+    bool cheapEqualTo(const SMatrix& m) const {
         return 0 == memcmp(fMat, m.fMat, sizeof(fMat));
-    }
-
-    friend bool operator==(const SkMatrix& a, const SkMatrix& b);
-    friend bool operator!=(const SkMatrix& a, const SkMatrix& b) {
-        return !(a == b);
     }
 
     enum {
         // writeTo/readFromMemory will never return a value larger than this
-        kMaxFlattenSize = 9 * sizeof(SkScalar) + sizeof(uint32_t)
+        kMaxFlattenSize = 9 * sizeof(float) + sizeof(uint32_t)
     };
-    // return the number of bytes written, whether or not buffer is null
-    size_t writeToMemory(void* buffer) const;
-    /**
-     * Reads data from the buffer parameter
-     *
-     * @param buffer Memory to read from
-     * @param length Amount of memory available in the buffer
-     * @return number of bytes read (must be a multiple of 4) or
-     *         0 if there was not enough memory available
-     */
-    size_t readFromMemory(const void* buffer, size_t length);
 
     /**
      * Calculates the minimum scaling factor of the matrix as computed from the SVD of the upper
@@ -577,7 +591,7 @@ public:
      *
      * @return minumum scale factor
      */
-    SkScalar getMinScale() const;
+    float getMinScale() const;
 
     /**
      * Calculates the maximum scaling factor of the matrix as computed from the SVD of the upper
@@ -585,31 +599,31 @@ public:
      *
      * @return maximum scale factor
      */
-    SkScalar getMaxScale() const;
+    float getMaxScale() const;
 
     /**
      * Gets both the min and max scale factors. The min scale factor is scaleFactors[0] and the max
      * is scaleFactors[1]. If the matrix has perspective false will be returned and scaleFactors
      * will be unchanged.
      */
-    bool getMinMaxScales(SkScalar scaleFactors[2]) const;
+    bool getMinMaxScales(float scaleFactors[2]) const;
 
     /**
      *  Return a reference to a const identity matrix
      */
-    static const SkMatrix& I();
+    static const SMatrix& I();
 
     /**
      *  Return a reference to a const matrix that is "invalid", one that could
      *  never be used.
      */
-    static const SkMatrix& InvalidMatrix();
+    static const SMatrix& InvalidMatrix();
 
     /**
      * Return the concatenation of two matrices, a * b.
      */
-    static SkMatrix Concat(const SkMatrix& a, const SkMatrix& b) {
-        SkMatrix result;
+    static SMatrix Concat(const SMatrix& a, const SMatrix& b) {
+        SMatrix result;
         result.setConcat(a, b);
         return result;
     }
@@ -651,7 +665,7 @@ private:
                     kRectStaysRect_Mask
     };
 
-    SkScalar         fMat[9];
+    float         fMat[9];
     mutable uint32_t fTypeMask;
 
     uint8_t computeTypeMask() const;
@@ -659,20 +673,20 @@ private:
 
     void setTypeMask(int mask) {
         // allow kUnknown or a valid mask
-        SkASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
+        SASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
                  ((kUnknown_Mask | kOnlyPerspectiveValid_Mask) & mask)
                  == (kUnknown_Mask | kOnlyPerspectiveValid_Mask));
         fTypeMask = SkToU8(mask);
     }
 
     void orTypeMask(int mask) {
-        SkASSERT((mask & kORableMasks) == mask);
+        SASSERT((mask & kORableMasks) == mask);
         fTypeMask = SkToU8(fTypeMask | mask);
     }
 
     void clearTypeMask(int mask) {
         // only allow a valid mask
-        SkASSERT((mask & kAllMasks) == mask);
+        SASSERT((mask & kAllMasks) == mask);
         fTypeMask = fTypeMask & ~mask;
     }
 
@@ -694,31 +708,31 @@ private:
         return ((fTypeMask & 0xF) == 0);
     }
 
-    bool SK_WARN_UNUSED_RESULT invertNonIdentity(SkMatrix* inverse) const;
+    bool  invertNonIdentity(SMatrix* inverse) const;
 
-    static bool Poly2Proc(const SkPoint[], SkMatrix*, const SkPoint& scale);
-    static bool Poly3Proc(const SkPoint[], SkMatrix*, const SkPoint& scale);
-    static bool Poly4Proc(const SkPoint[], SkMatrix*, const SkPoint& scale);
+    static bool Poly2Proc(const SPoint[], SMatrix*, const SPoint& scale);
+    static bool Poly3Proc(const SPoint[], SMatrix*, const SPoint& scale);
+    static bool Poly4Proc(const SPoint[], SMatrix*, const SPoint& scale);
 
-    static void Identity_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void Trans_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void Scale_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void ScaleTrans_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void Rot_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void RotTrans_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
-    static void Persp_xy(const SkMatrix&, SkScalar, SkScalar, SkPoint*);
+    static void Identity_xy(const SMatrix&, float, float, SPoint*);
+    static void Trans_xy(const SMatrix&, float, float, SPoint*);
+    static void Scale_xy(const SMatrix&, float, float, SPoint*);
+    static void ScaleTrans_xy(const SMatrix&, float, float, SPoint*);
+    static void Rot_xy(const SMatrix&, float, float, SPoint*);
+    static void RotTrans_xy(const SMatrix&, float, float, SPoint*);
+    static void Persp_xy(const SMatrix&, float, float, SPoint*);
 
     static const MapXYProc gMapXYProcs[];
 
-    static void Identity_pts(const SkMatrix&, SkPoint[], const SkPoint[], int);
-    static void Trans_pts(const SkMatrix&, SkPoint dst[], const SkPoint[], int);
-    static void Scale_pts(const SkMatrix&, SkPoint dst[], const SkPoint[], int);
-    static void ScaleTrans_pts(const SkMatrix&, SkPoint dst[], const SkPoint[],
+    static void Identity_pts(const SMatrix&, SPoint[], const SPoint[], int);
+    static void Trans_pts(const SMatrix&, SPoint dst[], const SPoint[], int);
+    static void Scale_pts(const SMatrix&, SPoint dst[], const SPoint[], int);
+    static void ScaleTrans_pts(const SMatrix&, SPoint dst[], const SPoint[],
                                int count);
-    static void Rot_pts(const SkMatrix&, SkPoint dst[], const SkPoint[], int);
-    static void RotTrans_pts(const SkMatrix&, SkPoint dst[], const SkPoint[],
+    static void Rot_pts(const SMatrix&, SPoint dst[], const SPoint[], int);
+    static void RotTrans_pts(const SMatrix&, SPoint dst[], const SPoint[],
                              int count);
-    static void Persp_pts(const SkMatrix&, SkPoint dst[], const SkPoint[], int);
+    static void Persp_pts(const SMatrix&, SPoint dst[], const SPoint[], int);
     static const MapPtsProc gMapPtsProcs[];
 
 
