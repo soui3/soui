@@ -2,7 +2,7 @@
 
 using namespace SOUI;
 
-#include "helper/SMatrix.h"
+#include "matrix/SMatrix.h"
 
 namespace SOUI{
 

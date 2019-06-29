@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "SMatrixWindow.h"
-#include "../third-part/skmatrix/include/SkCamera.h"
+#include <matrix/SCamera.h>
+
 namespace SOUI
 {
 
@@ -36,24 +37,24 @@ namespace SOUI
 			pRT->DrawText(_T("没有指定skin对象"),-1,rc,DT_SINGLELINE|DT_VCENTER|DT_VCENTER);
 		}else
 		{
-			Sk3DView view;
+			SCamera camera;
 			float zOffset = 0.0f;
 			switch(m_rotateDir)
 			{
 			case RotateX:
 				zOffset = rc.Height()/2*fabs(sin(m_nRotate*3.1415926/180));
-				view.translate(0,0,zOffset);
-				view.rotateX(m_nRotate);
+				camera.translate(0,0,zOffset);
+				camera.rotateX(m_nRotate);
 				break;
 			case RotateY:
 				zOffset = rc.Width()/2*fabs(sin(m_nRotate*3.1415926/180));
-				view.translate(0,0,zOffset);
-				view.rotateY(m_nRotate);
+				camera.translate(0,0,zOffset);
+				camera.rotateY(m_nRotate);
 				break;
-			case RotateZ:view.rotateZ(m_nRotate);break;
+			case RotateZ:camera.rotateZ(m_nRotate);break;
 			}
-			SkMatrix mat;
-			view.getMatrix(&mat);
+			SMatrix mat;
+			camera.getMatrix(&mat);
 
 			int wid = rc.Width()/2+rc.left;
 			int hei = rc.Height()/2+rc.top;

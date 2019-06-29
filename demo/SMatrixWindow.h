@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <helper/SMatrix.h>
+#include <matrix/SMatrix.h>
 namespace SOUI
 {
 	class S3DView : public SWindow,public ITimelineHandler

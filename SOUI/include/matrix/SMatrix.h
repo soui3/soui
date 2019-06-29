@@ -93,25 +93,25 @@ public:
 public:
 	SMatrix & translate(float dx, float dy)
 	{
-		setTranslate(dx, dy);
+		postTranslate(dx, dy);
 		return *this;
 	}
 
 	SMatrix & scale(float sx, float sy)
 	{
-		setScale(sx, sy);
+		postScale(sx, sy);
 		return *this;
 	}
 
 	SMatrix & shear(float sh, float sv)
 	{
-		setSkew(sh, sv);
+		postSkew(sh, sv);
 		return *this;
 	}
 
 	SMatrix & rotate(float deg)
 	{
-		setRotate(deg);
+		postRotate(deg);
 		return *this;
 	}
 
