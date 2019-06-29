@@ -3094,7 +3094,11 @@ namespace SOUI
 			if (xform.hasMatrix())
 			{
 				const SMatrix & mtx = xform.getMatrix();
-				
+				SRect rcWnd2;
+				rcWnd2.set(rcWnd);
+				mtx.mapRect(&rcWnd2);
+				RECT rcMap = rcWnd2.toRect();
+				InvalidateRect(&rcMap);
 			}
 			else
 			{

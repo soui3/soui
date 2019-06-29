@@ -11,17 +11,6 @@
 
 namespace SOUI{
 
-void SIRect::sort() {
-    if (fLeft > fRight) {
-        STSwap<int32_t>(fLeft, fRight);
-    }
-    if (fTop > fBottom) {
-        STSwap<int32_t>(fTop, fBottom);
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 void SRect::sort() {
     if (fLeft > fRight) {
         STSwap<float>(fLeft, fRight);
