@@ -526,6 +526,7 @@ namespace SOUI
 		virtual float GetPersp2() const = 0;
 		virtual float GetValue(Index idx) const = 0;
 		virtual const float * GetData() const = 0;
+		virtual float * GetData() = 0;
 
 		virtual void SetScaleX(float v) = 0;
 		virtual void SetScaleY(float v) = 0;

@@ -217,7 +217,7 @@ namespace SOUI
 			Transformation m_transform;
 		public:
 			SAnimationHandler(SWindow *pOwner);
-			Transformation GetTransformation() const;
+			const Transformation & GetTransformation() const;
 		protected:
 			void OnNextFrame() override;
 		};
@@ -825,6 +825,9 @@ namespace SOUI
 		*/
 		void ClearAnimation();
 
+		void SetTransformation(const Transformation & transform);
+
+		Transformation GetTransformation() const;
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();
@@ -1231,6 +1234,7 @@ namespace SOUI
 		void _RedrawNonClient();
         void _PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
         void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
+		CRect _getTransformRect() const;
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
         void DrawAniStep(CRect rcFore,CRect rcBack,IRenderTarget *pRTFore,IRenderTarget * pRTBack,CPoint ptAnchor);
@@ -1450,6 +1454,7 @@ namespace SOUI
 
 		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
 		SAnimationHandler	m_animationHandler;
+		Transformation		m_transform;
         typedef struct GETRTDATA
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */

@@ -1592,6 +1592,11 @@ const float * SMatrix::GetData() const
 	return fMat;
 }
 
+float * SMatrix::GetData()
+{
+	return fMat;
+}
+
 
 void SMatrix::SetScaleX(float v)
 {

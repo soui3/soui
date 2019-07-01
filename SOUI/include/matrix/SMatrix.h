@@ -51,6 +51,8 @@ public:
 
 	virtual const float * GetData() const;
 
+	virtual float * GetData();
+
 	virtual float GetPersp2() const;
 
 	virtual void SetScaleX(float v);

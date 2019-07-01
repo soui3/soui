@@ -109,8 +109,8 @@ public:
      * @param t
      */
     void compose(Transformation t) {
-        mAlpha *= t.getAlpha();
-		mMatrix = t.getMatrix() * mMatrix;
+		if (t.hasAlpha()) mAlpha *= t.getAlpha();
+		if (t.hasMatrix()) mMatrix = t.getMatrix() * mMatrix;
     }
     
     /**
@@ -119,8 +119,8 @@ public:
      * @hide
      */
     void postCompose(Transformation t) {
-        mAlpha *= t.getAlpha();
-        mMatrix *= t.getMatrix();
+        if(t.hasAlpha()) mAlpha *= t.getAlpha();
+        if(t.hasMatrix()) mMatrix *= t.getMatrix();
     }
 
     /**
@@ -159,6 +159,11 @@ public:
 	bool hasMatrix() const
 	{
 		return getTransformationType() & TYPE_MATRIX;
+	}
+
+	bool isIdentity() const
+	{
+		return getTransformationType() == TYPE_IDENTITY;
 	}
 };
 

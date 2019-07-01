@@ -1114,7 +1114,28 @@ namespace SOUI
 					}
 				}
 			}
-			pChild->_PaintRegion2(pRT,pRgn,iZorderBegin,iZorderEnd);
+			const Transformation transform = pChild->GetTransformation();
+			if (!transform.isIdentity())
+			{
+				CRect rcChild = pChild->GetWindowRect();
+				SAutoRefPtr<IRenderTarget> memRT;
+				const Transformation &transform = pChild->m_animationHandler.GetTransformation();
+				GETRENDERFACTORY->CreateRenderTarget(&memRT, rcChild.Width(), rcChild.Height());
+				POINT ptOrg;
+				pRT->GetViewportOrg(&ptOrg);
+				memRT->SetViewportOrg(ptOrg);
+				pChild->BeforePaintEx(memRT);
+				SMatrix curMtx;
+				pRT->GetTransform(curMtx.GetData());
+				memRT->SetTransform(curMtx.GetData());
+
+				pChild->_PaintRegion2(memRT, pRgn, iZorderBegin, iZorderEnd);
+
+			}
+			else
+			{
+				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
+			}
 			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 		AfterPaint(pRT,painter);
@@ -1148,6 +1169,19 @@ namespace SOUI
 			if(S_OK == hr) pRT->SelectObject(curFont);
 		}
 
+	}
+	CRect SWindow::_getTransformRect() const
+	{
+		const Transformation xform = GetTransformation();
+
+		CRect rcWnd = GetWindowRect();
+		if (!xform.hasMatrix())
+			return rcWnd;
+		const SMatrix & mtx = xform.getMatrix();
+		SRect rcMapped;
+		rcMapped.set(rcWnd);
+		mtx.mapRect(&rcMapped);
+		return rcMapped.toRect();
 	}
 
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
@@ -2136,6 +2170,18 @@ namespace SOUI
 		}
 	}
 
+	void SWindow::SetTransformation(const Transformation & transform)
+	{
+		m_transform = transform;
+	}
+
+	Transformation SWindow::GetTransformation() const
+	{
+		Transformation ret = m_transform;
+		ret.postCompose(m_animationHandler.GetTransformation());
+		return ret;
+	}
+
 	void SWindow::SetFocus()
 	{
 		if(!IsVisible(TRUE) || IsDisabled(TRUE) && IsFocusable()) return;
@@ -2779,7 +2825,9 @@ namespace SOUI
 
 	bool SWindow::IsDrawToCache() const
 	{
-		return m_bCacheDraw || (!IsLayeredWindow() && GetStyle().m_byAlpha!=0xff);
+		return m_bCacheDraw
+			|| !GetTransformation().isIdentity()
+			|| (!IsLayeredWindow() && GetStyle().m_byAlpha != 0xff);
 	}
 
 	IRenderTarget * SWindow::GetLayerRenderTarget()
@@ -3090,20 +3138,11 @@ namespace SOUI
 		CRect rcWnd = GetWindowRect();
 		if (m_animation->hasStarted())
 		{
-			Transformation xform = m_animationHandler.GetTransformation();
-			if (xform.hasMatrix())
-			{
-				const SMatrix & mtx = xform.getMatrix();
-				SRect rcWnd2;
-				rcWnd2.set(rcWnd);
-				mtx.mapRect(&rcWnd2);
-				RECT rcMap = rcWnd2.toRect();
-				InvalidateRect(&rcMap);
-			}
+			CRect rcWnd = _getTransformRect();
+			if (GetParent())
+				GetParent()->InvalidateRect(rcWnd);
 			else
-			{
 				InvalidateRect(rcWnd);
-			}
 		}
 		else if(m_animation->hasEnded())
 		{
@@ -3117,7 +3156,7 @@ namespace SOUI
 	{
 	}
 
-	Transformation SWindow::SAnimationHandler::GetTransformation() const
+	const Transformation & SWindow::SAnimationHandler::GetTransformation() const
 	{
 		return m_transform;
 	}
