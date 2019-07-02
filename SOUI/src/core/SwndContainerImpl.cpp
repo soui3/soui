@@ -163,6 +163,9 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
     {//没有设置鼠标捕获
         SWND hHover=SwndFromPoint(pt,FALSE);
         SWindow * pHover=SWindowMgr::GetWindow(hHover);
+		CPoint pt2 = pt;
+		pHover->ConvertPt2Window(pt2);
+
         if(m_hHover!=hHover)
         {//hover窗口发生了变化
             SWindow *pOldHover=SWindowMgr::GetWindow(m_hHover);
@@ -182,9 +185,9 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
             }
             if(pHover && !pHover->IsDisabled(TRUE) && !(pHover->GetState() & WndState_Hover))
             {
-                m_bNcHover=pHover->OnNcHitTest(pt);
-                if(m_bNcHover) pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
-                pHover->SSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
+                m_bNcHover=pHover->OnNcHitTest(pt2);
+                if(m_bNcHover) pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
+                pHover->SSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
             }
         }
         else if(pHover && !pHover->IsDisabled(TRUE))
@@ -195,7 +198,9 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
                 m_bNcHover=bNcHover;
                 if(m_bNcHover)
                 {
-                    pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
+					CPoint pt2 = pt;
+					pHover->ConvertPt2Window(pt2);
+					pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
                 }
                 else
                 {

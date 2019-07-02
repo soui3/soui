@@ -534,7 +534,7 @@ namespace SOUI
 		delete []pRowsWeight;
 
 		//计算子窗口位置
-		CPoint pt = rcParent.TopLeft();
+		CPoint pt;
 		for(int y=0;y<nRows;y++)
 		{
 			for(int x=0;x<nCols;x++)
