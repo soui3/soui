@@ -67,7 +67,7 @@ public:
     void clear() {
 		mMatrix.Clear();
         mAlpha = 1.0f;
-        mTransformationType = TYPE_BOTH;
+        mTransformationType = TYPE_IDENTITY;
     }
 
     /**
