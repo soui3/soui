@@ -1706,6 +1706,7 @@ Assigns the given \a matrix's values to this matrix.
 SMatrix &SMatrix::operator=(const SMatrix &src)
 {
 	memcpy(fMat, src.fMat, sizeof(fMat));
+	fTypeMask = src.fTypeMask;
 	return *this;
 }
 }//end of namespace SOUI

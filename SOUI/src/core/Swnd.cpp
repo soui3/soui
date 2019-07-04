@@ -2167,6 +2167,7 @@ namespace SOUI
 	void SWindow::SetTransformation(const Transformation & transform)
 	{
 		m_transform = transform;
+		m_transform.updateType();
 	}
 
 	Transformation SWindow::GetTransformation() const
