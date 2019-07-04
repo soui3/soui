@@ -740,7 +740,7 @@ private:
 
     friend class SkPerspIter;
 public:
-	static float SkScalarSinCos(float radians, float* cosValue);
+	static float SFloatSinCos(float radians, float* cosValue);
 };
 
 

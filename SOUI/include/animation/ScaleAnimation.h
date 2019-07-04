@@ -168,6 +168,7 @@ namespace SOUI {
 			else {
 				t.getMatrix().setScale(sx, sy, scale * mPivotX, scale * mPivotY);
 			}
+			t.updateType();
 		}
 
 		float resolveScale(float scale, int type, int data, int size, int psize) {

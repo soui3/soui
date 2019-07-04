@@ -62,7 +62,7 @@ bool SRect::setBoundsCheck(const SPoint pts[], int count) {
             if (y > b) b = y;
         }
 
-        SASSERT(!accum || !SkScalarIsFinite(accum));
+        SASSERT(!accum || !SFloatIsFinite(accum));
         if (accum) {
             l = t = r = b = 0;
             isFinite = false;

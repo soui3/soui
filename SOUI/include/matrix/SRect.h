@@ -57,15 +57,15 @@ struct SOUI_EXP SRect {
     float    bottom() const { return fBottom; }
     float    width() const { return fRight - fLeft; }
     float    height() const { return fBottom - fTop; }
-    float    centerX() const { return SkScalarHalf(fLeft + fRight); }
-    float    centerY() const { return SkScalarHalf(fTop + fBottom); }
+    float    centerX() const { return SFloatHalf(fLeft + fRight); }
+    float    centerY() const { return SFloatHalf(fTop + fBottom); }
 
     friend bool operator==(const SRect& a, const SRect& b) {
-        return SkScalarsEqual((float*)&a, (float*)&b, 4);
+        return SFloatsEqual((float*)&a, (float*)&b, 4);
     }
 
     friend bool operator!=(const SRect& a, const SRect& b) {
-        return !SkScalarsEqual((float*)&a, (float*)&b, 4);
+        return !SFloatsEqual((float*)&a, (float*)&b, 4);
     }
 
     /** return the 4 points that enclose the rectangle (top-left, top-right, bottom-right,
@@ -194,7 +194,7 @@ struct SOUI_EXP SRect {
     void sort();
 
     /**
-     *  cast-safe way to treat the rect as an array of (4) SkScalars.
+     *  cast-safe way to treat the rect as an array of (4) SFloats.
      */
     const float* asScalars() const { return &fLeft; }
 

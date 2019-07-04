@@ -1086,6 +1086,7 @@ namespace SOUI
 
 		SPainter painter;
 		BeforePaint(pRT,painter);
+		CRect rcChilds = GetChildrenLayoutRect();
 
 		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
@@ -1114,23 +1115,16 @@ namespace SOUI
 					}
 				}
 			}
-			const Transformation transform = pChild->GetTransformation();
-			if (!transform.isIdentity())
+			Transformation transform = pChild->GetTransformation();
+			if (transform.hasMatrix())
 			{
-				CRect rcChild = pChild->GetWindowRect();
-				SAutoRefPtr<IRenderTarget> memRT;
-				const Transformation &transform = pChild->m_animationHandler.GetTransformation();
-				GETRENDERFACTORY->CreateRenderTarget(&memRT, rcChild.Width(), rcChild.Height());
-				POINT ptOrg;
-				pRT->GetViewportOrg(&ptOrg);
-				memRT->SetViewportOrg(ptOrg);
-				pChild->BeforePaintEx(memRT);
-				SMatrix curMtx;
-				pRT->GetTransform(curMtx.GetData());
-				memRT->SetTransform(curMtx.GetData());
-
-				pChild->_PaintRegion2(memRT, pRgn, iZorderBegin, iZorderEnd);
-
+				SMatrix mtx = transform.getMatrix();
+				mtx.preTranslate(-rcChilds.left, -rcChilds.top);
+				mtx.postTranslate(rcChilds.left, rcChilds.top);
+				float oldMtx[9];
+				pRT->SetTransform(mtx.GetData(), oldMtx);
+				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
+				pRT->SetTransform(oldMtx);
 			}
 			else
 			{

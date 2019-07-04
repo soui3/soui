@@ -174,7 +174,7 @@ HEADERS += include/SApp.h \
            include/matrix/SMatrix.h \
            include/matrix/SPoint.h \
            include/matrix/SRect.h \
-           include/matrix/SScalar.h \
+           include/matrix/SFloat.h \
            include/matrix/STypes.h \
            include/msaa/SAccProxyCmnCtrl.h \
            include/msaa/SAccProxyWindow.h \

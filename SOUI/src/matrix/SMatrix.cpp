@@ -62,7 +62,7 @@ enum {
 static const int32_t kScalar1Int = 0x3f800000;
 
 uint8_t SMatrix::computePerspectiveTypeMask() const {
-    // Benchmarking suggests that replacing this set of SkScalarAs2sCompliment
+    // Benchmarking suggests that replacing this set of SFloatAs2sCompliment
     // is a win, but replacing those below is not. We don't yet understand
     // that result.
     if (fMat[kMPersp0] != 0 || fMat[kMPersp1] != 0 || fMat[kMPersp2] != 1) {
@@ -89,10 +89,10 @@ uint8_t SMatrix::computeTypeMask() const {
         mask |= kTranslate_Mask;
     }
 
-    int m00 = SkScalarAs2sCompliment(fMat[SMatrix::kMScaleX]);
-    int m01 = SkScalarAs2sCompliment(fMat[SMatrix::kMSkewX]);
-    int m10 = SkScalarAs2sCompliment(fMat[SMatrix::kMSkewY]);
-    int m11 = SkScalarAs2sCompliment(fMat[SMatrix::kMScaleY]);
+    int m00 = SFloatAs2sCompliment(fMat[SMatrix::kMScaleX]);
+    int m01 = SFloatAs2sCompliment(fMat[SMatrix::kMSkewX]);
+    int m10 = SFloatAs2sCompliment(fMat[SMatrix::kMSkewY]);
+    int m11 = SFloatAs2sCompliment(fMat[SMatrix::kMScaleY]);
 
     if (m01 | m10) {
         // The skew components may be scale-inducing, unless we are dealing
@@ -154,7 +154,7 @@ bool operator==(const SMatrix& a, const SMatrix& b) {
 static inline bool is_degenerate_2x2(float scaleX, float skewX,
                                      float skewY,  float scaleY) {
     float perp_dot = scaleX*scaleY - skewX*skewY;
-    return SkScalarNearlyZero(perp_dot, SK_ScalarNearlyZero*SK_ScalarNearlyZero);
+    return SFloatNearlyZero(perp_dot, SK_ScalarNearlyZero*SK_ScalarNearlyZero);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@ bool SMatrix::isSimilarity(float tol) const {
     float my = fMat[kMScaleY];
     // if no skew, can just compare scale factors
     if (!(mask & kAffine_Mask)) {
-        return !SkScalarNearlyZero(mx) && SkScalarNearlyEqual(SkScalarAbs(mx), SkScalarAbs(my));
+        return !SFloatNearlyZero(mx) && SFloatNearlyEqual(SFloatAbs(mx), SFloatAbs(my));
     }
     float sx = fMat[kMSkewX];
     float sy = fMat[kMSkewY];
@@ -184,8 +184,8 @@ bool SMatrix::isSimilarity(float tol) const {
 
     // upper 2x2 is rotation/reflection + uniform scale if basis vectors
     // are 90 degree rotations of each other
-    return (SkScalarNearlyEqual(mx, my, tol) && SkScalarNearlyEqual(sx, -sy, tol))
-        || (SkScalarNearlyEqual(mx, -my, tol) && SkScalarNearlyEqual(sx, sy, tol));
+    return (SFloatNearlyEqual(mx, my, tol) && SFloatNearlyEqual(sx, -sy, tol))
+        || (SFloatNearlyEqual(mx, -my, tol) && SFloatNearlyEqual(sx, sy, tol));
 }
 
 bool SMatrix::preservesRightAngles(float tol) const {
@@ -215,7 +215,7 @@ bool SMatrix::preservesRightAngles(float tol) const {
     vec[0].set(mx, sy);
     vec[1].set(sx, my);
 
-    return SkScalarNearlyZero(vec[0].dot(vec[1]), SkScalarSquare(tol));
+    return SFloatNearlyZero(vec[0].dot(vec[1]), SFloatSquare(tol));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ bool SMatrix::setIDiv(int divx, int divy) {
     if (!divx || !divy) {
         return false;
     }
-    this->setScale(SkScalarInvert(divx), SkScalarInvert(divy));
+    this->setScale(SFloatInvert(divx), SFloatInvert(divy));
     return true;
 }
 
@@ -414,17 +414,17 @@ void SMatrix::setSinCos(float sinV, float cosV,
     this->setTypeMask(kUnknown_Mask | kOnlyPerspectiveValid_Mask);
 }
 
-float SMatrix::SkScalarSinCos(float radians, float* cosValue) {
+float SMatrix::SFloatSinCos(float radians, float* cosValue) {
 	float sinValue = sk_float_sin(radians);
 
 	if (cosValue) {
 		*cosValue = sk_float_cos(radians);
-		if (SkScalarNearlyZero(*cosValue)) {
+		if (SFloatNearlyZero(*cosValue)) {
 			*cosValue = 0;
 		}
 	}
 
-	if (SkScalarNearlyZero(sinValue)) {
+	if (SFloatNearlyZero(sinValue)) {
 		sinValue = 0;
 	}
 	return sinValue;
@@ -447,13 +447,13 @@ void SMatrix::setSinCos(float sinV, float cosV) {
 
 void SMatrix::setRotate(float degrees, float px, float py) {
     float sinV, cosV;
-    sinV = SkScalarSinCos(SkDegreesToRadians(degrees), &cosV);
+    sinV = SFloatSinCos(SkDegreesToRadians(degrees), &cosV);
     this->setSinCos(sinV, cosV, px, py);
 }
 
 void SMatrix::setRotate(float degrees) {
     float sinV, cosV;
-    sinV = SkScalarSinCos(SkDegreesToRadians(degrees), &cosV);
+    sinV = SFloatSinCos(SkDegreesToRadians(degrees), &cosV);
     this->setSinCos(sinV, cosV);
 }
 
@@ -576,7 +576,7 @@ bool SMatrix::setRectToRect(const SRect& src, const SRect& dst,
             }
 
             if (align == kCenter_ScaleToFit) {
-                diff = SkScalarHalf(diff);
+                diff = SFloatHalf(diff);
             }
 
             if (xLarger) {
@@ -618,9 +618,9 @@ static inline float rowcol3(const float row[], const float col[]) {
 }
 
 static void normalize_perspective(float mat[9]) {
-    if (SkScalarAbs(mat[SMatrix::kMPersp2]) > 1) {
+    if (SFloatAbs(mat[SMatrix::kMPersp2]) > 1) {
         for (int i = 0; i < 9; i++)
-            mat[i] = SkScalarHalf(mat[i]);
+            mat[i] = SFloatHalf(mat[i]);
     }
 }
 
@@ -753,7 +753,7 @@ static double sk_inv_determinant(const float mat[9], int isPerspective) {
     // Since the determinant is on the order of the cube of the matrix members,
     // compare to the cube of the default nearly-zero constant (although an
     // estimate of the condition number would be better if it wasn't so expensive).
-    if (SkScalarNearlyZero((float)det, SK_ScalarNearlyZero * SK_ScalarNearlyZero * SK_ScalarNearlyZero)) {
+    if (SFloatNearlyZero((float)det, SK_ScalarNearlyZero * SK_ScalarNearlyZero * SK_ScalarNearlyZero)) {
         return 0;
     }
     return 1.0 / det;
@@ -797,8 +797,8 @@ bool SMatrix::invertNonIdentity(SMatrix* inv) const {
                 if (0 == invX || 0 == invY) {
                     return false;
                 }
-                invX = SkScalarInvert(invX);
-                invY = SkScalarInvert(invY);
+                invX = SFloatInvert(invX);
+                invY = SFloatInvert(invY);
 
                 // Must be careful when writing to inv, since it may be the
                 // same memory as this.
@@ -998,7 +998,7 @@ void SMatrix::Persp_pts(const SMatrix& m, SPoint dst[],
             float z = sdot(sx, m.fMat[kMPersp0], sy, m.fMat[kMPersp1]) + m.fMat[kMPersp2];
 #endif
             if (z) {
-                z = SkScalarFastInvert(z);
+                z = SFloatFastInvert(z);
             }
 
             dst->fY = y * z;
@@ -1117,7 +1117,7 @@ float SMatrix::mapRadius(float radius) const {
     float d1 = vec[1].length();
 
     // return geometric mean
-    return SkScalarSqrt(d0 * d1);
+    return SFloatSqrt(d0 * d1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1130,7 +1130,7 @@ void SMatrix::Persp_xy(const SMatrix& m, float sx, float sy,
     float y = sdot(sx, m.fMat[kMSkewY],  sy, m.fMat[kMScaleY]) + m.fMat[kMTransY];
     float z = sdot(sx, m.fMat[kMPersp0], sy, m.fMat[kMPersp1]) + m.fMat[kMPersp2];
     if (z) {
-        z = SkScalarFastInvert(z);
+        z = SFloatFastInvert(z);
     }
     pt->fX = x * z;
     pt->fY = y * z;
@@ -1215,7 +1215,7 @@ const SMatrix::MapXYProc SMatrix::gMapXYProcs[] = {
 ///////////////////////////////////////////////////////////////////////////////
 
 // if its nearly zero (just made up 26, perhaps it should be bigger or smaller)
-#define PerspNearlyZero(x)  SkScalarNearlyZero(x, (1.0f / (1 << 26)))
+#define PerspNearlyZero(x)  SFloatNearlyZero(x, (1.0f / (1 << 26)))
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1304,40 +1304,40 @@ bool SMatrix::Poly4Proc(const SPoint srcPt[], SMatrix* dst,
 
     /* check if abs(x2) > abs(y2) */
     if ( x2 > 0 ? y2 > 0 ? x2 > y2 : x2 > -y2 : y2 > 0 ? -x2 > y2 : x2 < y2) {
-        float denom = SkScalarMulDiv(x1, y2, x2) - y1;
+        float denom = SFloatMulDiv(x1, y2, x2) - y1;
         if (checkForZero(denom)) {
             return false;
         }
-        a1 = (SkScalarMulDiv(x0 - x1, y2, x2) - y0 + y1) / denom;
+        a1 = (SFloatMulDiv(x0 - x1, y2, x2) - y0 + y1) / denom;
     } else {
-        float denom = x1 - SkScalarMulDiv(y1, x2, y2);
+        float denom = x1 - SFloatMulDiv(y1, x2, y2);
         if (checkForZero(denom)) {
             return false;
         }
-        a1 = (x0 - x1 - SkScalarMulDiv(y0 - y1, x2, y2)) / denom;
+        a1 = (x0 - x1 - SFloatMulDiv(y0 - y1, x2, y2)) / denom;
     }
 
     /* check if abs(x1) > abs(y1) */
     if ( x1 > 0 ? y1 > 0 ? x1 > y1 : x1 > -y1 : y1 > 0 ? -x1 > y1 : x1 < y1) {
-        float denom = y2 - SkScalarMulDiv(x2, y1, x1);
+        float denom = y2 - SFloatMulDiv(x2, y1, x1);
         if (checkForZero(denom)) {
             return false;
         }
-        a2 = (y0 - y2 - SkScalarMulDiv(x0 - x2, y1, x1)) / denom;
+        a2 = (y0 - y2 - SFloatMulDiv(x0 - x2, y1, x1)) / denom;
     } else {
-        float denom = SkScalarMulDiv(y2, x1, y1) - x2;
+        float denom = SFloatMulDiv(y2, x1, y1) - x2;
         if (checkForZero(denom)) {
             return false;
         }
-        a2 = (SkScalarMulDiv(y0 - y2, x1, y1) - x0 + x2) / denom;
+        a2 = (SFloatMulDiv(y0 - y2, x1, y1) - x0 + x2) / denom;
     }
 
-    float invScale = SkScalarInvert(scale.fX);
+    float invScale = SFloatInvert(scale.fX);
     dst->fMat[kMScaleX] = (a2 * srcPt[3].fX + srcPt[3].fX - srcPt[0].fX) * invScale;
     dst->fMat[kMSkewY]  = (a2 * srcPt[3].fY + srcPt[3].fY - srcPt[0].fY) * invScale;
     dst->fMat[kMPersp0] = a2 * invScale;
 
-    invScale = SkScalarInvert(scale.fY);
+    invScale = SFloatInvert(scale.fY);
     dst->fMat[kMSkewX]  = (a1 * srcPt[1].fX + srcPt[1].fX - srcPt[0].fX) * invScale;
     dst->fMat[kMScaleY] = (a1 * srcPt[1].fY + srcPt[1].fY - srcPt[0].fY) * invScale;
     dst->fMat[kMPersp1] = a1 * invScale;
@@ -1371,8 +1371,8 @@ bool SMatrix::setPolyToPoly(const SPoint src[], const SPoint dst[],
 
     SPoint scale;
     if (!poly_to_point(&scale, src, count) ||
-            SkScalarNearlyZero(scale.fX) ||
-            SkScalarNearlyZero(scale.fY)) {
+            SFloatNearlyZero(scale.fX) ||
+            SFloatNearlyZero(scale.fY)) {
         return false;
     }
 
@@ -1420,14 +1420,14 @@ template <MinMaxOrBoth MIN_MAX_OR_BOTH> bool get_scale_factor(SMatrix::TypeMask 
     }
     if (!(typeMask & SMatrix::kAffine_Mask)) {
         if (kMin_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
-             results[0] = SkMinScalar(SkScalarAbs(m[SMatrix::kMScaleX]),
-                                      SkScalarAbs(m[SMatrix::kMScaleY]));
+             results[0] = SkMinScalar(SFloatAbs(m[SMatrix::kMScaleX]),
+                                      SFloatAbs(m[SMatrix::kMScaleY]));
         } else if (kMax_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
-             results[0] = SkMaxScalar(SkScalarAbs(m[SMatrix::kMScaleX]),
-                                      SkScalarAbs(m[SMatrix::kMScaleY]));
+             results[0] = SkMaxScalar(SFloatAbs(m[SMatrix::kMScaleX]),
+                                      SFloatAbs(m[SMatrix::kMScaleY]));
         } else {
-            results[0] = SkScalarAbs(m[SMatrix::kMScaleX]);
-            results[1] = SkScalarAbs(m[SMatrix::kMScaleY]);
+            results[0] = SFloatAbs(m[SMatrix::kMScaleX]);
+            results[1] = SFloatAbs(m[SMatrix::kMScaleY]);
              if (results[0] > results[1]) {
                  STSwap(results[0], results[1]);
              }
@@ -1464,8 +1464,8 @@ template <MinMaxOrBoth MIN_MAX_OR_BOTH> bool get_scale_factor(SMatrix::TypeMask 
         }
     } else {
         float aminusc = a - c;
-        float apluscdiv2 = SkScalarHalf(a + c);
-        float x = SkScalarHalf(SkScalarSqrt(aminusc * aminusc + 4 * bSqd));
+        float apluscdiv2 = SFloatHalf(a + c);
+        float x = SFloatHalf(SFloatSqrt(aminusc * aminusc + 4 * bSqd));
         if (kMin_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
             results[0] = apluscdiv2 - x;
         } else if (kMax_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
@@ -1476,10 +1476,10 @@ template <MinMaxOrBoth MIN_MAX_OR_BOTH> bool get_scale_factor(SMatrix::TypeMask 
         }
     }
     SASSERT(results[0] >= 0);
-    results[0] = SkScalarSqrt(results[0]);
+    results[0] = SFloatSqrt(results[0]);
     if (kBoth_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
         SASSERT(results[1] >= 0);
-        results[1] = SkScalarSqrt(results[1]);
+        results[1] = SFloatSqrt(results[1]);
     }
     return true;
 }

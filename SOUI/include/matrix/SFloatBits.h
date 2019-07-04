@@ -68,7 +68,7 @@ static inline int32_t SkFloatAs2sCompliment(float x) {
 
 //  Scalar wrappers for float-bit routines
 
-#define SkScalarAs2sCompliment(x)    SkFloatAs2sCompliment(x)
+#define SFloatAs2sCompliment(x)    SkFloatAs2sCompliment(x)
 #define Sk2sComplimentAsScalar(x)    Sk2sComplimentAsFloat(x)
 
 }//end of namespace SOUI

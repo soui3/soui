@@ -8,7 +8,7 @@
 #ifndef _SPoint_DEFINED_
 #define _SPoint_DEFINED_
 
-#include "sscalar.h"
+#include "Sfloat.h"
 
 namespace SOUI{
 /** \struct SkIPoint16
