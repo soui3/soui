@@ -2821,7 +2821,7 @@ namespace SOUI
 	bool SWindow::IsDrawToCache() const
 	{
 		return m_bCacheDraw
-			|| !GetTransformation().isIdentity()
+//			|| !GetTransformation().isIdentity()
 			|| (!IsLayeredWindow() && GetStyle().m_byAlpha != 0xff);
 	}
 

@@ -2110,12 +2110,18 @@ namespace SOUI
 		m_skPath.offset(dx,dy);
 	}
 
-	void SPath_Skia::transform(const IxForm * matrix)
+	void SPath_Skia::transform(const IxForm * xForm)
 	{
 		SkMatrix mat;
-		mat.setAll(matrix->GetScaleX(), matrix->GetSkewX(), matrix->GetTranslateX(),
-			matrix->GetSkewY(), matrix->GetScaleY(), matrix->GetTranslateY(),
-			matrix->GetPersp0(), matrix->GetPersp1(), matrix->GetPersp2());
+		mat.setAll(xForm->GetValue(IxForm::kMScaleX),
+			xForm->GetValue(IxForm::kMSkewX), 
+			xForm->GetValue(IxForm::kMTransX),
+			xForm->GetValue(IxForm::kMSkewY),
+			xForm->GetValue(IxForm::kMScaleY), 
+			xForm->GetValue(IxForm::kMTransY),
+			xForm->GetValue(IxForm::kMPersp0), 
+			xForm->GetValue(IxForm::kMPersp1), 
+			xForm->GetValue(IxForm::kMPersp2));
 		m_skPath.transform(mat);
 	}
 

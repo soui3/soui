@@ -65,7 +65,7 @@ public:
      * {@link #TYPE_BOTH} by default.
      */
     void clear() {
-		mMatrix.Clear();
+		mMatrix.reset();
         mAlpha = 1.0f;
         mTransformationType = TYPE_IDENTITY;
     }

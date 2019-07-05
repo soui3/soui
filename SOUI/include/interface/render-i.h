@@ -515,33 +515,13 @@ namespace SOUI
 			kMPersp2
 		};
 
-		virtual float GetScaleX() const = 0;
-		virtual float GetScaleY() const = 0;
-		virtual float GetSkewX() const = 0;
-		virtual float GetSkewY() const = 0;
-		virtual float GetTranslateX() const = 0;
-		virtual float GetTranslateY() const = 0;
-		virtual float GetPersp0() const = 0;
-		virtual float GetPersp1() const = 0;
-		virtual float GetPersp2() const = 0;
 		virtual float GetValue(Index idx) const = 0;
+		virtual void SetValue(Index index, float v) = 0;
+
 		virtual const float * GetData() const = 0;
 		virtual float * GetData() = 0;
 
-		virtual void SetScaleX(float v) = 0;
-		virtual void SetScaleY(float v) = 0;
-		virtual void SetSkewX(float v) = 0;
-		virtual void SetSkewY(float v) = 0;
-		virtual void SetTranslateX(float v) = 0;
-		virtual void SetTranslateY(float v) = 0;
-		virtual void SetPersp0(float v) = 0;
-		virtual void SetPersp1(float v) = 0;
-		virtual void SetPersp2(float v) = 0;
-		virtual void SetValue(Index index, float v) = 0;
 		virtual void SetData(const float fMat[9]) = 0;
-
-		virtual void Clear() = 0;
-		virtual void Concat(const IxForm * src) = 0;
 	};
 
 	struct IPath : IRenderObj

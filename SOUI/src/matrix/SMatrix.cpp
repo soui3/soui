@@ -1536,52 +1536,6 @@ const SMatrix& SMatrix::InvalidMatrix() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-float SMatrix::GetScaleX() const
-{
-	return fMat[kMScaleX];
-}
-
-float SMatrix::GetScaleY() const
-{
-	return fMat[kMScaleY];
-}
-
-float SMatrix::GetSkewX() const
-{
-	return fMat[kMSkewX];
-}
-
-float SMatrix::GetSkewY() const
-{
-	return fMat[kMSkewY];
-}
-
-float SMatrix::GetTranslateX() const
-{
-	return fMat[kMTransX];
-}
-
-float SMatrix::GetTranslateY() const
-{
-	return fMat[kMTransY];
-}
-
-float SMatrix::GetPersp0() const
-{
-	return fMat[kMPersp0];
-}
-
-float SMatrix::GetPersp1() const
-{
-	return fMat[kMPersp1];
-}
-
-float SMatrix::GetPersp2() const
-{
-	return fMat[kMPersp2];
-}
-
 float SMatrix::GetValue(Index idx) const
 {
 	return fMat[idx];
@@ -1598,51 +1552,6 @@ float * SMatrix::GetData()
 }
 
 
-void SMatrix::SetScaleX(float v)
-{
-	set(kMScaleX,v);
-}
-
-void SMatrix::SetScaleY(float v)
-{
-	set(kMScaleY,v);
-}
-
-void SMatrix::SetSkewX(float v)
-{
-	set(kMSkewX,v);
-}
-
-void SMatrix::SetSkewY(float v)
-{
-	set(kMSkewY,v);
-}
-
-void SMatrix::SetTranslateX(float v)
-{
-	set(kMTransX,v);
-}
-
-void SMatrix::SetTranslateY(float v)
-{
-	set(kMTransY,v);
-}
-
-void SMatrix::SetPersp0(float v)
-{
-	set(kMPersp0,v);
-}
-
-void SMatrix::SetPersp1(float v)
-{
-	set(kMPersp1,v);
-}
-
-void SMatrix::SetPersp2(float v)
-{
-	set(kMPersp2,v);
-}
-
 void SMatrix::SetValue(Index idx, float v)
 {
 	set(idx, v);
@@ -1655,20 +1564,6 @@ void SMatrix::SetData(const float fMat[9])
 }
 
 
-void SMatrix::Clear()
-{
-	reset();
-}
-
-
-void SMatrix::Concat(const IxForm * src)
-{
-	SMatrix mSrc(src->GetData());
-	postConcat(mSrc);
-}
-
-
-
 /*!
 \fn SMatrix &SMatrix::operator *=(const SMatrix &matrix)
 \overload
@@ -1679,7 +1574,7 @@ matrix.
 
 SMatrix &SMatrix::operator *=(const SMatrix &src)
 {
-	Concat(&src);
+	postConcat(src);
 	return *this;
 }
 
