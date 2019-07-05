@@ -176,6 +176,8 @@
 			<File
 				RelativePath="src\control\SCalendar.cpp" />
 			<File
+				RelativePath="src\matrix\SCamera.cpp" />
+			<File
 				RelativePath="src\control\SCaption.cpp" />
 			<File
 				RelativePath="src\control\SCmnCtrl.cpp" />
@@ -224,6 +226,8 @@
 			<File
 				RelativePath="src\control\SListbox.cpp" />
 			<File
+				RelativePath="src\matrix\SMatrix.cpp" />
+			<File
 				RelativePath="src\control\SMcListView.cpp" />
 			<File
 				RelativePath="src\helper\SMenu.cpp" />
@@ -244,7 +248,11 @@
 			<File
 				RelativePath="src\core\SPanel.cpp" />
 			<File
+				RelativePath="src\matrix\SPoint.cpp" />
+			<File
 				RelativePath="src\control\SRealWnd.cpp" />
+			<File
+				RelativePath="src\matrix\SRect.cpp" />
 			<File
 				RelativePath="src\res.mgr\SResProvider.cpp" />
 			<File
@@ -379,6 +387,8 @@
 			<File
 				RelativePath="include\control\SCalendar.h" />
 			<File
+				RelativePath="include\matrix\SCamera.h" />
+			<File
 				RelativePath="include\control\SCaption.h" />
 			<File
 				RelativePath="include\core\SCaret.h" />
@@ -406,6 +416,10 @@
 				RelativePath="include\control\SDropDown.h" />
 			<File
 				RelativePath="include\core\SDropTargetDispatcher.h" />
+			<File
+				RelativePath="include\matrix\SFloat.h" />
+			<File
+				RelativePath="include\matrix\SFloatBits.h" />
 			<File
 				RelativePath="include\res.mgr\SFontPool.h" />
 			<File
@@ -443,6 +457,8 @@
 			<File
 				RelativePath="include\control\SListbox.h" />
 			<File
+				RelativePath="include\matrix\SMatrix.h" />
+			<File
 				RelativePath="include\control\SMcListView.h" />
 			<File
 				RelativePath="include\helper\SMenu.h" />
@@ -465,7 +481,11 @@
 			<File
 				RelativePath="include\interface\SPathEffect-i.h" />
 			<File
+				RelativePath="include\matrix\SPoint.h" />
+			<File
 				RelativePath="include\control\SRealWnd.h" />
+			<File
+				RelativePath="include\matrix\SRect.h" />
 			<File
 				RelativePath="include\helper\SResID.h" />
 			<File
@@ -530,6 +550,8 @@
 				RelativePath="include\control\STreeCtrl.h" />
 			<File
 				RelativePath="include\control\STreeView.h" />
+			<File
+				RelativePath="include\matrix\STypes.h" />
 			<File
 				RelativePath="include\res.mgr\SUiDef.h" />
 			<File
