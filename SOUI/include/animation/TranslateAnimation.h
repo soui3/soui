@@ -26,21 +26,21 @@ namespace SOUI {
 	class SOUI_EXP STranslateAnimation : public SAnimation {
 		SOUI_CLASS_NAME(STranslateAnimation,L"Translate")
 
-		private: int mFromXType = ABSOLUTE;
-		private: int mToXType = ABSOLUTE;
+		private: int mFromXType;
+		private: int mToXType;
 
-		private: int mFromYType = ABSOLUTE;
-		private: int mToYType = ABSOLUTE;
-
-		/** @hide */
-		protected: float mFromXValue = 0.0f;
-		/** @hide */
-		protected: float mToXValue = 0.0f;
+		private: int mFromYType;
+		private: int mToYType;
 
 		/** @hide */
-		protected: float mFromYValue = 0.0f;
+		protected: float mFromXValue;
 		/** @hide */
-		protected: float mToYValue = 0.0f;
+		protected: float mToXValue;
+
+		/** @hide */
+		protected: float mFromYValue;
+		/** @hide */
+		protected: float mToYValue;
 
 		/** @hide */
 		protected: float mFromXDelta;
