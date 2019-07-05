@@ -1086,7 +1086,6 @@ namespace SOUI
 
 		SPainter painter;
 		BeforePaint(pRT,painter);
-		CRect rcChilds = GetChildrenLayoutRect();
 
 		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
@@ -1119,8 +1118,9 @@ namespace SOUI
 			if (transform.hasMatrix())
 			{
 				SMatrix mtx = transform.getMatrix();
-				mtx.preTranslate(-rcChilds.left, -rcChilds.top);
-				mtx.postTranslate(rcChilds.left, rcChilds.top);
+				CRect rcChild = pChild->GetWindowRect();
+				mtx.preTranslate(-rcChild.left, -rcChild.top);
+				mtx.postTranslate(rcChild.left, rcChild.top);
 				float oldMtx[9];
 				pRT->SetTransform(mtx.GetData(), oldMtx);
 				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
@@ -1164,19 +1164,6 @@ namespace SOUI
 		}
 
 	}
-	CRect SWindow::_getTransformRect() const
-	{
-		const Transformation xform = GetTransformation();
-
-		CRect rcWnd = GetWindowRect();
-		if (!xform.hasMatrix())
-			return rcWnd;
-		const SMatrix & mtx = xform.getMatrix();
-		SRect rcMapped;
-		rcMapped.set(rcWnd);
-		mtx.mapRect(&rcMapped);
-		return rcMapped.toRect();
-	}
 
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
 	void SWindow::_PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd)
@@ -1213,8 +1200,24 @@ namespace SOUI
 			InvalidateRect(rect);
 		}else
 		{
-			InvalidateRect(GetWindowRect());
+			InvalidateRect(GetBoundRect());
 		}
+	}
+
+	CRect SWindow::GetBoundRect() const
+	{
+		CRect rc = GetWindowRect();
+		Transformation xForm = GetTransformation();
+		if (xForm.hasMatrix())
+		{
+			SMatrix mtx = xForm.getMatrix();
+			mtx.preTranslate(-rc.left, -rc.top);
+			mtx.postTranslate(rc.left, rc.top);
+			SRect fRc = SRect::IMake(rc);
+			mtx.mapRect(&fRc);
+			rc = fRc.toRect();
+		}
+		return rc;
 	}
 
 	void SWindow::InvalidateRect(const CRect& rect,BOOL bFromThis/*=TRUE*/)
@@ -1223,7 +1226,7 @@ namespace SOUI
 		if(bFromThis) MarkCacheDirty(true);
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
 		//只能更新窗口有效区域
-		CRect rcIntersect = rect & GetWindowRect();
+		CRect rcIntersect = rect & GetBoundRect();
 		if(rcIntersect.IsRectEmpty()) return;
 
 		if(!GetStyle().m_bBkgndBlend)
@@ -2907,16 +2910,36 @@ namespace SOUI
 	BOOL SWindow::IsContainPoint(const POINT &pt,BOOL bClientOnly) const
 	{
 		BOOL bRet = FALSE;
-		if(bClientOnly)
+		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
+		Transformation xform = GetTransformation();
+		if (xform.hasMatrix())
 		{
-			CRect rcClient = GetClientRect();
-			bRet = rcClient.PtInRect(pt);
-		}else
+			CRect rcBound = GetBoundRect();
+			if (!rcBound.PtInRect(pt))
+				return FALSE;
+			SMatrix mtx = xform.getMatrix();
+			mtx.preTranslate(-rc.left, -rc.top);
+			mtx.postTranslate(rc.left, rc.top);
+			SRect fRc = SRect::IMake(rc);
+			if (mtx.rectStaysRect())
+			{
+				mtx.mapRect(&fRc);
+				rc = fRc.toRect();
+				bRet = rc.PtInRect(pt);
+			}
+			else {
+				SQuad quad;
+				fRc.toQuad(quad.fPts);
+				mtx.mapPoints(quad.fPts, 4);
+				bRet = quad.contains(SPoint::IMake(pt));
+			}
+		}
+		else
 		{
-			bRet = GetWindowRect().PtInRect(pt);
+			bRet = rc.PtInRect(pt);
 		}
 		if(m_rgnWnd)
-		{
+		{//todo: apply transform.
 			CPoint ptTmp = pt;
 			ptTmp -= GetWindowRect().TopLeft();
 			bRet = m_rgnWnd->PtInRegion(ptTmp);
@@ -3130,19 +3153,7 @@ namespace SOUI
 	void SWindow::OnAnimationInvalidate()
 	{
 		SASSERT(m_animation);
-		CRect rcWnd = GetWindowRect();
-		if (m_animation->hasStarted())
-		{
-			CRect rcWnd = _getTransformRect();
-			if (GetParent())
-				GetParent()->InvalidateRect(rcWnd);
-			else
-				InvalidateRect(rcWnd);
-		}
-		else if(m_animation->hasEnded())
-		{
-			InvalidateRect(rcWnd);
-		}
+		InvalidateRect(NULL);
 	}
 
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 

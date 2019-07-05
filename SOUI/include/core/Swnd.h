@@ -668,6 +668,7 @@ namespace SOUI
         void Invalidate();
         void InvalidateRect(LPCRECT lprect);
         
+		CRect GetBoundRect() const;
         /**
         * InvalidateRect
         * @brief    刷新窗口
@@ -1234,7 +1235,6 @@ namespace SOUI
 		void _RedrawNonClient();
         void _PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
         void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
-		CRect _getTransformRect() const;
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
         void DrawAniStep(CRect rcFore,CRect rcBack,IRenderTarget *pRTFore,IRenderTarget * pRTBack,CPoint ptAnchor);

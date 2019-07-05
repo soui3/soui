@@ -17,6 +17,13 @@ namespace SOUI{
 /** \struct SkRect
 */
 struct SOUI_EXP SRect {
+	static SRect IMake(const RECT & src)
+	{
+		SRect rc;
+		rc.iset(src);
+		return rc;
+	}
+
     float    fLeft, fTop, fRight, fBottom;
 
     /**
@@ -77,7 +84,7 @@ struct SOUI_EXP SRect {
     */
     void setEmpty() { memset(this, 0, sizeof(*this)); }
 
-	void set(const RECT & src)
+	void iset(const RECT & src)
 	{
 		fLeft = SkIntToScalar(src.left);
 		fTop = SkIntToScalar(src.top);
@@ -199,6 +206,18 @@ struct SOUI_EXP SRect {
     const float* asScalars() const { return &fLeft; }
 
 
+};
+
+struct SOUI_EXP STriangle
+{
+	SPoint fPts[3];
+	bool contains(const SPoint & pt) const;
+};
+
+struct SOUI_EXP SQuad
+{
+	SPoint fPts[4];
+	bool contains(const SPoint & pt) const;
 };
 
 }//end of namespace SOUI

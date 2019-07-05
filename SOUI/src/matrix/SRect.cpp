@@ -73,4 +73,58 @@ bool SRect::setBoundsCheck(const SPoint pts[], int count) {
     return isFinite;
 }
 
+
+// http://www.blackpawn.com/texts/pointinpoly/default.html
+// return true if pt is inside triangle; false if outside or on the line
+bool STriangle::contains(const SPoint& pt) const {
+	// Compute vectors
+	SPoint v0 = fPts[2] - fPts[0];
+	SPoint v1 = fPts[1] - fPts[0];
+	SPoint v2 = pt - fPts[0];
+
+	// Compute dot products
+	double dot00 = v0.dot(v0);
+	double dot01 = v0.dot(v1);
+	double dot02 = v0.dot(v2);
+	double dot11 = v1.dot(v1);
+	double dot12 = v1.dot(v2);
+
+	double w = dot00 * dot11 - dot01 * dot01;
+	if (w == 0) {
+		return false;
+	}
+	double wSign = w < 0 ? -1 : 1;
+	double u = (dot11 * dot02 - dot01 * dot12) * wSign;
+	if (u <= 0) {
+		return false;
+	}
+	double v = (dot00 * dot12 - dot01 * dot02) * wSign;
+	if (v <= 0) {
+		return false;
+	}
+	return u + v < w * wSign;
+}
+
+bool SQuad::contains(const SPoint & pt) const
+{
+	bool bRet = false;
+	if(!bRet)
+	{
+		STriangle tri;
+		tri.fPts[0] = fPts[0];
+		tri.fPts[1] = fPts[1];
+		tri.fPts[2] = fPts[2];
+		bRet = tri.contains(pt);
+	}
+	if (!bRet)
+	{
+		STriangle tri;
+		tri.fPts[0] = fPts[0];
+		tri.fPts[1] = fPts[2];
+		tri.fPts[2] = fPts[3];
+		bRet = tri.contains(pt);
+	}
+	return bRet;
+}
+
 }//end of namespace SOUI
