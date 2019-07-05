@@ -2914,16 +2914,12 @@ namespace SOUI
 		Transformation xform = GetTransformation();
 		if (xform.hasMatrix())
 		{
-			CRect rcBound = GetBoundRect();
-			if (!rcBound.PtInRect(pt))
-				return FALSE;
 			SMatrix mtx = xform.getMatrix();
 			mtx.preTranslate(-rc.left, -rc.top);
 			mtx.postTranslate(rc.left, rc.top);
 			SRect fRc = SRect::IMake(rc);
-			if (mtx.rectStaysRect())
+			if (mtx.mapRect(&fRc))
 			{
-				mtx.mapRect(&fRc);
 				rc = fRc.toRect();
 				bRet = rc.PtInRect(pt);
 			}
