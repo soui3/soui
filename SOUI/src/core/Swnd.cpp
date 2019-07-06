@@ -887,12 +887,15 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint ptHitTest, BOOL bOnlyText)
+	SWND SWindow::SwndFromPoint(CPoint pt, BOOL bOnlyText)
 	{
-		if(!IsContainPoint(ptHitTest,FALSE))
+		CPoint pt2(pt);
+		TransformPoint(pt2);
+
+		if(!IsContainPoint(pt2,FALSE))
 			return NULL;
 
-		if(!IsContainPoint(ptHitTest,TRUE))
+		if(!IsContainPoint(pt2,TRUE))
 			return m_swnd;//只在鼠标位于客户区时，才继续搜索子窗口
 
 		SWND swndChild = NULL;
@@ -902,7 +905,7 @@ namespace SOUI
 		{
 			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
 			{
-				swndChild = pChild->SwndFromPoint(ptHitTest, bOnlyText);
+				swndChild = pChild->SwndFromPoint(pt2, bOnlyText);
 
 				if (swndChild) return swndChild;
 			}
@@ -1163,6 +1166,24 @@ namespace SOUI
 			if(S_OK == hr) pRT->SelectObject(curFont);
 		}
 
+	}
+
+	void SWindow::TransformPoint(CPoint & pt) const
+	{
+		Transformation xform = GetTransformation();
+		if (xform.hasMatrix())
+		{
+			CRect rc = GetWindowRect();
+			SMatrix mtx = xform.getMatrix();
+			mtx.preTranslate(-rc.left, -rc.top);
+			mtx.postTranslate(rc.left, rc.top);
+			if (mtx.invert(&mtx))
+			{
+				SPoint spt = SPoint::IMake(pt);
+				mtx.mapPoints(&spt, 1);
+				pt = spt.toPoint();
+			}
+		}
 	}
 
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
@@ -2911,26 +2932,12 @@ namespace SOUI
 	{
 		BOOL bRet = FALSE;
 		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
-		Transformation xform = GetTransformation();
-		if (xform.hasMatrix())
-		{
-			SMatrix mtx = xform.getMatrix();
-			mtx.preTranslate(-rc.left, -rc.top);
-			mtx.postTranslate(rc.left, rc.top);
-			if (mtx.invert(&mtx))
-			{
-				SPoint spt = SPoint::IMake(pt);
-				mtx.mapPoints(&spt, 1);
-				bRet = rc.PtInRect(spt.toPoint());
-			}
-		}
-		else
-		{
-			bRet = rc.PtInRect(pt);
-		}
+		CPoint pt2(pt);
+		TransformPoint(pt2);
+		bRet = rc.PtInRect(pt2);
 		if(m_rgnWnd)
-		{//todo: apply transform.
-			CPoint ptTmp = pt;
+		{
+			CPoint ptTmp = pt2;
 			ptTmp -= GetWindowRect().TopLeft();
 			bRet = m_rgnWnd->PtInRegion(ptTmp);
 		}

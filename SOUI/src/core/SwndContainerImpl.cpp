@@ -140,6 +140,7 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
     SWindow *pCapture=SWindowMgr::GetWindow(m_hCapture);
     if(pCapture)
     {//有窗口设置了鼠标捕获,不需要判断是否有TrackMouseEvent属性,也不需要判断客户区与非客户区的变化
+		pCapture->TransformPoint(pt);
         SWindow * pHover=pCapture->IsContainPoint(pt,FALSE)?pCapture:NULL;
         SWND hHover=pHover?pHover->GetSwnd():NULL;
         if(hHover!=m_hHover)
@@ -163,6 +164,11 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
     {//没有设置鼠标捕获
         SWND hHover=SwndFromPoint(pt,FALSE);
         SWindow * pHover=SWindowMgr::GetWindow(hHover);
+		CPoint pt2 = pt;
+		if (pHover)
+		{
+			pHover->TransformPoint(pt2);
+		}
         if(m_hHover!=hHover)
         {//hover窗口发生了变化
             SWindow *pOldHover=SWindowMgr::GetWindow(m_hHover);
@@ -172,7 +178,9 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
                 BOOL bLeave=TRUE;
                 if(pOldHover->GetStyle().m_bTrackMouseEvent)
                 {//对于有监视鼠标事件的窗口做特殊处理
-                    bLeave = !pOldHover->IsContainPoint(pt,FALSE);
+					CPoint pt3 = pt;
+					pOldHover->TransformPoint(pt3);
+                    bLeave = !pOldHover->IsContainPoint(pt3,FALSE);
                 }
                 if(bLeave)
                 {
@@ -182,20 +190,20 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
             }
             if(pHover && !pHover->IsDisabled(TRUE) && !(pHover->GetState() & WndState_Hover))
             {
-                m_bNcHover=pHover->OnNcHitTest(pt);
-                if(m_bNcHover) pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
-                pHover->SSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
+                m_bNcHover=pHover->OnNcHitTest(pt2);
+                if(m_bNcHover) pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
+                pHover->SSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
             }
         }
         else if(pHover && !pHover->IsDisabled(TRUE))
         {//窗口内移动，检测客户区和非客户区的变化
-            BOOL bNcHover=pHover->OnNcHitTest(pt);
+            BOOL bNcHover=pHover->OnNcHitTest(pt2);
             if(bNcHover!=m_bNcHover)
             {
                 m_bNcHover=bNcHover;
                 if(m_bNcHover)
                 {
-                    pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
+                    pHover->SSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt2.x, pt2.y));
                 }
                 else
                 {
@@ -204,7 +212,7 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
             }
         }
         if(pHover && !pHover->IsDisabled(TRUE))
-            pHover->SSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt.x,pt.y));
+            pHover->SSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt2.x, pt2.y));
     }
 
     //处理trackMouseEvent属性
@@ -218,7 +226,9 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
             UnregisterTrackMouseEvent(swnd);
         }else if(pWnd->IsVisible(TRUE))
         {
-            BOOL bInWnd = pWnd->IsContainPoint(pt,FALSE);
+			CPoint pt4(pt);
+			pWnd->TransformPoint(pt4);
+            BOOL bInWnd = pWnd->IsContainPoint(pt4,FALSE);
             if(bInWnd && !(pWnd->GetState() & WndState_Hover))
             {
                 pWnd->SSendMessage(WM_MOUSEHOVER);
@@ -288,6 +298,9 @@ void SwndContainerImpl::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     {
         if(m_bNcHover) uMsg += (UINT)WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
         BOOL bMsgHandled = FALSE;
+		CPoint pt(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+		pCapture->TransformPoint(pt);
+		lParam = MAKELPARAM(pt.x, pt.y);
         pCapture->SSendMessage(uMsg,wParam,lParam,&bMsgHandled);
         SetMsgHandled(bMsgHandled);
     }
@@ -299,6 +312,9 @@ void SwndContainerImpl::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
         {
             BOOL bMsgHandled = FALSE;
             if(m_bNcHover) uMsg += (UINT)WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
+			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pCapture->TransformPoint(pt);
+			lParam = MAKELPARAM(pt.x, pt.y);
             pHover->SSendMessage(uMsg,wParam,lParam,&bMsgHandled);
             SetMsgHandled(bMsgHandled);
         }else

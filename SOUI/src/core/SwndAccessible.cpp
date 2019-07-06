@@ -106,6 +106,7 @@ namespace SOUI
 		if(!m_pWnd) return CO_E_OBJNOTCONNECTED;
 		if (!pvarChild) return E_INVALIDARG;
 		CPoint pt(xLeft, yTop);
+		m_pWnd->_TransformPoint(pt);
 		ScreenToClient(m_pWnd->GetContainer()->GetHostHwnd(), &pt);
 
 		SWindow *pChild = m_pWnd->GetWindow(GSW_LASTCHILD);

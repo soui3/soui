@@ -89,8 +89,8 @@ namespace SOUI
 
         void OnActivateApp(BOOL bActive, DWORD dwThreadID);
 
+	protected:
         void _BuildWndTreeZorder(SWindow *pWnd,UINT &iOrder);
-        
     protected:
         SWND m_hCapture;
         SWND m_hHover;

@@ -1121,6 +1121,7 @@ namespace SOUI
          */    
         IScriptModule * GetScriptModule();
 
+		void TransformPoint(CPoint & pt) const;
     public:
 
         /**
