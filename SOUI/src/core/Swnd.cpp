@@ -887,14 +887,19 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint ptHitTest, BOOL bOnlyText)
+	SWND SWindow::SwndFromPoint(CPoint &pt)
 	{
-		if(!IsContainPoint(ptHitTest,FALSE))
+		CPoint pt2(pt);
+		TransformPoint(pt2);
+
+		if(!IsContainPoint(pt2,FALSE))
 			return NULL;
 
-		if(!IsContainPoint(ptHitTest,TRUE))
+		if (!IsContainPoint(pt2, TRUE))
+		{
+			pt = pt2;//update pt;
 			return m_swnd;//只在鼠标位于客户区时，才继续搜索子窗口
-
+		}
 		SWND swndChild = NULL;
 
 		ptHitTest -= GetChildrenLayoutRect().TopLeft();
@@ -903,14 +908,14 @@ namespace SOUI
 		{
 			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
 			{
-				swndChild = pChild->SwndFromPoint(ptHitTest, bOnlyText);
+				swndChild = pChild->SwndFromPoint(pt2);
 
 				if (swndChild) return swndChild;
 			}
 
 			pChild=pChild->GetWindow(GSW_PREVSIBLING);
 		}
-
+		pt = pt2;//update pt;
 		return m_swnd;
 	}
 
@@ -1118,23 +1123,17 @@ namespace SOUI
 					}
 				}
 			}
-			const Transformation transform = pChild->GetTransformation();
-			if (!transform.isIdentity())
+			Transformation transform = pChild->GetTransformation();
+			if (transform.hasMatrix())
 			{
+				SMatrix mtx = transform.getMatrix();
 				CRect rcChild = pChild->GetWindowRect();
-				SAutoRefPtr<IRenderTarget> memRT;
-				const Transformation &transform = pChild->m_animationHandler.GetTransformation();
-				GETRENDERFACTORY->CreateRenderTarget(&memRT, rcChild.Width(), rcChild.Height());
-				POINT ptOrg;
-				pRT->GetViewportOrg(&ptOrg);
-				memRT->SetViewportOrg(ptOrg);
-				pChild->BeforePaintEx(memRT);
-				SMatrix curMtx;
-				pRT->GetTransform(curMtx.GetData());
-				memRT->SetTransform(curMtx.GetData());
-
-				pChild->_PaintRegion2(memRT, pRgn, iZorderBegin, iZorderEnd);
-
+				mtx.preTranslate(-rcChild.left, -rcChild.top);
+				mtx.postTranslate(rcChild.left, rcChild.top);
+				float oldMtx[9];
+				pRT->SetTransform(mtx.GetData(), oldMtx);
+				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
+				pRT->SetTransform(oldMtx);
 			}
 			else
 			{
@@ -1177,18 +1176,40 @@ namespace SOUI
 		}
 
 	}
-	CRect SWindow::_getTransformRect() const
-	{
-		const Transformation xform = GetTransformation();
 
-		CRect rcWnd = GetWindowRect();
-		if (!xform.hasMatrix())
-			return rcWnd;
-		const SMatrix & mtx = xform.getMatrix();
-		SRect rcMapped;
-		rcMapped.set(rcWnd);
-		mtx.mapRect(&rcMapped);
-		return rcMapped.toRect();
+	void SWindow::TransformPoint(CPoint & pt) const
+	{
+		Transformation xform = GetTransformation();
+		if (xform.hasMatrix())
+		{
+			CRect rc = GetWindowRect();
+			SMatrix mtx = xform.getMatrix();
+			mtx.preTranslate(-rc.left, -rc.top);
+			mtx.postTranslate(rc.left, rc.top);
+			if (mtx.invert(&mtx))
+			{
+				SPoint spt = SPoint::IMake(pt);
+				mtx.mapPoints(&spt, 1);
+				pt = spt.toPoint();
+			}
+		}
+	}
+
+	void SWindow::TransformPointEx(CPoint & pt) const
+	{
+		SList<const SWindow *> lstParent;
+		const SWindow *pParent = this;
+		while (pParent)
+		{
+			lstParent.AddHead(pParent);
+			pParent = pParent->GetParent();
+		}
+		SPOSITION pos = lstParent.GetHeadPosition();
+		while (pos)
+		{
+			pParent = lstParent.GetNext(pos);
+			pParent->TransformPoint(pt);
+		}
 	}
 
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
@@ -1230,14 +1251,28 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::InvalidateRect(const CRect& rect,BOOL bFromThis/*=TRUE*/)
+	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
 	{
 		TestMainThread();
 		if(bFromThis) MarkCacheDirty(true);
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
+
 		//只能更新窗口有效区域
-		CRect rcIntersect = rect & GetWindowRect();
-		if(rcIntersect.IsRectEmpty()) return;
+		CRect rcWnd = GetWindowRect();
+
+		CRect rcIntersect = rect & rcWnd;
+		if (rcIntersect.IsRectEmpty()) return;
+
+		Transformation xForm = GetTransformation();
+		if (xForm.hasMatrix())
+		{
+			SMatrix mtx = xForm.getMatrix();
+			mtx.preTranslate(-rcWnd.left, -rcWnd.top);
+			mtx.postTranslate(rcWnd.left, rcWnd.top);
+			SRect fRc = SRect::IMake(rcIntersect);
+			mtx.mapRect(&fRc);
+			rcIntersect = fRc.toRect();
+		}
 
 		if(!GetStyle().m_bBkgndBlend)
 		{//非背景混合窗口，直接发消息支宿主窗口来启动刷新
@@ -2193,6 +2228,7 @@ namespace SOUI
 	void SWindow::SetTransformation(const Transformation & transform)
 	{
 		m_transform = transform;
+		m_transform.updateType();
 	}
 
 	Transformation SWindow::GetTransformation() const
@@ -2846,7 +2882,7 @@ namespace SOUI
 	bool SWindow::IsDrawToCache() const
 	{
 		return m_bCacheDraw
-			|| !GetTransformation().isIdentity()
+//			|| !GetTransformation().isIdentity()
 			|| (!IsLayeredWindow() && GetStyle().m_byAlpha != 0xff);
 	}
 
@@ -2932,14 +2968,8 @@ namespace SOUI
 	BOOL SWindow::IsContainPoint(const POINT &pt,BOOL bClientOnly) const
 	{
 		BOOL bRet = FALSE;
-		if(bClientOnly)
-		{
-			CRect rcClient = GetClientRect();
-			bRet = rcClient.PtInRect(pt);
-		}else
-		{
-			bRet = GetWindowRect().PtInRect(pt);
-		}
+		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
+		bRet = rc.PtInRect(pt);
 		if(m_rgnWnd)
 		{
 			CPoint ptTmp = pt;
@@ -3155,19 +3185,7 @@ namespace SOUI
 	void SWindow::OnAnimationInvalidate()
 	{
 		SASSERT(m_animation);
-		CRect rcWnd = GetWindowRect();
-		if (m_animation->hasStarted())
-		{
-			CRect rcWnd = _getTransformRect();
-			if (GetParent())
-				GetParent()->InvalidateRect(rcWnd);
-			else
-				InvalidateRect(rcWnd);
-		}
-		else if(m_animation->hasEnded())
-		{
-			InvalidateRect(rcWnd);
-		}
+		InvalidateRect(NULL);
 	}
 
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 

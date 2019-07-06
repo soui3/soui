@@ -13,7 +13,7 @@ namespace SOUI{
 
 float SPoint::Length(float dx, float dy) {
     float mag2 = dx * dx + dy * dy;
-    if (SkScalarIsFinite(mag2)) {
+    if (SFloatIsFinite(mag2)) {
         return sk_float_sqrt(mag2);
     } else {
         double xx = dx;

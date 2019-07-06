@@ -65,7 +65,7 @@ public:
      * {@link #TYPE_BOTH} by default.
      */
     void clear() {
-		mMatrix.Clear();
+		mMatrix.reset();
         mAlpha = 1.0f;
         mTransformationType = TYPE_IDENTITY;
     }
@@ -130,18 +130,39 @@ public:
     const SMatrix & getMatrix() const {
         return mMatrix;
     }
-
+    
 	SMatrix & getMatrix() {
 		return mMatrix;
 	}
-    
+
+	void setMatrix(const SMatrix & mtx)
+	{
+		mMatrix = mtx;
+		if (mMatrix.isIdentity())
+			mTransformationType |= TYPE_MATRIX;
+		else
+			mTransformationType &= ~TYPE_MATRIX;
+	}
     /**
      * Sets the degree of transparency
      * @param alpha 1.0 means fully opaqe and 0.0 means fully transparent
      */
     void setAlpha(float alpha) {
         mAlpha = alpha;
+		if (SFloatNearlyEqual(alpha, 1.0f))
+			mTransformationType &= ~TYPE_ALPHA;
+		else
+			mTransformationType |= TYPE_ALPHA;
     }
+
+	void updateType()
+	{
+		mTransformationType = TYPE_IDENTITY;
+		if (mAlpha<1.0f)
+			mTransformationType |= TYPE_ALPHA;
+		if (!mMatrix.isIdentity())
+			mTransformationType |= TYPE_MATRIX;
+	}
 
     /**
      * @return The degree of transparency

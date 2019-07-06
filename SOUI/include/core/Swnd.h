@@ -671,13 +671,13 @@ namespace SOUI
         /**
         * InvalidateRect
         * @brief    刷新窗口
-        * @param    const CRect& rect --  刷新区域
+        * @param    const CRect & rect --  刷新区域
         * @param    BOOL bFromThis --  是否是由本窗口触发的刷新，子窗口的刷新导致父窗口刷新时bFromThis为FALSE
         * @return   void 
         *
         * Describe 
         */
-        void InvalidateRect(const CRect& rect,BOOL bFromThis=TRUE);
+        void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
         
         void LockUpdate();
         void UnlockUpdate();
@@ -909,7 +909,7 @@ namespace SOUI
 
         virtual SStringW tr(const SStringW &strSrc);
 
-        virtual SWND SwndFromPoint(CPoint ptHitTest, BOOL bOnlyText);
+        virtual SWND SwndFromPoint(CPoint &pt);
 
         virtual BOOL FireEvent(EventArgs &evt);
 
@@ -1129,6 +1129,9 @@ namespace SOUI
          */    
         IScriptModule * GetScriptModule();
 
+		void TransformPoint(CPoint & pt) const;
+
+		void TransformPointEx(CPoint &pt) const;
     public:
 
         /**
@@ -1243,7 +1246,6 @@ namespace SOUI
 		void _RedrawNonClient();
         void _PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
         void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
-		CRect _getTransformRect() const;
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
         void DrawAniStep(CRect rcFore,CRect rcBack,IRenderTarget *pRTFore,IRenderTarget * pRTBack,CPoint ptAnchor);

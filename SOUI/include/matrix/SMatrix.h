@@ -31,21 +31,6 @@ public:
 	SMatrix(const float data[9]);
 
 public:
-	virtual float GetScaleX() const;
-
-	virtual float GetScaleY() const;
-
-	virtual float GetSkewX() const;
-
-	virtual float GetSkewY() const;
-
-	virtual float GetTranslateX() const;
-
-	virtual float GetTranslateY() const;
-
-	virtual float GetPersp0() const;
-
-	virtual float GetPersp1() const;
 
 	virtual float GetValue(Index idx) const;
 
@@ -53,33 +38,9 @@ public:
 
 	virtual float * GetData();
 
-	virtual float GetPersp2() const;
-
-	virtual void SetScaleX(float v);
-
-	virtual void SetScaleY(float v);
-
-	virtual void SetSkewX(float v);
-
-	virtual void SetSkewY(float v);
-
-	virtual void SetTranslateX(float v);
-
-	virtual void SetTranslateY(float v);
-
-	virtual void SetPersp0(float v);
-
-	virtual void SetPersp1(float v);
-
-	virtual void SetPersp2(float v);
-
 	virtual void SetValue(Index idx,float v);
 
 	virtual void SetData(const float fMat[9]);
-
-	virtual void Clear();
-
-	virtual void Concat(const IxForm * src);
 
 public:
 	SMatrix &operator*=(const SMatrix &src);
@@ -740,7 +701,7 @@ private:
 
     friend class SkPerspIter;
 public:
-	static float SkScalarSinCos(float radians, float* cosValue);
+	static float SFloatSinCos(float radians, float* cosValue);
 };
 
 

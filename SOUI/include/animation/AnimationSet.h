@@ -59,7 +59,7 @@ namespace SOUI{
 		};
 
 	private:
-		int mFlags = 0;
+		int mFlags;
 		bool mDirty;
 		bool mHasAlpha;
 
@@ -104,6 +104,7 @@ namespace SOUI{
 
 	private: void init() {
 				 mStartTime = 0;
+				 mFlags = 0;
 			 }
 
 	public: void setFillAfter(bool fillAfter) {

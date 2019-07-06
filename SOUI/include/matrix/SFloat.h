@@ -5,8 +5,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef _SScalar_DEFINED_
-#define _SScalar_DEFINED_
+#ifndef _SFloat_DEFINED_
+#define _SFloat_DEFINED_
 
 #include "STypes.h"
 #include <math.h>
@@ -55,30 +55,30 @@
 /** SkFixedToScalar(n) returns its SkFixed argument as an float
 */
 #define SkFixedToScalar(x)      SkFixedToFloat(x)
-/** SkScalarToFixed(n) returns its float argument as an SkFixed
+/** SFloatToFixed(n) returns its float argument as an SkFixed
 */
-#define SkScalarToFixed(x)      SkFloatToFixed(x)
+#define SFloatToFixed(x)      SkFloatToFixed(x)
 
-#define SkScalarToFloat(n)      (n)
+#define SFloatToFloat(n)      (n)
 #ifndef SK_SCALAR_TO_FLOAT_EXCLUDED
 #define SkFloatToScalar(n)      (n)
 #endif
 
-#define SkScalarToDouble(n)      (double)(n)
+#define SFloatToDouble(n)      (double)(n)
 #define SkDoubleToScalar(n)      (float)(n)
 
-/** SkScalarFraction(x) returns the signed fractional part of the argument
+/** SFloatFraction(x) returns the signed fractional part of the argument
 */
-#define SkScalarFraction(x)     sk_float_mod(x, 1.0f)
+#define SFloatFraction(x)     sk_float_mod(x, 1.0f)
 
-#define SkScalarFloorToScalar(x)    sk_float_floor(x)
-#define SkScalarCeilToScalar(x)     sk_float_ceil(x)
-#define SkScalarRoundToScalar(x)    sk_float_floor((x) + 0.5f)
+#define SFloatFloorToScalar(x)    sk_float_floor(x)
+#define SFloatCeilToScalar(x)     sk_float_ceil(x)
+#define SFloatRoundToScalar(x)    sk_float_floor((x) + 0.5f)
 
-#define SkScalarFloorToInt(x)       sk_float_floor2int(x)
-#define SkScalarCeilToInt(x)        sk_float_ceil2int(x)
-#define SkScalarRoundToInt(x)       sk_float_round2int(x)
-#define SkScalarTruncToInt(x)       static_cast<int>(x)
+#define SFloatFloorToInt(x)       sk_float_floor2int(x)
+#define SFloatCeilToInt(x)        sk_float_ceil2int(x)
+#define SFloatRoundToInt(x)       sk_float_round2int(x)
+#define SFloatTruncToInt(x)       static_cast<int>(x)
 
 
 #define SK_ANNOTATE_UNPROTECTED_READ(x) (x)
@@ -87,41 +87,41 @@
 
 /** Returns the absolute value of the specified float
 */
-#define SkScalarAbs(x)          sk_float_abs(x)
+#define SFloatAbs(x)          sk_float_abs(x)
 /** Return x with the sign of y
  */
-#define SkScalarCopySign(x, y)  sk_float_copysign(x, y)
-/** Returns the product of two SkScalars
+#define SFloatCopySign(x, y)  sk_float_copysign(x, y)
+/** Returns the product of two SFloats
 */
-#define SkScalarMul(a, b)       ((float)(a) * (b))
-/** Returns the product of two SkScalars plus a third float
+#define SFloatMul(a, b)       ((float)(a) * (b))
+/** Returns the product of two SFloats plus a third float
 */
-#define SkScalarMulAdd(a, b, c) ((float)(a) * (b) + (c))
-/** Returns the quotient of two SkScalars (a/b)
+#define SFloatMulAdd(a, b, c) ((float)(a) * (b) + (c))
+/** Returns the quotient of two SFloats (a/b)
 */
-#define SkScalarDiv(a, b)       ((float)(a) / (b))
-/** Returns the mod of two SkScalars (a mod b)
+#define SFloatDiv(a, b)       ((float)(a) / (b))
+/** Returns the mod of two SFloats (a mod b)
 */
-#define SkScalarMod(x,y)        sk_float_mod(x,y)
+#define SFloatMod(x,y)        sk_float_mod(x,y)
 /** Returns the product of the first two arguments, divided by the third argument
 */
-#define SkScalarMulDiv(a, b, c) ((float)(a) * (b) / (c))
+#define SFloatMulDiv(a, b, c) ((float)(a) * (b) / (c))
 /** Returns the multiplicative inverse of the float (1/x)
 */
-#define SkScalarInvert(x)       (SK_Scalar1 / (x))
-#define SkScalarFastInvert(x)   (SK_Scalar1 / (x))
+#define SFloatInvert(x)       (SK_Scalar1 / (x))
+#define SFloatFastInvert(x)   (SK_Scalar1 / (x))
 /** Returns the square root of the float
 */
-#define SkScalarSqrt(x)         sk_float_sqrt(x)
+#define SFloatSqrt(x)         sk_float_sqrt(x)
 /** Returns b to the e
 */
-#define SkScalarPow(b, e)       sk_float_pow(b, e)
-/** Returns the average of two SkScalars (a+b)/2
+#define SFloatPow(b, e)       sk_float_pow(b, e)
+/** Returns the average of two SFloats (a+b)/2
 */
-#define SkScalarAve(a, b)       (((a) + (b)) * 0.5f)
+#define SFloatAve(a, b)       (((a) + (b)) * 0.5f)
 /** Returns one half of the specified float
 */
-#define SkScalarHalf(a)         ((a) * 0.5f)
+#define SFloatHalf(a)         ((a) * 0.5f)
 
 #define SK_ScalarSqrt2          1.41421356f
 #define SK_ScalarPI             3.14159265f
@@ -130,26 +130,26 @@
 
 #define SkDegreesToRadians(degrees) ((degrees) * (SK_ScalarPI / 180))
 #define SkRadiansToDegrees(radians) ((radians) * (180 / SK_ScalarPI))
-#define SkScalarSin(radians)    (float)sk_float_sin(radians)
-#define SkScalarCos(radians)    (float)sk_float_cos(radians)
-#define SkScalarTan(radians)    (float)sk_float_tan(radians)
-#define SkScalarASin(val)   (float)sk_float_asin(val)
-#define SkScalarACos(val)   (float)sk_float_acos(val)
-#define SkScalarATan2(y, x) (float)sk_float_atan2(y,x)
-#define SkScalarExp(x)  (float)sk_float_exp(x)
-#define SkScalarLog(x)  (float)sk_float_log(x)
+#define SFloatSin(radians)    (float)sk_float_sin(radians)
+#define SFloatCos(radians)    (float)sk_float_cos(radians)
+#define SFloatTan(radians)    (float)sk_float_tan(radians)
+#define SFloatASin(val)   (float)sk_float_asin(val)
+#define SFloatACos(val)   (float)sk_float_acos(val)
+#define SFloatATan2(y, x) (float)sk_float_atan2(y,x)
+#define SFloatExp(x)  (float)sk_float_exp(x)
+#define SFloatLog(x)  (float)sk_float_log(x)
 
 namespace SOUI{
 /**
- *  Variant of SkScalarRoundToInt, that performs the rounding step (adding 0.5) explicitly using
+ *  Variant of SFloatRoundToInt, that performs the rounding step (adding 0.5) explicitly using
  *  double, to avoid possibly losing the low bit(s) of the answer before calling floor().
  *
- *  This routine will likely be slower than SkScalarRoundToInt(), and should only be used when the
+ *  This routine will likely be slower than SFloatRoundToInt(), and should only be used when the
  *  extra precision is known to be valuable.
  *
  *  In particular, this catches the following case:
  *      float x = 0.49999997;
- *      int ix = SkScalarRoundToInt(x);
+ *      int ix = SFloatRoundToInt(x);
  *      SASSERT(0 == ix);    // <--- fails
  *      ix = SkDScalarRoundToInt(x);
  *      SASSERT(0 == ix);    // <--- succeeds
@@ -162,12 +162,12 @@ inline int SkDScalarRoundToInt(float x) {
 inline float SkMaxScalar(float a, float b) { return a > b ? a : b; }
 inline float SkMinScalar(float a, float b) { return a < b ? a : b; }
 
-/** SkScalarIsNaN(n) returns true if argument is not a number
+/** SFloatIsNaN(n) returns true if argument is not a number
 */
-inline bool SkScalarIsNaN(float x) { return x != x; }
+inline bool SFloatIsNaN(float x) { return x != x; }
 
 /** Returns true if x is not NaN and not infinite */
-inline bool SkScalarIsFinite(float x) {
+inline bool SFloatIsFinite(float x) {
 	// We rely on the following behavior of infinities and nans
 	// 0 * finite --> 0
 	// 0 * infinity --> NaN
@@ -180,19 +180,19 @@ inline bool SkScalarIsFinite(float x) {
 
 /** Returns the value pinned between 0 and max inclusive
 */
-inline float SkScalarClampMax(float x, float max) {
+inline float SFloatClampMax(float x, float max) {
 	return x < 0 ? 0 : x > max ? max : x;
 }
 /** Returns the value pinned between min and max inclusive
 */
-inline float SkScalarPin(float x, float min, float max) {
+inline float SFloatPin(float x, float min, float max) {
 	return x < min ? min : x > max ? max : x;
 }
 /** Returns the specified float squared (x*x)
 */
-inline float SkScalarSquare(float x) { return x * x; }
+inline float SFloatSquare(float x) { return x * x; }
 
-inline bool SkScalarIsInt(float x) {
+inline bool SFloatIsInt(float x) {
     return x == (float)(int)x;
 }
 
@@ -202,27 +202,27 @@ inline bool SkScalarIsInt(float x) {
  *   0 if x == 0
  *   1 if x > 0
  */
-inline int SkScalarSignAsInt(float x) {
+inline int SFloatSignAsInt(float x) {
     return x < 0 ? -1 : (x > 0);
 }
 
 // Scalar result version of above
-inline float SkScalarSignAsScalar(float x) {
+inline float SFloatSignAsScalar(float x) {
     return x < 0 ? -SK_Scalar1 : ((x > 0) ? SK_Scalar1 : 0);
 }
 
 #define SK_ScalarNearlyZero         (SK_Scalar1 / (1 << 12))
 
-inline bool SkScalarNearlyZero(float x,
+inline bool SFloatNearlyZero(float x,
                                     float tolerance = SK_ScalarNearlyZero) {
     SASSERT(tolerance >= 0);
-    return SkScalarAbs(x) <= tolerance;
+    return SFloatAbs(x) <= tolerance;
 }
 
-inline bool SkScalarNearlyEqual(float x, float y,
+inline bool SFloatNearlyEqual(float x, float y,
                                      float tolerance = SK_ScalarNearlyZero) {
     SASSERT(tolerance >= 0);
-    return SkScalarAbs(x-y) <= tolerance;
+    return SFloatAbs(x-y) <= tolerance;
 }
 
 /** Linearly interpolate between A and B, based on t.
@@ -231,7 +231,7 @@ inline bool SkScalarNearlyEqual(float x, float y,
     else interpolate.
     t must be [0..SK_Scalar1]
 */
-inline float SkScalarInterp(float A, float B, float t) {
+inline float SFloatInterp(float A, float B, float t) {
     SASSERT(t >= 0 && t <= SK_Scalar1);
     return A + (B - A) * t;
 }
@@ -240,7 +240,7 @@ inline float SkScalarInterp(float A, float B, float t) {
 /*
  *  Helper to compare an array of scalars.
  */
-inline bool SkScalarsEqual(const float a[], const float b[], int n) {
+inline bool SFloatsEqual(const float a[], const float b[], int n) {
     SASSERT(n >= 0);
     for (int i = 0; i < n; ++i) {
         if (a[i] != b[i]) {

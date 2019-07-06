@@ -107,11 +107,13 @@ namespace SOUI
 		if (!pvarChild) return E_INVALIDARG;
 		CPoint pt(xLeft, yTop);
 		ScreenToClient(m_pWnd->GetContainer()->GetHostHwnd(), &pt);
-
+		m_pWnd->TransformPointEx(pt);
 		SWindow *pChild = m_pWnd->GetWindow(GSW_LASTCHILD);
 		while (pChild)
 		{
-			if (pChild->IsVisible(TRUE) && pChild->IsContainPoint(pt,FALSE))
+			CPoint pt2 = pt;
+			pChild->TransformPoint(pt2);
+			if (pChild->IsVisible(TRUE) && pChild->IsContainPoint(pt2,FALSE))
 				break;
 			pChild = pChild->GetWindow(GSW_PREVSIBLING);
 		}

@@ -151,7 +151,7 @@ namespace SOUI{
 	};
 
 
-static float SkScalarDotDiv(int count, const float a[], int step_a,
+static float SFloatDotDiv(int count, const float a[], int step_a,
                                const float b[], int step_b,
                                float denom) {
     float prod = 0;
@@ -163,7 +163,7 @@ static float SkScalarDotDiv(int count, const float a[], int step_a,
     return prod / denom;
 }
 
-static float SkScalarDot(int count, const float a[], int step_a,
+static float SFloatDot(int count, const float a[], int step_a,
                                        const float b[], int step_b) {
     float prod = 0;
     for (int i = 0; i < count; i++) {
@@ -177,9 +177,9 @@ static float SkScalarDot(int count, const float a[], int step_a,
 ///////////////////////////////////////////////////////////////////////////////
 
 float SkPoint3D::normalize(SkUnit3D* unit) const {
-    float mag = SkScalarSqrt(fX*fX + fY*fY + fZ*fZ);
+    float mag = SFloatSqrt(fX*fX + fY*fY + fZ*fZ);
     if (mag) {
-        float scale = SkScalarInvert(mag);
+        float scale = SFloatInvert(mag);
         unit->fX = fX * scale;
         unit->fY = fY * scale;
         unit->fZ = fZ * scale;
@@ -227,11 +227,11 @@ void SkPatch3D::transform(const SkMatrix3D& m, SkPatch3D* dst) const {
 }
 
 float SkPatch3D::dotWith(float dx, float dy, float dz) const {
-    float cx = SkScalarMul(fU.fY, fV.fZ) - SkScalarMul(fU.fZ, fV.fY);
-    float cy = SkScalarMul(fU.fZ, fV.fX) - SkScalarMul(fU.fX, fV.fY);
-    float cz = SkScalarMul(fU.fX, fV.fY) - SkScalarMul(fU.fY, fV.fX);
+    float cx = SFloatMul(fU.fY, fV.fZ) - SFloatMul(fU.fZ, fV.fY);
+    float cy = SFloatMul(fU.fZ, fV.fX) - SFloatMul(fU.fX, fV.fY);
+    float cz = SFloatMul(fU.fX, fV.fY) - SFloatMul(fU.fY, fV.fX);
 
-    return SkScalarMul(cx, dx) + SkScalarMul(cy, dy) + SkScalarMul(cz, dz);
+    return SFloatMul(cx, dx) + SFloatMul(cy, dy) + SFloatMul(cz, dz);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ void SkMatrix3D::setTranslate(float x, float y, float z) {
 void SkMatrix3D::setRotateX(float degX) {
     float    s, c;
 
-	s = SMatrix::SkScalarSinCos(SkDegreesToRadians(degX), &c);
+	s = SMatrix::SFloatSinCos(SkDegreesToRadians(degX), &c);
     this->setRow(0, SK_Scalar1, 0, 0);
     this->setRow(1, 0, c, -s);
     this->setRow(2, 0, s, c);
@@ -260,7 +260,7 @@ void SkMatrix3D::setRotateX(float degX) {
 void SkMatrix3D::setRotateY(float degY) {
     float    s, c;
 
-    s = SMatrix::SkScalarSinCos(SkDegreesToRadians(degY), &c);
+    s = SMatrix::SFloatSinCos(SkDegreesToRadians(degY), &c);
     this->setRow(0, c, 0, -s);
     this->setRow(1, 0, SK_Scalar1, 0);
     this->setRow(2, s, 0, c);
@@ -269,7 +269,7 @@ void SkMatrix3D::setRotateY(float degY) {
 void SkMatrix3D::setRotateZ(float degZ) {
     float    s, c;
 
-    s = SMatrix::SkScalarSinCos(SkDegreesToRadians(degZ), &c);
+    s = SMatrix::SFloatSinCos(SkDegreesToRadians(degZ), &c);
     this->setRow(0, c, -s, 0);
     this->setRow(1, s, c, 0);
     this->setRow(2, 0, 0, SK_Scalar1);
@@ -279,7 +279,7 @@ void SkMatrix3D::preTranslate(float x, float y, float z) {
     float col[3] = { x, y, z};
 
     for (int i = 0; i < 3; i++) {
-        fMat[i][3] += SkScalarDot(3, &fMat[i][0], 1, col, 1);
+        fMat[i][3] += SFloatDot(3, &fMat[i][0], 1, col, 1);
     }
 }
 
@@ -310,9 +310,9 @@ void SkMatrix3D::setConcat(const SkMatrix3D& a, const SkMatrix3D& b) {
     }
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            c->fMat[i][j] = SkScalarDot(3, &a.fMat[i][0], 1, &b.fMat[0][j], 4);
+            c->fMat[i][j] = SFloatDot(3, &a.fMat[i][0], 1, &b.fMat[0][j], 4);
         }
-        c->fMat[i][3] = SkScalarDot(3, &a.fMat[i][0], 1,
+        c->fMat[i][3] = SFloatDot(3, &a.fMat[i][0], 1,
                                     &b.fMat[0][3], 4) + a.fMat[i][3];
     }
 
@@ -322,16 +322,16 @@ void SkMatrix3D::setConcat(const SkMatrix3D& a, const SkMatrix3D& b) {
 }
 
 void SkMatrix3D::mapPoint(const SkPoint3D& src, SkPoint3D* dst) const {
-    float x = SkScalarDot(3, &fMat[0][0], 1, &src.fX, 1) + fMat[0][3];
-    float y = SkScalarDot(3, &fMat[1][0], 1, &src.fX, 1) + fMat[1][3];
-    float z = SkScalarDot(3, &fMat[2][0], 1, &src.fX, 1) + fMat[2][3];
+    float x = SFloatDot(3, &fMat[0][0], 1, &src.fX, 1) + fMat[0][3];
+    float y = SFloatDot(3, &fMat[1][0], 1, &src.fX, 1) + fMat[1][3];
+    float z = SFloatDot(3, &fMat[2][0], 1, &src.fX, 1) + fMat[2][3];
     dst->set(x, y, z);
 }
 
 void SkMatrix3D::mapVector(const SkVector3D& src, SkVector3D* dst) const {
-    float x = SkScalarDot(3, &fMat[0][0], 1, &src.fX, 1);
-    float y = SkScalarDot(3, &fMat[1][0], 1, &src.fX, 1);
-    float z = SkScalarDot(3, &fMat[2][0], 1, &src.fX, 1);
+    float x = SFloatDot(3, &fMat[0][0], 1, &src.fX, 1);
+    float y = SFloatDot(3, &fMat[1][0], 1, &src.fX, 1);
+    float z = SFloatDot(3, &fMat[2][0], 1, &src.fX, 1);
     dst->set(x, y, z);
 }
 
@@ -409,18 +409,18 @@ void SkCamera3D::patchToMatrix(const SkPatch3D& quilt, SMatrix* matrix) const {
                         *SkTCast<const SkUnit3D*>(fOrientation.GetData() + 6));
 
     patchPtr = (const float*)&quilt;
-    matrix->set(SMatrix::kMScaleX, SkScalarDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMSkewY,  SkScalarDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
-    matrix->set(SMatrix::kMPersp0, SkScalarDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
+    matrix->set(SMatrix::kMScaleX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(SMatrix::kMSkewY,  SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(SMatrix::kMPersp0, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
 
     patchPtr += 3;
-    matrix->set(SMatrix::kMSkewX,  SkScalarDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMScaleY, SkScalarDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
-    matrix->set(SMatrix::kMPersp1, SkScalarDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
+    matrix->set(SMatrix::kMSkewX,  SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(SMatrix::kMScaleY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(SMatrix::kMPersp1, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
 
     patchPtr = (const float*)(const void*)&diff;
-    matrix->set(SMatrix::kMTransX, SkScalarDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMTransY, SkScalarDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(SMatrix::kMTransX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(SMatrix::kMTransY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
     matrix->set(SMatrix::kMPersp2, SK_Scalar1);
 }
 
