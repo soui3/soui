@@ -162,7 +162,7 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
     }
     else
     {//没有设置鼠标捕获
-        SWND hHover=SwndFromPoint(pt,FALSE);
+        SWND hHover=SwndFromPoint(pt);
         SWindow * pHover=SWindowMgr::GetWindow(hHover);
 		CPoint pt2 = pt;
 		if (pHover)
@@ -306,14 +306,14 @@ void SwndContainerImpl::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     }
     else
     {
-        m_hHover=SwndFromPoint(CPoint(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam)),FALSE);
+		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        m_hHover=SwndFromPoint(pt);
         SWindow *pHover=SWindowMgr::GetWindow(m_hHover);
         if(pHover  && !pHover->IsDisabled(TRUE))
         {
             BOOL bMsgHandled = FALSE;
             if(m_bNcHover) uMsg += (UINT)WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
-			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pCapture->TransformPoint(pt);
+			pHover->TransformPoint(pt);
 			lParam = MAKELPARAM(pt.x, pt.y);
             pHover->SSendMessage(uMsg,wParam,lParam,&bMsgHandled);
             SetMsgHandled(bMsgHandled);
@@ -331,7 +331,7 @@ void SwndContainerImpl::OnFrameMouseWheel( UINT uMsg,WPARAM wParam,LPARAM lParam
     {
         if(IsSendWheel2Hover())
         {
-            m_hHover=SwndFromPoint(CPoint(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam)),FALSE);
+            m_hHover=SwndFromPoint(CPoint(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam)));
             pWndTarget=SWindowMgr::GetWindow(m_hHover);        
         }else
         {

@@ -1258,7 +1258,7 @@ LRESULT SHostWnd::OnSpyMsgHitTest( UINT uMsg,WPARAM wParam,LPARAM lParam )
 {
     CPoint pt(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
     ScreenToClient(&pt);
-    return SwndFromPoint(pt,FALSE);
+    return SwndFromPoint(pt);
 }
 #endif//DISABLE_SWNDSPY
 

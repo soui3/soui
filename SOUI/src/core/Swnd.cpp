@@ -887,7 +887,7 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint pt, BOOL bOnlyText)
+	SWND SWindow::SwndFromPoint(CPoint pt)
 	{
 		CPoint pt2(pt);
 		TransformPoint(pt2);
@@ -905,7 +905,7 @@ namespace SOUI
 		{
 			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
 			{
-				swndChild = pChild->SwndFromPoint(pt2, bOnlyText);
+				swndChild = pChild->SwndFromPoint(pt2);
 
 				if (swndChild) return swndChild;
 			}
@@ -2932,12 +2932,10 @@ namespace SOUI
 	{
 		BOOL bRet = FALSE;
 		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
-		CPoint pt2(pt);
-		TransformPoint(pt2);
-		bRet = rc.PtInRect(pt2);
+		bRet = rc.PtInRect(pt);
 		if(m_rgnWnd)
 		{
-			CPoint ptTmp = pt2;
+			CPoint ptTmp = pt;
 			ptTmp -= GetWindowRect().TopLeft();
 			bRet = m_rgnWnd->PtInRegion(ptTmp);
 		}

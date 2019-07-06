@@ -225,9 +225,9 @@ void SItemPanel::ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove)
     ModifyState(dwStateAdd,dwStateRemove,FALSE);
 }
 
-SWND SItemPanel::SwndFromPoint(CPoint ptHitTest, BOOL bOnlyText)
+SWND SItemPanel::SwndFromPoint(CPoint ptHitTest)
 {
-    SWND hRet=__super::SwndFromPoint(ptHitTest,bOnlyText);
+    SWND hRet=SWindow::SwndFromPoint(ptHitTest);
     if(hRet==m_swnd) hRet=NULL;
     return hRet;
 }
