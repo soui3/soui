@@ -344,6 +344,7 @@ namespace SOUI
                 if(m_orientation == Vert)
                 {
                     CRect rcChild(CPoint(0,offset),pSize[iChild]);
+                    rcChild.OffsetRect(rcParent.TopLeft());
                     if(gravity == G_Center)
                         rcChild.OffsetRect((rcParent.Width()-rcChild.Width())/2,0);
                     else if(gravity == G_Right)
@@ -362,6 +363,7 @@ namespace SOUI
                 }else
                 {
                     CRect rcChild(CPoint(offset,0),pSize[iChild]);
+                    rcChild.OffsetRect(rcParent.TopLeft());
                     if(gravity == G_Center)
                         rcChild.OffsetRect(0,(rcParent.Height()-rcChild.Height())/2);
                     else if(gravity == G_Right)

@@ -902,7 +902,6 @@ namespace SOUI
 		}
 		SWND swndChild = NULL;
 
-		ptHitTest -= GetChildrenLayoutRect().TopLeft();
 		SWindow *pChild=GetWindow(GSW_LASTCHILD);
 		while(pChild)
 		{
@@ -1093,9 +1092,6 @@ namespace SOUI
 		SPainter painter;
 		BeforePaint(pRT,painter);
 
-		CRect rcChilds = GetChildrenLayoutRect();
-		pRT->OffsetViewportOrg(rcChilds.left, rcChilds.top);
-		if (pRgn) pRgn->Offset(-rcChilds.TopLeft());
 		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
@@ -1141,9 +1137,6 @@ namespace SOUI
 			}
 			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
 		}
-
-		if (pRgn) pRgn->Offset(rcChilds.TopLeft());
-		pRT->OffsetViewportOrg(-rcChilds.left, -rcChilds.top);
 		AfterPaint(pRT,painter);
 
 		if(IsClipClient())
@@ -1285,11 +1278,8 @@ namespace SOUI
 			::SendMessage(GetContainer()->GetHostHwnd(),UM_UPDATESWND,(WPARAM)m_swnd,0);//请求刷新窗口
 		}else
 		{
-			SWindow *pParent = GetParent();
-			if(pParent)
+			if(GetParent())
 			{
-				CRect rcParent = pParent->GetChildrenLayoutRect();
-				rcIntersect.OffsetRect(rcParent.TopLeft());
 				GetParent()->InvalidateRect(rcIntersect,FALSE);
 			}else
 			{
@@ -2145,16 +2135,6 @@ namespace SOUI
 	BOOL SWindow::ReleaseCapture()
 	{
 		return GetContainer()->OnReleaseSwndCapture();
-	}
-
-	void SWindow::ConvertPt2Window(CPoint & pt) const
-	{
-		SWindow *pParent = GetParent();
-		while (pParent)
-		{
-			pt -= pParent->GetChildrenLayoutRect().TopLeft();
-			pParent = pParent->GetParent();
-		}
 	}
 
 	/**

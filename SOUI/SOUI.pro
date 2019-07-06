@@ -126,7 +126,6 @@ HEADERS += include/SApp.h \
            include/helper/SListViewItemLocator.h \
            include/helper/slog-def.h \
            include/helper/slog.h \
-           include/helper/smatrix.h \
            include/helper/SMenu.h \
            include/helper/smenuex.h \
            include/helper/SplitString.h \
@@ -252,7 +251,6 @@ SOURCES += src/SApp.cpp \
            src/helper/SDIBHelper.cpp \
            src/helper/SDpiScale.cpp \
            src/helper/SListViewItemLocator.cpp \
-           src/helper/smatrix.cpp \
            src/helper/SMenu.cpp \
            src/helper/smenuex.cpp \
            src/helper/SScriptTimer.cpp \

@@ -788,15 +788,6 @@ namespace SOUI
         SWND SetCapture();
         BOOL ReleaseCapture();
 
-		/**
-		* ConvertPt2Window
-		* @brief    convert a point from container coordinate to swindow
-		* @param    CPoint & pt --  pt[in/out]
-		* @return   void
-		*
-		* Describe
-		*/
-		void ConvertPt2Window(CPoint & pt) const;
 	public:
 
 		/**
@@ -1399,7 +1390,7 @@ namespace SOUI
 
 		virtual void OnRemoveChild(SWindow *pChild) {}
     private:
-        CRect               m_rcWindow;         /**< 窗口在父窗口中的位置,由于它的值包含POS_INIT等，调整为private，不允许派生类中直接访问该变量的值 */
+        CRect               m_rcWindow;         /**< 窗口在容器中的位置,由于它的值包含POS_INIT等，调整为private，不允许派生类中直接访问该变量的值 */
 
     protected:
 

@@ -165,9 +165,6 @@ void SwndContainerImpl::OnFrameMouseMove(UINT uFlag,CPoint pt)
 		CPoint pt2 = pt;
 		SWND hHover=SwndFromPoint(pt2);
         SWindow * pHover=SWindowMgr::GetWindow(hHover);
-		CPoint pt2 = pt;
-		pHover->ConvertPt2Window(pt2);
-
         if(m_hHover!=hHover)
         {//hover窗口发生了变化
             SWindow *pOldHover=SWindowMgr::GetWindow(m_hHover);
