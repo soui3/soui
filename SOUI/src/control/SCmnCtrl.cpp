@@ -273,7 +273,6 @@ void SButton::OnPaint(IRenderTarget *pRT)
     if (!m_pBgSkin) return;
     CRect rcClient;
     GetClientRect(&rcClient);
-
     if(m_byAlphaAni==0xFF)
     {//不在动画过程中
         m_pBgSkin->DrawByState(
@@ -297,7 +296,7 @@ void SButton::OnPaint(IRenderTarget *pRT)
         }
     }
 
-    __super::OnPaint(pRT);
+    SWindow::OnPaint(pRT);
 }
 
 void SButton::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

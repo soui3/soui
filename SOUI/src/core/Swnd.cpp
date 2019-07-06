@@ -321,7 +321,7 @@ namespace SOUI
 		m_dwState = dwNewState;
 
 		OnStateChanged(dwOldState,dwNewState);
-		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetWindowRect());
+		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetBoundRect());
 		return dwOldState;
 	}
 
@@ -2917,17 +2917,11 @@ namespace SOUI
 			SMatrix mtx = xform.getMatrix();
 			mtx.preTranslate(-rc.left, -rc.top);
 			mtx.postTranslate(rc.left, rc.top);
-			SRect fRc = SRect::IMake(rc);
-			if (mtx.mapRect(&fRc))
+			if (mtx.invert(&mtx))
 			{
-				rc = fRc.toRect();
-				bRet = rc.PtInRect(pt);
-			}
-			else {
-				SQuad quad;
-				fRc.toQuad(quad.fPts);
-				mtx.mapPoints(quad.fPts, 4);
-				bRet = quad.contains(SPoint::IMake(pt));
+				SPoint spt = SPoint::IMake(pt);
+				mtx.mapPoints(&spt, 1);
+				bRet = rc.PtInRect(spt.toPoint());
 			}
 		}
 		else
