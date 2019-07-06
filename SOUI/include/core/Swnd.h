@@ -668,17 +668,16 @@ namespace SOUI
         void Invalidate();
         void InvalidateRect(LPCRECT lprect);
         
-		CRect GetBoundRect() const;
         /**
         * InvalidateRect
         * @brief    刷新窗口
-        * @param    const CRect& rect --  刷新区域
+        * @param    const CRect & rect --  刷新区域
         * @param    BOOL bFromThis --  是否是由本窗口触发的刷新，子窗口的刷新导致父窗口刷新时bFromThis为FALSE
         * @return   void 
         *
         * Describe 
         */
-        void InvalidateRect(const CRect& rect,BOOL bFromThis=TRUE);
+        void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
         
         void LockUpdate();
         void UnlockUpdate();
@@ -901,7 +900,7 @@ namespace SOUI
 
         virtual SStringW tr(const SStringW &strSrc);
 
-        virtual SWND SwndFromPoint(CPoint ptHitTest);
+        virtual SWND SwndFromPoint(CPoint &pt);
 
         virtual BOOL FireEvent(EventArgs &evt);
 
@@ -1122,6 +1121,8 @@ namespace SOUI
         IScriptModule * GetScriptModule();
 
 		void TransformPoint(CPoint & pt) const;
+
+		void TransformPointEx(CPoint &pt) const;
     public:
 
         /**

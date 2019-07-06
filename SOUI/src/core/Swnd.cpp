@@ -321,7 +321,7 @@ namespace SOUI
 		m_dwState = dwNewState;
 
 		OnStateChanged(dwOldState,dwNewState);
-		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetBoundRect());
+		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetWindowRect());
 		return dwOldState;
 	}
 
@@ -887,7 +887,7 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint pt)
+	SWND SWindow::SwndFromPoint(CPoint &pt)
 	{
 		CPoint pt2(pt);
 		TransformPoint(pt2);
@@ -895,9 +895,11 @@ namespace SOUI
 		if(!IsContainPoint(pt2,FALSE))
 			return NULL;
 
-		if(!IsContainPoint(pt2,TRUE))
+		if (!IsContainPoint(pt2, TRUE))
+		{
+			pt = pt2;//update pt;
 			return m_swnd;//只在鼠标位于客户区时，才继续搜索子窗口
-
+		}
 		SWND swndChild = NULL;
 
 		SWindow *pChild=GetWindow(GSW_LASTCHILD);
@@ -912,7 +914,7 @@ namespace SOUI
 
 			pChild=pChild->GetWindow(GSW_PREVSIBLING);
 		}
-
+		pt = pt2;//update pt;
 		return m_swnd;
 	}
 
@@ -1186,6 +1188,23 @@ namespace SOUI
 		}
 	}
 
+	void SWindow::TransformPointEx(CPoint & pt) const
+	{
+		SList<const SWindow *> lstParent;
+		const SWindow *pParent = this;
+		while (pParent)
+		{
+			lstParent.AddHead(pParent);
+			pParent = pParent->GetParent();
+		}
+		SPOSITION pos = lstParent.GetHeadPosition();
+		while (pos)
+		{
+			pParent = lstParent.GetNext(pos);
+			pParent->TransformPoint(pt);
+		}
+	}
+
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
 	void SWindow::_PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd)
 	{
@@ -1221,34 +1240,32 @@ namespace SOUI
 			InvalidateRect(rect);
 		}else
 		{
-			InvalidateRect(GetBoundRect());
+			InvalidateRect(GetWindowRect());
 		}
 	}
 
-	CRect SWindow::GetBoundRect() const
-	{
-		CRect rc = GetWindowRect();
-		Transformation xForm = GetTransformation();
-		if (xForm.hasMatrix())
-		{
-			SMatrix mtx = xForm.getMatrix();
-			mtx.preTranslate(-rc.left, -rc.top);
-			mtx.postTranslate(rc.left, rc.top);
-			SRect fRc = SRect::IMake(rc);
-			mtx.mapRect(&fRc);
-			rc = fRc.toRect();
-		}
-		return rc;
-	}
-
-	void SWindow::InvalidateRect(const CRect& rect,BOOL bFromThis/*=TRUE*/)
+	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
 	{
 		TestMainThread();
 		if(bFromThis) MarkCacheDirty(true);
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
+
 		//只能更新窗口有效区域
-		CRect rcIntersect = rect & GetBoundRect();
-		if(rcIntersect.IsRectEmpty()) return;
+		CRect rcWnd = GetWindowRect();
+
+		CRect rcIntersect = rect & rcWnd;
+		if (rcIntersect.IsRectEmpty()) return;
+
+		Transformation xForm = GetTransformation();
+		if (xForm.hasMatrix())
+		{
+			SMatrix mtx = xForm.getMatrix();
+			mtx.preTranslate(-rcWnd.left, -rcWnd.top);
+			mtx.postTranslate(rcWnd.left, rcWnd.top);
+			SRect fRc = SRect::IMake(rcIntersect);
+			mtx.mapRect(&fRc);
+			rcIntersect = fRc.toRect();
+		}
 
 		if(!GetStyle().m_bBkgndBlend)
 		{//非背景混合窗口，直接发消息支宿主窗口来启动刷新
