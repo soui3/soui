@@ -958,7 +958,7 @@ namespace SOUI
 				rcInter.IntersectRect(rcClip,rcWnd);
 				if(!rcInter.IsRectEmpty())
 				{
-					pRT->AlphaBlend(&rcInter,pRTCache,&rcInter,IsLayeredWindow()?0xFF:GetStyle().m_byAlpha);
+					pRT->AlphaBlend(&rcInter,pRTCache,&rcInter,IsLayeredWindow()?0xFF:GetAlpha());
 				}
 			}
 		}else
@@ -989,7 +989,7 @@ namespace SOUI
 					pRT->PushClipRegion(m_rgnWnd);
 					m_rgnWnd->Offset(-rcWnd.TopLeft());
 				}
-				pRT->AlphaBlend(&rcWnd,pRTCache,&rcWnd,IsLayeredWindow()?0xFF:GetStyle().m_byAlpha);
+				pRT->AlphaBlend(&rcWnd,pRTCache,&rcWnd,IsLayeredWindow()?0xFF: GetAlpha());
 				pRT->RestoreClip(nSave);
 			}
 		}else
@@ -1159,7 +1159,7 @@ namespace SOUI
 		if(pRTBack)
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
 			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
-			pRTBack->AlphaBlend(&GetWindowRect(),pRT,&GetWindowRect(),GetStyle().m_byAlpha);
+			pRTBack->AlphaBlend(&GetWindowRect(),pRT,&GetWindowRect(), GetAlpha());
 
 			SAutoRefPtr<IFont> curFont;
 			HRESULT hr = pRT->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
@@ -2107,7 +2107,7 @@ namespace SOUI
 				//从root开始绘制当前layer前的窗口背景
 				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,ZORDER_MIN,pLayerWindow->m_uZorder);
 				//将layer的渲染更新到root上
-				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetStyle().m_byAlpha);
+				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetAlpha());
 				//绘制当前layer前的窗口前景
 				if(uFrgndZorderMin!=ZORDER_MAX) 
 					pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,(UINT)uFrgndZorderMin,(UINT)ZORDER_MAX);
@@ -2205,17 +2205,26 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::SetTransformation(const Transformation & transform)
-	{
-		m_transform = transform;
-		m_transform.updateType();
-	}
-
 	Transformation SWindow::GetTransformation() const
 	{
 		Transformation ret = m_transform;
 		ret.postCompose(m_animationHandler.GetTransformation());
 		return ret;
+	}
+
+	void SWindow::SetMatrix(const SMatrix & mtx)
+	{
+		m_transform.setMatrix(mtx);
+	}
+
+	void SWindow::SetAlpha(BYTE byAlpha)
+	{
+		m_transform.setAlpha(byAlpha);
+	}
+
+	BYTE SWindow::GetAlpha() const
+	{
+		return (BYTE)((int)m_transform.getAlpha()*m_animationHandler.GetTransformation().getAlpha()/255);
 	}
 
 	void SWindow::SetFocus()
@@ -2728,7 +2737,8 @@ namespace SOUI
 
 	HRESULT SWindow::OnAttrAlpha( const SStringW& strValue, BOOL bLoading )
 	{
-		GetStyle().m_byAlpha = _wtoi(strValue);
+		BYTE byAlpha = _wtoi(strValue);
+		SetAlpha(byAlpha);
 		if(!bLoading)
 		{
 			if(!IsLayeredWindow()) UpdateCacheMode();
@@ -2862,8 +2872,7 @@ namespace SOUI
 	bool SWindow::IsDrawToCache() const
 	{
 		return m_bCacheDraw
-//			|| !GetTransformation().isIdentity()
-			|| (!IsLayeredWindow() && GetStyle().m_byAlpha != 0xff);
+			|| (!IsLayeredWindow() && GetAlpha() != 0xff);
 	}
 
 	IRenderTarget * SWindow::GetLayerRenderTarget()
@@ -2875,7 +2884,6 @@ namespace SOUI
 
 	void SWindow::OnStateChanging( DWORD dwOldState,DWORD dwNewState )
 	{
-
 	}
 
 	void SWindow::OnStateChanged( DWORD dwOldState,DWORD dwNewState )

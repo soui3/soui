@@ -825,9 +825,13 @@ namespace SOUI
 		*/
 		void ClearAnimation();
 
-		void SetTransformation(const Transformation & transform);
-
 		Transformation GetTransformation() const;
+
+		void SetMatrix(const SMatrix & mtx);
+
+		void SetAlpha(BYTE byAlpha);
+
+		BYTE GetAlpha() const;
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();

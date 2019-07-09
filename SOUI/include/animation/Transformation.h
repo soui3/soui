@@ -48,7 +48,7 @@ enum{
 
 protected:
 	SMatrix  mMatrix;
-    float mAlpha;
+    BYTE	 mAlpha;
     int mTransformationType;
 
     /**
@@ -66,7 +66,7 @@ public:
      */
     void clear() {
 		mMatrix.reset();
-        mAlpha = 1.0f;
+        mAlpha = 255;
         mTransformationType = TYPE_IDENTITY;
     }
 
@@ -78,17 +78,6 @@ public:
      */
     int getTransformationType() const{
         return mTransformationType;
-    }
-
-    /**
-     * Sets the transformation type.
-     *
-     * @param transformationType One of {@link #TYPE_ALPHA},
-     *        {@link #TYPE_MATRIX}, {@link #TYPE_BOTH} or
-     *        {@link #TYPE_IDENTITY}.
-     */
-    void setTransformationType(int transformationType) {
-        mTransformationType = transformationType;
     }
 
     /**
@@ -109,9 +98,10 @@ public:
      * @param t
      */
     void compose(Transformation t) {
-		if (t.hasAlpha()) mAlpha *= t.getAlpha();
+		if (t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha * t.getAlpha()/255);
 		if (t.hasMatrix()) mMatrix = t.getMatrix() * mMatrix;
-    }
+		updateType();
+	}
     
     /**
      * Like {@link #compose(Transformation)} but does this.postConcat(t) of
@@ -119,8 +109,9 @@ public:
      * @hide
      */
     void postCompose(Transformation t) {
-        if(t.hasAlpha()) mAlpha *= t.getAlpha();
+        if(t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha*t.getAlpha()/255);
         if(t.hasMatrix()) mMatrix *= t.getMatrix();
+		updateType();
     }
 
     /**
@@ -145,11 +136,11 @@ public:
 	}
     /**
      * Sets the degree of transparency
-     * @param alpha 1.0 means fully opaqe and 0.0 means fully transparent
+     * @param alpha 255 means fully opaqe and 0 means fully transparent
      */
-    void setAlpha(float alpha) {
+    void setAlpha(BYTE alpha) {
         mAlpha = alpha;
-		if (SFloatNearlyEqual(alpha, 1.0f))
+		if (mAlpha == 0xFF)
 			mTransformationType &= ~TYPE_ALPHA;
 		else
 			mTransformationType |= TYPE_ALPHA;
@@ -158,7 +149,7 @@ public:
 	void updateType()
 	{
 		mTransformationType = TYPE_IDENTITY;
-		if (mAlpha<1.0f)
+		if (mAlpha != 0xFF)
 			mTransformationType |= TYPE_ALPHA;
 		if (!mMatrix.isIdentity())
 			mTransformationType |= TYPE_MATRIX;
@@ -167,19 +158,19 @@ public:
     /**
      * @return The degree of transparency
      */
-    float getAlpha() const{
+    BYTE getAlpha() const{
         return mAlpha;
     }
 
 
 	bool hasAlpha() const
 	{
-		return getTransformationType() & TYPE_ALPHA;
+		return (getTransformationType() & TYPE_ALPHA) == TYPE_ALPHA;
 	}
 
 	bool hasMatrix() const
 	{
-		return getTransformationType() & TYPE_MATRIX;
+		return (getTransformationType() & TYPE_MATRIX) == TYPE_MATRIX;
 	}
 
 	bool isIdentity() const

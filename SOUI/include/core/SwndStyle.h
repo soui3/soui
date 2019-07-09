@@ -39,7 +39,6 @@ public:
     
     SStringT m_strCursor;           /**<光标NAME */
 
-    BYTE     m_byAlpha;             /**<窗口透明度 */
     DWORD    m_bDotted:1;           /**<支持省略号显示文本 */
     DWORD    m_bTrackMouseEvent:1;  /**<监视鼠标进入及移出消息 */
     DWORD    m_bBkgndBlend:1;       /**<渲染窗口内容和背景混合标志 */
@@ -111,7 +110,6 @@ protected:
 		ATTR_STRINGT(L"cursor",m_strCursor,FALSE)
         ATTR_INT(L"dotted",m_bDotted,FALSE)
         ATTR_INT(L"trackMouseEvent",m_bTrackMouseEvent,FALSE)
-        ATTR_INT(L"alpha",m_byAlpha,TRUE)
         ATTR_INT(L"bkgndBlend",m_bBkgndBlend,TRUE)
     SOUI_ATTRS_BREAK()
 };
