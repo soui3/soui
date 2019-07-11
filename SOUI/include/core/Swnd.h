@@ -1188,8 +1188,8 @@ namespace SOUI
 
         /**
          * IsLayeredWindow
-         * @brief    确定渲染时子窗口的内容是不是渲染到当前窗口的缓存上
-         * @return   BOOL -- TREU:子窗口的内容先渲染到this的缓存RT上
+         * @brief    determine whether this window need a render layer.
+         * @return   BOOL -- TRUE: need render layer, FALSE: no render layer.
          * Describe  
          */    
         virtual BOOL IsLayeredWindow() const;
@@ -1439,7 +1439,6 @@ namespace SOUI
         DWORD               m_bDrawFocusRect:1; /**< 绘制默认的焦点虚框 */
         DWORD               m_bCacheDraw:1;     /**< 支持窗口内容的Cache标志 */
         DWORD               m_bCacheDirty:1;    /**< 缓存窗口脏标志 */
-        DWORD               m_bLayeredWindow:1; /**< 指示是否是一个分层窗口 */
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */

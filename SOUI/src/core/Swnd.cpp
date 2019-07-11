@@ -62,7 +62,6 @@ namespace SOUI
 		, m_bDrawFocusRect(TRUE)
 		, m_bCacheDraw(FALSE)
 		, m_bCacheDirty(TRUE)
-		, m_bLayeredWindow(FALSE)
 		, m_layoutDirty(dirty_self)
 		, m_uData(0)
 		, m_pOwner(NULL)
@@ -1034,7 +1033,7 @@ namespace SOUI
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
 	void SWindow::_PaintRegion2( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
 	{
-		if(!IsVisible(TRUE))  //只在自己完全可见的情况下才绘制
+		if(!IsVisible(FALSE))
 			return;
 
 		CRect rcWnd = GetWindowRect();
@@ -1205,6 +1204,8 @@ namespace SOUI
 	void SWindow::_PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd)
 	{
 		TestMainThread();
+		if (!IsVisible(TRUE))
+			return;
 		BeforePaintEx(pRT);
 		_PaintRegion2(pRT,pRgn,iZorderBegin,iZorderEnd);
 	}
@@ -1212,6 +1213,8 @@ namespace SOUI
 	void SWindow::RedrawRegion(IRenderTarget *pRT, IRegion *pRgn)
 	{
 		TestMainThread();
+		if (!IsVisible(TRUE))
+			return;
 		_PaintRegion2(pRT, pRgn, (UINT)ZORDER_MIN, (UINT)ZORDER_MAX);
 	}
 
@@ -1944,10 +1947,9 @@ namespace SOUI
 		return 0;
 	}
 
-	//当窗口有半透明属性并且透明度要需要应用于子窗口时，子窗口的图像渲染到this的缓存RT上。
 	BOOL SWindow::IsLayeredWindow() const
 	{
-		return m_bLayeredWindow;
+		return GetAlpha()!=0xFF;
 	}
 
 	//查询当前窗口内容将被渲染到哪一个渲染层上，没有渲染层时返回NULL
@@ -2040,7 +2042,10 @@ namespace SOUI
 
 		if(pLayerWindow)
 		{
-			//pRT = pLayerWindow->GetLayerRenderTarget();
+			CRect rcWnd = pLayerWindow->GetWindowRect();
+			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcWnd.Width(), rcWnd.Height());
+			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top);
+			pLayerWindow->BeforePaintEx(pRT);
 		}else
 		{
 			pLayerWindow = GetRoot();
@@ -2075,43 +2080,18 @@ namespace SOUI
 		if(pLayerWindow)
 		{//存在一个渲染层
 			SASSERT(m_pGetRTData);
-			if(m_pGetRTData->gdcFlags != OLEDC_NODRAW)
-			{
-				UINT uFrgndZorderMin = (UINT)ZORDER_MAX;
-				SWindow *pParent = pLayerWindow->GetParent();
-				if(pParent)
-				{
-					//查找上一个渲染层的前景：向上层查找下一个兄弟，直到找到为止
-					SWindow *pWnd = pLayerWindow;
-					while(pWnd)
-					{
-						SWindow *pNextSibling = pWnd->GetWindow(GSW_NEXTSIBLING);
-						if(pNextSibling)
-						{
-							uFrgndZorderMin = pNextSibling->m_uZorder;
-							break;
-						}else
-						{
-							pWnd = pWnd->GetParent();
-						}
-					}
-				}
-
-				IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(m_pGetRTData->rcRT,OLEDC_OFFSCREEN);
-				pRTRoot->PushClipRegion(m_pGetRTData->rgn);
-				pRTRoot->ClearRect(m_pGetRTData->rcRT,0);
-				//从root开始绘制当前layer前的窗口背景
-				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,ZORDER_MIN,pLayerWindow->m_uZorder);
-				//将layer的渲染更新到root上
-				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetAlpha());
-				//绘制当前layer前的窗口前景
-				if(uFrgndZorderMin!=ZORDER_MAX) 
-					pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,(UINT)uFrgndZorderMin,(UINT)ZORDER_MAX);
-				pRTRoot->PopClip();
-				GetContainer()->OnReleaseRenderTarget(pRTRoot,m_pGetRTData->rcRT,OLEDC_OFFSCREEN);
-			}
+			SWindow *pParent = pLayerWindow->GetParent();
+			IRenderTarget *pRT2 = pParent->GetRenderTarget(m_pGetRTData->gdcFlags, m_pGetRTData->rgn);
+			//temp set the Layer window to invisible.
+			bool bVisible = pLayerWindow->m_bVisible;
+			pLayerWindow->m_bVisible = false;
+			pRT2->AlphaBlend(&m_pGetRTData->rcRT, pRT, &m_pGetRTData->rcRT, pLayerWindow->GetAlpha());
+			pParent->ReleaseRenderTarget(pRT2);
+			//restore visible
+			pLayerWindow->m_bVisible = bVisible;
+			pRT->Release();
 		}else
-		{//不在绘制层
+		{//不存在一个渲染层
 			GetContainer()->OnReleaseRenderTarget(pRT,m_pGetRTData->rcRT,m_pGetRTData->gdcFlags);
 		}
 		delete m_pGetRTData;
@@ -2831,7 +2811,7 @@ namespace SOUI
 
 	bool SWindow::IsDrawToCache() const
 	{
-		return m_bCacheDraw;
+		return m_bCacheDraw || (m_animation && m_animation->hasStarted());
 	}
 
 	void SWindow::OnStateChanging( DWORD dwOldState,DWORD dwNewState )
@@ -3115,10 +3095,12 @@ namespace SOUI
 
 	void SWindow::OnAnimationStart()
 	{
+		UpdateCacheMode();
 	}
 
 	void SWindow::OnAnimationStop()
 	{
+		UpdateCacheMode();
 		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
