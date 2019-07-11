@@ -1194,8 +1194,6 @@ namespace SOUI
          */    
         virtual BOOL IsLayeredWindow() const;
     
-        IRenderTarget * GetLayerRenderTarget();
-
     protected://helper functions
 
 		SWindow* _FindChildByID(int nID, int nDeep);
@@ -1247,7 +1245,6 @@ namespace SOUI
         void DrawAniStep( CRect rcWnd,IRenderTarget *pRTFore,IRenderTarget * pRTBack,BYTE byAlpha);
         
         void UpdateCacheMode();
-        void UpdateLayeredWindowMode();
 
         void TestMainThread();
         
@@ -1344,7 +1341,6 @@ namespace SOUI
         HRESULT OnAttrLayout(const SStringW& strValue, BOOL bLoading);
         HRESULT OnAttrClass(const SStringW& strValue, BOOL bLoading);
         HRESULT OnAttrTrackMouseEvent(const SStringW& strValue, BOOL bLoading);
-        HRESULT OnAttrLayeredWindow(const SStringW& strValue, BOOL bLoading);
         HRESULT OnAttrID(const SStringW& strValue, BOOL bLoading);
         HRESULT OnAttrName(const SStringW& strValue, BOOL bLoading);
 		HRESULT OnAttrTip(const SStringW& strValue, BOOL bLoading);
@@ -1371,7 +1367,6 @@ namespace SOUI
             ATTR_CUSTOM(L"display", OnAttrDisplay)
             ATTR_CUSTOM(L"cache", OnAttrCache)
             ATTR_CUSTOM(L"alpha",OnAttrAlpha)
-            ATTR_CUSTOM(L"layeredWindow",OnAttrLayeredWindow)
             ATTR_CUSTOM(L"trackMouseEvent",OnAttrTrackMouseEvent)
 			ATTR_CUSTOM(L"tip",OnAttrTip)
             ATTR_BOOL(L"msgTransparent", m_bMsgTransparent, FALSE)
@@ -1448,7 +1443,6 @@ namespace SOUI
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
-        SAutoRefPtr<IRenderTarget> m_layeredRT; /**< 分层窗口绘制的RT */
         SAutoRefPtr<IRegion>       m_rgnWnd;    /**< 窗口Region */
         ISkinObj *          m_pBgSkin;          /**< 背景skin */
         ISkinObj *          m_pNcSkin;          /**< 非客户区skin */

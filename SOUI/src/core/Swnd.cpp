@@ -958,7 +958,7 @@ namespace SOUI
 				rcInter.IntersectRect(rcClip,rcWnd);
 				if(!rcInter.IsRectEmpty())
 				{
-					pRT->AlphaBlend(&rcInter,pRTCache,&rcInter,IsLayeredWindow()?0xFF:GetAlpha());
+					pRT->BitBlt(&rcInter, pRTCache, rcInter.left, rcInter.top, SRCCOPY);
 				}
 			}
 		}else
@@ -989,7 +989,7 @@ namespace SOUI
 					pRT->PushClipRegion(m_rgnWnd);
 					m_rgnWnd->Offset(-rcWnd.TopLeft());
 				}
-				pRT->AlphaBlend(&rcWnd,pRTCache,&rcWnd,IsLayeredWindow()?0xFF: GetAlpha());
+				pRT->BitBlt(&rcWnd,pRTCache,rcWnd.left,rcWnd.top,SRCCOPY);
 				pRT->RestoreClip(nSave);
 			}
 		}else
@@ -1037,9 +1037,8 @@ namespace SOUI
 		if(!IsVisible(TRUE))  //只在自己完全可见的情况下才绘制
 			return;
 
-		CRect rcWnd,rcClient;
-		GetWindowRect(&rcWnd);
-		GetClientRect(&rcClient);
+		CRect rcWnd = GetWindowRect();
+		CRect rcClient = GetClientRect();
 
 		CRect rcRgn = rcWnd;
 		if(pRgn && !pRgn->IsEmpty())
@@ -1050,19 +1049,20 @@ namespace SOUI
 		rcRgnUnionClient.UnionRect(rcClient,rcRgn);
 		BOOL bRgnInClient = rcRgnUnionClient == rcClient;
 
-		IRenderTarget *pRTBack = NULL;//backup current RT
+		SAutoRefPtr<IRenderTarget> pRTBack;//backup current RT
 
-		if(IsLayeredWindow() && pRT != GetLayerRenderTarget())
+		if(IsLayeredWindow())
 		{//获得当前LayeredWindow RT来绘制内容
 			pRTBack = pRT;
-			pRT = GetLayerRenderTarget();
+			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcWnd.Width(), rcWnd.Height());
+			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top);
+			pRT->ClearRect(rcWnd, 0);
 
 			//绘制到窗口的缓存上,需要继承原RT的绘图属性
-			SAutoRefPtr<IFont> curFont;
-			HRESULT hr = pRTBack->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
-			COLORREF crTxt = pRTBack->GetTextColor();
-			if(S_OK == hr) pRT->SelectObject(curFont);
-			pRT->SetTextColor(crTxt);
+			pRT->SelectObject(pRTBack->GetCurrentObject(OT_FONT));
+			pRT->SelectObject(pRTBack->GetCurrentObject(OT_PEN));
+			pRT->SelectObject(pRTBack->GetCurrentObject(OT_BRUSH));
+			pRT->SetTextColor(pRTBack->GetTextColor());
 
 			if(pRgn && !pRgn->IsEmpty()) pRT->PushClipRegion(pRgn,RGN_COPY);
 			pRT->ClearRect(&rcWnd,0);
@@ -1071,7 +1071,7 @@ namespace SOUI
 		if(m_rgnWnd)
 		{
 			m_rgnWnd->Offset(GetWindowRect().TopLeft());
-			pRT->PushClipRegion(m_rgnWnd);
+			pRT->PushClipRegion(m_rgnWnd,RGN_AND);
 			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
 		}
 		if(IsClipClient())
@@ -1156,18 +1156,14 @@ namespace SOUI
 			_PaintNonClient(pRT);
 		}
 
-		if(pRTBack)
+		if(IsLayeredWindow())
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
+			SASSERT(pRTBack);
 			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
-			pRTBack->AlphaBlend(&GetWindowRect(),pRT,&GetWindowRect(), GetAlpha());
-
-			SAutoRefPtr<IFont> curFont;
-			HRESULT hr = pRT->SelectDefaultObject(OT_FONT,(IRenderObj**)&curFont);
-
+			pRTBack->AlphaBlend(&rcWnd,pRT,&rcWnd, GetAlpha());
 			pRT = pRTBack;
-			if(S_OK == hr) pRT->SelectObject(curFont);
+			pRTBack = NULL;
 		}
-
 	}
 
 	void SWindow::TransformPoint(CPoint & pt) const
@@ -2044,7 +2040,7 @@ namespace SOUI
 
 		if(pLayerWindow)
 		{
-			pRT = pLayerWindow->GetLayerRenderTarget();
+			//pRT = pLayerWindow->GetLayerRenderTarget();
 		}else
 		{
 			pLayerWindow = GetRoot();
@@ -2692,17 +2688,6 @@ namespace SOUI
 
 			MarkCacheDirty(true);
 		}
-		if(IsLayeredWindow())
-		{
-			if(!m_layeredRT)
-			{
-				GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,GetWindowRect().Width(),GetWindowRect().Height());
-			}else
-			{
-				m_layeredRT->Resize(GetWindowRect().Size());
-			}
-			m_layeredRT->SetViewportOrg(-GetWindowRect().TopLeft());
-		}
 
 		EventSwndSize evt(this);
 		evt.szWnd = size;
@@ -2746,31 +2731,6 @@ namespace SOUI
 		}
 		return bLoading?S_FALSE:S_OK;
 	}
-
-	void SWindow::UpdateLayeredWindowMode()
-	{
-		if(IsLayeredWindow() && !m_layeredRT)
-		{
-			GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,GetWindowRect().Width(),GetWindowRect().Height());
-			m_layeredRT->SetViewportOrg(-GetWindowRect().TopLeft());
-		}
-		if(!IsLayeredWindow() && m_layeredRT)
-		{
-			m_layeredRT=NULL;
-		}
-
-	}
-
-	HRESULT SWindow::OnAttrLayeredWindow( const SStringW& strValue, BOOL bLoading )
-	{
-		m_bLayeredWindow = STRINGASBOOL(strValue);
-		if(!bLoading)
-		{
-			UpdateLayeredWindowMode();
-		}
-		return bLoading?S_FALSE:S_OK;
-	}
-
 
 	HRESULT SWindow::OnAttrID( const SStringW& strValue, BOOL bLoading )
 	{
@@ -2871,15 +2831,7 @@ namespace SOUI
 
 	bool SWindow::IsDrawToCache() const
 	{
-		return m_bCacheDraw
-			|| (!IsLayeredWindow() && GetAlpha() != 0xff);
-	}
-
-	IRenderTarget * SWindow::GetLayerRenderTarget()
-	{
-		SASSERT(IsLayeredWindow());
-		if(!m_layeredRT)  GETRENDERFACTORY->CreateRenderTarget(&m_layeredRT,0,0);
-		return m_layeredRT;
+		return m_bCacheDraw;
 	}
 
 	void SWindow::OnStateChanging( DWORD dwOldState,DWORD dwNewState )
