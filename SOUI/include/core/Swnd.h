@@ -1367,6 +1367,7 @@ namespace SOUI
             ATTR_CUSTOM(L"display", OnAttrDisplay)
             ATTR_CUSTOM(L"cache", OnAttrCache)
             ATTR_CUSTOM(L"alpha",OnAttrAlpha)
+            ATTR_BOOL(L"layeredWindow",m_bLayeredWindow, TRUE)
             ATTR_CUSTOM(L"trackMouseEvent",OnAttrTrackMouseEvent)
 			ATTR_CUSTOM(L"tip",OnAttrTip)
             ATTR_BOOL(L"msgTransparent", m_bMsgTransparent, FALSE)
@@ -1439,6 +1440,7 @@ namespace SOUI
         DWORD               m_bDrawFocusRect:1; /**< 绘制默认的焦点虚框 */
         DWORD               m_bCacheDraw:1;     /**< 支持窗口内容的Cache标志 */
         DWORD               m_bCacheDirty:1;    /**< 缓存窗口脏标志 */
+        DWORD               m_bLayeredWindow:1; /**< 指示是否是一个分层窗口 */
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */

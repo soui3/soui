@@ -63,6 +63,7 @@ namespace SOUI
 		, m_bCacheDraw(FALSE)
 		, m_bCacheDirty(TRUE)
 		, m_layoutDirty(dirty_self)
+		, m_bLayeredWindow(FALSE)
 		, m_uData(0)
 		, m_pOwner(NULL)
 		, m_pCurMsg(NULL)
@@ -1949,7 +1950,7 @@ namespace SOUI
 
 	BOOL SWindow::IsLayeredWindow() const
 	{
-		return GetAlpha()!=0xFF;
+		return m_bLayeredWindow || GetAlpha()!=0xFF;
 	}
 
 	//查询当前窗口内容将被渲染到哪一个渲染层上，没有渲染层时返回NULL
@@ -2191,11 +2192,13 @@ namespace SOUI
 	void SWindow::SetMatrix(const SMatrix & mtx)
 	{
 		m_transform.setMatrix(mtx);
+		InvalidateRect(NULL);
 	}
 
 	void SWindow::SetAlpha(BYTE byAlpha)
 	{
 		m_transform.setAlpha(byAlpha);
+		InvalidateRect(NULL);
 	}
 
 	BYTE SWindow::GetAlpha() const
