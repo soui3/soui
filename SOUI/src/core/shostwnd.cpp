@@ -1262,29 +1262,6 @@ LRESULT SHostWnd::OnSpyMsgHitTest( UINT uMsg,WPARAM wParam,LPARAM lParam )
 }
 #endif//DISABLE_SWNDSPY
 
-LRESULT SHostWnd::OnUpdateSwnd(UINT uMsg,WPARAM wParam,LPARAM)
-{
-    (uMsg);
-    SWND swnd = (SWND)wParam;
-    SASSERT(SWindowMgr::getSingleton().GetWindow(swnd));
-    
-    if(!m_lstUpdateSwnd.Find(swnd))
-    {//防止重复加入
-        if(m_lstUpdateSwnd.IsEmpty())
-        {//请求刷新窗口
-            if(!m_hostAttr.m_bTranslucent)
-            {
-                SNativeWnd::Invalidate(FALSE);
-            }else if(m_dummyWnd.IsWindow()) 
-            {
-                m_dummyWnd.Invalidate(FALSE);
-            }
-        }
-        m_lstUpdateSwnd.AddTail(swnd);
-    }
-    return 0;
-}
-
 void SHostWnd::_UpdateNonBkgndBlendSwnd()
 {
     SList<SWND> lstUpdateSwnd = m_lstUpdateSwnd;
@@ -1351,6 +1328,27 @@ IScriptModule * SHostWnd::GetScriptModule()
 int SHostWnd::GetScale() const
 {
 	return m_nScale;
+}
+
+void SHostWnd::OnCavasInvalidate(SWND swnd)
+{
+	SASSERT(SWindowMgr::getSingleton().GetWindow(swnd));
+
+	if (!m_lstUpdateSwnd.Find(swnd))
+	{//防止重复加入
+		if (m_lstUpdateSwnd.IsEmpty())
+		{//请求刷新窗口
+			if (!m_hostAttr.m_bTranslucent)
+			{
+				SNativeWnd::Invalidate(FALSE);
+			}
+			else if (m_dummyWnd.IsWindow())
+			{
+				m_dummyWnd.Invalidate(FALSE);
+			}
+		}
+		m_lstUpdateSwnd.AddTail(swnd);
+	}
 }
 
 LRESULT SHostWnd::OnScriptTimer( UINT uMsg,WPARAM wParam,LPARAM lParam )

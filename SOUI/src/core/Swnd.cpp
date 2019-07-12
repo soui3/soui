@@ -1267,15 +1267,14 @@ namespace SOUI
 			rcIntersect = fRc.toRect();
 		}
 
-		if(!GetStyle().m_bBkgndBlend)
+		if(!GetStyle().m_bBlendBackground)
 		{//非背景混合窗口，直接发消息支宿主窗口来启动刷新
 			if(!m_invalidRegion)
 			{
 				GETRENDERFACTORY->CreateRegion(&m_invalidRegion);
 			}
 			m_invalidRegion->CombineRect(rcIntersect,RGN_OR);
-			//todo:hjx
-			::SendMessage(GetContainer()->GetHostHwnd(),UM_UPDATESWND,(WPARAM)m_swnd,0);//请求刷新窗口
+			GetContainer()->OnCavasInvalidate(m_swnd);//请求刷新窗口
 		}else
 		{
 			if(GetParent())
@@ -1311,6 +1310,7 @@ namespace SOUI
 		if(!pParent) return;
 		pParent->RemoveChild(this);
 		pParent->InsertChild(this);
+		pParent->Invalidate();
 	}
 
 	BOOL SWindow::FireEvent(EventArgs &evt)
@@ -2783,9 +2783,9 @@ namespace SOUI
 
 	void SWindow::_Update()
 	{
-		SASSERT(!GetStyle().m_bBkgndBlend);
+		SASSERT(!GetStyle().m_bBlendBackground);
 
-		if(!GetStyle().m_bBkgndBlend && m_invalidRegion && !m_invalidRegion->IsEmpty()) 
+		if(!GetStyle().m_bBlendBackground && m_invalidRegion && !m_invalidRegion->IsEmpty()) 
 		{
 			if(m_invalidRegion)
 			{

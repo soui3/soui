@@ -20,7 +20,7 @@ SwndStyle::SwndStyle()
     , m_strCursor(_T("arrow"))
     , m_bDotted(0)
     , m_bTrackMouseEvent(0)
-    , m_bBkgndBlend(1)
+    , m_bBlendBackground(1)
 	, m_nScale(100)
 {
     for(int i=0; i<4; i++)

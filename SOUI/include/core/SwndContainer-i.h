@@ -101,6 +101,8 @@ namespace SOUI
 		virtual int GetScale() const = 0;
 
 		virtual ICaret* GetCaret() = 0;
+
+		virtual void OnCavasInvalidate(SWND swnd) = 0;
     };
 
 

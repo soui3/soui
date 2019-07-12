@@ -239,8 +239,6 @@ protected:
     void UpdateHost(HDC dc,const CRect &rc);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
-    LRESULT OnUpdateSwnd(UINT uMsg,WPARAM,LPARAM);
-    
     void OnCaptureChanged(HWND wnd);
 
     LRESULT OnScriptTimer(UINT uMsg,WPARAM wParam,LPARAM lParam);
@@ -301,6 +299,8 @@ protected:// IContainer
     virtual IScriptModule * GetScriptModule();
 
 	virtual int GetScale() const;
+
+	virtual void OnCavasInvalidate(SWND swnd);
 protected:
 	virtual void OnNextFrame() override;
 protected://Swindow 虚方法
@@ -345,7 +345,6 @@ public://事件处理接口
         MSG_WM_NCHITTEST(OnWndNcHitTest)
         MSG_WM_GETMINMAXINFO(OnGetMinMaxInfo)
         MSG_WM_CAPTURECHANGED(OnCaptureChanged)
-        MESSAGE_HANDLER_EX(UM_UPDATESWND,OnUpdateSwnd)
         MESSAGE_HANDLER_EX(UM_SCRIPTTIMER,OnScriptTimer)
         MESSAGE_HANDLER_EX(UM_MENUEVENT,OnMenuExEvent)
 		MSG_WM_WINDOWPOSCHANGING(OnWindowPosChanging)
