@@ -675,14 +675,19 @@ HWND SHostWnd::GetHostHwnd()
 
 IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
 {
-    IRenderTarget *pRT=NULL;
-    GETRENDERFACTORY->CreateRenderTarget(&pRT,rc.Width(),rc.Height());
-    pRT->OffsetViewportOrg(-rc.left,-rc.top);
-    
-    if(gdcFlags != OLEDC_NODRAW)
-    {
-        pRT->BitBlt(&rc,m_memRT,rc.left,rc.top,SRCCOPY);
-    }
+	IRenderTarget *pRT = NULL;
+	if (gdcFlags == OLEDC_NODRAW)
+	{
+		GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
+		pRT->OffsetViewportOrg(-rc.left, -rc.top);
+		pRT->ClearRect(rc, 0);
+	}
+	else
+	{
+		pRT = m_memRT;
+		pRT->PushClipRect(rc, RGN_COPY);
+		pRT->AddRef();
+	}
     return pRT;
 }
 
@@ -690,7 +695,7 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,DWORD g
 {
     if(gdcFlags != OLEDC_NODRAW)
     {
-        m_memRT->BitBlt(&rc,pRT,rc.left,rc.top,SRCCOPY);
+		pRT->PopClip();
         if(!m_bRendering)
         {
             HDC dc=GetDC();

@@ -909,7 +909,11 @@ namespace SOUI
 			{
 				swndChild = pChild->SwndFromPoint(pt2);
 
-				if (swndChild) return swndChild;
+				if (swndChild)
+				{
+					pt = pt2;
+					return swndChild;
+				}
 			}
 
 			pChild=pChild->GetWindow(GSW_PREVSIBLING);
@@ -1022,13 +1026,14 @@ namespace SOUI
 			rgn->CombineRgn(m_rgnWnd,RGN_AND);
 			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
 		}
-		IRenderTarget *pRT=GetRenderTarget(OLEDC_OFFSCREEN,rgn);//不自动画背景
-
-		PaintBackground(pRT,&rcWnd);
-		SSendMessage(WM_NCPAINT, (WPARAM)pRT);
-		PaintForeground(pRT,&rcWnd);
-
-		ReleaseRenderTarget(pRT);
+		if (!rgn->IsEmpty())
+		{
+			IRenderTarget *pRT = GetRenderTarget(OLEDC_OFFSCREEN, rgn);//不自动画背景
+			PaintBackground(pRT, &rcWnd);
+			SSendMessage(WM_NCPAINT, (WPARAM)pRT);
+			PaintForeground(pRT, &rcWnd);
+			ReleaseRenderTarget(pRT);
+		}
 	}
 
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
@@ -1036,6 +1041,7 @@ namespace SOUI
 	{
 		if(!IsVisible(FALSE))
 			return;
+
 
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = GetClientRect();
@@ -1063,8 +1069,6 @@ namespace SOUI
 			pRT->SelectObject(pRTBack->GetCurrentObject(OT_PEN));
 			pRT->SelectObject(pRTBack->GetCurrentObject(OT_BRUSH));
 			pRT->SetTextColor(pRTBack->GetTextColor());
-
-			if(pRgn && !pRgn->IsEmpty()) pRT->PushClipRegion(pRgn,RGN_COPY);
 			pRT->ClearRect(&rcWnd,0);
 		}
 
@@ -1119,21 +1123,23 @@ namespace SOUI
 					}
 				}
 			}
-			Transformation transform = pChild->GetTransformation();
-			if (transform.hasMatrix())
+
+			Transformation xform = pChild->GetTransformation();
+			SMatrix oriMtx;
+			if (xform.hasMatrix())
 			{
-				SMatrix mtx = transform.getMatrix();
 				CRect rcChild = pChild->GetWindowRect();
+				pRT->GetTransform(oriMtx.GetData());
+				SMatrix mtx = xform.getMatrix();
 				mtx.preTranslate(-rcChild.left, -rcChild.top);
 				mtx.postTranslate(rcChild.left, rcChild.top);
-				float oldMtx[9];
-				pRT->SetTransform(mtx.GetData(), oldMtx);
-				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
-				pRT->SetTransform(oldMtx);
+				mtx.preConcat(oriMtx);
+				pRT->SetTransform(mtx.GetData());
 			}
-			else
+			pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
+			if (xform.hasMatrix())
 			{
-				pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
+				pRT->SetTransform(oriMtx.GetData());
 			}
 			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
 		}
@@ -1159,7 +1165,6 @@ namespace SOUI
 		if(IsLayeredWindow())
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
 			SASSERT(pRTBack);
-			if(pRgn  && !pRgn->IsEmpty()) pRT->PopClip();
 			pRTBack->AlphaBlend(&rcWnd,pRT,&rcWnd, GetAlpha());
 			pRT = pRTBack;
 			pRTBack = NULL;
@@ -1981,11 +1986,26 @@ namespace SOUI
 		}
 		if(pRc) rcRT.IntersectRect(pRc,&rcRT);
 
-
 		SAutoRefPtr<IRegion> rgn;
 		GETRENDERFACTORY->CreateRegion(&rgn);
-		rgn->CombineRect(rcRT,RGN_COPY);
 
+		SMatrix mtx = _GetMatrixEx();
+		if (!mtx.isIdentity())
+		{
+			SRect sRcRT = SRect::IMake(rcRT);
+			SPoint quad[4];
+			mtx.mapRectToQuad(quad, sRcRT);
+			POINT pts[4];
+			for (int i = 0; i < 4; i++)
+			{
+				pts[i] = quad[i].toPoint();
+			}
+			rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
+		}
+		else
+		{
+			rgn->CombineRect(rcRT, RGN_COPY);
+		}
 		return GetRenderTarget(gdcFlags,rgn);
 	}
 
@@ -1997,23 +2017,10 @@ namespace SOUI
 			GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
 			return pRT;
 		}
-
 		CRect rcClip;
 		pRgn->GetRgnBox(&rcClip);
-		SWindow *pParent = GetParent();
-		while(pParent)
-		{
-			rcClip.IntersectRect(rcClip,pParent->GetClientRect());
-			pParent = pParent->GetParent();
-		}
-
-		pRgn->CombineRect(&rcClip,RGN_AND);
-		pRgn->GetRgnBox(&rcClip);
-
 		//获得最近的一个渲染层的RT
-		IRenderTarget *pRT = _GetRenderTarget(rcClip,gdcFlags,pRgn);
-		BeforePaintEx(pRT);
-		return pRT;
+		return _GetRenderTarget(rcClip,gdcFlags,pRgn);
 	}
 
 	void SWindow::ReleaseRenderTarget(IRenderTarget *pRT)
@@ -2029,36 +2036,40 @@ namespace SOUI
 
 	IRenderTarget * SWindow::_GetRenderTarget(CRect & rcGetRT,DWORD gdcFlags,IRegion *pRgn)
 	{
+		SASSERT(!m_pGetRTData);
+
+		GetContainer()->BuildWndTreeZorder();
 		IRenderTarget *pRT = NULL;
 		SWindow *pLayerWindow = _GetCurrentLayeredWindow();
-
-		SASSERT(!m_pGetRTData);
 		m_pGetRTData = new GETRTDATA;
 
 		m_pGetRTData->gdcFlags = gdcFlags;
 		m_pGetRTData->rcRT = rcGetRT;
 		m_pGetRTData->rgn = pRgn;
 
-		GetContainer()->BuildWndTreeZorder();
 
 		if(pLayerWindow)
 		{
-			CRect rcWnd = pLayerWindow->GetWindowRect();
-			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcWnd.Width(), rcWnd.Height());
-			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top);
-			pLayerWindow->BeforePaintEx(pRT);
+			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcGetRT.Width(), rcGetRT.Height());
+			pRT->OffsetViewportOrg(-rcGetRT.left, -rcGetRT.top);
+			pRT->ClearRect(&rcGetRT,0);
 		}else
 		{
 			pLayerWindow = GetRoot();
 			pRT = GetContainer()->OnGetRenderTarget(rcGetRT,gdcFlags);
+			pRT->AddRef();
 		}
 
-		pRT->PushClipRegion(pRgn,RGN_COPY);
-
+		pRT->PushClipRegion(pRgn, RGN_COPY);
 		if(gdcFlags == OLEDC_PAINTBKGND)
 		{//重新绘制当前窗口的背景
-			pRT->ClearRect(&rcGetRT,0);
 			pLayerWindow->_PaintRegion(pRT,pRgn,ZORDER_MIN,m_uZorder);
+		}
+		BeforePaintEx(pRT);
+		SMatrix mtx = _GetMatrixEx();
+		if (!mtx.isIdentity())
+		{
+			pRT->SetTransform(mtx.GetData());
 		}
 		return pRT;
 	}
@@ -2083,20 +2094,84 @@ namespace SOUI
 			SASSERT(m_pGetRTData);
 			SWindow *pParent = pLayerWindow->GetParent();
 			IRenderTarget *pRT2 = pParent->GetRenderTarget(m_pGetRTData->gdcFlags, m_pGetRTData->rgn);
+			//Transformation xform = pLayerWindow->GetTransformation();
+			//SMatrix oriMtx;
+			//if (xform.hasMatrix())
+			//{
+			//	pRT2->GetTransform(oriMtx.GetData());
+			//	CRect rcWnd = pLayerWindow->GetWindowRect();
+			//	SMatrix mtx = pLayerWindow->GetTransformation().getMatrix();
+			//	mtx.preTranslate(-rcWnd.left, -rcWnd.top);
+			//	mtx.postTranslate(rcWnd.left, rcWnd.top);
+			//	mtx.preConcat(oriMtx);
+			//	pRT2->SetTransform(mtx.GetData());
+			//}
+
 			//temp set the Layer window to invisible.
 			bool bVisible = pLayerWindow->m_bVisible;
 			pLayerWindow->m_bVisible = false;
 			pRT2->AlphaBlend(&m_pGetRTData->rcRT, pRT, &m_pGetRTData->rcRT, pLayerWindow->GetAlpha());
+			//if (xform.hasMatrix())
+			//{
+			//	pRT2->SetTransform(oriMtx.GetData());
+			//}
 			pParent->ReleaseRenderTarget(pRT2);
 			//restore visible
 			pLayerWindow->m_bVisible = bVisible;
-			pRT->Release();
 		}else
 		{//不存在一个渲染层
 			GetContainer()->OnReleaseRenderTarget(pRT,m_pGetRTData->rcRT,m_pGetRTData->gdcFlags);
 		}
+		pRT->SetTransform(SMatrix().GetData());
+		pRT->Release();
+
 		delete m_pGetRTData;
 		m_pGetRTData = NULL;
+	}
+
+	SMatrix SWindow::_GetMatrixEx() const
+	{
+		SMatrix  mtx;
+		SList<const SWindow *> lstParent;
+		const SWindow *pParent = this;
+		while (pParent)
+		{
+			lstParent.AddHead(pParent);
+			if (pParent->IsLayeredWindow())
+				break;
+			pParent = pParent->GetParent();
+		}
+		mtx.reset();
+		SPOSITION pos = lstParent.GetHeadPosition();
+		while (pos)
+		{
+			pParent = lstParent.GetNext(pos);
+			Transformation xform = pParent->GetTransformation();
+			if (xform.hasMatrix())
+			{
+				CRect rcWnd = pParent->GetWindowRect();
+				SMatrix mtx2 = xform.getMatrix();
+				mtx2.preTranslate(-rcWnd.left, -rcWnd.top);
+				mtx2.postTranslate(rcWnd.left, rcWnd.top);
+				mtx.postConcat(mtx2);
+			}
+		}
+		return mtx;
+	}
+
+	bool SWindow::_ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx)
+	{
+		Transformation xform = GetTransformation();
+		if (!xform.hasMatrix())
+			return false;
+		pRT->GetTransform(oriMtx.GetData());
+		CRect rcWnd = GetWindowRect();
+		SMatrix mtx = xform.getMatrix();
+		mtx.preTranslate(-rcWnd.left, -rcWnd.top);
+		mtx.postTranslate(rcWnd.left, rcWnd.top);
+		mtx.preConcat(oriMtx);
+		pRT->SetTransform(mtx.GetData());
+		return true;
 	}
 
 	SWND SWindow::GetCapture()
@@ -2707,11 +2782,6 @@ namespace SOUI
 	{
 		BYTE byAlpha = _wtoi(strValue);
 		SetAlpha(byAlpha);
-		if(!bLoading)
-		{
-			if(!IsLayeredWindow()) UpdateCacheMode();
-			InvalidateRect(NULL);
-		}
 		return bLoading?S_FALSE:S_OK;
 	}
 

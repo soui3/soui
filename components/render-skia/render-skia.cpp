@@ -1606,6 +1606,31 @@ namespace SOUI
 		m_rgn.op(rgn,RGNMODE2SkRgnOP(nCombineMode));
 	}
 
+	void SRegion_Skia::CombinePolygon(const POINT * pts, int count, int nPolygonMode, int nCombineMode)
+	{
+		SkPoint *spts = new SkPoint[count];
+		RECT rc = { 0 };
+		for (int i = 0; i < count; i++)
+		{
+			if (rc.left > pts[i].x) rc.left = pts[i].x;
+			if (rc.right < pts[i].x) rc.right = pts[i].x;
+			if (rc.top > pts[i].y) rc.top = pts[i].y;
+			if (rc.bottom < pts[i].y) rc.bottom = pts[i].y;
+			spts[i].iset(pts[i].x, pts[i].y);
+		}
+		SkPath skPath;
+		skPath.addPoly(spts, count, true);
+		delete[]spts;
+
+		SkRegion clip;
+		clip.setRect(rc.left, rc.top, rc.right, rc.bottom);
+		SkRegion rgn;
+		rgn.setPath(skPath, clip);
+
+		m_rgn.op(rgn, RGNMODE2SkRgnOP(nCombineMode));
+
+	}
+
     void SRegion_Skia::CombineRgn(const IRegion * pRgnSrc,int nCombineMode)
     {
         const SRegion_Skia * pRgnSrc2 = (const SRegion_Skia*)pRgnSrc;

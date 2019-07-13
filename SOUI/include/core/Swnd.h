@@ -1233,6 +1233,9 @@ namespace SOUI
         */
         void _ReleaseRenderTarget(IRenderTarget *pRT);
 
+		SMatrix _GetMatrixEx() const;
+		bool _ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx);
+
         //将窗口内容绘制到RenderTarget上
         void _PaintClient(IRenderTarget *pRT);
         void _PaintNonClient(IRenderTarget *pRT);
@@ -1460,6 +1463,7 @@ namespace SOUI
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */
             DWORD gdcFlags;         /**< GETRT绘制标志位 */
+			SMatrix oriMtx;
             SAutoRefPtr<IRegion> rgn;/**< 保存一个和rcRT对应的IRegion对象 */
         } * PGETRTDATA;
         

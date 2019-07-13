@@ -229,6 +229,7 @@ namespace SOUI
 		virtual void CombineRect(LPCRECT lprect,int nCombineMode);
 		virtual void CombineRoundRect(LPCRECT lprect, POINT ptRadius, int nCombineMode);
 		virtual void CombineEllipse(LPCRECT lprect , int nCombineMode);
+		virtual void CombinePolygon(const POINT *pts, int count, int nPolygonMode, int nCombineMode);
         virtual void CombineRgn(const IRegion * pRgnSrc,int nCombineMode );
         virtual void SetRgn(const HRGN hRgn);
 		virtual BOOL PtInRegion(POINT pt);

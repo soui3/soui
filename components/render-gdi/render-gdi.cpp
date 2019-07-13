@@ -210,6 +210,13 @@ namespace SOUI
         DeleteObject(hRgn);
     }
 
+	void SRegion_GDI::CombinePolygon(const POINT * pts, int count, int nPolygonMode, int nCombineMode)
+	{
+		HRGN hRgn = ::CreatePolygonRgn(pts, count, nPolygonMode);
+		_CombineRgn(hRgn, nCombineMode);
+		DeleteObject(hRgn);
+	}
+
     void SRegion_GDI::CombineRgn(const IRegion * pRgnSrc,int nCombineMode)
     {
         const SRegion_GDI *pRgnSrcGdi = (const SRegion_GDI*)pRgnSrc;

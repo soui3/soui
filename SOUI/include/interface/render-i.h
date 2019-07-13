@@ -439,6 +439,7 @@ namespace SOUI
 
 		virtual void CombineEllipse(LPCRECT lprect , int nCombineMode) = 0;
 
+		virtual void CombinePolygon(const POINT *pts, int count, int nPolygonMode, int nCombineMode) = 0;
         /**
          * PtInRegion
          * @brief    检测一个点是否在region范围内
