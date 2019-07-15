@@ -264,6 +264,11 @@ void SMatrix::preTranslate(float dx, float dy) {
     }
 }
 
+void SMatrix::preTranslate(int dx, int dy)
+{
+	preTranslate((float)dx, (float)dy);
+}
+
 void SMatrix::postTranslate(float dx, float dy) {
     if (!dx && !dy) {
         return;
@@ -352,6 +357,11 @@ void SMatrix::preScale(float sx, float sy) {
     fMat[kMPersp1] *= sy;
 
     this->orTypeMask(kScale_Mask);
+}
+
+void SMatrix::postTranslate(int dx, int dy)
+{
+	postTranslate((float)dx, (float)dy);
 }
 
 void SMatrix::postScale(float sx, float sy, float px, float py) {

@@ -239,6 +239,9 @@ public:
         M' = M * T(dx, dy)
     */
     void preTranslate(float dx, float dy);
+
+	void preTranslate(int dx, int dy);
+
     /** Preconcats the matrix with the specified scale.
         M' = M * S(sx, sy, px, py)
     */
@@ -275,6 +278,8 @@ public:
     /** Postconcats the matrix with the specified scale.
         M' = S(sx, sy, px, py) * M
     */
+	void postTranslate(int dx, int dy);
+
     void postScale(float sx, float sy, float px, float py);
     /** Postconcats the matrix with the specified scale.
         M' = S(sx, sy) * M

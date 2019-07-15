@@ -1042,6 +1042,9 @@ namespace SOUI
 		if(!IsVisible(FALSE))
 			return;
 
+		SMatrix oriMtx;
+		bool bMtx = _ApplyMatrix(pRT, oriMtx);
+
 
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = GetClientRect();
@@ -1060,10 +1063,9 @@ namespace SOUI
 		if(IsLayeredWindow())
 		{//获得当前LayeredWindow RT来绘制内容
 			pRTBack = pRT;
+			
 			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcWnd.Width(), rcWnd.Height());
 			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top);
-			pRT->ClearRect(rcWnd, 0);
-
 			//绘制到窗口的缓存上,需要继承原RT的绘图属性
 			pRT->SelectObject(pRTBack->GetCurrentObject(OT_FONT));
 			pRT->SelectObject(pRTBack->GetCurrentObject(OT_PEN));
@@ -1071,7 +1073,6 @@ namespace SOUI
 			pRT->SetTextColor(pRTBack->GetTextColor());
 			pRT->ClearRect(&rcWnd,0);
 		}
-
 		if(m_rgnWnd)
 		{
 			m_rgnWnd->Offset(GetWindowRect().TopLeft());
@@ -1124,23 +1125,7 @@ namespace SOUI
 				}
 			}
 
-			Transformation xform = pChild->GetTransformation();
-			SMatrix oriMtx;
-			if (xform.hasMatrix())
-			{
-				CRect rcChild = pChild->GetWindowRect();
-				pRT->GetTransform(oriMtx.GetData());
-				SMatrix mtx = xform.getMatrix();
-				mtx.preTranslate(-rcChild.left, -rcChild.top);
-				mtx.postTranslate(rcChild.left, rcChild.top);
-				mtx.preConcat(oriMtx);
-				pRT->SetTransform(mtx.GetData());
-			}
 			pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
-			if (xform.hasMatrix())
-			{
-				pRT->SetTransform(oriMtx.GetData());
-			}
 			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 		AfterPaint(pRT,painter);
@@ -1165,10 +1150,12 @@ namespace SOUI
 		if(IsLayeredWindow())
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
 			SASSERT(pRTBack);
-			pRTBack->AlphaBlend(&rcWnd,pRT,&rcWnd, GetAlpha());
+//			pRTBack->FillSolidRect(rcWnd, RGBA(0, 0, 0xcc, 255));
+			pRTBack->AlphaBlend(&rcWnd, pRT, &rcWnd, GetAlpha());
 			pRT = pRTBack;
 			pRTBack = NULL;
 		}
+		if(bMtx) pRT->SetTransform(oriMtx.GetData());
 	}
 
 	void SWindow::TransformPoint(CPoint & pt) const
@@ -2064,6 +2051,7 @@ namespace SOUI
 		if(gdcFlags == OLEDC_PAINTBKGND)
 		{//重新绘制当前窗口的背景
 			pLayerWindow->_PaintRegion(pRT,pRgn,ZORDER_MIN,m_uZorder);
+			//pRT->FillSolidRect(rcGetRT, RGBA(255, 0, 0, 255));
 		}
 		BeforePaintEx(pRT);
 		SMatrix mtx = _GetMatrixEx();
@@ -2085,7 +2073,7 @@ namespace SOUI
 		if(m_pGetRTData->gdcFlags == OLEDC_PAINTBKGND)
 		{//从指定的窗口开始绘制前景
 			SWindow * pLayer = pLayerWindow?pLayerWindow:pRoot;
-			pLayer->_PaintRegion2(pRT,m_pGetRTData->rgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
+			//pLayer->_PaintRegion2(pRT,m_pGetRTData->rgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
 		}
 		pRT->PopClip();//对应_GetRenderTarget中调用的PushClipRegion
 
@@ -2094,27 +2082,10 @@ namespace SOUI
 			SASSERT(m_pGetRTData);
 			SWindow *pParent = pLayerWindow->GetParent();
 			IRenderTarget *pRT2 = pParent->GetRenderTarget(m_pGetRTData->gdcFlags, m_pGetRTData->rgn);
-			//Transformation xform = pLayerWindow->GetTransformation();
-			//SMatrix oriMtx;
-			//if (xform.hasMatrix())
-			//{
-			//	pRT2->GetTransform(oriMtx.GetData());
-			//	CRect rcWnd = pLayerWindow->GetWindowRect();
-			//	SMatrix mtx = pLayerWindow->GetTransformation().getMatrix();
-			//	mtx.preTranslate(-rcWnd.left, -rcWnd.top);
-			//	mtx.postTranslate(rcWnd.left, rcWnd.top);
-			//	mtx.preConcat(oriMtx);
-			//	pRT2->SetTransform(mtx.GetData());
-			//}
-
 			//temp set the Layer window to invisible.
 			bool bVisible = pLayerWindow->m_bVisible;
 			pLayerWindow->m_bVisible = false;
 			pRT2->AlphaBlend(&m_pGetRTData->rcRT, pRT, &m_pGetRTData->rcRT, pLayerWindow->GetAlpha());
-			//if (xform.hasMatrix())
-			//{
-			//	pRT2->SetTransform(oriMtx.GetData());
-			//}
 			pParent->ReleaseRenderTarget(pRT2);
 			//restore visible
 			pLayerWindow->m_bVisible = bVisible;
