@@ -253,7 +253,7 @@ namespace SOUI
 		rcInter.IntersectRect(&rcClient,&rcItem);
 		if(rcInter.IsRectEmpty()) return;
   
-		IRenderTarget * pRT=GetRenderTarget(&rcItem,OLEDC_PAINTBKGND);
+		IRenderTarget * pRT=GetRenderTarget(&rcItem,GRT_PAINTBKGND);
 
 		SSendMessage(WM_ERASEBKGND,(WPARAM)pRT);
 		DrawItem(pRT,rcItem,iItem);

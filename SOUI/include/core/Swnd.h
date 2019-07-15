@@ -61,6 +61,13 @@ namespace SOUI
 		WndState_Disable = 0x00000010UL,
 	};
 
+	enum GrtFlag
+	{	
+		GRT_NODRAW	= 0,
+		GRT_PAINTBKGND,
+		GRT_OFFSCREEN,
+	};
+
 	class SOUI_EXP SStateHelper {
 	public:
 		static void MarkState(DWORD &dwState, WndState state)
@@ -1059,7 +1066,7 @@ namespace SOUI
         *
         * Describe  使用ReleaseRenderTarget释放
         */
-        IRenderTarget * GetRenderTarget(LPCRECT pRc=NULL,DWORD gdcFlags=OLEDC_NODRAW,BOOL bClientRT=TRUE);
+        IRenderTarget * GetRenderTarget(LPCRECT pRc=NULL,GrtFlag gdcFlags=GRT_NODRAW,BOOL bClientRT=TRUE);
 
         /**
         * GetRenderTarget
@@ -1070,7 +1077,7 @@ namespace SOUI
         *
         * Describe  使用ReleaseRenderTarget释放
         */
-        IRenderTarget * GetRenderTarget(DWORD gdcFlags,IRegion *pRgn);
+        IRenderTarget * GetRenderTarget(GrtFlag gdcFlags,IRegion *pRgn);
 
 
         /**
@@ -1213,14 +1220,13 @@ namespace SOUI
         /**
         * _GetRenderTarget
         * @brief    获取一个与SWND窗口相适应的内存DC
-        * @param  [in,out]  CRect & rcGetRT --  RT范围,保存最后的有效绘制区
         * @param    DWORD gdcFlags --  同OLEDCFLAGS
         * @param    IRegion *pRgn --  绘制区域
         * @return   IRenderTarget * 
         *
         * Describe  使用ReleaseRenderTarget释放
         */
-        IRenderTarget * _GetRenderTarget(CRect & rcGetRT,DWORD gdcFlags,IRegion *pRgn);
+        IRenderTarget * _GetRenderTarget(GrtFlag gdcFlags,IRegion *pRgn,int nLayer=0);
 
 
         /**
@@ -1459,10 +1465,13 @@ namespace SOUI
 		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
 		SAnimationHandler	m_animationHandler;
 		Transformation		m_transform;
+
+
         typedef struct GETRTDATA
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */
-            DWORD gdcFlags;         /**< GETRT绘制标志位 */
+            GrtFlag gdcFlags;         /**< GETRT绘制标志位 */
+			int   nLayer;
 			SMatrix oriMtx;
             SAutoRefPtr<IRegion> rgn;/**< 保存一个和rcRT对应的IRegion对象 */
         } * PGETRTDATA;

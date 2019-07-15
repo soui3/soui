@@ -76,7 +76,7 @@ namespace SOUI
 		if (iPart == -1)
 		{
 			CRect rc = GetScrollBarRect(bVert);
-			IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND,FALSE);
+			IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND,FALSE);
 			sbHandler.OnDraw(pRT, SB_LINEUP);
 			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 			sbHandler.OnDraw(pRT, SB_THUMBTRACK);
@@ -86,7 +86,7 @@ namespace SOUI
 		else if (iPart == SB_THUMBTRACK)
 		{
 			CRect rcRail = sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
-			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, OLEDC_PAINTBKGND, FALSE);
+			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcRail, GRT_PAINTBKGND, FALSE);
 			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 			sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 			ReleaseRenderTarget(pRT);
@@ -94,7 +94,7 @@ namespace SOUI
 		else
 		{
 			CRect rcPart = sbHandler.GetPartRect(iPart);
-			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcPart, OLEDC_PAINTBKGND, FALSE);
+			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcPart, GRT_PAINTBKGND, FALSE);
 			sbHandler.OnDraw(pRT, iPart);
 			ReleaseRenderTarget(pRT);
 		}
@@ -119,7 +119,7 @@ namespace SOUI
 		CRect rcThumb = sbHandler.GetPartRect(SB_THUMBTRACK);
 		CRect rcUnion;
 		rcUnion.UnionRect(rcOldThumb, rcThumb);
-		IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND,FALSE);
+		IRenderTarget *pRT = GetRenderTarget(&rcUnion, GRT_PAINTBKGND,FALSE);
 		sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 		sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);

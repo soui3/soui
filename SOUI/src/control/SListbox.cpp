@@ -307,7 +307,7 @@ void SListBox::RedrawItem(int iItem)
         CRect rcItem(0,0,rcClient.Width(),nItemHei);
         rcItem.OffsetRect(0,nItemHei*iItem-m_ptOrigin.y);
         rcItem.OffsetRect(rcClient.TopLeft());
-        IRenderTarget *pRT=GetRenderTarget(&rcItem,OLEDC_PAINTBKGND);
+        IRenderTarget *pRT=GetRenderTarget(&rcItem,GRT_PAINTBKGND);
 
         SSendMessage(WM_ERASEBKGND,(WPARAM)(HDC)pRT);
         DrawItem(pRT,rcItem,iItem);

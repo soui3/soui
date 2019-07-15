@@ -489,7 +489,7 @@ void SListCtrl::RedrawItem(int nItem)
         rcItem.OffsetRect(rcList.TopLeft());
         CRect rcDC;
         rcDC.IntersectRect(rcItem,rcList);
-        IRenderTarget *pRT = GetRenderTarget(&rcDC, OLEDC_PAINTBKGND);
+        IRenderTarget *pRT = GetRenderTarget(&rcDC, GRT_PAINTBKGND);
         SSendMessage(WM_ERASEBKGND, (WPARAM)pRT);
 
         DrawItem(pRT, rcItem, nItem);

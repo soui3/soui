@@ -43,7 +43,7 @@ int SScrollBar::SetPos(int nPos)
             rcUnion.UnionRect(&rcOldThumb,&rcNewThumb);
 			if (IsVisible())
 			{
-				IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
+				IRenderTarget *pRT = GetRenderTarget(&rcUnion, GRT_PAINTBKGND);
 				m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 				m_sbHandler.OnDraw(pRT,SB_THUMBTRACK);
 				ReleaseRenderTarget(pRT);
@@ -186,7 +186,7 @@ void SScrollBar::OnScrollUpdateThumbTrack(bool bVert, int nPos)
 	CRect rcThumb = m_sbHandler.GetPartRect(SB_THUMBTRACK);
 	CRect rcUnion;
 	rcUnion.UnionRect(rcOldThumb, rcThumb);
-	IRenderTarget *pRT = GetRenderTarget(&rcUnion, OLEDC_PAINTBKGND);
+	IRenderTarget *pRT = GetRenderTarget(&rcUnion, GRT_PAINTBKGND);
 	m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 	m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 	ReleaseRenderTarget(pRT);
@@ -262,7 +262,7 @@ void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 	if (iPart == -1)
 	{
 		CRect rc = GetScrollBarRect(bVert);
-		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND);
 		m_sbHandler.OnDraw(pRT, SB_LINEUP);
 		m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 		m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
@@ -272,7 +272,7 @@ void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 	else if (iPart == SB_THUMBTRACK)
 	{
 		CRect rc = m_sbHandler.GetPartRect(SScrollBarHandler::kSbRail);
-		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND);
 		m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 		m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);
@@ -280,7 +280,7 @@ void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 	else
 	{
 		CRect rc = m_sbHandler.GetPartRect(iPart);
-		IRenderTarget *pRT = GetRenderTarget(&rc, OLEDC_PAINTBKGND);
+		IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND);
 		m_sbHandler.OnDraw(pRT, iPart);
 		ReleaseRenderTarget(pRT);
 	}

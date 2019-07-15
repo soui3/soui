@@ -787,7 +787,7 @@ void STreeCtrl::RedrawItem(HSTREEITEM hItem)
         rcItem.OffsetRect(rcClient.left-m_ptOrigin.x,
                 rcClient.top+m_nItemHei*iItem-m_ptOrigin.y);
 
-        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcItem,OLEDC_PAINTBKGND);
+        SAutoRefPtr<IRenderTarget> pRT=GetRenderTarget(&rcItem,GRT_PAINTBKGND);
 
         SSendMessage(WM_ERASEBKGND,(WPARAM)(void*)pRT);
 

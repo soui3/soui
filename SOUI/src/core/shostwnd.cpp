@@ -673,10 +673,10 @@ HWND SHostWnd::GetHostHwnd()
     return m_hWnd;
 }
 
-IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
+IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 {
 	IRenderTarget *pRT = NULL;
-	if (gdcFlags == OLEDC_NODRAW)
+	if (gdcFlags == GRT_NODRAW)
 	{
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
 		pRT->OffsetViewportOrg(-rc.left, -rc.top);
@@ -691,9 +691,9 @@ IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
     return pRT;
 }
 
-void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,DWORD gdcFlags)
+void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag gdcFlags)
 {
-    if(gdcFlags != OLEDC_NODRAW)
+    if(gdcFlags != GRT_NODRAW)
     {
 		pRT->PopClip();
         if(!m_bRendering)

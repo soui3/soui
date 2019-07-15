@@ -128,13 +128,13 @@ CRect SItemPanel::GetContainerRect() const
     return rcItem;
 }
 
-IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
+IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 {
     CRect rcItem=GetItemRect();
     CRect rcInvalid=rc;
     rcInvalid.OffsetRect(rcItem.TopLeft());
     IRenderTarget *pRT=m_pFrmHost->GetRenderTarget(rcInvalid,gdcFlags);
-    if(gdcFlags == OLEDC_PAINTBKGND)
+    if(gdcFlags == GRT_PAINTBKGND)
     {//调用frmhost的GetRenderTarget时，不会绘制frmHost的背景。注意此外只画背景，不画前景,因为itempanel就是前景
         m_pFrmHost->SSendMessage(WM_ERASEBKGND, (WPARAM)pRT);
     }
@@ -142,7 +142,7 @@ IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)
     return pRT;
 }
 
-void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,DWORD gdcFlags)
+void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)
 {
     CRect rcItem=GetItemRect();
     pRT->OffsetViewportOrg(-rcItem.left,-rcItem.top);
@@ -166,12 +166,12 @@ void SItemPanel::OnRedraw(const CRect &rc)
             m_pFrmHost->InvalidateRect(rc2);
         }else
         {
-            IRenderTarget *pRT=OnGetRenderTarget(rc,OLEDC_PAINTBKGND);
+            IRenderTarget *pRT=OnGetRenderTarget(rc,GRT_PAINTBKGND);
             SAutoRefPtr<IRegion> rgn;
             GETRENDERFACTORY->CreateRegion(&rgn);
             rgn->CombineRect(&rc,RGN_COPY);
             RedrawRegion(pRT,rgn);
-            OnReleaseRenderTarget(pRT,rc,OLEDC_PAINTBKGND);
+            OnReleaseRenderTarget(pRT,rc,GRT_PAINTBKGND);
         }
     }
 }

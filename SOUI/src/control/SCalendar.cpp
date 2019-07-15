@@ -343,7 +343,7 @@ void SCalendar::DrawDay( IRenderTarget *pRT,CRect & rcDay,WORD iDay )
 void SCalendar::RedrawDay(WORD iDay )
 {
     CRect rcDay=GetDayRect(iDay);
-    IRenderTarget * pRT=GetRenderTarget(&rcDay,OLEDC_PAINTBKGND);
+    IRenderTarget * pRT=GetRenderTarget(&rcDay,GRT_PAINTBKGND);
     DrawDay(pRT,rcDay,iDay);
     ReleaseRenderTarget(pRT);
 }

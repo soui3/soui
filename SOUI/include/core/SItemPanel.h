@@ -43,9 +43,9 @@ public://SwndContainerImpl
 
     virtual CRect GetContainerRect() const;
 
-    virtual IRenderTarget * OnGetRenderTarget(const CRect & rc ,DWORD gdcFlags);
+    virtual IRenderTarget * OnGetRenderTarget(const CRect & rc ,GrtFlag gdcFlags);
 
-    virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,DWORD gdcFlags);
+    virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags);
 
     virtual void OnRedraw(const CRect &rc);
 

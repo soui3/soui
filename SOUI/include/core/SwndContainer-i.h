@@ -14,11 +14,11 @@
 #pragma once
 
 #include <event/Events.h>
+#include <core/swnd.h>
 #include <core/SMsgLoop.h>
 #include <interface/SScriptModule-i.h>
 #include <interface/scaret-i.h>
 #include <interface/STimelineHandler-i.h>
-
 namespace SOUI
 {
 
@@ -29,6 +29,7 @@ namespace SOUI
     ZORDER_MAX  = (UINT)-1,
     };
 
+	enum GrtFlag;
     /**
     * @struct     ISwndContainer
     * @brief      SOUI窗口容器接口
@@ -53,9 +54,9 @@ namespace SOUI
         
         virtual CRect GetContainerRect() const =0;
 
-        virtual IRenderTarget * OnGetRenderTarget(const CRect & rc,DWORD gdcFlags)=0;
+        virtual IRenderTarget * OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)=0;
 
-        virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,DWORD gdcFlags)=0;
+        virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)=0;
 
         virtual void OnRedraw(const CRect &rc)=0;
 

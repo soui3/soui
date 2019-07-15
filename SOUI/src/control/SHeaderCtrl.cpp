@@ -197,7 +197,7 @@ namespace SOUI
 	void SHeaderCtrl::RedrawItem(int iItem)
 	{
 		CRect rcItem = GetItemRect(iItem);
-		IRenderTarget *pRT = GetRenderTarget(rcItem, OLEDC_PAINTBKGND);
+		IRenderTarget *pRT = GetRenderTarget(rcItem, GRT_PAINTBKGND);
 		DrawItem(pRT, rcItem, m_arrItems.GetData() + iItem);
 		ReleaseRenderTarget(pRT);
 	}
@@ -479,7 +479,7 @@ namespace SOUI
 	{
 		CRect rcClient;
 		GetClientRect(&rcClient);
-		IRenderTarget *pRT = GetRenderTarget(rcClient, OLEDC_PAINTBKGND);
+		IRenderTarget *pRT = GetRenderTarget(rcClient, GRT_PAINTBKGND);
 		SPainter painter;
 		BeforePaint(pRT, painter);
 		CRect rcItem(rcClient.left, rcClient.top, rcClient.left, rcClient.bottom);
