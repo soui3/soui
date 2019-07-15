@@ -934,7 +934,12 @@ namespace SOUI
 	//如果当前窗口有绘制缓存，它可能是由cache属性定义的，也可能是由于定义了alpha
 	void SWindow::_PaintClient(IRenderTarget *pRT)
 	{
-		if(IsDrawToCache())
+		if(m_pGetRTData)
+		{
+			CRect & rcRT = m_pGetRTData->rcRT;
+			pRT->BitBlt(rcRT,m_pGetRTData->rt,rcRT.left,rcRT.top,SRCCOPY);
+		}
+		else if(IsDrawToCache())
 		{
 			IRenderTarget *pRTCache=m_cachedRT;
 			if(pRTCache)
@@ -978,7 +983,11 @@ namespace SOUI
 		CRect rcClient = GetClientRect();
 		if(rcWnd==rcClient) return;
 
-		if(IsDrawToCache())
+		if(m_pGetRTData)
+		{
+			CRect & rcRT = m_pGetRTData->rcRT;
+			pRT->BitBlt(rcRT,m_pGetRTData->rt,rcRT.left,rcRT.top,SRCCOPY);
+		}else if(IsDrawToCache())
 		{
 			IRenderTarget *pRTCache=m_cachedRT;
 			if(pRTCache)
@@ -1975,34 +1984,12 @@ namespace SOUI
 
 		SAutoRefPtr<IRegion> rgn;
 		GETRENDERFACTORY->CreateRegion(&rgn);
+		rgn->CombineRect(rcRT, RGN_COPY);
 
-		SMatrix mtx = _GetMatrixEx();
-		if (!mtx.isIdentity())
-		{
-			SRect sRcRT = SRect::IMake(rcRT);
-			SPoint quad[4];
-			mtx.mapRectToQuad(quad, sRcRT);
-			POINT pts[4];
-			for (int i = 0; i < 4; i++)
-			{
-				pts[i] = quad[i].toPoint();
-			}
-			rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
-		}
-		else
-		{
-			rgn->CombineRect(rcRT, RGN_COPY);
-		}
 		return GetRenderTarget(gdcFlags,rgn);
 	}
 
 	IRenderTarget * SWindow::GetRenderTarget( GrtFlag gdcFlags,IRegion *pRgn )
-	{
-		//获得最近的一个渲染层的RT
-		return _GetRenderTarget(gdcFlags,pRgn,0);
-	}
-
-	IRenderTarget * SWindow::_GetRenderTarget(GrtFlag gdcFlags,IRegion *pRgn,int nLayer/*=0*/)
 	{
 		SASSERT(!m_pGetRTData);
 
@@ -2013,44 +2000,20 @@ namespace SOUI
 			return pRT;
 		}
 
-		CRect rcGetRT;
-		pRgn->GetRgnBox(&rcGetRT);
-
+		CRect rcRT;
+		pRgn->GetRgnBox(&rcRT);
 		GetContainer()->BuildWndTreeZorder();
 		IRenderTarget *pRT = NULL;
-		SWindow *pLayerWindow = _GetCurrentLayeredWindow();
 		m_pGetRTData = new GETRTDATA;
+		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcRT.Width(), rcRT.Height());
+		pRT->OffsetViewportOrg(-rcRT.left, -rcRT.top);
+		pRT->ClearRect(&rcRT,0);
+		BeforePaintEx(pRT);
 
 		m_pGetRTData->gdcFlags = gdcFlags;
-		m_pGetRTData->rcRT = rcGetRT;
+		m_pGetRTData->rcRT = rcRT;
 		m_pGetRTData->rgn = pRgn;
-		m_pGetRTData->nLayer = nLayer;
-
-
-		if(pLayerWindow)
-		{
-			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcGetRT.Width(), rcGetRT.Height());
-			pRT->OffsetViewportOrg(-rcGetRT.left, -rcGetRT.top);
-			pRT->ClearRect(&rcGetRT,0);
-		}else
-		{
-			pLayerWindow = GetRoot();
-			pRT = GetContainer()->OnGetRenderTarget(rcGetRT,gdcFlags);
-			pRT->ClearRect(rcGetRT,0);
-			pRT->AddRef();
-		}
-
-		pRT->PushClipRegion(pRgn, RGN_COPY);
-		if(gdcFlags == GRT_PAINTBKGND)
-		{//重新绘制当前窗口的背景
-			pLayerWindow->_PaintRegion(pRT,pRgn,ZORDER_MIN,m_uZorder+(nLayer>0?1:0));
-		}
-		BeforePaintEx(pRT);
-		SMatrix mtx = _GetMatrixEx();
-		if (!mtx.isIdentity())
-		{
-			pRT->SetTransform(mtx.GetData());
-		}
+		m_pGetRTData->rt = pRT;
 		return pRT;
 	}
 
@@ -2062,101 +2025,60 @@ namespace SOUI
 			return;
 		}
 		SASSERT(m_pGetRTData);
-		_ReleaseRenderTarget(pRT);        
-	}
 
-	void SWindow::_ReleaseRenderTarget(IRenderTarget *pRT)
-	{
-		SASSERT(m_pGetRTData);
-
-		SWindow *pRoot = GetRoot();
-		SWindow *pLayerWindow = _GetCurrentLayeredWindow();
-
-		if(m_pGetRTData->gdcFlags == GRT_PAINTBKGND)
-		{//从指定的窗口开始绘制前景
-			SWindow * pLayer = pLayerWindow?pLayerWindow:pRoot;
-			pLayer->_PaintRegion2(pRT,m_pGetRTData->rgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
-		}
-		pRT->PopClip();//对应_GetRenderTarget中调用的PushClipRegion
-
-		if(pLayerWindow)
-		{//存在一个渲染层
-			SASSERT(m_pGetRTData);
-			if(m_pGetRTData->gdcFlags != GRT_NODRAW)
+		SMatrix mtx;
+		SWindow *p = this;
+		while(p)
+		{
+			Transformation xform = p->GetTransformation();
+			if(xform.hasMatrix())
 			{
-				IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(m_pGetRTData->rcRT,GRT_OFFSCREEN);
-				pRTRoot->PushClipRegion(m_pGetRTData->rgn);
-				pRTRoot->ClearRect(m_pGetRTData->rcRT,0);
-				//从root开始绘制当前layer前的窗口背景
-				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,ZORDER_MIN,pLayerWindow->m_uZorder);
-				//将layer的渲染更新到root上
-				SMatrix mtx;
-				SWindow *p = pLayerWindow;
-				while(p)
-				{
-					Transformation xform = p->GetTransformation();
-					if(xform.hasMatrix())
-					{
-						SMatrix mtx2 = xform.getMatrix();
-						CRect rc = p->GetWindowRect();
-						mtx2.preTranslate(-rc.left,-rc.top);
-						mtx2.postTranslate(rc.left,rc.top);
-						mtx.preConcat(mtx2);
-					}
-					p = p->GetParent();
-				}
-
-				pRTRoot->SetTransform(mtx.GetData());
-				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetAlpha());
-				pRTRoot->SetTransform(SMatrix().GetData());
-				//绘制当前layer前的窗口前景
-				bool bVisible = pLayerWindow->m_bVisible;
-				pLayerWindow->m_bVisible = false;
-				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,pLayerWindow->m_uZorder+1,ZORDER_MAX);
-				pLayerWindow->m_bVisible = bVisible;
-				pRTRoot->PopClip();
-				GetContainer()->OnReleaseRenderTarget(pRTRoot,m_pGetRTData->rcRT,GRT_OFFSCREEN);
+				SMatrix mtx2 = xform.getMatrix();
+				CRect rc = p->GetWindowRect();
+				mtx2.preTranslate(-rc.left,-rc.top);
+				mtx2.postTranslate(rc.left,rc.top);
+				mtx.preConcat(mtx2);
 			}
-		}else
-		{//不存在一个渲染层
-			GetContainer()->OnReleaseRenderTarget(pRT,m_pGetRTData->rcRT,m_pGetRTData->gdcFlags);
+			p = p->GetParent();
 		}
-		pRT->SetTransform(SMatrix().GetData());
-		pRT->Release();
 
+		CRect rcRT = m_pGetRTData->rcRT;
+		if(!mtx.isIdentity())
+		{
+			SRect sRcRT = SRect::IMake(rcRT);
+			mtx.mapRect(&sRcRT);
+			rcRT = sRcRT.toRect();
+		}
+
+		IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(rcRT,GRT_OFFSCREEN);
+		SWindow *pRoot = GetRoot();
+		SAutoRefPtr<IRegion> rgn;
+		GETRENDERFACTORY->CreateRegion(&rgn);
+		if (!mtx.isIdentity())
+		{
+			SRect sRcRT = SRect::IMake(m_pGetRTData->rcRT);
+			SPoint quad[4];
+			mtx.mapRectToQuad(quad, sRcRT);
+			POINT pts[4];
+			for (int i = 0; i < 4; i++)
+			{
+				pts[i] = quad[i].toPoint();
+			}
+			rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
+			pRTRoot->PushClipRegion(rgn,RGN_COPY);
+		}
+		else
+		{
+			pRTRoot->PushClipRect(&rcRT,RGN_COPY);
+		}
+		pRTRoot->ClearRect(rcRT,0);
+		pRoot->RedrawRegion(pRTRoot,rgn);
+		GetContainer()->OnReleaseRenderTarget(pRTRoot,rcRT,m_pGetRTData->gdcFlags);
 		delete m_pGetRTData;
 		m_pGetRTData = NULL;
+		pRT->Release();
 	}
 
-	SMatrix SWindow::_GetMatrixEx() const
-	{
-		SMatrix  mtx;
-		SList<const SWindow *> lstParent;
-		const SWindow *pParent = this;
-		while (pParent)
-		{
-			if (pParent->IsLayeredWindow())
-				break;
-			lstParent.AddHead(pParent);
-			pParent = pParent->GetParent();
-		}
-		mtx.reset();
-		SPOSITION pos = lstParent.GetHeadPosition();
-		while (pos)
-		{
-			pParent = lstParent.GetNext(pos);
-			Transformation xform = pParent->GetTransformation();
-			if (xform.hasMatrix())
-			{
-				CRect rcWnd = pParent->GetWindowRect();
-				SMatrix mtx2 = xform.getMatrix();
-				mtx2.preTranslate(-rcWnd.left, -rcWnd.top);
-				mtx2.postTranslate(rcWnd.left, rcWnd.top);
-				mtx.postConcat(mtx2);
-			}
-		}
-		return mtx;
-	}
 
 	bool SWindow::_ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx)
 	{

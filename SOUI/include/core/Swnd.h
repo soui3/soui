@@ -1217,29 +1217,6 @@ namespace SOUI
          */    
         SWindow * _GetCurrentLayeredWindow();
 
-        /**
-        * _GetRenderTarget
-        * @brief    获取一个与SWND窗口相适应的内存DC
-        * @param    DWORD gdcFlags --  同OLEDCFLAGS
-        * @param    IRegion *pRgn --  绘制区域
-        * @return   IRenderTarget * 
-        *
-        * Describe  使用ReleaseRenderTarget释放
-        */
-        IRenderTarget * _GetRenderTarget(GrtFlag gdcFlags,IRegion *pRgn,int nLayer=0);
-
-
-        /**
-        * _ReleaseRenderTarget
-        * @brief    
-        * @param    IRenderTarget * pRT --  释放由GetRenderTarget获取的RT
-        * @return   void 
-        *
-        * Describe  
-        */
-        void _ReleaseRenderTarget(IRenderTarget *pRT);
-
-		SMatrix _GetMatrixEx() const;
 		bool _ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx);
 
         //将窗口内容绘制到RenderTarget上
@@ -1471,9 +1448,8 @@ namespace SOUI
         {
             CRect rcRT;             /**< GETRT调用的有效范围 */
             GrtFlag gdcFlags;         /**< GETRT绘制标志位 */
-			int   nLayer;
-			SMatrix oriMtx;
             SAutoRefPtr<IRegion> rgn;/**< 保存一个和rcRT对应的IRegion对象 */
+			SAutoRefPtr<IRenderTarget> rt;
         } * PGETRTDATA;
         
         PGETRTDATA m_pGetRTData;
