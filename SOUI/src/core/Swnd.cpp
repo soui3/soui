@@ -1999,18 +1999,7 @@ namespace SOUI
 	IRenderTarget * SWindow::GetRenderTarget( GrtFlag gdcFlags,IRegion *pRgn )
 	{
 		//获得最近的一个渲染层的RT
-		return _GetRenderTarget(gdcFlags,pRgn);
-	}
-
-	void SWindow::ReleaseRenderTarget(IRenderTarget *pRT)
-	{
-		if (IsUpdateLocked())
-		{
-			pRT->Release();
-			return;
-		}
-		SASSERT(m_pGetRTData);
-		_ReleaseRenderTarget(pRT);        
+		return _GetRenderTarget(gdcFlags,pRgn,0);
 	}
 
 	IRenderTarget * SWindow::_GetRenderTarget(GrtFlag gdcFlags,IRegion *pRgn,int nLayer/*=0*/)
@@ -2065,6 +2054,16 @@ namespace SOUI
 		return pRT;
 	}
 
+	void SWindow::ReleaseRenderTarget(IRenderTarget *pRT)
+	{
+		if (IsUpdateLocked())
+		{
+			pRT->Release();
+			return;
+		}
+		SASSERT(m_pGetRTData);
+		_ReleaseRenderTarget(pRT);        
+	}
 
 	void SWindow::_ReleaseRenderTarget(IRenderTarget *pRT)
 	{
@@ -2083,15 +2082,41 @@ namespace SOUI
 		if(pLayerWindow)
 		{//存在一个渲染层
 			SASSERT(m_pGetRTData);
-			SWindow *pParent = pLayerWindow->GetParent();
-			IRenderTarget *pRT2 = pParent->_GetRenderTarget(m_pGetRTData->gdcFlags, m_pGetRTData->rgn,m_pGetRTData->nLayer+1);
-			//temp set the Layer window to invisible.
-			bool bVisible = pLayerWindow->m_bVisible;
-			pLayerWindow->m_bVisible = false;
-			pRT2->AlphaBlend(&m_pGetRTData->rcRT, pRT, &m_pGetRTData->rcRT, pLayerWindow->GetAlpha());
-			pParent->ReleaseRenderTarget(pRT2);
-			//restore visible
-			pLayerWindow->m_bVisible = bVisible;
+			if(m_pGetRTData->gdcFlags != GRT_NODRAW)
+			{
+				IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(m_pGetRTData->rcRT,GRT_OFFSCREEN);
+				pRTRoot->PushClipRegion(m_pGetRTData->rgn);
+				pRTRoot->ClearRect(m_pGetRTData->rcRT,0);
+				//从root开始绘制当前layer前的窗口背景
+				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,ZORDER_MIN,pLayerWindow->m_uZorder);
+				//将layer的渲染更新到root上
+				SMatrix mtx;
+				SWindow *p = pLayerWindow;
+				while(p)
+				{
+					Transformation xform = p->GetTransformation();
+					if(xform.hasMatrix())
+					{
+						SMatrix mtx2 = xform.getMatrix();
+						CRect rc = p->GetWindowRect();
+						mtx2.preTranslate(-rc.left,-rc.top);
+						mtx2.postTranslate(rc.left,rc.top);
+						mtx.preConcat(mtx2);
+					}
+					p = p->GetParent();
+				}
+
+				pRTRoot->SetTransform(mtx.GetData());
+				pRTRoot->AlphaBlend(m_pGetRTData->rcRT,pRT,m_pGetRTData->rcRT,pLayerWindow->GetAlpha());
+				pRTRoot->SetTransform(SMatrix().GetData());
+				//绘制当前layer前的窗口前景
+				bool bVisible = pLayerWindow->m_bVisible;
+				pLayerWindow->m_bVisible = false;
+				pRoot->_PaintRegion2(pRTRoot,m_pGetRTData->rgn,pLayerWindow->m_uZorder+1,ZORDER_MAX);
+				pLayerWindow->m_bVisible = bVisible;
+				pRTRoot->PopClip();
+				GetContainer()->OnReleaseRenderTarget(pRTRoot,m_pGetRTData->rcRT,GRT_OFFSCREEN);
+			}
 		}else
 		{//不存在一个渲染层
 			GetContainer()->OnReleaseRenderTarget(pRT,m_pGetRTData->rcRT,m_pGetRTData->gdcFlags);
@@ -2110,9 +2135,9 @@ namespace SOUI
 		const SWindow *pParent = this;
 		while (pParent)
 		{
-			lstParent.AddHead(pParent);
 			if (pParent->IsLayeredWindow())
 				break;
+			lstParent.AddHead(pParent);
 			pParent = pParent->GetParent();
 		}
 		mtx.reset();
