@@ -1045,6 +1045,58 @@ namespace SOUI
 		}
 	}
 
+	static SAutoRefPtr<IRegion> GetWindowRgn(SWindow *pWnd, const CRect & rc)
+	{
+		Transformation xform = pWnd->GetTransformation();
+		SAutoRefPtr<IRegion> pRet = NULL;
+		GETRENDERFACTORY->CreateRegion(&pRet);
+		if (xform.hasMatrix())
+		{
+			SMatrix &mtx = xform.getMatrix();
+			CRect rcWnd = pWnd->GetWindowRect();
+			mtx.preTranslate(-rcWnd.left, -rcWnd.top);
+			mtx.postTranslate(rcWnd.left, rcWnd.top);
+			SRect sRc = SRect::IMake(rc);
+			if (mtx.rectStaysRect())
+			{
+				mtx.mapRect(&sRc);
+				CRect rc2 = sRc.toRect();
+				pRet->CombineRect(&rc2, RGN_COPY);
+			}
+			else
+			{
+				SPoint quad[4];
+				mtx.mapRectToQuad(quad, sRc);
+				POINT pts[4];
+				for (int i = 0; i < 4; i++)
+				{
+					pts[i] = quad[i].toPoint();
+				}
+				pRet->CombinePolygon(pts, 4, WINDING, RGN_COPY);
+			}
+		}
+		else
+		{
+			pRet->CombineRect(&rc, RGN_COPY);
+		}
+		return pRet;
+	}
+
+	static bool RgnInRgn(const IRegion * r1, IRegion *r2)
+	{
+		SAutoRefPtr<IRegion> pRet;
+		GETRENDERFACTORY->CreateRegion(&pRet);
+		pRet->CombineRgn(r1, RGN_COPY);
+		pRet->CombineRgn(r2, RGN_AND);
+		return !pRet->IsEmpty();
+	}
+
+	static bool WndRectInRgn(SWindow *p, const CRect &rc, const IRegion *rgn)
+	{
+		SAutoRefPtr<IRegion> rgn2 = GetWindowRgn(p, rc);
+		return RgnInRgn(rgn, rgn2);
+	}
+
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
 	void SWindow::_PaintRegion2( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
 	{
@@ -1094,7 +1146,7 @@ namespace SOUI
 		}
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
-			&& (!pRgn || pRgn->IsEmpty() || pRgn->RectInRegion(&rcClient)))
+			&& (!pRgn || pRgn->IsEmpty() || WndRectInRgn(this, rcClient, pRgn)))
 		{//paint client
 			_PaintClient(pRT);
 			if (IsFocused())
@@ -1150,7 +1202,7 @@ namespace SOUI
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
 			&& !bRgnInClient
-			&& (!pRgn ||  pRgn->IsEmpty() ||pRgn->RectInRegion(&rcWnd)) 
+			&& (!pRgn ||  pRgn->IsEmpty() || WndRectInRgn(this,rcWnd,pRgn))
 			)
 		{//paint nonclient
 			_PaintNonClient(pRT);
@@ -2000,9 +2052,50 @@ namespace SOUI
 			return pRT;
 		}
 
+		SList<SWindow*> lstParent;
+		SWindow *p = GetParent();
+		while (p)
+		{
+			lstParent.AddHead(p);
+			p = p->GetParent();
+		}
+
+		SPOSITION pos = lstParent.GetHeadPosition();
+		SMatrix m2;
+		while (pos)
+		{
+			SWindow *p = lstParent.GetNext(pos);
+			CRect rc = p->GetClientRect();
+			SMatrix m3 = p->GetTransformation().getMatrix();
+			if (!m3.isIdentity())
+			{
+				CRect rcWnd = p->GetWindowRect();
+				m3.preTranslate(-rcWnd.left, -rcWnd.top);
+				m3.postTranslate(rcWnd.left, rcWnd.top);
+				m2.postConcat(m3);
+			}
+			if (!m2.isIdentity())
+			{
+				SRect rc2 = SRect::IMake(rc);
+				SPoint quad[4];
+				m2.mapRectToQuad(quad, rc2);
+				POINT pts[4];
+				for (int i = 0; i < 4; i++)
+				{
+					pts[i] = quad[i].toPoint();
+				}
+				pRgn->CombinePolygon(pts, 4, WINDING, RGN_AND);
+			}
+			else
+			{
+				pRgn->CombineRect(rc, RGN_AND);
+			}
+		}
+
+		GetContainer()->BuildWndTreeZorder();
+
 		CRect rcRT;
 		pRgn->GetRgnBox(&rcRT);
-		GetContainer()->BuildWndTreeZorder();
 		IRenderTarget *pRT = NULL;
 		m_pGetRTData = new GETRTDATA;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcRT.Width(), rcRT.Height());
