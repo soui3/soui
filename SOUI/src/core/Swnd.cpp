@@ -2199,6 +2199,7 @@ namespace SOUI
 
 	void SWindow::SetAnimation(IAnimation * animation) {
 		m_animation = animation;
+		m_animation->setAnimationOwner(this);
 		if (m_animation)
 		{
 			if (m_animation->getStartTime() == IAnimation::START_ON_FIRST_FRAME)
@@ -2274,6 +2275,23 @@ namespace SOUI
 	BYTE SWindow::GetAlpha() const
 	{
 		return (BYTE)((int)m_transform.getAlpha()*m_animationHandler.GetTransformation().getAlpha()/255);
+	}
+
+	RECT SWindow::getAnimationOwnerRect() const
+	{
+		return GetWindowRect();
+	}
+
+	SIZE SWindow::getAnimationParentSize() const
+	{
+		if (GetParent())
+		{
+			return GetParent()->GetWindowRect().Size();
+		}
+		else
+		{
+			return GetWindowRect().Size();
+		}
 	}
 
 	void SWindow::SetFocus()

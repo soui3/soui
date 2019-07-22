@@ -206,9 +206,10 @@ namespace SOUI
     * 
     * Describe   SOUI窗口基类,实现窗口的基本接口
     */
-    class SOUI_EXP SWindow :  public SObject
+	class SOUI_EXP SWindow : public SObject
 		, public SMsgHandleState
 		, public ITrCtxProvider
+		, protected IAnimation::IAnimationOwner
         , public TObjRefImpl2<IObjRef,SWindow>
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
@@ -842,6 +843,10 @@ namespace SOUI
 		void SetAlpha(BYTE byAlpha);
 
 		BYTE GetAlpha() const;
+
+	protected:
+		virtual RECT getAnimationOwnerRect() const;
+		virtual SIZE getAnimationParentSize() const;
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();

@@ -29,6 +29,7 @@
 #include <SApp.h>
 
 namespace SOUI {
+
 	class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
 		SOUI_CLASS_NAME_EX(SAnimation, L"animation", Animation)
 	protected:
@@ -93,6 +94,7 @@ namespace SOUI {
 		*/
 		IAnimationListener * mListener;
 
+		IAnimationOwner	   * mOwner;
 		/**
 		* Desired Z order mode during animation.
 		*/
@@ -194,6 +196,7 @@ namespace SOUI {
 		mRepeated = 0;
 		mRepeatMode = RESTART;
 		mListener = NULL;
+		mOwner = NULL;
 		mScaleFactor = 1.0f;
 
 
@@ -470,10 +473,16 @@ namespace SOUI {
 			*
 			* @param listener the animation listener to be notified
 			*/
-	public: void setAnimationListener(IAnimationListener* listener) {
+	public: 
+		void setAnimationListener(IAnimationListener* listener) {
 		mListener = listener;
 	}
 
+		void setAnimationOwner(IAnimationOwner *pOwner)
+		{
+			mOwner = pOwner;
+		}
+	
 			/**
 			* Gurantees that this animation has an interpolator. Will use
 			* a AccelerateDecelerateInterpolator is nothing else was specified.
