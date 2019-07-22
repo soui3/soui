@@ -162,6 +162,8 @@ public:
      */
     BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,const SStringT & strXmlTypeName);
 
+	IAnimation * LoadAnimation(LPCTSTR pszType, LPCTSTR pszResName);
+
     /**
      * GetRenderFactory
      * @brief    获得当前的渲染模块

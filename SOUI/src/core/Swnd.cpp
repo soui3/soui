@@ -75,6 +75,7 @@ namespace SOUI
 		, m_strText(this)
 		, m_strToolTipText(this)
 		, m_animationHandler(this)
+		, m_isAnimating(false)
 #ifdef _DEBUG
 		, m_nMainThreadId( ::GetCurrentThreadId() ) // 初始化对象的线程不一定是主线程
 #endif
@@ -1045,17 +1046,14 @@ namespace SOUI
 		}
 	}
 
-	static SAutoRefPtr<IRegion> GetWindowRgn(SWindow *pWnd, const CRect & rc)
+	SAutoRefPtr<IRegion> SWindow::_ConvertRect2RenderRegion( const CRect & rc) const
 	{
-		Transformation xform = pWnd->GetTransformation();
-		SAutoRefPtr<IRegion> pRet = NULL;
+		SAutoRefPtr<IRegion> pRet;
 		GETRENDERFACTORY->CreateRegion(&pRet);
-		if (xform.hasMatrix())
+		SMatrix mtx = _GetMatrixEx();
+
+		if (!mtx.isIdentity())
 		{
-			SMatrix &mtx = xform.getMatrix();
-			CRect rcWnd = pWnd->GetWindowRect();
-			mtx.preTranslate(-rcWnd.left, -rcWnd.top);
-			mtx.postTranslate(rcWnd.left, rcWnd.top);
 			SRect sRc = SRect::IMake(rc);
 			if (mtx.rectStaysRect())
 			{
@@ -1091,9 +1089,9 @@ namespace SOUI
 		return !pRet->IsEmpty();
 	}
 
-	static bool WndRectInRgn(SWindow *p, const CRect &rc, const IRegion *rgn)
+	bool SWindow::_WndRectInRgn(const CRect &rc, const IRegion *rgn) const
 	{
-		SAutoRefPtr<IRegion> rgn2 = GetWindowRgn(p, rc);
+		SAutoRefPtr<IRegion> rgn2 = _ConvertRect2RenderRegion(rc);
 		return RgnInRgn(rgn, rgn2);
 	}
 
@@ -1146,7 +1144,7 @@ namespace SOUI
 		}
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
-			&& (!pRgn || pRgn->IsEmpty() || WndRectInRgn(this, rcClient, pRgn)))
+			&& (!pRgn || pRgn->IsEmpty() || _WndRectInRgn(rcClient, pRgn)))
 		{//paint client
 			_PaintClient(pRT);
 			if (IsFocused())
@@ -1202,7 +1200,7 @@ namespace SOUI
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
 			&& !bRgnInClient
-			&& (!pRgn ||  pRgn->IsEmpty() || WndRectInRgn(this,rcWnd,pRgn))
+			&& (!pRgn ||  pRgn->IsEmpty() || _WndRectInRgn(rcWnd,pRgn))
 			)
 		{//paint nonclient
 			_PaintNonClient(pRT);
@@ -2052,45 +2050,6 @@ namespace SOUI
 			return pRT;
 		}
 
-		SList<SWindow*> lstParent;
-		SWindow *p = GetParent();
-		while (p)
-		{
-			lstParent.AddHead(p);
-			p = p->GetParent();
-		}
-
-		SPOSITION pos = lstParent.GetHeadPosition();
-		SMatrix m2;
-		while (pos)
-		{
-			SWindow *p = lstParent.GetNext(pos);
-			CRect rc = p->GetClientRect();
-			SMatrix m3 = p->GetTransformation().getMatrix();
-			if (!m3.isIdentity())
-			{
-				CRect rcWnd = p->GetWindowRect();
-				m3.preTranslate(-rcWnd.left, -rcWnd.top);
-				m3.postTranslate(rcWnd.left, rcWnd.top);
-				m2.postConcat(m3);
-			}
-			if (!m2.isIdentity())
-			{
-				SRect rc2 = SRect::IMake(rc);
-				SPoint quad[4];
-				m2.mapRectToQuad(quad, rc2);
-				POINT pts[4];
-				for (int i = 0; i < 4; i++)
-				{
-					pts[i] = quad[i].toPoint();
-				}
-				pRgn->CombinePolygon(pts, 4, WINDING, RGN_AND);
-			}
-			else
-			{
-				pRgn->CombineRect(rc, RGN_AND);
-			}
-		}
 
 		GetContainer()->BuildWndTreeZorder();
 
@@ -2100,9 +2059,9 @@ namespace SOUI
 		m_pGetRTData = new GETRTDATA;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcRT.Width(), rcRT.Height());
 		pRT->OffsetViewportOrg(-rcRT.left, -rcRT.top);
-		pRT->ClearRect(&rcRT,0);
 		BeforePaintEx(pRT);
-
+		pRT->PushClipRegion(pRgn, RGN_COPY);
+		pRT->ClearRect(&rcRT,0);
 		m_pGetRTData->gdcFlags = gdcFlags;
 		m_pGetRTData->rcRT = rcRT;
 		m_pGetRTData->rgn = pRgn;
@@ -2158,14 +2117,15 @@ namespace SOUI
 				pts[i] = quad[i].toPoint();
 			}
 			rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
-			pRTRoot->PushClipRegion(rgn,RGN_COPY);
 		}
 		else
 		{
-			pRTRoot->PushClipRect(&rcRT,RGN_COPY);
+			rgn->CombineRect(rcRT, RGN_COPY);
 		}
-		pRTRoot->ClearRect(rcRT,0);
-		pRoot->RedrawRegion(pRTRoot,rgn);
+		pRTRoot->PushClipRegion(rgn, RGN_COPY);
+		pRTRoot->ClearRect(rcRT, 0);
+		pRoot->RedrawRegion(pRTRoot, rgn);
+		pRTRoot->PopClip();
 		GetContainer()->OnReleaseRenderTarget(pRTRoot,rcRT,m_pGetRTData->gdcFlags);
 		delete m_pGetRTData;
 		m_pGetRTData = NULL;
@@ -2186,6 +2146,26 @@ namespace SOUI
 		mtx.preConcat(oriMtx);
 		pRT->SetTransform(mtx.GetData());
 		return true;
+	}
+
+	SMatrix SWindow::_GetMatrixEx() const
+	{
+		SMatrix mtx;
+		const SWindow *p = this;
+		while (p)
+		{
+			Transformation xform = p->GetTransformation();
+			if (xform.hasMatrix())
+			{
+				SMatrix &mtx2 = xform.getMatrix();
+				CRect rcWnd = p->GetWindowRect();
+				mtx2.preTranslate(-rcWnd.left, -rcWnd.top);
+				mtx2.postTranslate(rcWnd.left, rcWnd.top);
+				mtx.preConcat(mtx2);
+			}
+			p = p->GetParent();
+		}
+		return mtx;
 	}
 
 	SWND SWindow::GetCapture()
@@ -2224,6 +2204,7 @@ namespace SOUI
 			if (m_animation->getStartTime() == IAnimation::START_ON_FIRST_FRAME)
 			{
 				m_animation->startNow();
+				OnAnimationStart();
 			}
 			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
 		}
@@ -2898,7 +2879,7 @@ namespace SOUI
 
 	bool SWindow::IsDrawToCache() const
 	{
-		return m_bCacheDraw || (m_animation && m_animation->hasStarted());
+		return m_bCacheDraw || m_isAnimating;
 	}
 
 	void SWindow::OnStateChanging( DWORD dwOldState,DWORD dwNewState )
@@ -3182,11 +3163,15 @@ namespace SOUI
 
 	void SWindow::OnAnimationStart()
 	{
+		m_isAnimating = true;
+		m_animationHandler.OnAnimationStart();
 		UpdateCacheMode();
 	}
 
 	void SWindow::OnAnimationStop()
 	{
+		m_isAnimating = false;
+		m_animationHandler.OnAnimationStop();
 		UpdateCacheMode();
 		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
@@ -3201,6 +3186,16 @@ namespace SOUI
 		:m_pOwner(pOwner)
 		, m_aniTime(-1)
 	{
+	}
+
+	void SWindow::SAnimationHandler::OnAnimationStart()
+	{
+		m_aniTime = 0;
+	}
+
+	void SWindow::SAnimationHandler::OnAnimationStop()
+	{
+		m_aniTime = -1;
 	}
 
 	const Transformation & SWindow::SAnimationHandler::GetTransformation() const
@@ -3220,11 +3215,13 @@ namespace SOUI
 			if (tm < 0)
 			{
 				pAni->startNow();
-				m_aniTime = 0;
 				m_pOwner->OnAnimationStart();
 			}
 		}
-		else
+		else if (tm == -1)
+		{
+			m_aniTime = 0;
+		}else
 		{
 			m_aniTime += SAnimationPulse::kPulseSpan;
 		}
@@ -3234,7 +3231,6 @@ namespace SOUI
 			bool bMore = pAni->getTransformation(m_aniTime, m_transform);
 			if(!bMore)
 			{//animation stoped.
-				m_aniTime = -1;
 				m_pOwner->OnAnimationStop();
 			}
 			m_pOwner->OnAnimationInvalidate();

@@ -30,7 +30,7 @@
 
 namespace SOUI {
 	class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
-		SOUI_CLASS_NAME_EX(SAnimation,L"animation", Animation)
+		SOUI_CLASS_NAME_EX(SAnimation, L"animation", Animation)
 	protected:
 		/**
 		* Set by {@link #getTransformation(long, Transformation)} when the animation ends.
@@ -96,47 +96,48 @@ namespace SOUI {
 		/**
 		* Desired Z order mode during animation.
 		*/
-	private: int mZAdjustment;
+	private:
+		int mZAdjustment;
 
-			 /**
-			 * Desired background color behind animation.
-			 */
-	private: int mBackgroundColor;
+		/**
+		* Desired background color behind animation.
+		*/
+		int mBackgroundColor;
 
-			 /**
-			 * scalefactor to apply to pivot points, etc. during animation. Subclasses retrieve the
-			 * value via getScaleFactor().
-			 */
-	private: float mScaleFactor;
+		/**
+		* scalefactor to apply to pivot points, etc. during animation. Subclasses retrieve the
+		* value via getScaleFactor().
+		*/
+		float mScaleFactor;
 
 
-	private: bool mMore;
-	private: bool mOneMoreTime;
+		bool mMore;
+		bool mOneMoreTime;
 
-	private: Transformation  mTransformation;
+		Transformation  mTransformation;
 
-			 /**
-			 * Indicates whether the animation transformation should be applied before the
-			 * animation starts. The value of this variable is only relevant if mFillEnabled is true;
-			 * otherwise it is assumed to be true.
-			 */
-			 bool mFillBefore;
+		/**
+		* Indicates whether the animation transformation should be applied before the
+		* animation starts. The value of this variable is only relevant if mFillEnabled is true;
+		* otherwise it is assumed to be true.
+		*/
+		bool mFillBefore;
 
-			 /**
-			 * Indicates whether the animation transformation should be applied after the
-			 * animation ends.
-			 */
-			 bool mFillAfter;
+		/**
+		* Indicates whether the animation transformation should be applied after the
+		* animation ends.
+		*/
+		bool mFillAfter;
 
-			 /**
-			 * Indicates whether fillBefore should be taken into account.
-			 */
-			 bool mFillEnabled;
+		/**
+		* Indicates whether fillBefore should be taken into account.
+		*/
+		bool mFillEnabled;
 
-			 /**
-			 * Creates a new animation with a duration of 0ms, the default interpolator, with
-			 * fillBefore set to true and fillAfter set to false
-			 */
+		/**
+		* Creates a new animation with a duration of 0ms, the default interpolator, with
+		* fillBefore set to true and fillAfter set to false
+		*/
 	public:
 		SAnimation() {
 			reset();
@@ -330,7 +331,7 @@ namespace SOUI {
 			* milliseconds.
 			*/
 	public: void startNow() {
-		//setStartTime(AnimationUtils.currentAnimationTimeMillis());
+		setStartTime(0);
 	}
 
 			/**
@@ -640,7 +641,7 @@ namespace SOUI {
 			*        transforms.
 			*/
 	protected:
-		virtual void applyTransformation(float interpolatedTime, const Transformation & t) {
+		virtual void applyTransformation(float interpolatedTime, Transformation & t) {
 		}
 
 		/**
@@ -677,5 +678,22 @@ namespace SOUI {
 			return false;
 		}
 
+	public:
+		SOUI_ATTRS_BEGIN()
+			ATTR_INT(L"duration",mDuration,FALSE)
+			ATTR_INT(L"startOffset",mStartOffset,FALSE)
+			ATTR_BOOL(L"fillEnable",mFillEnabled,FALSE)
+			ATTR_BOOL(L"fillBefore",mFillBefore,FALSE)
+			ATTR_BOOL(L"fillAfter",mFillAfter,FALSE)
+			ATTR_INT(L"repeatCount",mRepeatCount,FALSE)
+			ATTR_ENUM_BEGIN(L"repeatMode", RepeatMode,FALSE)
+				ATTR_ENUM_VALUE(L"restart", RESTART)
+				ATTR_ENUM_VALUE(L"reverse", REVERSE)
+			ATTR_ENUM_END(mRepeatMode)
+			ATTR_INTERPOLATOR(L"interpolator", mInterpolator, FALSE)
+			ATTR_CHAIN_PTR(mInterpolator,0)
+		SOUI_ATTRS_END()
 	};
+
+
 }

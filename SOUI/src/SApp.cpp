@@ -224,6 +224,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 	sysObjRegister.RegisterSkins(this);
 	sysObjRegister.RegisterWindows(this);
 	sysObjRegister.RegisterInterpolator(this);
+	sysObjRegister.RegisterAnimation(this);
 }
 
 SApplication::~SApplication(void)
@@ -360,6 +361,18 @@ BOOL SApplication::LoadXmlDocment(pugi::xml_document & xmlDoc, const SStringT & 
     SStringTList strLst;
     if(2!=ParseResID(strXmlTypeName,strLst)) return FALSE;
     return LoadXmlDocment(xmlDoc,strLst[1],strLst[0]);
+}
+
+IAnimation * SApplication::LoadAnimation(LPCTSTR pszType, LPCTSTR pszResName)
+{
+	pugi::xml_document xml;
+	if (!LoadXmlDocment(xml, pszResName, pszType))
+		return NULL;
+	IAnimation *pRet = CreateAnimationByName(xml.first_child().name());
+	if (!pRet)
+		return NULL;
+	pRet->InitFromXml(xml.first_child());
+	return pRet;
 }
 
 UINT SApplication::LoadSystemNamedResource( IResProvider *pResProvider )

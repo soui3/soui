@@ -30,6 +30,11 @@ private:
 	float mFromAlpha;
     float mToAlpha;
 
+public:
+	SOUI_ATTRS_BEGIN()
+		ATTR_FLOAT(L"fromAlpha",mFromAlpha,FALSE)
+		ATTR_FLOAT(L"toAlpha", mToAlpha, FALSE)
+	SOUI_ATTRS_END()
     /**
      * Constructor to use when building an AlphaAnimation from code
      * 
@@ -47,9 +52,9 @@ public:
      * Changes the alpha property of the supplied {@link Transformation}
      */
 protected:
-	void applyTransformation(float interpolatedTime, Transformation & t) {
+	virtual void applyTransformation(float interpolatedTime, Transformation & t) {
         float alpha = mFromAlpha;
-        t.setAlpha(alpha + ((mToAlpha - alpha) * interpolatedTime));
+        t.setAlpha((BYTE)((alpha + ((mToAlpha - alpha) * interpolatedTime))*255));
     }
 
 public:

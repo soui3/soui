@@ -374,7 +374,7 @@ namespace SOUI {
 		* @param t The Transformation object to fill in with the current
 		*        transforms.
 		*/
-		virtual void applyTransformation(float interpolatedTime, const Transformation & t) = 0;
+		virtual void applyTransformation(float interpolatedTime, Transformation & t) = 0;
 
 		/**
 		* Return true if this animation changes the view's alpha property.

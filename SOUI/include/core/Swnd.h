@@ -219,11 +219,14 @@ namespace SOUI
         friend class FocusSearch;
 
 		class SAnimationHandler : public ITimelineHandler {
+		private:
 			SWindow * m_pOwner;
 			long m_aniTime;
 			Transformation m_transform;
 		public:
 			SAnimationHandler(SWindow *pOwner);
+			void OnAnimationStart();
+			void OnAnimationStop();
 			const Transformation & GetTransformation() const;
 		protected:
 			void OnNextFrame() override;
@@ -1218,13 +1221,16 @@ namespace SOUI
         SWindow * _GetCurrentLayeredWindow();
 
 		bool _ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx);
+		SMatrix _GetMatrixEx() const;
+		SAutoRefPtr<IRegion> _ConvertRect2RenderRegion(const CRect & rc) const;
+		bool _WndRectInRgn(const CRect & rc, const IRegion * rgn) const;
 
         //将窗口内容绘制到RenderTarget上
         void _PaintClient(IRenderTarget *pRT);
         void _PaintNonClient(IRenderTarget *pRT);
 		void _RedrawNonClient();
         void _PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
-        void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
+		void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
         void DrawAniStep(CRect rcFore,CRect rcBack,IRenderTarget *pRTFore,IRenderTarget * pRTBack,CPoint ptAnchor);
@@ -1442,7 +1448,7 @@ namespace SOUI
 		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
 		SAnimationHandler	m_animationHandler;
 		Transformation		m_transform;
-
+		bool				m_isAnimating;
 
         typedef struct GETRTDATA
         {
