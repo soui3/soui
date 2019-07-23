@@ -211,16 +211,15 @@ public:                                                             \
  
 
 // bool = 0 or 1 StringA
-#define ATTR_BIT(attribname, varname, maskbit, allredraw) \
-    if (0 == strAttribName.CompareNoCase(attribname))                            \
-        {                                                           \
-        int nRet=0;                                                \
-        ::StrToIntW(strValue,&nRet);                                \
-        if(nRet) varname|=maskbit;                                \
-            else     varname &=~(maskbit);                            \
-            hRet = allredraw ? S_OK : S_FALSE;                        \
-        }                                                           \
-        else                                                        \
+#define ATTR_BIT(attribname, varname, maskbit, allredraw)     \
+    if (0 == strAttribName.CompareNoCase(attribname))         \
+        {                                                     \
+			bool bSet=STRINGASBOOL(strValue);                 \
+			if(bSet) varname|=maskbit;                        \
+            else     varname &=~(maskbit);                    \
+            hRet = allredraw ? S_OK : S_FALSE;                \
+        }                                                     \
+        else                                                  \
  
 
 // StringA = StringA

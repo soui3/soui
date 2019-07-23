@@ -64,7 +64,7 @@ namespace SOUI{
 		bool mHasAlpha;
 
 		SArray<SAutoRefPtr<IAnimation> > mAnimations;
-
+		SArray<int> mStoredOffsets;
 		long mLastEnd;
 
 		/**
@@ -79,20 +79,15 @@ namespace SOUI{
 				init();
 			}
 
-			//protected AnimationSet clone() {
-			//    AnimationSet animation = (AnimationSet) Animation::clone();
-			//    animation.mTempTransformation = new Transformation();
-			//    animation.mAnimations = new ArrayList<Animation>();
+	protected:
+		void copy(const IAnimation *src)
+		{
+			SAnimation::copy(src);
+			const SAnimationSet * src2 = sobj_cast<const SAnimationSet>(src);
+			mAnimations.Copy(src2->mAnimations);
+			mFlags = src2->mFlags;
+		}
 
-			//    int count = mAnimations.size();
-			//    ArrayList<Animation> animations = mAnimations;
-
-			//    for (int i = 0; i < count; i++) {
-			//        animation.mAnimations.add(animations.get(i).clone());
-			//    }
-
-			//    return animation;
-			//}
 
 	private: void setFlag(int mask, bool value) {
 				 if (value) {
@@ -307,8 +302,6 @@ namespace SOUI{
 			* @see android.view.animation.Animation#initialize(int, int, int, int)
 			*/
 	public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-				//        Animation::initialize(width, height, parentWidth, parentHeight);
-
 				bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
 				bool fillAfterSet = (mFlags & PROPERTY_FILL_AFTER_MASK) == PROPERTY_FILL_AFTER_MASK;
 				bool fillBeforeSet = (mFlags & PROPERTY_FILL_BEFORE_MASK) == PROPERTY_FILL_BEFORE_MASK;
@@ -322,50 +315,40 @@ namespace SOUI{
 					ensureInterpolator();
 				}
 
-				//ArrayList<Animation> children = mAnimations;
-				//int count = children.size();
 
-				//long duration = mDuration;
-				//bool fillAfter = mFillAfter;
-				//bool fillBefore = mFillBefore;
-				//int repeatMode = mRepeatMode;
-				//Interpolator interpolator = mInterpolator;
-				//long startOffset = mStartOffset;
+				long duration = mDuration;
+				bool fillAfter = mFillAfter;
+				bool fillBefore = mFillBefore;
+				RepeatMode repeatMode = mRepeatMode;
+				IInterpolator *interpolator = mInterpolator;
+				long startOffset = mStartOffset;
 
+				mStoredOffsets.SetCount(mAnimations.GetCount());
 
-				//long[] storedOffsets = mStoredOffsets;
-				//if (startOffsetSet) {
-				//    if (storedOffsets == null || storedOffsets.length != count) {
-				//        storedOffsets = mStoredOffsets = new long[count];
-				//    }
-				//} else if (storedOffsets != null) {
-				//    storedOffsets = mStoredOffsets = null;
-				//}
-
-				//for (int i = 0; i < count; i++) {
-				//    Animation a = children.get(i);
-				//    if (durationSet) {
-				//        a.setDuration(duration);
-				//    }
-				//    if (fillAfterSet) {
-				//        a.setFillAfter(fillAfter);
-				//    }
-				//    if (fillBeforeSet) {
-				//        a.setFillBefore(fillBefore);
-				//    }
-				//    if (repeatModeSet) {
-				//        a.setRepeatMode(repeatMode);
-				//    }
-				//    if (shareInterpolator) {
-				//        a.setInterpolator(interpolator);
-				//    }
-				//    if (startOffsetSet) {
-				//        long offset = a.getStartOffset();
-				//        a.setStartOffset(offset + startOffset);
-				//        storedOffsets[i] = offset;
-				//    }
-				//    a.initialize(width, height, parentWidth, parentHeight);
-				//}
+				for (UINT i = 0; i < mAnimations.GetCount(); i++) {
+				    IAnimation* a = mAnimations[i];
+				    if (durationSet) {
+				        a->setDuration(duration);
+				    }
+				    if (fillAfterSet) {
+				        a->setFillAfter(fillAfter);
+				    }
+				    if (fillBeforeSet) {
+				        a->setFillBefore(fillBefore);
+				    }
+				    if (repeatModeSet) {
+				        a->setRepeatMode(repeatMode);
+				    }
+				    if (shareInterpolator) {
+				        a->setInterpolator(interpolator);
+				    }
+				    if (startOffsetSet) {
+				        long offset = a->getStartOffset();
+				        a->setStartOffset(offset + startOffset);
+				        mStoredOffsets[i] = offset;
+				    }
+				    a->initialize(width, height, parentWidth, parentHeight);
+				}
 			}
 
 	public: void reset() {
@@ -377,17 +360,36 @@ namespace SOUI{
 			* @hide
 			*/
 			void restoreChildrenStartOffset() {
-				//long[] offsets = mStoredOffsets;
-				//if (offsets == NULL) return;
+				if (mStoredOffsets.GetCount() != mAnimations.GetCount())
+					return;
 
-				//ArrayList<Animation> children = mAnimations;
-				//int count = children.size();
-
-				//for (int i = 0; i < count; i++) {
-				//    children.get(i).setStartOffset(offsets[i]);
-				//}
+				for (UINT i = 0; i < mAnimations.GetCount(); i++) {
+					mAnimations[i]->setStartOffset(mStoredOffsets[i]);
+				}
 			}
 
+			protected:
+				BOOL InitFromXml(pugi::xml_node xmlNode)
+				{
+					SAnimation::InitFromXml(xmlNode);
+					pugi::xml_node xmlChild = xmlNode.first_child();
+					while (xmlChild)
+					{
+						IAnimation * ani = SApplication::getSingletonPtr()->CreateAnimationByName(xmlChild.name());
+						if (ani)
+						{
+							ani->InitFromXml(xmlChild);
+							addAnimation(ani);
+							ani->Release();
+						}
+						xmlChild = xmlChild.next_sibling();
+					}
+					return TRUE;
+				}
+
+				SOUI_ATTRS_BEGIN()
+					ATTR_BIT(L"shareInterpolator",mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK,FALSE)
+				SOUI_ATTRS_END()
 	};
 
 }

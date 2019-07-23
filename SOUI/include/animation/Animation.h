@@ -158,7 +158,7 @@ namespace SOUI {
 		/**
 		* Desired Z order mode during animation.
 		*/
-	private:
+	protected:
 		int mZAdjustment;
 
 		/**
