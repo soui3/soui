@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="soui-sys-resource"
-	ProjectGUID="{CDED27DB-57AA-32C0-B51A-06449B0E136E}"
+	ProjectGUID="{01EDEB62-60AA-397A-A283-39A26573CC3F}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

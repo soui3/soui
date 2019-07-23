@@ -1081,7 +1081,7 @@ void CMainDlg::OnBtnCreateByTemp()
 void CMainDlg::On3dViewRotate(EventArgs *e)
 {
 	EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
-	S3DView *p3dView = FindChildByName2<S3DView>(L"3d_test");
+	S3dWindow *p3dView = FindChildByName2<S3dWindow>(L"3d_test");
 	if(p3dView)
 	{
 		if((e2->dwNewState & WndState_Check) && !(e2->dwOldState&WndState_Check))

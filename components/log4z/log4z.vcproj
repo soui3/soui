@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="log4z"
-	ProjectGUID="{9686385C-47DA-37F7-A5B8-FBFFAA35BA2A}"
+	ProjectGUID="{3B39975F-6787-3493-AF59-2F6C908A89FE}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\release\log4z\"
 			UseOfMfc="0">
 			<Tool
@@ -38,21 +38,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				EnableCOMDATFolding="2"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OptimizeReferences="2"
-				OutputFile="$(OutDir)\log4z.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\log4z.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -68,14 +56,15 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\debug\log4z\"
 			UseOfMfc="0">
 			<Tool
@@ -98,18 +87,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\log4zd.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\log4zd.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -125,7 +105,8 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -143,8 +124,6 @@
 			<File
 				RelativePath="log4z.h" />
 		</Filter>
-		<File
-			RelativePath="log4z.rc" />
 	</Files>
 	<Globals>
 	</Globals>

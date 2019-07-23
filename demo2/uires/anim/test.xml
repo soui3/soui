@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set>
+  <rotate duration="500" fromDegrees="0" toDegrees="150" pivotX="50%" pivotY="50%" repeatCount="5" repeatMode="reverse"></rotate>
+  <scale duration="500" fromXScale="0.5" toXScale="1.5" fromYScale="0.5" toYScale="1.5"  pivotX="50%" pivotY="50%" repeatCount="5" repeatMode="reverse"/>
+  <!--<translate duration="500" fromXDelta="0" fromYDelta="0" toXDelta="50%" toYDelta="50%" fillAfter="true"/>-->
+  <alpha duration="500" fromAlpha="0.5" toAlpha="1.0" repeatCount="6" repeatMode="reverse"/>
+</set>

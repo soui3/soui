@@ -5,16 +5,16 @@
 namespace SOUI
 {
 
-	S3DView::S3DView(void):m_iStep(0),m_nRotate(0),m_rotateDir(RotateY),m_nSpeed(5)
+	S3dWindow::S3dWindow(void):m_iStep(0),m_nRotate(0),m_rotateDir(RotateY),m_nSpeed(5)
 	{
 	}
 
-	S3DView::~S3DView(void)
+	S3dWindow::~S3dWindow(void)
 	{
 	}
 
 
-	void S3DView::OnShowWindow(BOOL bShow, UINT nStatus)
+	void S3dWindow::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		__super::OnShowWindow(bShow,nStatus);
 		if(IsVisible(TRUE))
@@ -27,7 +27,7 @@ namespace SOUI
 	}
 
 
-	void S3DView::OnPaint(IRenderTarget *pRT)
+	void S3dWindow::OnPaint(IRenderTarget *pRT)
 	{
 		SPainter painter;
 		BeforePaint(pRT,painter);
@@ -84,7 +84,7 @@ namespace SOUI
 		AfterPaint(pRT,painter);
 	}
 
-	void S3DView::OnNextFrame()
+	void S3dWindow::OnNextFrame()
 	{
 		m_iStep ++;
 		if(m_iStep==m_nSpeed)

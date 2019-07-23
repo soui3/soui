@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="resprovider-7zip"
-	ProjectGUID="{54F07177-0540-3E2F-A212-B7A6DEAC854B}"
+	ProjectGUID="{F7ED4069-E0DD-3C1F-986B-753B12449CFB}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\release\resprovider-7zip\"
 			UseOfMfc="0">
 			<Tool
@@ -42,23 +42,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="7z.lib utilities.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				AdditionalOptions="/SAFESEH:NO"
-				DataExecutionPrevention="true"
-				EnableCOMDATFolding="2"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OptimizeReferences="2"
-				OutputFile="$(OutDir)\resprovider-7zip.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\resprovider-7zip.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -74,14 +60,15 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDER7ZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDER7ZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\debug\resprovider-7zip\"
 			UseOfMfc="0">
 			<Tool
@@ -108,20 +95,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="7zd.lib utilitiesd.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				AdditionalOptions="/SAFESEH:NO"
-				DataExecutionPrevention="true"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\resprovider-7zipd.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\resprovider-7zipd.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -137,7 +113,8 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDER7ZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDER7ZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -204,8 +181,6 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
-		<File
-			RelativePath="ResProvider-7Zip.rc" />
 	</Files>
 	<Globals>
 	</Globals>

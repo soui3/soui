@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="lua-52"
-	ProjectGUID="{D230AD96-D2FC-3D13-980B-3AD7483D7067}"
+	ProjectGUID="{7F10E4D9-F2EE-321B-AC44-1AB1C752DCB5}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

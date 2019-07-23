@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="TaskLoop"
-	ProjectGUID="{226ABB73-A763-3183-ACB4-851544028050}"
+	ProjectGUID="{A9B045BF-AD53-32B4-A1CC-257067C9FB85}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\release\TaskLoop\"
 			UseOfMfc="0">
 			<Tool
@@ -38,22 +38,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="utilities.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				EnableCOMDATFolding="2"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OptimizeReferences="2"
-				OutputFile="$(OutDir)\TaskLoop.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\TaskLoop.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -69,14 +56,15 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\debug\TaskLoop\"
 			UseOfMfc="0">
 			<Tool
@@ -99,19 +87,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="utilitiesd.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\TaskLoopd.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\TaskLoopd.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -127,7 +105,8 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -153,8 +132,6 @@
 			<File
 				RelativePath="thread.h" />
 		</Filter>
-		<File
-			RelativePath="TaskLoop.rc" />
 	</Files>
 	<Globals>
 	</Globals>

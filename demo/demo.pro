@@ -21,16 +21,11 @@ include($$dir/common.pri)
 QMAKE_CXXFLAGS -= /MP
 
 
-#import skmatrix module from dll.
-!LIB_ALL:!COM_LIB{
-	DEFINES += SKMATRIX_DLL
-}
-
 CONFIG(debug,debug|release){
-	LIBS += utilitiesd.lib souid.lib mhookd.lib smileyd.lib skmatrixd.lib
+	LIBS += utilitiesd.lib souid.lib mhookd.lib smileyd.lib
 }
 else{
-	LIBS += utilities.lib soui.lib mhook.lib smiley.lib skmatrix.lib
+	LIBS += utilities.lib soui.lib mhook.lib smiley.lib
 }
 
 
@@ -140,7 +135,7 @@ SOURCES += demo.cpp \
           magnet/magnetframe.cpp \
           memflash.cpp	\
           smatrixwindow.cpp \ 
-		  sroundimage.cpp \          
+          sroundimage.cpp \          
           threadObject.cpp \
           SmileyCreateHook.cpp \
           uianimation/uianimationwnd.cpp \

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="imgdecoder-png"
-	ProjectGUID="{9525C25B-0637-3099-8495-F0979E28F2F5}"
+	ProjectGUID="{4E60033E-D862-35E8-84F3-B50B9E55B3B4}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\release\imgdecoder-png\"
 			UseOfMfc="0">
 			<Tool
@@ -38,22 +38,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="zlib.lib png.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				EnableCOMDATFolding="2"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OptimizeReferences="2"
-				OutputFile="$(OutDir)\imgdecoder-png.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\imgdecoder-png.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -69,14 +56,15 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\debug\imgdecoder-png\"
 			UseOfMfc="0">
 			<Tool
@@ -99,19 +87,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="zlibd.lib pngd.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\imgdecoder-pngd.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\imgdecoder-pngd.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -127,7 +105,8 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -149,8 +128,6 @@
 			<File
 				RelativePath="imgdecoder-png.h" />
 		</Filter>
-		<File
-			RelativePath="imgdecoder-png.rc" />
 	</Files>
 	<Globals>
 	</Globals>

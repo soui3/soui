@@ -201,7 +201,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             theApp->RegisterWindowClass<SWkeWebkit>();//注册WKE浏览器
         }
         theApp->RegisterWindowClass<SMatrixWindow>();//
-		theApp->RegisterWindowClass<S3DView>();//
+		theApp->RegisterWindowClass<S3dWindow>();//
         theApp->RegisterWindowClass<SFreeMoveWindow>();//
         theApp->RegisterWindowClass<SClock>();//
         theApp->RegisterWindowClass<SGifPlayer>();//theApp中增加方法：RegisterWindowClass,替换RegisterWndFactory(TplSWindowFactory<SGifPlayer>())

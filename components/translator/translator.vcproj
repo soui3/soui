@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="translator"
-	ProjectGUID="{F8BE4C9A-5071-34A2-B1EE-7E264021A0A1}"
+	ProjectGUID="{50F44F7A-49C3-3D59-9AB1-3877C9B30FF2}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\release\translator\"
 			UseOfMfc="0">
 			<Tool
@@ -42,22 +42,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="utilities.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				EnableCOMDATFolding="2"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OptimizeReferences="2"
-				OutputFile="$(OutDir)\translator.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\translator.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -73,14 +60,15 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			IntermediateDirectory="..\..\obj\debug\translator\"
 			UseOfMfc="0">
 			<Tool
@@ -107,19 +95,9 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="utilitiesd.lib"
-				AdditionalLibraryDirectories="..\..\bin"
-				DataExecutionPrevention="true"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\translatord.dll"
-				ProgramDatabaseFile=""
-				RandomizedBaseAddress="true"
-				SubSystem="2"
-				SuppressStartupBanner="true"
-				TargetMachine="1" />
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\translatord.lib"
+				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -135,7 +113,8 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -200,8 +179,6 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
-		<File
-			RelativePath="translator.rc" />
 	</Files>
 	<Globals>
 	</Globals>

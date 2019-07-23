@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="scintilla"
-	ProjectGUID="{ED2E7128-2A87-3A5A-A7B0-0295A0628A29}"
+	ProjectGUID="{BA2220A7-2649-3DBE-8D80-E9A26C136493}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

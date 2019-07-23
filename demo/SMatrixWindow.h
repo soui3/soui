@@ -2,13 +2,13 @@
 #include <matrix/SMatrix.h>
 namespace SOUI
 {
-	class S3DView : public SWindow,public ITimelineHandler
+	class S3dWindow : public SWindow,public ITimelineHandler
 	{
-		SOUI_CLASS_NAME(S3DView,L"S3DView")
+		SOUI_CLASS_NAME(S3dWindow,L"S3DView")
 
 	public:
-		S3DView(void);
-		~S3DView(void);
+		S3dWindow(void);
+		~S3dWindow(void);
 
 	protected:
 		virtual void OnNextFrame();
