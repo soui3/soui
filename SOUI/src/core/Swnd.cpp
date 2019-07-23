@@ -2254,9 +2254,14 @@ namespace SOUI
 
 	Transformation SWindow::GetTransformation() const
 	{
-		Transformation ret = m_transform;
-		ret.postCompose(m_animationHandler.GetTransformation());
-		return ret;
+		if(!m_isAnimating)
+			return m_transform;
+		else
+		{
+			Transformation ret = m_transform;
+			ret.postCompose(m_animationHandler.GetTransformation());
+			return ret;
+		}
 	}
 
 	void SWindow::SetMatrix(const SMatrix & mtx)

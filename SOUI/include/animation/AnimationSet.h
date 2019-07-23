@@ -98,7 +98,6 @@ namespace SOUI{
 			 }
 
 	private: void init() {
-				 mStartTime = 0;
 				 mFlags = 0;
 			 }
 
