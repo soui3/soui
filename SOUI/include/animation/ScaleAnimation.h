@@ -28,18 +28,8 @@ namespace SOUI {
 		private: float mFromY;
 		private: float mToY;
 
-		private: int mFromXType;
-		private: int mToXType;
-		private: int mFromYType;
-		private: int mToYType;
-
-		private: int mFromXData;
-		private: int mToXData;
-		private: int mFromYData;
-		private: int mToYData;
-
-		private: int mPivotXType;
-		private: int mPivotYType;
+		private: ValueType mPivotXType;
+		private: ValueType mPivotYType;
 		private: float mPivotXValue;
 		private: float mPivotYValue;
 
@@ -89,8 +79,8 @@ namespace SOUI {
 			mFromY = fromY;
 			mToY = toY;
 
-			mPivotXType = ABSOLUTE;
-			mPivotYType = ABSOLUTE;
+			mPivotXType = ABSOLUTE_VALUE;
+			mPivotYType = ABSOLUTE_VALUE;
 			mPivotXValue = pivotX;
 			mPivotYValue = pivotY;
 			initializePivotPoint();
@@ -123,7 +113,7 @@ namespace SOUI {
 		 *        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		 */
 		public: SScaleAnimation(float fromX, float toX, float fromY, float toY,
-			int pivotXType, float pivotXValue, int pivotYType, float pivotYValue) {
+			ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue) {
 			mFromX = fromX;
 			mToX = toX;
 			mFromY = fromY;
@@ -141,16 +131,16 @@ namespace SOUI {
 		 * the pivot point. This is only possible for ABSOLUTE pivot values.
 		 */
 		private: void initializePivotPoint() {
-			if (mPivotXType == ABSOLUTE) {
+			if (mPivotXType == ABSOLUTE_VALUE) {
 				mPivotX = mPivotXValue;
 			}
-			if (mPivotYType == ABSOLUTE) {
+			if (mPivotYType == ABSOLUTE_VALUE) {
 				mPivotY = mPivotYValue;
 			}
 		}
 
 	protected:
-	void applyTransformation(float interpolatedTime, Transformation t) {
+	void applyTransformation(float interpolatedTime, Transformation & t) {
 			float sx = 1.0f;
 			float sy = 1.0f;
 			float scale = getScaleFactor();
@@ -163,44 +153,40 @@ namespace SOUI {
 			}
 
 			if (mPivotX == 0 && mPivotY == 0) {
-				t.getMatrix().scale(sx, sy);
+				t.getMatrix().setScale(sx, sy);
 			}
 			else {
 				t.getMatrix().setScale(sx, sy, scale * mPivotX, scale * mPivotY);
 			}
-			t.updateType();
-		}
+			t.setTransformationType(Transformation::TYPE_MATRIX);
+	}
 
-		float resolveScale(float scale, int type, int data, int size, int psize) {
-			float targetSize;
-			if (type == RELATIVE_TO_SELF) {
-			}
-			else if (type == RELATIVE_TO_PARENT)
-			{
-
-			}
-			else {
-				return scale;
-			}
-
-			if (size == 0) {
-				return 1;
-			}
-
-			return targetSize / (float)size;
-		}
-
+	void copy(const IAnimation *src) override
+	{
+		SAnimation::copy(src);
+		const SScaleAnimation * src2 = sobj_cast<const SScaleAnimation>(src);
+		mFromX = src2->mFromX;
+		mToX = src2->mToX;
+		mFromY = src2->mFromY;
+		mToY = src2->mToY;
+		mPivotXType = src2->mPivotXType;
+		mPivotXValue = src2->mPivotXValue;
+		mPivotYType = src2->mPivotYType;
+		mPivotYValue = src2->mPivotYValue;
+	}
 		public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-			SAnimation::reset();
-
-			mFromX = resolveScale(mFromX, mFromXType, mFromXData, width, parentWidth);
-			mToX = resolveScale(mToX, mToXType, mToXData, width, parentWidth);
-			mFromY = resolveScale(mFromY, mFromYType, mFromYData, height, parentHeight);
-			mToY = resolveScale(mToY, mToYType, mToYData, height, parentHeight);
-
-			mPivotX = resolveSize(mPivotXType, mPivotXValue, width, parentWidth);
-			mPivotY = resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
+			mPivotX = (float)resolveSize(mPivotXType, mPivotXValue, width, parentWidth);
+			mPivotY = (float)resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
 		}
+
+				SOUI_ATTRS_BEGIN()
+					ATTR_FLOAT(L"fromXScale",mFromX,FALSE)
+					ATTR_FLOAT(L"toXScale", mToX, FALSE)
+					ATTR_FLOAT(L"fromYScale", mFromY, FALSE)
+					ATTR_FLOAT(L"toYScale", mToY, FALSE)
+					ATTR_VALUE_DESC(L"pivotX",mPivotXType,mPivotXValue)
+					ATTR_VALUE_DESC(L"pivotY", mPivotYType, mPivotYValue)
+				SOUI_ATTRS_END()
 	};
 
 }

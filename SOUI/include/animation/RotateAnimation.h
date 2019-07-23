@@ -16,7 +16,9 @@
 
 #include <animation/Animation.h>
 
+
 namespace SOUI {
+
 	/**
 	 * An animation that controls the rotation of an object. This rotation takes
 	 * place in the X-Y plane. You can specify the point to use for the center of
@@ -30,8 +32,8 @@ namespace SOUI {
 		private:float mFromDegrees;
 		private:float mToDegrees;
 
-		private:int mPivotXType;
-		private:int mPivotYType;
+		private:ValueType mPivotXType;
+		private:ValueType mPivotYType;
 		private:float mPivotXValue;
 		private:float mPivotYValue;
 
@@ -75,8 +77,8 @@ namespace SOUI {
 			mFromDegrees = fromDegrees;
 			mToDegrees = toDegrees;
 
-			mPivotXType = ABSOLUTE;
-			mPivotYType = ABSOLUTE;
+			mPivotXType = ABSOLUTE_VALUE;
+			mPivotYType = ABSOLUTE_VALUE;
 			mPivotXValue = pivotX;
 			mPivotYValue = pivotY;
 			initializePivotPoint();
@@ -107,8 +109,8 @@ namespace SOUI {
 		 *        pivotYType is ABSOLUTE, or a percentage (where 1.0 is 100%)
 		 *        otherwise.
 		 */
-		public:SRotateAnimation(float fromDegrees, float toDegrees, int pivotXType, float pivotXValue,
-			int pivotYType, float pivotYValue) {
+		public:SRotateAnimation(float fromDegrees, float toDegrees, ValueType pivotXType, float pivotXValue,
+			ValueType pivotYType, float pivotYValue) {
 			mFromDegrees = fromDegrees;
 			mToDegrees = toDegrees;
 
@@ -124,31 +126,51 @@ namespace SOUI {
 		 * the pivot point. This is only possible for ABSOLUTE pivot values.
 		 */
 		private:void initializePivotPoint() {
-			if (mPivotXType == ABSOLUTE) {
+			if (mPivotXType == ABSOLUTE_VALUE) {
 				mPivotX = mPivotXValue;
 			}
-			if (mPivotYType == ABSOLUTE) {
+			if (mPivotYType == ABSOLUTE_VALUE) {
 				mPivotY = mPivotYValue;
 			}
 		}
 
-		protected: void applyTransformation(float interpolatedTime, Transformation t) {
+	protected: 
+		void applyTransformation(float interpolatedTime, Transformation & t) {
 			float degrees = mFromDegrees + ((mToDegrees - mFromDegrees) * interpolatedTime);
 			float scale = getScaleFactor();
 
 			if (mPivotX == 0.0f && mPivotY == 0.0f) {
-				t.getMatrix().rotate(degrees);
+				t.getMatrix().setRotate(degrees);
 			}
 			else {
 				t.getMatrix().setRotate(degrees, mPivotX * scale, mPivotY * scale);
 			}
+			t.setTransformationType(Transformation::TYPE_MATRIX);
+		}
+		void copy(const IAnimation *src)
+		{
+			SAnimation::copy(src);
+			SRotateAnimation * src2 = sobj_cast<SRotateAnimation>(src);
+			mFromDegrees = src2->mFromDegrees;
+			mToDegrees = src2->mToDegrees;
+
+			mPivotXType = src2->mPivotXType;
+			mPivotYType = src2->mPivotYType;
+			mPivotXValue = src2->mPivotXValue;
+			mPivotYValue = src2->mPivotYValue;
 		}
 
 		public:void initialize(int width, int height, int parentWidth, int parentHeight) {
-			SAnimation::reset();
-			mPivotX = resolveSize(mPivotXType, mPivotXValue, width, parentWidth);
-			mPivotY = resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
+			mPivotX = (float)resolveSize(mPivotXType, mPivotXValue, width, parentWidth);
+			mPivotY = (float)resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
 		}
+
+			SOUI_ATTRS_BEGIN()
+				ATTR_FLOAT(L"fromDegrees",mFromDegrees,FALSE)
+				ATTR_FLOAT(L"toDegrees", mToDegrees, FALSE)
+				ATTR_VALUE_DESC(L"pivotX",mPivotXType,mPivotXValue)
+				ATTR_VALUE_DESC(L"pivotY", mPivotYType, mPivotYValue)
+			SOUI_ATTRS_END()
 	};
 
 }

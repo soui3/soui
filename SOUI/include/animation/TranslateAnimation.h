@@ -24,32 +24,33 @@ namespace SOUI {
 	 *
 	 */
 	class SOUI_EXP STranslateAnimation : public SAnimation {
-		SOUI_CLASS_NAME(STranslateAnimation,L"Translate")
+		SOUI_CLASS_NAME(STranslateAnimation,L"translate")
 
-		private: int mFromXType;
-		private: int mToXType;
+	private:
+		ValueType mFromXType;
+		ValueType mToXType;
 
-		private: int mFromYType;
-		private: int mToYType;
-
+		ValueType mFromYType;
+		ValueType mToYType;
+	protected:
 		/** @hide */
-		protected: float mFromXValue;
+		float mFromXValue;
 		/** @hide */
-		protected: float mToXValue;
-
-		/** @hide */
-		protected: float mFromYValue;
-		/** @hide */
-		protected: float mToYValue;
+		float mToXValue;
 
 		/** @hide */
-		protected: float mFromXDelta;
+		float mFromYValue;
 		/** @hide */
-		protected: float mToXDelta;
+		float mToYValue;
+
 		/** @hide */
-		protected: float mFromYDelta;
+		float mFromXDelta;
 		/** @hide */
-		protected: float mToYDelta;
+		float mToXDelta;
+		/** @hide */
+		float mFromYDelta;
+		/** @hide */
+		float mToYDelta;
 		/**
 		 * Constructor to use when building a TranslateAnimation from code
 		 *
@@ -68,10 +69,10 @@ namespace SOUI {
 			mFromYValue = fromYDelta;
 			mToYValue = toYDelta;
 
-			mFromXType = ABSOLUTE;
-			mToXType = ABSOLUTE;
-			mFromYType = ABSOLUTE;
-			mToYType = ABSOLUTE;
+			mFromXType = ABSOLUTE_VALUE;
+			mToXType = ABSOLUTE_VALUE;
+			mFromYType = ABSOLUTE_VALUE;
+			mToYType = ABSOLUTE_VALUE;
 		}
 
 		/**
@@ -102,8 +103,8 @@ namespace SOUI {
 		 *        animation. This value can either be an absolute number if toYType
 		 *        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		 */
-		public: STranslateAnimation(int fromXType, float fromXValue, int toXType, float toXValue,
-			int fromYType, float fromYValue, int toYType, float toYValue) {
+		public: STranslateAnimation(ValueType fromXType, float fromXValue, ValueType toXType, float toXValue,
+			ValueType fromYType, float fromYValue, ValueType toYType, float toYValue) {
 
 			mFromXValue = fromXValue;
 			mToXValue = toXValue;
@@ -117,7 +118,7 @@ namespace SOUI {
 		}
 
 
-		protected: void applyTransformation(float interpolatedTime, Transformation t) {
+		protected: void applyTransformation(float interpolatedTime, Transformation& t) {
 			float dx = mFromXDelta;
 			float dy = mFromYDelta;
 			if (mFromXDelta != mToXDelta) {
@@ -126,16 +127,38 @@ namespace SOUI {
 			if (mFromYDelta != mToYDelta) {
 				dy = mFromYDelta + ((mToYDelta - mFromYDelta) * interpolatedTime);
 			}
-			t.getMatrix().translate(dx, dy);
+			t.getMatrix().setTranslate(dx, dy);
+			t.setTransformationType(Transformation::TYPE_MATRIX);
 		}
 
 		public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-			SAnimation::reset();
-			mFromXDelta = resolveSize(mFromXType, mFromXValue, width, parentWidth);
-			mToXDelta = resolveSize(mToXType, mToXValue, width, parentWidth);
-			mFromYDelta = resolveSize(mFromYType, mFromYValue, height, parentHeight);
-			mToYDelta = resolveSize(mToYType, mToYValue, height, parentHeight);
+			mFromXDelta = (float)resolveSize(mFromXType, mFromXValue, width, parentWidth);
+			mToXDelta = (float)resolveSize(mToXType, mToXValue, width, parentWidth);
+			mFromYDelta = (float)resolveSize(mFromYType, mFromYValue, height, parentHeight);
+			mToYDelta = (float)resolveSize(mToYType, mToYValue, height, parentHeight);
 		}
+
+				protected: 
+					virtual void copy(const IAnimation *src) override
+				{
+					SAnimation::copy(src);
+					const STranslateAnimation * src2 = sobj_cast<const STranslateAnimation>(src);
+					mFromXType = src2->mFromXType;
+					mFromXValue = src2->mFromXValue;
+					mToXType = src2->mToXType;
+					mToXValue = src2->mToXValue;
+					mFromYType = src2->mFromYType;
+					mFromYValue = src2->mFromYValue;
+					mToYType = src2->mToYType;
+					mToYValue = src2->mToYValue;
+					}
+
+	SOUI_ATTRS_BEGIN()
+		ATTR_VALUE_DESC(L"fromXDelta", mFromXType, mFromXValue)
+		ATTR_VALUE_DESC(L"toXDelta", mToXType,mToXValue)
+		ATTR_VALUE_DESC(L"fromYDelta", mFromYType, mFromYValue)
+		ATTR_VALUE_DESC(L"toYDelta", mToYType, mToYValue)
+	SOUI_ATTRS_END()
 	};
 
 }

@@ -63,7 +63,7 @@ namespace SOUI{
 		bool mDirty;
 		bool mHasAlpha;
 
-		SArray<SAnimation> mAnimations;
+		SArray<SAutoRefPtr<IAnimation> > mAnimations;
 
 		long mLastEnd;
 
@@ -136,7 +136,7 @@ namespace SOUI{
 
 					int count = mAnimations.GetCount();
 					for (int i = 0; i < count; i++) {
-						if (mAnimations.GetAt(i).hasAlpha()) {
+						if (mAnimations.GetAt(i)->hasAlpha()) {
 							mHasAlpha = true;
 							break;
 						}
@@ -164,17 +164,17 @@ namespace SOUI{
 			* that they were added
 			* @param a Animation to add.
 			*/
-	public: void addAnimation(SAnimation  a) {
+	public: void addAnimation(IAnimation  *a) {
 				mAnimations.Add(a);
 
 				if ((mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK) {
 					mLastEnd = mStartOffset + mDuration;
 				} else {
 					if (mAnimations.GetCount() == 1) {
-						mDuration = a.getStartOffset() + a.getDuration();
+						mDuration = a->getStartOffset() + a->getDuration();
 						mLastEnd = mStartOffset + mDuration;
 					} else {
-						mLastEnd = smax(mLastEnd, a.getStartOffset() + a.getDuration());
+						mLastEnd = smax(mLastEnd, a->getStartOffset() + a->getDuration());
 						mDuration = mLastEnd - mStartOffset;
 					}
 				}
@@ -193,8 +193,7 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					SAnimation & a = mAnimations[i];
-					a.setStartTime(startTimeMillis);
+					mAnimations[i]->setStartTime(startTimeMillis);
 				}
 			}
 
@@ -204,8 +203,8 @@ namespace SOUI{
 				int count = mAnimations.GetCount();
 
 				for (int i = 0; i < count; i++) {
-					SAnimation &a = mAnimations.GetAt(i);
-					startTime = smin(startTime, a.getStartTime());
+					IAnimation *a = mAnimations.GetAt(i);
+					startTime = smin(startTime, a->getStartTime());
 				}
 
 				return startTime;
@@ -226,7 +225,7 @@ namespace SOUI{
 					duration = mDuration;
 				} else {
 					for (int i = 0; i < count; i++) {
-						duration = smax(duration, mAnimations[i].getDuration());
+						duration = smax(duration, mAnimations[i]->getDuration());
 					}
 				}
 
@@ -243,7 +242,7 @@ namespace SOUI{
 				long duration = 0;
 				int count = mAnimations.GetCount();
 				for (int i = count - 1; i >= 0; --i) {
-					long d = mAnimations[i].computeDurationHint();
+					long d = mAnimations[i]->computeDurationHint();
 					if (d > duration) duration = d;
 				}
 				return duration;
@@ -267,14 +266,14 @@ namespace SOUI{
 				t.clear();
 
 				for (int i = count - 1; i >= 0; --i) {
-					SAnimation & a = mAnimations[i];
+					IAnimation * a = mAnimations[i];
 
 					Transformation temp;
-					more = a.getTransformation(currentTime, temp, getScaleFactor()) || more;
+					more = a->getTransformation(currentTime, temp, getScaleFactor()) || more;
 					t.compose(temp);
 
-					started = started || a.hasStarted();
-					ended = a.hasEnded() && ended;
+					started = started || a->hasStarted();
+					ended = a->hasEnded() && ended;
 				}
 
 				if (started && !mStarted) {
@@ -300,7 +299,7 @@ namespace SOUI{
 	public: void scaleCurrentDuration(float scale) {
 				int count = mAnimations.GetCount();
 				for (int i = 0; i < count; i++) {
-					mAnimations[i].scaleCurrentDuration(scale);
+					mAnimations[i]->scaleCurrentDuration(scale);
 				}
 			}
 

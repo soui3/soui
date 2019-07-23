@@ -28,7 +28,68 @@
 #include <sobject/sobject.hpp>
 #include <SApp.h>
 
+#define ATTR_VALUE_DESC(attribname, varType,varValue)				\
+    if (0 == strAttribName.CompareNoCase(attribname))               \
+        {                                                           \
+		SValueDescription desc = SOUI::SValueDescription::parseValue(strValue);\
+		varType=desc.type; varValue=desc.value;						\
+        hRet = S_FALSE;							\
+        }                                                           \
+        else                                                        \
+
+
 namespace SOUI {
+
+	/**
+	* Utility class to parse a string description of a size.
+	*/
+	class SOUI_EXP SValueDescription {
+	public:
+		/**
+		* One of Animation.ABSOLUTE_VALUE, Animation.RELATIVE_TO_SELF, or
+		* Animation.RELATIVE_TO_PARENT.
+		*/
+		IAnimation::ValueType type;
+
+		/**
+		* The absolute or relative dimension for this Description.
+		*/
+		float value;
+
+		/**
+		* Size descriptions can appear inthree forms:
+		* <ol>
+		* <li>An absolute size. This is represented by a number.</li>
+		* <li>A size relative to the size of the object being animated. This
+		* is represented by a number followed by "%".</li> *
+		* <li>A size relative to the size of the parent of object being
+		* animated. This is represented by a number followed by "%p".</li>
+		* </ol>
+		* @param value The typed value to parse
+		* @return The parsed version of the description
+		*/
+		static SValueDescription parseValue(const SStringW & value) {
+			SValueDescription d;
+			if (value.IsEmpty()) {
+				d.type = IAnimation::ABSOLUTE_VALUE;
+				d.value = 0.0f;
+			}
+			else if (value.EndsWith(L"%", true)) {
+				d.type = IAnimation::RELATIVE_TO_SELF;
+				d.value = (float)_wtof(value.Left(value.GetLength() - 1))/100;
+			}
+			else if (value.EndsWith(L"%p", true)) {
+				d.type = IAnimation::RELATIVE_TO_PARENT;
+				d.value = (float)_wtof(value.Left(value.GetLength() - 2))/100;
+			}
+			else
+			{
+				d.type = IAnimation::ABSOLUTE_VALUE;
+				d.value = (float)_wtof(value);
+			}
+			return d;
+		}
+	};
 
 	class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
 		SOUI_CLASS_NAME_EX(SAnimation, L"animation", Animation)
@@ -94,7 +155,6 @@ namespace SOUI {
 		*/
 		IAnimationListener * mListener;
 
-		IAnimationOwner	   * mOwner;
 		/**
 		* Desired Z order mode during animation.
 		*/
@@ -183,6 +243,9 @@ namespace SOUI {
 		*
 		* @see #initialize(int, int, int, int)
 		*/
+	public: void initialize(int width, int height, int parentWidth, int parentHeight) {
+	}
+
 	public: void reset() {
 		mEnded = false;
 
@@ -196,7 +259,6 @@ namespace SOUI {
 		mRepeated = 0;
 		mRepeatMode = RESTART;
 		mListener = NULL;
-		mOwner = NULL;
 		mScaleFactor = 1.0f;
 
 
@@ -477,11 +539,6 @@ namespace SOUI {
 		void setAnimationListener(IAnimationListener* listener) {
 		mListener = listener;
 	}
-
-		void setAnimationOwner(IAnimationOwner *pOwner)
-		{
-			mOwner = pOwner;
-		}
 	
 			/**
 			* Gurantees that this animation has an interpolator. Will use
@@ -664,7 +721,8 @@ namespace SOUI {
 		* @param parentSize The size of the parent of the object being animated
 		* @return The dimension to use for the animation
 		*/
-	protected: int resolveSize(int type, float value, int size, int parentSize) {
+	protected: 
+	int resolveSize(ValueType type, float value, int size, int parentSize) {
 		switch (type) {
 		case RELATIVE_TO_SELF:
 			return (int)(size * value);
@@ -675,7 +733,6 @@ namespace SOUI {
 			return (int)value;
 		}
 	}
-
 
 	public:
 		/**

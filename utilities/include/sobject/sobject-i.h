@@ -258,7 +258,7 @@ namespace SOUI
      * Describe  如果源对象不是待转换对象类型，返回NULL
      */    
     template<class T>
-    T * sobj_cast(IObject *pObj)
+    T * sobj_cast(const IObject *pObj)
     {
         if(!pObj)
             return NULL;

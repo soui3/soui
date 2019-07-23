@@ -80,6 +80,10 @@ public:
         return mTransformationType;
     }
 
+	void setTransformationType(int type)
+	{
+		mTransformationType = type;
+	}
     /**
      * Clones the specified transformation.
      *

@@ -57,12 +57,6 @@ namespace SOUI {
 			virtual void onAnimationRepeat(IAnimation * animation) = 0;
 		};
 
-		struct IAnimationOwner
-		{
-			virtual RECT getAnimationOwnerRect() const = 0;
-			virtual SIZE getAnimationParentSize() const= 0;
-		};
-
 		enum RepeatMode {
 			RESTART = 1,
 			REVERSE = 2,
@@ -320,7 +314,6 @@ namespace SOUI {
 		*/
 		virtual void setAnimationListener(IAnimationListener* listener) = 0;
 
-		virtual void setAnimationOwner(IAnimationOwner *pOwner) = 0;
 		/**
 		* Compute a hint at how long the entire animation may last, in milliseconds.
 		* Animations can be written to cause themselves to run for a different
@@ -390,6 +383,7 @@ namespace SOUI {
 		*/
 		virtual bool hasAlpha() const = 0;
 
+		virtual void initialize(int width, int height, int parentWidth, int parentHeight) = 0;
 	};
 
 

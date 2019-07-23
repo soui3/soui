@@ -64,6 +64,15 @@ public:
     virtual bool hasAlpha() const override{
         return true;
     }
+
+	virtual void copy(const IAnimation *src) override
+	{
+		SAnimation::copy(src);
+		const SAlphaAnimation *src2 = sobj_cast<const SAlphaAnimation>(src);
+		mFromAlpha = src2->mFromAlpha;
+		mToAlpha = src2->mToAlpha;
+	}
+
 };
 
 

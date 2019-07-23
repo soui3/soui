@@ -209,7 +209,6 @@ namespace SOUI
 	class SOUI_EXP SWindow : public SObject
 		, public SMsgHandleState
 		, public ITrCtxProvider
-		, protected IAnimation::IAnimationOwner
         , public TObjRefImpl2<IObjRef,SWindow>
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
@@ -219,7 +218,7 @@ namespace SOUI
         friend class SwndContainerImpl;
         friend class FocusSearch;
 
-		class SAnimationHandler : public ITimelineHandler {
+		class SAnimationHandler : public ITimelineHandler{
 		private:
 			SWindow * m_pOwner;
 			long m_aniTime;
@@ -231,6 +230,9 @@ namespace SOUI
 			const Transformation & GetTransformation() const;
 		protected:
 			void OnNextFrame() override;
+		protected:
+			CSize getAnimationOwnerSize() const;
+			CSize getAnimationParentSize() const;
 		};
 
     public:
@@ -844,9 +846,6 @@ namespace SOUI
 
 		BYTE GetAlpha() const;
 
-	protected:
-		virtual RECT getAnimationOwnerRect() const;
-		virtual SIZE getAnimationParentSize() const;
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();
