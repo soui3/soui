@@ -7,7 +7,6 @@
 #include "helper/SwndFinder.h"
 #include "helper/stime.h"
 #include "animation/Transformation.h"
-#include "core/SAnimationPulse.h"
 
 namespace SOUI
 {

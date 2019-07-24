@@ -81,7 +81,6 @@ HEADERS += include/SApp.h \
            include/core/Accelerator.h \
            include/core/FocusManager.h \
            include/core/hostmsg.h \
-           include/core/SAnimationPulse.h \
            include/core/SCaret.h \
            include/core/SDefine.h \
            include/core/SDropTargetDispatcher.h \
@@ -223,7 +222,6 @@ SOURCES += src/SApp.cpp \
            src/control/STreeView.cpp \
            src/core/Accelerator.cpp \
            src/core/FocusManager.cpp \
-           src/core/SAnimationPulse.cpp \
            src/core/scaret.cpp \
            src/core/SDropTargetDispatcher.cpp \
            src/core/SHostDialog.cpp \

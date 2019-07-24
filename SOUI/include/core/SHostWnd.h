@@ -20,7 +20,6 @@
 
 namespace SOUI
 {
-
     class SHostWnd;
     class SDummyWnd : public SNativeWnd
     {
@@ -156,6 +155,11 @@ public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
 
+public:
+	enum {
+		kPulseTimer = 4321,		//soui timer. don't use it in app
+		kPulseInterval = 10,
+	};
 public:
     SWindow * GetRoot() const {return (SWindow*)this;}
 
@@ -301,8 +305,6 @@ protected:// IContainer
 	virtual int GetScale() const;
 
 	virtual void OnCavasInvalidate(SWND swnd);
-protected:
-	virtual void OnNextFrame() override;
 protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);

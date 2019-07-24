@@ -7,12 +7,10 @@
 #include "helper/SplitString.h"
 
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
-#include <core/SanimationPulse.h>
 
 namespace SOUI
 {
 
-#define TIMER_NEXTFRAME 2
 #define KConstDummyPaint    0x80000000
 
 
@@ -557,6 +555,15 @@ BOOL SHostWnd::OnSetCursor(HWND hwnd, UINT nHitTest, UINT message)
 
 void SHostWnd::OnTimer(UINT_PTR idEvent)
 {
+	if(idEvent == kPulseTimer)
+	{
+		if (!IsIconic())
+		{
+			SwndContainerImpl::OnNextFrame();
+		}
+		return;
+	}
+
     STimerID sTimerID((DWORD)idEvent);
     if(sTimerID.bSwndTimer)
     {
@@ -1151,7 +1158,7 @@ BOOL SHostWnd::RegisterTimelineHandler( ITimelineHandler *pHandler )
 	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
 	if(bEmpty1 && !bEmpty2)
 	{
-		SAnimationPulse::getSingletonPtr()->RegisterTimelineHandler(this);
+		SNativeWnd::SetTimer(kPulseTimer, kPulseInterval, NULL);
 	}
     return bRet;
 }
@@ -1163,18 +1170,9 @@ BOOL SHostWnd::UnregisterTimelineHandler( ITimelineHandler *pHandler )
 	bool bEmpty2 = m_timelineHandlerMgr.IsEmpty();
 	if(!bEmpty1 && bEmpty2)
 	{
-		SAnimationPulse::getSingletonPtr()->UnregisterTimelineHandler(this);
+		SNativeWnd::KillTimer(kPulseTimer);
 	}
     return bRet;
-}
-
-
-void SHostWnd::OnNextFrame()
-{
-	if(!IsIconic())
-	{
-		SwndContainerImpl::OnNextFrame();
-	}
 }
 
 
