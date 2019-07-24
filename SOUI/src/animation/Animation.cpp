@@ -7,6 +7,31 @@ namespace SOUI {
 
 
 
+	SValueDescription SValueDescription::parseValue(const SStringW & value)
+	{
+		SValueDescription d;
+		if (value.IsEmpty()) {
+			d.type = IAnimation::ABSOLUTE_VALUE;
+			d.value = 0.0f;
+		}
+		else if (value.EndsWith(L"%", true)) {
+			d.type = IAnimation::RELATIVE_TO_SELF;
+			d.value = (float)_wtof(value.Left(value.GetLength() - 1))/100;
+		}
+		else if (value.EndsWith(L"%p", true)) {
+			d.type = IAnimation::RELATIVE_TO_PARENT;
+			d.value = (float)_wtof(value.Left(value.GetLength() - 2))/100;
+		}
+		else
+		{
+			d.type = IAnimation::ABSOLUTE_VALUE;
+			d.value = (float)_wtof(value);
+		}
+		return d;
+	}
+
+
+	////////////////////////////////////////////////////////////////////
 	bool SAnimation::hasAlpha() const
 	{
 		return false;
@@ -320,6 +345,8 @@ namespace SOUI {
 		mFillAfter = false;
 
 		mFillEnabled = false;
+
+		mUserData = 0;
 		mTransformation.clear();
 		ensureInterpolator();
 	}
@@ -366,6 +393,16 @@ namespace SOUI {
 	SAnimation::SAnimation()
 	{
 		reset();
+	}
+
+	void SAnimation::setUserData(ULONG_PTR data)
+	{
+		mUserData = data;
+	}
+
+	ULONG_PTR SAnimation::getUserData() const
+	{
+		return mUserData;
 	}
 
 }

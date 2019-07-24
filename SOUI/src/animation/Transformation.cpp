@@ -47,7 +47,7 @@ namespace SOUI {
 	void STransformation::setMatrix(const SMatrix & mtx)
 	{
 		mMatrix = mtx;
-		if (mMatrix.isIdentity())
+		if (!mMatrix.isIdentity())
 			mTransformationType |= TYPE_MATRIX;
 		else
 			mTransformationType &= ~TYPE_MATRIX;

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate duration="500" fromDegrees="0" toDegrees="360" pivotX="50%" pivotY="50%" repeatCount="-1" repeatMode="restart"
+        interpolator="linear"/>

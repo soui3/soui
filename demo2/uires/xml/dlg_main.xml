@@ -2,10 +2,11 @@
 appWnd="1"
 translucent="1" 
 >
-  <root  width="600" height="400" skin="_skin.sys.wnd.bkgnd" cache="1">
+  <root  width="800" height="600" skin="_skin.sys.wnd.bkgnd" cache="1">
     <caption pos="0,0,-0,30" show="1" font="adding:0">
       <icon pos="10,8" src="ICON_LOGO:16"/>
       <text pos="29,9">@string/title</text>
+      
       <imgbtn name="btn_close" skin="_skin.sys.btn.close"    pos="-45,0" tip="close" animate="1"/>
       <imgbtn name="btn_max" skin="_skin.sys.btn.maximize"  pos="-83,0" animate="1" />
       <imgbtn name="btn_restore" skin="_skin.sys.btn.restore"  pos="-83,0" show="0" animate="1" />
@@ -17,14 +18,19 @@ translucent="1"
         <button size="-2,30" text="show" name="btn_show"/>
         <button size="-2,30" text="hide" name="btn_hide"/>
       </window>
-      <window pos="200,0,@200,@200" colorBkgnd="#ffffff" name="txt_test" rotate="10">
-        <scrollview pos="50,0,@150,@150" viewSize="200,200" name="txt_test3" colorBkgnd="#cccccc" alpha="100">
-          <text pos="0,0" text="mark line" name="txt_test2"/>
-        </scrollview>
-      </window>
 
-      <window pos="0,0,@200,-0" name="pane_left" skin="skin_girl">
+      <window pos="0,0,@250,-30" name="pane_left" skin="skin_girl">
         <text pos="|0,|0" offset="-0.5,-0.5" text="left pane" colorText="#ff0000" font="size:30"/>
+      </window>
+      <window pos="|0,0,@300,]0" offset="-0.5,0">
+        <window pos="0,0,-0,]0" name="wnd_ani_host"/>
+        <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
+      </window>
+      <window pos="0,-30,-0,-0" layout="hbox" interval="10" gravity="center">
+        <text text="QQ:99200711"/>
+        <text text="QQ群:229313785"/>
+        <text text="GIT仓库:"/>
+        <link.web href="https://github.com/soui3/soui.git" text="https://github.com/soui3/soui.git"/>
       </window>
     </window>
   </root>

@@ -67,27 +67,7 @@ namespace SOUI {
 		* @param value The typed value to parse
 		* @return The parsed version of the description
 		*/
-		static SValueDescription parseValue(const SStringW & value) {
-			SValueDescription d;
-			if (value.IsEmpty()) {
-				d.type = IAnimation::ABSOLUTE_VALUE;
-				d.value = 0.0f;
-			}
-			else if (value.EndsWith(L"%", true)) {
-				d.type = IAnimation::RELATIVE_TO_SELF;
-				d.value = (float)_wtof(value.Left(value.GetLength() - 1))/100;
-			}
-			else if (value.EndsWith(L"%p", true)) {
-				d.type = IAnimation::RELATIVE_TO_PARENT;
-				d.value = (float)_wtof(value.Left(value.GetLength() - 2))/100;
-			}
-			else
-			{
-				d.type = IAnimation::ABSOLUTE_VALUE;
-				d.value = (float)_wtof(value);
-			}
-			return d;
-		}
+		static SValueDescription parseValue(const SStringW & value);
 	};
 
 	class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
@@ -157,7 +137,6 @@ namespace SOUI {
 		/**
 		* Desired Z order mode during animation.
 		*/
-	protected:
 		int mZAdjustment;
 
 		/**
@@ -199,12 +178,28 @@ namespace SOUI {
 		* Creates a new animation with a duration of 0ms, the default interpolator, with
 		* fillBefore set to true and fillAfter set to false
 		*/
+
+		ULONG_PTR mUserData;
+
+		SStringW mName;
+
+		int      mID;
 	public:
 		SAnimation();
 
 		void copy(const IAnimation *src);
 
 		IAnimation * clone() const;
+
+		LPCWSTR GetName() const
+		{
+			return mName;
+		}
+
+		int GetID() const
+		{
+			return mID;
+		}
 
 		/**
 		* Reset the initialization state of this animation.
@@ -512,8 +507,13 @@ namespace SOUI {
 		*/
 		virtual bool hasAlpha() const;
 
+		virtual void setUserData(ULONG_PTR data);
+
+		virtual ULONG_PTR getUserData() const;
 	public:
 		SOUI_ATTRS_BEGIN()
+			ATTR_STRINGW(L"name",mName,FALSE)
+			ATTR_INT(L"id",mID,FALSE)
 			ATTR_INT(L"duration",mDuration,FALSE)
 			ATTR_INT(L"startOffset",mStartOffset,FALSE)
 			ATTR_BOOL(L"fillEnable",mFillEnabled,FALSE)

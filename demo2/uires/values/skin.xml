@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <skin>
-  	<imglist name="skin_girl"	src="img:png_girl"/>
-  
-	</skin>
+  <imglist name="skin_girl"	src="img:png_girl"/>
+  <imglist name="skin_love"	src="img:png_love"/>
+  <imglist name="skin_soui"	src="img:png_soui"/>
+</skin>

@@ -384,6 +384,10 @@ namespace SOUI {
 		virtual bool hasAlpha() const = 0;
 
 		virtual void initialize(int width, int height, int parentWidth, int parentHeight) = 0;
+
+		virtual void setUserData(ULONG_PTR data) = 0;
+
+		virtual ULONG_PTR getUserData() const = 0;
 	};
 
 

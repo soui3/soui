@@ -4,6 +4,7 @@
   </UIDEF>
   <LAYOUT>
     <file name="XML_MAINWND" path="xml\dlg_main.xml"/>
+    <file name="xml_love" path="xml\love.xml"/>
   </LAYOUT>
   
   <values>
@@ -14,6 +15,8 @@
 
   <IMG>
     <file name="png_girl" path="image\girl.png"/>
+    <file name="png_love" path="image\love.png"/>
+    <file name="png_soui" path="image\soui.png"/>
   </IMG>
   <ICON>
     <file name="ICON_LOGO"  path="image\soui.ico"/>
@@ -22,5 +25,6 @@
     <file name="test" path="anim\test.xml"/>
     <file name="slide_show" path="anim\slide_show.xml"/>
     <file name="slide_hide" path="anim\slide_hide.xml"/>
+    <file name="rotate" path="anim\rotate.xml"/>
   </anim>
 </resource>

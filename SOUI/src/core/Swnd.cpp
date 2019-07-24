@@ -968,7 +968,7 @@ namespace SOUI
 				rcInter.IntersectRect(rcClip,rcWnd);
 				if(!rcInter.IsRectEmpty())
 				{
-					pRT->BitBlt(&rcInter, pRTCache, rcInter.left, rcInter.top, SRCCOPY);
+					pRT->AlphaBlend(rcInter, pRTCache, rcInter, 255);
 				}
 			}
 		}else
@@ -3230,7 +3230,6 @@ namespace SOUI
 		{
 			m_pOwner->OnAnimationInvalidate();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
-			SLOG_INFO("ani frame,matrix type:" << m_transform.getTransformationType());
 			if (!bMore)
 			{//animation stoped.
 				m_pOwner->OnAnimationStop();
