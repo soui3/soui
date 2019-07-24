@@ -1408,7 +1408,7 @@ namespace SOUI
 				m_rcWindow.bottom = m_rcWindow.top;
 
 			InvalidateRect(m_rcWindow);
-
+			
 			SSendMessage(WM_NCCALCSIZE);//计算非客户区大小
 		}
 
@@ -3194,13 +3194,22 @@ namespace SOUI
 
 	void SWindow::SAnimationHandler::OnAnimationStart()
 	{
-		CSize szOwner = getAnimationOwnerSize();
-		CSize szParent = getAnimationParentSize();
-		m_pOwner->GetAnimation()->initialize(szOwner.cx, szOwner.cy, szParent.cx, szParent.cy);
+		m_pOwner->GetEventSet()->subscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
+		if (m_pOwner->GetParent())
+		{
+			m_pOwner->GetParent()->GetEventSet()->subscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
+		}
+		OnOwnerResize(NULL);
 	}
 
 	void SWindow::SAnimationHandler::OnAnimationStop()
 	{
+		m_pOwner->GetEventSet()->unsubscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
+		if (m_pOwner->GetParent())
+		{
+			m_pOwner->GetParent()->GetEventSet()->unsubscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
+		}
+
 	}
 
 	const STransformation & SWindow::SAnimationHandler::GetTransformation() const
@@ -3228,6 +3237,14 @@ namespace SOUI
 			}
 			m_pOwner->OnAnimationInvalidate();
 		}
+	}
+
+	bool SWindow::SAnimationHandler::OnOwnerResize(EventArgs * e)
+	{
+		CSize szOwner = getAnimationOwnerSize();
+		CSize szParent = getAnimationParentSize();
+		m_pOwner->GetAnimation()->initialize(szOwner.cx, szOwner.cy, szParent.cx, szParent.cy);
+		return true;
 	}
 
 	CSize SWindow::SAnimationHandler::getAnimationOwnerSize() const

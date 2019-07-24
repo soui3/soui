@@ -230,6 +230,7 @@ namespace SOUI
 		protected:
 			void OnNextFrame() override;
 		protected:
+			bool OnOwnerResize(EventArgs *e);
 			CSize getAnimationOwnerSize() const;
 			CSize getAnimationParentSize() const;
 		};
