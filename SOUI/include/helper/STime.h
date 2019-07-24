@@ -10,30 +10,30 @@ namespace SOUI
     class SOUI_EXP CTimeSpan
     {
     public:
-        CTimeSpan() throw();
-        CTimeSpan( __time64_t time ) throw();
-        CTimeSpan( LONG lDays, int nHours, int nMins, int nSecs ) throw();
+        CTimeSpan();
+        CTimeSpan( __time64_t time );
+        CTimeSpan( LONG lDays, int nHours, int nMins, int nSecs );
 
-        LONGLONG GetDays() const throw();
-        LONGLONG GetTotalHours() const throw();
-        LONG GetHours() const throw();
-        LONGLONG GetTotalMinutes() const throw();
-        LONG GetMinutes() const throw();
-        LONGLONG GetTotalSeconds() const throw();
-        LONG GetSeconds() const throw();
+        LONGLONG GetDays() const;
+        LONGLONG GetTotalHours() const;
+        LONG GetHours() const;
+        LONGLONG GetTotalMinutes() const;
+        LONG GetMinutes() const;
+        LONGLONG GetTotalSeconds() const;
+        LONG GetSeconds() const;
 
-        __time64_t GetTimeSpan() const throw();
+        __time64_t GetTimeSpan() const;
 
-        CTimeSpan operator+( CTimeSpan span ) const throw();
-        CTimeSpan operator-( CTimeSpan span ) const throw();
-        CTimeSpan& operator+=( CTimeSpan span ) throw();
-        CTimeSpan& operator-=( CTimeSpan span ) throw();
-        bool operator==( CTimeSpan span ) const throw();
-        bool operator!=( CTimeSpan span ) const throw();
-        bool operator<( CTimeSpan span ) const throw();
-        bool operator>( CTimeSpan span ) const throw();
-        bool operator<=( CTimeSpan span ) const throw();
-        bool operator>=( CTimeSpan span ) const throw();
+        CTimeSpan operator+( CTimeSpan span ) const;
+        CTimeSpan operator-( CTimeSpan span ) const;
+        CTimeSpan& operator+=( CTimeSpan span );
+        CTimeSpan& operator-=( CTimeSpan span );
+        bool operator==( CTimeSpan span ) const;
+        bool operator!=( CTimeSpan span ) const;
+        bool operator<( CTimeSpan span ) const;
+        bool operator>( CTimeSpan span ) const;
+        bool operator<=( CTimeSpan span ) const;
+        bool operator>=( CTimeSpan span ) const;
 
     private:
         __time64_t m_timeSpan;
@@ -43,36 +43,19 @@ namespace SOUI
 class SOUI_EXP CTime
 {
 public:
-    // Attributes
-    enum DateTimeStatus
-    {
-        error = -1,
-        valid = 0,
-        invalid = 1,    // Invalid date (out of range, etc.)
-        null = 2,       // Literally has no value
-    };
-
-    static CTime GetCurrentTime() throw();
+    static CTime GetCurrentTime();
+	static uint64_t GetCurrentTimeMs();
     CTime(__time64_t tm=0):m_time(tm){}
     CTime( int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
         int nDST = -1 );
 
-    int SetDate(int nYear, int nMonth, int nDay) throw();
-    int SetDateTime(int nYear, int nMonth, int nDay,
-        int nHour, int nMin, int nSec,int nDST=-1) throw();
+    void SetDate(int nYear, int nMonth, int nDay);
+    void SetDateTime(int nYear, int nMonth, int nDay,
+        int nHour, int nMin, int nSec,int nDST=-1);
 
-    __time64_t    GetTime() const throw();
+    __time64_t    GetTime() const;
     struct tm* GetLocalTm(struct tm* ptm) const;
-    bool GetAsSystemTime(SYSTEMTIME& timeDest) const throw();
-    int GetStatus()
-    {
-        return m_status;
-    }
-
-    void SetStatus(int nStatus)
-    {
-        m_status=nStatus;
-    }
+    bool GetAsSystemTime(SYSTEMTIME& timeDest) const;
     int GetYear() const;
     int GetMonth() const;
     int GetDay() const;
@@ -81,30 +64,27 @@ public:
     int GetSecond() const;
     int GetDayOfWeek() const;
 
-    SStringT Format(
-        LPCTSTR pszFormat 
-        ) const;
+    SStringT Format(LPCTSTR pszFormat) const;
 
-    CTime& operator=( __time64_t time ) throw();
+    CTime& operator=( __time64_t time );
 
-    CTime& operator+=( CTimeSpan span ) throw();
-    CTime& operator-=( CTimeSpan span ) throw();
+    CTime& operator+=( CTimeSpan span );
+    CTime& operator-=( CTimeSpan span );
 
-    CTimeSpan operator-( CTime time ) const throw();
-    CTime operator-( CTimeSpan span ) const throw();
-    CTime operator+( CTimeSpan span ) const throw();
+    CTimeSpan operator-( CTime time ) const;
+    CTime operator-( CTimeSpan span ) const;
+    CTime operator+( CTimeSpan span ) const;
 
-    bool operator==( CTime time ) const throw();
-    bool operator!=( CTime time ) const throw();
-    bool operator<( CTime time ) const throw();
-    bool operator>( CTime time ) const throw();
-    bool operator<=( CTime time ) const throw();
-    bool operator>=( CTime time ) const throw();
+    bool operator==( CTime time ) const;
+    bool operator!=( CTime time ) const;
+    bool operator<( CTime time ) const;
+    bool operator>( CTime time ) const;
+    bool operator<=( CTime time ) const;
+    bool operator>=( CTime time ) const;
 
 protected:
 
     __time64_t m_time;
-    int m_status;
 };
 
 

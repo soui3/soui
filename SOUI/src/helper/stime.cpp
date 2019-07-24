@@ -5,109 +5,109 @@ namespace SOUI
 {
 	static const int kMaxTimeBufferSize = 128;
 
-	CTimeSpan::CTimeSpan() throw() :
+	CTimeSpan::CTimeSpan()  :
 		m_timeSpan(0)
 	{
 	}
 
-	CTimeSpan::CTimeSpan(__time64_t time) throw() :
+	CTimeSpan::CTimeSpan(__time64_t time)  :
 		m_timeSpan(time)
 	{
 	}
 
-	CTimeSpan::CTimeSpan(LONG lDays, int nHours, int nMins, int nSecs) throw()
+	CTimeSpan::CTimeSpan(LONG lDays, int nHours, int nMins, int nSecs) 
 	{
 		m_timeSpan = nSecs + 60 * (nMins + 60 * (nHours + __int64(24) * lDays));
 	}
 
-	LONGLONG CTimeSpan::GetDays() const throw()
+	LONGLONG CTimeSpan::GetDays() const 
 	{
 		return(m_timeSpan / (24 * 3600));
 	}
 
-	LONGLONG CTimeSpan::GetTotalHours() const throw()
+	LONGLONG CTimeSpan::GetTotalHours() const 
 	{
 		return(m_timeSpan / 3600);
 	}
 
-	LONG CTimeSpan::GetHours() const throw()
+	LONG CTimeSpan::GetHours() const 
 	{
 		return(LONG(GetTotalHours() - (GetDays() * 24)));
 	}
 
-	LONGLONG CTimeSpan::GetTotalMinutes() const throw()
+	LONGLONG CTimeSpan::GetTotalMinutes() const 
 	{
 		return(m_timeSpan / 60);
 	}
 
-	LONG CTimeSpan::GetMinutes() const throw()
+	LONG CTimeSpan::GetMinutes() const 
 	{
 		return(LONG(GetTotalMinutes() - (GetTotalHours() * 60)));
 	}
 
-	LONGLONG CTimeSpan::GetTotalSeconds() const throw()
+	LONGLONG CTimeSpan::GetTotalSeconds() const 
 	{
 		return(m_timeSpan);
 	}
 
-	LONG CTimeSpan::GetSeconds() const throw()
+	LONG CTimeSpan::GetSeconds() const 
 	{
 		return(LONG(GetTotalSeconds() - (GetTotalMinutes() * 60)));
 	}
 
-	__time64_t CTimeSpan::GetTimeSpan() const throw()
+	__time64_t CTimeSpan::GetTimeSpan() const 
 	{
 		return(m_timeSpan);
 	}
 
-	CTimeSpan CTimeSpan::operator+(CTimeSpan span) const throw()
+	CTimeSpan CTimeSpan::operator+(CTimeSpan span) const 
 	{
 		return(CTimeSpan(m_timeSpan + span.m_timeSpan));
 	}
 
-	CTimeSpan CTimeSpan::operator-(CTimeSpan span) const throw()
+	CTimeSpan CTimeSpan::operator-(CTimeSpan span) const 
 	{
 		return(CTimeSpan(m_timeSpan - span.m_timeSpan));
 	}
 
-	CTimeSpan& CTimeSpan::operator+=(CTimeSpan span) throw()
+	CTimeSpan& CTimeSpan::operator+=(CTimeSpan span) 
 	{
 		m_timeSpan += span.m_timeSpan;
 		return(*this);
 	}
 
-	CTimeSpan& CTimeSpan::operator-=(CTimeSpan span) throw()
+	CTimeSpan& CTimeSpan::operator-=(CTimeSpan span) 
 	{
 		m_timeSpan -= span.m_timeSpan;
 		return(*this);
 	}
 
-	bool CTimeSpan::operator==(CTimeSpan span) const throw()
+	bool CTimeSpan::operator==(CTimeSpan span) const 
 	{
 		return(m_timeSpan == span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator!=(CTimeSpan span) const throw()
+	bool CTimeSpan::operator!=(CTimeSpan span) const 
 	{
 		return(m_timeSpan != span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator<(CTimeSpan span) const throw()
+	bool CTimeSpan::operator<(CTimeSpan span) const 
 	{
 		return(m_timeSpan < span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator>(CTimeSpan span) const throw()
+	bool CTimeSpan::operator>(CTimeSpan span) const 
 	{
 		return(m_timeSpan > span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator<=(CTimeSpan span) const throw()
+	bool CTimeSpan::operator<=(CTimeSpan span) const 
 	{
 		return(m_timeSpan <= span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator>=(CTimeSpan span) const throw()
+	bool CTimeSpan::operator>=(CTimeSpan span) const 
 	{
 		return(m_timeSpan >= span.m_timeSpan);
 	}
@@ -121,8 +121,8 @@ namespace SOUI
 		SetDateTime(nYear, nMonth, nDay, nHour, nMin, nSec);
 	}
 
-	int CTime::SetDateTime(int nYear, int nMonth, int nDay,
-		int nHour, int nMin, int nSec, int nDst) throw()
+	void CTime::SetDateTime(int nYear, int nMonth, int nDay,
+		int nHour, int nMin, int nSec, int nDst) 
 	{
 		struct tm atm;
 
@@ -135,14 +135,11 @@ namespace SOUI
 		atm.tm_isdst = nDst;
 
 		m_time = _mktime64(&atm);
-
-		m_status = valid;
-		return m_status;//todo:
 	}
 
-	int CTime::SetDate(int nYear, int nMonth, int nDay) throw()
+	void CTime::SetDate(int nYear, int nMonth, int nDay)
 	{
-		return SetDateTime(nYear, nMonth, nDay, 0, 0, 0);
+		SetDateTime(nYear, nMonth, nDay, 0, 0, 0);
 	}
 
 	struct tm* CTime::GetLocalTm(struct tm* ptm) const
@@ -167,7 +164,7 @@ namespace SOUI
 		return NULL;
 	}
 
-	bool CTime::GetAsSystemTime(SYSTEMTIME& timeDest) const throw()
+	bool CTime::GetAsSystemTime(SYSTEMTIME& timeDest) const 
 	{
 		struct tm ttm;
 		struct tm* ptm;
@@ -188,12 +185,29 @@ namespace SOUI
 		return true;
 	}
 
-	CTime CTime::GetCurrentTime() throw()
+	CTime CTime::GetCurrentTime()
 	{
 		return(CTime(::_time64(NULL)));
 	}
 
-	__time64_t CTime::GetTime() const throw()
+	uint64_t CTime::GetCurrentTimeMs() {
+		SYSTEMTIME st;
+		GetSystemTime(&st); // We use UTC time
+
+		tm current;
+		memset(&current, 0, sizeof(current));
+
+		current.tm_year = st.wYear - 1900;
+		current.tm_mon = st.wMonth - 1;
+		current.tm_mday = st.wDay;
+		current.tm_hour = st.wHour;
+		current.tm_min = st.wMinute;
+		current.tm_sec = st.wSecond;
+		time_t currentTime = _mkgmtime(&current);
+		return static_cast<uint64_t>(currentTime) * 1000 + st.wMilliseconds;
+	}
+
+	__time64_t CTime::GetTime() const 
 	{
 		return(m_time);
 	}
@@ -261,69 +275,69 @@ namespace SOUI
 		return ptm ? ptm->tm_wday + 1 : 0;
 	}
 
-	CTime& CTime::operator=(__time64_t time) throw()
+	CTime& CTime::operator=(__time64_t time) 
 	{
 		m_time = time;
 
 		return(*this);
 	}
 
-	bool CTime::operator==(CTime time) const throw()
+	bool CTime::operator==(CTime time) const 
 	{
 		return(m_time == time.m_time);
 	}
 
-	bool CTime::operator!=(CTime time) const throw()
+	bool CTime::operator!=(CTime time) const 
 	{
 		return(m_time != time.m_time);
 	}
 
-	bool CTime::operator<(CTime time) const throw()
+	bool CTime::operator<(CTime time) const 
 	{
 		return(m_time < time.m_time);
 	}
 
-	bool CTime::operator>(CTime time) const throw()
+	bool CTime::operator>(CTime time) const 
 	{
 		return(m_time > time.m_time);
 	}
 
-	bool CTime::operator<=(CTime time) const throw()
+	bool CTime::operator<=(CTime time) const 
 	{
 		return(m_time <= time.m_time);
 	}
 
-	bool CTime::operator>=(CTime time) const throw()
+	bool CTime::operator>=(CTime time) const 
 	{
 		return(m_time >= time.m_time);
 	}
 
 
-	CTime& CTime::operator+=(CTimeSpan span) throw()
+	CTime& CTime::operator+=(CTimeSpan span) 
 	{
 		m_time += span.GetTimeSpan();
 
 		return(*this);
 	}
 
-	CTime& CTime::operator-=(CTimeSpan span) throw()
+	CTime& CTime::operator-=(CTimeSpan span) 
 	{
 		m_time -= span.GetTimeSpan();
 
 		return(*this);
 	}
 
-	CTimeSpan CTime::operator-(CTime time) const throw()
+	CTimeSpan CTime::operator-(CTime time) const 
 	{
 		return(CTimeSpan(m_time - time.m_time));
 	}
 
-	CTime CTime::operator-(CTimeSpan span) const throw()
+	CTime CTime::operator-(CTimeSpan span) const 
 	{
 		return(CTime(m_time - span.GetTimeSpan()));
 	}
 
-	CTime CTime::operator+(CTimeSpan span) const throw()
+	CTime CTime::operator+(CTimeSpan span) const 
 	{
 		return(CTime(m_time + span.GetTimeSpan()));
 	}
