@@ -250,7 +250,7 @@ namespace SOUI{
 			* 
 			* @see android.view.animation.Animation#getTransformation
 			*/
-	public: bool getTransformation(int64_t currentTime, Transformation &t) {
+	public: bool getTransformation(int64_t currentTime, STransformation &t) {
 				int count = mAnimations.GetCount();
 
 				bool more = false;
@@ -262,7 +262,7 @@ namespace SOUI{
 				for (int i = count - 1; i >= 0; --i) {
 					IAnimation * a = mAnimations[i];
 
-					Transformation temp;
+					STransformation temp;
 					more = a->getTransformation(currentTime, temp, getScaleFactor()) || more;
 					t.compose(temp);
 

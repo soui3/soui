@@ -140,7 +140,7 @@ namespace SOUI {
 		}
 
 	protected:
-	void applyTransformation(float interpolatedTime, Transformation & t) {
+	void applyTransformation(float interpolatedTime, STransformation & t) {
 			float sx = 1.0f;
 			float sy = 1.0f;
 			float scale = getScaleFactor();
@@ -158,7 +158,7 @@ namespace SOUI {
 			else {
 				t.getMatrix().setScale(sx, sy, scale * mPivotX, scale * mPivotY);
 			}
-			t.setTransformationType(Transformation::TYPE_MATRIX);
+			t.setTransformationType(STransformation::TYPE_MATRIX);
 	}
 
 	void copy(const IAnimation *src) override

@@ -221,12 +221,12 @@ namespace SOUI
 		class SAnimationHandler : public ITimelineHandler{
 		private:
 			SWindow * m_pOwner;
-			Transformation m_transform;
+			STransformation m_transform;
 		public:
 			SAnimationHandler(SWindow *pOwner);
 			void OnAnimationStart();
 			void OnAnimationStop();
-			const Transformation & GetTransformation() const;
+			const STransformation & GetTransformation() const;
 		protected:
 			void OnNextFrame() override;
 		protected:
@@ -837,7 +837,7 @@ namespace SOUI
 		*/
 		void ClearAnimation();
 
-		Transformation GetTransformation() const;
+		STransformation GetTransformation() const;
 
 		void SetMatrix(const SMatrix & mtx);
 
@@ -1450,7 +1450,7 @@ namespace SOUI
 
 		SAutoRefPtr<IAnimation>	m_animation;	/**< Animation */
 		SAnimationHandler	m_animationHandler;
-		Transformation		m_transform;
+		STransformation		m_transform;
 		bool				m_isAnimating;
 
         typedef struct GETRTDATA

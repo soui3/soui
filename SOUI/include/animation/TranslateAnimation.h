@@ -118,7 +118,7 @@ namespace SOUI {
 		}
 
 
-		protected: void applyTransformation(float interpolatedTime, Transformation& t) {
+		protected: void applyTransformation(float interpolatedTime, STransformation& t) {
 			float dx = mFromXDelta;
 			float dy = mFromYDelta;
 			if (mFromXDelta != mToXDelta) {
@@ -128,7 +128,7 @@ namespace SOUI {
 				dy = mFromYDelta + ((mToYDelta - mFromYDelta) * interpolatedTime);
 			}
 			t.getMatrix().setTranslate(dx, dy);
-			t.setTransformationType(Transformation::TYPE_MATRIX);
+			t.setTransformationType(STransformation::TYPE_MATRIX);
 		}
 
 		public: void initialize(int width, int height, int parentWidth, int parentHeight) {

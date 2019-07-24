@@ -21,7 +21,7 @@ namespace SOUI {
 /**
  * An animation that controls the alpha level of an object.
  * Useful for fading things in and out. This animation ends up
- * changing the alpha property of a {@link Transformation}
+ * changing the alpha property of a {@link STransformation}
  *
  */
 class SOUI_EXP SAlphaAnimation: public SAnimation {
@@ -49,10 +49,10 @@ public:
     }
     
     /**
-     * Changes the alpha property of the supplied {@link Transformation}
+     * Changes the alpha property of the supplied {@link STransformation}
      */
 protected:
-	virtual void applyTransformation(float interpolatedTime, Transformation & t) {
+	virtual void applyTransformation(float interpolatedTime, STransformation & t) {
         float alpha = mFromAlpha;
         t.setAlpha((BYTE)((alpha + ((mToAlpha - alpha) * interpolatedTime))*255));
     }

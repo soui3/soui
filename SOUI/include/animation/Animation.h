@@ -96,17 +96,17 @@ namespace SOUI {
 		SOUI_CLASS_NAME_EX(SAnimation, L"animation", Animation)
 	protected:
 		/**
-		* Set by {@link #getTransformation(long, Transformation)} when the animation ends.
+		* Set by {@link #getTransformation(long, STransformation)} when the animation ends.
 		*/
 		bool mEnded;
 
 		/**
-		* Set by {@link #getTransformation(long, Transformation)} when the animation starts.
+		* Set by {@link #getTransformation(long, STransformation)} when the animation starts.
 		*/
 		bool mStarted;
 
 		/**
-		* Set by {@link #getTransformation(long, Transformation)} when the animation repeats
+		* Set by {@link #getTransformation(long, STransformation)} when the animation repeats
 		* in REVERSE mode.
 		*/
 		bool mCycleFlip;
@@ -177,7 +177,7 @@ namespace SOUI {
 		bool mMore;
 		bool mOneMoreTime;
 
-		Transformation  mTransformation;
+		STransformation  mTransformation;
 
 		/**
 		* Indicates whether the animation transformation should be applied before the
@@ -369,7 +369,7 @@ namespace SOUI {
 			/**
 			* When this animation should start. When the start time is set to
 			* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
-			* {@link #getTransformation(long, Transformation)} is invoked. The time passed
+			* {@link #getTransformation(long, STransformation)} is invoked. The time passed
 			* to this method should be obtained by calling
 			* {@link AnimationUtils#currentAnimationTimeMillis()} instead of
 			* {@link System#currentTimeMillis()}.
@@ -386,7 +386,7 @@ namespace SOUI {
 
 			/**
 			* Convenience method to start the animation the first time
-			* {@link #getTransformation(long, Transformation)} is invoked.
+			* {@link #getTransformation(long, STransformation)} is invoked.
 			*/
 	public: void start() {
 		setStartTime(-1);
@@ -442,8 +442,8 @@ namespace SOUI {
 
 			/**
 			* The scale factor is set by the call to <code>getTransformation</code>. Overrides of
-			* {@link #getTransformation(long, Transformation, float)} will get this value
-			* directly. Overrides of {@link #applyTransformation(float, Transformation)} can
+			* {@link #getTransformation(long, STransformation, float)} will get this value
+			* directly. Overrides of {@link #applyTransformation(float, STransformation)} can
 			* call this method to get the value.
 			*
 			* @return float The scale factor that should be applied to pre-scaled values in
@@ -562,7 +562,7 @@ namespace SOUI {
 	}
 			/**
 			 * Gets the transformation to apply at a specified point in time. Implementations of this
-			 * method should always replace the specified Transformation or document they are doing
+			 * method should always replace the specified STransformation or document they are doing
 			 * otherwise.
 			 *
 			 * @param currentTime Where we are in the animation. This is wall clock time.
@@ -572,14 +572,14 @@ namespace SOUI {
 			 *        pivot points being rotated or scaled around.
 			 * @return True if the animation is still running
 			 */
-	public: bool getTransformation(uint64_t currentTime, Transformation & outTransformation,
+	public: bool getTransformation(uint64_t currentTime, STransformation & outTransformation,
 		float scale) {
 		mScaleFactor = scale;
 		return getTransformation(currentTime, outTransformation);
 	}
 			/**
 			* Gets the transformation to apply at a specified point in time. Implementations of this
-			* method should always replace the specified Transformation or document they are doing
+			* method should always replace the specified STransformation or document they are doing
 			* otherwise.
 			*
 			* @param currentTime Where we are in the animation. This is wall clock time.
@@ -587,7 +587,7 @@ namespace SOUI {
 			*        caller and will be filled in by the animation.
 			* @return True if the animation is still running
 			*/
-	public: bool getTransformation(int64_t currentTime, Transformation & outTransformation) {
+	public: bool getTransformation(int64_t currentTime, STransformation & outTransformation) {
 		if (mStartTime == -1) {
 			mStartTime = currentTime;
 		}
@@ -699,16 +699,16 @@ namespace SOUI {
 			/**
 			* Helper for getTransformation. Subclasses should implement this to apply
 			* their transforms given an interpolation value.  Implementations of this
-			* method should always replace the specified Transformation or document
+			* method should always replace the specified STransformation or document
 			* they are doing otherwise.
 			*
 			* @param interpolatedTime The value of the normalized time (0.0 to 1.0)
 			*        after it has been run through the interpolation function.
-			* @param t The Transformation object to fill in with the current
+			* @param t The STransformation object to fill in with the current
 			*        transforms.
 			*/
 	protected:
-		virtual void applyTransformation(float interpolatedTime, Transformation & t) {
+		virtual void applyTransformation(float interpolatedTime, STransformation & t) {
 		}
 
 		/**

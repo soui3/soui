@@ -1220,7 +1220,7 @@ namespace SOUI
 
 	void SWindow::TransformPoint(CPoint & pt) const
 	{
-		Transformation xform = GetTransformation();
+		STransformation xform = GetTransformation();
 		if (xform.hasMatrix())
 		{
 			CRect rc = GetWindowRect();
@@ -1308,7 +1308,7 @@ namespace SOUI
 		CRect rcIntersect = rect & rcWnd;
 		if (rcIntersect.IsRectEmpty()) return;
 
-		Transformation xForm = GetTransformation();
+		STransformation xForm = GetTransformation();
 		if (xForm.hasMatrix())
 		{
 			SMatrix mtx = xForm.getMatrix();
@@ -2083,7 +2083,7 @@ namespace SOUI
 		SWindow *p = this;
 		while(p)
 		{
-			Transformation xform = p->GetTransformation();
+			STransformation xform = p->GetTransformation();
 			if(xform.hasMatrix())
 			{
 				SMatrix mtx2 = xform.getMatrix();
@@ -2136,7 +2136,7 @@ namespace SOUI
 
 	bool SWindow::_ApplyMatrix(IRenderTarget * pRT, SMatrix &oriMtx)
 	{
-		Transformation xform = GetTransformation();
+		STransformation xform = GetTransformation();
 		if (!xform.hasMatrix())
 			return false;
 		pRT->GetTransform(oriMtx.GetData());
@@ -2155,7 +2155,7 @@ namespace SOUI
 		const SWindow *p = this;
 		while (p)
 		{
-			Transformation xform = p->GetTransformation();
+			STransformation xform = p->GetTransformation();
 			if (xform.hasMatrix())
 			{
 				SMatrix &mtx2 = xform.getMatrix();
@@ -2253,13 +2253,13 @@ namespace SOUI
 		}
 	}
 
-	Transformation SWindow::GetTransformation() const
+	STransformation SWindow::GetTransformation() const
 	{
 		if(!m_isAnimating)
 			return m_transform;
 		else
 		{
-			Transformation ret = m_transform;
+			STransformation ret = m_transform;
 			ret.postCompose(m_animationHandler.GetTransformation());
 			return ret;
 		}
@@ -3204,7 +3204,7 @@ namespace SOUI
 	{
 	}
 
-	const Transformation & SWindow::SAnimationHandler::GetTransformation() const
+	const STransformation & SWindow::SAnimationHandler::GetTransformation() const
 	{
 		return m_transform;
 	}

@@ -25,7 +25,7 @@ namespace SOUI
  * one point in time of an Animation.
  *
  */
-class SOUI_EXP Transformation {
+class SOUI_EXP STransformation {
 public:
 enum{
     /**
@@ -55,7 +55,7 @@ protected:
      * Creates a new transformation with alpha = 1 and the identity matrix.
      */
 public:
-	Transformation() {
+	STransformation() {
         clear();
     }
 
@@ -89,7 +89,7 @@ public:
      *
      * @param t The transformation to clone.
      */
-    void set(Transformation t) {
+    void set(STransformation t) {
         mAlpha = t.getAlpha();
 		mMatrix.SetData(t.getMatrix().GetData());
 
@@ -97,22 +97,22 @@ public:
     }
 
     /**
-     * Apply this Transformation to an existing Transformation, e.g. apply
+     * Apply this STransformation to an existing STransformation, e.g. apply
      * a scale effect to something that has already been rotated.
      * @param t
      */
-    void compose(Transformation t) {
+    void compose(STransformation t) {
 		if (t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha * t.getAlpha()/255);
 		if (t.hasMatrix()) mMatrix = t.getMatrix() * mMatrix;
 		updateType();
 	}
     
     /**
-     * Like {@link #compose(Transformation)} but does this.postConcat(t) of
+     * Like {@link #compose(STransformation)} but does this.postConcat(t) of
      * the transformation matrix.
      * @hide
      */
-    void postCompose(Transformation t) {
+    void postCompose(STransformation t) {
         if(t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha*t.getAlpha()/255);
         if(t.hasMatrix()) mMatrix *= t.getMatrix();
 		updateType();

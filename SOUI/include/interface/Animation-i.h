@@ -64,7 +64,7 @@ namespace SOUI {
 
 		/**
 		* Can be used as the start time to indicate the start time should be the current
-		* time when {@link #getTransformation(long, Transformation)} is invoked for the
+		* time when {@link #getTransformation(long, STransformation)} is invoked for the
 		* first animation frame. This can is useful for short animations.
 		*/
 		enum {
@@ -191,7 +191,7 @@ namespace SOUI {
 		/**
 		* When this animation should start. When the start time is set to
 		* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
-		* {@link #getTransformation(long, Transformation)} is invoked. The time passed
+		* {@link #getTransformation(long, STransformation)} is invoked. The time passed
 		* to this method should be obtained by calling
 		* {@link AnimationUtils#currentAnimationTimeMillis()} instead of
 		* {@link System#currentTimeMillis()}.
@@ -202,7 +202,7 @@ namespace SOUI {
 
 		/**
 		* Convenience method to start the animation the first time
-		* {@link #getTransformation(long, Transformation)} is invoked.
+		* {@link #getTransformation(long, STransformation)} is invoked.
 		*/
 		virtual void start() = 0;
 
@@ -323,7 +323,7 @@ namespace SOUI {
 		virtual long computeDurationHint() const = 0;
 		/**
 		 * Gets the transformation to apply at a specified point in time. Implementations of this
-		 * method should always replace the specified Transformation or document they are doing
+		 * method should always replace the specified STransformation or document they are doing
 		 * otherwise.
 		 *
 		 * @param currentTime Where we are in the animation. This is wall clock time.
@@ -333,12 +333,12 @@ namespace SOUI {
 		 *        pivot points being rotated or scaled around.
 		 * @return True if the animation is still running
 		 */
-		virtual bool getTransformation(uint64_t currentTime, Transformation & outTransformation,
+		virtual bool getTransformation(uint64_t currentTime, STransformation & outTransformation,
 			float scale) = 0;
 
 		/**
 		* Gets the transformation to apply at a specified point in time. Implementations of this
-		* method should always replace the specified Transformation or document they are doing
+		* method should always replace the specified STransformation or document they are doing
 		* otherwise.
 		*
 		* @param currentTime Where we are in the animation. This is wall clock time.
@@ -346,7 +346,7 @@ namespace SOUI {
 		*        caller and will be filled in by the animation.
 		* @return True if the animation is still running
 		*/
-		virtual bool getTransformation(int64_t currentTime, Transformation & outTransformation) = 0;
+		virtual bool getTransformation(int64_t currentTime, STransformation & outTransformation) = 0;
 
 
 		/**
@@ -366,15 +366,15 @@ namespace SOUI {
 		/**
 		* Helper for getTransformation. Subclasses should implement this to apply
 		* their transforms given an interpolation value.  Implementations of this
-		* method should always replace the specified Transformation or document
+		* method should always replace the specified STransformation or document
 		* they are doing otherwise.
 		*
 		* @param interpolatedTime The value of the normalized time (0.0 to 1.0)
 		*        after it has been run through the interpolation function.
-		* @param t The Transformation object to fill in with the current
+		* @param t The STransformation object to fill in with the current
 		*        transforms.
 		*/
-		virtual void applyTransformation(float interpolatedTime, Transformation & t) = 0;
+		virtual void applyTransformation(float interpolatedTime, STransformation & t) = 0;
 
 		/**
 		* Return true if this animation changes the view's alpha property.

@@ -135,7 +135,7 @@ namespace SOUI {
 		}
 
 	protected: 
-		void applyTransformation(float interpolatedTime, Transformation & t) {
+		void applyTransformation(float interpolatedTime, STransformation & t) {
 			float degrees = mFromDegrees + ((mToDegrees - mFromDegrees) * interpolatedTime);
 			float scale = getScaleFactor();
 
@@ -145,7 +145,7 @@ namespace SOUI {
 			else {
 				t.getMatrix().setRotate(degrees, mPivotX * scale, mPivotY * scale);
 			}
-			t.setTransformationType(Transformation::TYPE_MATRIX);
+			t.setTransformationType(STransformation::TYPE_MATRIX);
 		}
 		void copy(const IAnimation *src)
 		{
