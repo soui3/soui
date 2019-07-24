@@ -4,14 +4,14 @@
 SOUI是目前为数不多的轻量级可快速开发window桌面程序开源DirectUI库.其前身为Duiengine,更早期则是源自于金山卫士开源版本UI库Bkwin.经过作者多次开发维护升级后得此库.SOUI其寓意为"瘦UI" "UI,just so so!",目的就是能够快速开发,并且在产品发布局时不需要携带其它额外的第三方依赖库,高度精简及集中;模块化使得渲染模块,图片解码模块,资源打包压缩模块得以清晰分离,更能够高度的自定义.UI解析目前可采用的是XML布局,便于理解各控件之间的层级关系及其自身的属性设置.目前已有很多成功的商业产品,深受广大开发者及企业的青睐
 
 
-### Git下载地址(分离了demo的soui内核的仓库）
+### Git下载地址
 
-- [国内Git下载站点](https://gitee.com/setoutsoft/soui)
+- [国内Git下载站点](https://gitee.com/setoutsoft/soui3)
 
-- [国外Git下载站点](https://github.com/SOUI2/soui)
+- [国外Git下载站点](https://github.com/soui3/soui)
 
 ### DEMO仓库：
-- https://github.com/soui-demo
+- https://github.com/soui3-demo
 * 每一个Demo一个单独的仓库，自己分别clone就好了。如果想一次拉取所有demo,可以直接运行SOUI仓库代码下的clone_demos.bat来clone，当然前提是已经安装了git命令行工具。
 
 ### 编译
@@ -44,6 +44,3 @@ SOUI是目前为数不多的轻量级可快速开发window桌面程序开源Dire
 ### 极力推荐
 - 阅读作者[博客](http://www.cnblogs.com/setoutsoft/)，能让你更快掌握如何使用SOUI快速开发Window桌面应用
 - 教学[视频](http://my.tv.sohu.com/pl/9259542/89333168.shtml)
-
-### 捐献
-- 支付宝帐号![img](doc/alipay.png) 微信帐号![img](doc/wechat.png) 
