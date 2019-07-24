@@ -198,7 +198,7 @@ namespace SOUI {
 		*
 		* @param startTimeMillis the start time in milliseconds
 		*/
-		virtual void setStartTime(long startTimeMillis) = 0;
+		virtual void setStartTime(int64_t startTimeMillis) = 0;
 
 		/**
 		* Convenience method to start the animation the first time
@@ -259,7 +259,7 @@ namespace SOUI {
 		* @return the time in milliseconds when the animation should start or
 		*         {@link #START_ON_FIRST_FRAME}
 		*/
-		virtual long getStartTime() const = 0;
+		virtual int64_t getStartTime() const = 0;
 
 		/**
 		* How long this animation should last
@@ -333,7 +333,7 @@ namespace SOUI {
 		 *        pivot points being rotated or scaled around.
 		 * @return True if the animation is still running
 		 */
-		virtual bool getTransformation(long currentTime, Transformation & outTransformation,
+		virtual bool getTransformation(uint64_t currentTime, Transformation & outTransformation,
 			float scale) = 0;
 
 		/**
@@ -346,7 +346,7 @@ namespace SOUI {
 		*        caller and will be filled in by the animation.
 		* @return True if the animation is still running
 		*/
-		virtual bool getTransformation(long currentTime, Transformation & outTransformation) = 0;
+		virtual bool getTransformation(int64_t currentTime, Transformation & outTransformation) = 0;
 
 
 		/**

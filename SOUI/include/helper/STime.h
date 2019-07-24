@@ -7,12 +7,12 @@
 
 namespace SOUI
 {    
-    class SOUI_EXP CTimeSpan
+    class SOUI_EXP STimeSpan
     {
     public:
-        CTimeSpan();
-        CTimeSpan( __time64_t time );
-        CTimeSpan( LONG lDays, int nHours, int nMins, int nSecs );
+        STimeSpan();
+        STimeSpan( __time64_t time );
+        STimeSpan( LONG lDays, int nHours, int nMins, int nSecs );
 
         LONGLONG GetDays() const;
         LONGLONG GetTotalHours() const;
@@ -24,29 +24,29 @@ namespace SOUI
 
         __time64_t GetTimeSpan() const;
 
-        CTimeSpan operator+( CTimeSpan span ) const;
-        CTimeSpan operator-( CTimeSpan span ) const;
-        CTimeSpan& operator+=( CTimeSpan span );
-        CTimeSpan& operator-=( CTimeSpan span );
-        bool operator==( CTimeSpan span ) const;
-        bool operator!=( CTimeSpan span ) const;
-        bool operator<( CTimeSpan span ) const;
-        bool operator>( CTimeSpan span ) const;
-        bool operator<=( CTimeSpan span ) const;
-        bool operator>=( CTimeSpan span ) const;
+        STimeSpan operator+( STimeSpan span ) const;
+        STimeSpan operator-( STimeSpan span ) const;
+        STimeSpan& operator+=( STimeSpan span );
+        STimeSpan& operator-=( STimeSpan span );
+        bool operator==( STimeSpan span ) const;
+        bool operator!=( STimeSpan span ) const;
+        bool operator<( STimeSpan span ) const;
+        bool operator>( STimeSpan span ) const;
+        bool operator<=( STimeSpan span ) const;
+        bool operator>=( STimeSpan span ) const;
 
     private:
         __time64_t m_timeSpan;
     };
 
 
-class SOUI_EXP CTime
+class SOUI_EXP STime
 {
 public:
-    static CTime GetCurrentTime();
+    static STime GetCurrentTime();
 	static uint64_t GetCurrentTimeMs();
-    CTime(__time64_t tm=0):m_time(tm){}
-    CTime( int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
+    STime(__time64_t tm=0):m_time(tm){}
+    STime( int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
         int nDST = -1 );
 
     void SetDate(int nYear, int nMonth, int nDay);
@@ -66,21 +66,21 @@ public:
 
     SStringT Format(LPCTSTR pszFormat) const;
 
-    CTime& operator=( __time64_t time );
+    STime& operator=( __time64_t time );
 
-    CTime& operator+=( CTimeSpan span );
-    CTime& operator-=( CTimeSpan span );
+    STime& operator+=( STimeSpan span );
+    STime& operator-=( STimeSpan span );
 
-    CTimeSpan operator-( CTime time ) const;
-    CTime operator-( CTimeSpan span ) const;
-    CTime operator+( CTimeSpan span ) const;
+    STimeSpan operator-( STime time ) const;
+    STime operator-( STimeSpan span ) const;
+    STime operator+( STimeSpan span ) const;
 
-    bool operator==( CTime time ) const;
-    bool operator!=( CTime time ) const;
-    bool operator<( CTime time ) const;
-    bool operator>( CTime time ) const;
-    bool operator<=( CTime time ) const;
-    bool operator>=( CTime time ) const;
+    bool operator==( STime time ) const;
+    bool operator!=( STime time ) const;
+    bool operator<( STime time ) const;
+    bool operator>( STime time ) const;
+    bool operator<=( STime time ) const;
+    bool operator>=( STime time ) const;
 
 protected:
 

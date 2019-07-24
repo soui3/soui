@@ -26,6 +26,7 @@
 #include <animation/SInterpolatorImpl.h>
 #include <animation/Transformation.h>
 #include <sobject/sobject.hpp>
+#include <helper/stime.h>
 #include <SApp.h>
 
 #define ATTR_VALUE_DESC(attribname, varType,varValue)				\
@@ -114,7 +115,7 @@ namespace SOUI {
 		/**
 		* The time in milliseconds at which the animation must start;
 		*/
-		long mStartTime;
+		int64_t mStartTime;
 
 		/**
 		* The delay in milliseconds after which the animation must start. When the
@@ -375,7 +376,7 @@ namespace SOUI {
 			*
 			* @param startTimeMillis the start time in milliseconds
 			*/
-	public: void setStartTime(long startTimeMillis) {
+	public: void setStartTime(int64_t startTimeMillis) {
 		mStartTime = startTimeMillis;
 		mStarted = mEnded = false;
 		mCycleFlip = false;
@@ -396,7 +397,7 @@ namespace SOUI {
 			* milliseconds.
 			*/
 	public: void startNow() {
-		setStartTime(0);
+		setStartTime(STime::GetCurrentTimeMs());
 	}
 
 			/**
@@ -470,7 +471,7 @@ namespace SOUI {
 			* @return the time in milliseconds when the animation should start or
 			*         {@link #START_ON_FIRST_FRAME}
 			*/
-	public: long getStartTime() const {
+	public: int64_t getStartTime() const {
 		return mStartTime;
 	}
 
@@ -571,7 +572,7 @@ namespace SOUI {
 			 *        pivot points being rotated or scaled around.
 			 * @return True if the animation is still running
 			 */
-	public: bool getTransformation(long currentTime, Transformation & outTransformation,
+	public: bool getTransformation(uint64_t currentTime, Transformation & outTransformation,
 		float scale) {
 		mScaleFactor = scale;
 		return getTransformation(currentTime, outTransformation);
@@ -586,12 +587,12 @@ namespace SOUI {
 			*        caller and will be filled in by the animation.
 			* @return True if the animation is still running
 			*/
-	public: bool getTransformation(long currentTime, Transformation & outTransformation) {
+	public: bool getTransformation(int64_t currentTime, Transformation & outTransformation) {
 		if (mStartTime == -1) {
 			mStartTime = currentTime;
 		}
 
-		long startOffset = getStartOffset();
+		int64_t startOffset = getStartOffset();
 		long duration = mDuration;
 		float normalizedTime;
 		if (duration != 0) {

@@ -181,7 +181,7 @@ namespace SOUI{
 			* 
 			* @see android.view.animation.Animation#setStartTime(long)
 			*/
-	public: void setStartTime(long startTimeMillis) {
+	public: void setStartTime(int64_t startTimeMillis) {
 				SAnimation::setStartTime(startTimeMillis);
 
 				int count = mAnimations.GetCount();
@@ -191,8 +191,8 @@ namespace SOUI{
 				}
 			}
 
-	public: long getStartTime() {
-				long startTime = 100000;
+	public: int64_t getStartTime() const{
+				int64_t startTime = STime::GetCurrentTimeMs()+10000000;
 
 				int count = mAnimations.GetCount();
 
@@ -250,7 +250,7 @@ namespace SOUI{
 			* 
 			* @see android.view.animation.Animation#getTransformation
 			*/
-	public: bool getTransformation(long currentTime, Transformation &t) {
+	public: bool getTransformation(int64_t currentTime, Transformation &t) {
 				int count = mAnimations.GetCount();
 
 				bool more = false;

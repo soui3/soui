@@ -10,7 +10,7 @@ namespace SOUI
 		Init();
 		if (!SetDate(iYeay, iMonth, iDay))
 		{
-			//CTime tm = CTime::GetCurrentTime();
+			//STime tm = STime::GetCurrentTime();
 			SetDate(m_Today.wYear, m_Today.wMonth, m_Today.wDay);
 		}
 	}
@@ -18,7 +18,7 @@ namespace SOUI
 	SCalendarEx::SCalendarEx()
 	{
 		Init();
-		CTime tm = CTime::GetCurrentTime();
+		STime tm = STime::GetCurrentTime();
 		SetDate(tm.GetYear(), tm.GetMonth(), tm.GetDay());
 	}
 

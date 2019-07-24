@@ -221,7 +221,6 @@ namespace SOUI
 		class SAnimationHandler : public ITimelineHandler{
 		private:
 			SWindow * m_pOwner;
-			long m_aniTime;
 			Transformation m_transform;
 		public:
 			SAnimationHandler(SWindow *pOwner);

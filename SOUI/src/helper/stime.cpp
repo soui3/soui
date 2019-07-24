@@ -5,109 +5,109 @@ namespace SOUI
 {
 	static const int kMaxTimeBufferSize = 128;
 
-	CTimeSpan::CTimeSpan()  :
+	STimeSpan::STimeSpan()  :
 		m_timeSpan(0)
 	{
 	}
 
-	CTimeSpan::CTimeSpan(__time64_t time)  :
+	STimeSpan::STimeSpan(__time64_t time)  :
 		m_timeSpan(time)
 	{
 	}
 
-	CTimeSpan::CTimeSpan(LONG lDays, int nHours, int nMins, int nSecs) 
+	STimeSpan::STimeSpan(LONG lDays, int nHours, int nMins, int nSecs) 
 	{
 		m_timeSpan = nSecs + 60 * (nMins + 60 * (nHours + __int64(24) * lDays));
 	}
 
-	LONGLONG CTimeSpan::GetDays() const 
+	LONGLONG STimeSpan::GetDays() const 
 	{
 		return(m_timeSpan / (24 * 3600));
 	}
 
-	LONGLONG CTimeSpan::GetTotalHours() const 
+	LONGLONG STimeSpan::GetTotalHours() const 
 	{
 		return(m_timeSpan / 3600);
 	}
 
-	LONG CTimeSpan::GetHours() const 
+	LONG STimeSpan::GetHours() const 
 	{
 		return(LONG(GetTotalHours() - (GetDays() * 24)));
 	}
 
-	LONGLONG CTimeSpan::GetTotalMinutes() const 
+	LONGLONG STimeSpan::GetTotalMinutes() const 
 	{
 		return(m_timeSpan / 60);
 	}
 
-	LONG CTimeSpan::GetMinutes() const 
+	LONG STimeSpan::GetMinutes() const 
 	{
 		return(LONG(GetTotalMinutes() - (GetTotalHours() * 60)));
 	}
 
-	LONGLONG CTimeSpan::GetTotalSeconds() const 
+	LONGLONG STimeSpan::GetTotalSeconds() const 
 	{
 		return(m_timeSpan);
 	}
 
-	LONG CTimeSpan::GetSeconds() const 
+	LONG STimeSpan::GetSeconds() const 
 	{
 		return(LONG(GetTotalSeconds() - (GetTotalMinutes() * 60)));
 	}
 
-	__time64_t CTimeSpan::GetTimeSpan() const 
+	__time64_t STimeSpan::GetTimeSpan() const 
 	{
 		return(m_timeSpan);
 	}
 
-	CTimeSpan CTimeSpan::operator+(CTimeSpan span) const 
+	STimeSpan STimeSpan::operator+(STimeSpan span) const 
 	{
-		return(CTimeSpan(m_timeSpan + span.m_timeSpan));
+		return(STimeSpan(m_timeSpan + span.m_timeSpan));
 	}
 
-	CTimeSpan CTimeSpan::operator-(CTimeSpan span) const 
+	STimeSpan STimeSpan::operator-(STimeSpan span) const 
 	{
-		return(CTimeSpan(m_timeSpan - span.m_timeSpan));
+		return(STimeSpan(m_timeSpan - span.m_timeSpan));
 	}
 
-	CTimeSpan& CTimeSpan::operator+=(CTimeSpan span) 
+	STimeSpan& STimeSpan::operator+=(STimeSpan span) 
 	{
 		m_timeSpan += span.m_timeSpan;
 		return(*this);
 	}
 
-	CTimeSpan& CTimeSpan::operator-=(CTimeSpan span) 
+	STimeSpan& STimeSpan::operator-=(STimeSpan span) 
 	{
 		m_timeSpan -= span.m_timeSpan;
 		return(*this);
 	}
 
-	bool CTimeSpan::operator==(CTimeSpan span) const 
+	bool STimeSpan::operator==(STimeSpan span) const 
 	{
 		return(m_timeSpan == span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator!=(CTimeSpan span) const 
+	bool STimeSpan::operator!=(STimeSpan span) const 
 	{
 		return(m_timeSpan != span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator<(CTimeSpan span) const 
+	bool STimeSpan::operator<(STimeSpan span) const 
 	{
 		return(m_timeSpan < span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator>(CTimeSpan span) const 
+	bool STimeSpan::operator>(STimeSpan span) const 
 	{
 		return(m_timeSpan > span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator<=(CTimeSpan span) const 
+	bool STimeSpan::operator<=(STimeSpan span) const 
 	{
 		return(m_timeSpan <= span.m_timeSpan);
 	}
 
-	bool CTimeSpan::operator>=(CTimeSpan span) const 
+	bool STimeSpan::operator>=(STimeSpan span) const 
 	{
 		return(m_timeSpan >= span.m_timeSpan);
 	}
@@ -115,13 +115,13 @@ namespace SOUI
 
 	/////////////////////////////////////////////////////////////////////////
 
-	CTime::CTime(int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
+	STime::STime(int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
 		int nDST)
 	{
 		SetDateTime(nYear, nMonth, nDay, nHour, nMin, nSec);
 	}
 
-	void CTime::SetDateTime(int nYear, int nMonth, int nDay,
+	void STime::SetDateTime(int nYear, int nMonth, int nDay,
 		int nHour, int nMin, int nSec, int nDst) 
 	{
 		struct tm atm;
@@ -137,12 +137,12 @@ namespace SOUI
 		m_time = _mktime64(&atm);
 	}
 
-	void CTime::SetDate(int nYear, int nMonth, int nDay)
+	void STime::SetDate(int nYear, int nMonth, int nDay)
 	{
 		SetDateTime(nYear, nMonth, nDay, 0, 0, 0);
 	}
 
-	struct tm* CTime::GetLocalTm(struct tm* ptm) const
+	struct tm* STime::GetLocalTm(struct tm* ptm) const
 	{
 		// Ensure ptm is valid
 		SASSERT(ptm != NULL);
@@ -164,7 +164,7 @@ namespace SOUI
 		return NULL;
 	}
 
-	bool CTime::GetAsSystemTime(SYSTEMTIME& timeDest) const 
+	bool STime::GetAsSystemTime(SYSTEMTIME& timeDest) const 
 	{
 		struct tm ttm;
 		struct tm* ptm;
@@ -185,12 +185,12 @@ namespace SOUI
 		return true;
 	}
 
-	CTime CTime::GetCurrentTime()
+	STime STime::GetCurrentTime()
 	{
-		return(CTime(::_time64(NULL)));
+		return(STime(::_time64(NULL)));
 	}
 
-	uint64_t CTime::GetCurrentTimeMs() {
+	uint64_t STime::GetCurrentTimeMs() {
 		SYSTEMTIME st;
 		GetSystemTime(&st); // We use UTC time
 
@@ -207,12 +207,12 @@ namespace SOUI
 		return static_cast<uint64_t>(currentTime) * 1000 + st.wMilliseconds;
 	}
 
-	__time64_t CTime::GetTime() const 
+	__time64_t STime::GetTime() const 
 	{
 		return(m_time);
 	}
 
-	int CTime::GetYear() const
+	int STime::GetYear() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -221,7 +221,7 @@ namespace SOUI
 		return ptm ? (ptm->tm_year) + 1900 : 0;
 	}
 
-	int CTime::GetMonth() const
+	int STime::GetMonth() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -230,7 +230,7 @@ namespace SOUI
 		return ptm ? ptm->tm_mon + 1 : 0;
 	}
 
-	int CTime::GetDay() const
+	int STime::GetDay() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -239,7 +239,7 @@ namespace SOUI
 		return ptm ? ptm->tm_mday : 0;
 	}
 
-	int CTime::GetHour() const
+	int STime::GetHour() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -248,7 +248,7 @@ namespace SOUI
 		return ptm ? ptm->tm_hour : -1;
 	}
 
-	int CTime::GetMinute() const
+	int STime::GetMinute() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -257,7 +257,7 @@ namespace SOUI
 		return ptm ? ptm->tm_min : -1;
 	}
 
-	int CTime::GetSecond() const
+	int STime::GetSecond() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -266,7 +266,7 @@ namespace SOUI
 		return ptm ? ptm->tm_sec : -1;
 	}
 
-	int CTime::GetDayOfWeek() const
+	int STime::GetDayOfWeek() const
 	{
 		struct tm ttm;
 		struct tm * ptm;
@@ -275,74 +275,74 @@ namespace SOUI
 		return ptm ? ptm->tm_wday + 1 : 0;
 	}
 
-	CTime& CTime::operator=(__time64_t time) 
+	STime& STime::operator=(__time64_t time) 
 	{
 		m_time = time;
 
 		return(*this);
 	}
 
-	bool CTime::operator==(CTime time) const 
+	bool STime::operator==(STime time) const 
 	{
 		return(m_time == time.m_time);
 	}
 
-	bool CTime::operator!=(CTime time) const 
+	bool STime::operator!=(STime time) const 
 	{
 		return(m_time != time.m_time);
 	}
 
-	bool CTime::operator<(CTime time) const 
+	bool STime::operator<(STime time) const 
 	{
 		return(m_time < time.m_time);
 	}
 
-	bool CTime::operator>(CTime time) const 
+	bool STime::operator>(STime time) const 
 	{
 		return(m_time > time.m_time);
 	}
 
-	bool CTime::operator<=(CTime time) const 
+	bool STime::operator<=(STime time) const 
 	{
 		return(m_time <= time.m_time);
 	}
 
-	bool CTime::operator>=(CTime time) const 
+	bool STime::operator>=(STime time) const 
 	{
 		return(m_time >= time.m_time);
 	}
 
 
-	CTime& CTime::operator+=(CTimeSpan span) 
+	STime& STime::operator+=(STimeSpan span) 
 	{
 		m_time += span.GetTimeSpan();
 
 		return(*this);
 	}
 
-	CTime& CTime::operator-=(CTimeSpan span) 
+	STime& STime::operator-=(STimeSpan span) 
 	{
 		m_time -= span.GetTimeSpan();
 
 		return(*this);
 	}
 
-	CTimeSpan CTime::operator-(CTime time) const 
+	STimeSpan STime::operator-(STime time) const 
 	{
-		return(CTimeSpan(m_time - time.m_time));
+		return(STimeSpan(m_time - time.m_time));
 	}
 
-	CTime CTime::operator-(CTimeSpan span) const 
+	STime STime::operator-(STimeSpan span) const 
 	{
-		return(CTime(m_time - span.GetTimeSpan()));
+		return(STime(m_time - span.GetTimeSpan()));
 	}
 
-	CTime CTime::operator+(CTimeSpan span) const 
+	STime STime::operator+(STimeSpan span) const 
 	{
-		return(CTime(m_time + span.GetTimeSpan()));
+		return(STime(m_time + span.GetTimeSpan()));
 	}
 
-	SStringT CTime::Format(LPCTSTR pszFormat) const
+	SStringT STime::Format(LPCTSTR pszFormat) const
 	{
 		if (pszFormat == NULL)
 		{

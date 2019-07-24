@@ -232,7 +232,7 @@ SCalendar::SCalendar(WORD iYear, WORD iMonth, WORD iDay)
     Init();
    if(!SetDate(iYear, iMonth, iDay))
    {
-       CTime tm=CTime::GetCurrentTime();
+       STime tm=STime::GetCurrentTime();
        SetDate(tm.GetYear(),tm.GetMonth(),tm.GetDay());
    }
 }
@@ -240,7 +240,7 @@ SCalendar::SCalendar(WORD iYear, WORD iMonth, WORD iDay)
 SCalendar::SCalendar()
 {
     Init();
-    CTime tm=CTime::GetCurrentTime();
+    STime tm=STime::GetCurrentTime();
     SetDate(tm.GetYear(),tm.GetMonth(),tm.GetDay(),FALSE);
 }
 

@@ -5,6 +5,7 @@
 #include "layout/SouiLayout.h"
 #include "interface/sacchelper-i.h"
 #include "helper/SwndFinder.h"
+#include "helper/stime.h"
 #include "animation/Transformation.h"
 #include "core/SAnimationPulse.h"
 
@@ -3189,7 +3190,6 @@ namespace SOUI
 
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 
 		:m_pOwner(pOwner)
-		, m_aniTime(-1)
 	{
 	}
 
@@ -3198,12 +3198,10 @@ namespace SOUI
 		CSize szOwner = getAnimationOwnerSize();
 		CSize szParent = getAnimationParentSize();
 		m_pOwner->GetAnimation()->initialize(szOwner.cx, szOwner.cy, szParent.cx, szParent.cy);
-		m_aniTime = 0;
 	}
 
 	void SWindow::SAnimationHandler::OnAnimationStop()
 	{
-		m_aniTime = -1;
 	}
 
 	const Transformation & SWindow::SAnimationHandler::GetTransformation() const
@@ -3215,29 +3213,17 @@ namespace SOUI
 	{
 		IAnimation *pAni = m_pOwner->GetAnimation();
 		SASSERT(pAni);
-		long tm = pAni->getStartTime();
+		uint64_t tm = pAni->getStartTime();
+		if (tm == -1)
+		{
+			m_pOwner->OnAnimationStart();
+		}
 		if (tm > 0)
-		{//scheduled animation
-			tm -= SAnimationPulse::kPulseSpan;
-			pAni->setStartTime(tm);
-			if (tm < 0)
-			{
-				pAni->startNow();
-				m_pOwner->OnAnimationStart();
-			}
-		}
-		else if (tm == -1)
-		{
-			m_aniTime = 0;
-		}else
-		{
-			m_aniTime += SAnimationPulse::kPulseSpan;
-		}
-		if(m_aniTime>=0)
 		{
 			m_pOwner->OnAnimationInvalidate();
-			bool bMore = pAni->getTransformation(m_aniTime, m_transform);
-			if(!bMore)
+			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
+			SLOG_INFO("ani frame,matrix type:" << m_transform.getTransformationType());
+			if (!bMore)
 			{//animation stoped.
 				m_pOwner->OnAnimationStop();
 			}
