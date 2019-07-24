@@ -256,6 +256,7 @@ SOURCES += src/SApp.cpp \
            src/helper/SScriptTimer.cpp \
            src/helper/STileViewItemLocator.cpp \
            src/helper/STimerEx.cpp \
+		   src/helper/STime.cpp \
            src/helper/SToolTip.cpp \
            src/helper/SwndFinder.cpp \
            src/layout/SGridLayout.cpp \
