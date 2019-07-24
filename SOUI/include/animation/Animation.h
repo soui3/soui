@@ -26,17 +26,15 @@
 #include <animation/SInterpolatorImpl.h>
 #include <animation/Transformation.h>
 #include <sobject/sobject.hpp>
-#include <helper/stime.h>
-#include <SApp.h>
 
-#define ATTR_VALUE_DESC(attribname, varType,varValue)				\
-    if (0 == strAttribName.CompareNoCase(attribname))               \
-        {                                                           \
+#define ATTR_VALUE_DESC(attribname, varType,varValue)			\
+    if (0 == strAttribName.CompareNoCase(attribname))           \
+    {                                                           \
 		SValueDescription desc = SOUI::SValueDescription::parseValue(strValue);\
-		varType=desc.type; varValue=desc.value;						\
-        hRet = S_FALSE;							\
-        }                                                           \
-        else                                                        \
+		varType=desc.type; varValue=desc.value;					\
+        hRet = S_FALSE;							                \
+    }                                                           \
+    else                                                        \
 
 
 namespace SOUI {
@@ -202,79 +200,20 @@ namespace SOUI {
 		* fillBefore set to true and fillAfter set to false
 		*/
 	public:
-		SAnimation() {
-			reset();
-		}
+		SAnimation();
 
-		void copy(const IAnimation *src)
-		{
-			mEnded = false;
-			mStarted = false;
+		void copy(const IAnimation *src);
 
-			mStartTime = src->getStartTime();
-			mStartOffset = src->getStartOffset();
-			mDuration = src->getDuration();
-			mRepeatCount = src->getRepeatCount();
-			mRepeated = 0;
-			mRepeatMode = src->getRepeatMode();
-			mListener = NULL;
-			mScaleFactor = 1.0f;
-
-			mMore = true;
-			mOneMoreTime = true;
-
-
-			mFillBefore = src->getFillBefore();
-
-			mFillAfter = src->getFillAfter();
-
-			mFillEnabled = src->isFillEnabled();
-
-			mInterpolator = src->getInterpolator();
-		}
-
-		IAnimation * clone() const {
-			IAnimation *pRet = SApplication::getSingletonPtr()->CreateAnimationByName(GetClassName());
-			pRet->copy(this);
-			return pRet;
-		}
+		IAnimation * clone() const;
 
 		/**
 		* Reset the initialization state of this animation.
 		*
 		* @see #initialize(int, int, int, int)
 		*/
-	public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-	}
+	public: void initialize(int width, int height, int parentWidth, int parentHeight);
 
-	public: void reset() {
-		mEnded = false;
-
-		mStarted = false;
-
-		mStartTime = -1;
-
-		mStartOffset = 0;
-		mDuration = 0;
-		mRepeatCount = 0;
-		mRepeated = 0;
-		mRepeatMode = RESTART;
-		mListener = NULL;
-		mScaleFactor = 1.0f;
-
-
-		mMore = true;
-		mOneMoreTime = true;
-
-
-		mFillBefore = true;
-
-		mFillAfter = false;
-
-		mFillEnabled = false;
-		mTransformation.clear();
-		ensureInterpolator();
-	}
+	public: void reset();
 
 			/**
 			* Cancel the animation. Cancelling an animation invokes the animation
@@ -287,8 +226,7 @@ namespace SOUI {
 			* @see #start()
 			* @see #startNow()
 			*/
-	public: void cancel() {
-	}
+	public: void cancel();
 
 			/**
 			* Sets the acceleration curve for this animation. Defaults to a linear
@@ -297,9 +235,7 @@ namespace SOUI {
 			* @param i The interpolator which defines the acceleration curve
 			* @attr ref android.R.styleable#Animation_interpolator
 			*/
-	public: void setInterpolator(IInterpolator *i) {
-		mInterpolator = i;
-	}
+	public: void setInterpolator(IInterpolator *i);
 
 			/**
 			* How long this animation should last. The duration cannot be negative.
@@ -310,42 +246,23 @@ namespace SOUI {
 			*
 			* @attr ref android.R.styleable#Animation_duration
 			*/
-	public: void setDuration(long durationMillis) {
-		mDuration = durationMillis;
-	}
+	public: void setDuration(long durationMillis);
 
 			/**
 			* How much to scale the duration by.
 			*
 			* @param scale The amount to scale the duration.
 			*/
-	public: void scaleCurrentDuration(float scale) {
-		mDuration = (long)(mDuration * scale);
-		mStartOffset = (long)(mStartOffset * scale);
-	}
+	public: void scaleCurrentDuration(float scale);
 
-	public: void setFillBefore(bool bFill)
-	{
-		mFillBefore = bFill;
-	}
-	public: bool getFillBefore() const
-	{
-		return mFillBefore;
-	}
+	public: void setFillBefore(bool bFill);
+	public: bool getFillBefore() const;
 
-	public: void setFillAfter(bool bFill)
-	{
-		mFillAfter = bFill;
-	}
+	public: void setFillAfter(bool bFill);
 
-	public: bool getFillAfter() const
-	{
-		return mFillAfter;
-	}
+	public: bool getFillAfter() const;
 
-			bool isFillEnabled() const {
-				return mFillEnabled;
-			}
+			bool isFillEnabled() const;
 
 			/**
 			* If fillEnabled is true, the animation will apply the value of fillBefore.
@@ -358,14 +275,8 @@ namespace SOUI {
 			* @see #setFillBefore(boolean)
 			* @see #setFillAfter(boolean)
 			*/
-			void setFillEnabled(bool fillEnabled)
-			{
-				mFillEnabled = fillEnabled;
-			}
-	public: void setStartOffset(long offset)
-	{
-		mStartOffset = offset;
-	}
+			void setFillEnabled(bool fillEnabled);
+	public: void setStartOffset(long offset);
 			/**
 			* When this animation should start. When the start time is set to
 			* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
@@ -376,29 +287,19 @@ namespace SOUI {
 			*
 			* @param startTimeMillis the start time in milliseconds
 			*/
-	public: void setStartTime(int64_t startTimeMillis) {
-		mStartTime = startTimeMillis;
-		mStarted = mEnded = false;
-		mCycleFlip = false;
-		mRepeated = 0;
-		mMore = true;
-	}
+	public: void setStartTime(int64_t startTimeMillis);
 
 			/**
 			* Convenience method to start the animation the first time
 			* {@link #getTransformation(long, STransformation)} is invoked.
 			*/
-	public: void start() {
-		setStartTime(-1);
-	}
+	public: void start();
 
 			/**
 			* Convenience method to start the animation at the current time in
 			* milliseconds.
 			*/
-	public: void startNow() {
-		setStartTime(STime::GetCurrentTimeMs());
-	}
+	public: void startNow();
 
 			/**
 			* Defines what this animation should do when it reaches the end. This
@@ -408,9 +309,7 @@ namespace SOUI {
 			* @param repeatMode {@link #RESTART} or {@link #REVERSE}
 			* @attr ref android.R.styleable#Animation_repeatMode
 			*/
-	public: void setRepeatMode(RepeatMode repeatMode) {
-		mRepeatMode = repeatMode;
-	}
+	public: void setRepeatMode(RepeatMode repeatMode);
 
 			/**
 			* Sets how many times the animation should be repeated. If the repeat
@@ -421,12 +320,7 @@ namespace SOUI {
 			* @param repeatCount the number of times the animation should be repeated
 			* @attr ref android.R.styleable#Animation_repeatCount
 			*/
-	public: void setRepeatCount(int repeatCount) {
-		if (repeatCount < 0) {
-			repeatCount = INFINITE;
-		}
-		mRepeatCount = repeatCount;
-	}
+	public: void setRepeatCount(int repeatCount);
 
 
 			/**
@@ -436,9 +330,7 @@ namespace SOUI {
 			* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 			* @attr ref android.R.styleable#Animation_zAdjustment
 			*/
-	public: void setZAdjustment(int zAdjustment) {
-		mZAdjustment = zAdjustment;
-	}
+	public: void setZAdjustment(int zAdjustment);
 
 			/**
 			* The scale factor is set by the call to <code>getTransformation</code>. Overrides of
@@ -449,9 +341,7 @@ namespace SOUI {
 			* @return float The scale factor that should be applied to pre-scaled values in
 			* an Animation such as the pivot points in {@link ScaleAnimation} and {@link RotateAnimation}.
 			*/
-	protected: float getScaleFactor() {
-		return mScaleFactor;
-	}
+	protected: float getScaleFactor();
 
 
 			   /**
@@ -460,9 +350,7 @@ namespace SOUI {
 			   * @return the {@link Interpolator} associated to this animation
 			   * @attr ref android.R.styleable#Animation_interpolator
 			   */
-	public: IInterpolator* getInterpolator() const {
-		return mInterpolator;
-	}
+	public: IInterpolator* getInterpolator() const;
 
 			/**
 			* When this animation should start. If the animation has not startet yet,
@@ -471,9 +359,7 @@ namespace SOUI {
 			* @return the time in milliseconds when the animation should start or
 			*         {@link #START_ON_FIRST_FRAME}
 			*/
-	public: int64_t getStartTime() const {
-		return mStartTime;
-	}
+	public: int64_t getStartTime() const;
 
 			/**
 			* How long this animation should last
@@ -481,9 +367,7 @@ namespace SOUI {
 			* @return the duration in milliseconds of the animation
 			* @attr ref android.R.styleable#Animation_duration
 			*/
-	public: long getDuration() const {
-		return mDuration;
-	}
+	public: long getDuration() const;
 
 			/**
 			* When this animation should start, relative to StartTime
@@ -491,9 +375,7 @@ namespace SOUI {
 			* @return the start offset in milliseconds
 			* @attr ref android.R.styleable#Animation_startOffset
 			*/
-	public: long getStartOffset() const {
-		return mStartOffset;
-	}
+	public: long getStartOffset() const;
 
 			/**
 			* Defines what this animation should do when it reaches the end.
@@ -501,9 +383,7 @@ namespace SOUI {
 			* @return either one of {@link #REVERSE} or {@link #RESTART}
 			* @attr ref android.R.styleable#Animation_repeatMode
 			*/
-	public: RepeatMode getRepeatMode() const {
-		return mRepeatMode;
-	}
+	public: RepeatMode getRepeatMode() const;
 
 			/**
 			* Defines how many times the animation should repeat. The default value
@@ -512,9 +392,7 @@ namespace SOUI {
 			* @return the number of times the animation should repeat, or {@link #INFINITE}
 			* @attr ref android.R.styleable#Animation_repeatCount
 			*/
-	public: int getRepeatCount() const {
-		return mRepeatCount;
-	}
+	public: int getRepeatCount() const;
 
 			/**
 			* Returns the Z ordering mode to use while running the animation as
@@ -524,9 +402,7 @@ namespace SOUI {
 			* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 			* @attr ref android.R.styleable#Animation_zAdjustment
 			*/
-	public: int getZAdjustment() const {
-		return mZAdjustment;
-	}
+	public: int getZAdjustment() const;
 
 
 			/**
@@ -537,19 +413,13 @@ namespace SOUI {
 			* @param listener the animation listener to be notified
 			*/
 	public: 
-		void setAnimationListener(IAnimationListener* listener) {
-		mListener = listener;
-	}
+		void setAnimationListener(IAnimationListener* listener);
 	
 			/**
 			* Gurantees that this animation has an interpolator. Will use
 			* a AccelerateDecelerateInterpolator is nothing else was specified.
 			*/
-	protected: void ensureInterpolator() {
-		if (!mInterpolator) {
-			mInterpolator.Attach(new SAccelerateDecelerateInterpolator());
-		}
-	}
+	protected: void ensureInterpolator();
 
 			   /**
 			   * Compute a hint at how long the entire animation may last, in milliseconds.
@@ -557,9 +427,7 @@ namespace SOUI {
 			   * duration than what is computed here, but generally this should be
 			   * accurate.
 			   */
-	public: long computeDurationHint() const {
-		return (getStartOffset() + getDuration()) * (getRepeatCount() + 1);
-	}
+	public: long computeDurationHint() const;
 			/**
 			 * Gets the transformation to apply at a specified point in time. Implementations of this
 			 * method should always replace the specified STransformation or document they are doing
@@ -573,10 +441,7 @@ namespace SOUI {
 			 * @return True if the animation is still running
 			 */
 	public: bool getTransformation(uint64_t currentTime, STransformation & outTransformation,
-		float scale) {
-		mScaleFactor = scale;
-		return getTransformation(currentTime, outTransformation);
-	}
+		float scale);
 			/**
 			* Gets the transformation to apply at a specified point in time. Implementations of this
 			* method should always replace the specified STransformation or document they are doing
@@ -587,114 +452,29 @@ namespace SOUI {
 			*        caller and will be filled in by the animation.
 			* @return True if the animation is still running
 			*/
-	public: bool getTransformation(int64_t currentTime, STransformation & outTransformation) {
-		if (mStartTime == -1) {
-			mStartTime = currentTime;
-		}
+	public: bool getTransformation(int64_t currentTime, STransformation & outTransformation);
 
-		int64_t startOffset = getStartOffset();
-		long duration = mDuration;
-		float normalizedTime;
-		if (duration != 0) {
-			normalizedTime = ((float)(currentTime - (mStartTime + startOffset))) /
-				(float)duration;
-		}
-		else {
-			// time is a step-change with a zero duration
-			normalizedTime = currentTime < mStartTime ? 0.0f : 1.0f;
-		}
+	private: bool isCanceled();
 
-		bool expired = normalizedTime >= 1.0f || isCanceled();
-		mMore = !expired;
+	private: void fireAnimationStart();
 
-		if (!mFillEnabled) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
+	private: void fireAnimationRepeat();
 
-		if ((normalizedTime >= 0.0f || mFillBefore) && (normalizedTime <= 1.0f || mFillAfter)) {
-			if (!mStarted) {
-				fireAnimationStart();
-				mStarted = true;
-			}
-
-			if (mFillEnabled) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
-
-			if (mCycleFlip) {
-				normalizedTime = 1.0f - normalizedTime;
-			}
-
-			float interpolatedTime = mInterpolator->getInterpolation(normalizedTime);
-			applyTransformation(interpolatedTime, outTransformation);
-		}
-
-		if (expired) {
-			if (mRepeatCount == mRepeated || isCanceled()) {
-				if (!mEnded) {
-					mEnded = true;
-					fireAnimationEnd();
-				}
-			}
-			else {
-				if (mRepeatCount > 0) {
-					mRepeated++;
-				}
-
-				if (mRepeatMode == REVERSE) {
-					mCycleFlip = !mCycleFlip;
-				}
-
-				mStartTime = -1;
-				mMore = true;
-
-				fireAnimationRepeat();
-			}
-		}
-
-		if (!mMore && mOneMoreTime) {
-			mOneMoreTime = false;
-			return true;
-		}
-
-		return mMore;
-	}
-
-	private: bool isCanceled() {
-		return mStartTime == -2;
-	}
-
-	private: void fireAnimationStart() {
-		if (mListener != NULL) {
-			mListener->onAnimationStart(this);
-		}
-	}
-
-	private: void fireAnimationRepeat() {
-		if (mListener != NULL) {
-			mListener->onAnimationRepeat(this);
-		}
-	}
-
-	private: void fireAnimationEnd() {
-		if (mListener != NULL) {
-			mListener->onAnimationEnd(this);
-		}
-	}
+	private: void fireAnimationEnd();
 
 			 /**
 			 * <p>Indicates whether this animation has started or not.</p>
 			 *
 			 * @return true if the animation has started, false otherwise
 			 */
-	public: bool hasStarted() const {
-		return mStarted;
-	}
+	public: bool hasStarted() const;
 
 			/**
 			* <p>Indicates whether this animation has ended or not.</p>
 			*
 			* @return true if the animation has ended, false otherwise
 			*/
-	public: bool hasEnded() const {
-		return mEnded;
-	}
+	public: bool hasEnded() const;
 
 			/**
 			* Helper for getTransformation. Subclasses should implement this to apply
@@ -708,8 +488,7 @@ namespace SOUI {
 			*        transforms.
 			*/
 	protected:
-		virtual void applyTransformation(float interpolatedTime, STransformation & t) {
-		}
+		virtual void applyTransformation(float interpolatedTime, STransformation & t);
 
 		/**
 		* Convert the information in the description of a size to an actual
@@ -723,17 +502,7 @@ namespace SOUI {
 		* @return The dimension to use for the animation
 		*/
 	protected: 
-	int resolveSize(ValueType type, float value, int size, int parentSize) {
-		switch (type) {
-		case RELATIVE_TO_SELF:
-			return (int)(size * value);
-		case RELATIVE_TO_PARENT:
-			return (int)(parentSize * value);
-		case ABSOLUTE_VALUE:
-		default:
-			return (int)value;
-		}
-	}
+	int resolveSize(ValueType type, float value, int size, int parentSize);
 
 	public:
 		/**
@@ -741,9 +510,7 @@ namespace SOUI {
 		*
 		* @hide
 		*/
-		virtual bool hasAlpha() const {
-			return false;
-		}
+		virtual bool hasAlpha() const;
 
 	public:
 		SOUI_ATTRS_BEGIN()

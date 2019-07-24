@@ -43,35 +43,21 @@ public:
      * @param toAlpha Ending alpha value for the animation.
      */
 public:
-	SAlphaAnimation(float fromAlpha=0.0f, float toAlpha=0.0f) {
-        mFromAlpha = fromAlpha;
-        mToAlpha = toAlpha;
-    }
+	SAlphaAnimation(float fromAlpha=0.0f, float toAlpha=0.0f);
     
     /**
      * Changes the alpha property of the supplied {@link STransformation}
      */
 protected:
-	virtual void applyTransformation(float interpolatedTime, STransformation & t) {
-        float alpha = mFromAlpha;
-        t.setAlpha((BYTE)((alpha + ((mToAlpha - alpha) * interpolatedTime))*255));
-    }
+	virtual void applyTransformation(float interpolatedTime, STransformation & t);
 
 public:
     /**
      * @hide
      */
-    virtual bool hasAlpha() const override{
-        return true;
-    }
+    virtual bool hasAlpha() const override;
 
-	virtual void copy(const IAnimation *src) override
-	{
-		SAnimation::copy(src);
-		const SAlphaAnimation *src2 = sobj_cast<const SAlphaAnimation>(src);
-		mFromAlpha = src2->mFromAlpha;
-		mToAlpha = src2->mToAlpha;
-	}
+	virtual void copy(const IAnimation *src) override;
 
 };
 

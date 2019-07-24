@@ -47,15 +47,15 @@ namespace SOUI{
 
 	class SOUI_EXP SAnimationSet : public SAnimation {
 		SOUI_CLASS_NAME(SAnimationSet,L"set")
-		enum{
-			PROPERTY_FILL_AFTER_MASK         = 0x1,
-			PROPERTY_FILL_BEFORE_MASK        = 0x2,
-			PROPERTY_REPEAT_MODE_MASK        = 0x4,
-			PROPERTY_START_OFFSET_MASK       = 0x8,
-			PROPERTY_SHARE_INTERPOLATOR_MASK = 0x10,
-			PROPERTY_DURATION_MASK           = 0x20,
-			PROPERTY_MORPH_MATRIX_MASK       = 0x40,
-			PROPERTY_CHANGE_BOUNDS_MASK      = 0x80,
+			enum{
+				PROPERTY_FILL_AFTER_MASK         = 0x1,
+				PROPERTY_FILL_BEFORE_MASK        = 0x2,
+				PROPERTY_REPEAT_MODE_MASK        = 0x4,
+				PROPERTY_START_OFFSET_MASK       = 0x8,
+				PROPERTY_SHARE_INTERPOLATOR_MASK = 0x10,
+				PROPERTY_DURATION_MASK           = 0x20,
+				PROPERTY_MORPH_MATRIX_MASK       = 0x40,
+				PROPERTY_CHANGE_BOUNDS_MASK      = 0x80,
 		};
 
 	private:
@@ -74,321 +74,106 @@ namespace SOUI{
 		*        should use the interpolator associated with this AnimationSet.
 		*        Pass false if each animation should use its own interpolator.
 		*/
-	public: SAnimationSet(bool shareInterpolator=true) {
-				setFlag(PROPERTY_SHARE_INTERPOLATOR_MASK, shareInterpolator);
-				init();
-			}
+	public: SAnimationSet(bool shareInterpolator=true);
 
 	protected:
-		void copy(const IAnimation *src)
-		{
-			SAnimation::copy(src);
-			const SAnimationSet * src2 = sobj_cast<const SAnimationSet>(src);
-			mAnimations.Copy(src2->mAnimations);
-			mFlags = src2->mFlags;
-		}
+		void copy(const IAnimation *src);
 
 
-	private: void setFlag(int mask, bool value) {
-				 if (value) {
-					 mFlags |= mask;
-				 } else {
-					 mFlags &= ~mask;
-				 }
-			 }
+	private: 
+		void setFlag(int mask, bool value);
 
-	private: void init() {
-				 mFlags = 0;
-			 }
+	private: 
+		void init();
 
-	public: void setFillAfter(bool fillAfter) {
-				mFlags |= PROPERTY_FILL_AFTER_MASK;
-				SAnimation::setFillAfter(fillAfter);
-			}
+	public: 
+		void setFillAfter(bool fillAfter);
 
-	public: void setFillBefore(bool fillBefore) {
-				mFlags |= PROPERTY_FILL_BEFORE_MASK;
-				SAnimation::setFillBefore(fillBefore);
-			}
+		void setFillBefore(bool fillBefore);
 
-	public: void setRepeatMode(RepeatMode repeatMode) {
-				mFlags |= PROPERTY_REPEAT_MODE_MASK;
-				SAnimation::setRepeatMode(repeatMode);
-			}
+		void setRepeatMode(RepeatMode repeatMode);
 
-	public: void setStartOffset(long startOffset) {
-				mFlags |= PROPERTY_START_OFFSET_MASK;
-				SAnimation::setStartOffset(startOffset);
-			}
+		void setStartOffset(long startOffset);
 
-			/**
-			* @hide
-			*/
-	public: bool hasAlpha() {
-				if (mDirty) {
-					mDirty = mHasAlpha = false;
+		/**
+		* @hide
+		*/
+		bool hasAlpha();
 
-					int count = mAnimations.GetCount();
-					for (int i = 0; i < count; i++) {
-						if (mAnimations.GetAt(i)->hasAlpha()) {
-							mHasAlpha = true;
-							break;
-						}
-					}
-				}
+		/**
+		* <p>Sets the duration of every child animation.</p>
+		*
+		* @param durationMillis the duration of the animation, in milliseconds, for
+		*        every child in this set
+		*/
+		void setDuration(long durationMillis);
 
-				return mHasAlpha;
-			}
+		/**
+		* Add a child animation to this animation set.
+		* The transforms of the child animations are applied in the order
+		* that they were added
+		* @param a Animation to add.
+		*/
+		void addAnimation(IAnimation  *a);
 
-			/**
-			* <p>Sets the duration of every child animation.</p>
-			*
-			* @param durationMillis the duration of the animation, in milliseconds, for
-			*        every child in this set
-			*/
-	public: void setDuration(long durationMillis) {
-				mFlags |= PROPERTY_DURATION_MASK;
-				SAnimation::setDuration(durationMillis);
-				mLastEnd = mStartOffset + mDuration;
-			}
+		/**
+		* Sets the start time of this animation and all child animations
+		* 
+		* @see android.view.animation.Animation#setStartTime(long)
+		*/
+		void setStartTime(int64_t startTimeMillis);
 
-			/**
-			* Add a child animation to this animation set.
-			* The transforms of the child animations are applied in the order
-			* that they were added
-			* @param a Animation to add.
-			*/
-	public: void addAnimation(IAnimation  *a) {
-				mAnimations.Add(a);
+		int64_t getStartTime() const;
 
-				if ((mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK) {
-					mLastEnd = mStartOffset + mDuration;
-				} else {
-					if (mAnimations.GetCount() == 1) {
-						mDuration = a->getStartOffset() + a->getDuration();
-						mLastEnd = mStartOffset + mDuration;
-					} else {
-						mLastEnd = smax(mLastEnd, a->getStartOffset() + a->getDuration());
-						mDuration = mLastEnd - mStartOffset;
-					}
-				}
+		/**
+		* The duration of an AnimationSet is defined to be the 
+		* duration of the longest child animation.
+		* 
+		* @see android.view.animation.Animation#getDuration()
+		*/
+		long getDuration();
 
-				mDirty = true;
-			}
-
-			/**
-			* Sets the start time of this animation and all child animations
-			* 
-			* @see android.view.animation.Animation#setStartTime(long)
-			*/
-	public: void setStartTime(int64_t startTimeMillis) {
-				SAnimation::setStartTime(startTimeMillis);
-
-				int count = mAnimations.GetCount();
-
-				for (int i = 0; i < count; i++) {
-					mAnimations[i]->setStartTime(startTimeMillis);
-				}
-			}
-
-	public: int64_t getStartTime() const{
-				int64_t startTime = STime::GetCurrentTimeMs()+10000000;
-
-				int count = mAnimations.GetCount();
-
-				for (int i = 0; i < count; i++) {
-					IAnimation *a = mAnimations.GetAt(i);
-					startTime = smin(startTime, a->getStartTime());
-				}
-
-				return startTime;
-			}
-
-			/**
-			* The duration of an AnimationSet is defined to be the 
-			* duration of the longest child animation.
-			* 
-			* @see android.view.animation.Animation#getDuration()
-			*/
-	public: long getDuration() {
-				int count = mAnimations.GetCount();
-				long duration = 0;
-
-				bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
-				if (durationSet) {
-					duration = mDuration;
-				} else {
-					for (int i = 0; i < count; i++) {
-						duration = smax(duration, mAnimations[i]->getDuration());
-					}
-				}
-
-				return duration;
-			}
-
-			/**
-			* The duration hint of an animation set is the maximum of the duration
-			* hints of all of its component animations.
-			* 
-			* @see android.view.animation.Animation#computeDurationHint
-			*/
-	public: long computeDurationHint() {
-				long duration = 0;
-				int count = mAnimations.GetCount();
-				for (int i = count - 1; i >= 0; --i) {
-					long d = mAnimations[i]->computeDurationHint();
-					if (d > duration) duration = d;
-				}
-				return duration;
-			}
+		/**
+		* The duration hint of an animation set is the maximum of the duration
+		* hints of all of its component animations.
+		* 
+		* @see android.view.animation.Animation#computeDurationHint
+		*/
+		long computeDurationHint();
 
 
 
-			/**
-			* The transformation of an animation set is the concatenation of all of its
-			* component animations.
-			* 
-			* @see android.view.animation.Animation#getTransformation
-			*/
-	public: bool getTransformation(int64_t currentTime, STransformation &t) {
-				int count = mAnimations.GetCount();
+		/**
+		* The transformation of an animation set is the concatenation of all of its
+		* component animations.
+		* 
+		* @see android.view.animation.Animation#getTransformation
+		*/
+		bool getTransformation(int64_t currentTime, STransformation &t);
 
-				bool more = false;
-				bool started = false;
-				bool ended = true;
+		/**
+		* @see android.view.animation.Animation#scaleCurrentDuration(float)
+		*/
+		void scaleCurrentDuration(float scale);
 
-				t.clear();
+		/**
+		* @see android.view.animation.Animation#initialize(int, int, int, int)
+		*/
+		void initialize(int width, int height, int parentWidth, int parentHeight);
 
-				for (int i = count - 1; i >= 0; --i) {
-					IAnimation * a = mAnimations[i];
+		void reset();
 
-					STransformation temp;
-					more = a->getTransformation(currentTime, temp, getScaleFactor()) || more;
-					t.compose(temp);
+		/**
+		* @hide
+		*/
+		void restoreChildrenStartOffset();
 
-					started = started || a->hasStarted();
-					ended = a->hasEnded() && ended;
-				}
+	protected:
+		BOOL InitFromXml(pugi::xml_node xmlNode);
 
-				if (started && !mStarted) {
-					if (mListener != NULL) {
-						mListener->onAnimationStart(this);
-					}
-					mStarted = true;
-				}
-
-				if (ended != mEnded) {
-					if (mListener != NULL) {
-						mListener->onAnimationEnd(this);
-					}
-					mEnded = ended;
-				}
-
-				return more;
-			}
-
-			/**
-			* @see android.view.animation.Animation#scaleCurrentDuration(float)
-			*/
-	public: void scaleCurrentDuration(float scale) {
-				int count = mAnimations.GetCount();
-				for (int i = 0; i < count; i++) {
-					mAnimations[i]->scaleCurrentDuration(scale);
-				}
-			}
-
-			/**
-			* @see android.view.animation.Animation#initialize(int, int, int, int)
-			*/
-	public: void initialize(int width, int height, int parentWidth, int parentHeight) {
-				bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
-				bool fillAfterSet = (mFlags & PROPERTY_FILL_AFTER_MASK) == PROPERTY_FILL_AFTER_MASK;
-				bool fillBeforeSet = (mFlags & PROPERTY_FILL_BEFORE_MASK) == PROPERTY_FILL_BEFORE_MASK;
-				bool repeatModeSet = (mFlags & PROPERTY_REPEAT_MODE_MASK) == PROPERTY_REPEAT_MODE_MASK;
-				bool shareInterpolator = (mFlags & PROPERTY_SHARE_INTERPOLATOR_MASK)
-					== PROPERTY_SHARE_INTERPOLATOR_MASK;
-				bool startOffsetSet = (mFlags & PROPERTY_START_OFFSET_MASK)
-					== PROPERTY_START_OFFSET_MASK;
-
-				if (shareInterpolator) {
-					ensureInterpolator();
-				}
-
-
-				long duration = mDuration;
-				bool fillAfter = mFillAfter;
-				bool fillBefore = mFillBefore;
-				RepeatMode repeatMode = mRepeatMode;
-				IInterpolator *interpolator = mInterpolator;
-				long startOffset = mStartOffset;
-
-				mStoredOffsets.SetCount(mAnimations.GetCount());
-
-				for (UINT i = 0; i < mAnimations.GetCount(); i++) {
-				    IAnimation* a = mAnimations[i];
-				    if (durationSet) {
-				        a->setDuration(duration);
-				    }
-				    if (fillAfterSet) {
-				        a->setFillAfter(fillAfter);
-				    }
-				    if (fillBeforeSet) {
-				        a->setFillBefore(fillBefore);
-				    }
-				    if (repeatModeSet) {
-				        a->setRepeatMode(repeatMode);
-				    }
-				    if (shareInterpolator) {
-				        a->setInterpolator(interpolator);
-				    }
-				    if (startOffsetSet) {
-				        long offset = a->getStartOffset();
-				        a->setStartOffset(offset + startOffset);
-				        mStoredOffsets[i] = offset;
-				    }
-				    a->initialize(width, height, parentWidth, parentHeight);
-				}
-			}
-
-	public: void reset() {
-				SAnimation::reset();
-				restoreChildrenStartOffset();
-			}
-
-			/**
-			* @hide
-			*/
-			void restoreChildrenStartOffset() {
-				if (mStoredOffsets.GetCount() != mAnimations.GetCount())
-					return;
-
-				for (UINT i = 0; i < mAnimations.GetCount(); i++) {
-					mAnimations[i]->setStartOffset(mStoredOffsets[i]);
-				}
-			}
-
-			protected:
-				BOOL InitFromXml(pugi::xml_node xmlNode)
-				{
-					SAnimation::InitFromXml(xmlNode);
-					pugi::xml_node xmlChild = xmlNode.first_child();
-					while (xmlChild)
-					{
-						IAnimation * ani = SApplication::getSingletonPtr()->CreateAnimationByName(xmlChild.name());
-						if (ani)
-						{
-							ani->InitFromXml(xmlChild);
-							addAnimation(ani);
-							ani->Release();
-						}
-						xmlChild = xmlChild.next_sibling();
-					}
-					return TRUE;
-				}
-
-				SOUI_ATTRS_BEGIN()
-					ATTR_BIT(L"shareInterpolator",mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK,FALSE)
-				SOUI_ATTRS_END()
+		SOUI_ATTRS_BEGIN()
+			ATTR_BIT(L"shareInterpolator",mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK,FALSE)
+		SOUI_ATTRS_END()
 	};
 
 }

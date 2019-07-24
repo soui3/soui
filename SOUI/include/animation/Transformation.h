@@ -55,20 +55,14 @@ protected:
      * Creates a new transformation with alpha = 1 and the identity matrix.
      */
 public:
-	STransformation() {
-        clear();
-    }
+	STransformation();
 
     /**
      * Reset the transformation to a state that leaves the object
      * being animated in an unmodified state. The transformation type is
      * {@link #TYPE_BOTH} by default.
      */
-    void clear() {
-		mMatrix.reset();
-        mAlpha = 255;
-        mTransformationType = TYPE_IDENTITY;
-    }
+    void clear();
 
     /**
      * Indicates the nature of this transformation.
@@ -76,111 +70,58 @@ public:
      * @return {@link #TYPE_ALPHA}, {@link #TYPE_MATRIX},
      *         {@link #TYPE_BOTH} or {@link #TYPE_IDENTITY}.
      */
-    int getTransformationType() const{
-        return mTransformationType;
-    }
+    int getTransformationType() const;
 
-	void setTransformationType(int type)
-	{
-		mTransformationType = type;
-	}
+	void setTransformationType(int type);
     /**
      * Clones the specified transformation.
      *
      * @param t The transformation to clone.
      */
-    void set(STransformation t) {
-        mAlpha = t.getAlpha();
-		mMatrix.SetData(t.getMatrix().GetData());
-
-        mTransformationType = t.getTransformationType();
-    }
+    void set(STransformation t);
 
     /**
      * Apply this STransformation to an existing STransformation, e.g. apply
      * a scale effect to something that has already been rotated.
      * @param t
      */
-    void compose(STransformation t) {
-		if (t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha * t.getAlpha()/255);
-		if (t.hasMatrix()) mMatrix = t.getMatrix() * mMatrix;
-		updateType();
-	}
+    void compose(STransformation t);
     
     /**
      * Like {@link #compose(STransformation)} but does this.postConcat(t) of
      * the transformation matrix.
      * @hide
      */
-    void postCompose(STransformation t) {
-        if(t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha*t.getAlpha()/255);
-        if(t.hasMatrix()) mMatrix *= t.getMatrix();
-		updateType();
-    }
+    void postCompose(STransformation t);
 
     /**
-     * @return The 3x3 Matrix representing the trnasformation to apply to the
+     * @return The 3x3 Matrix representing the transformation to apply to the
      * coordinates of the object being animated
      */
-    const SMatrix & getMatrix() const {
-        return mMatrix;
-    }
+    const SMatrix & getMatrix() const;
     
-	SMatrix & getMatrix() {
-		return mMatrix;
-	}
+	SMatrix & getMatrix();
 
-	void setMatrix(const SMatrix & mtx)
-	{
-		mMatrix = mtx;
-		if (mMatrix.isIdentity())
-			mTransformationType |= TYPE_MATRIX;
-		else
-			mTransformationType &= ~TYPE_MATRIX;
-	}
+	void setMatrix(const SMatrix & mtx);
     /**
      * Sets the degree of transparency
      * @param alpha 255 means fully opaqe and 0 means fully transparent
      */
-    void setAlpha(BYTE alpha) {
-        mAlpha = alpha;
-		if (mAlpha == 0xFF)
-			mTransformationType &= ~TYPE_ALPHA;
-		else
-			mTransformationType |= TYPE_ALPHA;
-    }
+    void setAlpha(BYTE alpha);
 
-	void updateType()
-	{
-		mTransformationType = TYPE_IDENTITY;
-		if (mAlpha != 0xFF)
-			mTransformationType |= TYPE_ALPHA;
-		if (!mMatrix.isIdentity())
-			mTransformationType |= TYPE_MATRIX;
-	}
+	void updateType();
 
     /**
      * @return The degree of transparency
      */
-    BYTE getAlpha() const{
-        return mAlpha;
-    }
+    BYTE getAlpha() const;
 
 
-	bool hasAlpha() const
-	{
-		return (getTransformationType() & TYPE_ALPHA) == TYPE_ALPHA;
-	}
+	bool hasAlpha() const;
 
-	bool hasMatrix() const
-	{
-		return (getTransformationType() & TYPE_MATRIX) == TYPE_MATRIX;
-	}
+	bool hasMatrix() const;
 
-	bool isIdentity() const
-	{
-		return getTransformationType() == TYPE_IDENTITY;
-	}
+	bool isIdentity() const;
 };
 
 }
