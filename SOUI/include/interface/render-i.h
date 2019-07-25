@@ -83,6 +83,13 @@ namespace SOUI
 		kSrcAnd = SRCAND,
 	};
 
+	struct fPoint {
+		float fX, fY;
+	};
+
+	struct fRect {
+		float    fLeft, fTop, fRight, fBottom;
+	};
     /**
     * @struct     IRenderFactory
     * @brief      RenderFactory对象
@@ -661,7 +668,7 @@ namespace SOUI
 		(i.e. is not 0 <= index < countPoints()) then the returned coordinates
 		will be (0,0)
 		*/
-		virtual POINT getPoint(int index) const PURE;
+		virtual fPoint getPoint(int index) const PURE;
 
 		/** Returns the number of points in the path. Up to max points are copied.
 
@@ -669,7 +676,7 @@ namespace SOUI
 		@param max The maximum number of points to copy into points
 		@return the actual number of points in the path
 		*/
-		virtual int getPoints(POINT points[], int max) const PURE;
+		virtual int getPoints(fPoint points[], int max) const PURE;
 
 		/** Return the number of verbs in the path
 		*/

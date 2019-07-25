@@ -9,12 +9,10 @@
 #define _SPoint_DEFINED_
 
 #include "Sfloat.h"
-
+#include <interface/render-i.h>
 namespace SOUI{
 
-struct SOUI_EXP SPoint {
-    float    fX, fY;
-
+struct SOUI_EXP SPoint : public fPoint {
     static SPoint Make(float x, float y) {
         SPoint pt;
         pt.set(x, y);

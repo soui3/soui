@@ -185,6 +185,7 @@ void SObjectDefaultRegister::RegisterInterpolator(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SBounceInterpolator>();
 	objFactory->TplRegisterFactory<SCycleInterpolator>();
 	objFactory->TplRegisterFactory<SOvershootInterpolator>();
+	objFactory->TplRegisterFactory<SPathInterpolator>();
 }
 
 void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory)

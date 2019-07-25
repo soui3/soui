@@ -174,4 +174,62 @@ namespace SOUI
 			SOUI_ATTRS_END()
 
 	};
+
+	class SPathInterpolator : public SInterpolatorBase {
+		SOUI_CLASS_NAME(SPathInterpolator, L"path")
+
+	private:
+		SArray<fPoint> mPt;
+	public:
+		/**
+		* Create an interpolator for an arbitrary <code>Path</code>. The <code>Path</code>
+		* must begin at <code>(0, 0)</code> and end at <code>(1, 1)</code>.
+		*
+		* @param path The <code>Path</code> to use to make the line representing the interpolator.
+		*/
+		SPathInterpolator();
+
+		/**
+		* Create an interpolator for a quadratic Bezier curve. The end points
+		* <code>(0, 0)</code> and <code>(1, 1)</code> are assumed.
+		*
+		* @param controlX The x coordinate of the quadratic Bezier control point.
+		* @param controlY The y coordinate of the quadratic Bezier control point.
+		*/
+		SPathInterpolator(float controlX, float controlY);
+
+		/**
+		* Create an interpolator for a cubic Bezier curve.  The end points
+		* <code>(0, 0)</code> and <code>(1, 1)</code> are assumed.
+		*
+		* @param controlX1 The x coordinate of the first control point of the cubic Bezier.
+		* @param controlY1 The y coordinate of the first control point of the cubic Bezier.
+		* @param controlX2 The x coordinate of the second control point of the cubic Bezier.
+		* @param controlY2 The y coordinate of the second control point of the cubic Bezier.
+		*/
+		SPathInterpolator(float controlX1, float controlY1, float controlX2, float controlY2);
+
+	private:
+		void initQuad(float controlX, float controlY);
+
+		void initCubic(float x1, float y1, float x2, float y2);
+
+		void initPath(IPath * path);
+
+	public:
+		/**
+		* Using the line in the Path in this interpolator that can be described as
+		* <code>y = f(x)</code>, finds the y coordinate of the line given <code>t</code>
+		* as the x coordinate. Values less than 0 will always return 0 and values greater
+		* than 1 will always return 1.
+		*
+		* @param t Treated as the x coordinate along the line.
+		* @return The y coordinate of the Path along the line where x = <code>t</code>.
+		* @see Interpolator#getInterpolation(float)
+		*/
+		float getInterpolation(float t) const override;
+
+	protected:
+		void OnInitFinished(pugi::xml_node xmlNode) override;
+	};
 }

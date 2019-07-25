@@ -16,7 +16,7 @@ namespace SOUI{
 
 /** \struct SkRect
 */
-struct SOUI_EXP SRect {
+struct SOUI_EXP SRect : public fRect {
 	static SRect IMake(const RECT & src)
 	{
 		SRect rc;
@@ -24,7 +24,6 @@ struct SOUI_EXP SRect {
 		return rc;
 	}
 
-    float    fLeft, fTop, fRight, fBottom;
 
     /**
      *  Return true if the rectangle's width or height are <= 0

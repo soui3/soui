@@ -297,9 +297,9 @@ namespace SOUI
 
 		virtual int countPoints() const;
 
-		virtual POINT getPoint(int index) const;
+		virtual fPoint getPoint(int index) const;
 
-		virtual int getPoints(POINT points[], int max) const;
+		virtual int getPoints(fPoint points[], int max) const;
 
 		virtual int countVerbs() const;
 

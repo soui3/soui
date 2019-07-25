@@ -1960,22 +1960,22 @@ namespace SOUI
 		return m_skPath.countPoints();
 	}
 
-	POINT SPath_Skia::getPoint(int index) const
+	fPoint SPath_Skia::getPoint(int index) const
 	{
 		SkPoint ret = m_skPath.getPoint(index);
-		POINT pt = {(int)ret.fX,(int)ret.fY};
+		fPoint pt = {(int)ret.fX,(int)ret.fY};
 		return pt;
 	}
 
-	int SPath_Skia::getPoints(POINT points[], int max) const
+	int SPath_Skia::getPoints(fPoint points[], int max) const
 	{
 		SASSERT(points);
 		SkPoint *pts = new SkPoint[max];
 		int nRet = m_skPath.getPoints(pts,max);
 		for(int i=0;i<nRet;i++)
 		{
-			points[i].x = (int)pts[i].fX;
-			points[i].y = (int)pts[i].fY;
+			points[i].fX = (int)pts[i].fX;
+			points[i].fY = (int)pts[i].fY;
 		}
 		delete []pts;
 		return nRet;

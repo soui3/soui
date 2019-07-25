@@ -146,4 +146,108 @@ namespace SOUI
 	{
 	}
 
+
+	///////////////////////////////////////////////////////////////////////////////////
+	// This governs how accurate the approximation of the Path is.
+	SPathInterpolator::SPathInterpolator() {
+	}
+
+	SPathInterpolator::SPathInterpolator(float controlX, float controlY) {
+		initQuad(controlX, controlY);
+	}
+
+	SPathInterpolator::SPathInterpolator(float controlX1, float controlY1, float controlX2, float controlY2) {
+		initCubic(controlX1, controlY1, controlX2, controlY2);
+	}
+
+	void SPathInterpolator::initQuad(float controlX, float controlY) {
+		SAutoRefPtr<IPath> path;
+		GETRENDERFACTORY->CreatePath(&path);
+		if (path)
+		{
+			path->moveTo(0, 0);
+			path->quadTo(controlX, controlY, 1.f, 1.f);
+			initPath(path);
+		}
+	}
+
+	void SPathInterpolator::initCubic(float x1, float y1, float x2, float y2) {
+		SAutoRefPtr<IPath> path;
+		GETRENDERFACTORY->CreatePath(&path);
+		if (path)
+		{
+			path->moveTo(0, 0);
+			path->cubicTo(x1, y1, x2, y2, 1.f, 1.f);
+			initPath(path);
+		}
+	}
+
+	void SPathInterpolator::initPath(IPath * path) {
+		int numPoints = path->countPoints();
+		mPt.SetCount(numPoints);
+		for (int i = 0; i < numPoints; i++) {
+			mPt[i] = path->getPoint(i);
+		}
+	}
+
+	float SPathInterpolator::getInterpolation(float t) const{
+		if (t <= 0) {
+			return 0;
+		}
+		else if (t >= 1) {
+			return 1;
+		}
+		// Do a binary search for the correct x to interpolate between.
+		int startIndex = 0;
+		int endIndex = mPt.GetCount() - 1;
+
+		while (endIndex - startIndex > 1) {
+			int midIndex = (startIndex + endIndex) / 2;
+			if (t < mPt[midIndex].fX) {
+				endIndex = midIndex;
+			}
+			else {
+				startIndex = midIndex;
+			}
+		}
+
+		float xRange = mPt[endIndex].fX - mPt[startIndex].fX;
+		if (xRange == 0) {
+			return mPt[startIndex].fX;
+		}
+
+		float tInRange = t - mPt[startIndex].fX;
+		float fraction = tInRange / xRange;
+
+		float startY = mPt[startIndex].fY;
+		float endY = mPt[endIndex].fY;
+		return startY + (fraction * (endY - startY));
+		return 0;
+	}
+
+	void SPathInterpolator::OnInitFinished(pugi::xml_node xmlNode)
+	{
+		fPoint pts[2];
+		bool hasCtrl1 = false, hasCtrl2 = false;
+		if (xmlNode.attribute(L"controlX1") && xmlNode.attribute(L"controlY1"))
+		{
+			hasCtrl1 = true;
+			pts[0].fX = xmlNode.attribute(L"controlX1").as_float();
+			pts[0].fY = xmlNode.attribute(L"controlY1").as_float();
+		}
+		if (xmlNode.attribute(L"controlX2") && xmlNode.attribute(L"controlY2"))
+		{
+			hasCtrl2 = true;
+			pts[1].fX = xmlNode.attribute(L"controlX2").as_float();
+			pts[1].fY = xmlNode.attribute(L"controlY2").as_float();
+		}
+		if (hasCtrl1 && hasCtrl2)
+		{
+			initCubic(pts[0].fX, pts[0].fY, pts[1].fX, pts[1].fY);
+		}
+		else if (hasCtrl1)
+		{
+			initQuad(pts[0].fX, pts[0].fY);
+		}
+	}
 }
