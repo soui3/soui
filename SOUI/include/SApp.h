@@ -37,7 +37,7 @@
 #define GETREALWNDHANDLER   SOUI::SApplication::getSingleton().GetRealWndHander()
 #define GETTOOLTIPFACTORY   SOUI::SApplication::getSingleton().GetToolTipFactory()
 
-#define LOADXML(p1,p2,p3)   SOUI::SApplication::getSingleton().LoadXmlDocment(p1,p2,p3)
+#define LOADXML(p1,p2)   SOUI::SApplication::getSingleton().LoadXmlDocment(p1,p2)
 #define LOADIMAGE(p1,p2)    SOUI::SApplication::getSingleton().LoadImage(p1,p2)
 #define LOADIMAGE2(p1)      SOUI::SApplication::getSingleton().LoadImage2(p1)
 #define LOADICON(p1,p2)     SOUI::SApplication::getSingleton().LoadIcon(p1,p2,p2)
@@ -50,7 +50,6 @@
 #define GETLAYOUTSIZE(x)    SOUI::SApplication::getSingleton().GetLayoutSize(x)
 
 #define CREATEINTERPOLATOR(x)  SOUI::SApplication::getSingleton().CreateInterpolatorByName(x)
-#define RT_LAYOUT _T("LAYOUT")
 
 namespace SOUI
 {
@@ -143,26 +142,14 @@ public:
      * LoadXmlDocment
      * @brief    从资源中加载一个XML Document。
      * @param [out] pugi::xml_document & xmlDoc --  输出的xml_document对象
-     * @param    LPCTSTR pszXmlName --  XML文件在资源中的name
-     * @param    LPCTSTR pszType --  XML文件在资源中的type
+     * @param    const SStringT & strResId --  XML文件在资源中的type:name
      * @return   BOOL true-加载成功, false-加载失败
      *
      * Describe  
      */
-    BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,LPCTSTR pszXmlName ,LPCTSTR pszType);
+    BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,const SStringT & strResId);
 
-    /**
-     * LoadXmlDocment
-     * @brief    从资源中加载一个XML Document。
-     * @param [out] pugi::xml_document & xmlDoc --  输出的xml_document对象
-     * @param    const SStringT & strXmlTypeName --  XML文件在资源中的type:name
-     * @return   BOOL true-加载成功, false-加载失败
-     *
-     * Describe  
-     */
-    BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,const SStringT & strXmlTypeName);
-
-	IAnimation * LoadAnimation(LPCTSTR pszType, LPCTSTR pszResName);
+	IAnimation * LoadAnimation(const SStringT &strResId);
 
     /**
      * GetRenderFactory

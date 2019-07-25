@@ -692,15 +692,7 @@ namespace SOUI
 			{//在窗口布局中支持include标签
 				SStringT strSrc = S_CW2T(xmlChild.attribute(L"src").value());
 				pugi::xml_document xmlDoc;
-				SStringTList strLst;
-
-				if(2 == ParseResID(strSrc,strLst))
-				{
-					LOADXML(xmlDoc,strLst[1],strLst[0]);
-				}else
-				{
-					LOADXML(xmlDoc,strLst[0],RT_LAYOUT);
-				}
+				LOADXML(xmlDoc,strSrc);
 				if(xmlDoc)
 				{
 					pugi::xml_node xmlInclude = xmlDoc.first_child();
@@ -2248,6 +2240,7 @@ namespace SOUI
 				m_animation->cancel();
 			}
 			m_animation = NULL;
+			m_animationHandler.OnAnimationStop();
 			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		}
 	}

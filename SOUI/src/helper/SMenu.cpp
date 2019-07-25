@@ -267,19 +267,6 @@ SMenu::~SMenu(void)
 		DestroyMenu();
 }
 
-BOOL SMenu::LoadMenu( LPCTSTR pszResName ,LPCTSTR pszType)
-{
-	SASSERT(!::IsMenu(m_hMenu));
-
-    pugi::xml_document xmlDoc;
-    if(!LOADXML(xmlDoc,pszResName,pszType)) return FALSE;
-
-    pugi::xml_node xmlMenu=xmlDoc.child(L"menu");
-    if(!xmlMenu)  return FALSE;
-
-    return LoadMenu(xmlMenu);
-}
-
 
 BOOL SMenu::LoadMenu( pugi::xml_node xmlMenu )
 {
@@ -299,11 +286,17 @@ BOOL SMenu::LoadMenu( pugi::xml_node xmlMenu )
     return TRUE;
 }
 
-BOOL SMenu::LoadMenu(LPCTSTR pszResID)
+BOOL SMenu::LoadMenu(const SStringT & resId)
 {
-    SStringTList strLst;
-    if(2!=ParseResID(pszResID,strLst)) return FALSE;
-    return LoadMenu(strLst[1],strLst[0]);
+	SASSERT(!::IsMenu(m_hMenu));
+
+	pugi::xml_document xmlDoc;
+	if(!LOADXML(xmlDoc,resId)) return FALSE;
+
+	pugi::xml_node xmlMenu=xmlDoc.child(L"menu");
+	if(!xmlMenu)  return FALSE;
+
+	return LoadMenu(xmlMenu);
 }
 
 void SMenu::InitMenuItemData(SMenuItemData * itemInfo, const SStringW & strTextW)

@@ -455,16 +455,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	if(!m_strXmlLayout.IsEmpty())
 	{
 		pugi::xml_document xmlDoc;
-		SStringTList strLst;
-
-		if(2 == ParseResID(m_strXmlLayout,strLst))
-		{
-			LOADXML(xmlDoc,strLst[1],strLst[0]);
-		}else
-		{
-			LOADXML(xmlDoc,strLst[0],RT_LAYOUT);
-		}
-
+		LOADXML(xmlDoc,m_strXmlLayout);
 		if(xmlDoc)
 		{
 			InitFromXml(xmlDoc.child(L"SOUI"));

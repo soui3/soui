@@ -349,22 +349,18 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
     return result;
 }
 
-BOOL SApplication::LoadXmlDocment( pugi::xml_document & xmlDoc,LPCTSTR pszXmlName ,LPCTSTR pszType )
-{
-    return _LoadXmlDocment(pszXmlName,pszType,xmlDoc);
-}
 
-BOOL SApplication::LoadXmlDocment(pugi::xml_document & xmlDoc, const SStringT & strXmlTypeName)
+BOOL SApplication::LoadXmlDocment(pugi::xml_document & xmlDoc, const SStringT & strResId)
 {
     SStringTList strLst;
-    if(2!=ParseResID(strXmlTypeName,strLst)) return FALSE;
-    return LoadXmlDocment(xmlDoc,strLst[1],strLst[0]);
+    if(2!=ParseResID(strResId,strLst)) return FALSE;
+    return _LoadXmlDocment(strLst[1],strLst[0],xmlDoc);
 }
 
-IAnimation * SApplication::LoadAnimation(LPCTSTR pszType, LPCTSTR pszResName)
+IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
 {
 	pugi::xml_document xml;
-	if (!LoadXmlDocment(xml, pszResName, pszType))
+	if (!LoadXmlDocment(xml, strResId))
 		return NULL;
 	IAnimation *pRet = CreateAnimationByName(xml.first_child().name());
 	if (!pRet)

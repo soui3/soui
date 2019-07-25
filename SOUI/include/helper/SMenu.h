@@ -228,9 +228,7 @@ public:
 
 	HMENU Detach();
 
-    BOOL LoadMenu(LPCTSTR pszResID);
-
-    BOOL LoadMenu(LPCTSTR pszResName ,LPCTSTR pszType);
+    BOOL LoadMenu(const SStringT & resId);
 
     BOOL LoadMenu(pugi::xml_node xmlMenu);
 

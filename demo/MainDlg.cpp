@@ -484,7 +484,7 @@ void CMainDlg::OnBtnMenu()
 
     //使用自绘菜单
     SMenu menu;
-    menu.LoadMenu(_T("menu_test"),_T("SMENU"));
+	menu.LoadMenu(_T("SMenu:menu_test"));
     menu.TrackPopupMenu(0,pt.x,pt.y,m_hWnd);
 }
 
@@ -766,7 +766,7 @@ void CMainDlg::OnMclvCtxMenu(EventArgs *pEvt)
         
     }
     SMenu menu;
-    menu.LoadMenu(_T("menu_lv"),_T("SMENU"));
+	menu.LoadMenu(_T("smenu:menu_lv"));
     
     ClientToScreen(&pt);
         

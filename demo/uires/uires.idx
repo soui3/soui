@@ -56,7 +56,7 @@
 		<file name="img_busy" path="image\img_busy.png" />
 		<file name="btn_expand" path="image\btn_expand.png" />
 		<file name="jpg_bkgnd" path="image\Tulips.png" />
-		<!--file name="png_page_icons"   path="image\page_icons.png" /-->
+		<file name="png_page_icons"   path="image\page_icons.png" />
 		<file name="png_small_icons" path="image\small_icons.png" />
 		<file name="webbtn_back" path="image\webbtn_back.png" />
 		<file name="webbtn_forward" path="image\webbtn_forward.png" />

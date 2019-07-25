@@ -571,14 +571,10 @@ namespace SOUI
 			DestroyWindow();
 	}
 
-	BOOL SMenuEx::LoadMenu(LPCTSTR pszMenu,HWND hParent)
+	BOOL SMenuEx::LoadMenu(const SStringT &strMenu,HWND hParent)
 	{
-		SStringTList strMenu;
-		if (1 == SplitString<SStringT, TCHAR>(pszMenu, _T(':'), strMenu))
-			strMenu.InsertAt(0, _T("SMENUEX"));
-
 		pugi::xml_document xmlMenu;
-		BOOL bLoad = LOADXML(xmlMenu, strMenu[1], strMenu[0]);
+		BOOL bLoad = LOADXML(xmlMenu, strMenu);
 		if (!bLoad) return FALSE;
 		return LoadMenu(xmlMenu.first_child(),hParent);
 	}
