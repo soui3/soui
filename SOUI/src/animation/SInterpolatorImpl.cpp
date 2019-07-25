@@ -182,12 +182,41 @@ namespace SOUI
 		}
 	}
 
+	static const float PRECISION = 0.002f;
+
 	void SPathInterpolator::initPath(IPath * path) {
-		int numPoints = path->countPoints();
-		mPt.SetCount(numPoints);
-		for (int i = 0; i < numPoints; i++) {
-			mPt[i] = path->getPoint(i);
+		int nLen = 0;
+		float * pointComponents = path->approximate(PRECISION,nLen);
+
+		int numPoints = nLen / 3;
+		if (pointComponents[1] != 0 || pointComponents[2] != 0
+			|| pointComponents[nLen - 2] != 1
+			|| pointComponents[nLen - 1] != 1) {
+			goto error;
 		}
+
+		mPt.SetCount(numPoints);
+		float prevX = 0;
+		float prevFraction = 0;
+		int componentIndex = 0;
+		for (int i = 0; i < numPoints; i++) {
+			float fraction = pointComponents[componentIndex++];
+			float x = pointComponents[componentIndex++];
+			float y = pointComponents[componentIndex++];
+			if (fraction == prevFraction && x != prevX) {
+				goto error;
+			}
+			if (x < prevX) {
+				goto error;
+			}
+			mPt[i].fX = x;
+			mPt[i].fY = y;
+			prevX = x;
+			prevFraction = fraction;
+		}
+	error:
+		path->freeBuf(pointComponents);
+		mPt.RemoveAll();
 	}
 
 	float SPathInterpolator::getInterpolation(float t) const{

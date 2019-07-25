@@ -362,6 +362,10 @@ namespace SOUI
 		virtual void setLastPt(float x, float y);
 
 		virtual void addString(LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont);
+
+		virtual float * approximate(float acceptableError, int &nLen);
+
+		virtual void freeBuf(float * pBuf);
 	protected:
 		SkPath      m_skPath;
 	};

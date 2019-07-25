@@ -1013,6 +1013,17 @@ namespace SOUI
 
 		virtual void addString(LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont) PURE;
 
+		// Returns a float[] with each point along the path represented by 3 floats
+		// * fractional length along the path that the point resides
+		// * x coordinate
+		// * y coordinate
+		// Note that more than one point may have the same length along the path in
+		// the case of a move.
+		// NULL can be returned if the Path is empty.
+		virtual float * approximate(float acceptableError, int &nLen) PURE;
+
+		// Free approximate return float buffer.
+		virtual void freeBuf(float * pBuf) PURE;
 	};
     
 	struct IPathMeasure : IObjRef
