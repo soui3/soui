@@ -3183,7 +3183,6 @@ namespace SOUI
 
 	void SWindow::OnAnimationInvalidate()
 	{
-		SASSERT(m_animation);
 		InvalidateRect(NULL);
 	}
 
@@ -3221,6 +3220,7 @@ namespace SOUI
 	{
 		IAnimation *pAni = m_pOwner->GetAnimation();
 		SASSERT(pAni);
+		m_pOwner->AddRef();
 		uint64_t tm = pAni->getStartTime();
 		if (tm == -1)
 		{
@@ -3230,12 +3230,13 @@ namespace SOUI
 		{
 			m_pOwner->OnAnimationInvalidate();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
+			m_pOwner->OnAnimationInvalidate();
 			if (!bMore)
 			{//animation stoped.
 				m_pOwner->OnAnimationStop();
 			}
-			m_pOwner->OnAnimationInvalidate();
 		}
+		m_pOwner->Release();
 	}
 
 	bool SWindow::SAnimationHandler::OnOwnerResize(EventArgs * e)

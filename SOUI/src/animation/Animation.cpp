@@ -116,8 +116,8 @@ namespace SOUI {
 
 		if ((normalizedTime >= 0.0f || mFillBefore) && (normalizedTime <= 1.0f || mFillAfter)) {
 			if (!mStarted) {
-				fireAnimationStart();
 				mStarted = true;
+				fireAnimationStart();
 			}
 
 			if (mFillEnabled) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
@@ -314,9 +314,12 @@ namespace SOUI {
 
 	void SAnimation::cancel()
 	{
-		mStartTime = -2;
-		mEnded = true;
-		fireAnimationEnd();
+		if (mStarted && !mEnded)
+		{
+			mStartTime = -2;
+			mEnded = true;
+			fireAnimationEnd();
+		}
 	}
 
 	void SAnimation::reset()
@@ -355,7 +358,7 @@ namespace SOUI {
 	{
 	}
 
-	SAnimation::SAnimation()
+	SAnimation::SAnimation():mID(0)
 	{
 		reset();
 	}

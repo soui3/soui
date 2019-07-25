@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set>
+<set name="ani_test">
   <translate duration="5000" fromXDelta="0" toXDelta="0" fromYDelta="0" toYDelta="-100%p"/>
   <translate duration="500" fromXDelta="-50%" toXDelta="50%" fromYDelta="0" toYDelta="0" repeatCount="9" repeatMode="reverse"/>
   <scale duration="5000" fromXScale="1" toXScale="0.8" fromYScale="1" toYScale="0.8"  pivotX="50%" pivotY="50%"/>

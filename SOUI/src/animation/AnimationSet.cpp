@@ -164,17 +164,17 @@ namespace SOUI {
 		}
 
 		if (started && !mStarted) {
+			mStarted = true;
 			if (mListener != NULL) {
 				mListener->onAnimationStart(this);
 			}
-			mStarted = true;
 		}
 
 		if (ended != mEnded) {
+			mEnded = ended;
 			if (mListener != NULL) {
 				mListener->onAnimationEnd(this);
 			}
-			mEnded = ended;
 		}
 
 		return more;
