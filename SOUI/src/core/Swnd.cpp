@@ -2054,7 +2054,6 @@ namespace SOUI
 		BeforePaintEx(pRT);
 		pRT->PushClipRegion(pRgn, RGN_COPY);
 		pRT->ClearRect(&rcRT,0);
-		pRT->FillSolidRect(rcRT,RGBA(255,0,0,255));
 		m_pGetRTData->gdcFlags = gdcFlags;
 		m_pGetRTData->rcRT = rcRT;
 		m_pGetRTData->rgn = pRgn;
@@ -2114,6 +2113,10 @@ namespace SOUI
 		else
 		{
 			rgn->CombineRect(rcRT, RGN_COPY);
+		}
+		if(mtx.isIdentity())
+		{//todo: if matrix transform existed, combine getrt.rgn to the root rgn will not work.
+			rgn->CombineRgn(m_pGetRTData->rgn,RGN_AND);
 		}
 		pRTRoot->PushClipRegion(rgn, RGN_COPY);
 		pRTRoot->ClearRect(rcRT, 0);
