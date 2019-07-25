@@ -171,8 +171,19 @@ namespace SOUI{
 	protected:
 		BOOL InitFromXml(pugi::xml_node xmlNode);
 
+		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrFillBefore(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrFillAfter(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrRepeatMode(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrStartOffset(const SStringW & value, BOOL bLoading);
+
 		SOUI_ATTRS_BEGIN()
-			ATTR_BIT(L"shareInterpolator",mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK,FALSE)
+			ATTR_BIT(L"shareInterpolator", mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK, FALSE)
+			ATTR_CUSTOM(L"duration", OnAttrDuration)
+			ATTR_CUSTOM(L"fillBefore", OnAttrFillBefore)
+			ATTR_CUSTOM(L"fillAfter", OnAttrFillAfter)
+			ATTR_CUSTOM(L"repeatMode", OnAttrRepeatMode)
+			ATTR_CUSTOM(L"startOffset", OnAttrStartOffset)
 		SOUI_ATTRS_END()
 	};
 

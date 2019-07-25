@@ -26,6 +26,47 @@ namespace SOUI {
 		return TRUE;
 	}
 
+	HRESULT SAnimationSet::OnAttrDuration(const SStringW & value, BOOL bLoading)
+	{
+		long iValue = _wtoi(value);
+		setDuration(iValue);
+		return S_FALSE;
+	}
+
+	HRESULT SAnimationSet::OnAttrFillBefore(const SStringW & value, BOOL bLoading)
+	{
+		bool bValue = STRINGASBOOL(value);
+		setFillBefore(bValue);
+		return S_FALSE;
+	}
+
+	HRESULT SAnimationSet::OnAttrFillAfter(const SStringW & value, BOOL bLoading)
+	{
+		bool bValue = STRINGASBOOL(value);
+		setFillAfter(bValue);
+		return S_FALSE;
+	}
+
+	HRESULT SAnimationSet::OnAttrRepeatMode(const SStringW & value, BOOL bLoading)
+	{
+		RepeatMode mode;
+		if (value.CompareNoCase(L"reverse") == 0)
+			mode = REVERSE;
+		else if (value.CompareNoCase(L"restart") == 0)
+			mode = RESTART;
+		else
+			return E_INVALIDARG;
+		setRepeatMode(mode);
+		return S_FALSE;
+	}
+
+	HRESULT SAnimationSet::OnAttrStartOffset(const SStringW & value, BOOL bLoading)
+	{
+		long iValue = _wtoi(value);
+		setStartOffset(iValue);
+		return S_FALSE;
+	}
+
 	void SAnimationSet::restoreChildrenStartOffset()
 	{
 		if (mStoredOffsets.GetCount() != mAnimations.GetCount())
