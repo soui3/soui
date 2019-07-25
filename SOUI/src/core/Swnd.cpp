@@ -930,7 +930,7 @@ namespace SOUI
 		if(m_pGetRTData)
 		{
 			CRect & rcRT = m_pGetRTData->rcRT;
-			pRT->BitBlt(rcRT,m_pGetRTData->rt,rcRT.left,rcRT.top,SRCCOPY);
+			pRT->AlphaBlend(rcRT,m_pGetRTData->rt,rcRT,255);
 		}
 		else if(IsDrawToCache())
 		{
@@ -979,7 +979,7 @@ namespace SOUI
 		if(m_pGetRTData)
 		{
 			CRect & rcRT = m_pGetRTData->rcRT;
-			pRT->BitBlt(rcRT,m_pGetRTData->rt,rcRT.left,rcRT.top,SRCCOPY);
+			pRT->AlphaBlend(rcRT,m_pGetRTData->rt,rcRT,255);
 		}else if(IsDrawToCache())
 		{
 			IRenderTarget *pRTCache=m_cachedRT;
@@ -995,7 +995,7 @@ namespace SOUI
 					pRT->PushClipRegion(m_rgnWnd);
 					m_rgnWnd->Offset(-rcWnd.TopLeft());
 				}
-				pRT->BitBlt(&rcWnd,pRTCache,rcWnd.left,rcWnd.top,SRCCOPY);
+				pRT->AlphaBlend(rcWnd,pRTCache,rcWnd,255);
 				pRT->RestoreClip(nSave);
 			}
 		}else
@@ -2054,6 +2054,7 @@ namespace SOUI
 		BeforePaintEx(pRT);
 		pRT->PushClipRegion(pRgn, RGN_COPY);
 		pRT->ClearRect(&rcRT,0);
+		pRT->FillSolidRect(rcRT,RGBA(255,0,0,255));
 		m_pGetRTData->gdcFlags = gdcFlags;
 		m_pGetRTData->rcRT = rcRT;
 		m_pGetRTData->rgn = pRgn;
