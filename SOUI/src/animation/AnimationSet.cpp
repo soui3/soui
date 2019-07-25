@@ -314,14 +314,6 @@ namespace SOUI {
 		}
 	}
 
-	void SAnimationSet::copy(const IAnimation *src)
-	{
-		SAnimation::copy(src);
-		const SAnimationSet * src2 = sobj_cast<const SAnimationSet>(src);
-		mAnimations.Copy(src2->mAnimations);
-		mFlags = src2->mFlags;
-	}
-
 	SAnimationSet::SAnimationSet(bool shareInterpolator/*=true*/)
 	{
 		setFlag(PROPERTY_SHARE_INTERPOLATOR_MASK, shareInterpolator);

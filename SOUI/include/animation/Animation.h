@@ -187,10 +187,6 @@ namespace SOUI {
 	public:
 		SAnimation();
 
-		void copy(const IAnimation *src);
-
-		IAnimation * clone() const;
-
 		LPCWSTR GetName() const
 		{
 			return mName;

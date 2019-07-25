@@ -110,7 +110,6 @@ namespace SOUI {
 
 	protected: 
 		void applyTransformation(float interpolatedTime, STransformation & t);
-		void copy(const IAnimation *src);
 
 	public:
 		SOUI_ATTRS_BEGIN()

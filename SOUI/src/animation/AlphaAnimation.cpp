@@ -4,16 +4,6 @@
 
 namespace SOUI {
 
-
-
-	void SAlphaAnimation::copy(const IAnimation *src)
-	{
-		SAnimation::copy(src);
-		const SAlphaAnimation *src2 = sobj_cast<const SAlphaAnimation>(src);
-		mFromAlpha = src2->mFromAlpha;
-		mToAlpha = src2->mToAlpha;
-	}
-
 	bool SAlphaAnimation::hasAlpha() const 
 	{
 		return true;

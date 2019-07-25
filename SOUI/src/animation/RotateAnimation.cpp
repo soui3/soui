@@ -12,19 +12,6 @@ namespace SOUI {
 		mPivotY = (float)resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
 	}
 
-	void SRotateAnimation::copy(const IAnimation *src)
-	{
-		SAnimation::copy(src);
-		SRotateAnimation * src2 = sobj_cast<SRotateAnimation>(src);
-		mFromDegrees = src2->mFromDegrees;
-		mToDegrees = src2->mToDegrees;
-
-		mPivotXType = src2->mPivotXType;
-		mPivotYType = src2->mPivotYType;
-		mPivotXValue = src2->mPivotXValue;
-		mPivotYValue = src2->mPivotYValue;
-	}
-
 	void SRotateAnimation::applyTransformation(float interpolatedTime, STransformation & t)
 	{
 		float degrees = mFromDegrees + ((mToDegrees - mFromDegrees) * interpolatedTime);

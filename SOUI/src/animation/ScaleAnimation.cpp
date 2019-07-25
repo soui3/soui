@@ -12,20 +12,6 @@ namespace SOUI {
 		mPivotY = (float)resolveSize(mPivotYType, mPivotYValue, height, parentHeight);
 	}
 
-	void SScaleAnimation::copy(const IAnimation *src)
-	{
-		SAnimation::copy(src);
-		const SScaleAnimation * src2 = sobj_cast<const SScaleAnimation>(src);
-		mFromX = src2->mFromX;
-		mToX = src2->mToX;
-		mFromY = src2->mFromY;
-		mToY = src2->mToY;
-		mPivotXType = src2->mPivotXType;
-		mPivotXValue = src2->mPivotXValue;
-		mPivotYType = src2->mPivotYType;
-		mPivotYValue = src2->mPivotYValue;
-	}
-
 	void SScaleAnimation::applyTransformation(float interpolatedTime, STransformation & t)
 	{
 		float sx = 1.0f;

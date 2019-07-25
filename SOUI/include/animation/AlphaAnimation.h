@@ -57,8 +57,6 @@ public:
      */
     virtual bool hasAlpha() const override;
 
-	virtual void copy(const IAnimation *src) override;
-
 };
 
 

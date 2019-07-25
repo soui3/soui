@@ -353,41 +353,6 @@ namespace SOUI {
 
 	void SAnimation::initialize(int width, int height, int parentWidth, int parentHeight)
 	{
-
-	}
-
-	IAnimation * SAnimation::clone() const
-	{
-		IAnimation *pRet = SApplication::getSingletonPtr()->CreateAnimationByName(GetClassName());
-		pRet->copy(this);
-		return pRet;
-	}
-
-	void SAnimation::copy(const IAnimation *src)
-	{
-		mEnded = false;
-		mStarted = false;
-
-		mStartTime = src->getStartTime();
-		mStartOffset = src->getStartOffset();
-		mDuration = src->getDuration();
-		mRepeatCount = src->getRepeatCount();
-		mRepeated = 0;
-		mRepeatMode = src->getRepeatMode();
-		mListener = NULL;
-		mScaleFactor = 1.0f;
-
-		mMore = true;
-		mOneMoreTime = true;
-
-
-		mFillBefore = src->getFillBefore();
-
-		mFillAfter = src->getFillAfter();
-
-		mFillEnabled = src->isFillEnabled();
-
-		mInterpolator = src->getInterpolator();
 	}
 
 	SAnimation::SAnimation()

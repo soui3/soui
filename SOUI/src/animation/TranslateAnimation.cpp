@@ -2,23 +2,6 @@
 #include <souistd.h>
 #include <animation/TranslateAnimation.h>
 namespace SOUI {
-
-
-
-	void STranslateAnimation::copy(const IAnimation *src)
-	{
-		SAnimation::copy(src);
-		const STranslateAnimation * src2 = sobj_cast<const STranslateAnimation>(src);
-		mFromXType = src2->mFromXType;
-		mFromXValue = src2->mFromXValue;
-		mToXType = src2->mToXType;
-		mToXValue = src2->mToXValue;
-		mFromYType = src2->mFromYType;
-		mFromYValue = src2->mFromYValue;
-		mToYType = src2->mToYType;
-		mToYValue = src2->mToYValue;
-	}
-
 	void STranslateAnimation::initialize(int width, int height, int parentWidth, int parentHeight)
 	{
 		mFromXDelta = (float)resolveSize(mFromXType, mFromXValue, width, parentWidth);

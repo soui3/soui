@@ -76,10 +76,6 @@ namespace SOUI{
 		*/
 	public: SAnimationSet(bool shareInterpolator=true);
 
-	protected:
-		void copy(const IAnimation *src);
-
-
 	private: 
 		void setFlag(int mask, bool value);
 
