@@ -458,6 +458,8 @@ public:
 
 public:
     SArray();
+	SArray(const SArray & src);
+
 	~SArray();
 
     size_t GetCount() const;
@@ -658,6 +660,17 @@ SArray< E, ETraits >::SArray() :
     m_nGrowBy( 0 )
 {
 }
+
+template< typename E, class ETraits >
+SArray< E, ETraits >::SArray(const SArray< E, ETraits > & src) :
+	m_pData(NULL),
+	m_nSize(0),
+	m_nMaxSize(0),
+	m_nGrowBy(0)
+{
+	Copy(src);
+}
+
 
 template< typename E, class ETraits >
 SArray< E, ETraits >::~SArray()
@@ -904,18 +917,8 @@ void SArray< E, ETraits >::InsertAt( size_t iElement, INARGTYPE element, size_t 
         ETraits::RelocateElements( m_pData+(iElement+nElements), m_pData+iElement,
                                    nOldSize-iElement );
 
-//         _STRY
-        {
-            // re-init slots we copied from
-            CallConstructors( m_pData+iElement, nElements );
-        }
-//         _SCATCHALL()
-//         {
-//             ETraits::RelocateElements( m_pData+iElement, m_pData+(iElement+nElements),
-//                                        nOldSize-iElement );
-//             SetCount( nOldSize, -1 );
-//         }
-    }
+		CallConstructors(m_pData + iElement, nElements);
+	}
 
     // insert new value in the gap
     SASSERT( (iElement+nElements) <= m_nSize );
@@ -987,23 +990,10 @@ template< typename E, class ETraits >
 void SArray< E, ETraits >::CallConstructors( E* pElements, size_t nElements )
 {
     size_t iElement = 0;
-
-//     _STRY
-    {
-        for( iElement = 0; iElement < nElements; iElement++ )
-        {
-            ::new( pElements+iElement ) E;
-        }
-    }
-//     _SCATCHALL()
-//     {
-//         while( iElement > 0 )
-//         {
-//             iElement--;
-//             pElements[iElement].~E();
-//         }
-// 
-//     }
+	for (iElement = 0; iElement < nElements; iElement++)
+	{
+		::new(pElements + iElement) E;
+	}
 }
 
 #pragma pop_macro("new")
@@ -2978,11 +2968,9 @@ protected:
     CNode* Find(KINARGTYPE key) const ;
     CNode* FindPrefix( KINARGTYPE key ) const ;
 
-protected:
-    explicit SRBTree( size_t nBlockSize = 10 ) ;  // protected to prevent instantiation
-
 public:
-    ~SRBTree() ;
+	explicit SRBTree(size_t nBlockSize = 10); 
+	~SRBTree() ;
 
     void RemoveAll() ;
     void RemoveAt(SPOSITION pos) ;

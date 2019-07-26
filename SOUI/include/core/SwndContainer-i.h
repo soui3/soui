@@ -36,7 +36,7 @@ namespace SOUI
     * 
     * Describe    
     */
-    struct ISwndContainer : public ITimelineHandler
+    struct ISwndContainer : public ITimelineHandler, public ITimelineHandlersMgr
     {
         virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget)=0;
 
@@ -80,10 +80,6 @@ namespace SOUI
         virtual void FrameToHost(RECT & rc) const = 0;
                 
         virtual IAcceleratorMgr* GetAcceleratorMgr()=0;
-
-        virtual BOOL RegisterTimelineHandler(ITimelineHandler *pHandler)=0;
-
-        virtual BOOL UnregisterTimelineHandler(ITimelineHandler *pHandler)=0;
 
         virtual BOOL RegisterTrackMouseEvent(SWND swnd)=0;
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <unknown/obj-ref-i.h>
+#include <sobjType.h>
 #include <sobject/Sobject.hpp>
 #include "imgdecoder-i.h"
 #include "SPathEffect-i.h"

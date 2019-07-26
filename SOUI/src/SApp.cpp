@@ -35,6 +35,7 @@
 #include "animation/RotateAnimation.h"
 #include "animation/AlphaAnimation.h"
 #include "animation/TranslateAnimation.h"
+#include "valueAnimator/ValueAnimator.h"
 
 namespace SOUI
 {
@@ -197,6 +198,12 @@ void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory)
 	objFactory->TplRegisterFactory<SRotateAnimation>();
 	objFactory->TplRegisterFactory<STranslateAnimation>();
 }
+void SObjectDefaultRegister::RegisterValueAnimator(SObjectFactoryMgr * objFactory)
+{
+	objFactory->TplRegisterFactory<SIntAnimator>();
+	objFactory->TplRegisterFactory<SFloatAnimator>();
+	objFactory->TplRegisterFactory<SColorAnimator>();
+}
 //////////////////////////////////////////////////////////////////////////
 // SApplication
 
@@ -225,6 +232,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 	sysObjRegister.RegisterWindows(this);
 	sysObjRegister.RegisterInterpolator(this);
 	sysObjRegister.RegisterAnimation(this);
+	sysObjRegister.RegisterValueAnimator(this);
 }
 
 SApplication::~SApplication(void)
@@ -363,6 +371,18 @@ IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
 	if (!LoadXmlDocment(xml, strResId))
 		return NULL;
 	IAnimation *pRet = CreateAnimationByName(xml.first_child().name());
+	if (!pRet)
+		return NULL;
+	pRet->InitFromXml(xml.first_child());
+	return pRet;
+}
+
+IValueAnimator * SApplication::LoadValueAnimator(const SStringT & strResId)
+{
+	pugi::xml_document xml;
+	if (!LoadXmlDocment(xml, strResId))
+		return NULL;
+	IValueAnimator *pRet = CreateValueAnimatorByName(xml.first_child().name());
 	if (!pRet)
 		return NULL;
 	pRet->InitFromXml(xml.first_child());
@@ -531,7 +551,6 @@ ISkinObj * SApplication::CreateSkinByName(LPCWSTR pszSkinClass) const
 	return (ISkinObj*)CreateObject(SObjectInfo(pszSkinClass, Skin));
 }
 
-
 IInterpolator * SApplication::CreateInterpolatorByName(LPCWSTR pszName) const
 {
 	return (IInterpolator*)CreateObject(SObjectInfo(pszName, Interpolator));
@@ -540,6 +559,11 @@ IInterpolator * SApplication::CreateInterpolatorByName(LPCWSTR pszName) const
 IAnimation * SApplication::CreateAnimationByName(LPCWSTR pszName) const
 {
 	return (IAnimation*)CreateObject(SObjectInfo(pszName, Animation));
+}
+
+IValueAnimator * SApplication::CreateValueAnimatorByName(LPCWSTR pszName) const
+{
+	return (IValueAnimator*)CreateObject(SObjectInfo(pszName, ValueAnimator));
 }
 
 void SApplication::SetLogManager(ILog4zManager * pLogMgr)

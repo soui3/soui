@@ -98,7 +98,7 @@ namespace SOUI
 
 		int GetObjectType() const
 		{
-			return None;
+			return 0;
 		}
 
 

@@ -68,18 +68,6 @@ public:                                                 \
 
 namespace SOUI
 {
-
-	enum SObjectType
-	{
-		None = -1,
-		Undef = 0,
-		Window,
-		Skin,
-		Layout,
-		Interpolator,
-		Animation,
-	};
-
 	/**
 	* @class      SObject
 	* @brief      SOUI系统中的对象基类
@@ -102,7 +90,7 @@ namespace SOUI
 		* @return   int -- 类型
 		* Describe  静态函数
 		*/
-		static int     GetClassType() { return None; }
+		static int     GetClassType() { return 0; }
 
 		virtual ~IObject(){}
 

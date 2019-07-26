@@ -54,7 +54,7 @@
 namespace SOUI
 {
 struct IAccProxy;
-
+class IValueAnimator;
 interface IMsgLoopFactory : public IObjRef
 {
     virtual SMessageLoop * CreateMsgLoop() = 0;
@@ -68,6 +68,7 @@ interface SOUI_EXP ISystemObjectRegister
 	virtual void RegisterWindows(SObjectFactoryMgr *objFactory)  {}
 	virtual void RegisterInterpolator(SObjectFactoryMgr *objFactory) {}
 	virtual void RegisterAnimation(SObjectFactoryMgr *objFactory) {}
+	virtual void RegisterValueAnimator(SObjectFactoryMgr *objFactory) {}
 };
 
 class SOUI_EXP SObjectDefaultRegister : public ISystemObjectRegister
@@ -78,6 +79,7 @@ public:
 	void RegisterLayouts(SObjectFactoryMgr *objFactory);
 	void RegisterInterpolator(SObjectFactoryMgr *objFactory);
 	void RegisterAnimation(SObjectFactoryMgr *objFactory);
+	void RegisterValueAnimator(SObjectFactoryMgr *objFactory);
 };
 
 
@@ -151,6 +153,7 @@ public:
 
 	IAnimation * LoadAnimation(const SStringT &strResId);
 
+	IValueAnimator *LoadValueAnimator(const SStringT &strResId);
     /**
      * GetRenderFactory
      * @brief    获得当前的渲染模块
@@ -297,6 +300,7 @@ public:
 	virtual ISkinObj * CreateSkinByName(LPCWSTR pszSkinClass) const;
 	virtual IInterpolator * CreateInterpolatorByName(LPCWSTR pszName) const;
 	virtual IAnimation * CreateAnimationByName(LPCWSTR pszName) const;
+	virtual IValueAnimator *CreateValueAnimatorByName(LPCWSTR pszName) const;
 
 	virtual IAccProxy * CreateAccProxy(SWindow* pWnd) const;
 	virtual IAccessible * CreateAccessible(SWindow *pWnd) const;

@@ -17,6 +17,7 @@ translucent="1"
         <button size="-2,30" text="test" name="btn_test"/>
         <button size="-2,30" text="show" name="btn_show"/>
         <button size="-2,30" text="hide" name="btn_hide"/>
+        <button size="-2,30" text="animator" name="btn_animator"/>
       </window>
 
       <window pos="0,0,@250,-30" name="pane_left" skin="skin_girl">
