@@ -577,9 +577,21 @@ namespace SOUI{
 		TypeEvaluator<T> mValueEvaluator;
 		T				 mValue;
 
+		int		mID;
+		SStringW mName;
 	public:
 		TValueAnimator(T from, T to) : mValueEvaluator(from, to) {
 
+		}
+
+		LPCWSTR GetName() const
+		{
+			return mName;
+		}
+
+		int GetID() const
+		{
+			return mID;
 		}
 
 	protected:
@@ -590,6 +602,8 @@ namespace SOUI{
 
 	public:
 		SOUI_ATTRS_BEGIN()
+			ATTR_STRINGW(L"name",mName,FALSE)
+			ATTR_INT(L"id",mID,FALSE)
 			ATTR_INT(L"duration",mDuration,FALSE)
 			ATTR_INT(L"repeatCount",mRepeatCount,FALSE)
 			ATTR_ENUM_BEGIN(L"repeatMode",IAnimation::RepeatMode,FALSE)

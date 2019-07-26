@@ -70,7 +70,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
-				AdditionalIncludeDirectories="..\soui-sys-resource"
+				AdditionalIncludeDirectories="../soui-sys-resource"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -168,7 +168,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
-				AdditionalIncludeDirectories="..\soui-sys-resource"
+				AdditionalIncludeDirectories="../soui-sys-resource"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -237,11 +237,11 @@
 				>
 			</File>
 			<File
-				RelativePath="res\resource.h"
+				RelativePath="resource.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="res\resource.h"
 				>
 			</File>
 			<File
@@ -301,30 +301,6 @@
 		</Filter>
 		<File
 			RelativePath="demo2.rc"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\image\girl.png"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\image\love.png"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\xml\love.xml"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\anim\rotate.xml"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\image\soui.ico"
-			>
-		</File>
-		<File
-			RelativePath=".\uires\image\soui.png"
 			>
 		</File>
 	</Files>

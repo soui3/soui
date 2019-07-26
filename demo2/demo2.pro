@@ -28,6 +28,7 @@ else{
 
 PRECOMPILED_HEADER = stdafx.h
 RC_FILE += demo2.rc
+RC_INCLUDE += ../soui-sys-resource
 
 # Input
 HEADERS += MainDlg.h resource.h  res/resource.h

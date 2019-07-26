@@ -28,6 +28,6 @@
     <file name="rotate" path="anim\rotate.xml"/>
   </anim>
   <valueAni>
-    <file name="intAni" path="valueAni\int.xml"/>
+    <file name="alphaAni" path="valueAni\alpha.xml"/>
   </valueAni>
 </resource>
