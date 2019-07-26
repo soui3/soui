@@ -2331,7 +2331,7 @@ namespace SOUI
 		}
 	}
 
-	float * SPath_Skia::approximate(float acceptableError,int &nLen)
+	IPathInfo* SPath_Skia::approximate(float acceptableError)
 	{
 		SkPath::Iter pathIter(m_skPath, false);
 		SkPath::Verb verb;
@@ -2366,8 +2366,10 @@ namespace SOUI
 		size_t numPoints = segmentPoints.size();
 		size_t approximationArraySize = numPoints * 3;
 
-		nLen = approximationArraySize;
-		float* approximation = (float*)malloc(approximationArraySize*sizeof(float));
+		int nLen = approximationArraySize;
+
+		SPathInfo_Skia * pInfo = new SPathInfo_Skia(numPoints);
+		float* approximation = pInfo->buffer();
 
 		int approximationIndex = 0;
 		for (size_t i = 0; i < numPoints; i++) {
@@ -2377,15 +2379,33 @@ namespace SOUI
 			approximation[approximationIndex++] = point.y();
 		}
 
-		return approximation;
+		return pInfo;
 	}
 
-	void SPath_Skia::freeBuf(float * pBuf)
+	SPathInfo_Skia::SPathInfo_Skia(int points):mPoints(points),mData(new float[points*3])
 	{
-		if (pBuf) free(pBuf);
+		
 	}
 
+	SPathInfo_Skia::~SPathInfo_Skia()
+	{
+		delete []mData;
+	}
 
+	int SPathInfo_Skia::pointNumber() const
+	{
+		return mPoints;
+	}
+
+	const float * SPathInfo_Skia::data() const
+	{
+		return mData;
+	}
+
+	float * SPathInfo_Skia::buffer()
+	{
+		return mData;
+	}
 
 }//end of namespace SOUI
 

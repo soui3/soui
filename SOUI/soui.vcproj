@@ -567,6 +567,10 @@
 				RelativePath=".\src\animation\TranslateAnimation.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\valueAnimator\ValueAnimator.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -938,6 +942,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\core\SObjType.h"
+				>
+			</File>
+			<File
 				RelativePath="include\soui-version.h"
 				>
 			</File>
@@ -1198,7 +1206,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\valueAnimator\TypeEvaluator.h"
+				>
+			</File>
+			<File
 				RelativePath="include\helper\unknown.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\valueAnimator\ValueAnimator.h"
 				>
 			</File>
 		</Filter>

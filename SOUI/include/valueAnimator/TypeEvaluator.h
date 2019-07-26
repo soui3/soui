@@ -107,9 +107,9 @@ namespace SOUI {
 			startG = GetGValue(start) / 255.0f;
 			startB = GetBValue(start) / 255.0f;
 			// convert from sRGB to linear
-			startR = (float)pow(startR, 2.2);
-			startG = (float)pow(startG, 2.2);
-			startB = (float)pow(startB, 2.2);
+			startR = (float)pow(startR, 2.2f);
+			startG = (float)pow(startG, 2.2f);
+			startB = (float)pow(startB, 2.2f);
 		}
 
 		void setEnd(COLORREF end)
@@ -119,9 +119,14 @@ namespace SOUI {
 			endG = GetGValue(end) / 255.0f;
 			endB = GetBValue(end) / 255.0f;
 			// convert from sRGB to linear
-			endR = (float)pow(endR, 2.2);
-			endG = (float)pow(endG, 2.2);
-			endB = (float)pow(endB, 2.2);
+			endR = (float)pow(endR, 2.2f);
+			endG = (float)pow(endG, 2.2f);
+			endB = (float)pow(endB, 2.2f);
+		}
+
+		int round(float v) const
+		{
+			return (int)floor(v+0.5f);
 		}
 
 		COLORREF evaluate(float fraction)  const {
@@ -133,11 +138,11 @@ namespace SOUI {
 
 			// convert back to sRGB in the [0..255] range
 			a = a * 255.0f;
-			r = (float)pow(r, 1.0 / 2.2) * 255.0f;
-			g = (float)pow(g, 1.0 / 2.2) * 255.0f;
-			b = (float)pow(b, 1.0 / 2.2) * 255.0f;
+			r = (float)pow(r, 1.0f / 2.2f) * 255.0f;
+			g = (float)pow(g, 1.0f / 2.2f) * 255.0f;
+			b = (float)pow(b, 1.0f / 2.2f) * 255.0f;
 
-			return RGBA(lroundf(r), lroundf(g), lroundf(b), lroundf(a));
+			return RGBA(round(r), round(g), round(b), round(a));
 		}
 	};
 

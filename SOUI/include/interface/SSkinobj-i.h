@@ -12,7 +12,7 @@
 */
 #pragma once
 
-#include <sobjType.h>
+#include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
 #include <unknown/obj-ref-i.h>
 

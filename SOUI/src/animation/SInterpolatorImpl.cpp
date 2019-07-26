@@ -185,10 +185,11 @@ namespace SOUI
 	static const float PRECISION = 0.002f;
 
 	void SPathInterpolator::initPath(IPath * path) {
-		int nLen = 0;
-		float * pointComponents = path->approximate(PRECISION,nLen);
+		IPathInfo * pathInfo = path->approximate(PRECISION);
+		int numPoints = pathInfo->pointNumber();
+		const float * pointComponents = pathInfo->data();
 
-		int numPoints = nLen / 3;
+		int nLen = numPoints*3;
 		if (pointComponents[1] != 0 || pointComponents[2] != 0
 			|| pointComponents[nLen - 2] != 1
 			|| pointComponents[nLen - 1] != 1) {
@@ -215,7 +216,7 @@ namespace SOUI
 			prevFraction = fraction;
 		}
 	error:
-		path->freeBuf(pointComponents);
+		pathInfo->Release();
 		mPt.RemoveAll();
 	}
 

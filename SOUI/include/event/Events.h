@@ -12,7 +12,7 @@
 */
 
 #pragma once
-#include <sobjType.h>
+#include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
 
 //定义一组事件定义的宏，简化事件的定义。

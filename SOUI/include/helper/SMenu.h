@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <sobjType.h>
+#include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
 #include "core/SNativeWnd.h"
 #include "res.mgr/Sskinpool.h"

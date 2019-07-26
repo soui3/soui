@@ -253,6 +253,24 @@ namespace SOUI
 
 	//////////////////////////////////////////////////////////////////////////
 	//	SPath_Skia
+
+	class SPathInfo_Skia : public TObjRefImpl<IPathInfo>
+	{
+	public:
+		SPathInfo_Skia(int points);
+		~SPathInfo_Skia();
+	public:
+		virtual int pointNumber() const;
+
+		virtual const float * data() const;
+
+	public:
+		float * buffer();
+	private:
+		int mPoints;
+		float * mData;
+	};
+
 	class SPath_Skia: public TSkiaRenderObjImpl<IPath>
 	{
 		SOUI_CLASS_NAME(SPath_Skia,L"path")
@@ -363,9 +381,8 @@ namespace SOUI
 
 		virtual void addString(LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont);
 
-		virtual float * approximate(float acceptableError, int &nLen);
+		virtual IPathInfo* approximate(float acceptableError);
 
-		virtual void freeBuf(float * pBuf);
 	protected:
 		SkPath      m_skPath;
 	};

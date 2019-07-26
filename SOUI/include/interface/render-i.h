@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <unknown/obj-ref-i.h>
-#include <sobjType.h>
+#include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
 #include "imgdecoder-i.h"
 #include "SPathEffect-i.h"
@@ -533,6 +533,13 @@ namespace SOUI
 		virtual void SetData(const float fMat[9]) = 0;
 	};
 
+	
+	struct IPathInfo : IObjRef
+	{
+		virtual int pointNumber() const = 0;
+		virtual const float * data() const =0;
+	};
+
 	struct IPath : IRenderObj
 	{
 
@@ -1021,10 +1028,7 @@ namespace SOUI
 		// Note that more than one point may have the same length along the path in
 		// the case of a move.
 		// NULL can be returned if the Path is empty.
-		virtual float * approximate(float acceptableError, int &nLen) PURE;
-
-		// Free approximate return float buffer.
-		virtual void freeBuf(float * pBuf) PURE;
+		virtual IPathInfo* approximate(float acceptableError) PURE;
 	};
     
 	struct IPathMeasure : IObjRef
