@@ -1,4 +1,4 @@
-﻿<SOUI name="mainWindow" title="@string/title" bigIcon="ICON_LOGO:32" smallIcon="ICON_LOGO:16" width="600" height="400"  margin="5,5,5,5"  resizable="1" wndType="appMain"
+﻿<SOUI name="mainWindow" title="@string/title" bigIcon="ICON_LOGO:32" smallIcon="ICON_LOGO:16" margin="5,5,5,5"  resizable="1" wndType="appMain"
 [!if CHECKBOX_SHELLNOTIFYICON]
 toolWindow="1"
 [!else]
@@ -11,7 +11,7 @@ translucent="1"
 trCtx="dlg_main"
 [!endif]
 >
-  <root skin="_skin.sys.wnd.bkgnd" cache="1">
+  <root skin="_skin.sys.wnd.bkgnd" cache="1"  width="600" height="400" >
     <caption pos="0,0,-0,30" show="1" font="adding:0">
       <icon pos="10,8" src="ICON_LOGO:16"/>
       <text pos="29,9">@string/title</text>
