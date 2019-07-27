@@ -785,17 +785,6 @@ namespace SOUI
         * Describe  需要枚举定时器列表
         */
         void KillTimer2(UINT_PTR id);
-
-        /**
-        * AnimateWindow
-        * @brief    窗口动画效果
-        * @param    DWORD dwTime --  执行时间
-        * @param    DWORD dwFlags --  执行模式
-        * @return   BOOL 
-        *
-        * Describe  
-        */
-        BOOL AnimateWindow(DWORD dwTime,DWORD dwFlags);
         
         SWND GetCapture();
         SWND SetCapture();
@@ -1237,8 +1226,6 @@ namespace SOUI
 		void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
-        void DrawAniStep(CRect rcFore,CRect rcBack,IRenderTarget *pRTFore,IRenderTarget * pRTBack,CPoint ptAnchor);
-        void DrawAniStep( CRect rcWnd,IRenderTarget *pRTFore,IRenderTarget * pRTBack,BYTE byAlpha);
         
         void UpdateCacheMode();
 
