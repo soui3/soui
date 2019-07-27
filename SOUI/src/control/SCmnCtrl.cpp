@@ -1241,32 +1241,26 @@ void SRadioGroup::OnRemoveChild(SWindow * pChild)
 
 //////////////////////////////////////////////////////////////////////////
 // SToggle
-SToggle::SToggle():m_bToggled(FALSE)
+SToggle::SToggle()
 {
     m_pSkin = GETBUILTINSKIN(SKIN_SYS_TREE_TOGGLE);
 }
 
 void SToggle::SetToggle(BOOL bToggle,BOOL bUpdate/*=TRUE*/)
 {
-    m_bToggled=bToggle;
+    SetCheck(bToggle);
     if(bUpdate) Invalidate();
 }
 
 BOOL SToggle::GetToggle()
 {
-    return m_bToggled;
+    return IsChecked();
 }
 
 void SToggle::OnPaint(IRenderTarget *pRT)
 {
     SASSERT(m_pSkin);
     m_pSkin->DrawByState(pRT,GetWindowRect(),GetState());
-}
-
-void SToggle::OnLButtonUp(UINT nFlags,CPoint pt)
-{
-    if(GetWindowRect().PtInRect(pt)) m_bToggled=!m_bToggled;
-    __super::OnLButtonUp(nFlags,pt);
 }
 
 CSize SToggle::GetDesiredSize(int wid, int hei)
@@ -1276,17 +1270,6 @@ CSize SToggle::GetDesiredSize(int wid, int hei)
     return sz;
 }
 
-void SToggle::OnColorize(COLORREF cr)
-{
-    __super::OnColorize(cr);
-    if(m_pSkin) m_pSkin->OnColorize(cr);
-}
-
-void SToggle::OnScaleChanged(int nScale)
-{
-	__super::OnScaleChanged(nScale);
-	GetScaleSkin(m_pSkin, nScale);
-}
 
 #define GROUP_HEADER        20
 #define GROUP_ROUNDCORNOR    4

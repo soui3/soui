@@ -301,7 +301,7 @@ namespace SOUI
 	}
 
 	// Get SWindow state
-	DWORD SWindow::GetState(void)
+	DWORD SWindow::GetState(void) const
 	{
 		return m_dwState;
 	}
@@ -2251,7 +2251,7 @@ namespace SOUI
 
 	STransformation SWindow::GetTransformation() const
 	{
-		if(!m_isAnimating)
+		if(!m_isAnimating && !m_animationHandler.getFillAfter())
 			return m_transform;
 		else
 		{
@@ -2950,7 +2950,7 @@ namespace SOUI
 	}
 
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 
-		:m_pOwner(pOwner)
+		:m_pOwner(pOwner),m_bFillAfter(false)
 	{
 	}
 
@@ -2995,7 +2995,14 @@ namespace SOUI
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
 			m_pOwner->OnAnimationInvalidate();
 			if (!bMore)
-			{//animation stoped.
+			{//animation stopped.
+				if(pAni->isFillEnabled() && pAni->getFillAfter())
+				{
+					m_bFillAfter = true;
+				}else
+				{
+					m_bFillAfter = false;
+				}
 				m_pOwner->OnAnimationStop();
 			}
 		}
@@ -3004,22 +3011,20 @@ namespace SOUI
 
 	bool SWindow::SAnimationHandler::OnOwnerResize(EventArgs * e)
 	{
-		CSize szOwner = getAnimationOwnerSize();
-		CSize szParent = getAnimationParentSize();
+		CSize szOwner = m_pOwner->GetWindowRect().Size();
+		CSize szParent = szOwner;
+		SWindow *p = m_pOwner->GetParent();
+		if(p)
+		{
+			szParent = p->GetWindowRect().Size();
+		}
 		m_pOwner->GetAnimation()->initialize(szOwner.cx, szOwner.cy, szParent.cx, szParent.cy);
 		return true;
 	}
 
-	CSize SWindow::SAnimationHandler::getAnimationOwnerSize() const
+	bool SWindow::SAnimationHandler::getFillAfter() const
 	{
-		return m_pOwner->GetWindowRect().Size();
-	}
-
-	CSize SWindow::SAnimationHandler::getAnimationParentSize() const
-	{
-		SWindow *p = m_pOwner->GetParent();
-		if (!p) p = m_pOwner;
-		return p->GetWindowRect().Size();
+		return m_bFillAfter;
 	}
 
 }//namespace SOUI

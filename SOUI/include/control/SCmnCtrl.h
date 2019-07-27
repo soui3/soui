@@ -979,7 +979,7 @@ protected:
  * 
  * Describe    Toggle控件
  */
-class SOUI_EXP SToggle : public SWindow
+class SOUI_EXP SToggle : public SCheckBox
 {
     SOUI_CLASS_NAME(SToggle, L"toggle")
 public:
@@ -1008,26 +1008,17 @@ public:
      * Describe  获取Toggle属性 主要是获取是否Toggle
      */
     BOOL GetToggle();
+
+protected:
+	virtual CSize GetDesiredSize(int wid, int hei);
+	virtual BOOL NeedRedrawWhenStateChange(){return TRUE;}	
+
 protected:
     void OnPaint(IRenderTarget *pRT);
-    void OnLButtonUp(UINT nFlags,CPoint pt);
-    virtual CSize GetDesiredSize(int wid, int hei);
-    virtual BOOL NeedRedrawWhenStateChange(){return TRUE;}	
-    virtual void OnColorize(COLORREF cr);
-	virtual void OnScaleChanged(int nScale);
-
-    SOUI_ATTRS_BEGIN()
-        ATTR_INT(L"toggled", m_bToggled, TRUE)
-        ATTR_SKIN(L"skin", m_pSkin, TRUE)
-    SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
         MSG_WM_PAINT_EX(OnPaint)
-        MSG_WM_LBUTTONUP(OnLButtonUp)
     SOUI_MSG_MAP_END()
-protected:
-    BOOL m_bToggled;
-    ISkinObj *m_pSkin;
 };
 
 /**

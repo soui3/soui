@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set interpolator="Bounce" shareInterpolator="true" name="ani_hide">
-  <translate duration="800" fromXDelta="0" toXDelta="-100%" fromYDelta="0" toYDelta="0"/>
-  <alpha duration="800" fromAlpha="1" toAlpha="0"/>
+<set interpolator="Bounce" shareInterpolator="true" name="ani_hide" fillAfter="true" fillEnable="true">
+  <translate duration="800" fromXDelta="0" toXDelta="-250" fromYDelta="0" toYDelta="0"/>
 </set>

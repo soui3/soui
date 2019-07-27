@@ -13,19 +13,19 @@ translucent="1"
       <imgbtn name="btn_min" skin="_skin.sys.btn.minimize" pos="-121,0" animate="1" />
     </caption>
     <window pos="5,[2,-5,-5"  id="100">
+      <window pos="|0,0,@300,-30" offset="-0.5,0">
+        <window pos="0,0,-0,]0" name="wnd_ani_host"/>
+        <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
+      </window>
+
       <window pos="-0,0,@100,-0" offset="-1,0" layout="vbox" interval="10">
         <button size="-2,30" text="test" name="btn_test"/>
-        <button size="-2,30" text="show" name="btn_show"/>
-        <button size="-2,30" text="hide" name="btn_hide"/>
         <button size="-2,30" text="animator" name="btn_animator"/>
       </window>
 
-      <window pos="0,0,@250,-30" name="pane_left" skin="skin_girl" layout="hbox">
-        <include src="layout:xml_treectrl" size="-2,-2"/>
-      </window>
-      <window pos="|0,0,@300,]0" offset="-0.5,0">
-        <window pos="0,0,-0,]0" name="wnd_ani_host"/>
-        <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
+      <window pos="0,0,@270,-30" name="pane_left" layout="hbox" gravity="center">
+        <include src="layout:xml_treectrl" size="0,-2" weight="1"/>
+        <toggle size="-1,-1" name="tgl_left" skin="skin_btn_expand" checked="true"/>
       </window>
       <window pos="0,-30,-0,-0" layout="hbox" interval="10" gravity="center">
         <text text="QQ:99200711"/>

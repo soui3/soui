@@ -222,17 +222,17 @@ namespace SOUI
 		private:
 			SWindow * m_pOwner;
 			STransformation m_transform;
+			bool	  m_bFillAfter;
 		public:
 			SAnimationHandler(SWindow *pOwner);
 			void OnAnimationStart();
 			void OnAnimationStop();
 			const STransformation & GetTransformation() const;
+			bool getFillAfter() const;
 		protected:
 			void OnNextFrame() override;
 		protected:
 			bool OnOwnerResize(EventArgs *e);
-			CSize getAnimationOwnerSize() const;
-			CSize getAnimationParentSize() const;
 		};
 
     public:
@@ -355,7 +355,7 @@ namespace SOUI
         void SetOwner(SWindow *pOwner);
         SWindow *GetOwner();
 
-        DWORD GetState(void);
+        DWORD GetState(void) const;
         DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
         ISwndContainer *GetContainer();
 		const ISwndContainer* GetContainer() const;

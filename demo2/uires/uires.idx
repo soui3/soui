@@ -19,6 +19,7 @@
     <file name="png_love" path="image\love.png"/>
     <file name="png_soui" path="image\soui.png"/>
     <file name="png_treeicon" path="image\TreeIcon.png" />
+    <file name="btn_expand" path="image\btn_expand.png"/>
   </IMG>
   <ICON>
     <file name="ICON_LOGO"  path="image\soui.ico"/>
