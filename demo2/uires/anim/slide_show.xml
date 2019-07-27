@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set interpolator="Bounce" shareInterpolator="true">
-  <translate duration="500" fromXDelta="-100%" toXDelta="0" fromYDelta="0"  toYDelta="0"/>
-  <alpha duration="500" fromAlpha="0" toAlpha="1"/>
+  <translate duration="800" fromXDelta="-100%" toXDelta="0" fromYDelta="0"  toYDelta="0"/>
+  <alpha duration="800" fromAlpha="0" toAlpha="1"/>
 </set>

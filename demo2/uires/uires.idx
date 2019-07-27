@@ -5,6 +5,7 @@
   <LAYOUT>
     <file name="XML_MAINWND" path="xml\dlg_main.xml"/>
     <file name="xml_love" path="xml\love.xml"/>
+    <file name="xml_treectrl" path="xml\treectrl.xml"/>
   </LAYOUT>
   
   <values>
@@ -17,6 +18,7 @@
     <file name="png_girl" path="image\girl.png"/>
     <file name="png_love" path="image\love.png"/>
     <file name="png_soui" path="image\soui.png"/>
+    <file name="png_treeicon" path="image\TreeIcon.png" />
   </IMG>
   <ICON>
     <file name="ICON_LOGO"  path="image\soui.ico"/>

@@ -20,8 +20,8 @@ translucent="1"
         <button size="-2,30" text="animator" name="btn_animator"/>
       </window>
 
-      <window pos="0,0,@250,-30" name="pane_left" skin="skin_girl">
-        <text pos="|0,|0" offset="-0.5,-0.5" text="left pane" colorText="#ff0000" font="size:30"/>
+      <window pos="0,0,@250,-30" name="pane_left" skin="skin_girl" layout="hbox">
+        <include src="layout:xml_treectrl" size="-2,-2"/>
       </window>
       <window pos="|0,0,@300,]0" offset="-0.5,0">
         <window pos="0,0,-0,]0" name="wnd_ani_host"/>
