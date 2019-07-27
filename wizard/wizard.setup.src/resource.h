@@ -9,7 +9,7 @@
 #define IDC_UNINSTALL                   1002
 #define IDC_INSTALL                     1003
 #define IDC_VSDIR2                      1004
-#define IDC_SOUIDIR                1004
+#define IDC_SOUIDIR                     1004
 #define IDC_BROWSE2                     1005
 #define IDC_VS2005                      1006
 #define IDC_VS2008                      1007
@@ -19,6 +19,7 @@
 #define IDC_LOG                         1011
 #define IDC_BUTTON1                     1012
 #define IDC_SETOUTSOFT                  1012
+#define IDC_HOMESITE                    1012
 #define IDC_VSENV                       1014
 #define IDC_VSLIST                      1014
 

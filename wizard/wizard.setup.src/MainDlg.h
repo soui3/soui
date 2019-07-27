@@ -17,9 +17,8 @@ class CMainDlg : public CDialogImpl<CMainDlg>
 		CString strScriptSrc;
 	};
 
-	LPCTSTR const Ver[2] = { _T("[15.0,16.0]") ,_T("[16.0,17.0]") };
 
-
+ 
 public:
 	enum { IDD = IDD_MAINDLG };
 
@@ -30,7 +29,7 @@ public:
 		COMMAND_ID_HANDLER(IDC_BROWSE2, OnBrowseSouiDir)
 		COMMAND_ID_HANDLER(IDC_INSTALL, OnInstall)
 		COMMAND_ID_HANDLER(IDC_UNINSTALL, OnUninstall)
-		COMMAND_ID_HANDLER(IDC_SETOUTSOFT, OnSetoutsoft)
+		COMMAND_ID_HANDLER(IDC_HOMESITE, OnHomeSite)
 		END_MSG_MAP()
 
 	CString m_strWizardDir;//Êý¾ÝÄ¿Â¼
@@ -61,11 +60,13 @@ public:
 
 	CString GetVSDir(LPCTSTR pszEnvName)
 	{
+		static const LPCTSTR kVsVer[2] = { _T("[15.0,16.0]") ,_T("[16.0,17.0]") };
+
 		if (_tcscmp(_T("VS141COMNTOOLS"), pszEnvName) == 0)
-			return GetVs2017OrLaterDir(Ver[0]);
+			return GetVs2017OrLaterDir(kVsVer[0]);
 
 		if (_tcscmp(_T("VS142COMNTOOLS"), pszEnvName) == 0)
-			return GetVs2017OrLaterDir(Ver[1]);
+			return GetVs2017OrLaterDir(kVsVer[1]);
 
 		CString strRet;
 		strRet.GetEnvironmentVariable(pszEnvName);
@@ -312,9 +313,9 @@ public:
 		return TRUE;
 	}
 
-	LRESULT OnSetoutsoft(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	LRESULT OnHomeSite(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		ShellExecute(0, _T("open"), _T("http://www.setoutsoft.cn"), NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(0, _T("open"), _T("https://ui520.cn"), NULL, NULL, SW_SHOWNORMAL);
 		return 0;
 	}
 
