@@ -15,8 +15,6 @@
 #define _SRESPROVIDERBASE_
 #pragma once
 
-#define OR_API SOUI_EXP
-
 #include <unknown/obj-ref-i.h>
 #include <string/tstring.h>
 #include <souicoll.h>

@@ -13,8 +13,6 @@
 #   define SOUI_EXP
 #endif
 
-#define OR_API SOUI_EXP
-
 // Change these values to use different versions
 #ifndef WINVER 
 #define WINVER        0x0500
