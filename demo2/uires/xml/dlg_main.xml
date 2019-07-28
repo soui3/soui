@@ -12,13 +12,13 @@ translucent="1"
       <imgbtn name="btn_restore" skin="_skin.sys.btn.restore"  pos="-83,0" show="0" animate="1" />
       <imgbtn name="btn_min" skin="_skin.sys.btn.minimize" pos="-121,0" animate="1" />
     </caption>
-    <window pos="5,[2,-5,-5"  id="100">
-      <window pos="|0,0,@300,-30" offset="-0.5,0">
+    <window pos="5,[2,-5,-5"  id="100" clipClient="1">
+      <window pos="|0,0,@300,-30" offset="-0.5,0" clipClient="1">
         <window pos="0,0,-0,]0" name="wnd_ani_host"/>
-        <animateImg pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
+        <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui" msgTransparent="0"/>
       </window>
 
-      <window pos="-0,0,@100,-0" offset="-1,0" layout="vbox" interval="10">
+      <window pos="-0,0,@100,-0" offset="-1,0" layout="vbox" interval="10" show="0">
         <button size="-2,30" text="test" name="btn_test"/>
         <button size="-2,30" text="animator" name="btn_animator"/>
       </window>
