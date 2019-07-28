@@ -15,7 +15,7 @@ translucent="1"
     <window pos="5,[2,-5,-5"  id="100">
       <window pos="|0,0,@300,-30" offset="-0.5,0">
         <window pos="0,0,-0,]0" name="wnd_ani_host"/>
-        <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
+        <animateImg pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui"/>
       </window>
 
       <window pos="-0,0,@100,-0" offset="-1,0" layout="vbox" interval="10">

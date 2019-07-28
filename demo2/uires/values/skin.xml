@@ -2,7 +2,7 @@
 
 <skin>
   <imglist name="skin_girl"	src="img:png_girl" alpha="150"/>
-  <imglist name="skin_love"	src="img:png_love"/>
+  <imglist name="skin_love"	src="img:png_love" />
   <imglist name="skin_soui"	src="img:png_soui"/>
   <imglist name="skin_tree_icon" src="img:png_treeicon" states="3" />
   <imglist name="skin_btn_expand" src="img:btn_expand" states="6">
