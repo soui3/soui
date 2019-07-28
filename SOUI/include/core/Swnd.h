@@ -1440,6 +1440,7 @@ namespace SOUI
 		SAnimationHandler	m_animationHandler;
 		STransformation		m_transform;
 		bool				m_isAnimating;
+		bool				m_isDestroying;
 
         typedef struct GETRTDATA
         {

@@ -76,6 +76,7 @@ namespace SOUI
 		, m_strToolTipText(this)
 		, m_animationHandler(this)
 		, m_isAnimating(false)
+		, m_isDestroying(false)
 #ifdef _DEBUG
 		, m_nMainThreadId( ::GetCurrentThreadId() ) // 初始化对象的线程不一定是主线程
 #endif
@@ -412,7 +413,10 @@ namespace SOUI
 	BOOL SWindow::DestroyChild(SWindow *pChild)
 	{
 		TestMainThread();
-		if(this != pChild->GetParent()) return FALSE;
+		if(this != pChild->GetParent())
+			return FALSE;
+		if(pChild->m_isDestroying)
+			return FALSE;
 		pChild->InvalidateRect(NULL);
 		pChild->SSendMessage(WM_DESTROY);
 		RemoveChild(pChild);
@@ -1442,7 +1446,10 @@ namespace SOUI
 
 	void SWindow::OnDestroy()
 	{
-		ClearAnimation();
+		if(m_isDestroying)
+			return;
+
+		m_isDestroying = true;
 		EventSwndDestroy evt(this);
 		FireEvent(evt);
 		accNotifyEvent(EVENT_OBJECT_DESTROY);
@@ -1469,6 +1476,8 @@ namespace SOUI
 		}
 		m_pFirstChild=m_pLastChild=NULL;
 		m_nChildrenCount=0;
+		ClearAnimation();
+		m_isDestroying = false;
 	}
 
 	// Draw background default

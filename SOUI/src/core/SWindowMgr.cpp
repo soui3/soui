@@ -47,7 +47,7 @@ SWND SWindowMgr::NewWindow(SWindow *pSwnd)
     return swndNext;
 }
 
-// Destroy DuiWindow
+// Destroy SWindow
 BOOL SWindowMgr::DestroyWindow(SWND swnd)
 {
     ::EnterCriticalSection(&getSingleton().m_lockWndMap);
