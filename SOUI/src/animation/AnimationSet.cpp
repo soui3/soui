@@ -165,15 +165,29 @@ namespace SOUI {
 
 		if (started && !mStarted) {
 			mStarted = true;
-			if (mListener != NULL) {
-				mListener->onAnimationStart(this);
-			}
+			fireAnimationStart();
 		}
 
 		if (ended != mEnded) {
-			mEnded = ended;
-			if (mListener != NULL) {
-				mListener->onAnimationEnd(this);
+			if (mRepeatCount == mRepeated || isCanceled()) {
+				if (!mEnded) {
+					mEnded = true;
+					fireAnimationEnd();
+				}
+			}
+			else {
+				if (mRepeatCount > 0) {
+					mRepeated++;
+				}
+
+				for (int i = count - 1; i >= 0; --i) {
+					IAnimation * a = mAnimations[i];
+					a->start();
+				}
+				mStartTime = -1;
+				mStarted = mEnded = false;
+				more = true;
+				fireAnimationRepeat();
 			}
 		}
 

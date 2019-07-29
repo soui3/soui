@@ -445,13 +445,13 @@ namespace SOUI {
 			*/
 	public: bool getTransformation(int64_t currentTime, STransformation & outTransformation);
 
-	private: bool isCanceled();
+	protected: bool isCanceled();
 
-	private: void fireAnimationStart();
+	protected: void fireAnimationStart();
 
-	private: void fireAnimationRepeat();
+	protected: void fireAnimationRepeat();
 
-	private: void fireAnimationEnd();
+	protected: void fireAnimationEnd();
 
 			 /**
 			 * <p>Indicates whether this animation has started or not.</p>
