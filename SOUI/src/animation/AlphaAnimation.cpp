@@ -4,6 +4,16 @@
 
 namespace SOUI {
 
+	SAlphaAnimation::SAlphaAnimation() :mFromAlpha(0.f), mToAlpha(0.0f)
+	{
+	}
+
+	void SAlphaAnimation::init(float fromAlpha, float toAlpha)
+	{
+		mFromAlpha = fromAlpha;
+		mToAlpha = toAlpha;
+	}
+
 	bool SAlphaAnimation::hasAlpha() const 
 	{
 		return true;
@@ -13,12 +23,6 @@ namespace SOUI {
 	{
 		float alpha = mFromAlpha;
 		t.setAlpha((BYTE)((alpha + ((mToAlpha - alpha) * interpolatedTime))*255));
-	}
-
-	SAlphaAnimation::SAlphaAnimation(float fromAlpha/*=0.0f*/, float toAlpha/*=0.0f*/)
-	{
-		mFromAlpha = fromAlpha;
-		mToAlpha = toAlpha;
 	}
 
 }

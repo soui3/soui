@@ -37,6 +37,8 @@ namespace SOUI {
 		float mPivotX;
 		float mPivotY;
 
+	public:
+		SScaleAnimation();
 
 		/**
 		* Constructor to use when building a ScaleAnimation from code
@@ -49,7 +51,7 @@ namespace SOUI {
 		* @param toY Vertical scaling factor to apply at the end of the animation
 		*/
 	public: 
-		SScaleAnimation(float fromX=0.0f, float toX = 0.0f, float fromY = 0.0f, float toY = 0.0f);
+		void init(float fromX=0.0f, float toX = 0.0f, float fromY = 0.0f, float toY = 0.0f);
 
 		/**
 		* Constructor to use when building a ScaleAnimation from code
@@ -67,7 +69,7 @@ namespace SOUI {
 		*        being scaled, specified as an absolute number where 0 is the top
 		*        edge. (This point remains fixed while the object changes size.)
 		*/
-		SScaleAnimation(float fromX, float toX, float fromY, float toY,
+		void init (float fromX, float toX, float fromY, float toY,
 			float pivotX, float pivotY);
 
 		/**
@@ -96,7 +98,7 @@ namespace SOUI {
 		*        size.) This value can either be an absolute number if pivotYType
 		*        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		*/
-		SScaleAnimation(float fromX, float toX, float fromY, float toY,
+		void init(float fromX, float toX, float fromY, float toY,
 			ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue);
 
 		/**

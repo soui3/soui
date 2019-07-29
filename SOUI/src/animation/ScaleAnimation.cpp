@@ -44,7 +44,7 @@ namespace SOUI {
 		}
 	}
 
-	SScaleAnimation::SScaleAnimation(float fromX, float toX, float fromY, float toY, ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue)
+	void SScaleAnimation::init(float fromX, float toX, float fromY, float toY, ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue)
 	{
 		mFromX = fromX;
 		mToX = toX;
@@ -58,7 +58,7 @@ namespace SOUI {
 		initializePivotPoint();
 	}
 
-	SScaleAnimation::SScaleAnimation(float fromX, float toX, float fromY, float toY, float pivotX, float pivotY)
+	void SScaleAnimation::init(float fromX, float toX, float fromY, float toY, float pivotX, float pivotY)
 	{
 		mFromX = fromX;
 		mToX = toX;
@@ -72,7 +72,12 @@ namespace SOUI {
 		initializePivotPoint();
 	}
 
-	SScaleAnimation::SScaleAnimation(float fromX/*=0.0f*/, float toX /*= 0.0f*/, float fromY /*= 0.0f*/, float toY /*= 0.0f*/)
+	SScaleAnimation::SScaleAnimation()
+	{
+		init();
+	}
+
+	void SScaleAnimation::init(float fromX/*=0.0f*/, float toX /*= 0.0f*/, float fromY /*= 0.0f*/, float toY /*= 0.0f*/)
 	{
 		mFromX = fromX;
 		mToX = toX;

@@ -4,6 +4,13 @@
 
 namespace SOUI {
 
+	SRotateAnimation::SRotateAnimation()
+	{
+		mFromDegrees = 0.0f;
+		mToDegrees = 0.0f;
+		mPivotX = 0.0f;
+		mPivotY = 0.0f;
+	}
 
 
 	void SRotateAnimation::initialize(int width, int height, int parentWidth, int parentHeight) 
@@ -36,7 +43,7 @@ namespace SOUI {
 		}
 	}
 
-	SRotateAnimation::SRotateAnimation(float fromDegrees, float toDegrees, ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue) 
+	void SRotateAnimation::init(float fromDegrees, float toDegrees, ValueType pivotXType, float pivotXValue, ValueType pivotYType, float pivotYValue) 
 	{
 		mFromDegrees = fromDegrees;
 		mToDegrees = toDegrees;
@@ -48,7 +55,7 @@ namespace SOUI {
 		initializePivotPoint();
 	}
 
-	SRotateAnimation::SRotateAnimation(float fromDegrees, float toDegrees, float pivotX, float pivotY)
+	void SRotateAnimation::init(float fromDegrees, float toDegrees, float pivotX, float pivotY)
 	{
 		mFromDegrees = fromDegrees;
 		mToDegrees = toDegrees;
@@ -60,12 +67,5 @@ namespace SOUI {
 		initializePivotPoint();
 	}
 
-	SRotateAnimation::SRotateAnimation(float fromDegrees/*=0.0f*/, float toDegrees/*=0.0f*/) 
-	{
-		mFromDegrees = fromDegrees;
-		mToDegrees = toDegrees;
-		mPivotX = 0.0f;
-		mPivotY = 0.0f;
-	}
 
 }

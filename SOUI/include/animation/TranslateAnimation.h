@@ -52,6 +52,8 @@ namespace SOUI {
 		/** @hide */
 		float mToYDelta;
 	public: 
+		STranslateAnimation();
+
 		/**
 		* Constructor to use when building a TranslateAnimation from code
 		*
@@ -64,7 +66,7 @@ namespace SOUI {
 		* @param toYDelta Change in Y coordinate to apply at the end of the
 		*        animation
 		*/
-		STranslateAnimation(float fromXDelta=0.0f, float toXDelta=0.0f, float fromYDelta=0.0f, float toYDelta=0.0f);
+		void init(float fromXDelta=0.0f, float toXDelta=0.0f, float fromYDelta=0.0f, float toYDelta=0.0f);
 
 		/**
 		* Constructor to use when building a TranslateAnimation from code
@@ -94,7 +96,7 @@ namespace SOUI {
 		*        animation. This value can either be an absolute number if toYType
 		*        is ABSOLUTE, or a percentage (where 1.0 is 100%) otherwise.
 		*/
-		STranslateAnimation(ValueType fromXType, float fromXValue, ValueType toXType, float toXValue,
+		void init(ValueType fromXType, float fromXValue, ValueType toXType, float toXValue,
 			ValueType fromYType, float fromYValue, ValueType toYType, float toYValue);
 
 

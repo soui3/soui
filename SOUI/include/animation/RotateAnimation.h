@@ -53,69 +53,55 @@ namespace SOUI {
 		*
 		* @param toDegrees Rotation offset to apply at the end of the animation.
 		*/
-	public:SRotateAnimation(float fromDegrees=0.0f, float toDegrees=0.0f);
+		SRotateAnimation();
 
-		   /**
-		   * Constructor to use when building a RotateAnimation from code
-		   *
-		   * @param fromDegrees Rotation offset to apply at the start of the
-		   *        animation.
-		   *
-		   * @param toDegrees Rotation offset to apply at the end of the animation.
-		   *
-		   * @param pivotX The X coordinate of the point about which the object is
-		   *        being rotated, specified as an absolute number where 0 is the left
-		   *        edge.
-		   * @param pivotY The Y coordinate of the point about which the object is
-		   *        being rotated, specified as an absolute number where 0 is the top
-		   *        edge.
-		   */
-		   SRotateAnimation(float fromDegrees, float toDegrees, float pivotX, float pivotY) ;
-		   /**
-		   * Constructor to use when building a RotateAnimation from code
-		   *
-		   * @param fromDegrees Rotation offset to apply at the start of the
-		   *        animation.
-		   *
-		   * @param toDegrees Rotation offset to apply at the end of the animation.
-		   *
-		   * @param pivotXType Specifies how pivotXValue should be interpreted. One of
-		   *        Animation.ABSOLUTE, Animation.RELATIVE_TO_SELF, or
-		   *        Animation.RELATIVE_TO_PARENT.
-		   * @param pivotXValue The X coordinate of the point about which the object
-		   *        is being rotated, specified as an absolute number where 0 is the
-		   *        left edge. This value can either be an absolute number if
-		   *        pivotXType is ABSOLUTE, or a percentage (where 1.0 is 100%)
-		   *        otherwise.
-		   * @param pivotYType Specifies how pivotYValue should be interpreted. One of
-		   *        Animation.ABSOLUTE, Animation.RELATIVE_TO_SELF, or
-		   *        Animation.RELATIVE_TO_PARENT.
-		   * @param pivotYValue The Y coordinate of the point about which the object
-		   *        is being rotated, specified as an absolute number where 0 is the
-		   *        top edge. This value can either be an absolute number if
-		   *        pivotYType is ABSOLUTE, or a percentage (where 1.0 is 100%)
-		   *        otherwise.
-		   */
-		   SRotateAnimation(float fromDegrees, float toDegrees, ValueType pivotXType, float pivotXValue,
-			   ValueType pivotYType, float pivotYValue);
+		void init(float fromDegrees, float toDegrees, float pivotX=0.0f, float pivotY=0.0f);
 
-		   void initialize(int width, int height, int parentWidth, int parentHeight);
+		/**
+		* Constructor to use when building a RotateAnimation from code
+		*
+		* @param fromDegrees Rotation offset to apply at the start of the
+		*        animation.
+		*
+		* @param toDegrees Rotation offset to apply at the end of the animation.
+		*
+		* @param pivotXType Specifies how pivotXValue should be interpreted. One of
+		*        Animation.ABSOLUTE, Animation.RELATIVE_TO_SELF, or
+		*        Animation.RELATIVE_TO_PARENT.
+		* @param pivotXValue The X coordinate of the point about which the object
+		*        is being rotated, specified as an absolute number where 0 is the
+		*        left edge. This value can either be an absolute number if
+		*        pivotXType is ABSOLUTE, or a percentage (where 1.0 is 100%)
+		*        otherwise.
+		* @param pivotYType Specifies how pivotYValue should be interpreted. One of
+		*        Animation.ABSOLUTE, Animation.RELATIVE_TO_SELF, or
+		*        Animation.RELATIVE_TO_PARENT.
+		* @param pivotYValue The Y coordinate of the point about which the object
+		*        is being rotated, specified as an absolute number where 0 is the
+		*        top edge. This value can either be an absolute number if
+		*        pivotYType is ABSOLUTE, or a percentage (where 1.0 is 100%)
+		*        otherwise.
+		*/
+		void init(float fromDegrees, float toDegrees, ValueType pivotXType, float pivotXValue,
+			ValueType pivotYType, float pivotYValue);
 
-		   /**
-		   * Called at the end of constructor methods to initialize, if possible, values for
-		   * the pivot point. This is only possible for ABSOLUTE pivot values.
-		   */
+		void initialize(int width, int height, int parentWidth, int parentHeight);
+
+		/**
+		* Called at the end of constructor methods to initialize, if possible, values for
+		* the pivot point. This is only possible for ABSOLUTE pivot values.
+		*/
 	private:
-		void initializePivotPoint() ;
+		void initializePivotPoint();
 
-	protected: 
+	protected:
 		void applyTransformation(float interpolatedTime, STransformation & t);
 
 	public:
 		SOUI_ATTRS_BEGIN()
-			ATTR_FLOAT(L"fromDegrees",mFromDegrees,FALSE)
+			ATTR_FLOAT(L"fromDegrees", mFromDegrees, FALSE)
 			ATTR_FLOAT(L"toDegrees", mToDegrees, FALSE)
-			ATTR_VALUE_DESC(L"pivotX",mPivotXType,mPivotXValue)
+			ATTR_VALUE_DESC(L"pivotX", mPivotXType, mPivotXValue)
 			ATTR_VALUE_DESC(L"pivotY", mPivotYType, mPivotYValue)
 		SOUI_ATTRS_END()
 	};

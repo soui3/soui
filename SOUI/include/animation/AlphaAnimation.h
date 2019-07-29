@@ -43,12 +43,13 @@ public:
      * @param toAlpha Ending alpha value for the animation.
      */
 public:
-	SAlphaAnimation(float fromAlpha=0.0f, float toAlpha=0.0f);
+	SAlphaAnimation();
     
-    /**
+	void init(float fromAlpha = 0.0f, float toAlpha = 0.0f);
+protected:
+	/**
      * Changes the alpha property of the supplied {@link STransformation}
      */
-protected:
 	virtual void applyTransformation(float interpolatedTime, STransformation & t);
 
 public:

@@ -157,14 +157,13 @@ namespace SOUI{
 		*/
 		void initialize(int width, int height, int parentWidth, int parentHeight);
 
+	protected:
 		void reset();
-
 		/**
 		* @hide
 		*/
 		void restoreChildrenStartOffset();
 
-	protected:
 		BOOL InitFromXml(pugi::xml_node xmlNode);
 
 		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
