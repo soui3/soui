@@ -112,7 +112,7 @@ namespace SOUI {
 		bool expired = normalizedTime >= 1.0f || isCanceled();
 		mMore = !expired;
 
-		if (!mFillEnabled) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
+		if (!mFillEnabled || mRepeatCount!=0) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
 
 		if ((normalizedTime >= 0.0f || mFillBefore) && (normalizedTime <= 1.0f || mFillAfter)) {
 			if (!mStarted) {
@@ -127,6 +127,7 @@ namespace SOUI {
 			}
 
 			float interpolatedTime = mInterpolator->getInterpolation(normalizedTime);
+			//outTransformation.clear();
 			applyTransformation(interpolatedTime, outTransformation);
 		}
 
@@ -343,14 +344,13 @@ namespace SOUI {
 		mOneMoreTime = true;
 
 
-		mFillBefore = true;
+		mFillBefore = false;
 
 		mFillAfter = false;
 
-		mFillEnabled = false;
+		mFillEnabled = true;
 
 		mUserData = 0;
-		mTransformation.clear();
 		ensureInterpolator();
 	}
 

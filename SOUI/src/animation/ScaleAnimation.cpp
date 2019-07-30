@@ -74,7 +74,7 @@ namespace SOUI {
 
 	SScaleAnimation::SScaleAnimation()
 	{
-		init();
+		init(1.0f,1.0f,1.0f,1.0f, RELATIVE_TO_SELF,0.5f, RELATIVE_TO_SELF,0.5f);
 	}
 
 	void SScaleAnimation::init(float fromX/*=0.0f*/, float toX /*= 0.0f*/, float fromY /*= 0.0f*/, float toY /*= 0.0f*/)

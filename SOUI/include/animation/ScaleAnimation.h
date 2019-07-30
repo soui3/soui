@@ -51,7 +51,7 @@ namespace SOUI {
 		* @param toY Vertical scaling factor to apply at the end of the animation
 		*/
 	public: 
-		void init(float fromX=0.0f, float toX = 0.0f, float fromY = 0.0f, float toY = 0.0f);
+		void init(float fromX=1.0f, float toX = 1.0f, float fromY = 1.0f, float toY = 1.0f);
 
 		/**
 		* Constructor to use when building a ScaleAnimation from code

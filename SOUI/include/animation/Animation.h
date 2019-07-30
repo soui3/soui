@@ -154,8 +154,6 @@ namespace SOUI {
 		bool mMore;
 		bool mOneMoreTime;
 
-		STransformation  mTransformation;
-
 		/**
 		* Indicates whether the animation transformation should be applied before the
 		* animation starts. The value of this variable is only relevant if mFillEnabled is true;
@@ -202,284 +200,252 @@ namespace SOUI {
 		*
 		* @see #initialize(int, int, int, int)
 		*/
-	public: void initialize(int width, int height, int parentWidth, int parentHeight);
+		virtual void initialize(int width, int height, int parentWidth, int parentHeight);
 
-	public: void reset();
+		void reset();
 
-			/**
-			* Cancel the animation. Cancelling an animation invokes the animation
-			* listener, if set, to notify the end of the animation.
-			*
-			* If you cancel an animation manually, you must call {@link #reset()}
-			* before starting the animation again.
-			*
-			* @see #reset()
-			* @see #start()
-			* @see #startNow()
-			*/
-	public: void cancel();
+		/**
+		* Cancel the animation. Cancelling an animation invokes the animation
+		* listener, if set, to notify the end of the animation.
+		*
+		* If you cancel an animation manually, you must call {@link #reset()}
+		* before starting the animation again.
+		*
+		* @see #reset()
+		* @see #start()
+		* @see #startNow()
+		*/
+		void cancel();
 
-			/**
-			* Sets the acceleration curve for this animation. Defaults to a linear
-			* interpolation.
-			*
-			* @param i The interpolator which defines the acceleration curve
-			* @attr ref android.R.styleable#Animation_interpolator
-			*/
-	public: void setInterpolator(IInterpolator *i);
+		/**
+		* Sets the acceleration curve for this animation. Defaults to a linear
+		* interpolation.
+		*
+		* @param i The interpolator which defines the acceleration curve
+		* @attr ref android.R.styleable#Animation_interpolator
+		*/
+		void setInterpolator(IInterpolator *i);
 
-			/**
-			* How long this animation should last. The duration cannot be negative.
-			*
-			* @param durationMillis Duration in milliseconds
-			*
-			* @throws java.lang.IllegalArgumentException if the duration is < 0
-			*
-			* @attr ref android.R.styleable#Animation_duration
-			*/
-	public: void setDuration(long durationMillis);
+		/**
+		* How long this animation should last. The duration cannot be negative.
+		*
+		* @param durationMillis Duration in milliseconds
+		*
+		* @throws java.lang.IllegalArgumentException if the duration is < 0
+		*
+		* @attr ref android.R.styleable#Animation_duration
+		*/
+		void setDuration(long durationMillis);
 
-			/**
-			* How much to scale the duration by.
-			*
-			* @param scale The amount to scale the duration.
-			*/
-	public: void scaleCurrentDuration(float scale);
+		/**
+		* How much to scale the duration by.
+		*
+		* @param scale The amount to scale the duration.
+		*/
+		void scaleCurrentDuration(float scale);
 
-	public: void setFillBefore(bool bFill);
-	public: bool getFillBefore() const;
+		void setFillBefore(bool bFill);
+		bool getFillBefore() const;
 
-	public: void setFillAfter(bool bFill);
+		void setFillAfter(bool bFill);
 
-	public: bool getFillAfter() const;
+		bool getFillAfter() const;
 
-			bool isFillEnabled() const;
+		bool isFillEnabled() const;
 
-			/**
-			* If fillEnabled is true, the animation will apply the value of fillBefore.
-			* Otherwise, fillBefore is ignored and the animation
-			* transformation is always applied until the animation ends.
-			*
-			* @param fillEnabled true if the animation should take the value of fillBefore into account
-			* @attr ref android.R.styleable#Animation_fillEnabled
-			*
-			* @see #setFillBefore(boolean)
-			* @see #setFillAfter(boolean)
-			*/
-			void setFillEnabled(bool fillEnabled);
-	public: void setStartOffset(long offset);
-			/**
-			* When this animation should start. When the start time is set to
-			* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
-			* {@link #getTransformation(long, STransformation)} is invoked. The time passed
-			* to this method should be obtained by calling
-			* {@link AnimationUtils#currentAnimationTimeMillis()} instead of
-			* {@link System#currentTimeMillis()}.
-			*
-			* @param startTimeMillis the start time in milliseconds
-			*/
-	public: void setStartTime(int64_t startTimeMillis);
+		/**
+		* If fillEnabled is true, the animation will apply the value of fillBefore.
+		* Otherwise, fillBefore is ignored and the animation
+		* transformation is always applied until the animation ends.
+		*
+		* @param fillEnabled true if the animation should take the value of fillBefore into account
+		* @attr ref android.R.styleable#Animation_fillEnabled
+		*
+		* @see #setFillBefore(boolean)
+		* @see #setFillAfter(boolean)
+		*/
+		void setFillEnabled(bool fillEnabled);
+		void setStartOffset(long offset);
+		/**
+		* When this animation should start. When the start time is set to
+		* {@link #START_ON_FIRST_FRAME}, the animation will start the first time
+		* {@link #getTransformation(long, STransformation)} is invoked. The time passed
+		* to this method should be obtained by calling
+		* {@link AnimationUtils#currentAnimationTimeMillis()} instead of
+		* {@link System#currentTimeMillis()}.
+		*
+		* @param startTimeMillis the start time in milliseconds
+		*/
+		void setStartTime(int64_t startTimeMillis);
 
-			/**
-			* Convenience method to start the animation the first time
-			* {@link #getTransformation(long, STransformation)} is invoked.
-			*/
-	public: void start();
+		/**
+		* Convenience method to start the animation the first time
+		* {@link #getTransformation(long, STransformation)} is invoked.
+		*/
+		void start();
 
-			/**
-			* Convenience method to start the animation at the current time in
-			* milliseconds.
-			*/
-	public: void startNow();
+		/**
+		* Convenience method to start the animation at the current time in
+		* milliseconds.
+		*/
+		void startNow();
 
-			/**
-			* Defines what this animation should do when it reaches the end. This
-			* setting is applied only when the repeat count is either greater than
-			* 0 or {@link #INFINITE}. Defaults to {@link #RESTART}.
-			*
-			* @param repeatMode {@link #RESTART} or {@link #REVERSE}
-			* @attr ref android.R.styleable#Animation_repeatMode
-			*/
-	public: void setRepeatMode(RepeatMode repeatMode);
+		/**
+		* Defines what this animation should do when it reaches the end. This
+		* setting is applied only when the repeat count is either greater than
+		* 0 or {@link #INFINITE}. Defaults to {@link #RESTART}.
+		*
+		* @param repeatMode {@link #RESTART} or {@link #REVERSE}
+		* @attr ref android.R.styleable#Animation_repeatMode
+		*/
+		void setRepeatMode(RepeatMode repeatMode);
 
-			/**
-			* Sets how many times the animation should be repeated. If the repeat
-			* count is 0, the animation is never repeated. If the repeat count is
-			* greater than 0 or {@link #INFINITE}, the repeat mode will be taken
-			* into account. The repeat count is 0 by default.
-			*
-			* @param repeatCount the number of times the animation should be repeated
-			* @attr ref android.R.styleable#Animation_repeatCount
-			*/
-	public: void setRepeatCount(int repeatCount);
-
-
-			/**
-			* Set the Z ordering mode to use while running the animation.
-			*
-			* @param zAdjustment The desired mode, one of {@link #ZORDER_NORMAL},
-			* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
-			* @attr ref android.R.styleable#Animation_zAdjustment
-			*/
-	public: void setZAdjustment(int zAdjustment);
-
-			/**
-			* The scale factor is set by the call to <code>getTransformation</code>. Overrides of
-			* {@link #getTransformation(long, STransformation, float)} will get this value
-			* directly. Overrides of {@link #applyTransformation(float, STransformation)} can
-			* call this method to get the value.
-			*
-			* @return float The scale factor that should be applied to pre-scaled values in
-			* an Animation such as the pivot points in {@link ScaleAnimation} and {@link RotateAnimation}.
-			*/
-	protected: float getScaleFactor();
+		/**
+		* Sets how many times the animation should be repeated. If the repeat
+		* count is 0, the animation is never repeated. If the repeat count is
+		* greater than 0 or {@link #INFINITE}, the repeat mode will be taken
+		* into account. The repeat count is 0 by default.
+		*
+		* @param repeatCount the number of times the animation should be repeated
+		* @attr ref android.R.styleable#Animation_repeatCount
+		*/
+		void setRepeatCount(int repeatCount);
 
 
-			   /**
-			   * Gets the acceleration curve type for this animation.
-			   *
-			   * @return the {@link Interpolator} associated to this animation
-			   * @attr ref android.R.styleable#Animation_interpolator
-			   */
-	public: IInterpolator* getInterpolator() const;
+		/**
+		* Set the Z ordering mode to use while running the animation.
+		*
+		* @param zAdjustment The desired mode, one of {@link #ZORDER_NORMAL},
+		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
+		* @attr ref android.R.styleable#Animation_zAdjustment
+		*/
+		void setZAdjustment(int zAdjustment);
 
-			/**
-			* When this animation should start. If the animation has not startet yet,
-			* this method might return {@link #START_ON_FIRST_FRAME}.
-			*
-			* @return the time in milliseconds when the animation should start or
-			*         {@link #START_ON_FIRST_FRAME}
-			*/
-	public: int64_t getStartTime() const;
+		/**
+		* Gets the acceleration curve type for this animation.
+		*
+		* @return the {@link Interpolator} associated to this animation
+		* @attr ref android.R.styleable#Animation_interpolator
+		*/
+		IInterpolator* getInterpolator() const;
 
-			/**
-			* How long this animation should last
-			*
-			* @return the duration in milliseconds of the animation
-			* @attr ref android.R.styleable#Animation_duration
-			*/
-	public: long getDuration() const;
+		/**
+		* When this animation should start. If the animation has not startet yet,
+		* this method might return {@link #START_ON_FIRST_FRAME}.
+		*
+		* @return the time in milliseconds when the animation should start or
+		*         {@link #START_ON_FIRST_FRAME}
+		*/
+		int64_t getStartTime() const;
 
-			/**
-			* When this animation should start, relative to StartTime
-			*
-			* @return the start offset in milliseconds
-			* @attr ref android.R.styleable#Animation_startOffset
-			*/
-	public: long getStartOffset() const;
+		/**
+		* How long this animation should last
+		*
+		* @return the duration in milliseconds of the animation
+		* @attr ref android.R.styleable#Animation_duration
+		*/
+		virtual long getDuration() const;
 
-			/**
-			* Defines what this animation should do when it reaches the end.
-			*
-			* @return either one of {@link #REVERSE} or {@link #RESTART}
-			* @attr ref android.R.styleable#Animation_repeatMode
-			*/
-	public: RepeatMode getRepeatMode() const;
+		/**
+		* When this animation should start, relative to StartTime
+		*
+		* @return the start offset in milliseconds
+		* @attr ref android.R.styleable#Animation_startOffset
+		*/
+		virtual long getStartOffset() const;
 
-			/**
-			* Defines how many times the animation should repeat. The default value
-			* is 0.
-			*
-			* @return the number of times the animation should repeat, or {@link #INFINITE}
-			* @attr ref android.R.styleable#Animation_repeatCount
-			*/
-	public: int getRepeatCount() const;
+		/**
+		* Defines what this animation should do when it reaches the end.
+		*
+		* @return either one of {@link #REVERSE} or {@link #RESTART}
+		* @attr ref android.R.styleable#Animation_repeatMode
+		*/
+		virtual RepeatMode getRepeatMode() const;
 
-			/**
-			* Returns the Z ordering mode to use while running the animation as
-			* previously set by {@link #setZAdjustment}.
-			*
-			* @return Returns one of {@link #ZORDER_NORMAL},
-			* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
-			* @attr ref android.R.styleable#Animation_zAdjustment
-			*/
-	public: int getZAdjustment() const;
+		/**
+		* Defines how many times the animation should repeat. The default value
+		* is 0.
+		*
+		* @return the number of times the animation should repeat, or {@link #INFINITE}
+		* @attr ref android.R.styleable#Animation_repeatCount
+		*/
+		virtual int getRepeatCount() const;
+
+		/**
+		* Returns the Z ordering mode to use while running the animation as
+		* previously set by {@link #setZAdjustment}.
+		*
+		* @return Returns one of {@link #ZORDER_NORMAL},
+		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
+		* @attr ref android.R.styleable#Animation_zAdjustment
+		*/
+		virtual int getZAdjustment() const;
 
 
-			/**
-			* <p>Binds an animation listener to this animation. The animation listener
-			* is notified of animation events such as the end of the animation or the
-			* repetition of the animation.</p>
-			*
-			* @param listener the animation listener to be notified
-			*/
-	public: 
+		/**
+		* <p>Binds an animation listener to this animation. The animation listener
+		* is notified of animation events such as the end of the animation or the
+		* repetition of the animation.</p>
+		*
+		* @param listener the animation listener to be notified
+		*/
 		void setAnimationListener(IAnimationListener* listener);
-	
-			/**
-			* Gurantees that this animation has an interpolator. Will use
-			* a AccelerateDecelerateInterpolator is nothing else was specified.
-			*/
-	protected: void ensureInterpolator();
 
-			   /**
-			   * Compute a hint at how long the entire animation may last, in milliseconds.
-			   * Animations can be written to cause themselves to run for a different
-			   * duration than what is computed here, but generally this should be
-			   * accurate.
-			   */
-	public: long computeDurationHint() const;
-			/**
-			 * Gets the transformation to apply at a specified point in time. Implementations of this
-			 * method should always replace the specified STransformation or document they are doing
-			 * otherwise.
-			 *
-			 * @param currentTime Where we are in the animation. This is wall clock time.
-			 * @param outTransformation A transformation object that is provided by the
-			 *        caller and will be filled in by the animation.
-			 * @param scale Scaling factor to apply to any inputs to the transform operation, such
-			 *        pivot points being rotated or scaled around.
-			 * @return True if the animation is still running
-			 */
-	public: bool getTransformation(uint64_t currentTime, STransformation & outTransformation,
-		float scale);
-			/**
-			* Gets the transformation to apply at a specified point in time. Implementations of this
-			* method should always replace the specified STransformation or document they are doing
-			* otherwise.
-			*
-			* @param currentTime Where we are in the animation. This is wall clock time.
-			* @param outTransformation A transformation object that is provided by the
-			*        caller and will be filled in by the animation.
-			* @return True if the animation is still running
-			*/
-	public: bool getTransformation(int64_t currentTime, STransformation & outTransformation);
+	public:
+		/**
+		* Compute a hint at how long the entire animation may last, in milliseconds.
+		* Animations can be written to cause themselves to run for a different
+		* duration than what is computed here, but generally this should be
+		* accurate.
+		*/
+		long computeDurationHint() const;
+		/**
+		 * Gets the transformation to apply at a specified point in time. Implementations of this
+		 * method should always replace the specified STransformation or document they are doing
+		 * otherwise.
+		 *
+		 * @param currentTime Where we are in the animation. This is wall clock time.
+		 * @param outTransformation A transformation object that is provided by the
+		 *        caller and will be filled in by the animation.
+		 * @param scale Scaling factor to apply to any inputs to the transform operation, such
+		 *        pivot points being rotated or scaled around.
+		 * @return True if the animation is still running
+		 */
+		bool getTransformation(uint64_t currentTime, STransformation & outTransformation, float scale);
+		/**
+		* Gets the transformation to apply at a specified point in time. Implementations of this
+		* method should always replace the specified STransformation or document they are doing
+		* otherwise.
+		*
+		* @param currentTime Where we are in the animation. This is wall clock time.
+		* @param outTransformation A transformation object that is provided by the
+		*        caller and will be filled in by the animation.
+		* @return True if the animation is still running
+		*/
+		virtual bool getTransformation(int64_t currentTime, STransformation & outTransformation);
 
-	protected: bool isCanceled();
-
-	protected: void fireAnimationStart();
-
-	protected: void fireAnimationRepeat();
-
-	protected: void fireAnimationEnd();
-
-			 /**
-			 * <p>Indicates whether this animation has started or not.</p>
-			 *
-			 * @return true if the animation has started, false otherwise
-			 */
-	public: bool hasStarted() const;
-
-			/**
-			* <p>Indicates whether this animation has ended or not.</p>
-			*
-			* @return true if the animation has ended, false otherwise
-			*/
-	public: bool hasEnded() const;
-
-			/**
-			* Helper for getTransformation. Subclasses should implement this to apply
-			* their transforms given an interpolation value.  Implementations of this
-			* method should always replace the specified STransformation or document
-			* they are doing otherwise.
-			*
-			* @param interpolatedTime The value of the normalized time (0.0 to 1.0)
-			*        after it has been run through the interpolation function.
-			* @param t The STransformation object to fill in with the current
-			*        transforms.
-			*/
 	protected:
+		/**
+		* Helper for getTransformation. Subclasses should implement this to apply
+		* their transforms given an interpolation value.  Implementations of this
+		* method should always replace the specified STransformation or document
+		* they are doing otherwise.
+		*
+		* @param interpolatedTime The value of the normalized time (0.0 to 1.0)
+		*        after it has been run through the interpolation function.
+		* @param t The STransformation object to fill in with the current
+		*        transforms.
+		*/
 		virtual void applyTransformation(float interpolatedTime, STransformation & t);
+
+	protected:
+		bool isCanceled();
+
+		void fireAnimationStart();
+
+		void fireAnimationRepeat();
+
+		void fireAnimationEnd();
 
 		/**
 		* Convert the information in the description of a size to an actual
@@ -492,10 +458,41 @@ namespace SOUI {
 		* @param parentSize The size of the parent of the object being animated
 		* @return The dimension to use for the animation
 		*/
-	protected: 
-	int resolveSize(ValueType type, float value, int size, int parentSize);
+		int resolveSize(ValueType type, float value, int size, int parentSize);
+
+		/**
+		* Gurantees that this animation has an interpolator. Will use
+		* a AccelerateDecelerateInterpolator is nothing else was specified.
+		*/
+		void ensureInterpolator();
+
+		/**
+		* The scale factor is set by the call to <code>getTransformation</code>. Overrides of
+		* {@link #getTransformation(long, STransformation, float)} will get this value
+		* directly. Overrides of {@link #applyTransformation(float, STransformation)} can
+		* call this method to get the value.
+		*
+		* @return float The scale factor that should be applied to pre-scaled values in
+		* an Animation such as the pivot points in {@link ScaleAnimation} and {@link RotateAnimation}.
+		*/
+		float getScaleFactor();
 
 	public:
+		/**
+		* <p>Indicates whether this animation has started or not.</p>
+		*
+		* @return true if the animation has started, false otherwise
+		*/
+		bool hasStarted() const;
+
+		/**
+		* <p>Indicates whether this animation has ended or not.</p>
+		*
+		* @return true if the animation has ended, false otherwise
+		*/
+		bool hasEnded() const;
+
+
 		/**
 		* Return true if this animation changes the view's alpha property.
 		*
@@ -508,22 +505,20 @@ namespace SOUI {
 		virtual ULONG_PTR getUserData() const;
 	public:
 		SOUI_ATTRS_BEGIN()
-			ATTR_STRINGW(L"name",mName,FALSE)
-			ATTR_INT(L"id",mID,FALSE)
-			ATTR_INT(L"duration",mDuration,FALSE)
-			ATTR_INT(L"startOffset",mStartOffset,FALSE)
-			ATTR_BOOL(L"fillEnable",mFillEnabled,FALSE)
-			ATTR_BOOL(L"fillBefore",mFillBefore,FALSE)
-			ATTR_BOOL(L"fillAfter",mFillAfter,FALSE)
-			ATTR_INT(L"repeatCount",mRepeatCount,FALSE)
-			ATTR_ENUM_BEGIN(L"repeatMode", RepeatMode,FALSE)
+			ATTR_STRINGW(L"name", mName, FALSE)
+			ATTR_INT(L"id", mID, FALSE)
+			ATTR_INT(L"duration", mDuration, FALSE)
+			ATTR_INT(L"startOffset", mStartOffset, FALSE)
+			ATTR_BOOL(L"fillEnable", mFillEnabled, FALSE)
+			ATTR_BOOL(L"fillBefore", mFillBefore, FALSE)
+			ATTR_BOOL(L"fillAfter", mFillAfter, FALSE)
+			ATTR_INT(L"repeatCount", mRepeatCount, FALSE)
+			ATTR_ENUM_BEGIN(L"repeatMode", RepeatMode, FALSE)
 				ATTR_ENUM_VALUE(L"restart", RESTART)
 				ATTR_ENUM_VALUE(L"reverse", REVERSE)
 			ATTR_ENUM_END(mRepeatMode)
 			ATTR_INTERPOLATOR(L"interpolator", mInterpolator, FALSE)
-			ATTR_CHAIN_PTR(mInterpolator,0)
+			ATTR_CHAIN_PTR(mInterpolator, 0)
 		SOUI_ATTRS_END()
 	};
-
-
 }

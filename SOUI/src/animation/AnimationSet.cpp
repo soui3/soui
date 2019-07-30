@@ -67,22 +67,6 @@ namespace SOUI {
 		return S_FALSE;
 	}
 
-	void SAnimationSet::restoreChildrenStartOffset()
-	{
-		if (mStoredOffsets.GetCount() != mAnimations.GetCount())
-			return;
-
-		for (UINT i = 0; i < mAnimations.GetCount(); i++) {
-			mAnimations[i]->setStartOffset(mStoredOffsets[i]);
-		}
-	}
-
-	void SAnimationSet::reset()
-	{
-		SAnimation::reset();
-		restoreChildrenStartOffset();
-	}
-
 	void SAnimationSet::initialize(int width, int height, int parentWidth, int parentHeight)
 	{
 		bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
@@ -91,8 +75,6 @@ namespace SOUI {
 		bool repeatModeSet = (mFlags & PROPERTY_REPEAT_MODE_MASK) == PROPERTY_REPEAT_MODE_MASK;
 		bool shareInterpolator = (mFlags & PROPERTY_SHARE_INTERPOLATOR_MASK)
 			== PROPERTY_SHARE_INTERPOLATOR_MASK;
-		bool startOffsetSet = (mFlags & PROPERTY_START_OFFSET_MASK)
-			== PROPERTY_START_OFFSET_MASK;
 
 		if (shareInterpolator) {
 			ensureInterpolator();
@@ -106,7 +88,6 @@ namespace SOUI {
 		IInterpolator *interpolator = mInterpolator;
 		long startOffset = mStartOffset;
 
-		mStoredOffsets.SetCount(mAnimations.GetCount());
 
 		for (UINT i = 0; i < mAnimations.GetCount(); i++) {
 			IAnimation* a = mAnimations[i];
@@ -125,11 +106,6 @@ namespace SOUI {
 			if (shareInterpolator) {
 				a->setInterpolator(interpolator);
 			}
-			if (startOffsetSet) {
-				long offset = a->getStartOffset();
-				a->setStartOffset(offset + startOffset);
-				mStoredOffsets[i] = offset;
-			}
 			a->initialize(width, height, parentWidth, parentHeight);
 		}
 	}
@@ -144,13 +120,31 @@ namespace SOUI {
 
 	bool SAnimationSet::getTransformation(int64_t currentTime, STransformation &t)
 	{
+		if (mStartTime == -1) {
+			mStartTime = currentTime;
+		}
+
+		if (!mStarted) {
+			mStarted = true;
+			fireAnimationStart();
+		}
+		t.clear();
+		int64_t startOffset = getStartOffset();
+		if (currentTime < (mStartTime + startOffset))
+		{
+			return true;
+		}
 		int count = mAnimations.GetCount();
+		if (!mChildStarted) {
+			mChildStarted = true;
+			for (int i = count - 1; i >= 0; --i) {
+				IAnimation * a = mAnimations[i];
+				a->setStartTime(mStartTime + startOffset);
+			}
+		}
 
 		bool more = false;
-		bool started = false;
 		bool ended = true;
-
-		t.clear();
 
 		for (int i = count - 1; i >= 0; --i) {
 			IAnimation * a = mAnimations[i];
@@ -159,33 +153,21 @@ namespace SOUI {
 			more = a->getTransformation(currentTime, temp, getScaleFactor()) || more;
 			t.compose(temp);
 
-			started = started || a->hasStarted();
 			ended = a->hasEnded() && ended;
 		}
 
-		if (started && !mStarted) {
-			mStarted = true;
-			fireAnimationStart();
-		}
-
-		if (ended != mEnded) {
+		if (ended) {
 			if (mRepeatCount == mRepeated || isCanceled()) {
-				if (!mEnded) {
-					mEnded = true;
-					fireAnimationEnd();
-				}
+				mEnded = true;
+				mChildStarted = false;
+				fireAnimationEnd();
 			}
 			else {
 				if (mRepeatCount > 0) {
 					mRepeated++;
 				}
-
-				for (int i = count - 1; i >= 0; --i) {
-					IAnimation * a = mAnimations[i];
-					a->start();
-				}
+				mChildStarted = false;
 				mStartTime = -1;
-				mStarted = mEnded = false;
 				more = true;
 				fireAnimationRepeat();
 			}
@@ -194,7 +176,7 @@ namespace SOUI {
 		return more;
 	}
 
-	long SAnimationSet::computeDurationHint()
+	long SAnimationSet::computeDurationHint() const
 	{
 		long duration = 0;
 		int count = mAnimations.GetCount();
@@ -205,7 +187,7 @@ namespace SOUI {
 		return duration;
 	}
 
-	long SAnimationSet::getDuration()
+	long SAnimationSet::getDuration() const
 	{
 		int count = mAnimations.GetCount();
 		long duration = 0;
@@ -220,31 +202,6 @@ namespace SOUI {
 		}
 
 		return duration;
-	}
-
-	int64_t SAnimationSet::getStartTime() const
-	{
-		int64_t startTime = STime::GetCurrentTimeMs()+10000000;
-
-		int count = mAnimations.GetCount();
-
-		for (int i = 0; i < count; i++) {
-			IAnimation *a = mAnimations.GetAt(i);
-			startTime = smin(startTime, a->getStartTime());
-		}
-
-		return startTime;
-	}
-
-	void SAnimationSet::setStartTime(int64_t startTimeMillis)
-	{
-		SAnimation::setStartTime(startTimeMillis);
-
-		int count = mAnimations.GetCount();
-
-		for (int i = 0; i < count; i++) {
-			mAnimations[i]->setStartTime(startTimeMillis);
-		}
 	}
 
 	void SAnimationSet::addAnimation(IAnimation *a)
@@ -290,12 +247,6 @@ namespace SOUI {
 		return mHasAlpha;
 	}
 
-	void SAnimationSet::setStartOffset(long startOffset)
-	{
-		mFlags |= PROPERTY_START_OFFSET_MASK;
-		SAnimation::setStartOffset(startOffset);
-	}
-
 	void SAnimationSet::setRepeatMode(RepeatMode repeatMode)
 	{
 		mFlags |= PROPERTY_REPEAT_MODE_MASK;
@@ -317,6 +268,9 @@ namespace SOUI {
 	void SAnimationSet::init()
 	{
 		mFlags = 0;
+		mDirty = false;
+		mHasAlpha = false;
+		mChildStarted = false;
 	}
 
 	void SAnimationSet::setFlag(int mask, bool value)

@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rotate duration="500" fromDegrees="0" toDegrees="360" pivotX="50%" pivotY="50%" repeatCount="-1" repeatMode="restart"
+<set repeatCount="-1">
+  <alpha duration="500" fromAlpha="1.0" toAlpha="0.5" repeatCount="1" repeatMode="reverse"/>
+  <rotate duration="500" startOffset="1000" fromDegrees="0" toDegrees="360" pivotX="50%" pivotY="50%" repeatMode="restart" repeatCount="0"
         interpolator="linear"/>
+  <set startOffset="1500">
+    <scale duration="500"  fromXScale="1.0f" toXScale="0.5" fromYScale="1.0" toYScale="0.5" repeatCount="1" repeatMode="reverse"/>
+  </set>
+</set>
+

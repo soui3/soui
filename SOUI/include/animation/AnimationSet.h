@@ -51,7 +51,6 @@ namespace SOUI{
 				PROPERTY_FILL_AFTER_MASK         = 0x1,
 				PROPERTY_FILL_BEFORE_MASK        = 0x2,
 				PROPERTY_REPEAT_MODE_MASK        = 0x4,
-				PROPERTY_START_OFFSET_MASK       = 0x8,
 				PROPERTY_SHARE_INTERPOLATOR_MASK = 0x10,
 				PROPERTY_DURATION_MASK           = 0x20,
 				PROPERTY_MORPH_MATRIX_MASK       = 0x40,
@@ -64,7 +63,7 @@ namespace SOUI{
 		bool mHasAlpha;
 
 		SArray<SAutoRefPtr<IAnimation> > mAnimations;
-		SArray<int> mStoredOffsets;
+		bool mChildStarted;
 		long mLastEnd;
 
 		/**
@@ -89,8 +88,6 @@ namespace SOUI{
 
 		void setRepeatMode(RepeatMode repeatMode);
 
-		void setStartOffset(long startOffset);
-
 		/**
 		* @hide
 		*/
@@ -113,21 +110,12 @@ namespace SOUI{
 		void addAnimation(IAnimation  *a);
 
 		/**
-		* Sets the start time of this animation and all child animations
-		* 
-		* @see android.view.animation.Animation#setStartTime(long)
-		*/
-		void setStartTime(int64_t startTimeMillis);
-
-		int64_t getStartTime() const;
-
-		/**
 		* The duration of an AnimationSet is defined to be the 
 		* duration of the longest child animation.
 		* 
 		* @see android.view.animation.Animation#getDuration()
 		*/
-		long getDuration();
+		long getDuration() const;
 
 		/**
 		* The duration hint of an animation set is the maximum of the duration
@@ -135,7 +123,7 @@ namespace SOUI{
 		* 
 		* @see android.view.animation.Animation#computeDurationHint
 		*/
-		long computeDurationHint();
+		long computeDurationHint() const;
 
 
 
@@ -158,12 +146,6 @@ namespace SOUI{
 		void initialize(int width, int height, int parentWidth, int parentHeight);
 
 	protected:
-		void reset();
-		/**
-		* @hide
-		*/
-		void restoreChildrenStartOffset();
-
 		BOOL InitFromXml(pugi::xml_node xmlNode);
 
 		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
