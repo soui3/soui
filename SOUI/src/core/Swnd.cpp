@@ -2079,59 +2079,62 @@ namespace SOUI
 		}
 		SASSERT(m_pGetRTData);
 
-		SMatrix mtx;
-		SWindow *p = this;
-		while(p)
+		if(m_pGetRTData->gdcFlags != GRT_NODRAW)
 		{
-			STransformation xform = p->GetTransformation();
-			if(xform.hasMatrix())
+			SMatrix mtx;
+			SWindow *p = this;
+			while(p)
 			{
-				SMatrix mtx2 = xform.getMatrix();
-				CRect rc = p->GetWindowRect();
-				mtx2.preTranslate(-rc.left,-rc.top);
-				mtx2.postTranslate(rc.left,rc.top);
-				mtx.preConcat(mtx2);
+				STransformation xform = p->GetTransformation();
+				if(xform.hasMatrix())
+				{
+					SMatrix mtx2 = xform.getMatrix();
+					CRect rc = p->GetWindowRect();
+					mtx2.preTranslate(-rc.left,-rc.top);
+					mtx2.postTranslate(rc.left,rc.top);
+					mtx.preConcat(mtx2);
+				}
+				p = p->GetParent();
 			}
-			p = p->GetParent();
-		}
 
-		CRect rcRT = m_pGetRTData->rcRT;
-		if(!mtx.isIdentity())
-		{
-			SRect sRcRT = SRect::IMake(rcRT);
-			mtx.mapRect(&sRcRT);
-			rcRT = sRcRT.toRect();
-		}
-
-		IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(rcRT,GRT_OFFSCREEN);
-		SWindow *pRoot = GetRoot();
-		SAutoRefPtr<IRegion> rgn;
-		GETRENDERFACTORY->CreateRegion(&rgn);
-		if (!mtx.isIdentity())
-		{
-			SRect sRcRT = SRect::IMake(m_pGetRTData->rcRT);
-			SPoint quad[4];
-			mtx.mapRectToQuad(quad, sRcRT);
-			POINT pts[4];
-			for (int i = 0; i < 4; i++)
+			CRect rcRT = m_pGetRTData->rcRT;
+			if(!mtx.isIdentity())
 			{
-				pts[i] = quad[i].toPoint();
+				SRect sRcRT = SRect::IMake(rcRT);
+				mtx.mapRect(&sRcRT);
+				rcRT = sRcRT.toRect();
 			}
-			rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
+
+			IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(rcRT,GRT_OFFSCREEN);
+			SWindow *pRoot = GetRoot();
+			SAutoRefPtr<IRegion> rgn;
+			GETRENDERFACTORY->CreateRegion(&rgn);
+			if (!mtx.isIdentity())
+			{
+				SRect sRcRT = SRect::IMake(m_pGetRTData->rcRT);
+				SPoint quad[4];
+				mtx.mapRectToQuad(quad, sRcRT);
+				POINT pts[4];
+				for (int i = 0; i < 4; i++)
+				{
+					pts[i] = quad[i].toPoint();
+				}
+				rgn->CombinePolygon(pts,4,WINDING, RGN_COPY);
+			}
+			else
+			{
+				rgn->CombineRect(rcRT, RGN_COPY);
+			}
+			if(mtx.isIdentity())
+			{//todo: if matrix transform existed, combine getrt.rgn to the root rgn will not work.
+				rgn->CombineRgn(m_pGetRTData->rgn,RGN_AND);
+			}
+			pRTRoot->PushClipRegion(rgn, RGN_COPY);
+			pRTRoot->ClearRect(rcRT, 0);
+			pRoot->RedrawRegion(pRTRoot, rgn);
+			pRTRoot->PopClip();
+			GetContainer()->OnReleaseRenderTarget(pRTRoot,rcRT,m_pGetRTData->gdcFlags);
 		}
-		else
-		{
-			rgn->CombineRect(rcRT, RGN_COPY);
-		}
-		if(mtx.isIdentity())
-		{//todo: if matrix transform existed, combine getrt.rgn to the root rgn will not work.
-			rgn->CombineRgn(m_pGetRTData->rgn,RGN_AND);
-		}
-		pRTRoot->PushClipRegion(rgn, RGN_COPY);
-		pRTRoot->ClearRect(rcRT, 0);
-		pRoot->RedrawRegion(pRTRoot, rgn);
-		pRTRoot->PopClip();
-		GetContainer()->OnReleaseRenderTarget(pRTRoot,rcRT,m_pGetRTData->gdcFlags);
 		delete m_pGetRTData;
 		m_pGetRTData = NULL;
 		pRT->Release();
