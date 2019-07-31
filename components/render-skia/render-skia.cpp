@@ -1243,7 +1243,9 @@ namespace SOUI
 			matrix[IxForm::kMSkewY],matrix[IxForm::kMScaleY],matrix[IxForm::kMTransY],
 			matrix[IxForm::kMPersp0], matrix[IxForm::kMPersp1], matrix[IxForm::kMPersp2]
 			);
-        m_SkCanvas->setMatrix(m);
+		m.preTranslate(-m_ptOrg.fX, -m_ptOrg.fY);
+		m.postTranslate(m_ptOrg.fX, m_ptOrg.fY);
+		m_SkCanvas->setMatrix(m);
         return S_OK;
     }
 
