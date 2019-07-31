@@ -2252,9 +2252,9 @@ namespace SOUI
 			{
 				m_animation->cancel();
 			}
-			m_animation = NULL;
 			m_animationHandler.OnAnimationStop();
 			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
+			m_animation = NULL;
 		}
 	}
 

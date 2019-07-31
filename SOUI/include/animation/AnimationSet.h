@@ -112,15 +112,6 @@ namespace SOUI{
 		*/
 		long getDuration() const;
 
-		/**
-		* The duration hint of an animation set is the maximum of the duration
-		* hints of all of its component animations.
-		* 
-		* @see android.view.animation.Animation#computeDurationHint
-		*/
-		long computeDurationHint() const;
-
-
 
 		/**
 		* The transformation of an animation set is the concatenation of all of its

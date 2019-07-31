@@ -185,6 +185,8 @@ namespace SOUI {
 	public:
 		SAnimation();
 
+		~SAnimation();
+
 		LPCWSTR GetName() const
 		{
 			return mName;

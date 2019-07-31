@@ -140,6 +140,7 @@ namespace SOUI {
 		}
 
 		if (ended || (currentTime- mStartTime) >= mLastEnd) {
+			SLOG_INFO("ended:"<<ended<<" time span:"<<(currentTime- mStartTime)<<" cur time:"<<currentTime<<" start time:"<<mStartTime);
 			if (mRepeatCount == mRepeated || isCanceled()) {
 				mEnded = true;
 				mChildStarted = false;
@@ -159,16 +160,7 @@ namespace SOUI {
 		return more;
 	}
 
-	long SAnimationSet::computeDurationHint() const
-	{
-		long duration = 0;
-		int count = mAnimations.GetCount();
-		for (int i = count - 1; i >= 0; --i) {
-			long d = mAnimations[i]->computeDurationHint();
-			if (d > duration) duration = d;
-		}
-		return duration;
-	}
+
 
 	long SAnimationSet::getDuration() const
 	{
@@ -180,7 +172,7 @@ namespace SOUI {
 			duration = mDuration;
 		} else {
 			for (int i = 0; i < count; i++) {
-				duration = smax(duration, mAnimations[i]->getDuration());
+				duration = smax(duration, mAnimations[i]->computeDurationHint());
 			}
 		}
 
@@ -194,13 +186,13 @@ namespace SOUI {
 		if ((mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK) {
 			mLastEnd = mStartOffset + mDuration;
 		} else {
+			long duration = a->computeDurationHint();
 			if (mAnimations.GetCount() == 1) {
-				mDuration = a->getStartOffset() + a->getDuration();
-				mLastEnd = mStartOffset + mDuration;
+				mDuration = duration;
 			} else {
-				mLastEnd = smax(mLastEnd, a->getStartOffset() + a->getDuration());
-				mDuration = mLastEnd - mStartOffset;
+				mDuration = smax(mDuration,duration);
 			}
+			mLastEnd = mStartOffset + mDuration;
 		}
 
 		mDirty = true;

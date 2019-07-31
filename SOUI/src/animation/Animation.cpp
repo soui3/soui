@@ -170,7 +170,7 @@ namespace SOUI {
 
 	long SAnimation::computeDurationHint() const
 	{
-		return (getStartOffset() + getDuration()) * (getRepeatCount() + 1);
+		return getStartOffset() + getDuration() * (getRepeatCount() + 1);
 	}
 
 	void SAnimation::ensureInterpolator()
@@ -343,7 +343,6 @@ namespace SOUI {
 		mMore = true;
 		mOneMoreTime = true;
 
-
 		mFillBefore = false;
 
 		mFillAfter = true;
@@ -371,6 +370,10 @@ namespace SOUI {
 	ULONG_PTR SAnimation::getUserData() const
 	{
 		return mUserData;
+	}
+
+	SAnimation::~SAnimation()
+	{
 	}
 
 }
