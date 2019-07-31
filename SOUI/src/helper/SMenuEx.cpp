@@ -809,7 +809,7 @@ namespace SOUI
 			}
 			MSG msg = { 0 };
 
-			if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{//获取消息，不从消息队列中移除。
 				if (msg.message == WM_KEYDOWN
 					|| msg.message == WM_SYSKEYDOWN
@@ -843,10 +843,6 @@ namespace SOUI
 				{
 					bMsgQuit = TRUE;
 				}
-
-				//移除消息队列中当前的消息。
-				MSG msgT;
-				::GetMessage(&msgT, 0, 0, 0);
 
 				//拦截非菜单窗口的MouseMove消息
 				if (msg.message == WM_MOUSEMOVE)
