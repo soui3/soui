@@ -47,19 +47,6 @@ namespace SOUI {
 		return S_FALSE;
 	}
 
-	HRESULT SAnimationSet::OnAttrRepeatMode(const SStringW & value, BOOL bLoading)
-	{
-		RepeatMode mode;
-		if (value.CompareNoCase(L"reverse") == 0)
-			mode = REVERSE;
-		else if (value.CompareNoCase(L"restart") == 0)
-			mode = RESTART;
-		else
-			return E_INVALIDARG;
-		setRepeatMode(mode);
-		return S_FALSE;
-	}
-
 	HRESULT SAnimationSet::OnAttrStartOffset(const SStringW & value, BOOL bLoading)
 	{
 		long iValue = _wtoi(value);
@@ -72,7 +59,6 @@ namespace SOUI {
 		bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
 		bool fillAfterSet = (mFlags & PROPERTY_FILL_AFTER_MASK) == PROPERTY_FILL_AFTER_MASK;
 		bool fillBeforeSet = (mFlags & PROPERTY_FILL_BEFORE_MASK) == PROPERTY_FILL_BEFORE_MASK;
-		bool repeatModeSet = (mFlags & PROPERTY_REPEAT_MODE_MASK) == PROPERTY_REPEAT_MODE_MASK;
 		bool shareInterpolator = (mFlags & PROPERTY_SHARE_INTERPOLATOR_MASK)
 			== PROPERTY_SHARE_INTERPOLATOR_MASK;
 
@@ -99,9 +85,6 @@ namespace SOUI {
 			}
 			if (fillBeforeSet) {
 				a->setFillBefore(fillBefore);
-			}
-			if (repeatModeSet) {
-				a->setRepeatMode(repeatMode);
 			}
 			if (shareInterpolator) {
 				a->setInterpolator(interpolator);
@@ -156,7 +139,7 @@ namespace SOUI {
 			ended = a->hasEnded() && ended;
 		}
 
-		if (ended) {
+		if (ended || (currentTime- mStartTime) >= mLastEnd) {
 			if (mRepeatCount == mRepeated || isCanceled()) {
 				mEnded = true;
 				mChildStarted = false;
@@ -245,12 +228,6 @@ namespace SOUI {
 		}
 
 		return mHasAlpha;
-	}
-
-	void SAnimationSet::setRepeatMode(RepeatMode repeatMode)
-	{
-		mFlags |= PROPERTY_REPEAT_MODE_MASK;
-		SAnimation::setRepeatMode(repeatMode);
 	}
 
 	void SAnimationSet::setFillBefore(bool fillBefore)

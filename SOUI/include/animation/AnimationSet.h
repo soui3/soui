@@ -50,11 +50,8 @@ namespace SOUI{
 			enum{
 				PROPERTY_FILL_AFTER_MASK         = 0x1,
 				PROPERTY_FILL_BEFORE_MASK        = 0x2,
-				PROPERTY_REPEAT_MODE_MASK        = 0x4,
-				PROPERTY_SHARE_INTERPOLATOR_MASK = 0x10,
-				PROPERTY_DURATION_MASK           = 0x20,
-				PROPERTY_MORPH_MATRIX_MASK       = 0x40,
-				PROPERTY_CHANGE_BOUNDS_MASK      = 0x80,
+				PROPERTY_DURATION_MASK = 0x04,
+				PROPERTY_SHARE_INTERPOLATOR_MASK = 0x08,
 		};
 
 	private:
@@ -85,8 +82,6 @@ namespace SOUI{
 		void setFillAfter(bool fillAfter);
 
 		void setFillBefore(bool fillBefore);
-
-		void setRepeatMode(RepeatMode repeatMode);
 
 		/**
 		* @hide
@@ -151,7 +146,6 @@ namespace SOUI{
 		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
 		HRESULT OnAttrFillBefore(const SStringW & value, BOOL bLoading);
 		HRESULT OnAttrFillAfter(const SStringW & value, BOOL bLoading);
-		HRESULT OnAttrRepeatMode(const SStringW & value, BOOL bLoading);
 		HRESULT OnAttrStartOffset(const SStringW & value, BOOL bLoading);
 
 		SOUI_ATTRS_BEGIN()
@@ -159,7 +153,6 @@ namespace SOUI{
 			ATTR_CUSTOM(L"duration", OnAttrDuration)
 			ATTR_CUSTOM(L"fillBefore", OnAttrFillBefore)
 			ATTR_CUSTOM(L"fillAfter", OnAttrFillAfter)
-			ATTR_CUSTOM(L"repeatMode", OnAttrRepeatMode)
 			ATTR_CUSTOM(L"startOffset", OnAttrStartOffset)
 		SOUI_ATTRS_END()
 	};

@@ -127,7 +127,7 @@ namespace SOUI {
 			}
 
 			float interpolatedTime = mInterpolator->getInterpolation(normalizedTime);
-			//outTransformation.clear();
+			outTransformation.clear();
 			applyTransformation(interpolatedTime, outTransformation);
 		}
 
@@ -346,7 +346,7 @@ namespace SOUI {
 
 		mFillBefore = false;
 
-		mFillAfter = false;
+		mFillAfter = true;
 
 		mFillEnabled = true;
 
