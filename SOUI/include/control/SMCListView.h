@@ -115,6 +115,7 @@ namespace SOUI
         void OnSize(UINT nType, CSize size);
         void OnDestroy();
 
+		LRESULT OnIMEChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
         LRESULT OnMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
         LRESULT OnKeyEvent( UINT uMsg,WPARAM wParam,LPARAM lParam );
@@ -137,6 +138,7 @@ namespace SOUI
             MSG_WM_SETFOCUS_EX(OnSetFocus)
             MSG_WM_KILLFOCUS_EX(OnKillFocus)
 			MSG_WM_SHOWWINDOW(OnShowWindow)
+			MESSAGE_HANDLER_EX(WM_IME_CHAR, OnIMEChar)
             MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST,WM_MOUSELAST,OnMouseEvent)
             MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST,WM_KEYLAST,OnKeyEvent)
             MESSAGE_RANGE_HANDLER_EX(WM_IME_STARTCOMPOSITION,WM_IME_KEYLAST,OnKeyEvent)
