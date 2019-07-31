@@ -785,6 +785,11 @@ SItemPanel * SMCListView::HitTest(CPoint & pt)
     return NULL;
 }
 
+LRESULT SMcListViewEx::OnIMEChar(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	return 0;
+}
+
 LRESULT SMCListView::OnMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
     SetMsgHandled(FALSE);
