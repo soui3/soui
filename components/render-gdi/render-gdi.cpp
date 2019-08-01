@@ -1220,6 +1220,11 @@ namespace SOUI
 		return S_OK;
 	}
 
+	int SRenderTarget_GDI::SetMapMode(int mode)
+	{
+		return ::SetMapMode(m_hdc,mode);
+	}
+
 
     //////////////////////////////////////////////////////////////////////////
     namespace RENDER_GDI

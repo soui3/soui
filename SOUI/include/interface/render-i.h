@@ -1167,16 +1167,6 @@ namespace SOUI
          */        
         virtual HRESULT GetTransform(float matrix[9]) const = 0;
         
-        /**
-         * QueryInterface
-         * @brief    提供接口扩展的用的方法
-         * @param    REFGUID iid --  待扩展接口ID
-         * @param    IObjRef * * ppObj --  接口输出
-         * @return   HRESULT -- 成功返回S_OK
-         *
-         * Describe  具体能获取什么接口依赖于不同的渲染引擎
-         */
-        virtual HRESULT QueryInterface(REFGUID iid,IObjRef ** ppObj) =0;
 
         /**
          * GetPixel
@@ -1235,6 +1225,8 @@ namespace SOUI
 		virtual HRESULT PopLayer() = 0;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode=NULL) = 0;
+
+		virtual int SetMapMode(int nMode) = 0;
 	};
 
 

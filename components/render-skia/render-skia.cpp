@@ -10,7 +10,6 @@
 #include "drawtext-skia.h"
 
 #include "render-skia.h"
-#include "Render-Skia2.h"
 #include "trace.h"
 
 #include "skia2rop2.h"
@@ -1224,16 +1223,6 @@ namespace SOUI
 
     }
 
-    HRESULT SRenderTarget_Skia::QueryInterface( REFGUID iid,IObjRef ** ppObj )
-    {
-        if(iid == __uuidof(IRenderTarget_Skia2))
-        {
-            *ppObj = new RenderTarget_Skia2;
-            return S_OK;
-        }
-        return E_NOINTERFACE;
-    }
-
     HRESULT SRenderTarget_Skia::SetTransform(const float matrix[9], float oldMatrix[9])
     {
         SASSERT(matrix);
@@ -1392,6 +1381,12 @@ namespace SOUI
 		if(pOldMode) *pOldMode = m_xferMode;
 		m_xferMode = mode;
 		return S_OK;
+	}
+
+	int SRenderTarget_Skia::SetMapMode(int mode)
+	{
+		m_SkCanvas->setMatrix;
+		return 0;
 	}
 
 	bool SRenderTarget_Skia::SetPaintXferMode(SkPaint & paint,int nRopMode)

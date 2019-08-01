@@ -40,15 +40,12 @@ PRECOMPILED_HEADER = stdafx.h
 # Input
 HEADERS += drawtext-skia.h \
 			render-skia.h \
-			render-skia2-i.h \
-			render-skia2.h \
 			skia2rop2.h \
 			patheffect-skia.h \
 			pathmeasure-skia.h
 			
 SOURCES += drawtext-skia.cpp \
 	       render-skia.cpp \
-	       render-skia2.cpp \
 	       skia2rop2.cpp \
 	       patheffect-skia.cpp \
 	       pathmeasure-skia.cpp

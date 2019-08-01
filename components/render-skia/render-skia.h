@@ -481,8 +481,6 @@ namespace SOUI
         virtual HDC GetDC(UINT uFlag=0);
 
 		virtual void ReleaseDC(HDC hdc);
-
-        virtual HRESULT QueryInterface(REFGUID iid,IObjRef ** ppObj);
         
         virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]);
 
@@ -505,6 +503,8 @@ namespace SOUI
 		virtual HRESULT PopLayer() ;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode/* =NULL */);
+
+		virtual int SetMapMode(int mode);
     public:
         SkCanvas *GetCanvas(){return m_SkCanvas;}
 

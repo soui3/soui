@@ -367,12 +367,6 @@ namespace SOUI
         virtual HDC GetDC(UINT uFlag=0);
         virtual void ReleaseDC(HDC hdc);
 
-        virtual HRESULT QueryInterface(REFGUID iid,IObjRef ** ppObj){
-			(iid);
-			(ppObj);
-			return E_NOINTERFACE;
-		}
-
         virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]);
 
         virtual HRESULT GetTransform(float matrix[9]) const;
@@ -396,6 +390,8 @@ namespace SOUI
 		virtual HRESULT PopLayer();
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode);
+
+		virtual int SetMapMode(int mode);
 	protected:
         HDC               m_hdc;
         SColor            m_curColor;
