@@ -503,8 +503,6 @@ namespace SOUI
 		virtual HRESULT PopLayer() ;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode/* =NULL */);
-
-		virtual int SetMapMode(int mode);
     public:
         SkCanvas *GetCanvas(){return m_SkCanvas;}
 

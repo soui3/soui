@@ -1383,12 +1383,6 @@ namespace SOUI
 		return S_OK;
 	}
 
-	int SRenderTarget_Skia::SetMapMode(int mode)
-	{
-		m_SkCanvas->setMatrix;
-		return 0;
-	}
-
 	bool SRenderTarget_Skia::SetPaintXferMode(SkPaint & paint,int nRopMode)
 	{
 		bool bRet = true;

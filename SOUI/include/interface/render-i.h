@@ -1225,8 +1225,6 @@ namespace SOUI
 		virtual HRESULT PopLayer() = 0;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode=NULL) = 0;
-
-		virtual int SetMapMode(int nMode) = 0;
 	};
 
 
