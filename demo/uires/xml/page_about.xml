@@ -1,9 +1,9 @@
 ﻿<include>
   <text pos="|0,10" offset="-0.5,0">欢迎使用SOUI！</text>
-  <text pos="10,[5">协议类型：MIT，个人，企业均可以免费使用本产品，请保留产品的license</text>
+  <text pos="10,[5">协议类型：自定义开源协议，商业化产品收费，个人免费产品免费使用，具体参考license.txt</text>
   <text pos="10,[5">版权所有：启程软件</text>
   <link pos="[10,{5" href="http://www.cnblogs.com/setoutsoft/" class="cls_btn_weblink">SOUI教程</link>
-  <link pos="[10,{0" href="http://soui.me" class="cls_btn_weblink">SOUI论坛</link>
+  <link pos="[10,{0" href="http://www.soui.vip" class="cls_btn_weblink">SOUI论坛</link>
 
   <text pos="10,[5">QQ群#1(2000人)：</text><edit readOnly="1">229313785</edit>
   <link href="http://jq.qq.com/?_wv=1027&k=PxXh59"  class="cls_btn_weblink">申请群#1</link>
@@ -13,17 +13,4 @@
   <text pos="10,[5">git.github：</text><edit pos="150,{0,@-1,@30" readOnly="1">https://github.com/soui2/soui</edit>
   <text pos="10,[5">git.oschina：</text><edit pos="150,{0,@-1,@30" readOnly="1">https://gitee.com/setousoft/soui</edit>
   
-  
-  <group pos="10,[5,-10,@350" align="left" show="1" text="支持SOUI发展" layout="hbox" padding="10,10,10,0">
-    <window size="0,-2" layout="vbox" gravity="center" weight="1">
-      <text>微信赞助</text>
-      <qrctrl size="300,300" skin="skin_qrbg" qrrect="92,139,199,246"  colorBkgnd="#ffffff">wxp://f2f0J_TGrQJ7F_KjpfCdDTFNKDAvDFIYrSM5</qrctrl>
-    </window>
-    <window size="0,-2" layout="vbox" gravity="center" weight="1" >
-      <text>支付宝赞助</text>
-      <qrctrl size="300,300" text="https://qr.alipay.com/tsx05622blbc2yo3dubkrb0">
-        <icon pos="|0,|0,@48,@48" offset="-0.5,-0.5" src="ICON_LOGO:48"/>
-      </qrctrl>
-    </window>
-  </group>
 </include>
