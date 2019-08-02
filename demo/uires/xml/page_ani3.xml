@@ -1,4 +1,4 @@
-﻿<window size="-2,-2">
+﻿<window size="-2,-2" clipClient="1">
   <window pos="|0,0,@300,-0" offset="-0.5,0" clipClient="1">
     <window pos="0,0,-0,]0" name="wnd_ani_host"/>
     <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui" msgTransparent="0"/>
