@@ -15,7 +15,7 @@
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			IntermediateDirectory="..\..\obj\release\resprovider-zip\"
 			UseOfMfc="0">
 			<Tool
@@ -42,9 +42,22 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\resprovider-zip.lib"
-				SuppressStartupBanner="true" />
+				Name="VCLinkerTool"
+				AdditionalDependencies="zlib.lib utilities.lib"
+				AdditionalLibraryDirectories="..\..\bin"
+				DataExecutionPrevention="true"
+				EnableCOMDATFolding="2"
+				GenerateDebugInformation="true"
+				IgnoreImportLibrary="true"
+				LinkIncremental="1"
+				LinkTimeCodeGeneration="0"
+				OptimizeReferences="2"
+				OutputFile="$(OutDir)\resprovider-zip.dll"
+				ProgramDatabaseFile=""
+				RandomizedBaseAddress="true"
+				SubSystem="2"
+				SuppressStartupBanner="true"
+				TargetMachine="1" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -60,15 +73,14 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDERZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
-				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDERZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\bin\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			IntermediateDirectory="..\..\obj\debug\resprovider-zip\"
 			UseOfMfc="0">
 			<Tool
@@ -95,9 +107,19 @@
 			<Tool
 				Name="VCCustomBuildTool" />
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\resprovider-zipd.lib"
-				SuppressStartupBanner="true" />
+				Name="VCLinkerTool"
+				AdditionalDependencies="zlibd.lib utilitiesd.lib"
+				AdditionalLibraryDirectories="..\..\bin"
+				DataExecutionPrevention="true"
+				GenerateDebugInformation="true"
+				IgnoreImportLibrary="true"
+				LinkTimeCodeGeneration="0"
+				OutputFile="$(OutDir)\resprovider-zipd.dll"
+				ProgramDatabaseFile=""
+				RandomizedBaseAddress="true"
+				SubSystem="2"
+				SuppressStartupBanner="true"
+				TargetMachine="1" />
 			<Tool
 				Name="VCManifestTool" />
 			<Tool
@@ -113,8 +135,7 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDERZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
-				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,RESPROVIDERZIP_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -181,6 +202,8 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath="ResProvider-Zip.rc" />
 	</Files>
 	<Globals>
 	</Globals>

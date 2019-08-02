@@ -108,8 +108,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TaskLoop", "components\Task
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SIpcObject", "components\SIpcObject\SIpcObject.vcproj", "{F253BEA3-4AD5-3CE7-98E9-B648CB61FA52}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo2", "demo2\demo2.vcproj", "{2C81BE0F-C31D-3861-BDAD-299CD2C832EB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -224,10 +222,6 @@ Global
 		{F253BEA3-4AD5-3CE7-98E9-B648CB61FA52}.Debug|Win32.Build.0 = Debug|Win32
 		{F253BEA3-4AD5-3CE7-98E9-B648CB61FA52}.Release|Win32.ActiveCfg = Release|Win32
 		{F253BEA3-4AD5-3CE7-98E9-B648CB61FA52}.Release|Win32.Build.0 = Release|Win32
-		{2C81BE0F-C31D-3861-BDAD-299CD2C832EB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2C81BE0F-C31D-3861-BDAD-299CD2C832EB}.Debug|Win32.Build.0 = Debug|Win32
-		{2C81BE0F-C31D-3861-BDAD-299CD2C832EB}.Release|Win32.ActiveCfg = Release|Win32
-		{2C81BE0F-C31D-3861-BDAD-299CD2C832EB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

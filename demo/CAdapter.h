@@ -270,10 +270,14 @@ public:
 		pItem->FindChildByName(L"txt_installtime")->SetWindowText(S_CW2T(psi->pszInstallTime));
 		pItem->FindChildByName(L"txt_usetime")->SetWindowText(S_CW2T(psi->pszUseTime));
 		pItem->FindChildByName(L"txt_size")->SetWindowText(getSizeText(psi->dwSize));
-		pItem->FindChildByName2<SRatingBar>(L"rating_score")->SetValue(psi->fScore / 2);
+		SRatingBar *pRatingBar = pItem->FindChildByName2<SRatingBar>(L"rating_score");
+		pRatingBar->SetValue(psi->fScore / 2);
 		pItem->FindChildByName(L"txt_index")->SetWindowText(SStringT().Format(_T("第%d行"), position + 1));
 
 		SButton *pBtnUninstall = pItem->FindChildByName2<SButton>(L"btn_uninstall");
+		SMatrix mtx;
+		mtx.rotate(20);
+		pBtnUninstall->SetMatrix(mtx);
 		pBtnUninstall->SetUserData(position);
 		pBtnUninstall->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestMcAdapterFix::OnButtonClick, this));
 	}

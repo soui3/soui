@@ -2993,6 +2993,9 @@ namespace SOUI
 
 	void SWindow::SAnimationHandler::OnNextFrame()
 	{
+		if(!m_pOwner->IsVisible(TRUE))
+			return;
+
 		IAnimation *pAni = m_pOwner->GetAnimation();
 		SASSERT(pAni);
 		m_pOwner->AddRef();

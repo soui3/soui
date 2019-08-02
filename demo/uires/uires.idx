@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resource>
 	<UIDEF>
 		<file name="xml_init" path="uidef\init.xml" />
@@ -50,7 +50,9 @@
 		<file name="dlg_set_skin" path="xml\dlg_skinset.xml" />
 		<file name="dlg_tip" path="xml\dlg_tip.xml" />
 		<file name="dlg_wrap_content" path="xml\dlg_wrap_content.xml" />
-	</LAYOUT>
+    <file name="page_ani3" path="xml\page_ani3.xml"/>
+    <file name="xml_love" path="xml\love.xml"/>
+  </LAYOUT>
 	<IMGX>
 		<file name="qrbg" path="image\thDKT76T9X.png" />
 		<file name="img_busy" path="image\img_busy.png" />
@@ -96,6 +98,9 @@
 		<file name="btn_skin1_png" path="image\btn_skin1.png" />
     <file name="icons.png" path="image\icons.png"/>
     <file name="btn_catetory.png" path="image\btn_catetory.png"/>
+    <file name="png_girl" path="image\girl.png"/>
+    <file name="png_love" path="image\love.png"/>
+    <file name="png_soui" path="image\soui.png"/>
   </IMGX>
 	<img.calendar2>
 		<file name="png_skin_btn_semiarc" path="img.calendar2\skin_btn_semiarc.png" />
@@ -178,4 +183,13 @@
 		<file name="volume" path="image\TrayMenu\volume.png" />
 		<file name="menu_ico" path="image\TrayMenu\menu_ico.png" />
 	</ImgTrayMenu>
+  <anim>
+    <file name="love" path="anim\love.xml"/>
+    <file name="slide_show" path="anim\slide_show.xml"/>
+    <file name="slide_hide" path="anim\slide_hide.xml"/>
+    <file name="rotate" path="anim\rotate.xml"/>
+  </anim>
+  <valueAni>
+    <file name="alphaAni" path="valueAni\alpha.xml"/>
+  </valueAni>
 </resource>

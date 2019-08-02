@@ -1,0 +1,19 @@
+﻿<window size="-2,-2">
+  <window pos="|0,0,@300,-0" offset="-0.5,0" clipClient="1">
+    <window pos="0,0,-0,]0" name="wnd_ani_host"/>
+    <img pos="|0,-0,@100,@100" offset="-0.5,-1" skin="skin_soui" name="img_soui" msgTransparent="0"/>
+  </window>
+
+  <window pos="-0,0,@100,-0" offset="-1,0" layout="vbox" interval="10" show="0">
+    <button size="-2,30" text="test" name="btn_test"/>
+    <button size="-2,30" text="animator" name="btn_animator"/>
+  </window>
+
+  <window pos="0,0,@270,-0" name="pane_left" layout="hbox" gravity="center">
+    <window size="0,-2" weight="1">
+      <img pos="0,0,-0,-0" skin="skin_girl"/>
+      <include pos="0,0,-0,-0" src="layout:treectrl"/>
+    </window>
+    <toggle size="-1,-1" name="tgl_left" skin="skin_btn_expand" checked="true"/>
+  </window>
+</window>

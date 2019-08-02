@@ -21,6 +21,7 @@
 //#define SHOW_AERO //open aero for vista and win7
 
 #define TIMER_QUIT 1000
+#define TIMER_SOUI3 1100
 
 #ifdef SHOW_AERO
 #include <dwmapi.h>
@@ -421,6 +422,9 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 		}
 		pPathView->AddPoint(pts,ARRAYSIZE(pts));
 	}
+
+	//init soui 3.0 animation.
+	InitSoui3Animation();
     return 0;
 }
 
@@ -990,6 +994,28 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 	{
 		SNativeWnd::KillTimer(idEvent);
 		PostQuitMessage(-3);
+	}else if(idEvent == TIMER_SOUI3)
+	{
+		SWindow *pAniHost = FindChildByName(L"wnd_ani_host");
+		if (pAniHost && pAniHost->IsVisible(TRUE))
+		{
+			const WCHAR * kLoveXml= L"<include src=\"LAYOUT:xml_love\"/>";
+			SWindow *pLove = pAniHost->CreateChildren(kLoveXml);
+			if(pLove)
+			{
+				pAniHost->UpdateLayout();
+				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:love");
+				if(pAni)
+				{
+					pAni->setStartOffset(rand()%100);//random delay max to 100 ms to play the animation.
+					pAni->setUserData((ULONG_PTR)pLove);
+					pAni->setAnimationListener(this);
+					pLove->SetAnimation(pAni);
+					pAni->Release();
+				}
+
+			}
+		}
 	}
 }
 
@@ -1107,6 +1133,57 @@ void CMainDlg::OnSetPropItemValue()
 	}else
 	{
 		SMessageBox(m_hWnd,_T("target item not found!"),_T("error"),MB_OK|MB_ICONSTOP);
+	}
+}
+
+void CMainDlg::InitSoui3Animation()
+{
+	SWindow *pWnd = FindChildByName(L"img_soui");
+	if (pWnd)
+	{
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:rotate");
+		if(pAni)
+		{
+			pWnd->SetAnimation(pAni);
+			pAni->Release();
+		}
+	}
+	SNativeWnd::SetTimer(TIMER_SOUI3,1000);	//start timer.
+}
+
+void CMainDlg::onAnimationEnd(IAnimation * animation)
+{
+	if(wcsicmp(animation->GetName(),L"ani_test") == 0)
+	{
+		SWindow *pWnd = (SWindow*)animation->getUserData();
+		pWnd->DestroyWindow();
+	}
+}
+
+
+void CMainDlg::OnToggleLeft(EventArgs *e)
+{
+	SToggle *pToggle = sobj_cast<SToggle>(e->sender);
+	SASSERT(pToggle);
+	SWindow *pWnd = FindChildByName(L"pane_left");
+	if(!pWnd)
+		return;
+	if(pToggle->GetToggle())
+	{
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_show");
+		if(pAni)
+		{
+			pWnd->SetAnimation(pAni);
+			pAni->Release();
+		}
+	}else
+	{
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_hide");
+		if(pAni)
+		{
+			pWnd->SetAnimation(pAni);
+			pAni->Release();
+		}
 	}
 }
 

@@ -64,6 +64,7 @@ class CMainDlg : public SHostWnd
 			   , public CThreadObject	//线程对象
 			   , public TAutoEventMapReg<CMainDlg>//通知中心自动注册
 			   , public ISetOrLoadSkinHandler
+,				public IAnimation::IAnimationListener
 ,				public SDpiHandler<CMainDlg>
 {
 public:
@@ -124,7 +125,10 @@ protected:
     //DUI菜单响应函数
     void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
         
-
+protected:
+	virtual void onAnimationStart(IAnimation * animation){}
+	virtual void onAnimationRepeat(IAnimation * animation){}
+	virtual void onAnimationEnd(IAnimation * animation);
 protected:
     //virtual void OnSetSkin(int iSkin);
 
@@ -217,6 +221,8 @@ protected:
 
 	void OnSetPropItemValue();
 
+	void OnToggleLeft(EventArgs *e);
+
     //UI控件的事件及响应函数映射表
 	EVENT_MAP_BEGIN()
 		EVENT_HANDLER(EventPath::EventID,OnEventPath)
@@ -277,6 +283,7 @@ protected:
 		EVENT_NAME_HANDLER(L"rotate_y",EventSwndStateChanged::EventID,On3dViewRotate)
 		EVENT_NAME_HANDLER(L"rotate_z",EventSwndStateChanged::EventID,On3dViewRotate)
 		EVENT_ID_COMMAND(R.id.btn_set_prop_value,OnSetPropItemValue)
+		EVENT_NAME_HANDLER(L"tgl_left",EventCmd::EventID,OnToggleLeft)
 	EVENT_MAP_END()	
 
     //HOST消息及响应函数映射表
@@ -298,6 +305,7 @@ protected:
     //////////////////////////////////////////////////////////////////////////
     //  辅助函数
     void InitListCtrl();
+	void InitSoui3Animation();
 
 	virtual bool SaveSkin(SkinType skinType, SkinSaveInf & skinSaveInf);
 

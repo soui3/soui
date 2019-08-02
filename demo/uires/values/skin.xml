@@ -17,7 +17,6 @@
 	<imglist name="skin_btn_menu" src="imgx:btn_menu" states="3" />
 	<imglist name="skin_propswitch" src="imgx:png_propswitch" states="4" />
 	<imglist name="skin_bkgnd" src="IMGX:jpg_bkgnd" />
-	<imglist name="skin_btn_expand" src="imgx:btn_expand" states="6" />
 	<vscrollbar name="skin_vscrollbar" src="imgx:png_vscroll" states="3" margin="4" />
 	<newScrollbar name="skin_new_scrollbar" srcVert="imgx:png_vscroll" srcHorz="imgx:png_hscroll" states="3" margin="4" />
 	<imglist name="skin_chrome_tab_new" src="imgx:png_chrome_tab_new" states="3" />
@@ -95,4 +94,17 @@
 
   <imglist name="clock.background" src="img.clock:background"/>
 
+  <imglist name="skin_girl"	src="imgx:png_girl" alpha="150"/>
+  <imglist name="skin_love"	src="imgx:png_love" />
+  <imglist name="skin_soui"	src="imgx:png_soui"/>
+  <imglist name="skin_btn_expand" src="imgx:btn_expand" states="6">
+    <states>
+      <state index="0" value="normal"/>
+      <state index="1" value="hover"/>
+      <state index="2" value="hover|pushdown"/>
+      <state index="3" value="normal|checked"/>
+      <state index="4" value="hover|checked"/>
+      <state index="5" value="hover|pushdown|checked"/>
+    </states>
+  </imglist>
 </skin>
