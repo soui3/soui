@@ -3004,6 +3004,7 @@ namespace SOUI
 		if (tm > 0)
 		{
 			m_pOwner->OnAnimationInvalidate();
+			pAni->AddRef();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
 			m_pOwner->OnAnimationInvalidate();
 			if (!bMore)
@@ -3017,6 +3018,7 @@ namespace SOUI
 				}
 				m_pOwner->OnAnimationStop();
 			}
+			pAni->Release();
 		}
 		m_pOwner->Release();
 	}

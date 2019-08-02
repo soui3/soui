@@ -110,7 +110,7 @@ namespace SOUI {
 		}
 
 		bool expired = normalizedTime >= 1.0f || isCanceled();
-		mMore = !expired;
+		bool bMore = !expired;
 
 		if (!mFillEnabled || mRepeatCount!=0) normalizedTime = smax(smin(normalizedTime, 1.0f), 0.0f);
 
@@ -142,24 +142,23 @@ namespace SOUI {
 				if (mRepeatCount > 0) {
 					mRepeated++;
 				}
+				else
+				{
+					mRepeated = 1;
+				}
 
 				if (mRepeatMode == REVERSE) {
 					mCycleFlip = !mCycleFlip;
 				}
 
 				mStartTime = -1;
-				mMore = true;
+				bMore = true;
 
 				fireAnimationRepeat();
 			}
 		}
 
-		if (!mMore && mOneMoreTime) {
-			mOneMoreTime = false;
-			return true;
-		}
-
-		return mMore;
+		return bMore;
 	}
 
 	bool SAnimation::getTransformation(uint64_t currentTime, STransformation & outTransformation, float scale)
@@ -202,7 +201,7 @@ namespace SOUI {
 
 	long SAnimation::getStartOffset() const
 	{
-		return mStartOffset;
+		return mRepeated == 0 ? mStartOffset : 0;
 	}
 
 	long SAnimation::getDuration() const
@@ -259,7 +258,6 @@ namespace SOUI {
 		mStarted = mEnded = false;
 		mCycleFlip = false;
 		mRepeated = 0;
-		mMore = true;
 	}
 
 	void SAnimation::setStartOffset(long offset)
@@ -338,10 +336,6 @@ namespace SOUI {
 		mRepeatMode = RESTART;
 		mListener = NULL;
 		mScaleFactor = 1.0f;
-
-
-		mMore = true;
-		mOneMoreTime = true;
 
 		mFillBefore = false;
 

@@ -150,10 +150,6 @@ namespace SOUI {
 		*/
 		float mScaleFactor;
 
-
-		bool mMore;
-		bool mOneMoreTime;
-
 		/**
 		* Indicates whether the animation transformation should be applied before the
 		* animation starts. The value of this variable is only relevant if mFillEnabled is true;

@@ -139,16 +139,21 @@ namespace SOUI {
 			ended = a->hasEnded() && ended;
 		}
 
-		if (ended || (currentTime- mStartTime) >= mLastEnd) {
-			SLOG_INFO("ended:"<<ended<<" time span:"<<(currentTime- mStartTime)<<" cur time:"<<currentTime<<" start time:"<<mStartTime);
+		if (ended || (currentTime - startOffset - mStartTime) >= mLastEnd) {
+			//SLOG_INFO("ended:"<<ended<<" time span:"<<(currentTime - startOffset - mStartTime)<<" cur time:"<<currentTime<<" start time:"<<mStartTime<<" startOffset:"<<startOffset);
 			if (mRepeatCount == mRepeated || isCanceled()) {
 				mEnded = true;
 				mChildStarted = false;
+				more = false;
 				fireAnimationEnd();
 			}
 			else {
 				if (mRepeatCount > 0) {
 					mRepeated++;
+				}
+				else
+				{
+					mRepeated = 1;
 				}
 				mChildStarted = false;
 				mStartTime = -1;
