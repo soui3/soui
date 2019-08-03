@@ -322,7 +322,7 @@ namespace SOUI
 		return TRUE;
 	}
 
-	void SMenuExItem::GetTextRect(LPRECT pRect) const
+	void SMenuExItem::GetTextRect(LPRECT pRect)
 	{
 		GetClientRect(pRect);
 		SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
@@ -410,7 +410,7 @@ namespace SOUI
 			m_bDisable = TRUE;
 		}
 
-		virtual CSize GetDesiredSize(int wid, int hei) const
+		virtual CSize GetDesiredSize(int wid, int hei)
 		{
 			SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
 			(void)pMenuRoot;

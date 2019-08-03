@@ -1,4 +1,4 @@
-﻿<SOUI trCtx="dlg_set_skin" title="set skin" width="214" height="220" margin="5,5,5,5" resizable="0" translucent="1" toolwindow="1">
+﻿<SOUI trCtx="dlg_set_skin" title="set skin" margin="5,5,5,5" resizable="0" translucent="1" toolwindow="1">
   <style>
     <!--局部style对象-->
     <class name="cls_border" ncSkin="_skin.sys.border" margin-x="2" margin-y="2" />
@@ -13,7 +13,7 @@
     <imglist name="skin_bkimg_6_fit" src="bkimg:skin_pic_6" colorizeEnable="0"/>
     <imglist name="skin_bkimg_7_fit" src="bkimg:skin_pic_7" colorizeEnable="0"/>
   </skin>
-  <root class="cls_dlg_frame" cache="1">
+  <root class="cls_dlg_frame" cache="1" width="214" height="220">
     <window pos="5,5">
       <img pos="0,0,@100,@50" class="cls_border" name="img_skin_0" id="10" msgTransparent="0" skin="skin_bkimg_0_fit"/>
       <img pos="[2,0,@100,@50" class="cls_border" name="img_skin_1" id="11" msgTransparent="0" skin="skin_bkimg_1_fit"/>

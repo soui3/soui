@@ -29,14 +29,13 @@
   </skin>
   <root colorBkgnd="#eeeeee" cache="1" width="758" height="500">
     <window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1">
-      <window cache="1" pos="0,0,-0,-0" colorBkgnd="#ffffff" alpha="100"/>
       <caption pos="0,0,-0,30" show="1" font="adding:0" layout="hbox" padding="5,0,5,0" gravity="center">
         <icon size="-1,-1" src="ICON_LOGO:16"/>
         <text size="-1,-1">@string/setskintitle</text>
         <window size="0,0" weight="1" visible="0"/>
         <imgbtn size="-1,-1" name="btn_close" skin="_skin.sys.btn.close" animate="1"/>
       </caption>
-      <window pos="0,30,-0,-0" colorBkgnd="#edeeee" alpha="70">
+      <window pos="0,30,-0,-0" colorBkgnd="#edeeee">
         <window pos="0,1,-0,-0" colorBkgnd="#ffffff">
           <window pos="4,7,-4,@100">
             <img pos="2,0,@120,@120" class="cls_border" name="img_skin_0" id="10" msgTransparent="0" skin="skin_bkimg_0_fit"/>

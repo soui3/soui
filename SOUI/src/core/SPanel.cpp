@@ -665,10 +665,10 @@ void SScrollView::SetViewOrigin(CPoint pt)
 {
 	if (pt.x < 0) pt.x = 0;
 	if (pt.y < 0) pt.y = 0;
-	if (pt.x > m_siHoz.nMax - m_siHoz.nPage+1)
-		pt.x = m_siHoz.nMax - m_siHoz.nPage+1;
-	if (pt.y > m_siVer.nMax - m_siVer.nPage+1)
-		pt.y = m_siVer.nMax - m_siVer.nPage+1;
+	if (pt.x > (int)(m_siHoz.nMax - m_siHoz.nPage+1))
+		pt.x = (int)(m_siHoz.nMax - m_siHoz.nPage+1);
+	if (pt.y > (int)(m_siVer.nMax - m_siVer.nPage+1))
+		pt.y = (int)(m_siVer.nMax - m_siVer.nPage+1);
 	if(m_ptOrigin==pt) return;
     CPoint ptOld=m_ptOrigin;
     m_ptOrigin=pt;
