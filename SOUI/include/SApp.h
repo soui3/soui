@@ -22,7 +22,7 @@
 #include "interface/SAttrStorage-i.h"
 #include "interface/sinterpolator-i.h"
 #include "interface/Animation-i.h"
-
+#include "interface/ValueAnimator-i.h"
 #include "control/RealWndHandler-i.h"
 
 #include "res.mgr/SResProviderMgr.h"
@@ -54,7 +54,6 @@
 namespace SOUI
 {
 struct IAccProxy;
-class IValueAnimator;
 interface IMsgLoopFactory : public IObjRef
 {
     virtual SMessageLoop * CreateMsgLoop() = 0;

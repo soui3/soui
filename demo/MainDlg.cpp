@@ -11,7 +11,7 @@
 #include "SMatrixWindow.h"
 #include "FormatMsgDlg.h"
 #include <math.h>
-
+#include <valueAnimator/ValueAnimator.h>
 #include <helper/SMenuEx.h>
 #include <helper/SDibHelper.h>
 
@@ -1183,6 +1183,42 @@ void CMainDlg::OnToggleLeft(EventArgs *e)
 		{
 			pWnd->SetAnimation(pAni);
 			pAni->Release();
+		}
+	}
+}
+
+void CMainDlg::OnSouiClick()
+{
+	IValueAnimator * pAni = SApplication::getSingletonPtr()->LoadValueAnimator(L"valueAni:colorAni");
+	if(pAni)
+	{
+		pAni->addListener(this);
+		pAni->addUpdateListener(this);
+		pAni->start(this);
+	}
+}
+
+void CMainDlg::onAnimationEnd(IValueAnimator * pAnimator)
+{
+	SWindow *pTst = FindChildByName(L"tree_test");
+	if(pTst)
+	{
+		pTst->SetAttribute(L"colorBkgnd",L"RGBA(255,255,255,0)");//set invalid colorBkgnd
+	}
+}
+
+void CMainDlg::onAnimationUpdate(IValueAnimator *pAnimator)
+{
+	SWindow *pTst = FindChildByName(L"tree_test");
+	if(pTst)
+	{
+		SColorAnimator *ani = sobj_cast<SColorAnimator>(pAnimator);
+		if(ani)
+		{
+			SStringW strColor;
+			SColor cr(ani->getValue());
+			strColor.Format(L"RGBA(%d,%d,%d,%d)",cr.r,cr.g,cr.b,cr.a);
+			pTst->SetAttribute(L"colorBkgnd",strColor);
 		}
 	}
 }

@@ -191,5 +191,6 @@
   </anim>
   <valueAni>
     <file name="alphaAni" path="valueAni\alpha.xml"/>
+    <file name="colorAni" path="valueAni\color.xml"/>
   </valueAni>
 </resource>

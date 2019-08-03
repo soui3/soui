@@ -65,6 +65,8 @@ class CMainDlg : public SHostWnd
 			   , public TAutoEventMapReg<CMainDlg>//通知中心自动注册
 			   , public ISetOrLoadSkinHandler
 ,				public IAnimation::IAnimationListener
+,				public IValueAnimator::IAnimatorListener 
+,				public IValueAnimator::IAnimatorUpdateListener
 ,				public SDpiHandler<CMainDlg>
 {
 public:
@@ -129,6 +131,13 @@ protected:
 	virtual void onAnimationStart(IAnimation * animation){}
 	virtual void onAnimationRepeat(IAnimation * animation){}
 	virtual void onAnimationEnd(IAnimation * animation);
+
+protected:
+	virtual void onAnimationStart(IValueAnimator * pAnimator){}
+	virtual void onAnimationRepeat(IValueAnimator * pAnimator){}
+	virtual void onAnimationEnd(IValueAnimator * pAnimator);
+	virtual void onAnimationUpdate(IValueAnimator *pAnimator);
+
 protected:
     //virtual void OnSetSkin(int iSkin);
 
@@ -223,6 +232,8 @@ protected:
 
 	void OnToggleLeft(EventArgs *e);
 
+	void OnSouiClick();
+
     //UI控件的事件及响应函数映射表
 	EVENT_MAP_BEGIN()
 		EVENT_HANDLER(EventPath::EventID,OnEventPath)
@@ -284,6 +295,7 @@ protected:
 		EVENT_NAME_HANDLER(L"rotate_z",EventSwndStateChanged::EventID,On3dViewRotate)
 		EVENT_ID_COMMAND(R.id.btn_set_prop_value,OnSetPropItemValue)
 		EVENT_NAME_HANDLER(L"tgl_left",EventCmd::EventID,OnToggleLeft)
+		EVENT_NAME_COMMAND(L"img_soui",OnSouiClick)
 	EVENT_MAP_END()	
 
     //HOST消息及响应函数映射表

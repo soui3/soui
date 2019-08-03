@@ -11,8 +11,8 @@
 
   <window pos="0,0,@270,-0" name="pane_left" layout="hbox" gravity="center">
     <window size="0,-2" weight="1">
-      <img pos="0,0,-0,-0" skin="skin_girl"/>
-      <include pos="0,0,-0,-0" src="layout:treectrl"/>
+      <img pos="0,0,-0,-0" skin="skin_girl" name="img_girl"/>
+      <include pos="0,0,-0,-0" src="layout:treectrl" name="tree_test"/>
     </window>
     <toggle size="-1,-1" name="tgl_left" skin="skin_btn_expand" checked="true"/>
   </window>

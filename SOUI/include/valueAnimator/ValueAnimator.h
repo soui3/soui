@@ -22,13 +22,13 @@
 * <p>There is a single timing pulse that all animations use. It runs in a
 * custom handler to ensure that property changes happen on the UI thread.</p>
 *
-* <p>By default, IValueAnimator uses non-linear time interpolation, via the
+* <p>By default, SValueAnimator uses non-linear time interpolation, via the
 * {@link AccelerateDecelerateInterpolator} class, which accelerates into and decelerates
 * out of an animation. This behavior can be changed by calling
-* {@link IValueAnimator#setInterpolator(TimeInterpolator)}.</p>
+* {@link SValueAnimator#setInterpolator(TimeInterpolator)}.</p>
 *
 * <p>Animators can be created from either code or resource files. Here is an example
-* of a IValueAnimator resource file:</p>
+* of a SValueAnimator resource file:</p>
 *
 * {@sample development/samples/ApiDemos/res/anim/animator.xml ValueAnimatorResources}
 *
@@ -44,48 +44,18 @@
 *
 * <div class="special reference">
 * <h3>Developer Guides</h3>
-* <p>For more information about animating with {@code IValueAnimator}, read the
+* <p>For more information about animating with {@code SValueAnimator}, read the
 * <a href="{@docRoot}guide/topics/graphics/prop-animation.html#value-animator">Property
 * Animation</a> developer guide.</p>
 * </div>
 */
 
-#include <interface/Animation-i.h>
-#include <interface/STimelineHandler-i.h>
+#include <interface/ValueAnimator-i.h>
 #include "TypeEvaluator.h"
 
 namespace SOUI{
 
-	class SOUI_EXP IValueAnimator  : public IObjRef, public IObject, ITimelineHandler{
-	public:
-		struct IAnimatorUpdateListener
-		{
-			virtual void onAnimationUpdate(IValueAnimator *pAnimator) = 0;
-		};
-
-		struct IAnimatorListener {
-			/**
-			* <p>Notifies the start of the animation.</p>
-			*
-			* @param animation The started animation.
-			*/
-			virtual void onAnimationStart(IValueAnimator * pAnimator) = 0;
-
-			/**
-			* <p>Notifies the end of the animation. This callback is not invoked
-			* for animations with repeat count set to INFINITE.</p>
-			*
-			* @param animation The animation which reached its end.
-			*/
-			virtual void onAnimationEnd(IValueAnimator * pAnimator) = 0;
-
-			/**
-			* <p>Notifies the repetition of the animation.</p>
-			*
-			* @param animation The animation which was repeated.
-			*/
-			virtual void onAnimationRepeat(IValueAnimator * pAnimator) = 0;
-		};
+	class SOUI_EXP SValueAnimator  : public IValueAnimator, ITimelineHandler{
 	protected:
 		/**
 		* The first time that the animation's animateFrame() method is called. This time is used to
@@ -221,20 +191,20 @@ namespace SOUI{
 
 	public:
 		/**
-		* Creates a new IValueAnimator object. This default constructor is primarily for
+		* Creates a new SValueAnimator object. This default constructor is primarily for
 		* use internally; the factory methods which take parameters are more generally
 		* useful.
 		*/
-		IValueAnimator();
+		SValueAnimator();
 
 		/**
 		* Sets the length of the animation. The default duration is 300 milliseconds.
 		*
 		* @param duration The length of the animation, in milliseconds. This value cannot
 		* be negative.
-		* @return IValueAnimator The object called with setDuration(). This return
+		* @return SValueAnimator The object called with setDuration(). This return
 		* value makes it easier to compose statements together that construct and then set the
-		* duration, as in <code>IValueAnimator.ofInt(0, 10).setDuration(500).start()</code>.
+		* duration, as in <code>SValueAnimator.ofInt(0, 10).setDuration(500).start()</code>.
 		*/
 		void setDuration(long duration);
 
@@ -411,9 +381,9 @@ namespace SOUI{
 		void setInterpolator(IInterpolator * value);
 
 		/**
-		* Returns the timing interpolator that this IValueAnimator uses.
+		* Returns the timing interpolator that this SValueAnimator uses.
 		*
-		* @return The timing interpolator for this IValueAnimator.
+		* @return The timing interpolator for this SValueAnimator.
 		*/
 		IInterpolator * getInterpolator();
 
@@ -434,7 +404,7 @@ namespace SOUI{
 		* properties of objects in the view hierarchy, then the calling thread should be the UI
 		* thread for that view hierarchy.</p>
 		*
-		* @param playBackwards Whether the IValueAnimator should start playing in reverse.
+		* @param playBackwards Whether the SValueAnimator should start playing in reverse.
 		*/
 		void start(bool playBackwards);
 
@@ -448,7 +418,7 @@ namespace SOUI{
 		bool isStarted();
 
 		/**
-		* Plays the IValueAnimator in reverse. If the animation is already running,
+		* Plays the SValueAnimator in reverse. If the animation is already running,
 		* it will stop itself and play backwards from the point reached when reverse was called.
 		* If the animation is not currently running, then it will start from the end and
 		* play backwards. This behavior is only set for the current animation; future playing
@@ -570,7 +540,7 @@ namespace SOUI{
 
 
 	template<class T>
-	class  TValueAnimator : public TObjRefImpl<SObjectImpl<IValueAnimator> >
+	class  TValueAnimator : public TObjRefImpl<SObjectImpl<SValueAnimator> >
 	{
 		SOUI_CLASS_NAME_EX(TValueAnimator<T>, L"valueAnimator", ValueAnimator)
 	protected:

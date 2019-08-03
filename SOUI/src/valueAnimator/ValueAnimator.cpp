@@ -6,7 +6,7 @@
 namespace SOUI{
 
 
-	IValueAnimator::IValueAnimator()
+	SValueAnimator::SValueAnimator()
 	{
 		sDurationScale = 1.0f;
 		mStartTime = -1;
@@ -46,22 +46,22 @@ namespace SOUI{
 		mInterpolator.Attach(new SLinearInterpolator());
 	}
 
-	void IValueAnimator::addAnimationCallback()
+	void SValueAnimator::addAnimationCallback()
 	{
 		mContainer->RegisterTimelineHandler(this);
 	}
 
-	void IValueAnimator::removeAnimationCallback()
+	void SValueAnimator::removeAnimationCallback()
 	{
 		mContainer->UnregisterTimelineHandler(this);
 	}
 
-	void IValueAnimator::OnNextFrame()
+	void SValueAnimator::OnNextFrame()
 	{
 		doAnimationFrame(STime::GetCurrentTimeMs());
 	}
 
-	void IValueAnimator::animateValue(float fraction)
+	void SValueAnimator::animateValue(float fraction)
 	{
 		fraction = mInterpolator->getInterpolation(fraction);
 		mCurrentFraction = fraction;
@@ -72,12 +72,12 @@ namespace SOUI{
 		}
 	}
 
-	float IValueAnimator::getAnimatedFraction() const
+	float SValueAnimator::getAnimatedFraction() const
 	{
 		return mCurrentFraction;
 	}
 
-	bool IValueAnimator::doAnimationFrame(uint64_t frameTime)
+	bool SValueAnimator::doAnimationFrame(uint64_t frameTime)
 	{
 		if (mStartTime < 0) {
 			// First frame. If there is start delay, start delay count down will happen *after* this
@@ -123,12 +123,12 @@ namespace SOUI{
 		return finished;
 	}
 
-	bool IValueAnimator::isInitialized()
+	bool SValueAnimator::isInitialized()
 	{
 		return mInitialized;
 	}
 
-	void IValueAnimator::skipToEndValue(bool inReverse)
+	void SValueAnimator::skipToEndValue(bool inReverse)
 	{
 		float endFraction = inReverse ? 0.f : 1.f;
 		if (mRepeatCount % 2 == 1 && mRepeatMode == IAnimation::REVERSE) {
@@ -138,7 +138,7 @@ namespace SOUI{
 		animateValue(endFraction);
 	}
 
-	void IValueAnimator::animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, bool inReverse)
+	void SValueAnimator::animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, bool inReverse)
 	{
 		if (currentPlayTime < 0 || lastPlayTime < 0) {
 			return;//error
@@ -170,7 +170,7 @@ namespace SOUI{
 		}
 	}
 
-	bool IValueAnimator::animateBasedOnTime(uint64_t currentTime)
+	bool SValueAnimator::animateBasedOnTime(uint64_t currentTime)
 	{
 		bool done = false;
 		if (mRunning) {
@@ -201,7 +201,7 @@ namespace SOUI{
 		return done;
 	}
 
-	void IValueAnimator::commitAnimationFrame(long frameTime)
+	void SValueAnimator::commitAnimationFrame(long frameTime)
 	{
 		if (!mStartTimeCommitted) {
 			mStartTimeCommitted = true;
@@ -212,12 +212,12 @@ namespace SOUI{
 		}
 	}
 
-	bool IValueAnimator::isPulsingInternal()
+	bool SValueAnimator::isPulsingInternal()
 	{
 		return mLastFrameTime >= 0;
 	}
 
-	void IValueAnimator::startAnimation()
+	void SValueAnimator::startAnimation()
 	{
 		mAnimationEndRequested = false;
 		mRunning = true;
@@ -229,7 +229,7 @@ namespace SOUI{
 		notifyStartListeners();
 	}
 
-	void IValueAnimator::endAnimation()
+	void SValueAnimator::endAnimation()
 	{
 		if (mAnimationEndRequested) {
 			return;
@@ -260,12 +260,12 @@ namespace SOUI{
 		Release();
 	}
 
-	bool IValueAnimator::canReverse()
+	bool SValueAnimator::canReverse()
 	{
 		return true;
 	}
 
-	void IValueAnimator::reverse()
+	void SValueAnimator::reverse()
 	{
 		if (isPulsingInternal()) {
 			uint64_t currentTime = STime::GetCurrentTimeMs();
@@ -282,17 +282,17 @@ namespace SOUI{
 		}
 	}
 
-	bool IValueAnimator::isStarted()
+	bool SValueAnimator::isStarted()
 	{
 		return mStarted;
 	}
 
-	bool IValueAnimator::isRunning()
+	bool SValueAnimator::isRunning()
 	{
 		return mRunning;
 	}
 
-	void IValueAnimator::end()
+	void SValueAnimator::end()
 	{
 		if (!mRunning) {
 			// Special case if the animation has not yet started; get it ready for ending
@@ -303,13 +303,13 @@ namespace SOUI{
 		endAnimation();
 	}
 
-	void IValueAnimator::start(ITimelineHandlersMgr *pContainer)
+	void SValueAnimator::start(ITimelineHandlersMgr *pContainer)
 	{
 		mContainer = pContainer;
 		start(false);
 	}
 
-	void IValueAnimator::start(bool playBackwards)
+	void SValueAnimator::start(bool playBackwards)
 	{
 		SASSERT(mInterpolator);
 		mReversing = playBackwards;
@@ -350,7 +350,7 @@ namespace SOUI{
 		}
 	}
 
-	void IValueAnimator::notifyStartListeners()
+	void SValueAnimator::notifyStartListeners()
 	{
 		AddRef();
 		SArray<IAnimatorListener *> tmpListeners = mListeners;
@@ -362,7 +362,7 @@ namespace SOUI{
 		Release();
 	}
 
-	void IValueAnimator::removeListener(IAnimatorListener * p)
+	void SValueAnimator::removeListener(IAnimatorListener * p)
 	{
 		int iFind = mListeners.Find(p);
 		if (iFind != -1)
@@ -371,58 +371,58 @@ namespace SOUI{
 		}
 	}
 
-	void IValueAnimator::addListener(IAnimatorListener * p)
+	void SValueAnimator::addListener(IAnimatorListener * p)
 	{
 		mListeners.Add(p);
 	}
 
-	IInterpolator * IValueAnimator::getInterpolator()
+	IInterpolator * SValueAnimator::getInterpolator()
 	{
 		return mInterpolator;
 	}
 
-	void IValueAnimator::setInterpolator(IInterpolator * value)
+	void SValueAnimator::setInterpolator(IInterpolator * value)
 	{
 		mInterpolator = value;
 	}
 
-	void IValueAnimator::removeUpdateListener(IAnimatorUpdateListener *listener)
+	void SValueAnimator::removeUpdateListener(IAnimatorUpdateListener *listener)
 	{
 		int iFind = mUpdateListeners.Find(listener);
 		if (iFind != -1) mUpdateListeners.RemoveAt(iFind);
 	}
 
-	void IValueAnimator::removeAllUpdateListeners()
+	void SValueAnimator::removeAllUpdateListeners()
 	{
 		mUpdateListeners.RemoveAll();
 	}
 
-	void IValueAnimator::addUpdateListener(IAnimatorUpdateListener * listener)
+	void SValueAnimator::addUpdateListener(IAnimatorUpdateListener * listener)
 	{
 		mUpdateListeners.Add(listener);
 	}
 
-	IAnimation::RepeatMode IValueAnimator::getRepeatMode()
+	IAnimation::RepeatMode SValueAnimator::getRepeatMode()
 	{
 		return mRepeatMode;
 	}
 
-	void IValueAnimator::setRepeatMode(IAnimation::RepeatMode value)
+	void SValueAnimator::setRepeatMode(IAnimation::RepeatMode value)
 	{
 		mRepeatMode = value;
 	}
 
-	int IValueAnimator::getRepeatCount()
+	int SValueAnimator::getRepeatCount()
 	{
 		return mRepeatCount;
 	}
 
-	void IValueAnimator::setRepeatCount(int value)
+	void SValueAnimator::setRepeatCount(int value)
 	{
 		mRepeatCount = value;
 	}
 
-	void IValueAnimator::setStartDelay(long startDelay)
+	void SValueAnimator::setStartDelay(long startDelay)
 	{
 		// Clamp start delay to non-negative range.
 		if (startDelay < 0) {
@@ -431,12 +431,12 @@ namespace SOUI{
 		mStartDelay = startDelay;
 	}
 
-	long IValueAnimator::getStartDelay()
+	long SValueAnimator::getStartDelay()
 	{
 		return mStartDelay;
 	}
 
-	long IValueAnimator::getCurrentPlayTime()
+	long SValueAnimator::getCurrentPlayTime()
 	{
 		if (!mInitialized || (!mStarted && mSeekFraction < 0)) {
 			return 0;
@@ -447,7 +447,7 @@ namespace SOUI{
 		return (long) ((STime::GetCurrentTimeMs() - mStartTime) / sDurationScale);
 	}
 
-	bool IValueAnimator::shouldPlayBackward(int iteration, bool inReverse)
+	bool SValueAnimator::shouldPlayBackward(int iteration, bool inReverse)
 	{
 		if (iteration > 0 && mRepeatMode == IAnimation::REVERSE &&
 			(iteration < (mRepeatCount + 1) || mRepeatCount == -1)) {
@@ -463,7 +463,7 @@ namespace SOUI{
 		}
 	}
 
-	float IValueAnimator::clampFraction(float fraction)
+	float SValueAnimator::clampFraction(float fraction)
 	{
 		if (fraction < 0) {
 			fraction = 0;
@@ -473,7 +473,7 @@ namespace SOUI{
 		return fraction;
 	}
 
-	float IValueAnimator::getCurrentIterationFraction(float fraction, bool inReverse)
+	float SValueAnimator::getCurrentIterationFraction(float fraction, bool inReverse)
 	{
 		fraction = clampFraction(fraction);
 		int iteration = getCurrentIteration(fraction);
@@ -481,7 +481,7 @@ namespace SOUI{
 		return shouldPlayBackward(iteration, inReverse) ? 1.f - currentFraction : currentFraction;
 	}
 
-	int IValueAnimator::getCurrentIteration(float fraction)
+	int SValueAnimator::getCurrentIteration(float fraction)
 	{
 		fraction = clampFraction(fraction);
 		// If the overall fraction is a positive integer, we consider the current iteration to be
@@ -494,7 +494,7 @@ namespace SOUI{
 		return (int) iteration;
 	}
 
-	void IValueAnimator::setCurrentFraction(float fraction)
+	void SValueAnimator::setCurrentFraction(float fraction)
 	{
 		fraction = clampFraction(fraction);
 		mStartTimeCommitted = true; // do not allow start time to be compensated for jank
@@ -514,13 +514,13 @@ namespace SOUI{
 		animateValue(currentIterationFraction);
 	}
 
-	void IValueAnimator::setCurrentPlayTime(long playTime)
+	void SValueAnimator::setCurrentPlayTime(long playTime)
 	{
 		float fraction = mDuration > 0 ? (float) playTime / mDuration : 1;
 		setCurrentFraction(fraction);
 	}
 
-	long IValueAnimator::getTotalDuration()
+	long SValueAnimator::getTotalDuration()
 	{
 		if (mRepeatCount == -1) {
 			return 100000;//todo: DURATION_INFINITE;
@@ -529,17 +529,17 @@ namespace SOUI{
 		}
 	}
 
-	long IValueAnimator::getDuration()
+	long SValueAnimator::getDuration()
 	{
 		return mDuration;
 	}
 
-	long IValueAnimator::getScaledDuration()
+	long SValueAnimator::getScaledDuration()
 	{
 		return (long)(mDuration * sDurationScale);
 	}
 
-	void IValueAnimator::setDuration(long duration)
+	void SValueAnimator::setDuration(long duration)
 	{
 		if (duration >= 0) {
 			mDuration = duration;
