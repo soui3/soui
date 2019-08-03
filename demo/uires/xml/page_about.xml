@@ -1,16 +1,25 @@
-﻿<include>
-  <text pos="|0,10" offset="-0.5,0">欢迎使用SOUI！</text>
-  <text pos="10,[5">协议类型：自定义开源协议，商业化产品收费，个人免费产品免费使用，具体参考license.txt</text>
-  <text pos="10,[5">版权所有：启程软件</text>
-  <link pos="[10,{5" href="http://www.cnblogs.com/setoutsoft/" class="cls_btn_weblink">SOUI教程</link>
-  <link pos="[10,{0" href="http://www.soui.vip" class="cls_btn_weblink">SOUI论坛</link>
+﻿<window layout="vbox" interval="10" gravity="left" size="-2,-2" padding="10,50,10,10">
+  <text layout_gravity="center">欢迎使用SOUI！</text>
+  <text>协议类型：自定义开源协议，商业化产品收费，个人免费产品免费使用，具体参考license.txt</text>
+  <text>版权所有：启程软件</text>
+  <window size="-1,-1" layout="hbox" interval="10" layout_gravity="center">
+    <link href="http://www.cnblogs.com/setoutsoft/" class="cls_btn_weblink">SOUI教程</link>
+    <link href="http://www.soui.vip" class="cls_btn_weblink">SOUI论坛</link>
+  </window>
 
-  <text pos="10,[5">QQ群#1(2000人)：</text><edit readOnly="1">229313785</edit>
-  <link href="http://jq.qq.com/?_wv=1027&k=PxXh59"  class="cls_btn_weblink">申请群#1</link>
-  <text pos="[10,{0">QQ群#2(500人)：</text>
-  <edit readOnly="1">385438344</edit>
-  <link href="http://jq.qq.com/?_wv=1027&k=VRATCo"  class="cls_btn_weblink">申请群#2</link>
-  <text pos="10,[5">git.github：</text><edit pos="150,{0,@-1,@30" readOnly="1">https://github.com/soui2/soui</edit>
-  <text pos="10,[5">git.oschina：</text><edit pos="150,{0,@-1,@30" readOnly="1">https://gitee.com/setousoft/soui</edit>
-  
-</include>
+  <window size="-1,-1" layout="gridlayout" interval="10" columnCount="3" gravity="fill">
+      <text >QQ群#1(2000人)：</text>
+      <edit readOnly="1">229313785</edit>
+      <link href="http://jq.qq.com/?_wv=1027&k=PxXh59"  class="cls_btn_weblink">申请群#1</link>
+
+    <text>QQ群#2(500人)：</text>
+      <edit readOnly="1">385438344</edit>
+      <link href="http://jq.qq.com/?_wv=1027&k=VRATCo"  class="cls_btn_weblink">申请群#2</link>
+  </window>
+  <window size="-2,-1" layout="gridlayout" interval="10" columnCount="2" gravity="fill" extend_top="40">
+      <text >github：</text>
+      <edit readOnly="1">https://github.com/soui3/soui</edit>
+      <text>gitee：</text>
+      <edit readOnly="1">https://gitee.com/setousoft/soui3</edit>
+  </window>
+</window>
