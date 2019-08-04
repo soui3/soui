@@ -17,7 +17,7 @@
 #if (_WIN32_WINNT >= 0x0600) && !defined(_WIN32_WCE)
 #include <shobjidl.h>
 #endif // (_WIN32_WINNT >= 0x0600) && !defined(_WIN32_WCE)
-#include <core\SimpleWnd.h>
+#include <core\SNativeWnd.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -297,7 +297,7 @@ public: \
 
 
 	template <class T>
-	class CFileDialogImpl : public SOUI::CSimpleWnd
+	class CFileDialogImpl : public SOUI::SNativeWnd
 	{
 	public:
 		OPENFILENAME m_ofn;
@@ -357,23 +357,23 @@ public: \
 			ATLASSERT(m_hWnd == NULL);
 
 			//ModuleHelper::AddCreateWndData(&m_thunk.cd, (ATL::CDialogImplBase*)this);
-			SOUI::CSimpleWndHelper::getSingletonPtr()->LockSharePtr(this);
-			m_pThunk = (tagThunk*)HeapAlloc(CSimpleWndHelper::getSingletonPtr()->GetHeap(), HEAP_ZERO_MEMORY, sizeof(tagThunk));
+			SOUI::SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
+			m_pThunk = (tagThunk*)HeapAlloc(SNativeWndHelper::getSingletonPtr()->GetHeap(), HEAP_ZERO_MEMORY, sizeof(tagThunk));
 			BOOL bRet;
 			if (m_bOpenFileDialog)
 				bRet = ::GetOpenFileName(&m_ofn);
 			else
 				bRet = ::GetSaveFileName(&m_ofn);
-			CSimpleWndHelper::getSingletonPtr()->UnlockSharePtr();
+			SNativeWndHelper::getSingletonPtr()->UnlockSharePtr();
 			m_hWnd = NULL;
-			HeapFree(CSimpleWndHelper::getSingletonPtr()->GetHeap(), 0, m_pThunk);
+			HeapFree(SNativeWndHelper::getSingletonPtr()->GetHeap(), 0, m_pThunk);
 			return bRet ? IDOK : IDCANCEL;
 		}
 		// Attributes
-		SOUI::CSimpleWnd GetFileDialogWindow() const
+		SOUI::SNativeWnd GetFileDialogWindow() const
 		{
 			ATLASSERT(::IsWindow(m_hWnd));
-			return SOUI::CSimpleWnd(GetParent(m_hWnd));
+			return SOUI::SNativeWnd(GetParent(m_hWnd));
 		}
 
 		int GetFilePath(LPTSTR lpstrFilePath, int nLength) const
@@ -1715,7 +1715,7 @@ public: \
 		virtual void IncludeChildDir(bool) = NULL;
 	};
 
-	class CWindowImpl:public CSimpleWnd
+	class CWindowImpl:public SNativeWnd
 	{
 	protected:
 		fun* m_pHostWnd;
@@ -1750,7 +1750,7 @@ public: \
 		}
 		BEGIN_MSG_MAP_EX(CWindowImpl)
 			MSG_WM_LBUTTONUP(OnLButtonUp)
-			CHAIN_MSG_MAP(CSimpleWnd)
+			CHAIN_MSG_MAP(SNativeWnd)
 		END_MSG_MAP()
 	};
 
@@ -1789,14 +1789,14 @@ public: \
 	///////////////////////////////////////////////////////////////////////////////
 	// CCommonDialogImplBase - base class for common dialog classes
 
-	class ATL_NO_VTABLE CCommonDialogImplBase : public CSimpleWnd
+	class ATL_NO_VTABLE CCommonDialogImplBase : public SNativeWnd
 	{
 	public:
 		static UINT_PTR APIENTRY HookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (uMsg != WM_INITDIALOG)
 				return 0;
-			CCommonDialogImplBase* pT = (CCommonDialogImplBase*)CSimpleWndHelper::getSingletonPtr()->GetSharePtr();
+			CCommonDialogImplBase* pT = (CCommonDialogImplBase*)SNativeWndHelper::getSingletonPtr()->GetSharePtr();
 			ATLASSERT(pT != NULL);
 			ATLASSERT(pT->m_hWnd == NULL);
 			ATLASSERT(::IsWindow(hWnd));
@@ -2224,7 +2224,7 @@ public: \
 
 			if (uMsg == WM_INITDIALOG)
 			{
-				pT = (CCommonDialogImplBase*)CSimpleWndHelper::getSingletonPtr()->GetSharePtr();
+				pT = (CCommonDialogImplBase*)SNativeWndHelper::getSingletonPtr()->GetSharePtr();
 				lpCC->lCustData = (LPARAM)pT;
 				ATLASSERT(pT != NULL);
 				ATLASSERT(pT->m_hWnd == NULL);
