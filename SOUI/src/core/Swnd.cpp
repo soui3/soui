@@ -1352,18 +1352,16 @@ namespace SOUI
 
 	void SWindow::BringWindowToTop()
 	{
-		TestMainThread();
-		SWindow *pParent=GetParent();
-		if(!pParent) return;
-		pParent->RemoveChild(this);
-		pParent->InsertChild(this);
-		pParent->Invalidate();
+		AdjustZOrder(ICWND_LAST);
 	}
 
 	bool SWindow::AdjustZOrder(SWindow *pInsertAfter)
 	{
+		TestMainThread();
 		SWindow *pParent=GetParent();
 		if(!pParent)
+			return true;
+		if(m_isDestroying)
 			return true;
 		if(pInsertAfter != ICWND_FIRST && pInsertAfter != ICWND_LAST && pInsertAfter->GetParent() != pParent)
 		{
@@ -1373,7 +1371,6 @@ namespace SOUI
 		{
 			return false;
 		}
-		
 		pParent->RemoveChild(this);
 		pParent->InsertChild(this,pInsertAfter);
 		pParent->Invalidate();
