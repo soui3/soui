@@ -1204,6 +1204,7 @@ void CMainDlg::onAnimationEnd(IValueAnimator * pAnimator)
 	if(pTst)
 	{
 		pTst->SetAttribute(L"colorBkgnd",L"RGBA(255,255,255,0)");//set invalid colorBkgnd
+		pAnimator->Release();
 	}
 }
 
