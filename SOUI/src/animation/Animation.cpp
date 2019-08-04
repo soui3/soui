@@ -184,7 +184,7 @@ namespace SOUI {
 		mListener = listener;
 	}
 
-	int SAnimation::getZAdjustment() const
+	IAnimation::ZAdjustment SAnimation::getZAdjustment() const
 	{
 		return mZAdjustment;
 	}
@@ -224,7 +224,7 @@ namespace SOUI {
 		return mScaleFactor;
 	}
 
-	void SAnimation::setZAdjustment(int zAdjustment)
+	void SAnimation::setZAdjustment(ZAdjustment zAdjustment)
 	{
 		mZAdjustment = zAdjustment;
 	}
@@ -334,6 +334,7 @@ namespace SOUI {
 		mRepeatCount = 0;
 		mRepeated = 0;
 		mRepeatMode = RESTART;
+		mZAdjustment = ZORDER_NORMAL;
 		mListener = NULL;
 		mScaleFactor = 1.0f;
 

@@ -1360,6 +1360,26 @@ namespace SOUI
 		pParent->Invalidate();
 	}
 
+	bool SWindow::AdjustZOrder(SWindow *pInsertAfter)
+	{
+		SWindow *pParent=GetParent();
+		if(!pParent)
+			return true;
+		if(pInsertAfter != ICWND_FIRST && pInsertAfter != ICWND_LAST && pInsertAfter->GetParent() != pParent)
+		{
+			return false;
+		}
+		if(pInsertAfter == this)
+		{
+			return false;
+		}
+		
+		pParent->RemoveChild(this);
+		pParent->InsertChild(this,pInsertAfter);
+		pParent->Invalidate();
+		return true;
+	}
+
 	BOOL SWindow::FireEvent(EventArgs &evt)
 	{
 		TestMainThread();
@@ -2961,13 +2981,32 @@ namespace SOUI
 		InvalidateRect(NULL);
 	}
 
+	static SWindow * ICWND_NONE = (SWindow*)-2;
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 
-		:m_pOwner(pOwner),m_bFillAfter(false)
+		:m_pOwner(pOwner)
+		,m_bFillAfter(false)
+		,m_pPrevSiblingBackup(ICWND_NONE)
 	{
 	}
 
 	void SWindow::SAnimationHandler::OnAnimationStart()
 	{
+		IAnimation *pAni = m_pOwner->GetAnimation();
+		SASSERT(pAni);
+		if(pAni->getZAdjustment() != IAnimation::ZORDER_NORMAL)
+		{
+			m_pPrevSiblingBackup = m_pOwner->GetWindow(GSW_PREVSIBLING);
+			if(m_pPrevSiblingBackup == NULL)
+				m_pPrevSiblingBackup = ICWND_FIRST;
+
+			if(pAni->getZAdjustment() == IAnimation::ZORDER_TOP)
+				m_pOwner->AdjustZOrder(ICWND_LAST);
+			else
+				m_pOwner->AdjustZOrder(ICWND_FIRST);
+		}else
+		{
+			m_pPrevSiblingBackup = ICWND_NONE;
+		}
 		m_pOwner->GetEventSet()->subscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
 		if (m_pOwner->GetParent())
 		{
@@ -2983,7 +3022,11 @@ namespace SOUI
 		{
 			m_pOwner->GetParent()->GetEventSet()->unsubscribeEvent(EventSwndSize::EventID, Subscriber(&SWindow::SAnimationHandler::OnOwnerResize, this));
 		}
-
+		if(m_pPrevSiblingBackup != ICWND_NONE)
+		{
+			m_pOwner->AdjustZOrder(m_pPrevSiblingBackup);
+			m_pPrevSiblingBackup = ICWND_NONE;
+		}
 	}
 
 	const STransformation & SWindow::SAnimationHandler::GetTransformation() const

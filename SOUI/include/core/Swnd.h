@@ -223,6 +223,7 @@ namespace SOUI
 			SWindow * m_pOwner;
 			STransformation m_transform;
 			bool	  m_bFillAfter;
+			SWindow * m_pPrevSiblingBackup;//previous sibling of owner.
 		public:
 			SAnimationHandler(SWindow *pOwner);
 			void OnAnimationStart();
@@ -505,6 +506,16 @@ namespace SOUI
          * Describe  
          */
         void BringWindowToTop();
+
+		/**
+         * AdjustZOrder
+         * @brief    调整窗口Z序
+		 * @param    SWindow *pInsertAfter --  插入在这个窗口之后
+         * @return   bool,  pInsertAfter与this非同级窗口返回失败
+         *
+         * Describe  pInsertAfter可以为NULL，或是与this同一级的兄弟窗口
+         */
+		bool AdjustZOrder(SWindow *pInsertAfter);
 
         /**
         * FindChildByID

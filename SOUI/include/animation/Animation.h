@@ -137,7 +137,7 @@ namespace SOUI {
 		/**
 		* Desired Z order mode during animation.
 		*/
-		int mZAdjustment;
+		ZAdjustment mZAdjustment;
 
 		/**
 		* Desired background color behind animation.
@@ -317,7 +317,7 @@ namespace SOUI {
 		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 		* @attr ref android.R.styleable#Animation_zAdjustment
 		*/
-		void setZAdjustment(int zAdjustment);
+		void setZAdjustment(ZAdjustment zAdjustment);
 
 		/**
 		* Gets the acceleration curve type for this animation.
@@ -377,7 +377,7 @@ namespace SOUI {
 		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 		* @attr ref android.R.styleable#Animation_zAdjustment
 		*/
-		virtual int getZAdjustment() const;
+		virtual ZAdjustment getZAdjustment() const;
 
 
 		/**
@@ -511,6 +511,11 @@ namespace SOUI {
 			ATTR_BOOL(L"fillBefore", mFillBefore, FALSE)
 			ATTR_BOOL(L"fillAfter", mFillAfter, FALSE)
 			ATTR_INT(L"repeatCount", mRepeatCount, FALSE)
+			ATTR_ENUM_BEGIN(L"zAdjustment",ZAdjustment,FALSE)
+				ATTR_ENUM_VALUE(L"normal", ZORDER_NORMAL)
+				ATTR_ENUM_VALUE(L"top", ZORDER_TOP)
+				ATTR_ENUM_VALUE(L"bottom", ZORDER_BOTTOM)
+			ATTR_ENUM_END(mZAdjustment)
 			ATTR_ENUM_BEGIN(L"repeatMode", RepeatMode, FALSE)
 				ATTR_ENUM_VALUE(L"restart", RESTART)
 				ATTR_ENUM_VALUE(L"reverse", REVERSE)

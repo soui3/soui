@@ -88,7 +88,7 @@ namespace SOUI {
 			RELATIVE_TO_PARENT = 2,
 		};
 
-		enum {
+		enum ZAdjustment{
 			/**
 			* Requests that the content being animated be kept in its current Z
 			* order.
@@ -237,7 +237,7 @@ namespace SOUI {
 		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 		* @attr ref android.R.styleable#Animation_zAdjustment
 		*/
-		virtual void setZAdjustment(int zAdjustment) = 0;
+		virtual void setZAdjustment(ZAdjustment zAdjustment) = 0;
 
 
 		/**
@@ -298,7 +298,7 @@ namespace SOUI {
 		* {@link #ZORDER_TOP}, or {@link #ZORDER_BOTTOM}.
 		* @attr ref android.R.styleable#Animation_zAdjustment
 		*/
-		virtual int getZAdjustment() const = 0;
+		virtual ZAdjustment getZAdjustment() const = 0;
 
 
 		/**
