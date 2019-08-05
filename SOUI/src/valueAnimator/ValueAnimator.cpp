@@ -46,6 +46,12 @@ namespace SOUI{
 		mInterpolator.Attach(new SLinearInterpolator());
 	}
 
+
+	SValueAnimator::~SValueAnimator()
+	{
+
+	}
+
 	void SValueAnimator::addAnimationCallback()
 	{
 		mContainer->RegisterTimelineHandler(this);

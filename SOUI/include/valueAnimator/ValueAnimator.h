@@ -197,6 +197,8 @@ namespace SOUI{
 		*/
 		SValueAnimator();
 
+		~SValueAnimator();
+
 		/**
 		* Sets the length of the animation. The default duration is 300 milliseconds.
 		*
@@ -564,6 +566,9 @@ namespace SOUI{
 			return mID;
 		}
 
+		T getValue() const{
+			return mValue;
+		}
 	protected:
 		void onEvaluateValue(float fraction)
 		{
@@ -592,11 +597,6 @@ namespace SOUI{
 		{
 		}
 
-		int getValue() const
-		{
-			return mValue;
-		}
-
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_INT(L"valueFrom",mValueEvaluator.mStart,FALSE)
@@ -609,10 +609,6 @@ namespace SOUI{
 	public:
 		SFloatAnimator() :TValueAnimator<float>(0.f, 1.f)
 		{
-		}
-		float getValue() const
-		{
-			return mValue;
 		}
 
 	public:
@@ -629,10 +625,7 @@ namespace SOUI{
 		{
 
 		}
-		COLORREF getValue() const
-		{
-			return mValue;
-		}
+
 	protected:
 		HRESULT OnAttrFrom(const SStringW & strValue, BOOL bLoading)
 		{
