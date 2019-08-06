@@ -83,6 +83,14 @@ int SSkinGif::LoadFromMemory( LPVOID pBuf,size_t dwSize )
 
 int SSkinGif::LoadFromGdipImage( Gdiplus::Bitmap * pImage )
 {
+	if (m_nFrames)
+	{
+		SASSERT(m_pFrames);
+		delete[]m_pFrames;
+		m_pFrames = NULL;
+		m_nFrames = 0;
+	}
+
     UINT nCount = pImage->GetFrameDimensionsCount();
 
     GUID* pDimensionIDs = new GUID[nCount];
@@ -92,7 +100,7 @@ int SSkinGif::LoadFromGdipImage( Gdiplus::Bitmap * pImage )
         m_nFrames = pImage->GetFrameCount(&pDimensionIDs[0]);
         delete pDimensionIDs;
     }
-    m_pFrames = new SAniImgFrame [m_nFrames];
+    m_pFrames = new SAniFrame[m_nFrames];
     UINT nSize = pImage->GetPropertyItemSize(PropertyTagFrameDelay);
     SASSERT (nSize);
 
@@ -127,6 +135,27 @@ int SSkinGif::LoadFromGdipImage( Gdiplus::Bitmap * pImage )
 
 static ULONG_PTR s_gdipToken=0;
 
+
+
+/**
+* GetFrameDelay
+* @brief    获得指定帧的显示时间
+* @param    int iFrame --  帧号,为-1时代表获得当前帧的延时
+* @return   long -- 延时时间(*10ms)
+* Describe
+*/
+
+long SSkinGif::GetFrameDelay(int iFrame) const
+{
+	if (iFrame == -1) iFrame = m_iFrame;
+	long nRet = -1;
+	if (m_nFrames>1 && iFrame >= 0 && iFrame<m_nFrames)
+	{
+		nRet = m_pFrames[iFrame].nDelay;
+	}
+	return nRet;
+}
+
 BOOL SSkinGif::Gdiplus_Startup()
 {
     GdiplusStartupInput gdiplusStartupInput;
@@ -138,6 +167,15 @@ BOOL SSkinGif::Gdiplus_Startup()
 void SSkinGif::Gdiplus_Shutdown()
 {
     GdiplusShutdown(s_gdipToken);
+}
+
+void SSkinGif::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const
+{
+	if (iState < m_nFrames)
+	{
+		CRect rcSrc(CPoint(0, 0), GetSkinSize());
+		pRT->DrawBitmapEx(rcDraw, m_pFrames[iState].pBmp, rcSrc, EM_STRETCH, byAlpha);
+	}
 }
 
 }//end of namespace SOUI
