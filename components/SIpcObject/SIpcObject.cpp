@@ -102,11 +102,11 @@ namespace SOUI
 
 		//make sure msg queue is empty.
 		MSG msg;
-		while(::PeekMessage(&msg, m_hLocalId, UM_CALL_FUN, UM_CALL_FUN, PM_REMOVE))
+		while(::PeekMessage(&msg, NULL, UM_CALL_FUN, UM_CALL_FUN, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)
 			{
-				PostMessage(m_hLocalId,WM_QUIT,0,0);
+				PostQuitMessage(msg.wParam);
 				return false;
 			}
 			DispatchMessage(&msg);
