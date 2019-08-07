@@ -49,7 +49,7 @@ namespace SOUI
 		IShareBuffer *pBuf = GetRecvBuffer();
 		assert(pBuf->Tell()>= 4); //4=sizeof(int)
 		pBuf->Seek(IShareBuffer::seek_cur,-4);
-		int nLen;
+		int nLen=0;
 		pBuf->Read(&nLen, 4);
 		assert(pBuf->Tell()>=(UINT)(nLen+ 4));
 		pBuf->Seek(IShareBuffer::seek_cur,-(nLen+ 4));
@@ -71,9 +71,13 @@ namespace SOUI
 			return E_INVALIDARG;
 		if (!IsWindow(hRemote))
 			return E_INVALIDARG;
-
-		LRESULT lRet = ::SendMessage(hRemote, UM_CALL_FUN, FUN_ID_CONNECT, (LPARAM)hLocal);
+		ULONG_PTR dwResult = 0;
+		LRESULT lRet = ::SendMessageTimeout(hRemote, UM_CALL_FUN, FUN_ID_CONNECT, (LPARAM)hLocal, SMTO_ABORTIFHUNG,100,&dwResult);
 		if (lRet == 0)
+		{
+			return E_FAIL;
+		}
+		if (dwResult == 0)
 		{
 			return E_FAIL;
 		}
@@ -87,7 +91,7 @@ namespace SOUI
 			return E_UNEXPECTED;
 		if (m_hRemoteId == NULL)
 			return E_UNEXPECTED;
-		::SendMessage(m_hRemoteId, UM_CALL_FUN, FUN_ID_DISCONNECT, (LPARAM)m_hLocalId);
+		::PostMessage(m_hRemoteId, UM_CALL_FUN, FUN_ID_DISCONNECT, (LPARAM)m_hLocalId);
 		m_hRemoteId = NULL;
 		m_recvBuf.Close();
 		m_hLocalId = NULL;
