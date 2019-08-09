@@ -1,5 +1,5 @@
 #pragma once
-#include "core\SimpleWnd.h"
+#include "core\SNativeWnd.h"
 #include "helper\SMenu.h"
 
 //添加一个事件接收窗口用于专门处理托盘图标

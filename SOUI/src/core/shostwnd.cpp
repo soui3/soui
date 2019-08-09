@@ -295,7 +295,14 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         SendMessage(WM_SETICON,TRUE,(LPARAM)m_hostAttr.m_hAppIconBig);
     }
 
-
+	//compatible with 2.x width and height properties in soui element.
+	pugi::xml_attribute attrWid = xmlNode.attribute(L"width");
+	pugi::xml_attribute attrHei = xmlNode.attribute(L"height");
+	pugi::xml_node xmlRoot = xmlNode.child(L"root");
+	if (attrWid && !xmlRoot.attribute(attrWid.name()))
+		xmlRoot.append_copy(attrWid);
+	if (attrHei && !xmlRoot.attribute(attrHei.name()))
+		xmlRoot.append_copy(attrHei);
 
     SWindow::InitFromXml(xmlNode.child(L"root"));
     BuildWndTreeZorder();
