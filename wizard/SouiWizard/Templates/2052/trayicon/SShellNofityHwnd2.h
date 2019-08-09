@@ -30,7 +30,7 @@
 namespace SOUI
 {
 	class SShellNotifyIcon;
-	class CShellNotifyHwnd2 :public CSimpleWnd
+	class CShellNotifyHwnd2 :public SNativeWnd
 	{
 	public:
 		CShellNotifyHwnd2(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
@@ -48,7 +48,7 @@ namespace SOUI
 			MSG_WM_TIMER(OnTimer)
 			CHAIN_MSG_MAP_MEMBER_PTR(m_pMainWnd)
 			MESSAGE_HANDLER(WM_ICONNOTIFY, OnIconNotify)
-			CHAIN_MSG_MAP(CSimpleWnd)
+			CHAIN_MSG_MAP(SNativeWnd)
 		END_MSG_MAP()
 	private:
 		SHostWnd            *m_pMainWnd;
