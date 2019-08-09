@@ -1,7 +1,7 @@
 VSWIZARD 7.0
 Wizard=VsWizard.VsWizardEngine.10.0
 
-Param="WIZARD_NAME = SouiDllWizard"
-Param="ABSOLUTE_PATH = %SOUIPATH%\wizard\souidllwizard"
+Param="WIZARD_NAME = Soui3DllWizard"
+Param="ABSOLUTE_PATH = %SOUI3PATH%\wizard\souidllwizard"
 Param="FALLBACK_LCID = 2052"
 Param="WIZARD_VERSION = 10.0"
