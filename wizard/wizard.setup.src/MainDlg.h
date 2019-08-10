@@ -336,8 +336,8 @@ public:
 		CListViewCtrl vslist;
 		vslist.Attach(GetDlgItem(IDC_VSLIST));
 
-		if (GetFileAttributes(_T("Soui3Wizard")) == INVALID_FILE_ATTRIBUTES
-			|| GetFileAttributes(_T("Soui3DllWizard")) == INVALID_FILE_ATTRIBUTES)
+		if (GetFileAttributes(_T("SouiWizard")) == INVALID_FILE_ATTRIBUTES
+			|| GetFileAttributes(_T("SouiDllWizard")) == INVALID_FILE_ATTRIBUTES)
 		{
 			MessageBox(_T("当前目录下没有找到SOUI的向导数据"), _T("错误"), MB_OK | MB_ICONSTOP);
 			return 0;
