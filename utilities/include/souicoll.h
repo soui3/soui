@@ -458,9 +458,7 @@ public:
 
 public:
     SArray();
-	SArray(const SArray & src);
-
-	~SArray();
+	SArray(const SArray &src);
 
     size_t GetCount() const;
     bool IsEmpty() const;
@@ -511,6 +509,9 @@ private:
 private:
     static void CallConstructors( E* pElements, size_t nElements );
     static void CallDestructors( E* pElements, size_t nElements );
+
+public:
+    ~SArray();
 
 };
 
@@ -663,14 +664,13 @@ SArray< E, ETraits >::SArray() :
 
 template< typename E, class ETraits >
 SArray< E, ETraits >::SArray(const SArray< E, ETraits > & src) :
-	m_pData(NULL),
-	m_nSize(0),
-	m_nMaxSize(0),
-	m_nGrowBy(0)
+    m_pData( NULL ),
+    m_nSize( 0 ),
+    m_nMaxSize( 0 ),
+    m_nGrowBy( 0 )
 {
 	Copy(src);
 }
-
 
 template< typename E, class ETraits >
 SArray< E, ETraits >::~SArray()
@@ -1264,7 +1264,7 @@ inline void SList< E, ETraits >::SetAt( SPOSITION pos, INARGTYPE element )
 }
 
 template< typename E, class ETraits >
-inline SList< E, ETraits >::SList( UINT nBlockSize ) :
+SList< E, ETraits >::SList( UINT nBlockSize ) :
     m_pHead( NULL ),
     m_pTail( NULL ),
     m_nElements(0),
@@ -3908,7 +3908,7 @@ typename SRBMap< K, V, KTraits, VTraits >::CPair* SRBMap< K, V, KTraits, VTraits
 template< typename K, typename V, class KTraits, class VTraits >
 bool SRBMap< K, V, KTraits, VTraits >::Lookup(  typename SRBTree< K, V, KTraits, VTraits >::KINARGTYPE key, typename SRBTree< K, V, KTraits, VTraits >::VOUTARGTYPE value ) const 
 {
-    const CPair* pLookup = Find( key );
+    const SRBTree::CPair* pLookup = Find( key );
     if( pLookup == NULL )
         return false;
 
@@ -3994,8 +3994,8 @@ template< typename K, typename V, class KTraits, class VTraits >
 const typename SRBMultiMap< K, V, KTraits, VTraits >::CPair* SRBMultiMap< K, V, KTraits, VTraits >::GetNextWithKey( typename SRBMultiMap< K, V, KTraits, VTraits >::SPOSITION& pos, typename SRBTree< K, V, KTraits, VTraits >::KINARGTYPE key ) const
 {
     SASSERT( pos != NULL );
-    const CPair* pNode = GetNext( pos );
-    if( (pos == NULL) || !KTraits::CompareElements( static_cast< CPair* >( pos )->m_key, key ) )
+    const SRBTree::CPair* pNode = GetNext( pos );
+    if( (pos == NULL) || !KTraits::CompareElements( static_cast<SRBTree::CPair* >( pos )->m_key, key ) )
     {
         pos = NULL;
     }
@@ -4007,8 +4007,8 @@ template< typename K, typename V, class KTraits, class VTraits >
 typename SRBMultiMap< K, V, KTraits, VTraits >::CPair* SRBMultiMap< K, V, KTraits, VTraits >::GetNextWithKey(typename SRBMultiMap< K, V, KTraits, VTraits >::SPOSITION& pos, typename SRBTree< K, V, KTraits, VTraits >::KINARGTYPE key)
 {
     SASSERT( pos != NULL );
-    CPair* pNode = GetNext( pos );
-    if( (pos == NULL) || !KTraits::CompareElements( static_cast< CPair* >( pos )->m_key, key ) )
+	SRBTree::CPair* pNode = GetNext( pos );
+    if( (pos == NULL) || !KTraits::CompareElements( static_cast<SRBTree::CPair* >( pos )->m_key, key ) )
     {
         pos = NULL;
     }
@@ -4019,7 +4019,7 @@ typename SRBMultiMap< K, V, KTraits, VTraits >::CPair* SRBMultiMap< K, V, KTrait
 template< typename K, typename V, class KTraits, class VTraits >
 const V& SRBMultiMap< K, V, KTraits, VTraits >::GetNextValueWithKey( typename SRBMultiMap< K, V, KTraits, VTraits >::SPOSITION& pos, typename SRBTree< K, V, KTraits, VTraits >::KINARGTYPE key ) const
 {
-    const CPair* pPair = GetNextWithKey( pos, key );
+    const SRBTree::CPair* pPair = GetNextWithKey( pos, key );
 
     return( pPair->m_value );
 }
@@ -4027,7 +4027,7 @@ const V& SRBMultiMap< K, V, KTraits, VTraits >::GetNextValueWithKey( typename SR
 template< typename K, typename V, class KTraits, class VTraits >
 V& SRBMultiMap< K, V, KTraits, VTraits >::GetNextValueWithKey( typename SRBMultiMap< K, V, KTraits, VTraits >::SPOSITION& pos, typename SRBTree< K, V, KTraits, VTraits >::KINARGTYPE key )
 {
-    CPair* pPair = GetNextWithKey( pos, key );
+	SRBTree::CPair* pPair = GetNextWithKey( pos, key );
 
     return( pPair->m_value );
 }

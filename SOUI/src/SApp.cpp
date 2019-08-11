@@ -101,7 +101,7 @@ public:
     }
 };
 
-void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory)
+void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory) const
 {
 	objFactory->TplRegisterFactory<SWindow>();
 	objFactory->TplRegisterFactory<SPanel>();
@@ -152,7 +152,7 @@ void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SDateTimePicker>();
 }
 
-void SObjectDefaultRegister::RegisterSkins(SObjectFactoryMgr *objFactory) 
+void SObjectDefaultRegister::RegisterSkins(SObjectFactoryMgr *objFactory)  const
 {
 	objFactory->TplRegisterFactory<SSkinImgList>();
 	objFactory->TplRegisterFactory<SSkinImgCenter>();
@@ -166,7 +166,7 @@ void SObjectDefaultRegister::RegisterSkins(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SSKinGroup>();
 }
 
-void SObjectDefaultRegister::RegisterLayouts(SObjectFactoryMgr *objFactory) 
+void SObjectDefaultRegister::RegisterLayouts(SObjectFactoryMgr *objFactory)  const
 {
 	objFactory->TplRegisterFactory<SouiLayout>();
 	objFactory->TplRegisterFactory<SLinearLayout>();
@@ -175,7 +175,7 @@ void SObjectDefaultRegister::RegisterLayouts(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SGridLayout>();
 }
 
-void SObjectDefaultRegister::RegisterInterpolator(SObjectFactoryMgr *objFactory) 
+void SObjectDefaultRegister::RegisterInterpolator(SObjectFactoryMgr *objFactory)  const
 {
 	objFactory->TplRegisterFactory<SLinearInterpolator>();
 	objFactory->TplRegisterFactory<SAccelerateInterpolator>();
@@ -189,7 +189,7 @@ void SObjectDefaultRegister::RegisterInterpolator(SObjectFactoryMgr *objFactory)
 	objFactory->TplRegisterFactory<SPathInterpolator>();
 }
 
-void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory)
+void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory) const
 {
 	objFactory->TplRegisterFactory<SAnimation>();
 	objFactory->TplRegisterFactory<SAnimationSet>();
@@ -198,7 +198,7 @@ void SObjectDefaultRegister::RegisterAnimation(SObjectFactoryMgr * objFactory)
 	objFactory->TplRegisterFactory<SRotateAnimation>();
 	objFactory->TplRegisterFactory<STranslateAnimation>();
 }
-void SObjectDefaultRegister::RegisterValueAnimator(SObjectFactoryMgr * objFactory)
+void SObjectDefaultRegister::RegisterValueAnimator(SObjectFactoryMgr * objFactory) const
 {
 	objFactory->TplRegisterFactory<SIntAnimator>();
 	objFactory->TplRegisterFactory<SFloatAnimator>();
@@ -209,7 +209,7 @@ void SObjectDefaultRegister::RegisterValueAnimator(SObjectFactoryMgr * objFactor
 
 template<> SApplication* SSingleton<SApplication>::ms_Singleton = 0;
 
-SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR pszHostClassName, ISystemObjectRegister & sysObjRegister,BOOL bImeApp)
+SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR pszHostClassName, const ISystemObjectRegister & sysObjRegister,BOOL bImeApp)
     :m_hInst(hInst)
     ,m_RenderFactory(pRendFactory)
     ,m_hMainWnd(NULL)
