@@ -386,14 +386,6 @@ HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
     return S_FALSE;
 }
 
-CSize SButton::GetDesiredSize( int wid, int hei )
-{
-    SASSERT(m_pBgSkin);
-    CSize szRet=m_pBgSkin->GetSkinSize();
-    if(szRet.cx==0 || szRet.cy==0)
-        szRet=__super::GetDesiredSize(wid,hei);
-    return szRet;
-}
 
 void SButton::OnStateChanged( DWORD dwOldState,DWORD dwNewState )
 {
@@ -436,6 +428,24 @@ void SButton::OnNextFrame()
     Invalidate();
 }
 
+//////////////////////////////////////////////////////////////////////////
+SImageButton::SImageButton()
+{
+	m_bDrawFocusRect=FALSE;
+}
+
+
+CSize SImageButton::GetDesiredSize( int wid, int hei )
+{
+	SASSERT(m_pBgSkin);
+	CSize szRet=SButton::GetDesiredSize(wid,hei);
+	CSize szSkin=m_pBgSkin->GetSkinSize();
+	if(GetLayoutParam()->IsWrapContent(Horz))
+		szRet.cx = szSkin.cx;
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy = szSkin.cy;
+	return szRet;
+}
 //////////////////////////////////////////////////////////////////////////
 // Image Control
 // Use src attribute specify a resource id

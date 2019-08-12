@@ -164,17 +164,6 @@ public:
      */
     SButton();
 
-public:
-     /**
-     * SButton::GetDesiredSize
-     * @brief    获得期望的大小值
-     * @param    int wid -- 容器宽度
-	 * @param    int hei -- 容器高度
-     *
-     * Describe  根据内容窗体矩形大小，计算出适合的大小
-     */
-    virtual CSize GetDesiredSize(int wid,int hei);
-
 protected:
     /**
      * SButton::NeedRedrawWhenStateChange
@@ -279,10 +268,19 @@ class SOUI_EXP SImageButton : public SButton
 {
     SOUI_CLASS_NAME(SImageButton, L"imgbtn")
 public:
-    SImageButton()
-    {
-        m_bDrawFocusRect=FALSE;
-    }
+    SImageButton();
+
+protected:
+     /**
+     * SButton::GetDesiredSize
+     * @brief    获得期望的大小值
+     * @param    int wid -- 容器宽度
+	 * @param    int hei -- 容器高度
+     *
+     * Describe  根据内容窗体矩形大小，计算出适合的大小
+     */
+    virtual CSize GetDesiredSize(int wid,int hei);
+
 };
 
 /**
