@@ -138,6 +138,8 @@
 			<File
 				RelativePath="src\helper\SCriticalSection.cpp" />
 			<File
+				RelativePath="src\helper\SSemaphore.cpp" />
+			<File
 				RelativePath="src\gdialpha.cpp" />
 			<File
 				RelativePath="src\pugixml\pugixml.cpp" />
@@ -170,6 +172,8 @@
 				RelativePath="include\helper\SEmptyable.hpp" />
 			<File
 				RelativePath="include\helper\SNoCopyable.hpp" />
+			<File
+				RelativePath="include\helper\SSemaphore.h" />
 			<File
 				RelativePath="include\helper\SSharedPtr.hpp" />
 			<File

@@ -28,6 +28,9 @@ namespace SOUI
 
 	void STaskHandler::start(const char * pszName, Priority priority)
 	{
+		SAutoLock autoLock(m_runningInfoLock);
+
+		::SetWindowTextA(m_hWnd,pszName);
 		SetTimer(100, 10, NULL);
 		m_isRunning = true;
 	}
@@ -70,20 +73,22 @@ namespace SOUI
 
 		m_taskListLock.Enter();
 
-		item.taskID = m_nextTaskID;
-		m_nextTaskID = (m_nextTaskID + 1) & ((std::numeric_limits<long>::max)());
-		std::list<TaskItem>::reverse_iterator it = m_items.rbegin();
-		while (it != m_items.rend())
+		item.taskID = ++m_nextTaskID;
+		if (m_nextTaskID > 100000000) m_nextTaskID = 0;
+
+		SPOSITION pos = m_items.GetTailPosition();
+		while(pos)
 		{
-			if (it->nPriority >= priority)
+			SPOSITION pos2 = pos;
+			const TaskItem & item = m_items.GetPrev(pos);
+			if (item.nPriority >= priority)
 			{
-				m_items.insert(it.base(), item);
+				m_items.InsertAfter(pos2,item);
 				break;
 			}
-			it++;
 		}
-		if (it == m_items.rend())
-			m_items.push_front(item);
+		if(!pos) 
+			m_items.AddHead(item);
 
 		m_taskListLock.Leave();
 		m_itemsSem.notify();
@@ -109,14 +114,11 @@ namespace SOUI
 				SAutoLock autoRunningLock(m_runningLock);
 				SAutoLock autoRuningInfoLock(m_runningInfoLock);
 				m_hasRunningItem = false;
-				m_runingItemInfo.clear();
 				m_runningItem = TaskItem(NULL, 0);
-				if (!m_items.empty())
+				if (!m_items.IsEmpty())
 				{
 					m_hasRunningItem = true;
-					m_runningItem = m_items.front();
-					m_runingItemInfo = m_runningItem.getRunnableInfo();
-					m_items.pop_front();
+					m_runningItem = m_items.RemoveHead();
 				}
 			}
 
@@ -133,7 +135,6 @@ namespace SOUI
 					}
 					SAutoLock autoRuningInfoLock(m_runningInfoLock);
 					m_hasRunningItem = false;
-					m_runingItemInfo.clear();
 					m_runningItem = TaskItem(NULL, 0);
 				}
 				else
@@ -147,10 +148,7 @@ namespace SOUI
 
 	bool STaskHandler::getName(char * pszBuf, int nBufLen)
 	{
-		SAutoLock autoLock(m_taskListLock);
-		if (m_strName.length() >= (size_t)nBufLen)
-			return false;
-		strcpy_s(pszBuf, nBufLen, m_strName.c_str());
+		GetWindowTextA(m_hWnd,pszBuf,nBufLen);
 		return true;
 	}
 
@@ -163,19 +161,15 @@ namespace SOUI
 
 		{
 			SAutoLock autoLock(m_taskListLock);
-			std::list<TaskItem>::iterator iter = m_items.begin();
-
-			while (iter != m_items.end())
+			SPOSITION pos = m_items.GetHeadPosition();
+			while(pos)
 			{
-				TaskItem &item = *iter;
+				SPOSITION prev = pos;
+				TaskItem &item = m_items.GetNext(pos);
 
 				if (item.runnable->getObject() == object)
 				{
-					iter = m_items.erase(iter);
-				}
-				else
-				{
-					++iter;
+					m_items.RemoveAt(prev);
 				}
 			}
 		}
@@ -185,7 +179,6 @@ namespace SOUI
 			if (m_hasRunningItem)
 			{//make sure the running item is not belong to the to be canceled object.
 				m_hasRunningItem = false;
-				m_runingItemInfo.clear();
 				m_runningItem = TaskItem(NULL, 0);
 			}
 		}
@@ -194,18 +187,16 @@ namespace SOUI
 	bool STaskHandler::cancelTask(long taskId)
 	{
 		SAutoLock autoLock(m_taskListLock);
-		std::list<TaskItem>::iterator itemIt = m_items.begin();
-
-		while (itemIt != m_items.end())
+		SPOSITION pos = m_items.GetHeadPosition();
+		while(pos)
 		{
-			if (itemIt->taskID == taskId)
+			SPOSITION prev = pos;
+			TaskItem &item = m_items.GetNext(pos);
+
+			if (item.taskID == taskId)
 			{
-				itemIt = m_items.erase(itemIt);
+				m_items.RemoveAt(prev);
 				return true;
-			}
-			else
-			{
-				++itemIt;
 			}
 		}
 		return false;
@@ -214,17 +205,12 @@ namespace SOUI
 	int STaskHandler::getTaskCount() const
 	{
 		SAutoLock autoLock(m_taskListLock);
-
-		return (int)m_items.size();
+		return (int)m_items.GetCount();
 	}
 
 	bool STaskHandler::getRunningTaskInfo(char *buf, int bufLen)
 	{
-		SAutoLock autoLock(m_runningInfoLock);
-		if (!m_hasRunningItem)
-			return false;
-		strcat_s(buf, bufLen - 1, m_runingItemInfo.c_str());
-		return true;
+		return false;
 	}
 
 }

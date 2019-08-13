@@ -2,14 +2,14 @@
 
 #include <interface/STaskLoop-i.h>
 #include <helper/SSharedPtr.hpp>
-#include <list>
 #include <unknown/obj-ref-impl.hpp>
 #include <helper/SFunctor.hpp>
 #include <core/SNativeWnd.h>
 #include <helper/SSemaphore.h>
+#include <souicoll.h>
 namespace SOUI
 {
-	class STaskHandler : public TObjRefImpl<ITaskLoop>, protected SNativeWnd
+	class SOUI_EXP STaskHandler : public TObjRefImpl<ITaskLoop>, protected SNativeWnd
 	{
 	public:
 		/**
@@ -27,12 +27,6 @@ namespace SOUI
 		*/
 		void start(const char * pszName, Priority priority);
 
-		template<typename TClass, typename Fun>
-		void _start(TClass *obj, Fun fun, Priority priority)
-		{
-			SFunctor0<TClass, Fun>  runnable(this, &STaskHandler::runLoopProc);
-			m_thread.start(&runnable, m_strName, (Thread::ThreadPriority)priority);
-		}
 		/**
 		* Stop task mgr synchronized.
 		*/
@@ -97,17 +91,16 @@ namespace SOUI
 
 		BEGIN_MSG_MAP_EX(STaskHandler)
 			MSG_WM_TIMER(OnTimer)
-			END_MSG_MAP()
+			CHAIN_MSG_MAP(SNativeWnd)
+		END_MSG_MAP()
 
 		mutable SCriticalSection m_taskListLock;
 		SCriticalSection m_runningLock;
-		std::string m_strName;
 		SSemaphore m_itemsSem;
-		std::list<TaskItem> m_items;
+		SList<TaskItem> m_items;
 
 		SCriticalSection m_runningInfoLock;
 		bool m_hasRunningItem;
-		std::string m_runingItemInfo;
 		TaskItem m_runningItem;
 		long m_nextTaskID;
 		bool    m_isRunning;
