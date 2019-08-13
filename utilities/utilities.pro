@@ -48,6 +48,8 @@ HEADERS += include/gdialpha.h \
            include/sobject/sobject-state-i.h \
            include/sobject/sobject-state-impl.hpp \
            include/helper/SCriticalSection.h \
+		   include/helper/SSemaphore.h \
+		   include/helper/SSharedPtr.hpp \
            include/helper/SNoCopyable.hpp \
            include/helper/SEmptyable.hpp \
 		   include/helper/SSharedPtr.hpp \
@@ -62,4 +64,5 @@ SOURCES += src/gdialpha.cpp \
            src/string/tstring.cpp \
            src/sobject/sobject.cpp \
 		   src/helper/SCriticalSection.cpp \
+		   src/helper/SSemaphore.cpp \
 		   src/helper/SAutoBuf.cpp \
