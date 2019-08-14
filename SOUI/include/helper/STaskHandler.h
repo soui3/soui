@@ -11,6 +11,7 @@ namespace SOUI
 {
 	class SOUI_EXP STaskHandler : public TObjRefImpl<ITaskLoop>, protected SNativeWnd
 	{
+		enum{UM_RUN_TASK=(WM_USER+100) };
 	public:
 		/**
 		* Constructor.
@@ -66,44 +67,16 @@ namespace SOUI
 		bool getRunningTaskInfo(char *buf, int bufLen);
 
 	private:
-		class TaskItem
-		{
-		public:
-			TaskItem(IRunnable *runnable_, int nPriority_)
-				: taskID(0)
-				, runnable(runnable_)
-				, nPriority(nPriority_)
-				, semaphore(NULL)
-			{}
-
-			const char *getRunnableInfo()
-			{
-				return runnable->getClassInfo();
-			}
-
-			long taskID;
-			SSharedPtr<IRunnable> runnable;
-			SSemaphore *semaphore;
-			int  nPriority;
-		};
-
-		void OnTimer(UINT_PTR id);
-
+		LRESULT OnRunTask(UINT uMsg, WPARAM wp, LPARAM lp);
 		BEGIN_MSG_MAP_EX(STaskHandler)
-			MSG_WM_TIMER(OnTimer)
+			MESSAGE_HANDLER_EX(UM_RUN_TASK,OnRunTask)
 			CHAIN_MSG_MAP(SNativeWnd)
 		END_MSG_MAP()
 
 		mutable SCriticalSection m_taskListLock;
-		SCriticalSection m_runningLock;
-		SSemaphore m_itemsSem;
-		SList<TaskItem> m_items;
+		SMap<long,IRunnable *> m_items;
 
-		SCriticalSection m_runningInfoLock;
-		bool m_hasRunningItem;
-		TaskItem m_runningItem;
 		long m_nextTaskID;
-		bool    m_isRunning;
 		DWORD   m_dwThreadID;
 	};
 }

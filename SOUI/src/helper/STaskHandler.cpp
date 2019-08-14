@@ -10,15 +10,10 @@ namespace SOUI
 
 	STaskHandler::STaskHandler() :
 		m_taskListLock(),
-		m_runningLock(),
-		m_itemsSem(),
 		m_items(),
-		m_hasRunningItem(false),
-		m_runningItem(NULL, 0),
 		m_nextTaskID(0)
 	{
 		m_dwThreadID = GetCurrentThreadId();
-		Create(_T("task_handler_wnd"), WS_POPUP, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL);
 	}
 
 	STaskHandler::~STaskHandler()
@@ -28,30 +23,34 @@ namespace SOUI
 
 	void STaskHandler::start(const char * pszName, Priority priority)
 	{
-		SAutoLock autoLock(m_runningInfoLock);
-
-		::SetWindowTextA(m_hWnd,pszName);
-		SetTimer(100, 10, NULL);
-		m_isRunning = true;
+		SAutoLock autoLock(m_taskListLock);
+		if (isRunning())
+			return;
+		TCHAR szBuf[101];
+#ifdef _UNICODE
+		int nLen =MultiByteToWideChar(CP_ACP, 0, pszName, strlen(pszName), szBuf, 100);
+		szBuf[nLen] = 0;
+#else
+		strcpy_s(szBuf, 100, pszName);
+#endif
+		Create(szBuf, WS_POPUP, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL);
 	}
 
 	void STaskHandler::stop()
 	{
-		int taskNum = getTaskCount();
-
-		m_itemsSem.notify();
-		KillTimer(100);
-		m_isRunning = false;
+		SAutoLock autoLock(m_taskListLock);
+		if (IsWindow())
+			DestroyWindow();
 	}
 
 	bool STaskHandler::isRunning()
 	{
-		return m_isRunning;
+		return !!IsWindow();
 	}
 
 	long STaskHandler::postTask(const IRunnable *runnable, bool waitUntilDone, int priority)
 	{
-		if (!m_isRunning)
+		if (!isRunning())
 		{
 			return -1;
 		}
@@ -62,92 +61,37 @@ namespace SOUI
 			delete pCloneRunnable;
 			return -1;
 		}
-
-		SSemaphore semaphore;
-		TaskItem item(pCloneRunnable, priority);
-
+		SAutoLock autoLock(m_taskListLock);
 		if (waitUntilDone)
 		{
-			item.semaphore = &semaphore;
+			SendMessage(UM_RUN_TASK, ++m_nextTaskID, (LPARAM)pCloneRunnable);
+			return -1;
 		}
-
-		m_taskListLock.Enter();
-
-		item.taskID = ++m_nextTaskID;
-		if (m_nextTaskID > 100000000) m_nextTaskID = 0;
-
-		SPOSITION pos = m_items.GetTailPosition();
-		while(pos)
+		else
 		{
-			SPOSITION pos2 = pos;
-			const TaskItem & item = m_items.GetPrev(pos);
-			if (item.nPriority >= priority)
-			{
-				m_items.InsertAfter(pos2,item);
-				break;
-			}
+			PostMessage(UM_RUN_TASK, ++m_nextTaskID, (LPARAM)pCloneRunnable);
+			m_items[m_nextTaskID] = pCloneRunnable;
+			return m_nextTaskID;
 		}
-		if(!pos) 
-			m_items.AddHead(item);
-
-		m_taskListLock.Leave();
-		m_itemsSem.notify();
-
-		if (waitUntilDone)
-		{
-			int ret = semaphore.wait();
-
-			if (ret == RETURN_ERROR)
-			{
-			}
-		}
-
-		return item.taskID;
 	}
 
-	void STaskHandler::OnTimer(UINT_PTR timerId)
+	LRESULT STaskHandler::OnRunTask(UINT uMsg, WPARAM wp, LPARAM lp)
 	{
-		while (true)
+		SAutoLock autoLock(m_taskListLock);
+		if (m_items.Lookup((long)wp) != NULL)
 		{
-			{
-				SAutoLock autoLock(m_taskListLock);
-				SAutoLock autoRunningLock(m_runningLock);
-				SAutoLock autoRuningInfoLock(m_runningInfoLock);
-				m_hasRunningItem = false;
-				m_runningItem = TaskItem(NULL, 0);
-				if (!m_items.IsEmpty())
-				{
-					m_hasRunningItem = true;
-					m_runningItem = m_items.RemoveHead();
-				}
-			}
-
-			{
-				SAutoLock autoRunningLock(m_runningLock);
-				if (m_hasRunningItem)
-				{
-					TaskItem item = m_runningItem;
-					item.runnable->run();
-					if (item.semaphore)
-					{
-						//通知一个task执行完毕
-						item.semaphore->notify();
-					}
-					SAutoLock autoRuningInfoLock(m_runningInfoLock);
-					m_hasRunningItem = false;
-					m_runningItem = TaskItem(NULL, 0);
-				}
-				else
-				{
-					break;
-				}
-
-			}
-		}// end of while
+			IRunnable *pRunnable = (IRunnable *)lp;
+			pRunnable->run();
+			delete pRunnable;
+			m_items.RemoveKey((long)wp);
+		}
+		return 0;
 	}
 
 	bool STaskHandler::getName(char * pszBuf, int nBufLen)
 	{
+		if (!isRunning())
+			return false;
 		GetWindowTextA(m_hWnd,pszBuf,nBufLen);
 		return true;
 	}
@@ -158,28 +102,16 @@ namespace SOUI
 		{
 			return;
 		}
-
+		SAutoLock autoLock(m_taskListLock);
+		SPOSITION pos = m_items.GetStartPosition();
+		while (pos)
 		{
-			SAutoLock autoLock(m_taskListLock);
-			SPOSITION pos = m_items.GetHeadPosition();
-			while(pos)
+			SPOSITION posPrev = pos;
+			IRunnable * p = m_items.GetNextValue(pos);
+			if (p->getObject() == object)
 			{
-				SPOSITION prev = pos;
-				TaskItem &item = m_items.GetNext(pos);
-
-				if (item.runnable->getObject() == object)
-				{
-					m_items.RemoveAt(prev);
-				}
-			}
-		}
-		{
-			SAutoLock autoLock(m_runningLock);
-			SAutoLock autoLockRunningInfo(m_runningInfoLock);
-			if (m_hasRunningItem)
-			{//make sure the running item is not belong to the to be canceled object.
-				m_hasRunningItem = false;
-				m_runningItem = TaskItem(NULL, 0);
+				m_items.RemoveAtPos(posPrev);
+				delete p;
 			}
 		}
 	}
@@ -187,15 +119,17 @@ namespace SOUI
 	bool STaskHandler::cancelTask(long taskId)
 	{
 		SAutoLock autoLock(m_taskListLock);
-		SPOSITION pos = m_items.GetHeadPosition();
-		while(pos)
+		SPOSITION pos = m_items.GetStartPosition();
+		while (pos)
 		{
-			SPOSITION prev = pos;
-			TaskItem &item = m_items.GetNext(pos);
-
-			if (item.taskID == taskId)
+			SPOSITION posPrev = pos;
+			long key=0;
+			IRunnable * p=NULL;
+			m_items.GetNextAssoc(pos,key,p);
+			if (key == taskId)
 			{
-				m_items.RemoveAt(prev);
+				m_items.RemoveAtPos(posPrev);
+				delete p;
 				return true;
 			}
 		}
