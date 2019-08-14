@@ -6,8 +6,6 @@ set(render-skia_header
 	stdafx.h
 	drawtext-skia.h
 	render-skia.h
-	render-skia2-i.h
-	render-skia2.h
 	skia2rop2.h
 	patheffect-skia.h
 	pathmeasure-skia.h
@@ -15,7 +13,6 @@ set(render-skia_header
 set(render-skia_src
 	drawtext-skia.cpp
 	render-skia.cpp
-	render-skia2.cpp
 	skia2rop2.cpp
 	patheffect-skia.cpp
 	pathmeasure-skia.cpp
