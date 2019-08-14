@@ -178,4 +178,20 @@ void SSkinGif::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYT
 	}
 }
 
+SIZE SSkinGif::GetSkinSize() const
+{
+	CSize szRet;
+	if (m_pFrames && m_nFrames>0)
+	{
+		szRet.cx = m_pFrames[0].pBmp->Width();
+		szRet.cy = m_pFrames[0].pBmp->Height();
+	}
+	return szRet;
+}
+
+int SSkinGif::GetStates() const
+{
+	return m_nFrames;
+}
+
 }//end of namespace SOUI

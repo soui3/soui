@@ -74,6 +74,11 @@ namespace SOUI
          */    
         int LoadFromMemory(LPVOID pBits,size_t szData);
 
+	public:
+		virtual SIZE GetSkinSize() const override;
+		virtual int GetStates() const  override;
+
+	public:
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"src",OnAttrSrc)   //XML文件中指定的图片资源名,(type:name)
         SOUI_ATTRS_END()
