@@ -39,12 +39,12 @@ namespace SOUI
 	int SState2Index::GetDefIndex(DWORD dwState)
 	{
 		int idx = 0;
-		if (dwState & WndState_Hover)
-			idx = 1;
+		if (dwState & WndState_Disable)
+			idx = 3;
 		else if (dwState & WndState_PushDown)
 			idx = 2;
-		else if (dwState & WndState_Disable)
-			idx= 3;
+		else if (dwState & WndState_Hover)
+			idx= 1;
 		else // WndState_Normal
 			idx = 0;
 		if (dwState & WndState_Check)
