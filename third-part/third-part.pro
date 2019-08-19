@@ -8,6 +8,7 @@ INCLUDEPATH += .
 
 include(../cpy-cfg.pri)
 
+SUBDIRS += skia_new
 SUBDIRS += gtest
 SUBDIRS += png
 SUBDIRS += skia
@@ -19,8 +20,6 @@ SUBDIRS += 7z
 SUBDIRS += scintilla
 SUBDIRS += sqlite3
 SUBDIRS += jsoncpp
-
 CONFIG(c++11){
-#7z需要c11支持
-	
+#7z需要c11支持	
 }

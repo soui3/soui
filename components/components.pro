@@ -21,9 +21,11 @@ SUBDIRS += log4z
 SUBDIRS += resprovider-7zip
 SUBDIRS += TaskLoop
 SUBDIRS += SIpcObject
+SUBDIRS += render-skia_new
 
 imgdecoder-png.depends += zlib png
 render-skia.depends += skia
+render-skia_new.depends += skia_new
 resprovider-zip.depends += zlib utilities
 translator.depends += utilities
 resprovider-7zip.depends += 7z utilities
