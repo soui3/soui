@@ -215,12 +215,11 @@ void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,B
 		SAutoRefPtr<IRegion> rgnClip;
 		if (nCorner > 2)
 		{
+			CRect rcDraw(*prcDraw);
+			rcDraw.right++,rcDraw.bottom++;
 			GETRENDERFACTORY->CreateRegion(&rgnClip);
-			//the last two params of CreateRoundRectRgn are width and height of ellipse, thus we should multiple corner radius by 2.
-			HRGN hRgn = ::CreateRoundRectRgn(prcDraw->left, prcDraw->top, prcDraw->right+1, prcDraw->bottom+1, nCorner*2, nCorner*2);
-			rgnClip->SetRgn(hRgn);
-			DeleteObject(hRgn);
-
+			CPoint ptCorner(nCorner*2,nCorner*2);
+			rgnClip->CombineRoundRect(&rcDraw,ptCorner,RGN_COPY);
 			pRT->PushClipRegion(rgnClip);
 		}
 		CRect rcDraw = *prcDraw;
