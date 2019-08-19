@@ -455,7 +455,7 @@ namespace SOUI
          * @return   BOOL -- true在region内
          * Describe  
          */    
-        virtual BOOL PtInRegion(POINT pt)=0;
+        virtual BOOL PtInRegion(POINT pt) const=0;
 
         /**
          * RectInRegion
@@ -464,7 +464,7 @@ namespace SOUI
          * @return   BOOL -- true在region内
          * Describe  
          */    
-        virtual BOOL RectInRegion(LPCRECT lprect)=0;
+        virtual BOOL RectInRegion(LPCRECT lprect) const=0;
 
         /**
          * GetRgnBox
@@ -473,7 +473,7 @@ namespace SOUI
          * @return   void  
          * Describe  
          */    
-        virtual void GetRgnBox(LPRECT lprect)=0;
+        virtual void GetRgnBox(LPRECT lprect) const=0;
 
         /**
          * IsEmpty
@@ -481,7 +481,7 @@ namespace SOUI
          * @return   BOOL -- true为空
          * Describe  
          */    
-        virtual BOOL IsEmpty()=0;
+        virtual BOOL IsEmpty() const=0;
 
         /**
          * Offset
@@ -500,14 +500,13 @@ namespace SOUI
          */    
         virtual void Clear()=0;
         
-         /**
-         * SetRgn
-         * @brief    从HRGN创建Region
-         * @param    const HRGN hRgn --  HRGN
-         * @return   void
+		/**
+         * IsEqual
+         * @brief    Test whether two region is equal
+         * @return   bool, true-this and testRgn are equal
          * Describe  
          */    
-        virtual void SetRgn(const HRGN hRgn) = 0;
+		virtual BOOL IsEqual(const IRegion * testRgn) const = 0;
     };
 
 	struct IxForm

@@ -237,29 +237,35 @@ namespace SOUI
 
     }
 
-    BOOL SRegion_GDI::PtInRegion( POINT pt )
+    BOOL SRegion_GDI::PtInRegion( POINT pt ) const
     {
         return ::PtInRegion(m_hRgn,pt.x,pt.y);
     }
 
-    BOOL SRegion_GDI::RectInRegion( LPCRECT lprect )
+    BOOL SRegion_GDI::RectInRegion( LPCRECT lprect ) const
     {
         SASSERT(lprect);
         return ::RectInRegion(m_hRgn,lprect);
     }
 
-    void SRegion_GDI::GetRgnBox( LPRECT lprect )
+    void SRegion_GDI::GetRgnBox( LPRECT lprect ) const
     {
         SASSERT(lprect);
         ::GetRgnBox(m_hRgn,lprect);
     }
 
-    BOOL SRegion_GDI::IsEmpty()
+    BOOL SRegion_GDI::IsEmpty() const
     {
         RECT rcBox;
         GetRgnBox(&rcBox);
         return (rcBox.left == rcBox.right) || (rcBox.top== rcBox.bottom);
     }
+
+	BOOL SRegion_GDI::IsEqual(const IRegion * testRgn) const
+	{
+		const SRegion_GDI *pRgnTestGdi = (const SRegion_GDI*)testRgn;
+		return ::EqualRgn(m_hRgn,pRgnTestGdi->m_hRgn);
+	}
 
     void SRegion_GDI::Offset( POINT pt )
     {
@@ -269,11 +275,6 @@ namespace SOUI
     HRGN SRegion_GDI::GetRegion() const
     {
         return m_hRgn;
-    }
-
-    void SRegion_GDI::SetRgn( const HRGN  rgn )
-    {
-        ::CombineRgn(m_hRgn,rgn,NULL,RGN_COPY);
     }
 
     void SRegion_GDI::Clear()

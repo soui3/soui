@@ -351,16 +351,13 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 			p->UpdateChildrenPosition();
 		}
 
-        CRect rc=pWndRgn->GetWindowRect();
-        rc.MoveToXY(0,0);//注意：SWindow将窗口的左上角定义为Rgn的原点。
-        HRGN hRgn =::CreateEllipticRgnIndirect(&rc);
 
         SAutoRefPtr<IRegion> pRgn;
         GETRENDERFACTORY->CreateRegion(&pRgn);
-        pRgn->SetRgn(hRgn);
+		CRect rc=pWndRgn->GetWindowRect();
+		rc.MoveToXY(0,0);//注意：SWindow将窗口的左上角定义为Rgn的原点。
+		pRgn->CombineEllipse(&rc,RGN_COPY);
         pWndRgn->SetWindowRgn(pRgn,TRUE);
-
-        DeleteObject(hRgn);
     }
     
     //行高固定的列表

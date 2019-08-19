@@ -255,15 +255,15 @@ namespace SOUI
 		virtual void CombineEllipse(LPCRECT lprect , int nCombineMode);
 		virtual void CombinePolygon(const POINT * pts, int count, int nPolygonMode, int nCombineMode);
 		virtual void CombineRgn(const IRegion * pRgnSrc,int nCombineMode );
-        virtual void SetRgn(const HRGN rgn);
 
-        virtual BOOL PtInRegion(POINT pt);
-        virtual BOOL RectInRegion(LPCRECT lprect);
-        virtual void GetRgnBox(LPRECT lprect);
-        virtual BOOL IsEmpty();
+        virtual BOOL PtInRegion(POINT pt) const;
+        virtual BOOL RectInRegion(LPCRECT lprect) const;
+        virtual void GetRgnBox(LPRECT lprect) const;
+        virtual BOOL IsEmpty() const;
         virtual void Offset(POINT pt);
         virtual void Clear();
 
+		virtual BOOL IsEqual(const IRegion * testRgn) const;
     protected:
         HRGN GetRegion() const;
         void _CombineRgn(HRGN hRgn,int nCombineMode);

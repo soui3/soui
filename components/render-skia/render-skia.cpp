@@ -1629,38 +1629,19 @@ namespace SOUI
         const SRegion_Skia * pRgnSrc2 = (const SRegion_Skia*)pRgnSrc;
         m_rgn.op(pRgnSrc2->GetRegion(),RGNMODE2SkRgnOP(nCombineMode));
     }
-
-    void SRegion_Skia::SetRgn(const HRGN hRgn)
-    {
-        DWORD dwSize = GetRegionData(hRgn,0,NULL);
-        RGNDATA *pData = (RGNDATA*)malloc(dwSize);
-        GetRegionData(hRgn,dwSize,pData);
-        SkIRect *pRcs= new SkIRect[pData->rdh.nCount];
-        LPRECT pRcsSrc = (LPRECT)pData->Buffer;
-        for(unsigned int i = 0 ;i< pData->rdh.nCount;i++)
-        {
-            pRcs[i].fLeft = pRcsSrc[i].left;
-            pRcs[i].fTop = pRcsSrc[i].top;
-            pRcs[i].fRight = pRcsSrc[i].right;
-            pRcs[i].fBottom = pRcsSrc[i].bottom;
-        }
-        m_rgn.setRects(pRcs,pData->rdh.nCount);
-        free(pData);
-        delete []pRcs;
-    }
     
-	BOOL SRegion_Skia::PtInRegion( POINT pt )
+	BOOL SRegion_Skia::PtInRegion( POINT pt ) const
 	{
         return m_rgn.contains(pt.x,pt.y);
 	}
 
-	BOOL SRegion_Skia::RectInRegion( LPCRECT lprect )
+	BOOL SRegion_Skia::RectInRegion( LPCRECT lprect ) const
 	{
         SASSERT(lprect);
         return m_rgn.intersects(toSkIRect(lprect));
 	}
 
-	void SRegion_Skia::GetRgnBox( LPRECT lprect )
+	void SRegion_Skia::GetRgnBox( LPRECT lprect ) const
 	{
         SASSERT(lprect);
         SkIRect rc=m_rgn.getBounds();
@@ -1670,9 +1651,15 @@ namespace SOUI
         lprect->bottom=rc.bottom();
 	}
 
-	BOOL SRegion_Skia::IsEmpty()
+	BOOL SRegion_Skia::IsEmpty() const
 	{
         return m_rgn.isEmpty();
+	}
+
+	BOOL SRegion_Skia::IsEqual(const IRegion *testRgn) const
+	{
+		const SRegion_Skia * pRgnTest = (const SRegion_Skia*)testRgn;
+		return m_rgn == pRgnTest->m_rgn;
 	}
 
     void SRegion_Skia::Offset( POINT pt )
