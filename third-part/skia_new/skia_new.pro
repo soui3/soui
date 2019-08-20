@@ -18,15 +18,7 @@ win32-msvc*{
     QMAKE_CXXFLAGS += /wd4244 /wd4800 /wd4100
 }
 # Input
-HEADERS += include/android/SkAndroidFrameworkUtils.h \
-           include/android/SkAnimatedImage.h \
-           include/android/SkBitmapRegionDecoder.h \
-           include/android/SkBRDAllocator.h \
-           include/atlastext/SkAtlasTextContext.h \
-           include/atlastext/SkAtlasTextFont.h \
-           include/atlastext/SkAtlasTextRenderer.h \
-           include/atlastext/SkAtlasTextTarget.h \
-           include/c/sk_canvas.h \
+HEADERS +=    include/c/sk_canvas.h \
            include/c/sk_colorspace.h \
            include/c/sk_data.h \
            include/c/sk_image.h \
@@ -176,14 +168,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            include/pathops/SkPathOps.h \
            include/ports/SkCFObject.h \
            include/ports/SkFontConfigInterface.h \
-           include/ports/SkFontMgr_android.h \
-           include/ports/SkFontMgr_directory.h \
-           include/ports/SkFontMgr_empty.h \
-           include/ports/SkFontMgr_fontconfig.h \
-           include/ports/SkFontMgr_FontConfigInterface.h \
-           include/ports/SkFontMgr_fuchsia.h \
-           include/ports/SkFontMgr_indirect.h \
-           include/ports/SkImageGeneratorWIC.h \
            include/ports/SkRemotableFontMgr.h \
            include/ports/SkTypeface_mac.h \
            include/ports/SkTypeface_win.h \
@@ -231,7 +215,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            include/private/SkTo.h \
            include/private/SkVx.h \
            include/private/SkWeakRefCnt.h \
-           include/svg/SkSVGCanvas.h \
            include/utils/Sk3D.h \
            include/utils/SkAnimCodecPlayer.h \
            include/utils/SkBase64.h \
@@ -449,9 +432,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/effects/SkPackBits.h \
            src/effects/SkTrimPE.h \           
            src/image/SkImage_Base.h \
-           src/image/SkImage_Gpu.h \
-           src/image/SkImage_GpuBase.h \
-           src/image/SkImage_GpuYUVA.h \
            src/image/SkImage_Lazy.h \
            src/image/SkReadPixelsRec.h \
            src/image/SkSurface_Base.h \
@@ -471,62 +451,9 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/opts/SkSwizzler_opts.h \
            src/opts/SkUtils_opts.h \
            src/opts/SkXfermode_opts.h \
-           src/pathops/SkAddIntersections.h \
-           src/pathops/SkIntersectionHelper.h \
-           src/pathops/SkIntersections.h \
-           src/pathops/SkLineParameters.h \
-           src/pathops/SkOpAngle.h \
-           src/pathops/SkOpCoincidence.h \
-           src/pathops/SkOpContour.h \
-           src/pathops/SkOpEdgeBuilder.h \
-           src/pathops/SkOpSegment.h \
-           src/pathops/SkOpSpan.h \
-           src/pathops/SkPathOpsBounds.h \
-           src/pathops/SkPathOpsCommon.h \
-           src/pathops/SkPathOpsConic.h \
-           src/pathops/SkPathOpsCubic.h \
-           src/pathops/SkPathOpsCurve.h \
-           src/pathops/SkPathOpsDebug.h \
-           src/pathops/SkPathOpsLine.h \
-           src/pathops/SkPathOpsPoint.h \
-           src/pathops/SkPathOpsQuad.h \
-           src/pathops/SkPathOpsRect.h \
-           src/pathops/SkPathOpsTCurve.h \
-           src/pathops/SkPathOpsTSect.h \
-           src/pathops/SkPathOpsTypes.h \
-           src/pathops/SkPathWriter.h \
-           src/pathops/SkReduceOrder.h \
-           src/pdf/SkBitmapKey.h \
-           src/pdf/SkClusterator.h \
-           src/pdf/SkDeflate.h \
-           src/pdf/SkJpegInfo.h \
-           src/pdf/SkKeyedImage.h \
-           src/pdf/SkPDFBitmap.h \
-           src/pdf/SkPDFDevice.h \
-           src/pdf/SkPDFDocumentPriv.h \
-           src/pdf/SkPDFFont.h \
-           src/pdf/SkPDFFormXObject.h \
-           src/pdf/SkPDFGlyphUse.h \
-           src/pdf/SkPDFGradientShader.h \
-           src/pdf/SkPDFGraphicStackState.h \
-           src/pdf/SkPDFGraphicState.h \
-           src/pdf/SkPDFMakeCIDGlyphWidthsArray.h \
-           src/pdf/SkPDFMakeToUnicodeCmap.h \
-           src/pdf/SkPDFMetadata.h \
-           src/pdf/SkPDFResourceDict.h \
-           src/pdf/SkPDFShader.h \
-           src/pdf/SkPDFSubsetFont.h \
-           src/pdf/SkPDFTag.h \
-           src/pdf/SkPDFType1Font.h \
-           src/pdf/SkPDFTypes.h \
-           src/pdf/SkPDFUnion.h \
-           src/pdf/SkPDFUtils.h \
-           src/pdf/SkUUID.h \
            src/ports/SkFontConfigInterface_direct.h \
            src/ports/SkFontConfigTypeface.h \
            src/ports/SkFontHost_FreeType_common.h \
-           src/ports/SkFontMgr_android_parser.h \
-           src/ports/SkFontMgr_custom.h \
            src/ports/SkOSFile_ios.h \
            src/ports/SkOSLibrary.h \
            src/ports/SkScalerContext_win_dw.h \
@@ -603,7 +530,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/sksl/SkSLStringStream.h \
            src/sksl/SkSLUtil.h \
            src/sksl/spirv.h \
-           src/svg/SkSVGDevice.h \
            src/utils/SkBitSet.h \
            src/utils/SkCallableTraits.h \
            src/utils/SkCanvasStack.h \
@@ -620,13 +546,8 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/utils/SkPatchUtils.h \
            src/utils/SkPolyUtils.h \
            src/utils/SkShadowTessellator.h \
-           src/utils/SkUTF.h \
-           src/xml/SkDOM.h \
-           src/xml/SkXMLParser.h \
-           src/xml/SkXMLWriter.h \
-           src/xps/SkXPSDevice.h \           
+           src/utils/SkUTF.h \     
            include/third_party/skcms/skcms.h \
-           include/utils/mac/SkCGUtils.h \          
            src/shaders/gradients/Sk4fGradientBase.h \
            src/shaders/gradients/Sk4fGradientPriv.h \
            src/shaders/gradients/Sk4fLinearGradient.h \
@@ -698,7 +619,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/sksl/lex/NFAtoDFA.h \
            src/sksl/lex/RegexNode.h \
            src/sksl/lex/RegexParser.h \
-           src/utils/mac/SkUniqueCFRef.h \
            src/utils/win/SkAutoCoInitialize.h \
            src/utils/win/SkDWrite.h \
            src/utils/win/SkDWriteFontFileStream.h \
@@ -709,7 +629,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            src/utils/win/SkObjBase.h \
            src/utils/win/SkTScopedComPtr.h \
            src/utils/win/SkWGL.h \
-           /include/android/SkAndroidFrameworkUtils.h \
            /include/core/SkRefCnt.h \
            /include/core/SkTypes.h \
            /include/core/SkPreConfig.h \
@@ -769,25 +688,16 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/core/SkEncodedImageFormat.h \
            /include/core/SkStream.h \
            /include/core/SkShader.h \
-           /include/core/SkFlattenable.h \
-           /include/gpu/GrTypes.h \
-           /include/gpu/GrConfig.h \
+           /include/core/SkFlattenable.h \         
            /src/core/SkImagePriv.h \
-           /src/core/SkSurfacePriv.h \
-           /src/gpu/GrClip.h \
+           /src/core/SkSurfacePriv.h \         
            /include/core/SkRRect.h \
-           /src/gpu/GrAppliedClip.h \
-           /src/gpu/GrFragmentProcessor.h \
-           /src/gpu/GrProcessor.h \
-           /src/gpu/GrColor.h \
            /include/core/SkColorPriv.h \
            /include/private/SkColorData.h \
            /include/private/SkNx.h \
            /include/private/SkNx_sse.h \
            /include/private/SkNx_neon.h \
            /include/private/SkHalf.h \
-           /src/gpu/GrGpuBuffer.h \
-           /include/gpu/GrGpuResource.h \
            /include/private/GrResourceKey.h \
            /include/private/GrTypesPriv.h \
            /include/core/SkPath.h \
@@ -799,43 +709,16 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/private/GrSharedEnums.h \
            /include/private/SkImageInfoPriv.h \
            /include/private/SkWeakRefCnt.h \
-           /src/gpu/GrBuffer.h \
-           /src/gpu/GrProcessorUnitTest.h \
-           /src/gpu/GrTestUtils.h \
            /include/core/SkPathEffect.h \
            /include/core/SkStrokeRec.h \
            /include/utils/SkRandom.h \
-           /src/gpu/GrFPArgs.h \
-           /src/gpu/GrSamplerState.h \
            /src/shaders/SkShaderBase.h \
            /src/core/SkEffectPriv.h \
            /src/core/SkMask.h \
            /src/core/SkTLazy.h \
-           /src/gpu/GrTextureProxy.h \
-           /src/gpu/GrSurfaceProxy.h \
-           /include/gpu/GrBackendSurface.h \
-           /include/gpu/gl/GrGLTypes.h \
-           /include/gpu/gl/GrGLConfig.h \
-           /include/gpu/mock/GrMockTypes.h \
-           /include/gpu/vk/GrVkTypes.h \
-           /include/gpu/vk/GrVkVulkan.h \
-           /include/third_party/vulkan/vulkan/vulkan_core.h \
-           /include/third_party/vulkan/vulkan/vk_platform.h \
-           /include/third_party/vulkan/vulkan/vulkan_android.h \
            /include/private/GrGLTypesPriv.h \
            /include/private/GrVkTypesPriv.h \
-           /include/gpu/dawn/GrDawnTypes.h \
-           /include/gpu/mtl/GrMtlTypes.h \
            /include/ports/SkCFObject.h \
-           /include/gpu/GrSurface.h \
-           /include/gpu/GrTexture.h \
-           /src/gpu/GrSwizzle.h \
-           /src/gpu/GrShaderVar.h \
-           /src/gpu/GrSurfaceProxyPriv.h \
-           /src/gpu/GrResourceProvider.h \
-           /include/gpu/GrContextOptions.h \
-           /include/gpu/GrDriverBugWorkarounds.h \
-           /include/gpu/GrDriverBugWorkaroundsAutogen.h \
            /src/core/SkScalerContext.h \
            /include/core/SkFont.h \
            /include/core/SkTypeface.h \
@@ -856,7 +739,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/private/SkTHash.h \
            /src/core/SkWriter32.h \
            /include/core/SkPoint3.h \
-           /src/gpu/GrResourceCache.h \
            /src/core/SkMessageBus.h \
            /src/core/SkTDPQueue.h \
            /src/core/SkTSort.h \
@@ -864,95 +746,30 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkTInternalLList.h \
            /src/core/SkTMultiMap.h \
            /src/core/SkTDynamicHash.h \
-           /src/gpu/GrGpuResourceCacheAccess.h \
-           /src/gpu/GrGpuResourcePriv.h \
-           /src/gpu/ops/GrOp.h \
-           /src/gpu/GrNonAtomicRef.h \
-           /src/gpu/GrTracing.h \
            /src/core/SkTraceEvent.h \
            /include/utils/SkEventTracer.h \
            /src/core/SkTraceEventCommon.h \
            /include/utils/SkTraceEventPhase.h \
-           /src/gpu/GrAuditTrail.h \
-           /src/gpu/GrRenderTargetProxy.h \
-           /src/gpu/GrCaps.h \
-           /src/gpu/GrBlend.h \
-           /src/gpu/GrShaderCaps.h \
-           /src/gpu/glsl/GrGLSL.h \
-           /src/gpu/GrXferProcessor.h \
-           /src/gpu/GrProcessorAnalysis.h \
-           /src/gpu/GrScissorState.h \
-           /src/gpu/GrWindowRectsState.h \
-           /src/gpu/GrWindowRectangles.h \
            /src/core/SkClipStack.h \
            /src/core/SkClipOpPriv.h \
-           /src/gpu/GrRenderTargetContext.h \
            /include/core/SkDrawable.h \
-           /src/gpu/GrPaint.h \
-           /src/gpu/GrRenderTargetOpList.h \
            /src/core/SkArenaAlloc.h \
            /src/core/SkStringUtils.h \
-           /src/gpu/GrOpList.h \
-           /src/gpu/GrRenderTask.h \
-           /src/gpu/GrTextureResolveManager.h \
-           /src/gpu/GrDrawingManager.h \
-           /src/gpu/GrBufferAllocPool.h \
-           /src/gpu/GrCpuBuffer.h \
            /src/core/SkSafeMath.h \
-           /src/gpu/GrDeferredUpload.h \
-           /src/gpu/GrPathRenderer.h \
-           /src/gpu/GrPathRendererChain.h \
-           /src/gpu/text/GrTextContext.h \
            /src/core/SkGlyphRun.h \
-           /src/gpu/GrGeometryProcessor.h \
-           /src/gpu/GrPrimitiveProcessor.h \
-           /src/gpu/text/GrDistanceFieldAdjustTable.h \
-           /src/gpu/text/GrTextTarget.h \
-           /src/gpu/GrColorSpaceInfo.h \
-           /src/gpu/GrColorSpaceXform.h \
            /src/core/SkColorSpaceXformSteps.h \
-           /src/gpu/GrDrawOpTest.h \
-           /src/gpu/GrPathRendering.h \
-           /src/gpu/GrPipeline.h \
-           /src/gpu/GrPendingIOResource.h \
-           /src/gpu/GrProcessorSet.h \
-           /src/gpu/GrProgramDesc.h \
            /src/core/SkOpts.h \
            /src/core/SkRasterPipeline.h \
            /src/core/SkXfermodePriv.h \
-           /src/gpu/glsl/GrGLSLFragmentShaderBuilder.h \
-           /src/gpu/glsl/GrGLSLFragmentProcessor.h \
-           /src/gpu/glsl/GrGLSLProgramDataManager.h \
-           /src/gpu/GrResourceHandle.h \
-           /src/gpu/glsl/GrGLSLUniformHandler.h \
-           /src/gpu/glsl/GrGLSLShaderBuilder.h \
-           /src/gpu/GrAllocator.h \
            /src/sksl/SkSLString.h \
            /src/sksl/SkSLDefines.h \
-           /src/gpu/GrUserStencilSettings.h \
-           /src/gpu/effects/GrCoverageSetOpXP.h \
-           /src/gpu/effects/GrDisableColorXP.h \
-           /src/gpu/effects/GrPorterDuffXferProcessor.h \
-           /src/gpu/effects/generated/GrSimpleTextureEffect.h \
-           /src/gpu/GrCoordTransform.h \
-           /src/gpu/geometry/GrRect.h \
-           /src/gpu/ops/GrDrawOp.h \
-           /src/gpu/GrSurfaceContext.h \
-           /src/gpu/GrDataUtils.h \
-           /src/gpu/geometry/GrQuad.h \
            /include/private/SkVx.h \
-           /src/gpu/GrStyle.h \
-           /include/android/SkAnimatedImage.h \
            /include/core/SkYUVASizeInfo.h \
            /include/private/SkEncodedInfo.h \
            /include/core/SkPictureRecorder.h \
            /include/core/SkBBHFactory.h \
            /include/core/SkPixelRef.h \      
-           /include/atlastext/SkAtlasTextContext.h \
-           /include/atlastext/SkAtlasTextRenderer.h \
            /src/core/SkArenaAllocList.h \
-           /include/atlastext/SkAtlasTextTarget.h \
-           /include/atlastext/SkAtlasTextFont.h \
            /src/core/SkGlyphRunPainter.h \
            /src/core/SkDistanceFieldGen.h \
            /src/core/SkTextBlobPriv.h \
@@ -960,27 +777,13 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/core/SkImageFilter.h \
            /include/core/SkTextBlob.h \
            /src/core/SkPaintPriv.h \
-           /src/gpu/GrContextPriv.h \
-           /include/gpu/GrContext.h \
            /include/private/GrRecordingContext.h \
            /include/private/GrImageContext.h \
            /include/private/GrContext_Base.h \
            /include/private/GrSingleOwner.h \
            /include/core/SkUnPreMultiply.h \
-           /src/gpu/text/GrAtlasManager.h \
-           /src/gpu/GrDrawOpAtlas.h \
            /src/core/SkIPoint16.h \
-           /src/gpu/GrOnFlushResourceProvider.h \
-           /src/gpu/GrOpFlushState.h \
-           /src/gpu/GrDeinstantiateProxyTracker.h \
-           /src/gpu/ops/GrMeshDrawOp.h \
-           /src/gpu/GrMesh.h \
-           /src/gpu/GrProxyProvider.h \
-           /src/gpu/GrMemoryPool.h \
-           /src/gpu/SkGr.h \
            /src/core/SkBlendModePriv.h \
-           /src/gpu/ops/GrAtlasTextOp.h \
-           /src/gpu/text/GrTextBlob.h \
            /src/core/SkDescriptor.h \
            /src/core/SkMaskFilterBase.h \
            /src/core/SkRectPriv.h \
@@ -989,8 +792,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkStrike.h \
            /include/core/SkFontMetrics.h \
            /src/core/SkStrikeSpec.h \
-           /src/gpu/text/GrStrikeCache.h \          
-           /src/gpu/GrGlyph.h \
            /src/c/sk_types_priv.h \
            /include/c/sk_types.h \
            /include/c/sk_shader.h \
@@ -1080,11 +881,7 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkMaskBlurFilter.h \
            /src/core/SkBlurPriv.h \
            /src/core/SkGpuBlurUtils.h \
-           /src/gpu/effects/GrTextureDomain.h \
            /src/core/SkRRectPriv.h \
-           /src/gpu/GrRecordingContextPriv.h \
-           /src/gpu/effects/generated/GrCircleBlurFragmentProcessor.h \
-           /src/gpu/effects/generated/GrRRectBlurEffect.h \
            /include/effects/SkBlurMaskFilter.h \
            /src/core/SkPathPriv.h \
            /src/core/SkMaskCache.h \
@@ -1098,10 +895,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/pathops/SkPathOps.h \
            /src/core/SkClipStackDevice.h \
            /src/core/SkColorFilterPriv.h \
-           /src/gpu/effects/generated/GrMixerEffect.h \
-           /src/gpu/effects/GrSRGBEffect.h \
-           /src/gpu/effects/GrSkSLFP.h \
-           /src/gpu/GrSkSLFPFactoryCache.h \
            /src/sksl/SkSLCompiler.h \
            /src/sksl/SkSLByteCode.h \
            /src/sksl/SkSLCFGGenerator.h \
@@ -1128,12 +921,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/sksl/ir/SkSLBoolLiteral.h \
            /src/sksl/ir/SkSLFloatLiteral.h \
            /src/sksl/ir/SkSLIntLiteral.h \
-           /src/gpu/vk/GrVkCaps.h \
-           /src/gpu/vk/GrVkStencilAttachment.h \
-           /src/gpu/GrStencilAttachment.h \
-           /src/gpu/vk/GrVkImage.h \
-           /src/gpu/vk/GrVkImageLayout.h \
-           /src/gpu/vk/GrVkResource.h \
            /src/sksl/SkSLPipelineStageCodeGenerator.h \
            /src/sksl/SkSLGLSLCodeGenerator.h \
            /src/sksl/SkSLCodeGenerator.h \
@@ -1171,7 +958,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkModeColorFilter.h \
            /include/effects/SkColorMatrix.h \
            /src/core/SkColorFilter_Matrix.h \
-           /src/gpu/effects/generated/GrColorMatrixFragmentProcessor.h \
            /include/core/SkContourMeasure.h \
            /src/core/SkGeometry.h \
            /src/core/SkPathMeasurePriv.h \
@@ -1189,16 +975,8 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/core/SkDataTable.h \
            /include/private/SkDeferredDisplayList.h \
            /include/core/SkSurfaceCharacterization.h \
-           /include/gpu/GrContextThreadSafeProxy.h \
-           /src/gpu/ccpr/GrCCPerOpListPaths.h \
-           /src/gpu/ccpr/GrCCClipPath.h \
-           /src/gpu/ccpr/GrCCAtlas.h \
            /include/core/SkDeferredDisplayListRecorder.h \
            /include/core/SkPromiseImageTexture.h \
-           /src/image/SkImage_Gpu.h \
-           /src/image/SkImage_GpuBase.h \
-           /src/image/SkImage_GpuYUVA.h \
-           /src/image/SkSurface_Gpu.h \
            /include/core/SkPathMeasure.h \
            /src/shaders/SkLocalMatrixShader.h \
            /include/core/SkDocument.h \
@@ -1222,11 +1000,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkFontStream.h \
            /src/core/SkGaussFilter.h \
            /src/pathops/SkPathOpsQuad.h \
-           /src/gpu/text/GrTextBlobCache.h \
-           /src/gpu/GrFixedClip.h \
-           /src/gpu/GrRenderTargetContextPriv.h \
-           /src/gpu/effects/GrGaussianConvolutionFragmentProcessor.h \
-           /src/gpu/effects/GrMatrixConvolutionEffect.h \
            /include/core/SkGraphics.h \
            /include/core/SkTime.h \
            /src/core/SkTypefaceCache.h \
@@ -1239,10 +1012,7 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/core/SkMatrixImageFilter.h \
            /src/core/SkValidationUtils.h \
            /src/image/SkReadPixelsRec.h \
-           /src/gpu/effects/GrXfermodeFragmentProcessor.h \
-           /src/gpu/text/GrSDFMaskFilter.h \
            /src/core/SkMiniRecorder.h \
-           /src/gpu/effects/generated/GrConstColorProcessor.h \
            /include/core/SkMultiPictureDraw.h \
            /src/core/SkNormalFlatSource.h \
            /src/core/SkNormalSource.h \
@@ -1284,11 +1054,7 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/utils/SkMatrix22.h \
            /src/core/SkScanPriv.h \
            /src/core/SkSharedMutex.h \
-           /src/gpu/SkGpuDevice.h \
-           /src/gpu/GrClipStackClip.h \
-           /src/gpu/GrReducedClip.h \
            /src/core/SkTLList.h \
-           /src/gpu/GrContextThreadSafeProxyPriv.h \
            /include/core/SkSwizzle.h \
            /src/sfnt/SkOTTable_OS_2.h \
            /src/sfnt/SkOTTable_OS_2_V0.h \
@@ -1302,7 +1068,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/sfnt/SkOTTable_OS_2_VA.h \
            /src/core/SkVM.h \
            /src/core/SkLRUCache.h \
-           /src/gpu/effects/GrCustomXfermode.h \
            /src/core/SkYUVMath.h \
            /src/core/SkYUVPlanesCache.h \
            /include/effects/Sk1DPathEffect.h \
@@ -1319,7 +1084,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/effects/SkBlurDrawLooper.h \
            /include/effects/SkLayerDrawLooper.h \
            /include/effects/SkLumaColorFilter.h \
-           /src/gpu/effects/generated/GrLumaColorFilterEffect.h \
            /src/effects/SkOpPE.h \
            /include/effects/SkOpPathEffect.h \
            /include/effects/SkOverdrawColorFilter.h \
@@ -1331,136 +1095,13 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/effects/SkTrimPE.h \
            /include/ports/SkFontMgr_indirect.h \
            /include/ports/SkRemotableFontMgr.h \
-           /src/gpu/GrAHardwareBufferImageGenerator.h \
            /src/core/SkExchange.h \
-           /src/gpu/GrAHardwareBufferUtils.h \
-           /src/gpu/GrResourceProviderPriv.h \
-           /src/gpu/gl/GrGLDefines.h \
-           /include/gpu/vk/GrVkExtensions.h \
-           /src/gpu/vk/GrVkGpu.h \
-           /include/gpu/vk/GrVkBackendContext.h \
-           /include/gpu/vk/GrVkMemoryAllocator.h \
-           /src/gpu/GrGpu.h \
-           /src/gpu/GrGpuCommandBuffer.h \
-           /src/gpu/GrSamplePatternDictionary.h \
-           /src/gpu/GrTextureProducer.h \
-           /src/gpu/GrRenderTarget.h \
-           /src/gpu/GrRenderTargetPriv.h \
-           /src/gpu/glsl/GrGLSLVarying.h \
-           /src/gpu/GrSemaphore.h \
-           /include/gpu/GrBackendSemaphore.h \
-           /src/gpu/GrStencilSettings.h \
            /src/utils/SkJSONWriter.h \
-           /src/gpu/dawn/GrDawnUtil.h \
-           /src/gpu/mtl/GrMtlCppUtil.h \
-           /src/gpu/GrBackendTextureImageGenerator.h \
-           /src/gpu/GrTexturePriv.h \
-           /src/gpu/GrTextureProxyPriv.h \
-           /src/gpu/gl/GrGLTexture.h \
-           /src/gpu/GrBitmapTextureMaker.h \
-           /src/gpu/GrTextureMaker.h \
-           /src/gpu/GrBlurUtils.h \
-           /src/gpu/GrSoftwarePathRenderer.h \
-           /src/gpu/GrDeferredProxyUploader.h \
-           /src/gpu/GrSWMaskHelper.h \
-           /src/gpu/effects/GrConvexPolyEffect.h \
-           /src/gpu/effects/GrRRectEffect.h \
-           /src/gpu/glsl/GrGLSLColorSpaceXformHelper.h \
-           /src/gpu/GrShaderUtils.h \
-           /src/gpu/ccpr/GrCoverageCountingPathRenderer.h \
-           /src/gpu/ccpr/GrCCPerFlushResources.h \
-           /src/gpu/ccpr/GrCCFiller.h \
-           /src/gpu/GrTessellator.h \
-           /src/gpu/ccpr/GrCCCoverageProcessor.h \
-           /src/gpu/glsl/GrGLSLGeometryProcessor.h \
-           /src/gpu/ccpr/GrCCFillGeometry.h \
-           /src/gpu/ccpr/GrCCPathProcessor.h \
-           /src/gpu/ccpr/GrOctoBounds.h \
-           /src/gpu/ccpr/GrCCStroker.h \
-           /src/gpu/ccpr/GrCCStrokeGeometry.h \
-           /src/gpu/ccpr/GrStencilAtlasOp.h \
-           /src/gpu/GrBaseContextPriv.h \
-           /src/gpu/GrSurfaceContextPriv.h \
-           /src/gpu/GrSurfacePriv.h \
-           /src/gpu/GrTextureContext.h \
-           /src/gpu/effects/generated/GrConfigConversionEffect.h \
-           /src/gpu/GrDefaultGeoProcFactory.h \
-           /src/gpu/glsl/GrGLSLUtil.h \
-           /src/gpu/GrDistanceFieldGenFromVector.h \
-           /src/gpu/geometry/GrPathUtils.h \
-           /src/core/SkTTopoSort.h \
-           /src/gpu/GrResourceAllocator.h \
-           /src/gpu/GrTextureOpList.h \
-           /src/gpu/GrTextureResolveRenderTask.h \
-           /src/gpu/GrRectanizer.h \
-           /src/gpu/effects/generated/GrOverrideInputFragmentProcessor.h \
-           /src/gpu/effects/generated/GrPremulInputFragmentProcessor.h \
-           /src/gpu/GrImageContextPriv.h \
-           /src/gpu/GrImageTextureMaker.h \
-           /src/gpu/effects/GrYUVtoRGBEffect.h \
-           /src/image/SkImage_Lazy.h \
-           /src/gpu/gl/GrGLGpu.h \
-           /src/gpu/gl/GrGLContext.h \
-           /src/gpu/gl/GrGLCaps.h \
-           /src/gpu/gl/GrGLStencilAttachment.h \
-           /src/gpu/gl/GrGLIRect.h \
-           /src/gpu/gl/GrGLPathRendering.h \
-           /src/gpu/gl/GrGLProgram.h \
-           /src/gpu/gl/GrGLProgramDataManager.h \
-           /src/gpu/gl/GrGLRenderTarget.h \
-           /src/gpu/gl/GrGLVertexArray.h \
-           /src/gpu/mock/GrMockGpu.h \
-           /src/gpu/mtl/GrMtlTrampoline.h \
-           /src/gpu/dawn/GrDawnGpu.h \
-           /src/gpu/GrPath.h \
-           /src/gpu/GrPathProcessor.h \
-           /src/gpu/gl/GrGLVaryingHandler.h \
-           /src/gpu/ops/GrAAConvexPathRenderer.h \
-           /src/gpu/ops/GrAAHairLinePathRenderer.h \
-           /src/gpu/ops/GrAALinearizingConvexPathRenderer.h \
-           /src/gpu/ops/GrDashLinePathRenderer.h \
-           /src/gpu/ops/GrDefaultPathRenderer.h \
-           /src/gpu/ops/GrPathStencilSettings.h \
-           /src/gpu/ops/GrSmallPathRenderer.h \
-           /src/gpu/ops/GrStencilAndCoverPathRenderer.h \
-           /src/gpu/ops/GrTessellatingPathRenderer.h \
-           /src/gpu/ops/GrStencilPathOp.h \
-           /src/gpu/GrTextureProxyCacheAccess.h \
-           /src/gpu/GrTextureRenderTargetProxy.h \
-           /src/gpu/GrRectanizer_pow2.h \
-           /src/gpu/GrRectanizer_skyline.h \
-           /src/gpu/GrStencilClip.h \
-           /src/gpu/effects/generated/GrAARectEffect.h \
+           /src/core/SkTTopoSort.h \           
+           /src/image/SkImage_Lazy.h \           
            /include/private/SkShadowFlags.h \
-           /include/utils/SkShadowUtils.h \
-           /src/gpu/effects/GrBicubicEffect.h \
-           /src/gpu/geometry/GrQuadUtils.h \
-           /src/gpu/ops/GrClearOp.h \
-           /src/gpu/ops/GrClearStencilClipOp.h \
-           /src/gpu/ops/GrDebugMarkerOp.h \
-           /src/gpu/ops/GrDrawAtlasOp.h \
-           /src/gpu/ops/GrDrawVerticesOp.h \
-           /src/gpu/ops/GrDrawableOp.h \
-           /src/gpu/ops/GrFillRRectOp.h \
-           /src/gpu/ops/GrFillRectOp.h \
-           /src/gpu/ops/GrLatticeOp.h \
-           /src/gpu/ops/GrOvalOpFactory.h \
-           /src/gpu/ops/GrRegionOp.h \
-           /src/gpu/ops/GrSemaphoreOp.h \
-           /src/gpu/ops/GrShadowRRectOp.h \
-           /src/gpu/ops/GrStrokeRectOp.h \
-           /src/gpu/ops/GrTextureOp.h \
-           /src/gpu/ops/GrTransferFromOp.h \
-           /src/gpu/ops/GrCopySurfaceOp.h \
+           /include/utils/SkShadowUtils.h \       
            /src/core/SkScopeExit.h \
-           /src/gpu/GrVertexWriter.h \
-           /src/gpu/GrTextureAdjuster.h \
-           /src/gpu/GrYUVProvider.h \
-           /src/gpu/GrRenderTargetProxyPriv.h \
-           /include/encode/SkJpegEncoder.h \
-           /include/encode/SkEncoder.h \
-           /include/encode/SkPngEncoder.h \
-           /include/encode/SkWebpEncoder.h \
            /src/images/SkImageEncoderPriv.h \
            /src/images/SkImageEncoderFns.h \
            /src/images/SkJPEGWriteUtility.h \
@@ -1484,36 +1125,11 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/pathops/SkPathOpsCommon.h \
            /src/pathops/SkPathOpsTSect.h \
            /src/pathops/SkReduceOrder.h \
-           /src/pdf/SkClusterator.h \
-           /src/pdf/SkDeflate.h \
            /include/docs/SkPDFDocument.h \
-           /src/pdf/SkKeyedImage.h \
-           /src/pdf/SkBitmapKey.h \
-           /src/pdf/SkPDFBitmap.h \
-           /src/pdf/SkPDFDocumentPriv.h \
-           /src/pdf/SkPDFMetadata.h \
-           /src/pdf/SkPDFTypes.h \
-           /src/pdf/SkUUID.h \
-           /src/pdf/SkPDFTag.h \
-           /src/pdf/SkPDFUtils.h \
            /src/utils/SkFloatToDecimal.h \
-           /src/pdf/SkPDFDevice.h \
-           /src/pdf/SkPDFGraphicStackState.h \
-           /src/pdf/SkPDFFont.h \
-           /src/pdf/SkPDFGlyphUse.h \
            /src/utils/SkBitSet.h \
-           /src/pdf/SkPDFFormXObject.h \
-           /src/pdf/SkPDFGraphicState.h \
-           /src/pdf/SkPDFResourceDict.h \
-           /src/pdf/SkPDFShader.h \
-           /src/pdf/SkPDFGradientShader.h \
-           /src/pdf/SkPDFMakeCIDGlyphWidthsArray.h \
-           /src/pdf/SkPDFMakeToUnicodeCmap.h \
-           /src/pdf/SkPDFSubsetFont.h \
-           /src/pdf/SkPDFType1Font.h \
            /include/core/SkMilestone.h \
            /src/utils/SkCallableTraits.h \
-           /src/pdf/SkPDFUnion.h \
            /include/ports/SkFontConfigInterface.h \
            /src/ports/SkFontConfigInterface_direct.h \
            /src/ports/SkFontHost_FreeType_common.h \
@@ -1568,9 +1184,7 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/utils/win/SkDWriteGeometrySink.h \
            /src/sfnt/SkOTTable_fvar.h \
            /src/sfnt/SkOTTable_hhea.h \
-           /src/sfnt/SkOTTable_post.h \
-           /src/gpu/effects/generated/GrComposeLerpEffect.h \
-           /src/gpu/effects/generated/GrComposeLerpRedEffect.h \
+           /src/sfnt/SkOTTable_post.h \          
            /src/sksl/SkSLByteCodeGenerator.h \
            /src/sksl/SkSLMemoryLayout.h \
            /src/sksl/ir/SkSLBreakStatement.h \
@@ -1624,7 +1238,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/utils/SkMultiPictureDocumentPriv.h \
            /include/utils/SkNullCanvas.h \
            /src/utils/SkShadowTessellator.h \
-           /src/gpu/effects/generated/GrBlurredEdgeFragmentProcessor.h \
            /include/utils/SkTextUtils.h \
            src/utils/SkWhitelistChecksums.inc \
            /src/xml/SkXMLParser.h \
@@ -1633,7 +1246,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/xps/SkXPSDevice.h \
            /include/docs/SkXPSDocument.h \
            /include/effects/SkAlphaThresholdFilter.h \
-           /src/gpu/effects/generated/GrAlphaThresholdFragmentProcessor.h \
            /include/effects/SkArithmeticImageFilter.h \
            /include/effects/SkXfermodeImageFilter.h \
            /include/effects/SkBlurImageFilter.h \
@@ -1650,96 +1262,12 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /include/effects/SkPaintImageFilter.h \
            /include/effects/SkPictureImageFilter.h \
            /include/effects/SkTileImageFilter.h \
-           /src/gpu/effects/generated/GrMagnifierEffect.h \
-           /src/gpu/ccpr/GrCCPathCache.h \
-           /src/gpu/ccpr/GrCCClipProcessor.h \
-           /src/gpu/ccpr/GrCCConicShader.h \
-           /src/gpu/ccpr/GrCCCubicShader.h \
-           /src/gpu/ccpr/GrCCQuadraticShader.h \
-           /src/gpu/ccpr/GrCCDrawPathsOp.h \
-           /src/gpu/ccpr/GrCCSTLList.h \
-           /src/gpu/ccpr/GrGSCoverageProcessor.h \
-           /src/gpu/ccpr/GrSampleMaskProcessor.h \
-           /src/gpu/ccpr/GrVSCoverageProcessor.h \
-           /src/gpu/dawn/GrDawnBuffer.h \
-           /src/gpu/dawn/GrDawnCaps.h \
-           /src/gpu/dawn/GrDawnGpuCommandBuffer.h \
-           /src/gpu/dawn/GrDawnRenderTarget.h \
-           /src/gpu/dawn/GrDawnStencilAttachment.h \
-           /src/gpu/dawn/GrDawnTexture.h \
-           /src/gpu/dawn/GrDawnProgramBuilder.h \
-           /src/gpu/dawn/GrDawnProgramDataManager.h \
-           /src/gpu/dawn/GrDawnUniformHandler.h \
-           /src/gpu/dawn/GrDawnVaryingHandler.h \
-           /src/gpu/dawn/GrDawnTextureRenderTarget.h \
-           /src/gpu/effects/GrBezierEffect.h \
-           /src/gpu/effects/GrBitmapTextGeoProc.h \
-           /src/gpu/effects/GrAtlasedShaderHelpers.h \
-           /src/gpu/glsl/GrGLSLBlend.h \
-           /src/gpu/effects/GrDistanceFieldGeoProc.h \
-           /src/gpu/effects/GrOvalEffect.h \
-           /src/gpu/effects/generated/GrCircleEffect.h \
-           /src/gpu/effects/generated/GrEllipseEffect.h \
-           /src/gpu/effects/GrShadowGeoProc.h \
            /src/sksl/SkSLCPP.h \
-           /include/gpu/gl/GrGLAssembleHelpers.h \
-           /include/gpu/gl/GrGLAssembleInterface.h \
-           /src/gpu/gl/GrGLBuffer.h \
-           /src/gpu/gl/GrGLGLSL.h \
-           /src/gpu/gl/GrGLGpuCommandBuffer.h \
-           /src/gpu/gl/GrGLSemaphore.h \
-           /src/gpu/gl/GrGLTextureRenderTarget.h \
-           /src/gpu/gl/builders/GrGLShaderStringBuilder.h \
-           /src/gpu/gl/builders/GrGLProgramBuilder.h \
-           /src/gpu/gl/GrGLUniformHandler.h \
-           /src/gpu/gl/GrGLPath.h \
-           /src/gpu/gradients/GrGradientBitmapCache.h \
-           /src/gpu/gradients/GrGradientShader.h \
            /src/shaders/gradients/SkGradientShaderPriv.h \
            /src/shaders/gradients/SkLinearGradient.h \
            /src/shaders/gradients/SkRadialGradient.h \
            /src/shaders/gradients/SkSweepGradient.h \
            /src/shaders/gradients/SkTwoPointConicalGradient.h \
-           /src/gpu/gradients/generated/GrClampedGradientEffect.h \
-           /src/gpu/gradients/generated/GrTiledGradientEffect.h \
-           /src/gpu/gradients/generated/GrLinearGradientLayout.h \
-           /src/gpu/gradients/generated/GrRadialGradientLayout.h \
-           /src/gpu/gradients/generated/GrSweepGradientLayout.h \
-           /src/gpu/gradients/generated/GrTwoPointConicalGradientLayout.h \
-           /src/gpu/gradients/generated/GrDualIntervalGradientColorizer.h \
-           /src/gpu/gradients/generated/GrSingleIntervalGradientColorizer.h \
-           /src/gpu/gradients/generated/GrTextureGradientColorizer.h \
-           /src/gpu/gradients/generated/GrUnrolledBinaryGradientColorizer.h \
-           /src/gpu/mock/GrMockCaps.h \
-           /src/gpu/mock/GrMockBuffer.h \
-           /src/gpu/mock/GrMockGpuCommandBuffer.h \
-           /src/gpu/mock/GrMockStencilAttachment.h \
-           /src/gpu/mock/GrMockTexture.h \
-           /src/gpu/ops/GrSimpleMeshDrawOpHelper.h \
-           /src/gpu/ops/GrAAConvexTessellator.h \
-           /src/gpu/ops/GrDashOp.h \
-           /src/gpu/ops/GrDrawPathOp.h \
-           /src/gpu/geometry/GrQuadBuffer.h \
-           /src/gpu/ops/GrQuadPerEdgeAA.h \
-           /src/gpu/vk/GrVkAMDMemoryAllocator.h \
-           /src/gpu/vk/GrVkTransferBuffer.h \
-           /src/gpu/vk/GrVkBufferView.h \
-           /src/gpu/GrUtil.h \
-           /src/gpu/vk/GrVkTexture.h \
-           /src/gpu/vk/GrVkCommandBuffer.h \
-           /src/gpu/vk/GrVkCommandPool.h \
-           /src/gpu/vk/GrVkGpuCommandBuffer.h \
-           /src/gpu/GrTRecorder.h \
-           /src/gpu/vk/GrVkFramebuffer.h \
-           /src/gpu/vk/GrVkImageView.h \
-           /src/gpu/vk/GrVkPipeline.h \
-           /src/gpu/vk/GrVkRenderTarget.h \
-           /src/gpu/vk/GrVkDescriptorSet.h \
-           /src/gpu/vk/GrVkTextureRenderTarget.h \
-           /include/gpu/GrBackendDrawableInfo.h \
-           /src/gpu/vk/GrVkUniformBuffer.h \
-           /src/gpu/GrPersistentCacheUtils.h \
-           /src/gpu/vk/GrVkSecondaryCBDrawContext.h \
            /src/shaders/gradients/Sk4fGradientBase.h \
            /src/shaders/gradients/Sk4fGradientPriv.h \
            /src/shaders/gradients/Sk4fLinearGradient.h \
@@ -1753,7 +1281,6 @@ HEADERS += include/android/SkAndroidFrameworkUtils.h \
            /src/sksl/lex/RegexParser.h \
            /src/utils/SkFloatUtils.h \
            /src/utils/win/SkWGL.h \
-           /src/gpu/GrAutoLocaleSetter.h
 
 SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/c/sk_effects.cpp \
@@ -1974,108 +1501,10 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/effects/SkTrimPathEffect.cpp \
            src/fonts/SkFontMgr_indirect.cpp \
            src/fonts/SkRemotableFontMgr.cpp \
-           src/gpu/GrAHardwareBufferImageGenerator.cpp \
-           src/gpu/GrAHardwareBufferUtils.cpp \
-           src/gpu/GrAuditTrail.cpp \
-           src/gpu/GrBackendSurface.cpp \
-           src/gpu/GrBackendTextureImageGenerator.cpp \
-           src/gpu/GrBitmapTextureMaker.cpp \
-           src/gpu/GrBlurUtils.cpp \
-           src/gpu/GrBufferAllocPool.cpp \
-           src/gpu/GrCaps.cpp \
-           src/gpu/GrClipStackClip.cpp \
-           src/gpu/GrColorSpaceInfo.cpp \
-           src/gpu/GrColorSpaceXform.cpp \
-           src/gpu/GrContext.cpp \
-           src/gpu/GrContext_Base.cpp \
-           src/gpu/GrContextPriv.cpp \
-           src/gpu/GrContextThreadSafeProxy.cpp \
-           src/gpu/GrDataUtils.cpp \
-           src/gpu/GrDDLContext.cpp \
-           src/gpu/GrDefaultGeoProcFactory.cpp \
-           src/gpu/GrDeinstantiateProxyTracker.cpp \
-           src/gpu/GrDistanceFieldGenFromVector.cpp \
-           src/gpu/GrDrawingManager.cpp \
-           src/gpu/GrDrawOpAtlas.cpp \
-           src/gpu/GrDrawOpTest.cpp \
-           src/gpu/GrDriverBugWorkarounds.cpp \
-           src/gpu/GrFixedClip.cpp \
-           src/gpu/GrFragmentProcessor.cpp \
-           src/gpu/GrGpu.cpp \
-           src/gpu/GrGpuBuffer.cpp \
-           src/gpu/GrGpuCommandBuffer.cpp \
-           src/gpu/GrGpuResource.cpp \
-           src/gpu/GrImageContext.cpp \
-           src/gpu/GrImageTextureMaker.cpp \
-           src/gpu/GrLegacyDirectContext.cpp \
-           src/gpu/GrMemoryPool.cpp \
-           src/gpu/GrOnFlushResourceProvider.cpp \
-           src/gpu/GrOpFlushState.cpp \
-           src/gpu/GrOpList.cpp \
-           src/gpu/GrPaint.cpp \
-           src/gpu/GrPath.cpp \
-           src/gpu/GrPathProcessor.cpp \
-           src/gpu/GrPathRenderer.cpp \
-           src/gpu/GrPathRendererChain.cpp \
-           src/gpu/GrPathRendering.cpp \
-           src/gpu/GrPathRendering_none.cpp \
-           src/gpu/GrPipeline.cpp \
-           src/gpu/GrPrimitiveProcessor.cpp \
-           src/gpu/GrProcessor.cpp \
-           src/gpu/GrProcessorAnalysis.cpp \
-           src/gpu/GrProcessorSet.cpp \
-           src/gpu/GrProcessorUnitTest.cpp \
-           src/gpu/GrProgramDesc.cpp \
-           src/gpu/GrProxyProvider.cpp \
-           src/gpu/GrRecordingContext.cpp \
-           src/gpu/GrRectanizer_pow2.cpp \
-           src/gpu/GrRectanizer_skyline.cpp \
-           src/gpu/GrReducedClip.cpp \
-           src/gpu/GrRenderTarget.cpp \
-           src/gpu/GrRenderTargetContext.cpp \
-           src/gpu/GrRenderTargetOpList.cpp \
-           src/gpu/GrRenderTargetProxy.cpp \
-           src/gpu/GrRenderTask.cpp \
-           src/gpu/GrResourceAllocator.cpp \
-           src/gpu/GrResourceCache.cpp \
-           src/gpu/GrResourceProvider.cpp \
-           src/gpu/GrSamplePatternDictionary.cpp \
-           src/gpu/GrShaderCaps.cpp \
-           src/gpu/GrShaderUtils.cpp \
-           src/gpu/GrShaderVar.cpp \
-           src/gpu/GrSoftwarePathRenderer.cpp \
-           src/gpu/GrStencilAttachment.cpp \
-           src/gpu/GrStencilSettings.cpp \
-           src/gpu/GrStyle.cpp \
-           src/gpu/GrSurface.cpp \
-           src/gpu/GrSurfaceContext.cpp \
-           src/gpu/GrSurfaceProxy.cpp \
-           src/gpu/GrSwizzle.cpp \
-           src/gpu/GrSWMaskHelper.cpp \
-           src/gpu/GrTessellator.cpp \
-           src/gpu/GrTestUtils.cpp \
-           src/gpu/GrTexture.cpp \
-           src/gpu/GrTextureAdjuster.cpp \
-           src/gpu/GrTextureContext.cpp \
-           src/gpu/GrTextureMaker.cpp \
-           src/gpu/GrTextureOpList.cpp \
-           src/gpu/GrTextureProducer.cpp \
-           src/gpu/GrTextureProxy.cpp \
-           src/gpu/GrTextureRenderTargetProxy.cpp \
-           src/gpu/GrTextureResolveRenderTask.cpp \
-           src/gpu/GrXferProcessor.cpp \
-           src/gpu/GrYUVProvider.cpp \
-           src/gpu/SkGpuDevice.cpp \
-           src/gpu/SkGpuDevice_drawTexture.cpp \
-           src/gpu/SkGr.cpp \
            src/image/SkImage.cpp \
-           src/image/SkImage_Gpu.cpp \
-           src/image/SkImage_GpuBase.cpp \
-           src/image/SkImage_GpuYUVA.cpp \
            src/image/SkImage_Lazy.cpp \
            src/image/SkImage_Raster.cpp \
            src/image/SkSurface.cpp \
-           src/image/SkSurface_Gpu.cpp \
            src/image/SkSurface_Raster.cpp \
            src/lazy/SkDiscardableMemoryPool.cpp \
            src/opts/SkOpts_avx.cpp \
@@ -2124,7 +1553,6 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/ports/SkFontMgr_win_dw_factory.cpp \
            src/ports/SkGlobalInitialization_default.cpp \
            src/ports/SkImageEncoder_WIC.cpp \
-           src/ports/SkImageGenerator_none.cpp \
            src/ports/SkImageGenerator_skia.cpp \
            src/ports/SkImageGeneratorWIC.cpp \
            src/ports/SkMemory_malloc.cpp \      
@@ -2200,11 +1628,6 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/utils/SkThreadUtils_win.cpp \
            src/utils/SkUTF.cpp \
            src/utils/SkWhitelistTypefaces.cpp \
-           src/xml/SkDOM.cpp \
-           src/xml/SkXMLParser.cpp \
-           src/xml/SkXMLWriter.cpp \
-           src/xps/SkXPSDevice.cpp \
-           src/xps/SkXPSDocument.cpp \
            src/effects/imagefilters/SkAlphaThresholdFilter.cpp \
            src/effects/imagefilters/SkArithmeticImageFilter.cpp \
            src/effects/imagefilters/SkBlurImageFilter.cpp \
@@ -2223,99 +1646,7 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/effects/imagefilters/SkPaintImageFilter.cpp \
            src/effects/imagefilters/SkPictureImageFilter.cpp \
            src/effects/imagefilters/SkTileImageFilter.cpp \
-           src/effects/imagefilters/SkXfermodeImageFilter.cpp \
-           src/gpu/ccpr/GrCCAtlas.cpp \
-           src/gpu/ccpr/GrCCClipPath.cpp \
-           src/gpu/ccpr/GrCCClipProcessor.cpp \
-           src/gpu/ccpr/GrCCConicShader.cpp \
-           src/gpu/ccpr/GrCCCoverageProcessor.cpp \
-           src/gpu/ccpr/GrCCCubicShader.cpp \
-           src/gpu/ccpr/GrCCDrawPathsOp.cpp \
-           src/gpu/ccpr/GrCCFiller.cpp \
-           src/gpu/ccpr/GrCCFillGeometry.cpp \
-           src/gpu/ccpr/GrCCPathCache.cpp \
-           src/gpu/ccpr/GrCCPathProcessor.cpp \
-           src/gpu/ccpr/GrCCPerFlushResources.cpp \
-           src/gpu/ccpr/GrCCQuadraticShader.cpp \
-           src/gpu/ccpr/GrCCStrokeGeometry.cpp \
-           src/gpu/ccpr/GrCCStroker.cpp \
-           src/gpu/ccpr/GrCoverageCountingPathRenderer.cpp \
-           src/gpu/ccpr/GrCoverageCountingPathRenderer_none.cpp \
-           src/gpu/ccpr/GrGSCoverageProcessor.cpp \
-           src/gpu/ccpr/GrOctoBounds.cpp \
-           src/gpu/ccpr/GrSampleMaskProcessor.cpp \
-           src/gpu/ccpr/GrStencilAtlasOp.cpp \
-           src/gpu/ccpr/GrVSCoverageProcessor.cpp \           
-           src/gpu/effects/GrBezierEffect.cpp \
-           src/gpu/effects/GrBicubicEffect.cpp \
-           src/gpu/effects/GrBitmapTextGeoProc.cpp \
-           src/gpu/effects/GrConvexPolyEffect.cpp \
-           src/gpu/effects/GrCoverageSetOpXP.cpp \
-           src/gpu/effects/GrCustomXfermode.cpp \
-           src/gpu/effects/GrDisableColorXP.cpp \
-           src/gpu/effects/GrDistanceFieldGeoProc.cpp \
-           src/gpu/effects/GrGaussianConvolutionFragmentProcessor.cpp \
-           src/gpu/effects/GrMatrixConvolutionEffect.cpp \
-           src/gpu/effects/GrOvalEffect.cpp \
-           src/gpu/effects/GrPorterDuffXferProcessor.cpp \
-           src/gpu/effects/GrRRectEffect.cpp \
-           src/gpu/effects/GrShadowGeoProc.cpp \
-           src/gpu/effects/GrSkSLFP.cpp \
-           src/gpu/effects/GrSRGBEffect.cpp \
-           src/gpu/effects/GrTextureDomain.cpp \
-           src/gpu/effects/GrXfermodeFragmentProcessor.cpp \
-           src/gpu/effects/GrYUVtoRGBEffect.cpp \
-           src/gpu/geometry/GrPathUtils.cpp \
-           src/gpu/geometry/GrQuad.cpp \
-           src/gpu/geometry/GrQuadUtils.cpp \
-           src/gpu/geometry/GrShape.cpp \  
-           src/gpu/gradients/GrGradientBitmapCache.cpp \
-           src/gpu/gradients/GrGradientShader.cpp \
-           src/gpu/mock/GrMockCaps.cpp \
-           src/gpu/mock/GrMockGpu.cpp \
-           src/gpu/mock/GrMockTypes.cpp \
-           src/gpu/ops/GrAAConvexPathRenderer.cpp \
-           src/gpu/ops/GrAAConvexTessellator.cpp \
-           src/gpu/ops/GrAAHairLinePathRenderer.cpp \
-           src/gpu/ops/GrAALinearizingConvexPathRenderer.cpp \
-           src/gpu/ops/GrAtlasTextOp.cpp \
-           src/gpu/ops/GrClearOp.cpp \
-           src/gpu/ops/GrClearStencilClipOp.cpp \
-           src/gpu/ops/GrCopySurfaceOp.cpp \
-           src/gpu/ops/GrDashLinePathRenderer.cpp \
-           src/gpu/ops/GrDashOp.cpp \
-           src/gpu/ops/GrDebugMarkerOp.cpp \
-           src/gpu/ops/GrDefaultPathRenderer.cpp \
-           src/gpu/ops/GrDrawableOp.cpp \
-           src/gpu/ops/GrDrawAtlasOp.cpp \
-           src/gpu/ops/GrDrawPathOp.cpp \
-           src/gpu/ops/GrDrawVerticesOp.cpp \
-           src/gpu/ops/GrFillRectOp.cpp \
-           src/gpu/ops/GrFillRRectOp.cpp \
-           src/gpu/ops/GrLatticeOp.cpp \
-           src/gpu/ops/GrMeshDrawOp.cpp \
-           src/gpu/ops/GrOp.cpp \
-           src/gpu/ops/GrOvalOpFactory.cpp \
-           src/gpu/ops/GrQuadPerEdgeAA.cpp \
-           src/gpu/ops/GrRegionOp.cpp \
-           src/gpu/ops/GrSemaphoreOp.cpp \
-           src/gpu/ops/GrShadowRRectOp.cpp \
-           src/gpu/ops/GrSimpleMeshDrawOpHelper.cpp \
-           src/gpu/ops/GrSmallPathRenderer.cpp \
-           src/gpu/ops/GrStencilAndCoverPathRenderer.cpp \
-           src/gpu/ops/GrStencilPathOp.cpp \
-           src/gpu/ops/GrStrokeRectOp.cpp \
-           src/gpu/ops/GrTessellatingPathRenderer.cpp \
-           src/gpu/ops/GrTextureOp.cpp \
-           src/gpu/ops/GrTransferFromOp.cpp \
-           src/gpu/text/GrAtlasManager.cpp \
-           src/gpu/text/GrDistanceFieldAdjustTable.cpp \
-           src/gpu/text/GrSDFMaskFilter.cpp \
-           src/gpu/text/GrStrikeCache.cpp \
-           src/gpu/text/GrTextBlob.cpp \
-           src/gpu/text/GrTextBlobCache.cpp \
-           src/gpu/text/GrTextBlobVertexRegenerator.cpp \
-           src/gpu/text/GrTextContext.cpp \           
+           src/effects/imagefilters/SkXfermodeImageFilter.cpp \         
            src/shaders/gradients/Sk4fGradientBase.cpp \
            src/shaders/gradients/Sk4fLinearGradient.cpp \
            src/shaders/gradients/SkGradientShader.cpp \
@@ -2338,32 +1669,3 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/utils/win/SkHRESULT.cpp \
            src/utils/win/SkIStream.cpp \
            src/utils/win/SkWGL_win.cpp \
-           src/gpu/effects/generated/GrAARectEffect.cpp \
-           src/gpu/effects/generated/GrAlphaThresholdFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrBlurredEdgeFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrCircleBlurFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrCircleEffect.cpp \
-           src/gpu/effects/generated/GrColorMatrixFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrComposeLerpEffect.cpp \
-           src/gpu/effects/generated/GrComposeLerpRedEffect.cpp \
-           src/gpu/effects/generated/GrConfigConversionEffect.cpp \
-           src/gpu/effects/generated/GrConstColorProcessor.cpp \
-           src/gpu/effects/generated/GrEllipseEffect.cpp \
-           src/gpu/effects/generated/GrLumaColorFilterEffect.cpp \
-           src/gpu/effects/generated/GrMagnifierEffect.cpp \
-           src/gpu/effects/generated/GrMixerEffect.cpp \
-           src/gpu/effects/generated/GrOverrideInputFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrPremulInputFragmentProcessor.cpp \
-           src/gpu/effects/generated/GrRectBlurEffect.cpp \
-           src/gpu/effects/generated/GrRRectBlurEffect.cpp \
-           src/gpu/effects/generated/GrSimpleTextureEffect.cpp \           
-           src/gpu/gradients/generated/GrClampedGradientEffect.cpp \
-           src/gpu/gradients/generated/GrDualIntervalGradientColorizer.cpp \
-           src/gpu/gradients/generated/GrLinearGradientLayout.cpp \
-           src/gpu/gradients/generated/GrRadialGradientLayout.cpp \
-           src/gpu/gradients/generated/GrSingleIntervalGradientColorizer.cpp \
-           src/gpu/gradients/generated/GrSweepGradientLayout.cpp \
-           src/gpu/gradients/generated/GrTextureGradientColorizer.cpp \
-           src/gpu/gradients/generated/GrTiledGradientEffect.cpp \
-           src/gpu/gradients/generated/GrTwoPointConicalGradientLayout.cpp \
-           src/gpu/gradients/generated/GrUnrolledBinaryGradientColorizer.cpp

@@ -18,12 +18,7 @@ namespace SOUI
 
 		virtual void * GetRealPathEffect();
 	private:
-#ifdef SKIA_NEW
 		sk_sp<SkPathEffect> m_skPathEffect;
-#else
-		SkCornerPathEffect * m_skPathEffect;
-#endif
-
 	};
 
 	class SPathEffect_Dash : public TObjRefImpl<IDashPathEffect>
@@ -37,11 +32,7 @@ namespace SOUI
 		virtual void * GetRealPathEffect();
 
 	private:
-#ifdef SKIA_NEW
 		sk_sp<SkPathEffect> m_skPathEffect;
-#else
-		SkCornerPathEffect* m_skPathEffect;
-#endif
 	};
 
 	class SPathEffect_Discrete : public TObjRefImpl<IDiscretePathEffect>
@@ -55,11 +46,7 @@ namespace SOUI
 		virtual void * GetRealPathEffect();
 
 	private:
-#ifdef SKIA_NEW
 		sk_sp<SkPathEffect> m_skPathEffect;
-#else
-		SkCornerPathEffect* m_skPathEffect;
-#endif
 	};
 
 

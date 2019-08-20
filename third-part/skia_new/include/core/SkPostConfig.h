@@ -63,7 +63,7 @@
 #endif
 
 #if !defined(SK_SUPPORT_GPU)
-#  define SK_SUPPORT_GPU 0
+#  define SK_SUPPORT_GPU 1
 #endif
 
 /**

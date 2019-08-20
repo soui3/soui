@@ -19,16 +19,16 @@ DEPENDPATH += .
 INCLUDEPATH += . \
 			   ../../soui/include \
 			   ../../utilities/include \
-			   ../../third-part/skia \
-			   ../../third-part/skia/include \
-			   ../../third-part/skia/include/config \
-			   ../../third-part/skia/include/core \
+			   ../../third-part/skia_new \
+			   ../../third-part/skia_new/include \
+			   ../../third-part/skia_new/include/config \
+			   ../../third-part/skia_new/include/core \
 
 dir = ../..
 include($$dir/common.pri)
 
 CONFIG(debug,debug|release){
-	LIBS += utilitiesd.lib skiad.lib shlwapi.lib
+	LIBS += utilitiesd.lib skia_newd.lib shlwapi.lib
 }
 else{
 	LIBS += utilities.lib skia_new.lib shlwapi.lib
