@@ -125,8 +125,8 @@ namespace SOUI
         virtual BOOL IsStrikeOut(){return m_lf.lfStrikeOut;}
 		virtual BOOL UpdateFont(const LOGFONT *pLogFont);
 
-        const SkPaint  GetPaint() const {return m_skPaint;}
-        SkTypeface *GetFont()const {return m_skFont;}
+        const SkPaint &GetPaint() const {return m_skPaint;}
+		const SkFont &GetFont()const {return m_skFont;}
 
 		virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
 		virtual void OnInitFinished(pugi::xml_node xmlNode); 
@@ -140,7 +140,7 @@ namespace SOUI
 			ATTR_FLOAT(L"blurRadius",m_blurRadius,FALSE)
 		SOUI_ATTRS_END()
 	protected:
-        SkTypeface *m_skFont;   //定义字体
+		SkFont		m_skFont;   //定义字体
         SkPaint     m_skPaint;  //定义文字绘制属性
         LOGFONT     m_lf;
 		SkBlurStyle m_blurStyle;

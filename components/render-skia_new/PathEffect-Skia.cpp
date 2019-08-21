@@ -3,20 +3,11 @@
 
 namespace SOUI
 {
-#ifndef SKIA_NEW
-	SPathEffect_Corner::SPathEffect_Corner() :m_skPathEffect(NULL)
-	{
-	}
-#else 
 	SPathEffect_Corner::SPathEffect_Corner()
 	{
 	}
-#endif // !SKIA_NEW	
 	SPathEffect_Corner::~SPathEffect_Corner()
 	{
-#ifndef SKIA_NEW
-		if (m_skPathEffect) m_skPathEffect->unref();
-#endif // !SKIA_NEW	
 	}
 
 	void SPathEffect_Corner::Init(float radius)
@@ -29,14 +20,13 @@ namespace SOUI
 
 
 	//////////////////////////////////////////////////////////////////////////
-#ifndef SKIA_NEW
+
 	SPathEffect_Dash::SPathEffect_Dash()
 	{
 	}
 
 	SPathEffect_Dash::~SPathEffect_Dash()
-	{
-		if (m_skPathEffect) m_skPathEffect->unref();
+	{		
 	}
 
 

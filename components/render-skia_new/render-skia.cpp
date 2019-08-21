@@ -1,14 +1,11 @@
 ﻿#include <core\SkShader.h>
-#ifdef SKIA_NEW
 #include <src\core\SkDevice.h>
-#else
-#include <core\SkDevice.h>
-#endif // SKIA_NEW
 
 #include <effects\SkDashPathEffect.h>
 #include <effects\SkGradientShader.h>
 #include <effects\SkBlurMaskFilter.h>
-#include "../skia/src/effects/SkBlurMask.h"
+#include <../skia/src/effects/SkBlurMask.h>
+#include <core/SkFontMetrics.h>
 
 #include <gdialpha.h>
 
@@ -95,22 +92,21 @@ namespace SOUI
 	class SGetLineDashEffect
 	{
 	public:
-		SGetLineDashEffect(int iStyle):pDashPathEffect(NULL)
+		SGetLineDashEffect(int iStyle)
 		{
 			if(iStyle>=PS_SOLID && iStyle<=PS_DASHDOTDOT)
 			{
 				const LineDashEffect *pEff=&LINEDASHEFFECT[iStyle];
-				pDashPathEffect=SkDashPathEffect::Create(pEff->fDash,pEff->nCount,0.0f);
+				pDashPathEffect=SkDashPathEffect::Make(pEff->fDash,pEff->nCount,0.0f);
 			}
 		}
 		~SGetLineDashEffect()
-		{
-			if(pDashPathEffect) pDashPathEffect->unref();
+		{			
 		}
 
-		SkDashPathEffect * Get() const{return pDashPathEffect;}
+		SkPathEffect* Get() const{return pDashPathEffect.get();}
 	private:
-		SkDashPathEffect * pDashPathEffect;
+		sk_sp<SkPathEffect> pDashPathEffect;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	// SRenderFactory_Skia
@@ -370,15 +366,10 @@ namespace SOUI
 		SStringW strW=S_CT2W(SStringT(pszText,cchLen));
         SkPaint     txtPaint = m_curFont->GetPaint();
         txtPaint.setColor(m_curColor.toARGB());
-        txtPaint.setTypeface(m_curFont->GetFont());
-        if(uFormat & DT_CENTER)
-            txtPaint.setTextAlign(SkPaint::kCenter_Align);
-        else if(uFormat & DT_RIGHT)
-            txtPaint.setTextAlign(SkPaint::kRight_Align);
-
+        //txtPaint.setTypeface(m_curFont->GetFont());
         SkRect skrc=toSkRect(pRc);
         skrc.offset(m_ptOrg);
-        skrc=DrawText_Skia(m_SkCanvas,strW,strW.GetLength(),skrc,txtPaint,uFormat);
+        skrc=DrawText_Skia(m_SkCanvas,strW,strW.GetLength(),skrc,txtPaint,*m_curFont->GetFont(),uFormat);
         if(uFormat & DT_CALCRECT)
         {
             pRc->left=(int)skrc.fLeft;
@@ -391,13 +382,12 @@ namespace SOUI
 
 	HRESULT SRenderTarget_Skia::MeasureText( LPCTSTR pszText,int cchLen, SIZE *psz )
 	{
-        SkPaint     txtPaint = m_curFont->GetPaint();
-        txtPaint.setTypeface(m_curFont->GetFont());
+        const SkFont &txtFont = m_curFont->GetFont();       
         SStringW strW=S_CT2W(SStringT(pszText,cchLen));
-        psz->cx = (int)txtPaint.measureText(strW,strW.GetLength()*sizeof(wchar_t));
+        psz->cx = (int)txtFont.measureText(strW,strW.GetLength()*sizeof(wchar_t),SkTextEncoding::kUTF16);
         
-        SkPaint::FontMetrics metrics;
-        txtPaint.getFontMetrics(&metrics);
+		SkFontMetrics metrics;
+		txtFont.getMetrics(&metrics);
         psz->cy = (int)(metrics.fBottom-metrics.fTop);
 		return S_OK;
 	}
@@ -555,7 +545,7 @@ namespace SOUI
 		if(nCount<0) nCount= _tcslen(lpszString);
 		SStringW strW=S_CT2W(SStringT(lpszString,nCount));
         SkPaint     txtPaint = m_curFont->GetPaint();
-        SkPaint::FontMetrics metrics;
+        FontMetrics metrics;
         txtPaint.getFontMetrics(&metrics);
         SkScalar fx = m_ptOrg.fX + x;
         SkScalar fy = m_ptOrg.fY + y;
@@ -1739,8 +1729,7 @@ namespace SOUI
 
     static int s_cFont =0;
     SFont_Skia::SFont_Skia( IRenderFactory * pRenderFac,const LOGFONT * plf) 
-        :TSkiaRenderObjImpl<IFont>(pRenderFac)
-        ,m_skFont(NULL)
+        :TSkiaRenderObjImpl<IFont>(pRenderFac)        
 		,m_blurStyle((SkBlurStyle)-1)
 		,m_blurRadius(0.0f)
     {
@@ -1750,19 +1739,23 @@ namespace SOUI
 #else
 		SStringA strFace=S_CT2A(plf->lfFaceName,CP_ACP);
 #endif
-		BYTE style=SkTypeface::kNormal;
-        if(plf->lfItalic) style |= SkTypeface::kItalic;
-        if(plf->lfWeight == FW_BOLD) style |= SkTypeface::kBold;
+		SkFontStyle style= SkFontStyle::Normal();
+        if(plf->lfItalic&& (plf->lfWeight != FW_BOLD))
+			style = SkFontStyle::Italic();
+        if((plf->lfWeight == FW_BOLD)&&(!(plf->lfItalic)))
+			style = SkFontStyle::Bold();
+		if ((plf->lfWeight == FW_BOLD) && (plf->lfItalic))
+			style = SkFontStyle::BoldItalic();
 
-        m_skFont=SkTypeface::CreateFromName(strFace,(SkTypeface::Style)style);
+		m_skFont =SkTypeface::MakeFromName(strFace,style);
+		
+		m_skFont.setTextSize(SkIntToScalar(abs(plf->lfHeight)));
+		m_skFont.setUnderlineText(!!plf->lfUnderline);
+		m_skFont.setStrikeThruText(!!plf->lfStrikeOut);
 
-        m_skPaint.setTextSize(SkIntToScalar(abs(plf->lfHeight)));
-        m_skPaint.setUnderlineText(!!plf->lfUnderline);
-        m_skPaint.setStrikeThruText(!!plf->lfStrikeOut);
-
-        m_skPaint.setTextEncoding(SkPaint::kUTF16_TextEncoding);
-        m_skPaint.setAntiAlias(true);
-		m_skPaint.setLCDRenderText(true);
+        //m_skPaint.setTextEncoding(SkPaint::kUTF16_TextEncoding);
+		m_skFont.setAntiAlias(true);
+		m_skFont.setLCDRenderText(true);
 		m_skPaint.setStyle(SkPaint::kStrokeAndFill_Style);
 //         STRACE(L"font new: objects = %d", ++s_cFont);
     }
@@ -1778,7 +1771,7 @@ namespace SOUI
 		(bLoading);
 		if(strAttribName.CompareNoCase(L"antiAlias")==0)
 		{
-			m_skPaint.setAntiAlias(String2Bool(strValue));
+			m_skFont.setAntiAlias(String2Bool(strValue));
 		}else if(strAttribName.CompareNoCase(L"style")==0)
 		{
 			if(strValue.CompareNoCase(L"strokeAndFill")==0)
@@ -1789,7 +1782,7 @@ namespace SOUI
 				m_skPaint.setStyle(SkPaint::kStroke_Style);
 		}else if(strAttribName.CompareNoCase(L"lcdText")==0)
 		{
-			m_skPaint.setLCDRenderText(String2Bool(strValue));
+			m_skFont.setLCDRenderText(String2Bool(strValue));
 		}
 		return S_OK;
 	}
@@ -1799,14 +1792,14 @@ namespace SOUI
 		(xmlNode);
 		if(m_blurStyle != -1 && m_blurRadius > 0.0f)
 		{
-			m_skPaint.setMaskFilter(SkBlurMaskFilter::Create(m_blurStyle,
-				SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
+			//m_skPaint.setMaskFilter(SkBlurMaskFilter::Create(m_blurStyle,
+			//	SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
 		}
 	}
 
 	BOOL SFont_Skia::UpdateFont(const LOGFONT *plf)
 	{
-		if(!m_skFont) return FALSE;
+		//if(!m_skFont) return FALSE;
 
 		memcpy(&m_lf,plf,sizeof(LOGFONT));
 
@@ -1815,15 +1808,19 @@ namespace SOUI
 #else
 		SStringA strFace=S_CT2A(plf->lfFaceName,CP_ACP);
 #endif
-		BYTE style=SkTypeface::kNormal;
-		if(plf->lfItalic) style |= SkTypeface::kItalic;
-		if(plf->lfWeight == FW_BOLD) style |= SkTypeface::kBold;
-		m_skFont->unref();
-		m_skFont=SkTypeface::CreateFromName(strFace,(SkTypeface::Style)style);
+		SkFontStyle style = SkFontStyle::Normal();
+		if (plf->lfItalic && (plf->lfWeight != FW_BOLD))
+			style = SkFontStyle::Italic();
+		if ((plf->lfWeight == FW_BOLD) && (!(plf->lfItalic)))
+			style = SkFontStyle::Bold();
+		if ((plf->lfWeight == FW_BOLD) && (plf->lfItalic))
+			style = SkFontStyle::BoldItalic();
 
-		m_skPaint.setTextSize(SkIntToScalar(abs(plf->lfHeight)));
-		m_skPaint.setUnderlineText(!!plf->lfUnderline);
-		m_skPaint.setStrikeThruText(!!plf->lfStrikeOut);
+		m_skFont = SkTypeface::MakeFromName(strFace, style);
+
+		m_skFont.setTextSize(SkIntToScalar(abs(plf->lfHeight)));
+		m_skFont.setUnderlineText(!!plf->lfUnderline);
+		m_skFont.setStrikeThruText(!!plf->lfStrikeOut);
 
 		return TRUE;
 	}
