@@ -148,8 +148,6 @@ namespace SOUI
         void StoreFocusedView();
         void RestoreFocusedView();
 
-        bool IsFocusChanging(){return is_changing_focus_;}
-
         // IAcceleratorMgr
 
         // Register a keyboard accelerator for the specified target. If multiple
@@ -190,8 +188,6 @@ namespace SOUI
         SWND  focused_view_;
 
         SWND  focused_backup_;
-
-        bool is_changing_focus_;
 
         FocusChangeReason focus_change_reason_;
 

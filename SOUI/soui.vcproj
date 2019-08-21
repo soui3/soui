@@ -615,8 +615,6 @@
 			<File
 				RelativePath="include\valueAnimator\ValueAnimator.h" />
 			<File
-				RelativePath="include\helper\auto_reset.h" />
-			<File
 				RelativePath="include\helper\color.h" />
 			<File
 				RelativePath="include\event\eventcrack.h" />

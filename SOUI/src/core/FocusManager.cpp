@@ -1,5 +1,4 @@
 ﻿#include "souistd.h"
-#include "helper/auto_reset.h"
 #include "core/FocusManager.h"
 #include "core/SWindowMgr.h"
 
@@ -289,7 +288,6 @@ namespace SOUI
             return;
         }
 
-        AutoReset<bool> auto_changing_focus(&is_changing_focus_, true);
         // Update the reason for the focus change (since this is checked by
         // some listeners), then notify all listeners.
         SWindow *pOldFocus=SWindowMgr::GetWindow(focused_view_);

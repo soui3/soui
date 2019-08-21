@@ -111,7 +111,6 @@ HEADERS += include/SApp.h \
            include/event/EventSubscriber.h \
            include/event/NotifyCenter.h \
            include/helper/AppDir.h \
-           include/helper/auto_reset.h \
            include/helper/color.h \
            include/helper/DragWnd.h \
            include/helper/MemDC.h \
