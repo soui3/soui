@@ -1104,14 +1104,6 @@ void CMainDlg::OnBtnCreateByTemp()
 void CMainDlg::On3dViewRotate(EventArgs *e)
 {
 	EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
-	S3dWindow *p3dView = FindChildByName2<S3dWindow>(L"3d_test");
-	if(p3dView)
-	{
-		if((e2->dwNewState & WndState_Check) && !(e2->dwOldState&WndState_Check))
-		{
-			p3dView->SetAttribute(L"rotateDir",e->nameFrom);
-		}
-	}
 }
 
 void CMainDlg::OnSetPropItemValue()
