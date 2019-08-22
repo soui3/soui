@@ -130,9 +130,10 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
 {
     if (NULL != m_hWnd)
         return m_hWnd;
-
+	m_bAutoSizing = true;
     HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
-    if(!hWnd) return NULL;
+	m_bAutoSizing = false;
+	if(!hWnd) return NULL;
 
     if(nWidth==0 || nHeight==0) CenterWindow(hWndParent);
     return hWnd;
@@ -330,11 +331,8 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
 	if(nWidth != m_szAppSetted.cx || nHeight != m_szAppSetted.cy)
 	{
-		m_bAutoSizing = true;
 		SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
-		m_bAutoSizing = false;
 	}
-	
 
     CRect rcClient;
     SNativeWnd::GetClientRect(&rcClient);
