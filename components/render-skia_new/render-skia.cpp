@@ -4,7 +4,7 @@
 #include <effects\SkDashPathEffect.h>
 #include <effects\SkGradientShader.h>
 #include <effects\SkBlurMaskFilter.h>
-#include <../skia/src/effects/SkBlurMask.h>
+#include <src/core/SkBlurMask.h>
 #include <core/SkFontMetrics.h>
 
 #include <gdialpha.h>

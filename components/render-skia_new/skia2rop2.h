@@ -1,10 +1,6 @@
 ﻿#pragma once
 
-#ifdef SKIA_NEW
 #include <src/core/SkXfermodePriv.h>
-#else
-#include <core/SkXfermode.h>
-#endif // SKIA_NEW
 
 
 class ProcXfermode : public SkXfermode {

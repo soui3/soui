@@ -10,8 +10,11 @@
 #include <helper\SAttrCracker.h>
 #include <string\tstring.h>
 #include <string\strcpcvt.h>
-#include <interface/render-i.h>
+#include <interface\render-i.h>
 #include <souicoll.h>
+#include <core\SkRegion.h>
+#include <core\SkBlurTypes.h>
+#include <core/SkFont.h>
 
 namespace SOUI
 {
