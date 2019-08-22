@@ -106,7 +106,7 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_bRendering(FALSE)
 , m_nScale(100)
 , m_szAppSetted(0,0)
-, m_bAutoSizing(false)
+, m_nAutoSizing(0)
 , m_bResizing(false)
 {
     m_msgMouse.message = 0;
@@ -130,9 +130,9 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
 {
     if (NULL != m_hWnd)
         return m_hWnd;
-	m_bAutoSizing = true;
+	m_nAutoSizing++;
     HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
-	m_bAutoSizing = false;
+	m_nAutoSizing--;
 	if(!hWnd) return NULL;
 
     if(nWidth==0 || nHeight==0) CenterWindow(hWndParent);
@@ -149,9 +149,9 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	if (!m_bResizing)
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
-		m_bAutoSizing = true;
+		m_nAutoSizing++;
 		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
-		m_bAutoSizing = false;
+		m_nAutoSizing--;
 	}
 	return true;
 }
@@ -505,7 +505,7 @@ void SHostWnd::OnSize(UINT nType, CSize size)
 
     if (size.cx==0 || size.cy==0)
         return;
-    if(!m_bAutoSizing)
+    if(m_nAutoSizing==0)
 	{
 		m_szAppSetted = size;
 	}
