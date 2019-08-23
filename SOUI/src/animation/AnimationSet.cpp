@@ -93,6 +93,23 @@ namespace SOUI {
 		}
 	}
 
+	void SAnimationSet::copy(const IAnimation * src)
+	{
+		const SAnimationSet *src2 = sobj_cast<const SAnimationSet>(src);
+		if (!src2) return;
+		SAnimation::copy(src);
+
+		mFlags = src2->mFlags;
+		mHasAlpha = src2->mHasAlpha;
+		mLastEnd = src2->mLastEnd;
+		for (UINT i = 0; i < src2->mAnimations.GetCount(); i++)
+		{
+			SAutoRefPtr<IAnimation> ani;
+			ani.Attach(src2->mAnimations[i]->clone());
+			mAnimations.Add(ani);
+		}
+	}
+
 	void SAnimationSet::scaleCurrentDuration(float scale)
 	{
 		int count = mAnimations.GetCount();

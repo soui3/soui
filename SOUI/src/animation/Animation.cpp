@@ -86,6 +86,7 @@ namespace SOUI {
 		}
 	}
 
+
 	bool SAnimation::isCanceled()
 	{
 		return mStartTime == -2;
@@ -346,6 +347,35 @@ namespace SOUI {
 
 		mUserData = 0;
 		ensureInterpolator();
+	}
+
+	void SAnimation::copy(const IAnimation * src)
+	{
+		const SAnimation * src2 = (SAnimation*)src;
+		mStartOffset = src2->mStartOffset;
+		mDuration = src2->mDuration;
+		mRepeatCount = src2->mRepeatCount;
+		mRepeatMode = src2->mRepeatMode;
+		mZAdjustment = src2->mZAdjustment;
+		mScaleFactor = src2->mScaleFactor;
+		mFillBefore = src2->mFillBefore;
+		mFillAfter = src2->mFillAfter;
+		mFillEnabled = src2->mFillEnabled;
+		mInterpolator = src2->mInterpolator;
+
+		mUserData = src2->mUserData;
+		mID = src2->mID;
+		mName = src2->mName;
+	}
+
+	IAnimation * SAnimation::clone() const
+	{
+		IAnimation *pRet = SApplication::getSingletonPtr()->CreateAnimationByName(GetClassName());
+		if (pRet)
+		{
+			pRet->copy(this);
+		}
+		return pRet;
 	}
 
 	void SAnimation::initialize(int width, int height, int parentWidth, int parentHeight)

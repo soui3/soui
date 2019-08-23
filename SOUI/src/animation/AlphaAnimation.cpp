@@ -25,4 +25,13 @@ namespace SOUI {
 		t.setAlpha((BYTE)((alpha + ((mToAlpha - alpha) * interpolatedTime))*255));
 	}
 
+	void SAlphaAnimation::copy(const IAnimation * src)
+	{
+		const SAlphaAnimation *src2 = sobj_cast<const SAlphaAnimation>(src);
+		if (!src2) return;
+		SAnimation::copy(src);
+		mFromAlpha = src2->mFromAlpha;
+		mToAlpha = src2->mToAlpha;
+	}
+
 }

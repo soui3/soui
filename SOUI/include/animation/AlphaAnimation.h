@@ -52,6 +52,7 @@ protected:
      */
 	virtual void applyTransformation(float interpolatedTime, STransformation & t);
 
+	virtual void copy(const IAnimation * src);
 public:
     /**
      * @hide

@@ -131,6 +131,7 @@ namespace SOUI{
 		*/
 		void initialize(int width, int height, int parentWidth, int parentHeight);
 
+		virtual void copy(const IAnimation* src);
 	protected:
 		BOOL InitFromXml(pugi::xml_node xmlNode);
 

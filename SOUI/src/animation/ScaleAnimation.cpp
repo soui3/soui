@@ -34,6 +34,23 @@ namespace SOUI {
 		t.setTransformationType(STransformation::TYPE_MATRIX);
 	}
 
+	void SScaleAnimation::copy(const IAnimation * src)
+	{
+		const SScaleAnimation *src2 = sobj_cast<const SScaleAnimation>(src);
+		if (!src2) return;
+		SAnimation::copy(src);
+		mFromX = src2->mFromX;
+		mToX = src2->mToX;
+		mFromY = src2->mFromY;
+		mToY = src2->mToY;
+
+		mPivotXType = src2->mPivotXType;
+		mPivotYType = src2->mPivotYType;
+		mPivotXValue = src2->mPivotXValue;
+		mPivotYValue = src2->mPivotYValue;
+		initializePivotPoint();
+	}
+
 	void SScaleAnimation::initializePivotPoint()
 	{
 		if (mPivotXType == ABSOLUTE_VALUE) {

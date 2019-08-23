@@ -33,6 +33,20 @@ namespace SOUI {
 		t.setTransformationType(STransformation::TYPE_MATRIX);
 	}
 
+	void SRotateAnimation::copy(const IAnimation * src)
+	{
+		const SRotateAnimation *src2 = sobj_cast<const SRotateAnimation>(src);
+		if (!src2) return;
+		SAnimation::copy(src);
+		mFromDegrees = src2->mFromDegrees;
+		mToDegrees = src2->mToDegrees;
+		mPivotXType = src2->mPivotXType;
+		mPivotYType = src2->mPivotYType;
+		mPivotXValue = src2->mPivotXValue;
+		mPivotYValue = src2->mPivotYValue;
+		initializePivotPoint();
+	}
+
 	void SRotateAnimation::initializePivotPoint()
 	{
 		if (mPivotXType == ABSOLUTE_VALUE) {

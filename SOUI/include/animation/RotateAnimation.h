@@ -97,6 +97,7 @@ namespace SOUI {
 	protected:
 		void applyTransformation(float interpolatedTime, STransformation & t);
 
+		virtual void copy(const IAnimation *src);
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_FLOAT(L"fromDegrees", mFromDegrees, FALSE)

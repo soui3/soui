@@ -106,6 +106,10 @@ namespace SOUI {
 			ZORDER_BOTTOM = -1
 		};
 
+		virtual IAnimation * clone() const = 0;
+
+		virtual void copy(const IAnimation *src) = 0;
+
 		/**
 		* Reset the initialization state of this animation.
 		*

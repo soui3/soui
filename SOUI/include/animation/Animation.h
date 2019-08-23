@@ -188,6 +188,7 @@ namespace SOUI {
 			return mID;
 		}
 
+		virtual IAnimation * clone() const;
 		/**
 		* Reset the initialization state of this animation.
 		*
@@ -432,6 +433,8 @@ namespace SOUI {
 		virtual void applyTransformation(float interpolatedTime, STransformation & t);
 
 	protected:
+		virtual void copy(const IAnimation * src);
+
 		bool isCanceled();
 
 		void fireAnimationStart();
