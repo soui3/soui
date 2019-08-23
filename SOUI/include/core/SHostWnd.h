@@ -169,6 +169,9 @@ public:
 	SHostWndAttr & GetHostAttr() {
 		return m_hostAttr;
 	}
+	IToolTip * GetToolTip() const {
+		return m_pTipCtrl;
+	}
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
