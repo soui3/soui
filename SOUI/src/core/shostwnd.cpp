@@ -448,12 +448,22 @@ BOOL SHostWnd::OnEraseBkgnd(HDC dc)
 }
 
 
+IToolTip * SHostWnd::CreateTooltip() const
+{
+	return GETTOOLTIPFACTORY->CreateToolTip(m_hWnd);
+}
+
+void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
+{
+	GETTOOLTIPFACTORY->DestroyToolTip(pTooltip);
+}
+
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
 	m_nAutoSizing++;
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
-    m_pTipCtrl = GETTOOLTIPFACTORY->CreateToolTip(m_hWnd);
+    m_pTipCtrl = CreateTooltip();
     if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
     
 	m_szAppSetted.cx = lpCreateStruct->cx;
@@ -486,7 +496,7 @@ void SHostWnd::OnDestroy()
     if(m_pTipCtrl)
     {
         GetMsgLoop()->RemoveMessageFilter(m_pTipCtrl);
-        GETTOOLTIPFACTORY->DestroyToolTip(m_pTipCtrl);
+		DestroyTooltip(m_pTipCtrl);
         m_pTipCtrl = NULL;
     }
     if(m_dummyWnd.IsWindow())

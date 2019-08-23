@@ -187,10 +187,6 @@ public:
 	SHostWndAttr & GetHostAttr() {
 		return m_hostAttr;
 	}
-
-	IToolTip * GetToolTip() const {
-		return m_pTipCtrl;
-	}
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
@@ -313,11 +309,13 @@ protected://Swindow 虚方法
 	virtual HRESULT OnLanguageChanged(); 
 	virtual void OnScaleChanged(int scale);
 
-
+protected:
+	virtual IToolTip * CreateTooltip() const;
+	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
-
+	
 public://事件处理接口
     virtual BOOL _HandleEvent(EventArgs *pEvt){return FALSE;}
 
