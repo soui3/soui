@@ -20,24 +20,6 @@
 
 namespace SOUI
 {
-    class SHostWnd;
-    class SDummyWnd : public SNativeWnd
-    {
-    public:
-        SDummyWnd(SHostWnd* pOwner):m_pOwner(pOwner)
-        {
-        }
-
-        void OnPaint(HDC dc);
-
-        BEGIN_MSG_MAP_EX(SDummyWnd)
-            MSG_WM_PAINT(OnPaint)
-        END_MSG_MAP()
-    private:
-        SHostWnd *m_pOwner;
-    };
-
-	
     class SHostWndAttr : public SObject, public ITrCtxProvider
     {
         SOUI_CLASS_NAME(SHostWndAttr, L"SHostWndAttr")
@@ -121,7 +103,7 @@ class SOUI_EXP SHostWnd
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
 protected:    
-    SDummyWnd            m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
+    SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */
     SStringT             m_strXmlLayout;        /**<布局资源名称,如xml:main_wnd */
 
@@ -191,6 +173,7 @@ protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
     void _RestoreClickState();
+	void _Invalidate(LPCRECT prc);
 protected:
     //////////////////////////////////////////////////////////////////////////
     // Message handler

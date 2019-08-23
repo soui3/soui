@@ -17,6 +17,22 @@ namespace SOUI
 //////////////////////////////////////////////////////////////////////////
 //    SDummyWnd
 //////////////////////////////////////////////////////////////////////////
+	class SDummyWnd : public SNativeWnd
+	{
+	public:
+		SDummyWnd(SHostWnd* pOwner) :m_pOwner(pOwner)
+		{
+		}
+
+		void OnPaint(HDC dc);
+
+		BEGIN_MSG_MAP_EX(SDummyWnd)
+			MSG_WM_PAINT(OnPaint)
+			END_MSG_MAP()
+	private:
+		SHostWnd *m_pOwner;
+	};
+
 void SDummyWnd::OnPaint( HDC dc )
 {
     PAINTSTRUCT ps;
@@ -102,7 +118,7 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_bNeedRepaint(FALSE)
 , m_bNeedAllRepaint(TRUE)
 , m_pTipCtrl(NULL)
-, m_dummyWnd(this)
+, m_dummyWnd(NULL)
 , m_bRendering(FALSE)
 , m_nScale(100)
 , m_szAppSetted(0,0)
@@ -278,10 +294,11 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     if(m_hostAttr.m_bTranslucent)
     {
         SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-        m_dummyWnd.Create(_T("SOUI_DUMMY_WND"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
-        m_dummyWnd.SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd.GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-        ::SetLayeredWindowAttributes(m_dummyWnd.m_hWnd,0,0,LWA_ALPHA);
-        m_dummyWnd.ShowWindow(SW_SHOWNOACTIVATE);
+		m_dummyWnd = new SDummyWnd(this);
+        m_dummyWnd->Create(_T("SOUI_DUMMY_WND"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
+        m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+        ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+        m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
     }else if(dwExStyle & WS_EX_LAYERED || m_hostAttr.m_byAlpha!=0xFF)
     {
         if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
@@ -356,11 +373,7 @@ void SHostWnd::_Redraw()
     m_bNeedAllRepaint = TRUE;
     m_bNeedRepaint = TRUE;
     m_rgnInvalidate->Clear();
-
-    if(!m_hostAttr.m_bTranslucent)
-        SNativeWnd::Invalidate(FALSE);
-    else if(m_dummyWnd.IsWindow()) 
-        m_dummyWnd.Invalidate(FALSE);
+	_Invalidate(NULL);
 }
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
@@ -499,9 +512,11 @@ void SHostWnd::OnDestroy()
 		DestroyTooltip(m_pTipCtrl);
         m_pTipCtrl = NULL;
     }
-    if(m_dummyWnd.IsWindow())
+    if(m_dummyWnd)
     {
-        m_dummyWnd.DestroyWindow();
+        m_dummyWnd->DestroyWindow();
+		delete m_dummyWnd;
+		m_dummyWnd = NULL;
     }
 
 	m_memRT = NULL;
@@ -749,14 +764,7 @@ void SHostWnd::OnRedraw(const CRect &rc)
     
     m_bNeedRepaint = TRUE;
 
-    if(!m_hostAttr.m_bTranslucent)
-    {
-        SNativeWnd::InvalidateRect(rc, FALSE);
-    }else
-    {
-        if(m_dummyWnd.IsWindow()) 
-            m_dummyWnd.Invalidate(FALSE);
-    }
+	_Invalidate(rc);
 }
 
 BOOL SHostWnd::OnReleaseSwndCapture()
@@ -791,8 +799,10 @@ BOOL SHostWnd::IsSendWheel2Hover() const
 BOOL SHostWnd::UpdateWindow()
 {
     if(m_bResizing) return FALSE;
-    if(m_hostAttr.m_bTranslucent) ::UpdateWindow(m_dummyWnd.m_hWnd);
-    else ::UpdateWindow(m_hWnd);
+    if(m_dummyWnd) 
+		::UpdateWindow(m_dummyWnd->m_hWnd);
+    else 
+		::UpdateWindow(m_hWnd);
     return TRUE;
 }
 
@@ -1351,14 +1361,7 @@ void SHostWnd::OnCavasInvalidate(SWND swnd)
 	{//防止重复加入
 		if (m_lstUpdateSwnd.IsEmpty())
 		{//请求刷新窗口
-			if (!m_hostAttr.m_bTranslucent)
-			{
-				SNativeWnd::Invalidate(FALSE);
-			}
-			else if (m_dummyWnd.IsWindow())
-			{
-				m_dummyWnd.Invalidate(FALSE);
-			}
+			_Invalidate(NULL);
 		}
 		m_lstUpdateSwnd.AddTail(swnd);
 	}
@@ -1492,6 +1495,21 @@ void SHostWnd::_RestoreClickState()
         break;
     }
 
+}
+
+void SHostWnd::_Invalidate(LPCRECT prc)
+{
+	if (!m_hostAttr.m_bTranslucent)
+	{
+		if(prc)
+			SNativeWnd::InvalidateRect(prc, FALSE);
+		else
+			SNativeWnd::Invalidate(FALSE);
+	}
+	else if (m_dummyWnd)
+	{
+		m_dummyWnd->Invalidate(FALSE);
+	}
 }
 
 HRESULT SHostWnd::OnLanguageChanged()
