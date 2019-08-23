@@ -331,7 +331,9 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
 	if(nWidth != m_szAppSetted.cx || nHeight != m_szAppSetted.cy)
 	{
+		m_nAutoSizing++;
 		SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
+		m_nAutoSizing--;
 	}
 
     CRect rcClient;
@@ -448,6 +450,7 @@ BOOL SHostWnd::OnEraseBkgnd(HDC dc)
 
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	m_nAutoSizing++;
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
     m_pTipCtrl = GETTOOLTIPFACTORY->CreateToolTip(m_hWnd);
@@ -469,6 +472,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 			SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
 		}
 	}
+	m_nAutoSizing--;
     return 0;
 }
 
