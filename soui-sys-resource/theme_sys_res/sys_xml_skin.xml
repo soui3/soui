@@ -27,9 +27,9 @@
 
   <imglist name="_skin.sys.menu.check" src="PNG:SYS_MENU_CHECK" states="3" />
   <imglist name="_skin.sys.menu.arrow" src="PNG:SYS_MENU_ARROW" states="2" />
-  <imgframe name="_skin.sys.menu.sep" src="PNG:SYS_MENU_SEP" left="25"/>
+  <imgframe name="_skin.sys.menu.sep" src="PNG:SYS_MENU_SEP" left="26"/>
   <imgframe name="_skin.sys.menu.border" src="PNG:SYS_MENU_BORDER" margin-x="2" margin-y="2"/>
-  <imgframe name="_skin.sys.menu.skin" src="PNG:SYS_MENU_SKIN" states="2" left="30" top="2" bottom="2"/>
+  <imgframe name="_skin.sys.menu.skin" src="PNG:SYS_MENU_SKIN" states="2" left="26" top="2" bottom="2"/>
   <imglist name="_skin.sys.icons" src="PNG:SYS_ICONS" states="12"/>
   <imgframe name="_skin.sys.wnd.bkgnd"  src="PNG:SYS_WND_BKGND" left="5" right="5" top="40" bottom="40"/>
   <imgcenter name="_skin.sys.btn.prev" src="PNG:SYS_BTN_PREV" states="3" />
