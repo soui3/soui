@@ -140,11 +140,6 @@ namespace SOUI {
 		ZAdjustment mZAdjustment;
 
 		/**
-		* Desired background color behind animation.
-		*/
-		int mBackgroundColor;
-
-		/**
 		* scalefactor to apply to pivot points, etc. during animation. Subclasses retrieve the
 		* value via getScaleFactor().
 		*/
