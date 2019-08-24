@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="scriptmodule-lua"
-	ProjectGUID="{39C639DA-830F-3CB8-AEBC-B7A88CCCE06B}"
+	ProjectGUID="{A284957C-9B5B-3DE6-8EE5-BC266FB878D5}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -43,7 +43,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua-52.lib soui.lib utilities.lib"
+				AdditionalDependencies="lua-52.lib soui3.lib utilities.lib"
 				AdditionalLibraryDirectories="..\..\bin"
 				DataExecutionPrevention="true"
 				EnableCOMDATFolding="2"
@@ -108,7 +108,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua-52d.lib souid.lib utilitiesd.lib"
+				AdditionalDependencies="lua-52d.lib soui3d.lib utilitiesd.lib"
 				AdditionalLibraryDirectories="..\..\bin"
 				DataExecutionPrevention="true"
 				GenerateDebugInformation="true"

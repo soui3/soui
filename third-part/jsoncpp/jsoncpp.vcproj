@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="jsoncpp"
-	ProjectGUID="{C0F3A666-8540-3AEC-8A83-7F90A2C70411}"
+	ProjectGUID="{3B835920-6653-3EA6-92CA-73634E09BB81}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

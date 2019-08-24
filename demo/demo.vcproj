@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="demo"
-	ProjectGUID="{F72D96A9-7BB4-3D32-A832-099EFD826EBE}"
+	ProjectGUID="{E3891D4D-E74A-3FAB-AA22-F682307D06F3}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -42,7 +42,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="utilities.lib soui.lib mhook.lib smiley.lib"
+				AdditionalDependencies="utilities.lib soui3.lib mhook.lib smiley.lib"
 				AdditionalLibraryDirectories="..\bin"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
 				DataExecutionPrevention="true"
@@ -107,7 +107,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="utilitiesd.lib souid.lib mhookd.lib smileyd.lib"
+				AdditionalDependencies="utilitiesd.lib soui3d.lib mhookd.lib smileyd.lib"
 				AdditionalLibraryDirectories="..\bin"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
 				DataExecutionPrevention="true"

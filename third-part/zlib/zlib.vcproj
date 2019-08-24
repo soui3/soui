@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="zlib"
-	ProjectGUID="{0AD79CEF-E674-3623-9750-88248C461939}"
+	ProjectGUID="{50DD85A6-53D7-3E68-A34E-984FE9ABCB91}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="TaskLoop"
-	ProjectGUID="{A9B045BF-AD53-32B4-A1CC-257067C9FB85}"
+	ProjectGUID="{B74865B7-0702-3E95-9051-5ACEBD378532}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
