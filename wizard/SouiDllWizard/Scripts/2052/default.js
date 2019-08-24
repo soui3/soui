@@ -161,7 +161,7 @@ function AddConfig(proj, strProjectName) {
         CLTool.SuppressStartupBanner = true;
         CLTool.TreatWChar_tAsBuiltInType = (wcharSet == 1);
         CLTool.WarningLevel = warningLevelOption.warningLevel_3;
-        CLTool.AdditionalIncludeDirectories = '"$(SOUIPATH)\\config";"$(SOUIPATH)\\components";"$(SOUIPATH)\\SOUI\\include";"$(SOUIPATH)\\utilities\\include"';
+        CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
         CLTool.PreprocessorDefinitions = 'WIN32;_WINDOWS;_USRDLL;STRICT;_DEBUG';
         CLTool.RuntimeLibrary = (mtSet == 1) ? 1 : 3; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
         CLTool.BrowseInformation = browseInfoOption.brAllInfo;// FR
@@ -174,14 +174,14 @@ function AddConfig(proj, strProjectName) {
         LinkTool.LinkIncremental = linkIncrementalYes;
         LinkTool.SuppressStartupBanner = true;  // nologo
         LinkTool.GenerateDebugInformation = true;
-        LinkTool.AdditionalLibraryDirectories = '"$(SOUIPATH)\\bin"';
-        LinkTool.AdditionalDependencies = 'utilitiesd.lib souid.lib'
+        LinkTool.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin"';
+        LinkTool.AdditionalDependencies = 'utilitiesd.lib soui3d.lib'
         LinkTool.SubSystem = subSystemOption.subSystemWindows;
 
         var resCplTool = config.Tools('VCResourceCompilerTool');
         resCplTool.Culture = 0x804;
         if (SysResBuiltin && (ResLoadType == 0)) {
-            resCplTool.AdditionalIncludeDirectories = '"$(SOUIPATH)\\soui-sys-resource"';
+            resCplTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\soui-sys-resource"';
         }
 		else {
 			resCplTool.PreprocessorDefinitions += ';_DEBUG';	
@@ -203,7 +203,7 @@ function AddConfig(proj, strProjectName) {
         CLTool.SuppressStartupBanner = true;
         CLTool.TreatWChar_tAsBuiltInType = (wcharSet == 1);
         CLTool.WarningLevel = warningLevelOption.warningLevel_3;
-        CLTool.AdditionalIncludeDirectories = '"$(SOUIPATH)\\config";"$(SOUIPATH)\\components";"$(SOUIPATH)\\SOUI\\include";"$(SOUIPATH)\\utilities\\include"';
+        CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
         CLTool.PreprocessorDefinitions = 'WIN32;_WINDOWS;_USRDLL;NDEBUG';
         CLTool.RuntimeLibrary = (mtSet == 1) ? 0 : 2;; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
         CLTool.WholeProgramOptimization = true;	//全程序优化：启动链接时代码生成
@@ -213,15 +213,15 @@ function AddConfig(proj, strProjectName) {
         LinkTool.GenerateDebugInformation = true;
         LinkTool.LinkIncremental = linkIncrementalYes;
         LinkTool.SuppressStartupBanner = true;  // nologoif(UserDll)
-        LinkTool.AdditionalLibraryDirectories = '"$(SOUIPATH)\\bin"';
-        LinkTool.AdditionalDependencies = 'utilities.lib soui.lib'
+        LinkTool.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin"';
+        LinkTool.AdditionalDependencies = 'utilities.lib soui3.lib'
         LinkTool.LinkIncremental = 1;
         LinkTool.SubSystem = subSystemOption.subSystemWindows;
 
         var resCplTool = config.Tools('VCResourceCompilerTool');
         resCplTool.Culture = 0x804;
         if (SysResBuiltin && (ResLoadType == 0)) {
-            resCplTool.AdditionalIncludeDirectories = '"$(SOUIPATH)\\soui-sys-resource"';
+            resCplTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\soui-sys-resource"';
         }
         //x64配置,默认情况15以前的版本是没有X64的配置的
         var config_x64 = proj.Object.Configurations('Debug|x64');
@@ -241,7 +241,7 @@ function AddConfig(proj, strProjectName) {
             CLTool_x64.SuppressStartupBanner = true;
             CLTool_x64.TreatWChar_tAsBuiltInType = (wcharSet == 1);
             CLTool_x64.WarningLevel = warningLevelOption.warningLevel_3;
-            CLTool_x64.AdditionalIncludeDirectories = '"$(SOUIPATH)\\config";"$(SOUIPATH)\\components";"$(SOUIPATH)\\SOUI\\include";"$(SOUIPATH)\\utilities\\include"';
+            CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
             CLTool_x64.PreprocessorDefinitions = 'WIN64;_WINDOWS;_USRDLL;STRICT;_DEBUG';
             CLTool_x64.RuntimeLibrary = (mtSet == 1) ? 1 : 3; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
             CLTool_x64.BrowseInformation = browseInfoOption.brAllInfo;// FR
@@ -254,14 +254,14 @@ function AddConfig(proj, strProjectName) {
             LinkTool_64.LinkIncremental = linkIncrementalYes;
             LinkTool_64.SuppressStartupBanner = true;  // nologo
             LinkTool_64.GenerateDebugInformation = true;
-            LinkTool_64.AdditionalLibraryDirectories = '"$(SOUIPATH)\\bin64"';
-            LinkTool_64.AdditionalDependencies = 'utilitiesd.lib souid.lib'
+            LinkTool_64.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin64"';
+            LinkTool_64.AdditionalDependencies = 'utilitiesd.lib soui3d.lib'
             LinkTool_64.SubSystem = subSystemOption.subSystemWindows;
             var resCplTool_64 = config_x64.Tools('VCResourceCompilerTool');
             resCplTool_64.Culture = 0x804;
             resCplTool_64.PreprocessorDefinitions += ';_DEBUG';
             if (SysResBuiltin && (ResLoadType == 0)) {
-                resCplTool_64.AdditionalIncludeDirectories = '"$(SOUIPATH)\\soui-sys-resource"';
+                resCplTool_64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\soui-sys-resource"';
             }
             var config_64 = proj.Object.Configurations('Release|x64');
             config_64.CharacterSet = (unicodeSet == 1) ? charSetUNICODE : charSetMBCS;
@@ -279,7 +279,7 @@ function AddConfig(proj, strProjectName) {
             CLTool_x64.SuppressStartupBanner = true;
             CLTool_x64.TreatWChar_tAsBuiltInType = (wcharSet == 1);
             CLTool_x64.WarningLevel = warningLevelOption.warningLevel_3;
-            CLTool_x64.AdditionalIncludeDirectories = '"$(SOUIPATH)\\config";"$(SOUIPATH)\\components";"$(SOUIPATH)\\SOUI\\include";"$(SOUIPATH)\\utilities\\include"';
+            CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
             CLTool_x64.PreprocessorDefinitions = 'WIN64;_WINDOWS;_USRDLL;NDEBUG';
             CLTool_x64.RuntimeLibrary = (mtSet == 1) ? 0 : 2;; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
             CLTool_x64.WholeProgramOptimization = true;	//全程序优化：启动链接时代码生成
@@ -288,15 +288,15 @@ function AddConfig(proj, strProjectName) {
             LinkTool_x64.GenerateDebugInformation = true;
             LinkTool_x64.LinkIncremental = linkIncrementalYes;
             LinkTool_x64.SuppressStartupBanner = true;  // nologoif(UserDll)
-            LinkTool_x64.AdditionalLibraryDirectories = '"$(SOUIPATH)\\bin64"';
-            LinkTool_x64.AdditionalDependencies = 'utilities.lib soui.lib'
+            LinkTool_x64.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin64"';
+            LinkTool_x64.AdditionalDependencies = 'utilities.lib soui3.lib'
             LinkTool_x64.LinkIncremental = 1;
             LinkTool_x64.SubSystem = subSystemOption.subSystemWindows;
 
             var resCplTool_64 = config_64.Tools('VCResourceCompilerTool');
             resCplTool_64.Culture = 0x804;
             if (SysResBuiltin && (ResLoadType == 0)) {
-                resCplTool_64.AdditionalIncludeDirectories = '"$(SOUIPATH)\\soui-sys-resource"';
+                resCplTool_64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\soui-sys-resource"';
             }
         }
     }
@@ -486,19 +486,19 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile) {
             outFile = 'uires.7z';
         }
         if (WizardVersion >= 10.0) {
-            cmdline = '"$(SOUIPATH)\\tools\\uiresbuilder.exe" -i "%(FullPath)" -p uires -r .\\res\\soui_res.rc2 -h .\\res\\resource.h idtable';
+            cmdline = '"$(SOUI3PATH)\\tools\\uiresbuilder.exe" -i "%(FullPath)" -p uires -r .\\res\\soui_res.rc2 -h .\\res\\resource.h idtable';
             DirFor7z = '"$(TargetDir)' + outFile + '" "%(RootDir)%(Directory)*"';
         }
         else {
-            cmdline = '"$(SOUIPATH)\\tools\\uiresbuilder.exe" -i "$(InputPath)" -p uires -r .\\res\\soui_res.rc2 -h .\\res\\resource.h idtable';
+            cmdline = '"$(SOUI3PATH)\\tools\\uiresbuilder.exe" -i "$(InputPath)" -p uires -r .\\res\\soui_res.rc2 -h .\\res\\resource.h idtable';
             DirFor7z = '"$(TargetDir)' + outFile + '" "$(InputDir)*"';
         }
 
         if (ResLoadType == 1) {
-            cmd7z = '"$(SOUIPATH)\\tools\\7z.exe" a -tzip ' + DirFor7z;
+            cmd7z = '"$(SOUI3PATH)\\tools\\7z.exe" a -tzip ' + DirFor7z;
         }
         else if (ResLoadType == 2) {
-            cmd7z = '"$(SOUIPATH)\\tools\\7z.exe" a ' + DirFor7z;
+            cmd7z = '"$(SOUI3PATH)\\tools\\7z.exe" a ' + DirFor7z;
         }
 
         if (psw != null && psw.length != 0) {

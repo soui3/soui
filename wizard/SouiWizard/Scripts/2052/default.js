@@ -179,7 +179,7 @@ function AddConfig(proj, strProjectName) {
         LinkTool.SuppressStartupBanner = true;  // nologo
         LinkTool.GenerateDebugInformation = true;
         LinkTool.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin"';
-        LinkTool.AdditionalDependencies = 'utilitiesd.lib souid.lib'
+        LinkTool.AdditionalDependencies = 'utilitiesd.lib soui3d.lib'
         LinkTool.SubSystem = subSystemOption.subSystemWindows;
 
         var resCplTool = config.Tools('VCResourceCompilerTool');
@@ -219,7 +219,7 @@ function AddConfig(proj, strProjectName) {
         LinkTool.LinkIncremental = linkIncrementalYes;
         LinkTool.SuppressStartupBanner = true;  // nologoif(UserDll)
         LinkTool.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin"';
-        LinkTool.AdditionalDependencies = 'utilities.lib soui.lib'
+        LinkTool.AdditionalDependencies = 'utilities.lib soui3.lib'
         LinkTool.LinkIncremental = 1;
         LinkTool.SubSystem = subSystemOption.subSystemWindows;
 
@@ -260,7 +260,7 @@ function AddConfig(proj, strProjectName) {
             LinkTool_64.SuppressStartupBanner = true;  // nologo
             LinkTool_64.GenerateDebugInformation = true;
             LinkTool_64.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin64"';
-            LinkTool_64.AdditionalDependencies = 'utilitiesd.lib souid.lib'
+            LinkTool_64.AdditionalDependencies = 'utilitiesd.lib soui3d.lib'
             LinkTool_64.SubSystem = subSystemOption.subSystemWindows;
             var resCplTool_64 = config_x64.Tools('VCResourceCompilerTool');
             resCplTool_64.Culture = 0x804;
@@ -294,7 +294,7 @@ function AddConfig(proj, strProjectName) {
             LinkTool_x64.LinkIncremental = linkIncrementalYes;
             LinkTool_x64.SuppressStartupBanner = true;  // nologoif(UserDll)
             LinkTool_x64.AdditionalLibraryDirectories = '"$(SOUI3PATH)\\bin64"';
-            LinkTool_x64.AdditionalDependencies = 'utilities.lib soui.lib'
+            LinkTool_x64.AdditionalDependencies = 'utilities.lib soui3.lib'
             LinkTool_x64.LinkIncremental = 1;
             LinkTool_x64.SubSystem = subSystemOption.subSystemWindows;
 

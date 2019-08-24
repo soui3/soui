@@ -20,12 +20,17 @@ include($$dir/common.pri)
 #demo中使用了#import，不支持MP编译
 QMAKE_CXXFLAGS -= /MP
 
-
 CONFIG(debug,debug|release){
-	LIBS += utilitiesd.lib souid.lib mhookd.lib smileyd.lib
+	LIBS += utilitiesd.lib soui3d.lib
 }
 else{
-	LIBS += utilities.lib soui.lib mhook.lib smiley.lib
+	LIBS += utilities.lib soui3.lib
+}
+CONFIG(debug,debug|release){
+	LIBS += mhookd.lib smileyd.lib
+}
+else{
+	LIBS += mhook.lib smiley.lib
 }
 
 
