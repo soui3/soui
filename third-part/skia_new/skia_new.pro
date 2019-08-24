@@ -71,7 +71,6 @@ HEADERS +=    include/c/sk_canvas.h \
            include/core/SkImage.h \
            include/core/SkImageEncoder.h \
            include/core/SkImageFilter.h \
-           include/core/SkImageGenerator.h \
            include/core/SkImageInfo.h \
            include/core/SkMallocPixelRef.h \
            include/core/SkMaskFilter.h \
@@ -432,7 +431,6 @@ HEADERS +=    include/c/sk_canvas.h \
            src/effects/SkPackBits.h \
            src/effects/SkTrimPE.h \           
            src/image/SkImage_Base.h \
-           src/image/SkImage_Lazy.h \
            src/image/SkReadPixelsRec.h \
            src/image/SkSurface_Base.h \
            src/image/SkSurface_Gpu.h \
@@ -812,7 +810,6 @@ HEADERS +=    include/c/sk_canvas.h \
            /src/core/SkAutoPixmapStorage.h \
            /include/core/SkPngChunkReader.h \         
            /include/core/SkYUVAIndex.h \
-           /include/core/SkImageGenerator.h \
            /src/core/SkEndian.h \
            /src/pdf/SkJpegInfo.h \
            /src/core/SkUtils.h \
@@ -1097,8 +1094,7 @@ HEADERS +=    include/c/sk_canvas.h \
            /include/ports/SkRemotableFontMgr.h \
            /src/core/SkExchange.h \
            /src/utils/SkJSONWriter.h \
-           /src/core/SkTTopoSort.h \           
-           /src/image/SkImage_Lazy.h \           
+           /src/core/SkTTopoSort.h \              
            /include/private/SkShadowFlags.h \
            /include/utils/SkShadowUtils.h \       
            /src/core/SkScopeExit.h \
@@ -1171,7 +1167,6 @@ HEADERS +=    include/c/sk_canvas.h \
            /include/effects/SkImageFilters.h \
            /src/utils/win/SkAutoCoInitialize.h \
            /src/utils/win/SkIStream.h \
-           /include/ports/SkImageGeneratorWIC.h \
            /src/ports/SkOSFile_ios.h \
            /src/ports/SkOSLibrary.h \
            /src/ports/SkScalerContext_win_dw.h \
@@ -1367,7 +1362,6 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/core/SkICC.cpp \
            src/core/SkImageFilter.cpp \
            src/core/SkImageFilterCache.cpp \
-           src/core/SkImageGenerator.cpp \
            src/core/SkImageInfo.cpp \
            src/core/SkLatticeIter.cpp \
            src/core/SkLineClipper.cpp \
@@ -1552,10 +1546,8 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/ports/SkFontMgr_win_dw.cpp \
            src/ports/SkFontMgr_win_dw_factory.cpp \
            src/ports/SkGlobalInitialization_default.cpp \
-           src/ports/SkImageEncoder_WIC.cpp \
-           src/ports/SkImageGenerator_skia.cpp \
-           src/ports/SkImageGeneratorWIC.cpp \
-           src/ports/SkMemory_malloc.cpp \      
+           src/ports/SkMemory_malloc.cpp \    
+           src/ports/SkOSFile_stdio.cpp \     
            src/ports/SkOSFile_win.cpp \
            src/ports/SkOSLibrary_win.cpp \
            src/ports/SkRemotableFontMgr_win_dw.cpp \
@@ -1669,3 +1661,10 @@ SOURCES +=  src/atlastext/SkAtlasTextContext.cpp \
            src/utils/win/SkHRESULT.cpp \
            src/utils/win/SkIStream.cpp \
            src/utils/win/SkWGL_win.cpp \
+           third_party/skcms/skcms.cc\
+           src/codec/SkBmpCodec.cpp\
+           src/ports/SkImageGenerator_none.cpp\
+           src/images/SkImageEncoder.cpp\
+           src/core/SkImageGenerator.cpp\
+           src/codec/SkCodec.cpp\
+           src/codec/SkSampler.cpp\

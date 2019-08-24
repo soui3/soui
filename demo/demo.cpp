@@ -161,7 +161,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		//从各组件中显式创建上述组件对象
 		if (nType == IDYES)
 		{
-			bLoaded = pComMgr->CreateRender_Skia((IObjRef**)&pRenderFactory);			
+			bLoaded = pComMgr->CreateRender_Skia2((IObjRef**)&pRenderFactory);			
 		}
         else
             bLoaded = pComMgr->CreateRender_GDI((IObjRef**)&pRenderFactory);

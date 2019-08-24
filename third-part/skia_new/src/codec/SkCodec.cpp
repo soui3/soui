@@ -46,13 +46,13 @@ static std::vector<DecoderProc>* decoders() {
     #ifdef SK_HAS_WUFFS_LIBRARY
         { SkWuffsCodec_IsFormat, SkWuffsCodec_MakeFromStream },
     #else
-        { SkGifCodec::IsGif, SkGifCodec::MakeFromStream },
+        //{ SkGifCodec::IsGif, SkGifCodec::MakeFromStream },
     #endif
     #ifdef SK_HAS_PNG_LIBRARY
         { SkIcoCodec::IsIco, SkIcoCodec::MakeFromStream },
     #endif
-        { SkBmpCodec::IsBmp, SkBmpCodec::MakeFromStream },
-        { SkWbmpCodec::IsWbmp, SkWbmpCodec::MakeFromStream },
+        //{ SkBmpCodec::IsBmp, SkBmpCodec::MakeFromStream },
+        //{ SkWbmpCodec::IsWbmp, SkWbmpCodec::MakeFromStream },
     };
     return decoders;
 }

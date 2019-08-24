@@ -15,6 +15,7 @@
 #ifdef _DEBUG
 #define COM_RENDER_GDI  _T("render-gdid.dll")
 #define COM_RENDER_SKIA _T("render-skiad.dll")
+#define COM_RENDER_SKIA_NEW _T("render-skia_newd.dll")
 #define COM_SCRIPT_LUA _T("scriptmodule-luad.dll")
 #define COM_TRANSLATOR _T("translatord.dll")
 #define COM_ZIPRESPROVIDER _T("resprovider-zipd.dll")
@@ -25,6 +26,7 @@
 #else
 #define COM_RENDER_GDI  _T("render-gdi.dll")
 #define COM_RENDER_SKIA _T("render-skia.dll")
+#define COM_RENDER_SKIA_NEW _T("render-skia_new.dll")
 #define COM_SCRIPT_LUA _T("scriptmodule-lua.dll")
 #define COM_TRANSLATOR _T("translator.dll")
 #define COM_ZIPRESPROVIDER _T("resprovider-zip.dll")
@@ -318,6 +320,11 @@ public:
     {
         return renderLoader.CreateInstance(m_strDllPath+COM_RENDER_GDI,ppObj);
     }
+
+	BOOL CreateRender_Skia2(IObjRef** ppObj)
+	{
+		return renderLoader.CreateInstance(m_strDllPath + COM_RENDER_SKIA_NEW, ppObj);
+	}
 
     BOOL CreateRender_Skia(IObjRef **ppObj)
     {
