@@ -105,8 +105,8 @@ struct SkNx {
         Half::Store2(ptr + 2*N/2*sizeof(T), a.fHi, b.fHi);
     }
 
-    AI T min() const { return SkTMin(fLo.min(), fHi.min()); }
-    AI T max() const { return SkTMax(fLo.max(), fHi.max()); }
+    AI T _min() const { return SkTMin((fLo.min)(), (fHi.min)()); }
+    AI T _max() const { return SkTMax((fLo.max)(), (fHi.max)()); }
     AI bool anyTrue() const { return fLo.anyTrue() || fHi.anyTrue(); }
     AI bool allTrue() const { return fLo.allTrue() && fHi.allTrue(); }
 
@@ -215,8 +215,8 @@ struct SkNx<1,T> {
         b.store(ptr + 1*sizeof(T));
     }
 
-    AI T min() const { return fVal; }
-    AI T max() const { return fVal; }
+    AI T _min() const { return fVal; }
+    AI T _max() const { return fVal; }
     AI bool anyTrue() const { return fVal != 0; }
     AI bool allTrue() const { return fVal != 0; }
 
@@ -255,7 +255,7 @@ struct SkNx<1,T> {
     AI SkNx saturatedAdd(const SkNx& y) const {
         static_assert(std::is_unsigned<T>::value, "");
         T sum = fVal + y.fVal;
-        return sum < fVal ? std::numeric_limits<T>::max() : sum;
+        return sum < fVal ? (std::numeric_limits<T>::max)() : sum;
     }
 
     AI SkNx mulHi(const SkNx& m) const {

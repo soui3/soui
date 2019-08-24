@@ -80,7 +80,7 @@ typename std::enable_if<(std::is_integral<S>::value || std::is_enum<S>::value) &
 
     // E.g. (uint8_t)(int8_t) uint8_t(255) == 255, but the int8_t == -1.
     (std::is_signed<D>::value && std::is_unsigned<S>::value && sizeof(D) <= sizeof(S)) ?
-        src <= (S)std::numeric_limits<typename sk_strip_enum<D>::type>::max() :
+        src <= (S)(std::numeric_limits<typename sk_strip_enum<D>::type>::max)() :
 
 #if !defined(SK_DEBUG) && !defined(__MSVC_RUNTIME_CHECKS )
     // Correct (simple) version. This trips up MSVC's /RTCc run-time checking.

@@ -247,7 +247,7 @@ static inline float sk_ieee_float_divide_TODO_IS_DIVIDE_BY_ZERO_SAFE_HERE(float 
     return sk_ieee_float_divide(n,d);
 }
 static inline float sk_ieee_double_divide_TODO_IS_DIVIDE_BY_ZERO_SAFE_HERE(double n, double d) {
-    return sk_ieee_double_divide(n,d);
+    return (float)sk_ieee_double_divide(n,d);
 }
 
 static inline float sk_fmaf(float f, float m, float a) {

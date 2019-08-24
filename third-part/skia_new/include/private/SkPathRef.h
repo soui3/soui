@@ -475,7 +475,7 @@ private:
             }
         }
 
-        constexpr size_t maxSize = std::numeric_limits<size_t>::max();
+        constexpr size_t maxSize = (std::numeric_limits<size_t>::max)();
         size_t newSize;
         if (growSize <= maxSize - oldSize) {
             newSize = oldSize + growSize;
