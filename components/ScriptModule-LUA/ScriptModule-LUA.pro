@@ -28,10 +28,10 @@ include($$dir/common.pri)
 
 
 CONFIG(debug,debug|release){
-	LIBS += lua-52d.lib souid.lib utilitiesd.lib
+	LIBS += lua-52d.lib soui3d.lib utilitiesd.lib
 }
 else{
-	LIBS += lua-52.lib soui.lib utilities.lib
+	LIBS += lua-52.lib soui3.lib utilities.lib
 }
 
 PRECOMPILED_HEADER = src/stdafx.h
