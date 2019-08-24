@@ -68,7 +68,12 @@ void SkTextLayoutEx::init(const wchar_t text[], size_t length, SkRect rc, const 
 		}
 		m_text = tmp;
 	}
-	m_TextAlign = SkTextUtils::kLeft_Align;
+	m_TextAlign = SkTextUtils::kLeft_Align;	
+	m_paint = &paint;
+	m_font = &font;
+	m_rcBound = rc;
+	m_uFormat = uFormat;
+
 	if (m_uFormat & DT_CENTER)
 	{
 		m_TextAlign = SkTextUtils::kCenter_Align;
@@ -77,10 +82,6 @@ void SkTextLayoutEx::init(const wchar_t text[], size_t length, SkRect rc, const 
 	{
 		m_TextAlign = SkTextUtils::kRight_Align;
 	}
-	m_paint = &paint;
-	m_font = &font;
-	m_rcBound = rc;
-	m_uFormat = uFormat;
 	buildLines();
 }
 

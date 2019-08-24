@@ -60,7 +60,7 @@
       <page title="soui ctrl">
         <include src="layout:page_ctrls"/>
       </page>
-      <page title="教程" tip="show webkit based on WKE">
+      <page title="教程네이버" tip="show webkit based on WKE">
         <include src="layout:page_webkit"/>
       </page>
       <page title="flash" tip="windowless flash control">
