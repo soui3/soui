@@ -105,7 +105,7 @@ static SkPMColor rdRop2Proc_Set(SkPMColor src, SkPMColor dst)
 //     unsigned b = SkAlphaBlend(SkGetPackedB32(src), SkGetPackedB32(dst), scale);
 //     return SkPackARGB32(a, r, g, b);
 // }
-
+typedef SkPMColor(*SkXfermodeProc)(SkPMColor, SkPMColor);
 // rop2操作，结束
 typedef struct _Rop2Proc
 {
@@ -132,14 +132,14 @@ static Rop2Proc rop2_map[] = {
 
 ProcXfermode::ProcXfermode( int rop ) : rop2(rop)
 {
-    if(rop < Rop2_End)
+    /*if(rop < Rop2_End)
     {
         fProc = rop2_map[rop].proc;
     }
     else
     {
         fProc = NULL;
-    }
+    }*/
 }
 
 void ProcXfermode::xfer32( SkPMColor  dst[],
@@ -147,7 +147,7 @@ void ProcXfermode::xfer32( SkPMColor  dst[],
                           const  SkAlpha  aa[]) const 
 {
     SkASSERT(dst && src && count >= 0);
-    SkXfermodeProc proc = fProc;
+    /*SkXfermodeProc proc = fProc;
     if (NULL != proc) {
         if (NULL == aa) {
             for (int i = count - 1; i >= 0; --i) {
@@ -166,8 +166,9 @@ void ProcXfermode::xfer32( SkPMColor  dst[],
                 }
             }
         }
-    }
+    }*/
 }
+/*
 void ProcXfermode::xfer16( uint16_t dst[],
                           const  SkPMColor src[], int count,
                           const  SkAlpha aa[]) const
@@ -224,6 +225,7 @@ void ProcXfermode::xferA8( SkAlpha dst[],
         }
     }
 }
+
 ProcXfermode::ProcXfermode(SkReadBuffer& buffer)
 : SkXfermode(buffer)
 {
@@ -236,4 +238,4 @@ void ProcXfermode::flatten(SkWriteBuffer& buffer)
 {
     buffer.writeFunctionPtr((void*)fProc);
     buffer.write32(rop2);
-}
+}*/

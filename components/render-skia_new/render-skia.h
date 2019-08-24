@@ -144,10 +144,10 @@ namespace SOUI
 		SOUI_ATTRS_END()
 	protected:
 		SkFont		m_skFont;   //定义字体
-        SkPaint     m_skPaint;  //定义文字绘制属性
-        LOGFONT     m_lf;
-		SkBlurStyle m_blurStyle;
-		SkScalar	m_blurRadius;
+		SkPaint      m_skPaint;  //定义文字绘制属性
+        LOGFONT				m_lf;
+		SkBlurStyle			m_blurStyle;
+		SkScalar			m_blurRadius;
 	};
 
 	class SBrush_Skia : public TSkiaRenderObjImpl<IBrush>
@@ -246,9 +246,9 @@ namespace SOUI
         
         void SetRegion(const SkRegion & rgn);
         
-        static SkRegion::Op RGNMODE2SkRgnOP(UINT mode);
+        static SkClipOp RgnMode2SkClipOP(UINT mode);
 
-
+		static SkRegion::Op RgnMode2SkRgnOP(UINT mode);
 	protected:
         SkRegion    m_rgn;
 	};

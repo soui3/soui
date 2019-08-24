@@ -16,7 +16,9 @@ namespace SOUI
 	}
 
 	void* SPathEffect_Corner::GetRealPathEffect()
-	{}
+	{
+		return nullptr;
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////

@@ -44,7 +44,7 @@
     here.
  */
 //#define SK_DEBUG
-//#define SK_RELEASE
+#define SK_RELEASE
 
 /*  To write debug messages to a console, skia will call SkDebugf(...) following
     printf conventions (e.g. const char* format, ...). If you want to redirect
@@ -56,7 +56,7 @@
  *  To specify a different default font cache limit, define this. If this is
  *  undefined, skia will use a built-in value.
  */
-//#define SK_DEFAULT_FONT_CACHE_LIMIT   (1024 * 1024)
+#define SK_DEFAULT_FONT_CACHE_LIMIT   (1024 * 1024)
 
 /*
  *  To specify the default size of the image cache, undefine this and set it to
@@ -74,7 +74,7 @@
 
 /*  Change the kN32_SkColorType ordering to BGRA to work in X windows.
  */
-//#define SK_R32_SHIFT    16
+#define SK_R32_SHIFT    16
 
 
 /* Determines whether to build code that supports the GPU backend. Some classes
@@ -91,7 +91,7 @@
  * Skia consumers can provide their own definitions of these macros to
  * integrate with their histogram collection backend.
  */
-//#define SK_HISTOGRAM_BOOLEAN(name, value)
-//#define SK_HISTOGRAM_ENUMERATION(name, value, boundary_value)
+#define SK_HISTOGRAM_BOOLEAN(name, value)
+#define SK_HISTOGRAM_ENUMERATION(name, value, boundary_value)
 
 #endif
