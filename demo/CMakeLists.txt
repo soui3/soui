@@ -15,7 +15,7 @@ file(GLOB_RECURSE CURRENT_RC *.rc *.rc2)
 
 set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/SWkeWebkit.h
-	${PROJECT_SOURCE_DIR}/controls.extend/gif/SAniImgFrame.h
+	${PROJECT_SOURCE_DIR}/controls.extend/gif/SSkinAni.h
 	${PROJECT_SOURCE_DIR}/controls.extend/gif/SGifPlayer.h
 	${PROJECT_SOURCE_DIR}/controls.extend/gif/SSkinGif.h
 	${PROJECT_SOURCE_DIR}/controls.extend/gif/SSkinAPNG.h
@@ -95,7 +95,7 @@ add_executable(demo WIN32 ${CURRENT_HEADERS} ${CURRENT_SRCS} ${CURRENT_SOUIS} ${
 
 set_target_properties(demo PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 add_dependencies(demo soui-sys-resource ${COM_LIBS})
-target_link_libraries(demo soui utilities mhook smiley)
+target_link_libraries(demo soui3 utilities mhook smiley)
 set_target_properties (demo PROPERTIES
     FOLDER demos
 )

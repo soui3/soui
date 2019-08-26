@@ -67,7 +67,7 @@
 #
 
 cmake_minimum_required(VERSION 3.4.3)
-project(SOUI)
+project(SOUI3)
 
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/__cmake/")
 include(__cmake/cotire.cmake)
