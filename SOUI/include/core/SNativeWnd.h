@@ -352,11 +352,19 @@ public:
         SASSERT(::IsWindow(m_hWnd));
         return ::SendNotifyMessage(m_hWnd, message, wParam, lParam);
     }
+
     BOOL SetWindowText(LPCTSTR lpszString)
     {
         SASSERT(::IsWindow(m_hWnd));
-        return ::SetWindowText(m_hWnd, lpszString);
+        BOOL bRet= ::SetWindowText(m_hWnd, lpszString);
+		if (bRet)
+		{
+			OnWindowTextChanged(lpszString);
+		}
+		return bRet;
     }
+
+	virtual void OnWindowTextChanged(LPCTSTR lpszString) {}
 
     int GetWindowText(LPTSTR lpszStringBuf, int nMaxCount) const
     {

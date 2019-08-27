@@ -289,13 +289,14 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     
     ModifyStyle(0,dwStyle);
     ModifyStyleEx(0,dwExStyle);
-    SNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
+	SStringT strTitle = m_hostAttr.m_strTitle.GetText(FALSE);
+    SNativeWnd::SetWindowText(strTitle);
     
     if(m_hostAttr.m_bTranslucent)
     {
         SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 		m_dummyWnd = new SDummyWnd(this);
-        m_dummyWnd->Create(_T("SOUI_DUMMY_WND"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
+        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
         m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
         ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
         m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
@@ -366,6 +367,14 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     FireEvent(evt);
 
     return TRUE;
+}
+
+void SHostWnd::OnWindowTextChanged(LPCTSTR pszTitle)
+{
+	if (m_dummyWnd)
+	{
+		m_dummyWnd->SetWindowText(pszTitle);
+	}
 }
 
 void SHostWnd::_Redraw()

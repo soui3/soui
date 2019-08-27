@@ -298,6 +298,9 @@ protected://Swindow 虚方法
 protected:
 	virtual IToolTip * CreateTooltip() const;
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
+
+protected:
+	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
