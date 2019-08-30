@@ -62,7 +62,6 @@ namespace SOUI
 		mutable CShareMemBuffer	m_sendBuf;
 		HWND	m_hRemoteId;
 		CShareMemBuffer	m_recvBuf;
-
 		IIpcConnection * m_pConn;
 		mutable UINT	m_uCallSeq;
 	};

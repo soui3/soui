@@ -3,7 +3,8 @@
 
 namespace SOUI
 {
-	SIpcHandle::SIpcHandle() :m_pConn(NULL), m_hLocalId(0),m_hRemoteId(0)
+	SIpcHandle::SIpcHandle() 
+		:m_pConn(NULL), m_hLocalId(0),m_hRemoteId(0)
 	{
 		m_uCallSeq = 0;
 	}
@@ -23,7 +24,6 @@ namespace SOUI
 		{
 			return FALSE;
 		}
-
 		GetIpcConnection()->BuildShareBufferName(idRemote, idLocal, szName);
 
 		if (!m_recvBuf.OpenMemFile(szName, uBufSize, pSa))
@@ -58,7 +58,7 @@ namespace SOUI
 		UINT uFunId = 0;
 		pBuf->Read(&uFunId,4);
 		SParamStream ps(pBuf);
-
+		//SLOG_INFO("handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
 		bool bReqHandled = m_pConn->HandleFun(uFunId, ps);
 		return  bReqHandled?1:0;
 	}
@@ -115,11 +115,16 @@ namespace SOUI
 			}
 			DispatchMessage(&msg);
 		}
+		IShareBuffer *pBuf = &m_sendBuf;
+		if (!pBuf->Lock(1000))//prevent the next call before the message was handled by the other endpoint.
+		{
+			//SLOG_ERROR("lock share buffer timeout");
+			return false;
+		}
 
 		int nCallSeq = m_uCallSeq ++;
 		if(m_uCallSeq>100000) m_uCallSeq=0;
-
-		IShareBuffer *pBuf = &m_sendBuf;
+		//SLOG_WARN("call function, this:"<<this<<" seq="<<nCallSeq<<" id="<<pParam->GetID());
 		DWORD dwPos = pBuf->Tell();
 		pBuf->Write(&nCallSeq,4);//write call seq first.
 		UINT uFunId = pParam->GetID();
@@ -127,22 +132,23 @@ namespace SOUI
 		if(!ToStream4Input(pParam, pBuf))
 		{
 			pBuf->Seek(IShareBuffer::seek_set, dwPos);
-			m_sendBuf.SetTail(dwPos);
+			pBuf->SetTail(dwPos);
 			assert(false);
 			return false;
 		}
-		int nLen = m_sendBuf.Tell()-dwPos;
-		m_sendBuf.Write(&nLen,sizeof(int));//write a length of params to stream, which will be used to locate param header.
+		int nLen = pBuf->Tell()-dwPos;
+		pBuf->Write(&nLen,sizeof(int));//write a length of params to stream, which will be used to locate param header.
 		LRESULT lRet = SendMessage(m_hRemoteId, UM_CALL_FUN, pParam->GetID(), (LPARAM)m_hLocalId);
 		if (lRet != 0)
 		{
-			m_sendBuf.Seek(IShareBuffer::seek_set,dwPos+nLen+sizeof(int));//output param must be follow input params.
+			pBuf->Seek(IShareBuffer::seek_set,dwPos+nLen+sizeof(int));//output param must be follow input params.
 			BOOL bRet = FromStream4Output(pParam,&m_sendBuf);
 			assert(bRet);
 		}
 		//clear params.
-		m_sendBuf.Seek(IShareBuffer::seek_set, dwPos);
-		m_sendBuf.SetTail(dwPos);
+		pBuf->Seek(IShareBuffer::seek_set, dwPos);
+		pBuf->SetTail(dwPos);
+		pBuf->Unlock();
 
 		return lRet!=0;
 	}
