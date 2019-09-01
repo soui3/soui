@@ -95,7 +95,7 @@ int CShareMemBuffer::Write(const void * pBuf, UINT nLen)
 
 	UINT nRemain = pHeader->dwSize - pHeader->dwPos;
 	if (nLen > nRemain) nLen = nRemain;
-	memcpy(GetBuffer() + pHeader->dwTailPos, pBuf, nLen);
+	memcpy(GetBuffer() + pHeader->dwPos, pBuf, nLen);
 	pHeader->dwPos += nLen;
 	if (pHeader->dwTailPos < pHeader->dwPos)
 		pHeader->dwTailPos = pHeader->dwPos;
@@ -133,7 +133,11 @@ UINT CShareMemBuffer::Seek(SEEK mode, int nOffset)
 	default:
 		break;
 	}
-	assert(nOffset >= 0 && nOffset <= (int)pHeader->dwTailPos);
+	assert(nOffset >= 0 && nOffset < pHeader->dwSize);
+	if (nOffset > pHeader->dwTailPos)
+	{//auto expend buffer used size.
+		pHeader->dwTailPos = nOffset;
+	}
 	pHeader->dwPos = nOffset;
 	return pHeader->dwPos;
 }

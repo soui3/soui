@@ -5,8 +5,8 @@ namespace SOUI
 {
 	SIpcHandle::SIpcHandle() 
 		:m_pConn(NULL), m_hLocalId(0),m_hRemoteId(0)
+		,m_uCallSeq(0),m_nCallStack(0)
 	{
-		m_uCallSeq = 0;
 	}
 
 	SIpcHandle::~SIpcHandle() {}
@@ -47,19 +47,19 @@ namespace SOUI
 			return 0;
 		bHandled = TRUE;
 		IShareBuffer *pBuf = GetRecvBuffer();
-		assert(pBuf->Tell()>= 4); //4=sizeof(int)
-		pBuf->Seek(IShareBuffer::seek_cur,-4);
-		int nLen=0;
-		pBuf->Read(&nLen, 4);
-		assert(pBuf->Tell()>=(UINT)(nLen+ 4));
-		pBuf->Seek(IShareBuffer::seek_cur,-(nLen+ 4));
+		int iStack = (int)wp;//get call stack.
+		pBuf->Seek(IShareBuffer::seek_set, iStack * m_pConn->GetBufSize());//seek to parameter header.
+
+		//read Seq
 		int nCallSeq = 0;
 		pBuf->Read(&nCallSeq,4);
+		//read func id
 		UINT uFunId = 0;
 		pBuf->Read(&uFunId,4);
 		SParamStream ps(pBuf);
-		//SLOG_INFO("handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
+		//SLOG_WARN("+++++handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
 		bool bReqHandled = m_pConn->HandleFun(uFunId, ps);
+		//SLOG_WARN("=====handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
 		return  bReqHandled?1:0;
 	}
 
@@ -116,39 +116,29 @@ namespace SOUI
 			DispatchMessage(&msg);
 		}
 		IShareBuffer *pBuf = &m_sendBuf;
-		if (!pBuf->Lock(1000))//prevent the next call before the message was handled by the other endpoint.
-		{
-			//SLOG_ERROR("lock share buffer timeout");
+		assert(m_nCallStack >= 0);
+		if (m_nCallStack + 1 > m_pConn->GetStackSize())
 			return false;
-		}
+		//SLOG_WARN("call function, this:"<<this<<" seq="<<nCallSeq<<" id="<<pParam->GetID());
+		pBuf->Seek(IShareBuffer::seek_set, m_nCallStack * m_pConn->GetBufSize());
+		m_nCallStack++;
 
 		int nCallSeq = m_uCallSeq ++;
 		if(m_uCallSeq>100000) m_uCallSeq=0;
-		//SLOG_WARN("call function, this:"<<this<<" seq="<<nCallSeq<<" id="<<pParam->GetID());
-		DWORD dwPos = pBuf->Tell();
 		pBuf->Write(&nCallSeq,4);//write call seq first.
 		UINT uFunId = pParam->GetID();
 		pBuf->Write(&uFunId,4);
-		if(!ToStream4Input(pParam, pBuf))
-		{
-			pBuf->Seek(IShareBuffer::seek_set, dwPos);
-			pBuf->SetTail(dwPos);
-			assert(false);
-			return false;
-		}
-		int nLen = pBuf->Tell()-dwPos;
-		pBuf->Write(&nLen,sizeof(int));//write a length of params to stream, which will be used to locate param header.
-		LRESULT lRet = SendMessage(m_hRemoteId, UM_CALL_FUN, pParam->GetID(), (LPARAM)m_hLocalId);
+		ToStream4Input(pParam, pBuf);
+		DWORD dwPos = pBuf->Tell();
+		LRESULT lRet = SendMessage(m_hRemoteId, UM_CALL_FUN, (WPARAM)m_nCallStack-1, (LPARAM)m_hLocalId);
 		if (lRet != 0)
 		{
-			pBuf->Seek(IShareBuffer::seek_set,dwPos+nLen+sizeof(int));//output param must be follow input params.
+			pBuf->Seek(IShareBuffer::seek_set,dwPos);//output param must be follow input params.
 			BOOL bRet = FromStream4Output(pParam,&m_sendBuf);
 			assert(bRet);
 		}
 		//clear params.
-		pBuf->Seek(IShareBuffer::seek_set, dwPos);
-		pBuf->SetTail(dwPos);
-		pBuf->Unlock();
+		m_nCallStack--;
 
 		return lRet!=0;
 	}
@@ -298,7 +288,7 @@ namespace SOUI
 		pIpcHandle->SetIpcConnection(pConn);
 
 		void * pSa = m_pCallback->GetSecurityAttr();
-		if (!pIpcHandle->InitShareBuf((ULONG_PTR)m_hSvr, (ULONG_PTR)hClient, m_pCallback->GetBufSize(), pSa))
+		if (!pIpcHandle->InitShareBuf((ULONG_PTR)m_hSvr, (ULONG_PTR)hClient, pConn->GetBufSize()* pConn->GetStackSize(), pSa))
 		{
 			m_pCallback->ReleaseSecurityAttr(pSa);
 			pConn->Release();
@@ -366,7 +356,7 @@ namespace SOUI
 	}
 }
 
-SIPC_COM_C BOOL SIPC_API SOUI::IPC::SCreateInstance(IObjRef ** ppIpcFactory)
+ BOOL  SOUI::IPC::SCreateInstance(IObjRef ** ppIpcFactory)
 {
 	*ppIpcFactory = new SOUI::SIpcFactory();
 	return TRUE;

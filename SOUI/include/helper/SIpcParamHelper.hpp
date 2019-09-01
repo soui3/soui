@@ -13,10 +13,8 @@ bool HandleFun(UINT uMsg, SOUI::SParamStream &ps){ \
 	{\
 		x param; \
 		GetIpcHandle()->FromStream4Input(&param,ps.GetBuffer());\
-		DWORD dwPos = ps.GetBuffer()->Seek(SOUI::IShareBuffer::seek_cur,sizeof(int));\
-		ps.GetBuffer()->Unlock();\
+		DWORD dwPos=ps.GetBuffer()->Tell();\
 		fun(param); \
-		ps.GetBuffer()->Lock(INFINITE);\
 		ps.GetBuffer()->Seek(SOUI::IShareBuffer::seek_set,dwPos);\
 		GetIpcHandle()->ToStream4Output(&param,ps.GetBuffer());\
 		bHandled = true;\
