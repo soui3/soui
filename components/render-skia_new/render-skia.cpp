@@ -1706,7 +1706,17 @@ namespace SOUI
 
 	SkRegion::Op SRegion_Skia::RgnMode2SkRgnOP(UINT mode)
 	{
-		return SkRegion::Op();
+		SkRegion::Op op;
+		switch (mode)
+		{
+			case RGN_COPY: op = SkRegion::kReplace_Op; break;
+			case RGN_AND: op = SkRegion::kIntersect_Op; break;
+			case RGN_OR: op = SkRegion::kUnion_Op; break;
+			case RGN_DIFF: op = SkRegion::kDifference_Op; break;
+			case RGN_XOR: op = SkRegion::kXOR_Op; break;
+			default:SASSERT(FALSE); break;
+		}
+		return op;
 	}
 
     void SRegion_Skia::Clear()
@@ -1791,7 +1801,8 @@ namespace SOUI
 				m_skPaint.setStyle(SkPaint::kStroke_Style);
 		}else if(strAttribName.CompareNoCase(L"lcdText")==0)
 		{
-			//m_skFont.setLCDRenderText(String2Bool(strValue));
+			if(String2Bool(strValue))
+				m_skFont.setEdging(SkFont::Edging::kSubpixelAntiAlias);
 		}
 		return S_OK;
 	}
@@ -1801,8 +1812,8 @@ namespace SOUI
 		(xmlNode);
 		if(m_blurStyle != -1 && m_blurRadius > 0.0f)
 		{
-			//m_skPaint.setMaskFilter(SkBlurMaskFilter::Create(m_blurStyle,
-			//	SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
+			m_skPaint.setMaskFilter(SkBlurMaskFilter::Make(m_blurStyle,
+				SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
 		}
 	}
 
@@ -1829,8 +1840,7 @@ namespace SOUI
 
 		m_skFont.setSize(SkIntToScalar(abs(plf->lfHeight)));
 		//m_skFont.setUnderlineText(!!plf->lfUnderline);
-		//m_skFont.setStrikeThruText(!!plf->lfStrikeOut);
-
+		//m_skFont.setStrikeThruText(!!plf->lfStrikeOut);		
 		return TRUE;
 	}
 

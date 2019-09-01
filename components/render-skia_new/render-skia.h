@@ -143,8 +143,8 @@ namespace SOUI
 			ATTR_FLOAT(L"blurRadius",m_blurRadius,FALSE)
 		SOUI_ATTRS_END()
 	protected:
-		SkFont		m_skFont;   //定义字体
-		SkPaint      m_skPaint;  //定义文字绘制属性
+		SkFont				m_skFont;   //定义字体
+		SkPaint				m_skPaint;  //定义文字绘制属性
         LOGFONT				m_lf;
 		SkBlurStyle			m_blurStyle;
 		SkScalar			m_blurRadius;

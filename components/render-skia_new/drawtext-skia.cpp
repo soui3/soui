@@ -118,7 +118,7 @@ SkScalar SkTextLayoutEx::drawLine(SkCanvas* canvas, SkScalar x, SkScalar y, int 
 
 	if (!(m_uFormat & DT_CALCRECT))
 	{
-		canvas->drawSimpleText(text, (iEnd - iBegin) * sizeof(wchar_t), SkTextEncoding::kUTF16, x, y, *m_font, *m_paint);
+		SkTextUtils::Draw(canvas,text, (iEnd - iBegin) * sizeof(wchar_t), SkTextEncoding::kUTF16, x, y, *m_font, *m_paint, m_TextAlign);
 		int i = 0;
 		while (i < m_prefix.count())
 		{
@@ -129,18 +129,12 @@ SkScalar SkTextLayoutEx::drawLine(SkCanvas* canvas, SkScalar x, SkScalar y, int 
 
 		SkScalar xBase = x;
 
-		if (m_TextAlign != SkTextUtils::kLeft_Align)
-		{
-			SkScalar nTextWidth = m_font->measureText(text, (iEnd - iBegin) * sizeof(wchar_t), SkTextEncoding::kUTF16);
-			switch (m_TextAlign)
-			{
-				case SkTextUtils::kCenter_Align:
-					xBase = x - nTextWidth / 2.0f;
-					break;
-				case SkTextUtils::kRight_Align:
-					xBase = x - nTextWidth;
-					break;
+		if (m_TextAlign != SkTextUtils::kLeft_Align) {
+			SkScalar width = m_font->measureText(text, (iEnd - iBegin) * sizeof(wchar_t), SkTextEncoding::kUTF16);
+			if (m_TextAlign == SkTextUtils::kCenter_Align) {
+				width *= 0.5f;
 			}
+			xBase -= width;
 		}
 
 		while (i < m_prefix.count() && m_prefix[i] < iEnd)
@@ -181,6 +175,7 @@ SkScalar SkTextLayoutEx::drawLineEndWithEllipsis(SkCanvas* canvas, SkScalar x, S
 			wchar_t* pbuf = new wchar_t[i + 3];
 			memcpy(pbuf, text, i * sizeof(wchar_t));
 			memcpy(pbuf + i, CH_ELLIPSIS, 3 * sizeof(wchar_t));
+			//SkTextUtils::Draw(canvas, text, (iEnd - iBegin) * sizeof(wchar_t), SkTextEncoding::kUTF16, x, y, *m_font, *m_paint, m_TextAlign);
 			canvas->drawSimpleText(pbuf, (i + 3) * sizeof(wchar_t), SkTextEncoding::kUTF16, x, y, *m_font, *m_paint);
 			delete[]pbuf;
 		}
