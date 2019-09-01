@@ -114,6 +114,8 @@ namespace SOUI
 
 	struct IIpcConnection : IObjRef
 	{
+		virtual int GetBufSize() const = 0;
+		virtual int GetStackSize() const = 0;
 		virtual IIpcHandle * GetIpcHandle() = 0;
 		virtual bool HandleFun(UINT uFunID, SParamStream & ps) = 0;
 		virtual void BuildShareBufferName(ULONG_PTR idLocal, ULONG_PTR idRemote, TCHAR szBuf[MAX_PATH]) const = 0;
@@ -124,7 +126,6 @@ namespace SOUI
 		virtual void OnNewConnection(IIpcHandle * pIpcHandle, IIpcConnection ** ppConn) = 0;
 		virtual void OnConnected(IIpcConnection * pConn) =0;
 		virtual void OnDisconnected(IIpcConnection * pConn) =0;
-		virtual int GetBufSize() const = 0;
 		virtual void * GetSecurityAttr() const = 0;
 		virtual void ReleaseSecurityAttr(void* psa) const = 0;
 	};
