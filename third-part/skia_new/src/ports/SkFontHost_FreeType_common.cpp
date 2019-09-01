@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2006-2012 The Android Open Source Project
  * Copyright 2012 Mozilla Foundation
  *

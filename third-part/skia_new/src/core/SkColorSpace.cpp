@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2016 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -212,7 +212,7 @@ void SkColorSpace::toProfile(skcms_ICCProfile* profile) const {
 }
 
 sk_sp<SkColorSpace> SkColorSpace::Make(const skcms_ICCProfile& profile) {
-    // TODO: move below ≈sRGB test?
+    // TODO: move below 鈮坰RGB test?
     if (!profile.has_toXYZD50 || !profile.has_trc) {
         return nullptr;
     }

@@ -1,4 +1,4 @@
-#ifndef VULKAN_WIN32_H_
+﻿#ifndef VULKAN_WIN32_H_
 #define VULKAN_WIN32_H_ 1
 
 #ifdef __cplusplus

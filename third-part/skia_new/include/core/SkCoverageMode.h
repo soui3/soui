@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2018 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -18,11 +18,11 @@
  *  See SkMaskFilter for ways to use these when combining two different masks.
  */
 enum class SkCoverageMode {
-    kUnion,             // A ∪ B    A+B-A*B
-    kIntersect,         // A ∩ B    A*B
+    kUnion,             // A 鈭?B    A+B-A*B
+    kIntersect,         // A 鈭?B    A*B
     kDifference,        // A - B    A*(1-B)
     kReverseDifference, // B - A    B*(1-A)
-    kXor,               // A ⊕ B    A+B-2*A*B
+    kXor,               // A 鈯?B    A+B-2*A*B
 
     kLast = kXor,
 };

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2006 The Android Open Source Project
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -227,8 +227,8 @@ public:
     FT_Get_Var_Blend_CoordinatesProc fGetVarDesignCoordinates;
 
     // FT_Get_Var_Axis_Flags was introduced in FreeType 2.8.1
-    // Get the ‘flags’ field of an OpenType Variation Axis Record.
-    // Not meaningful for Adobe MM fonts (‘*flags’ is always zero).
+    // Get the 鈥榝lags鈥?field of an OpenType Variation Axis Record.
+    // Not meaningful for Adobe MM fonts (鈥?flags鈥?is always zero).
     using FT_Get_Var_Axis_FlagsProc = FT_Error (*)(FT_MM_Var*, FT_UInt, FT_UInt*);
     FT_Get_Var_Axis_FlagsProc fGetVarAxisFlags;
 

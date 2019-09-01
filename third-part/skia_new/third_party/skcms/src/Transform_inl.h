@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2018 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -656,7 +656,7 @@ static void clut(const skcms_A2B* a2b, F* r, F* g, F* b, F a) {
         // where 0 selects the low index contribution and its weight 1-t,
         // or 4 the high index contribution and its weight t.
 
-        // Since 0<dim≤4, we can always just start off with the 0-th channel,
+        // Since 0<dim鈮?, we can always just start off with the 0-th channel,
         // then handle the others conditionally.
         I32 ix = index [0 + (combo&1)*4];
         F    w = weight[0 + (combo&1)*4];

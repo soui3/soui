@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2019 The Android Open Source Project
  *
  * Use of this source code is governed by a BSD-style license that can be

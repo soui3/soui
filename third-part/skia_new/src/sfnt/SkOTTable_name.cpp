@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2013 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -248,7 +248,7 @@ BCP47FromLanguageID[] = {
     { 0x0411, "ja-JP" }, //Japanese
     { 0x0412, "ko-KR" }, //Korean
     { 0x0413, "nl-NL" }, //Dutch
-    { 0x0414, "nb-NO" }, //Norwegian (Bokmål)
+    { 0x0414, "nb-NO" }, //Norwegian (Bokm氓l)
     { 0x0415, "pl-PL" }, //Polish
     { 0x0416, "pt-BR" }, //Portuguese
     { 0x0417, "rm-CH" }, //Romansh

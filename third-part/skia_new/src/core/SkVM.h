@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -232,11 +232,11 @@ namespace skvm {
 
     enum class Op : uint8_t {
           store8,   store16,   store32,
-    // ↑ side effects / no side effects ↓
+    // 鈫?side effects / no side effects 鈫?
 
            load8,    load16,    load32,
          gather8,  gather16,  gather32,
-    // ↑ always varying / uniforms, constants, Just Math ↓
+    // 鈫?always varying / uniforms, constants, Just Math 鈫?
 
         uniform8, uniform16, uniform32,
         splat,

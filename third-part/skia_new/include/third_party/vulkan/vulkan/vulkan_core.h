@@ -1,4 +1,4 @@
-#ifndef VULKAN_CORE_H_
+﻿#ifndef VULKAN_CORE_H_
 #define VULKAN_CORE_H_ 1
 
 #ifdef __cplusplus

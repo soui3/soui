@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2018 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -3486,7 +3486,7 @@ SI void store_565_(uint16_t* ptr, size_t tail, U16 r, U16 g, U16 b) {
     // Round from [0,255] to [0,31] or [0,63], as if x * (31/255.0f) + 0.5f.
     // (Don't feel like you need to find some fundamental truth in these...
     // they were brute-force searched.)
-    U16 R = (r *  9 + 36) / 74,   //  9/74 ≈ 31/255, plus 36/74, about half.
+    U16 R = (r *  9 + 36) / 74,   //  9/74 鈮?31/255, plus 36/74, about half.
         G = (g * 21 + 42) / 85,   // 21/85 = 63/255 exactly.
         B = (b *  9 + 36) / 74;
     // Pack them back into 15|rrrrr gggggg bbbbb|0.

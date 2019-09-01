@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2018 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -1426,7 +1426,7 @@ bool skcms_TransferFunction_invert(const skcms_TransferFunction* src, skcms_Tran
 
     // We're inverting this function, solving for x in terms of y.
     //   y = (cx + f)         x < d
-    //       (ax + b)^g + e   x ≥ d
+    //       (ax + b)^g + e   x 鈮?d
     // The inverse of this function can be expressed in the same piecewise form.
     skcms_TransferFunction inv = {0,0,0,0,0,0,0};
 
@@ -1484,7 +1484,7 @@ bool skcms_TransferFunction_invert(const skcms_TransferFunction* src, skcms_Tran
 // From here below we're approximating an skcms_Curve with an skcms_TransferFunction{g,a,b,c,d,e,f}:
 //
 //   tf(x) =  cx + f          x < d
-//   tf(x) = (ax + b)^g + e   x ≥ d
+//   tf(x) = (ax + b)^g + e   x 鈮?d
 //
 // When fitting, we add the additional constraint that both pieces meet at d:
 //
@@ -1493,7 +1493,7 @@ bool skcms_TransferFunction_invert(const skcms_TransferFunction* src, skcms_Tran
 // Solving for e and folding it through gives an alternate formulation of the non-linear piece:
 //
 //   tf(x) =                           cx + f   x < d
-//   tf(x) = (ax + b)^g - (ad + b)^g + cd + f   x ≥ d
+//   tf(x) = (ax + b)^g - (ad + b)^g + cd + f   x 鈮?d
 //
 // Our overall strategy is then:
 //    For a couple tolerances,
@@ -1509,11 +1509,11 @@ bool skcms_TransferFunction_invert(const skcms_TransferFunction* src, skcms_Tran
 //    let y = Table(x)
 //    r(x) = x - f_inv(y)
 //
-//    ∂r/∂g = ln(ay + b)*(ay + b)^g
+//    鈭俽/鈭俫 = ln(ay + b)*(ay + b)^g
 //          - ln(ad + b)*(ad + b)^g
-//    ∂r/∂a = yg(ay + b)^(g-1)
+//    鈭俽/鈭俛 = yg(ay + b)^(g-1)
 //          - dg(ad + b)^(g-1)
-//    ∂r/∂b =  g(ay + b)^(g-1)
+//    鈭俽/鈭俠 =  g(ay + b)^(g-1)
 //          -  g(ad + b)^(g-1)
 
 // Return the residual of roundtripping skcms_Curve(x) through f_inv(y) with parameters P,
@@ -1555,7 +1555,7 @@ static bool gauss_newton_step(const skcms_Curve* curve,
     //
     // We want to do P' = P + (Jf^T Jf)^-1 Jf^T r(P),
     //   where r(P) is the residual vector
-    //   and Jf is the Jacobian matrix of f(), ∂r/∂P.
+    //   and Jf is the Jacobian matrix of f(), 鈭俽/鈭侾.
     //
     // Let's review the shape of each of these expressions:
     //   r(P)   is [N x 1], a column vector with one entry per value of x tested
@@ -1566,7 +1566,7 @@ static bool gauss_newton_step(const skcms_Curve* curve,
     //                                              and so is its inverse (Jf^T Jf)^-1
     //   Jf^T r(P) is [3 x N] * [N x 1] == [3 x 1], a column vector with the same shape as P
     //
-    // Our implementation strategy to get to the final ∆P is
+    // Our implementation strategy to get to the final 鈭哖 is
     //   1) evaluate Jf^T Jf,   call that lhs
     //   2) evaluate Jf^T r(P), call that rhs
     //   3) invert lhs

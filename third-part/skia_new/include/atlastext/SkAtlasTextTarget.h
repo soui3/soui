@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2017 Google Inc.
  *
  * Use of this source code is governed by a BSD-style license that can be
@@ -25,7 +25,7 @@ public:
     virtual ~SkAtlasTextTarget();
 
     /**
-     * Creates a text drawing target. ‘handle’ is used to identify this rendering surface when
+     * Creates a text drawing target. 鈥榟andle鈥?is used to identify this rendering surface when
      * draws are flushed to the SkAtlasTextContext's SkAtlasTextRenderer.
      */
     static std::unique_ptr<SkAtlasTextTarget> Make(sk_sp<SkAtlasTextContext>,

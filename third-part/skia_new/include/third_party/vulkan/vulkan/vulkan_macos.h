@@ -1,4 +1,4 @@
-#ifndef VULKAN_MACOS_H_
+﻿#ifndef VULKAN_MACOS_H_
 #define VULKAN_MACOS_H_ 1
 
 #ifdef __cplusplus
