@@ -20,13 +20,9 @@ namespace SOUI
 	class SRenderFactory_Skia : public TObjRefImpl<IRenderFactory>
 	{
 	public:
-		SRenderFactory_Skia()
-		{
-		}
+		SRenderFactory_Skia();
         
-        ~SRenderFactory_Skia()
-        {
-        }
+		~SRenderFactory_Skia();
         
 		virtual BOOL CreateRenderTarget(IRenderTarget ** ppRenderTarget,int nWid,int nHei);
         virtual BOOL CreateFont(IFont ** ppFont , const LOGFONT &lf);

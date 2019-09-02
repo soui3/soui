@@ -4,6 +4,7 @@
 #include <effects\SkGradientShader.h>
 #include <effects\SkBlurMaskFilter.h>
 #include "../skia/src/effects/SkBlurMask.h"
+#include "../skia/include/core/SkGraphics.h"
 
 #include <gdialpha.h>
 
@@ -109,6 +110,15 @@ namespace SOUI
 	};
 	//////////////////////////////////////////////////////////////////////////
 	// SRenderFactory_Skia
+
+	SRenderFactory_Skia::SRenderFactory_Skia()
+	{
+	}
+
+	SRenderFactory_Skia::~SRenderFactory_Skia()
+	{
+		SkGraphics::PurgeFontCache();
+	}
 
 	BOOL SRenderFactory_Skia::CreateRenderTarget( IRenderTarget ** ppRenderTarget ,int nWid,int nHei)
 	{
