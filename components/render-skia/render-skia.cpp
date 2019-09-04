@@ -113,11 +113,12 @@ namespace SOUI
 
 	SRenderFactory_Skia::SRenderFactory_Skia()
 	{
+		SkGraphics::Init();
 	}
 
 	SRenderFactory_Skia::~SRenderFactory_Skia()
 	{
-		SkGraphics::PurgeFontCache();
+		SkGraphics::Term();
 	}
 
 	BOOL SRenderFactory_Skia::CreateRenderTarget( IRenderTarget ** ppRenderTarget ,int nWid,int nHei)
