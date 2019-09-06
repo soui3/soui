@@ -114,6 +114,7 @@ namespace SOUI
 	SRenderFactory_Skia::SRenderFactory_Skia()
 	{
 		SkGraphics::Init();
+		SkGraphics::SetFontCacheCountLimit(100);//cache up to 100 font resource.
 	}
 
 	SRenderFactory_Skia::~SRenderFactory_Skia()
