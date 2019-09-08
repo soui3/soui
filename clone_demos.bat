@@ -8,8 +8,11 @@ cd ..
 mkdir soui-demo
 cd soui-demo
 
-rem call :update_repo TimDemo
-
+call :update_repo SoTool 
+call :update_repo sinstar3
+call :update_repo CapScreenDemo
+call :update_repo idoudemo
+call :update_repo SouiActivexDemo
 
 SET /p selected=1.是否生成soui_demo.sln工程[1=YES;Other=No]:
 if %selected% neq 1 (
