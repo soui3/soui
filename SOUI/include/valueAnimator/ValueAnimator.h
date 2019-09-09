@@ -219,9 +219,9 @@ namespace SOUI{
 		*
 		* @return The length of the animation, in milliseconds.
 		*/
-		long getDuration();
+		long getDuration() const;
 
-		long getTotalDuration();
+		long getTotalDuration() const;
 
 		/**
 		* Sets the position of the animation to the specified point in time. This time should
@@ -303,7 +303,7 @@ namespace SOUI{
 		*
 		* @return the number of milliseconds to delay running the animation
 		*/
-		long getStartDelay();
+		long getStartDelay() const;
 
 		/**
 		* The amount of time, in milliseconds, to delay starting the animation after
@@ -330,7 +330,7 @@ namespace SOUI{
 		*
 		* @return the number of times the animation should repeat, or {@link #INFINITE}
 		*/
-		int getRepeatCount();
+		int getRepeatCount() const;
 
 		/**
 		* Defines what this animation should do when it reaches the end. This
@@ -346,7 +346,7 @@ namespace SOUI{
 		*
 		* @return either one of {@link #REVERSE} or {@link #RESTART}
 		*/
-		IAnimation::RepeatMode getRepeatMode();
+		IAnimation::RepeatMode getRepeatMode() const;
 
 		/**
 		* Adds a listener to the set of listeners that are sent update events through the life of
@@ -387,7 +387,7 @@ namespace SOUI{
 		*
 		* @return The timing interpolator for this SValueAnimator.
 		*/
-		IInterpolator * getInterpolator();
+		IInterpolator * getInterpolator() const;
 
 		void addListener(IAnimatorListener * p);
 
@@ -415,9 +415,9 @@ namespace SOUI{
 
 		void end();
 
-		bool isRunning();
+		bool isRunning() const;
 
-		bool isStarted();
+		bool isStarted() const;
 
 		/**
 		* Plays the SValueAnimator in reverse. If the animation is already running,
@@ -535,6 +535,8 @@ namespace SOUI{
 		void removeAnimationCallback();
 		void addAnimationCallback();
 	protected:
+		virtual void copy(const IValueAnimator * pSrc);
+
 		virtual void onEvaluateValue(float fraction) = 0;
 
 		virtual void OnNextFrame() override;
@@ -552,7 +554,8 @@ namespace SOUI{
 		int		mID;
 		SStringW mName;
 	public:
-		TValueAnimator(T from, T to) : mValueEvaluator(from, to) {
+		TValueAnimator(T from, T to) 
+			:mValueEvaluator(from, to) {
 
 		}
 
@@ -569,7 +572,16 @@ namespace SOUI{
 		T getValue() const{
 			return mValue;
 		}
+		
 	protected:
+
+		virtual void copy(const IValueAnimator * pSrc)
+		{
+			SValueAnimator::copy(pSrc);
+			mName = pSrc->GetName();
+			mID = pSrc->GetID();
+		}
+
 		void onEvaluateValue(float fraction)
 		{
 			mValue = mValueEvaluator.evaluate(fraction);
@@ -597,6 +609,14 @@ namespace SOUI{
 		{
 		}
 
+		IValueAnimator *clone() const
+		{
+			SIntAnimator *pRet = new SIntAnimator();
+			pRet->mValueEvaluator.mStart = mValueEvaluator.mStart;
+			pRet->mValueEvaluator.mEnd = mValueEvaluator.mEnd;
+			pRet->copy(this);
+			return pRet;
+		}
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_INT(L"valueFrom",mValueEvaluator.mStart,FALSE)
@@ -611,6 +631,14 @@ namespace SOUI{
 		{
 		}
 
+		IValueAnimator *clone() const
+		{
+			SFloatAnimator *pRet = new SFloatAnimator();
+			pRet->mValueEvaluator.mStart = mValueEvaluator.mStart;
+			pRet->mValueEvaluator.mEnd = mValueEvaluator.mEnd;
+			pRet->copy(this);
+			return pRet;
+		}
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_FLOAT(L"valueFrom", mValueEvaluator.mStart, FALSE)
@@ -620,23 +648,35 @@ namespace SOUI{
 
 	class SOUI_EXP SColorAnimator : public TValueAnimator<COLORREF> {
 		SOUI_CLASS_NAME(SColorAnimator, L"ColorAnimator")
+
+	protected:
+		COLORREF mStart, mEnd;
 	public:
-		SColorAnimator():TValueAnimator<COLORREF>(0, 0)
+		SColorAnimator():TValueAnimator<COLORREF>(0, 0), mStart(0),mEnd(0)
 		{
 
+		}
+
+		IValueAnimator *clone() const
+		{
+			SColorAnimator *pRet = new SColorAnimator();
+			pRet->mValueEvaluator.setStart(mStart);
+			pRet->mValueEvaluator.setEnd(mEnd);
+			pRet->copy(this);
+			return pRet;
 		}
 
 	protected:
 		HRESULT OnAttrFrom(const SStringW & strValue, BOOL bLoading)
 		{
-			COLORREF cr = GETCOLOR(strValue);
-			mValueEvaluator.setStart(cr);
+			mStart = GETCOLOR(strValue);
+			mValueEvaluator.setStart(mStart);
 			return S_FALSE;
 		}
 		HRESULT OnAttrTo(const SStringW & strValue, BOOL bLoading)
 		{
-			COLORREF cr = GETCOLOR(strValue);
-			mValueEvaluator.setEnd(cr);
+			mEnd = GETCOLOR(strValue);
+			mValueEvaluator.setEnd(mEnd);
 			return S_FALSE;
 		}
 

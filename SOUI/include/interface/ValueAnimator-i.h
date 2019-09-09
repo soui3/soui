@@ -51,9 +51,9 @@ namespace SOUI
 		*
 		* @return The length of the animation, in milliseconds.
 		*/
-		virtual long getDuration() = 0;
+		virtual long getDuration() const = 0;
 
-		virtual long getTotalDuration() = 0;
+		virtual long getTotalDuration() const = 0;
 
 		/**
 		* Sets the position of the animation to the specified point in time. This time should
@@ -103,7 +103,7 @@ namespace SOUI
 		*
 		* @return the number of milliseconds to delay running the animation
 		*/
-		virtual long getStartDelay() = 0;
+		virtual long getStartDelay() const = 0;
 
 		/**
 		* The amount of time, in milliseconds, to delay starting the animation after
@@ -130,7 +130,7 @@ namespace SOUI
 		*
 		* @return the number of times the animation should repeat, or {@link #INFINITE}
 		*/
-		virtual int getRepeatCount() = 0;
+		virtual int getRepeatCount() const = 0;
 
 		/**
 		* Defines what this animation should do when it reaches the end. This
@@ -146,7 +146,7 @@ namespace SOUI
 		*
 		* @return either one of {@link #REVERSE} or {@link #RESTART}
 		*/
-		virtual IAnimation::RepeatMode getRepeatMode() = 0;
+		virtual IAnimation::RepeatMode getRepeatMode()  const = 0;
 
 		/**
 		* Adds a listener to the set of listeners that are sent update events through the life of
@@ -187,7 +187,7 @@ namespace SOUI
 		*
 		* @return The timing interpolator for this IValueAnimator.
 		*/
-		virtual IInterpolator * getInterpolator() = 0;
+		virtual IInterpolator * getInterpolator() const = 0;
 
 		virtual void addListener(IAnimatorListener * p) = 0;
 
@@ -195,11 +195,9 @@ namespace SOUI
 
 		virtual void start(ITimelineHandlersMgr *pContainer) = 0;
 
-		//void end();
+		virtual bool isRunning() const = 0;
 
-		virtual bool isRunning() = 0;
-
-		virtual bool isStarted() = 0;
+		virtual bool isStarted() const = 0;
 
 		/**
 		* Plays the IValueAnimator in reverse. If the animation is already running,
@@ -225,6 +223,7 @@ namespace SOUI
 		*/
 		virtual float getAnimatedFraction() const = 0;
 
+		virtual IValueAnimator * clone() const = 0;
 	protected:
 		virtual void onEvaluateValue(float fraction) = 0;
 

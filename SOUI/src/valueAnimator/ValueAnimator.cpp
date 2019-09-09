@@ -6,7 +6,7 @@
 namespace SOUI{
 
 
-	SValueAnimator::SValueAnimator()
+	SValueAnimator::SValueAnimator():mContainer(NULL)
 	{
 		sDurationScale = 1.0f;
 		mStartTime = -1;
@@ -55,6 +55,16 @@ namespace SOUI{
 	void SValueAnimator::addAnimationCallback()
 	{
 		mContainer->RegisterTimelineHandler(this);
+	}
+
+	void SValueAnimator::copy(const IValueAnimator * pSrc)
+	{
+		SValueAnimator *pSrc2 = sobj_cast<SValueAnimator>(pSrc);
+		mDuration = pSrc2->mDuration;
+		mStartDelay = pSrc2->mStartDelay;
+		mRepeatCount = pSrc2->mRepeatCount;
+		mRepeatMode = pSrc2->mRepeatMode;
+		mInterpolator = pSrc2->mInterpolator;
 	}
 
 	void SValueAnimator::removeAnimationCallback()
@@ -288,12 +298,12 @@ namespace SOUI{
 		}
 	}
 
-	bool SValueAnimator::isStarted()
+	bool SValueAnimator::isStarted() const
 	{
 		return mStarted;
 	}
 
-	bool SValueAnimator::isRunning()
+	bool SValueAnimator::isRunning() const
 	{
 		return mRunning;
 	}
@@ -382,7 +392,7 @@ namespace SOUI{
 		mListeners.Add(p);
 	}
 
-	IInterpolator * SValueAnimator::getInterpolator()
+	IInterpolator * SValueAnimator::getInterpolator() const
 	{
 		return mInterpolator;
 	}
@@ -408,7 +418,7 @@ namespace SOUI{
 		mUpdateListeners.Add(listener);
 	}
 
-	IAnimation::RepeatMode SValueAnimator::getRepeatMode()
+	IAnimation::RepeatMode SValueAnimator::getRepeatMode() const
 	{
 		return mRepeatMode;
 	}
@@ -418,7 +428,7 @@ namespace SOUI{
 		mRepeatMode = value;
 	}
 
-	int SValueAnimator::getRepeatCount()
+	int SValueAnimator::getRepeatCount() const
 	{
 		return mRepeatCount;
 	}
@@ -437,7 +447,7 @@ namespace SOUI{
 		mStartDelay = startDelay;
 	}
 
-	long SValueAnimator::getStartDelay()
+	long SValueAnimator::getStartDelay() const
 	{
 		return mStartDelay;
 	}
@@ -526,7 +536,7 @@ namespace SOUI{
 		setCurrentFraction(fraction);
 	}
 
-	long SValueAnimator::getTotalDuration()
+	long SValueAnimator::getTotalDuration() const
 	{
 		if (mRepeatCount == -1) {
 			return 100000;//todo: DURATION_INFINITE;
@@ -535,7 +545,7 @@ namespace SOUI{
 		}
 	}
 
-	long SValueAnimator::getDuration()
+	long SValueAnimator::getDuration() const
 	{
 		return mDuration;
 	}
