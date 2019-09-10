@@ -215,6 +215,8 @@ namespace SOUI
             pRT->PushClipRect(&rcClient,RGN_AND);
 
             CRect rcClip,rcInter;
+			SAutoRefPtr<IRegion> rgnClip;
+			pRT->GetClipRegion(&rgnClip);
             pRT->GetClipBox(&rcClip);
 
             int nOffset = m_lvItemLocator->Item2Position(iFirst)-m_siVer.nPos;
@@ -230,11 +232,13 @@ namespace SOUI
                 rcItem.top=rcItem.bottom;
                 rcItem.bottom = rcItem.top + m_lvItemLocator->GetItemHeight(iFirst+i);
                 rcInter.IntersectRect(&rcClip,&rcItem);
-                if(!rcInter.IsRectEmpty())
-                    ii.pItem->Draw(pRT,rcItem);
+				if (!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+				{
+					ii.pItem->Draw(pRT, rcItem);
+				}
                 rcItem.top = rcItem.bottom;
                 rcItem.bottom += m_lvItemLocator->GetDividerSize();
-                if(m_pSkinDivider)
+                if(m_pSkinDivider && !rcItem.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
                 {//绘制分隔线
                     m_pSkinDivider->DrawByIndex(pRT,rcItem,0);
                 }

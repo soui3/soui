@@ -25,6 +25,7 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer
 {
     SASSERT(m_pFrmHost);
     SASSERT(m_pItemContainer);
+	m_bCacheDraw = 1;//default to cache draw canvas
     if(xmlNode) 
     {
         InitFromXml(xmlNode);

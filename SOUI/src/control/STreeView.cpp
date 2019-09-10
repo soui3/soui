@@ -476,6 +476,8 @@ namespace SOUI
 
         CRect rcClip, rcInter;
         pRT->GetClipBox(&rcClip);
+		SAutoRefPtr<IRegion> rgnClip;
+		pRT->GetClipRegion(&rgnClip);
 
 		CPoint pt(0,-1);
 		for(SPOSITION pos = m_visible_items.GetHeadPosition();pos;)
@@ -492,7 +494,7 @@ namespace SOUI
 		    
 		    CRect rcItem(pt,szItem);
 		    rcItem.OffsetRect(rcClient.TopLeft());
-		    if(!(rcItem & rcClip).IsRectEmpty())
+		    if(!(rcItem & rcClip).IsRectEmpty() && rgnClip->RectInRegion(rcItem))
 		    {//draw the item
 		        ii.pItem->Draw(pRT,rcItem);
 		    }

@@ -464,23 +464,23 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
         pRT->PushClipRect(&rcClient,RGN_AND);
 
         CRect rcClip,rcInter;
+		SAutoRefPtr<IRegion> rgnClip;
         pRT->GetClipBox(&rcClip);
-
+		pRT->GetClipRegion(&rgnClip);
         
         SPOSITION pos= m_lstItems.GetHeadPosition();
         int i=0;
         for(;pos;i++)
         {
-
             ItemInfo ii = m_lstItems.GetNext(pos);
             CRect rcItem = _OnItemGetRect(iFirst+i);
             rcInter.IntersectRect(&rcClip,&rcItem);
-            if(!rcInter.IsRectEmpty())
+            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
                 ii.pItem->Draw(pRT,rcItem);
             rcItem.top = rcItem.bottom;
             rcItem.bottom += m_lvItemLocator->GetDividerSize();
-            if(m_pSkinDivider)
-            {//绘制分隔线
+			if (m_pSkinDivider && !rcItem.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+			{//绘制分隔线
                 m_pSkinDivider->DrawByIndex(pRT,rcItem,0);
             }
         }

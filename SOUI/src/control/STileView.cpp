@@ -219,7 +219,9 @@ void STileView::OnPaint(IRenderTarget *pRT)
         
         CRect rcClip, rcInter;
         pRT->GetClipBox(&rcClip);
-        
+		SAutoRefPtr<IRegion> rgnClip;
+		pRT->GetClipRegion(&rgnClip);
+
         int nOffset = m_tvItemLocator->Item2Position(iFirst) - m_siVer.nPos;
         int nLastBottom = rcClient.top + m_tvItemLocator->GetMarginSize() + nOffset;
         
@@ -237,7 +239,7 @@ void STileView::OnPaint(IRenderTarget *pRT)
             }
             
             rcInter.IntersectRect(&rcClip, &rcItem);
-            if(!rcInter.IsRectEmpty())
+            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
             {
                 ii.pItem->Draw(pRT, rcItem);
             }
