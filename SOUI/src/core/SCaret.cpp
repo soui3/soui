@@ -7,7 +7,7 @@ namespace SOUI{
     SCaret::SCaret(ISwndContainer *pContainer)
 		:m_pContainer(pContainer)
 		,m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
-		,m_crCaret(RGBA(0,0,0,255)), m_nFrames(30),m_bAniCaret(FALSE)
+		,m_crCaret(RGBA(0,0,0,255)), m_nAniFrames(20),m_nShowFrames(10),m_bAniCaret(FALSE)
     {
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
 	}
@@ -57,22 +57,37 @@ namespace SOUI{
 	{
 		if (!m_bVisible)
 			return;
+
 		m_iFrame++;
+		int nFrameCount=(m_nShowFrames + m_nAniFrames*2);
+		if(m_iFrame%nFrameCount==0)
+			m_iFrame=0;
+
 		if (m_bAniCaret)
 		{
-			if (m_iFrame%m_nFrames == 0)
-			{
-				m_iFrame = 0;
+			if(m_iFrame<m_nShowFrames)
+				m_byAlpha = 255;//visible
+			else if(m_iFrame<m_nShowFrames+m_nAniFrames)
+			{//fadeout
+				int iFrame = m_iFrame-m_nShowFrames;
+				m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation(1.0f - iFrame*1.0f / m_nAniFrames));
+			}else
+			{//fadein
+				int iFrame = m_iFrame-m_nShowFrames-m_nAniFrames;
+				m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation( iFrame*1.0f / m_nAniFrames));
 			}
-			m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation((1.0f - m_iFrame*1.0f / m_nFrames)));
 			m_pContainer->OnRedraw(GetRect());
 		}
 		else
 		{
-			if (m_iFrame%m_nFrames == 0)
+			if(m_iFrame == 0)
 			{
-				m_bDrawCaret = !m_bDrawCaret;
-				m_iFrame = 0;
+				m_bDrawCaret = true;
+				m_byAlpha = 255;
+				m_pContainer->OnRedraw(GetRect());
+			}else if(m_iFrame == m_nShowFrames)
+			{
+				m_bDrawCaret = false;
 				m_pContainer->OnRedraw(GetRect());
 			}
 		}
