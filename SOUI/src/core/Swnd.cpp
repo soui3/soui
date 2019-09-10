@@ -322,6 +322,7 @@ namespace SOUI
 
 		m_dwState = dwNewState;
 
+		MarkCacheDirty(true);
 		OnStateChanged(dwOldState,dwNewState);
 		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetWindowRect());
 		return dwOldState;
@@ -1294,7 +1295,6 @@ namespace SOUI
 	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
 	{
 		TestMainThread();
-		if(bFromThis) MarkCacheDirty(true);
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
 
 		//只能更新窗口有效区域
@@ -1302,6 +1302,7 @@ namespace SOUI
 
 		CRect rcIntersect = rect & rcWnd;
 		if (rcIntersect.IsRectEmpty()) return;
+		MarkCacheDirty(true);
 
 		STransformation xForm = GetTransformation();
 		if (xForm.hasMatrix())
