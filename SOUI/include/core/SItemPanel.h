@@ -82,7 +82,8 @@ public://SWindow
     virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
     virtual BOOL IsLayeredWindow() const {return FALSE;}
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable);
-    
+	virtual bool IsDrawToCache() const {return true;}//force to draw to cache.
+
     CRect GetItemRect() const;
     void SetItemCapture(BOOL bCapture);
     void SetItemData(LPARAM dwData);

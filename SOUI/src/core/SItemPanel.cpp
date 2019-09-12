@@ -25,7 +25,6 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer
 {
     SASSERT(m_pFrmHost);
     SASSERT(m_pItemContainer);
-	m_bCacheDraw = 1;//default to cache draw canvas
     if(xmlNode) 
     {
         InitFromXml(xmlNode);
@@ -131,23 +130,15 @@ CRect SItemPanel::GetContainerRect() const
 
 IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 {
-    CRect rcItem=GetItemRect();
-    CRect rcInvalid=rc;
-    rcInvalid.OffsetRect(rcItem.TopLeft());
-    IRenderTarget *pRT=m_pFrmHost->GetRenderTarget(rcInvalid,gdcFlags);
-    if(gdcFlags == GRT_PAINTBKGND)
-    {//调用frmhost的GetRenderTarget时，不会绘制frmHost的背景。注意此外只画背景，不画前景,因为itempanel就是前景
-        m_pFrmHost->SSendMessage(WM_ERASEBKGND, (WPARAM)pRT);
-    }
-    pRT->OffsetViewportOrg(rcItem.left,rcItem.top);
-    return pRT;
+	SASSERT(m_cachedRT);
+	m_cachedRT->PushClipRect(rc);
+	return m_cachedRT;
 }
 
 void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)
 {
-    CRect rcItem=GetItemRect();
-    pRT->OffsetViewportOrg(-rcItem.left,-rcItem.top);
-    m_pFrmHost->ReleaseRenderTarget(pRT);
+	m_cachedRT->PopClip();
+	OnRedraw(rc);
 }
 
 void SItemPanel::OnRedraw(const CRect &rc)
