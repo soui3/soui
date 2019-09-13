@@ -52,6 +52,7 @@ namespace SOUI
 
 		m_pSkinDay = NULL;
 
+		m_showType = SHOW_MONTH;
 	}
 
 	WORD SCalendarEx::GetYear()
@@ -85,7 +86,7 @@ namespace SOUI
 		if (iWeek < 0) return FALSE;
 
 		WORD nDayCount = SCalendarCore::GetDaysOfMonth(iYear, iMonth);
-				
+
 		if (iWeek > 0)				// 如果 不是星期天 先计算 上个月 的最后几天
 		{
 			WORD nFrontDayCount = 0;
@@ -93,33 +94,32 @@ namespace SOUI
 				nFrontDayCount = SCalendarCore::GetDaysOfMonth(iYear - 1, 12);
 			else
 				nFrontDayCount = SCalendarCore::GetDaysOfMonth(iYear, iMonth - 1);
-			
-			
-			for (int i=0; i<iWeek; ++i)
+
+
+			for (int i = 0; i < iWeek; ++i)
 			{
 				m_arrDays[i].nType = -1;
 				m_arrDays[i].iDay = nFrontDayCount - iWeek + i + 1;
 			}
 		}
 
-		
+
 		// 计算 当月 的 天数 位置
-		for (int i=0; i<nDayCount; ++i)
+		for (int i = 0; i < nDayCount; ++i)
 		{
 			m_arrDays[iWeek + i].nType = 0;
 			m_arrDays[iWeek + i].iDay = i + 1;
 		}
 
 		int nNextDay = 1;
-		for (int i=iWeek+nDayCount; i<42; ++i)
+		for (int i = iWeek + nDayCount; i < 42; ++i)
 		{
 			m_arrDays[i].nType = 1;
 			m_arrDays[i].iDay = nNextDay++;
 		}
-	
 		m_iYear = iYear;
 		m_iMonth = iMonth;
-	
+
 		m_nHoverItem = HIT_NULL;
 		m_nSelItem = iWeek % 7 + iDay - 1;
 		Invalidate();
@@ -133,8 +133,69 @@ namespace SOUI
 			evt.nBtnType = nBtnType;
 			FireEvent(evt);
 		}
-		
+
 		return TRUE;
+
+	}
+	void SCalendarEx::SetShowType(int showType)
+	{
+		m_showType = showType;
+	}
+
+	void SCalendarEx::SetYearDecadeCentury()
+	{
+		if (m_showType == SHOW_YEAR)
+		{
+			for (WORD i = 0; i < 12; i++)
+			{
+				m_arrMonthOrYear[i].iMonthOrYear = i + 1;
+				m_arrMonthOrYear[i].nType = 0;
+			}
+			//计算m_nSelItem
+			m_nSelItem = m_iMonth - 1;
+		}
+		if (m_showType == SHOW_YEAR_DECADE)
+		{
+			//年代头年份
+			int decadeFirstYear = m_iYear - m_iYear % 10;
+			//计算 显示
+
+			m_arrMonthOrYear[0].iMonthOrYear = decadeFirstYear - 1;
+			m_arrMonthOrYear[0].nType = -1;
+
+			for (WORD i = 1; i <= 10; i++)
+			{
+				m_arrMonthOrYear[i].iMonthOrYear = decadeFirstYear + i - 1;
+				m_arrMonthOrYear[i].nType = 0;
+			}
+
+			m_arrMonthOrYear[11].iMonthOrYear = decadeFirstYear + 10;
+			m_arrMonthOrYear[11].nType = -1;
+
+			//计算m_nSelItem
+			m_nSelItem = m_iYear % 10 + 1;
+		}
+		else if (m_showType ==SHOW_YEAR_CENTURY)
+		{
+			//世纪头 年份 2019 -19 = 2000
+			int centiryFirstYear = m_iYear - m_iYear % 100;
+			//计算 显示
+
+			m_arrMonthOrYear[0].iMonthOrYear = centiryFirstYear - 10;
+			m_arrMonthOrYear[0].nType = -1;
+
+			for (WORD i = 1; i <= 10; i++)
+			{
+				m_arrMonthOrYear[i].iMonthOrYear = centiryFirstYear + (i - 1) * 10;
+				m_arrMonthOrYear[i].nType = 0;
+			}
+
+			m_arrMonthOrYear[11].iMonthOrYear = centiryFirstYear + 100;
+			m_arrMonthOrYear[11].nType = -1;
+
+			//计算m_nSelItem
+			m_nSelItem = m_iYear % 100 / 10 + 1;
+		}
 	}
 
 	void SCalendarEx::SetLastMonth()
@@ -161,6 +222,49 @@ namespace SOUI
 			++m_iMonth;
 
 		SetDate(m_iYear, m_iMonth, 1, HIT_RIGHT, true);
+	}
+
+	void SCalendarEx::SetLastYear()
+	{
+		--m_iYear;
+		SetYearDecadeCentury();
+	}
+
+	void SCalendarEx::SetNextYear()
+	{
+		++m_iYear;
+		SetYearDecadeCentury();
+	}
+	void SCalendarEx::SetLastYearDecade()
+	{
+		m_iYear -= 10;
+		SetYearDecadeCentury();
+	}
+	void SCalendarEx::SetNextYearDecade()
+	{
+		m_iYear += 10;
+		SetYearDecadeCentury();
+	}
+	void SCalendarEx::SetLastYearCentury()
+	{
+		if (m_iYear <= 1600)
+		{
+			return;
+		}
+		m_iYear -= 100;
+		SetYearDecadeCentury();
+	}
+	void SCalendarEx::SetNextYearCentury()
+	{
+		m_iYear += 100;
+		SetYearDecadeCentury();
+	}
+
+	void SCalendarEx::SetYearMonth(int iYear, int iMonth)
+	{
+		m_iYear = iYear;
+		m_iMonth = iMonth;
+		SetYearDecadeCentury();
 	}
 	
 	int SCalendarEx::OnCreate(LPVOID)
@@ -210,7 +314,26 @@ namespace SOUI
 			pRT->SetTextColor(crText);
 
 		SStringT szYearMonth;
-		szYearMonth.Format(_T("%04d年%d月"), m_iYear, m_iMonth);
+		if (m_showType == SHOW_MONTH)
+		{
+			szYearMonth.Format(_T("%04d年%d月"), m_iYear, m_iMonth);
+		}
+		else if (m_showType ==SHOW_YEAR)
+		{
+			szYearMonth.Format(_T("%04d年"), m_iYear);
+		}
+		else if (m_showType == SHOW_YEAR_DECADE)
+		{
+			//年代头年份
+			int decadeFirstYear = m_iYear - m_iYear % 10;
+			szYearMonth.Format(_T("%04d-%04d"), decadeFirstYear, decadeFirstYear + 9);
+		}
+		else if (m_showType == SHOW_YEAR_CENTURY)
+		{
+			//世纪头年份
+			int centuryFirstYear = m_iYear - m_iYear % 100;
+			szYearMonth.Format(_T("%04d-%04d"), centuryFirstYear, centuryFirstYear + 99);
+		}
 		CRect rc = rect;
 		pRT->DrawText(szYearMonth, -1, rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
@@ -322,9 +445,83 @@ namespace SOUI
 		pRT->SetTextColor(crText);
 	}
 
+	void SCalendarEx::DrawYearDecadeCentury(IRenderTarget *pRT, const CRect& rect, int nItem)
+	{
+		if (nItem < 0 || nItem >= 42)
+			return;
+
+		wMonthOrYearInfo& monthYearInfo = m_arrMonthOrYear[nItem];
+
+		COLORREF crText = pRT->GetTextColor();
+		CPoint ptRound(1, 1);
+
+		// 
+
+		if (0 != monthYearInfo.nType)
+		{
+			pRT->SetTextColor(m_crOtherDayText);
+		}
+// 		else if (m_Today.wDay == dayInfo.iDay && m_Today.wYear == m_iYear && m_Today.wMonth == m_iMonth)
+// 		{
+// 			// today 框 就用 textcolor
+// 			pRT->DrawRoundRect(rcDay, ptRound);
+// 		}
+		DWORD dwState = 0;
+		if (m_nSelItem == nItem)
+		{
+			if (CR_INVALID != m_crSelDayBack)
+				pRT->FillSolidRoundRect(rect, ptRound, m_crSelDayBack);
+
+			if (CR_INVALID != m_crSelText)
+				pRT->SetTextColor(m_crSelText);
+
+			dwState = 2;
+		}
+		else if (m_nHoverItem == nItem)				// 
+		{
+			pRT->SetTextColor(m_crHoverText);
+			dwState = 1;
+		}
+
+		if (NULL != m_pSkinDay)
+			m_pSkinDay->DrawByIndex(pRT, rect, dwState);
+
+		CRect rcItem = rect;
+		SStringT sDay;
+		if (m_showType == SHOW_YEAR)
+		{
+			sDay.Format(_T("%d月"), monthYearInfo.iMonthOrYear );
+			pRT->DrawText(sDay, -1, rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+		}
+		else if (m_showType == SHOW_YEAR_DECADE)
+		{
+			sDay.Format(_T("%d"), monthYearInfo.iMonthOrYear);
+			pRT->DrawText(sDay, -1, rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+		}
+		else if (m_showType == SHOW_YEAR_CENTURY)
+		{
+			sDay.Format(_T("%d-\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
+			pRT->DrawText(sDay, -1, rcItem, DT_VCENTER);
+		}
+
+
+		pRT->SetTextColor(crText);
+	}
+
 	void SCalendarEx::OnPaint(IRenderTarget * pRT)
 	{
 		// 字体 都用 默认 的 
+		if (m_showType == SHOW_MONTH)
+		{
+			OnPaintMonth(pRT);
+		}
+		else if (m_showType == SHOW_YEAR || m_showType == SHOW_YEAR_DECADE|| m_showType == SHOW_YEAR_CENTURY)
+		{
+			OnPaintYearDecadeCentury(pRT);
+		}
+	}
+	void SCalendarEx::OnPaintMonth(IRenderTarget *pRT)
+	{
 		SPainter painter;
 		BeforePaint(pRT, painter);
 
@@ -339,7 +536,7 @@ namespace SOUI
 		rcWeek.top = rcYear.bottom;
 		rcWeek.bottom = rcWeek.top + m_nWeekHeight.toPixelSize(GetScale());
 		DrawWeek(pRT, rcWeek);
-		
+
 		// 计算 天 
 		m_rcDays = rcClient;
 		m_rcDays.top = rcWeek.bottom;
@@ -347,19 +544,54 @@ namespace SOUI
 		//m_rcDays.bottom;
 
 		CRect rcItem;
-		for (int i=0; i<42; ++i)
+		for (int i = 0; i < 42; ++i)
 		{
 			GetItemRect(i, rcItem);
 			DrawDay(pRT, rcItem, i);
 		}
-		
+
 		CRect rcToday(rcClient);
 		rcToday.top = m_rcDays.bottom;
 		DrawToday(pRT, rcToday);
 
 		AfterPaint(pRT, painter);
 	}
+	void SCalendarEx::OnPaintYearDecadeCentury(IRenderTarget *pRT)
+	{
+		SPainter painter;
+		BeforePaint(pRT, painter);
 
+		CRect rcClient;
+		GetClientRect(&rcClient);
+
+		CRect rcYear(rcClient);			// 年月 区域
+		rcYear.bottom = rcYear.top + m_nYearMonthHeight.toPixelSize(GetScale());
+		DrawYearMonth(pRT, rcYear);
+
+		CRect rcMonth(rcClient);		// 中间月份 区域
+		rcMonth.top = rcYear.bottom;
+		rcMonth.bottom = rcClient.bottom - m_nFooterHeight.toPixelSize(GetScale());
+		
+		CRect rcItem;
+		int iWidth = rcMonth.Width() / 4;
+		int iHeight = rcMonth.Height() / 3;
+		for (int i = 0; i < 12; i++)
+		{
+			rcItem.left = rcMonth.left  + i % 4 * iWidth;
+			rcItem.top = rcMonth.top + i / 4 * iHeight;
+			rcItem.right = rcItem.left + iWidth;
+			rcItem.bottom = rcItem.top + iHeight;
+			DrawYearDecadeCentury(pRT, rcItem, i);
+		}
+
+		// 计算 今天
+		CRect rcToday(rcClient);
+		rcToday.top = rcMonth.bottom;
+		DrawToday(pRT, rcToday);
+
+		AfterPaint(pRT, painter);
+	}
+	
 	void SCalendarEx::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		__super::OnLButtonDown(nFlags, point);
@@ -367,48 +599,129 @@ namespace SOUI
 		if (nItem < 0)
 		{
 			if (HIT_LEFT == nItem)
-				SetLastMonth();
+			{
+				if (m_showType == SHOW_MONTH)
+				{
+					SetLastMonth();
+				}
+				else if(m_showType == SHOW_YEAR)
+				{
+					SetLastYear();
+				}
+				else if (m_showType == SHOW_YEAR_DECADE)
+				{
+					SetLastYearDecade();
+				}
+				else if(m_showType ==SHOW_YEAR_CENTURY)
+				{
+					SetLastYearCentury();
+				}
+			}
 			else if (HIT_RIGHT == nItem)
-				SetNextMonth();
-			
-			return;
+			{
+				if (m_showType == SHOW_MONTH)
+				{
+					SetNextMonth();
+				}
+				else if (m_showType == SHOW_YEAR)
+				{
+					SetNextYear();
+				}
+				else if (m_showType == SHOW_YEAR_DECADE)
+				{
+					SetNextYearDecade();
+				}
+				else if (m_showType == SHOW_YEAR_CENTURY)
+				{
+					SetNextYearCentury();
+				}
+			}
+			else if (HIT_YEAR == nItem)
+			{
+				if (m_showType != SHOW_YEAR_CENTURY)
+				{
+					m_showType--;
+				}
+				SetYearDecadeCentury();
+			}
+
 		}
 		else if (HIT_TODAY == nItem)
 		{
+			SetShowType(SHOW_MONTH);
 			SetDate(m_Today.wYear, m_Today.wMonth, m_Today.wDay, HIT_TODAY, true);
 		}
 		else if (m_nSelItem != nItem)
 		{
-			wDayInfo& dayInfo = m_arrDays[nItem];
-			
-			m_nSelItem = nItem;
-			EventCalendarExChanged evt(this);
-			evt.nBtnType = nItem;		// 天数 就是 0-41
-			evt.iNewDay = dayInfo.iDay;
-			if (dayInfo.nType < 0)		// 点击 上一个月 的天
+			m_showTypeLbdown = m_showType;
+			if (m_showType == SHOW_MONTH)
 			{
-				if (1 == m_iMonth)
-				{
-					m_iMonth = 12;
-					--m_iYear;
-				}
-				else
-					--m_iMonth;
-			}
-			else if (dayInfo.nType > 0)	//点击 下一个月 的 天
-			{
-				if (12 == m_iMonth)
-				{
-					m_iMonth = 1;
-					++m_iYear;
-				}
-				else
-					++m_iMonth;
-			}
+				wDayInfo& dayInfo = m_arrDays[nItem];
 
-			evt.iNewMonth = m_iMonth;
-			evt.iNewYear = m_iYear;
-			FireEvent(evt);
+				m_nSelItem = nItem;
+				EventCalendarExChanged evt(this);
+				evt.nBtnType = nItem;		// 天数 就是 0-41
+				evt.iNewDay = dayInfo.iDay;
+				if (dayInfo.nType < 0)		// 点击 上一个月 的天
+				{
+					if (1 == m_iMonth)
+					{
+						m_iMonth = 12;
+						--m_iYear;
+					}
+					else
+						--m_iMonth;
+				}
+				else if (dayInfo.nType > 0)	//点击 下一个月 的 天
+				{
+					if (12 == m_iMonth)
+					{
+						m_iMonth = 1;
+						++m_iYear;
+					}
+					else
+						++m_iMonth;
+				}
+
+				evt.iNewMonth = m_iMonth;
+				evt.iNewYear = m_iYear;
+				FireEvent(evt);
+			}
+			else
+			{
+				m_nSelItem = nItem;
+				wMonthOrYearInfo& info =m_arrMonthOrYear[nItem];
+
+				int tmpYear = 0, tmpMonth = 0;
+
+				if (m_showType == SHOW_YEAR)
+				{
+					tmpYear = m_iYear;
+					tmpMonth = info.iMonthOrYear;
+				}
+				else if (m_showType == SHOW_YEAR_DECADE)
+				{
+					tmpYear = info.iMonthOrYear;
+					tmpMonth = m_iMonth;
+				}
+				else if (m_showType == SHOW_YEAR_CENTURY)
+				{
+					tmpYear = info.iMonthOrYear;
+					tmpMonth = m_iMonth;
+				}
+				if (m_showType != SHOW_MONTH)
+				{
+					m_showType++;
+				}
+				if (m_showType != SHOW_MONTH)
+				{
+					SetYearMonth(tmpYear, tmpMonth);
+				}
+				else
+				{
+					SetDate(tmpYear, tmpMonth, 1, HIT_NULL);
+				}
+			}
 		}
 		Invalidate();
 	}
@@ -416,14 +729,16 @@ namespace SOUI
 	void SCalendarEx::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 		int nItem = HitTest(point);
-		if (nItem < 0 || nItem >= 42)					// 只有 点击 天  才 发送 cmd 事件 
+		// 只有在显示天数， 点击天  才 发送 cmd 事件  使dropwnd关闭
+		//其他情况，让event mute静止
+		if (!(m_showType == SHOW_MONTH && m_showTypeLbdown==SHOW_MONTH && nItem >= 0 && nItem < 42))
 		{
 			GetEventSet()->setMutedState(true);
-		
 		}
 		
 		__super::OnLButtonUp(nFlags, point);
-		if (nItem < 0 || nItem >= 42)
+
+		if (!(m_showType == SHOW_MONTH && m_showTypeLbdown == SHOW_MONTH  && nItem >= 0 && nItem < 42))
 		{
 			GetEventSet()->setMutedState(false);
 		}
@@ -444,13 +759,43 @@ namespace SOUI
 
 	BOOL SCalendarEx::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	{
-		if (zDelta > 0)			// 上滚  上一个月
+		if (zDelta > 0)			// 上滚  上一个
 		{
-			SetLastMonth();
+			if (m_showType == SHOW_MONTH)
+			{
+				SetLastMonth();
+			}
+			else if (m_showType == SHOW_YEAR)
+			{
+				SetLastYear();
+			}
+			else if (m_showType == SHOW_YEAR_DECADE)
+			{
+				SetLastYearDecade();
+			}
+			else if (m_showType == SHOW_YEAR_CENTURY)
+			{
+				SetLastYearCentury();
+			}
 		}
-		else							// 下滚   下一个 月
+		else							// 下滚   下一个 
 		{
-			SetNextMonth();
+			if (m_showType == SHOW_MONTH)
+			{
+				SetNextMonth();
+			}
+			else if (m_showType == SHOW_YEAR)
+			{
+				SetNextYear();
+			}
+			else if (m_showType == SHOW_YEAR_DECADE)
+			{
+				SetNextYearDecade();
+			}
+			else if (m_showType == SHOW_YEAR_CENTURY)
+			{
+				SetNextYearCentury();
+			}
 		
 		}
 		
@@ -460,37 +805,77 @@ namespace SOUI
 
 	int SCalendarEx::HitTest(const CPoint& pt)
 	{
-		if (pt.y < m_rcDays.top)				//  小于  表示  在 天  的上面
+		if (m_showType == SHOW_MONTH)
 		{
-			if (pt.y > (m_rcDays.top - m_nWeekHeight.toPixelSize(GetScale())))
-				return HIT_NULL;
+			if (pt.y < m_rcDays.top)				//  小于  表示  在 天  的上面
+			{
+				if (pt.y > (m_rcDays.top - m_nWeekHeight.toPixelSize(GetScale())))
+					return HIT_NULL;
 
-			int nYearHei = m_nYearMonthHeight.toPixelSize(GetScale());
-			if ((pt.x - m_rcDays.left) < nYearHei)
-				return HIT_LEFT;
-			else if ((m_rcDays.right - pt.x) < nYearHei)
-				return HIT_RIGHT;
-			
-			return HIT_YEAR;
+				int nYearHei = m_nYearMonthHeight.toPixelSize(GetScale());
+				if ((pt.x - m_rcDays.left) < nYearHei)
+					return HIT_LEFT;
+				else if ((m_rcDays.right - pt.x) < nYearHei)
+					return HIT_RIGHT;
+
+				return HIT_YEAR;
+			}
+			else if (pt.y > m_rcDays.bottom)
+			{
+				if (m_rcToday.PtInRect(pt))
+					return HIT_TODAY;
+
+				return 43;
+			}
+
+			int nDay_X = pt.x - m_rcDays.left;
+			int nDay_Y = pt.y - m_rcDays.top;
+			int nWid = m_rcDays.Width() / 7;
+			int nHei = m_rcDays.Height() / 6;
+
+			int nRow = nDay_X / nWid;
+			if (nRow > 6)			// 处理 边缘 
+				nRow = 6;
+
+			return nRow + (nDay_Y / nHei) * 7;
 		}
-		else if (pt.y > m_rcDays.bottom)
+		else if (m_showType == SHOW_YEAR || m_showType == SHOW_YEAR_DECADE || m_showType == SHOW_YEAR_CENTURY)
 		{
-			if(m_rcToday.PtInRect(pt))
-				return HIT_TODAY;	
-			
-			return 43;
+			//多出星期的高度
+			CRect rcDays = m_rcDays;
+			rcDays.top = rcDays.top - m_nWeekHeight.toPixelSize(GetScale());
+
+			if (pt.y < rcDays.top)				//  小于  表示  在 天  的上面
+			{
+				int nYearHei = m_nYearMonthHeight.toPixelSize(GetScale());
+				if ((pt.x - rcDays.left) < nYearHei)
+					return HIT_LEFT;
+				else if ((rcDays.right - pt.x) < nYearHei)
+					return HIT_RIGHT;
+
+				return HIT_YEAR;
+			}
+			else if (pt.y > rcDays.bottom)
+			{
+				if (m_rcToday.PtInRect(pt))
+					return HIT_TODAY;
+
+				return 43;
+			}
+
+			int nDay_X = pt.x - rcDays.left;
+			int nDay_Y = pt.y - rcDays.top;
+			int nWid = m_rcDays.Width() / 4;
+			int nHei = m_rcDays.Height() / 3;
+
+			int nRow = nDay_X / nWid;
+			if (nRow > 3)			// 处理 边缘 
+				nRow = 3;
+
+			return nRow + (nDay_Y / nHei) * 4;
+
 		}
-
-		int nDay_X = pt.x - m_rcDays.left;
-		int nDay_Y = pt.y - m_rcDays.top;
-		int nWid = m_rcDays.Width() / 7;
-		int nHei = m_rcDays.Height() / 6;
-
-		int nRow = nDay_X / nWid;
-		if (nRow > 6)			// 处理 边缘 
-			nRow = 6;
-		
-		return nRow + (nDay_Y / nHei ) * 7;
+		return 43;
 	}
 
 	void SCalendarEx::GetItemRect(int nItem, CRect& rcItem)
@@ -598,6 +983,7 @@ namespace SOUI
 
 	void SDateTimePicker::OnCreateDropDown(SDropDownWnd* pDropDown)
 	{
+		m_pCalendar->SetShowType(SHOW_MONTH);
 		m_pCalendar->SetDate(m_sysTime.wYear, m_sysTime.wMonth, m_sysTime.wDay);
 		//pDropDown->SetAttribute(L"sendWheel2Hover", L"1", TRUE);
 		pDropDown->InsertChild(m_pCalendar);

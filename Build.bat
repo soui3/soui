@@ -222,12 +222,12 @@ if %specs%==win32-msvc2017 (
 SET /p selected=open[o], compile[c] "soui3.sln" or quit(q) [o,c or q]?
 if "%selected%" == "o" (
 	if %targetx86andx64%==1 (
-		soui.sln
-		soui64.sln
+		soui3.sln
+		soui364.sln
 	) else if "%target%"=="x86" (
-		soui.sln
+		soui3.sln
 	) else (
-		soui64.sln
+		soui364.sln
 	)
 ) else if "%selected%" == "c" (
 		if %targetx86andx64%==1 (

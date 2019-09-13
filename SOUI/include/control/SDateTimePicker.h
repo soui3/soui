@@ -13,7 +13,16 @@ namespace SOUI
 #define HIT_LEFT				-10			// 上一个月 按钮
 #define HIT_RIGHT				-11			// 下一个月 按钮
 #define HIT_YEAR				-12			//  年月  还没用到
+#define HIT_YEAR_1			-13
+#define HIT_YEAR_2			-14
+#define HIT_YEAR_3			-15
 #define HIT_TODAY				42				//  今天 
+
+	//日历显示的状态
+#define SHOW_MONTH		-101	//显示月份
+#define SHOW_YEAR		-102	//显示年份
+#define SHOW_YEAR_DECADE	-103	//显示近10年
+#define SHOW_YEAR_CENTURY	-104	//显示近100年
 
 class SOUI_EXP SCalendarEx : public SWindow
 {
@@ -62,6 +71,7 @@ protected:
 protected:
 	// 定位 小于0  是 年月 3个按钮 暂时 没完成   0 - 41  天    42 today按钮
 	int HitTest(const CPoint& pt);
+	// 绘制日历头 中上部分
 	void DrawYearMonth(IRenderTarget* pRT, const CRect& rect);
 	void DrawWeek(IRenderTarget* pRT, const CRect& rect);
 	void DrawDay(IRenderTarget* pRT, CRect& rcDay, int nItem);
@@ -69,6 +79,21 @@ protected:
 	void GetItemRect(int nItem, CRect& rcItem);
 	void SetLastMonth();
 	void SetNextMonth();
+	//扩展功能
+	void SetLastYear();
+	void SetNextYear();
+	void SetLastYearDecade();
+	void SetNextYearDecade();
+	void SetLastYearCentury();
+	void SetNextYearCentury();
+	void SetYearMonth(int iYear, int iMonth);
+	void OnPaintMonth(IRenderTarget *pRT);
+	void OnPaintYearDecadeCentury(IRenderTarget *pRT);
+	void DrawYearDecadeCentury(IRenderTarget *pRT, const CRect& rect, int nItem);
+public:
+	void SetShowType(int showType);
+	void SetYearDecadeCentury();
+
 protected:
 	SLayoutSize			m_nYearMonthHeight;   //年月
 	SLayoutSize			m_nWeekHeight;				//星期高度
@@ -100,6 +125,15 @@ protected:
 	WORD					m_iYear;
 	WORD					m_iMonth;
 	SYSTEMTIME			m_Today;
+
+	int					m_showType;			//日历显示状态
+	int					m_showTypeLbdown;	//鼠标按下时，日历的显示状态
+	struct wMonthOrYearInfo
+	{
+		WORD			iMonthOrYear;	//日历 月-年-年代-世纪
+		int				nType;			//-1前一 0 当前 1后一
+	};
+	wMonthOrYearInfo m_arrMonthOrYear[12];
 };
     //
     // 日期 选择控件
