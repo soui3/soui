@@ -500,7 +500,7 @@ namespace SOUI
 		}
 		else if (m_showType == SHOW_YEAR_CENTURY)
 		{
-			sDay.Format(_T("%d-\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
+			sDay.Format(_T("%d-\r\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
 			pRT->DrawText(sDay, -1, rcItem, DT_VCENTER);
 		}
 
@@ -909,6 +909,7 @@ namespace SOUI
 		, m_nDropWidth(220)
 		, m_bTimeEnable(true)
 		, m_wCharNum(0)
+		, m_dwBtnState(WndState_Normal)
 	{
 		m_evtSet.addEvent(EVENTID(EventDateTimeChanged));
 		m_pNcSkin = GETBUILTINSKIN(SKIN_SYS_BORDER);
