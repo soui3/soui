@@ -300,6 +300,7 @@ namespace SOUI
 					break;
 				SWindow *pChild = pChilds[iChild];
 				SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+				int nScale = pChild->GetScale();
                 if(pLinearLayoutParam->weight > 0.0f)
                 {
 					int extra = int(nRemain*pLinearLayoutParam->weight / fWeight + 0.5f);
@@ -321,9 +322,15 @@ namespace SOUI
 
 						CSize szCalc = pChild->GetDesiredSize(nWid,nHei);
 						if(orienOther == Vert)
+						{
+							szCalc.cy += pLinearLayoutParam->extend_top.toPixelSize(nScale) + pLinearLayoutParam->extend_bottom.toPixelSize(nScale);
 							pSize[iChild].cy = szCalc.cy;
+						}
 						else
+						{
+							szCalc.cx += pLinearLayoutParam->extend_left.toPixelSize(nScale) + pLinearLayoutParam->extend_right.toPixelSize(nScale);
 							pSize[iChild].cx = szCalc.cx;
+						}
 						pChild->SetLayoutParam(backup);
 						backup->Release();
 					}
@@ -477,6 +484,7 @@ namespace SOUI
 						break;
 					SWindow *pChild = ppChilds[iChild];
 					SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+					int nScale = pChild->GetScale();
 					if(pLinearLayoutParam->weight > 0.0f)
 					{
 						int extra = int(nRemain*pLinearLayoutParam->weight / fWeight + 0.5f);
@@ -499,9 +507,15 @@ namespace SOUI
 
 							CSize szCalc = pChild->GetDesiredSize(nWid,nHei);
 							if(orienOther == Vert)
+							{
+								szCalc.cy += pLinearLayoutParam->extend_top.toPixelSize(nScale) + pLinearLayoutParam->extend_bottom.toPixelSize(nScale);
 								pSize[iChild].cy = szCalc.cy;
+							}
 							else
+							{
+								szCalc.cx += pLinearLayoutParam->extend_left.toPixelSize(nScale) + pLinearLayoutParam->extend_right.toPixelSize(nScale);
 								pSize[iChild].cx = szCalc.cx;
+							}
 							pChild->SetLayoutParam(backup);
 							backup->Release();
 						}
