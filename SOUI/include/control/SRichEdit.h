@@ -909,6 +909,8 @@ namespace SOUI
 
 		virtual void OnScaleChanged(int nScale);
 
+		virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
+
 		void OnEnable(BOOL bEnable, UINT nStatus);
         /**
         * SRichEdit::InitDefaultCharFormat
@@ -1144,6 +1146,7 @@ namespace SOUI
             ATTR_INT(L"allowBeep",m_fAllowBeep,FALSE)
             ATTR_INT(L"autoWordSel",m_fEnableAutoWordSel,FALSE)
             ATTR_INT(L"vcenter",m_fSingleLineVCenter,FALSE)
+			ATTR_INT(L"disableCaret",m_fDisableCaret,FALSE)
             ATTR_CUSTOM(L"colorText",OnAttrTextColor)
             ATTR_CUSTOM(L"rtf",OnAttrRTF)
             ATTR_CUSTOM(L"align",OnAttrAlign)
@@ -1195,7 +1198,7 @@ namespace SOUI
         UINT    m_fEnableDragDrop    :1;       /**< 允许在该控件中使用拖放 */
         UINT    m_fAutoSel              :1;    /**< 有焦点时自动全选 */
         UINT    m_fNotifyChange         :1;    /**< receive re_notify when data changed */
-        
+		UINT	m_fDisableCaret			:1;	   /**< disable caret flag */
         BYTE    m_byDbcsLeadByte; /**< DBCS输入时的中文头字节*/
         SStringW m_strRtfSrc;     /**< 在XML中指定的RTF数据源*/
         STextHost    *m_pTxtHost; /**< Host of Richedit*/

@@ -596,6 +596,7 @@ SRichEdit::SRichEdit()
     ,m_fEnableDragDrop(FALSE)
     ,m_fAutoSel(FALSE)
     ,m_fNotifyChange(FALSE)
+	,m_fDisableCaret(FALSE)
     ,m_cchTextMost(cInitTextMax)
     ,m_chPasswordChar(_T('*'))
     ,m_lAccelPos(-1)
@@ -1694,6 +1695,13 @@ BOOL SRichEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	{
 		return SPanel::OnMouseWheel(nFlags,zDelta,pt);
 	}
+}
+
+BOOL SRichEdit::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
+{
+	if(m_fDisableCaret)
+		return FALSE;
+	return SWindow::CreateCaret(pBmp,nWid,nHeight);
 }
 
 //////////////////////////////////////////////////////////////////////////
