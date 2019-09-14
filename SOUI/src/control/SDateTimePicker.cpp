@@ -500,7 +500,7 @@ namespace SOUI
 		}
 		else if (m_showType == SHOW_YEAR_CENTURY)
 		{
-			sDay.Format(_T("%d-\r\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
+			sDay.Format(_T("%d-\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
 			pRT->DrawText(sDay, -1, rcItem, DT_VCENTER);
 		}
 
