@@ -913,8 +913,8 @@ namespace SOUI
 		m_evtSet.addEvent(EVENTID(EventDateTimeChanged));
 		m_pNcSkin = GETBUILTINSKIN(SKIN_SYS_BORDER);
 		m_style.SetAttribute(L"margin", L"1", TRUE);
-		m_style.SetAttribute(L"align",L"left",TRUE);
-		m_style.SetAttribute(L"valign",L"middle",TRUE);
+		m_style.SetAlign(DT_LEFT);
+		m_style.SetVAlign(DT_VCENTER);
 
 		m_bFocusable = TRUE;
 

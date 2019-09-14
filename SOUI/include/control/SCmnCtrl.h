@@ -36,11 +36,7 @@ public:
      *
      * Describe  构造函数
      */
-    SStatic():m_bMultiLines(0),m_nLineInter(5)
-    {
-        m_bMsgTransparent=TRUE;
-        m_style.SetAttribute(L"align",L"left");
-    }
+    SStatic();
     /**
      * SStatic::SDrawText
      * @brief    绘制文本
@@ -86,10 +82,7 @@ public:
      *
      * Describe  构造函数
      */
-    SLink()
-    {
-        m_style.SetAttribute(L"align",L"left");
-    }
+    SLink();
 
 protected:
     /**

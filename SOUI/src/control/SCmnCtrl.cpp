@@ -21,6 +21,13 @@ namespace SOUI
 //////////////////////////////////////////////////////////////////////////
 // Static Control
 //
+	
+SStatic::SStatic() :m_bMultiLines(0),m_nLineInter(5)
+{
+	m_bMsgTransparent=TRUE;
+	m_style.SetAlign(DT_LEFT);
+}
+
 void SStatic::DrawText(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
     if(!m_bMultiLines)
@@ -150,12 +157,18 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
     
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 // Link Control
 // Only For Header Drag Test
 // Usage: <link>inner text example</link>
 //
+
+SLink::SLink()
+{
+	m_style.SetAlign(DT_LEFT);
+}
+
+
 void SLink::DrawText(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
     if(!(uFormat&DT_CALCRECT))
@@ -855,7 +868,7 @@ SCheckBox::SCheckBox()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_CHECKBOX))
     , m_pFocusSkin(GETBUILTINSKIN(SKIN_SYS_FOCUSCHECKBOX))
 {
-    m_style.SetAttribute(L"align",L"left");
+	m_style.SetAlign(DT_LEFT);
     m_bFocusable=TRUE;
 }
 
@@ -1008,7 +1021,7 @@ SRadioBox::SRadioBox()
 	, m_uIconVAlign(SwndStyle::VAlign_Middle)
 	, m_nRadioBoxSpacing(4)
 {
-    m_style.SetAttribute(L"align",L"left");
+	m_style.SetAlign(DT_LEFT);
     m_bFocusable=TRUE;
 }
 

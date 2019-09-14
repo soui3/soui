@@ -251,7 +251,7 @@ namespace SOUI
 	{
 		m_pBgSkin = pItemSkin;
 		m_style.m_bTrackMouseEvent = TRUE;
-		m_style.SetAttribute(L"align", L"left", TRUE);
+		m_style.SetAlign(DT_LEFT);
 	}
 
 	void SMenuExItem::OnPaint(IRenderTarget *pRT)

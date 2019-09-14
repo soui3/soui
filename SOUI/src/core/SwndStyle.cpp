@@ -150,5 +150,15 @@ CRect SwndStyle::GetPadding() const
 
 }
 
+void SwndStyle::SetAlign(UINT uAlign)
+{
+	m_uAlign = uAlign;
+}
+
+void SwndStyle::SetVAlign(UINT uAlign)
+{
+	m_uVAlign = uAlign;
+}
+
 
 }//namespace SOUI

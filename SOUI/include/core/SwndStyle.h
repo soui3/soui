@@ -52,6 +52,8 @@ public:
     void SetTextColor(int iState,COLORREF cr){m_crText[iState]=cr;}
 
 	void SetScale(int nScale);
+	void SetAlign(UINT uAlign);
+	void SetVAlign(UINT uAlign);
 protected:
 	SLayoutSize    m_rcMargin[4];   /**< 4周非客户区大小 */
 	SLayoutSize    m_rcInset[4];    /**< 文字区4个方向的内边距 */

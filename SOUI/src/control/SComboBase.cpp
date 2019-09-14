@@ -78,8 +78,8 @@ namespace SOUI
 		,m_bAutoFitDropBtn(TRUE)
     {
         m_bFocusable=TRUE;
-        m_style.SetAttribute(L"align",L"left",TRUE);
-        m_style.SetAttribute(L"valign",L"middle",TRUE);
+		m_style.SetAlign(DT_LEFT);
+		m_style.SetVAlign(DT_VCENTER);
 
         m_evtSet.addEvent(EVENTID(EventCBSelChange));
         m_evtSet.addEvent(EVENTID(EventRENotify));
