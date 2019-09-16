@@ -22,6 +22,7 @@ SwndStyle::SwndStyle()
     , m_bTrackMouseEvent(0)
     , m_bBlendBackground(1)
 	, m_nScale(100)
+	, m_bMultiLines(FALSE)
 {
     for(int i=0; i<4; i++)
     {
@@ -35,15 +36,26 @@ UINT SwndStyle::GetTextAlign() const
     UINT uRet=0;
     switch(m_uAlign)
     {
-    case Align_Center: uRet |= DT_CENTER;break;
-    case Align_Right: uRet|= DT_RIGHT;break;
+    case Align_Center:
+		uRet |= DT_CENTER;
+		break;
+    case Align_Right:
+		uRet|= DT_RIGHT;
+		break;
     }
     switch(m_uVAlign)
     {
-    case VAlign_Middle:uRet |= DT_VCENTER|DT_SINGLELINE;break;
-    case VAlign_Bottom:uRet|= DT_BOTTOM|DT_SINGLELINE;break;
+    case VAlign_Middle:
+		uRet |= DT_VCENTER;
+		break;
+    case VAlign_Bottom:
+		uRet|= DT_BOTTOM;
+		break;
     }
-    if(m_bDotted) uRet|=DT_END_ELLIPSIS;
+	if (!m_bMultiLines)
+		uRet |= DT_SINGLELINE;
+    if(m_bDotted) 
+		uRet|=DT_END_ELLIPSIS;
     return uRet;
 }
 

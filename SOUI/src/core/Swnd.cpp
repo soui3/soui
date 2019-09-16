@@ -835,14 +835,14 @@ namespace SOUI
 			strText.TrimBlank();
 			if (!strText.IsEmpty())
 			{
-				m_strText.SetText(S_CW2T(GETSTRING(strText)));   //使用语言包翻译。
+				OnAttrText(strText, TRUE);
 			}else if(m_strText.GetText(TRUE).IsEmpty())
 			{//try to apply cdata as text
 				SStringW strCData = xmlNode.child_value();
 				strCData.TrimBlank();
 				if(!strCData.IsEmpty())
 				{
-					m_strText.SetText(S_CW2T(GETSTRING(strCData)));
+					OnAttrText(strCData, TRUE);
 				}
 			}
 		}
@@ -1608,7 +1608,7 @@ namespace SOUI
 		}
 	}
 
-	static const int KWnd_MaxSize  = 0x7fffff;
+	static const int KWnd_MaxSize  = 10000;
 	CSize SWindow::GetDesiredSize(int nParentWid , int nParentHei )
 	{
 		//检查当前窗口的MatchParent属性及容器窗口的WrapContent属性。
@@ -2628,6 +2628,54 @@ namespace SOUI
 	{
 		SetToolTipText(S_CW2T(GETSTRING(strValue)));
 		return S_FALSE;
+	}
+
+	HRESULT SWindow::OnAttrText(const SStringW & strValue, BOOL bLoading)
+	{
+		SStringW strText = GETSTRING(strValue);
+		SStringW strCvt;
+		LPCWSTR pszBuf = strText;
+		int i = 0;
+		int iBegin = i;
+		while (i < strText.GetLength())
+		{
+			if (pszBuf[i] == L'\\' && i+1<strText.GetLength())
+			{
+				if (pszBuf[i + 1] == L'n')
+				{
+					strCvt += strText.Mid(iBegin, i - iBegin);
+					strCvt += L"\n";
+					i += 2;
+					iBegin = i;
+				}
+				else if (pszBuf[i + 1] == L't')
+				{
+					strCvt += strText.Mid(iBegin, i - iBegin);
+					strCvt += L"\t";
+					i += 2;
+					iBegin = i;
+				}
+				else if (pszBuf[i + 1] == L'\\')
+				{
+					i += 2;
+				}
+				else
+				{
+					i += 1;
+				}
+			}
+			else
+			{
+				i += 1;
+			}
+		}
+		strCvt += strText.Mid(iBegin);
+		SStringT strCvt2 = S_CW2T(strCvt);
+		if(bLoading)
+			m_strText.SetText(strCvt2);
+		else
+			SetWindowText(strCvt2);
+		return S_OK;
 	}
 
 	SWindow * SWindow::GetSelectedChildInGroup()

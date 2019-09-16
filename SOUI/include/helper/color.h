@@ -19,12 +19,12 @@ public:
 
 	}
 
-	SColor(COLORREF cr,BYTE a)
+	SColor(COLORREF cr,BYTE alpha)
 	{
 	    r=GetRValue(cr);
 	    g=GetGValue(cr);
 	    b=GetBValue(cr);
-        this->a = a;
+        a = alpha;
 	}
 
     SColor(COLORREF cr)
@@ -55,12 +55,12 @@ public:
         a=GetAValue(cr);
     }
     
-    void setRGB(COLORREF cr,BYTE a)
+    void setRGB(COLORREF cr,BYTE alpha)
     {
         r=GetRValue(cr);
         g=GetGValue(cr);
         b=GetBValue(cr);
-        this->a=a;
+        a=alpha;
     }
     
     void updateAlpha(BYTE alpha)

@@ -5,25 +5,31 @@
 #define MAX(a,b)    (((a) > (b)) ? (a) : (b))
 
 static size_t breakTextEx(const SkPaint *pPaint, const wchar_t* textD, size_t length, SkScalar maxWidth,
-                          SkScalar* measuredWidth) 
+	int &endLen)
 {
-    size_t nLineLen=pPaint->breakText(textD,length*sizeof(wchar_t),maxWidth,measuredWidth,SkPaint::kForward_TextBufferDirection);
-    if(nLineLen==0) return 0;
-    nLineLen/=sizeof(wchar_t);
+	size_t nLineLen = pPaint->breakText(textD, length * sizeof(wchar_t), maxWidth, NULL, SkPaint::kForward_TextBufferDirection);
+	if (nLineLen == 0) return 0;
+	nLineLen /= sizeof(wchar_t);
+	endLen = 0;
 
-    const wchar_t * p=textD;
-    for(size_t i=0;i<nLineLen;i++, p++)
-    {
-        if(*p == L'\r')
-        {
-            if(i<nLineLen-1 && p[1]==L'\n') return i+2;
-            else return i;
-        }else if(*p == L'\n')
-        {
-            return i+1;
-        }
-    }
-    return nLineLen;
+	const wchar_t * p = textD;
+	int nRet = nLineLen;
+	for (size_t i = 0; i<nLineLen; i++, p++)
+	{
+		if (*p == L'\r' || *p == L'\n')
+		{
+			nRet = i;
+			break;
+		}
+	}
+	if (nRet < length)
+	{
+		if (nRet + 1 < length && textD[nRet] == L'\r' && textD[nRet + 1] == L'\n')
+			endLen = 2;
+		else if (textD[nRet] == L'\r' || textD[nRet] == L'\n')
+			endLen = 1;
+	}
+	return nRet;
 }
 
 SkRect DrawText_Skia(SkCanvas* canvas,const wchar_t *text,int len,SkRect box,const SkPaint& paint,UINT uFormat)
@@ -77,7 +83,8 @@ void SkTextLayoutEx::buildLines()
 
     if(m_uFormat & DT_SINGLELINE)
     {
-        m_lines.push(0);
+		LineInfo info = { 0,m_text.count() };
+        m_lines.push(info);
     }else
     {
         const wchar_t *text = m_text.begin();
@@ -88,11 +95,14 @@ void SkTextLayoutEx::buildLines()
         int lineHead=0;
         while(lineHead<m_text.count())
         {
-            m_lines.push(lineHead);
-            size_t line_len = breakTextEx(m_paint,text, stop - text, maxWid,0);
-			if (0 == line_len) break;
-			text += line_len;
-            lineHead += line_len;
+			int endLen = 0;
+            size_t line_len = breakTextEx(m_paint,text, stop - text, maxWid,endLen);
+			if (line_len + endLen == 0)
+				break;
+			LineInfo info = { lineHead,(int)line_len };
+			m_lines.push(info);
+			text += line_len+endLen;
+            lineHead += line_len+endLen;
         };
     }
 }
@@ -227,8 +237,8 @@ SkRect SkTextLayoutEx::draw( SkCanvas* canvas )
         {
             if(y + lineSpan + metrics.fTop >= m_rcBound.fBottom) 
                 break;  //the last visible line
-            int iBegin=m_lines[iLine];
-            int iEnd = iLine<(m_lines.count()-1)?m_lines[iLine+1]:m_text.count();
+            int iBegin=m_lines[iLine].nOffset;
+            int iEnd = iBegin + m_lines[iLine].nLen;
             SkScalar lineWid = drawLine(canvas,x,y,iBegin,iEnd);
             maxLineWid = MAX(maxLineWid,lineWid);
             y += lineSpan;
@@ -236,8 +246,8 @@ SkRect SkTextLayoutEx::draw( SkCanvas* canvas )
         }
         if(iLine<m_lines.count())
         {//draw the last visible line
-            int iBegin=m_lines[iLine];
-            int iEnd = iLine<(m_lines.count()-1)?m_lines[iLine+1]:m_text.count();
+			int iBegin = m_lines[iLine].nOffset;
+			int iEnd = iBegin + m_lines[iLine].nLen;
             SkScalar lineWid;
             if(m_uFormat & DT_ELLIPSIS)
             {//只支持在行尾增加省略号

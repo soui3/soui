@@ -491,17 +491,20 @@ namespace SOUI
 		if (m_showType == SHOW_YEAR)
 		{
 			sDay.Format(_T("%d月"), monthYearInfo.iMonthOrYear );
-			pRT->DrawText(sDay, -1, rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+			pRT->DrawText(sDay, sDay.GetLength(), rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 		}
 		else if (m_showType == SHOW_YEAR_DECADE)
 		{
 			sDay.Format(_T("%d"), monthYearInfo.iMonthOrYear);
-			pRT->DrawText(sDay, -1, rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+			pRT->DrawText(sDay, sDay.GetLength(), rcItem, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 		}
 		else if (m_showType == SHOW_YEAR_CENTURY)
 		{
 			sDay.Format(_T("%d-\n%d"), monthYearInfo.iMonthOrYear, monthYearInfo.iMonthOrYear + 9);
-			pRT->DrawText(sDay, -1, rcItem, DT_VCENTER);
+			CRect rcTxt=rcItem;
+			pRT->DrawText(sDay, sDay.GetLength(), rcTxt,  DT_CALCRECT);
+			rcItem.DeflateRect((rcItem.Width() - rcTxt.Width()) / 2, (rcItem.Height() - rcTxt.Height()) / 2);
+			pRT->DrawText(sDay, sDay.GetLength(), rcItem, 0);
 		}
 
 

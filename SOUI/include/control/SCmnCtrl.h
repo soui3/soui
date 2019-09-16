@@ -55,11 +55,9 @@ protected:
 
     void DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
     
-    int m_bMultiLines;  /**< 是否开启多行显示 */  
     int m_nLineInter;   /**< 行间距 */
 
     SOUI_ATTRS_BEGIN()
-        ATTR_INT(L"multiLines", m_bMultiLines, FALSE)
         ATTR_INT(L"interHeight", m_nLineInter, FALSE)
     SOUI_ATTRS_END()
 };

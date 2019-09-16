@@ -1338,6 +1338,7 @@ namespace SOUI
         HRESULT OnAttrID(const SStringW& strValue, BOOL bLoading);
         HRESULT OnAttrName(const SStringW& strValue, BOOL bLoading);
 		HRESULT OnAttrTip(const SStringW& strValue, BOOL bLoading);
+		HRESULT OnAttrText(const SStringW& strValue, BOOL bLoading);
 
         HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
 
@@ -1353,7 +1354,7 @@ namespace SOUI
             ATTR_CUSTOM(L"skin", OnAttrSkin)        //直接获得皮肤对象
             ATTR_SKIN(L"ncskin", m_pNcSkin, TRUE)   //直接获得皮肤对象
             ATTR_INT(L"data", m_uData, 0 )
-			ATTR_I18NSTRT(L"text",m_strText,TRUE)	//从text属性中获取显示文本
+			ATTR_CUSTOM(L"text",OnAttrText)
 			ATTR_STRINGW(L"trCtx",m_strTrCtx,FALSE) 
             ATTR_CUSTOM(L"enable", OnAttrEnable)
             ATTR_CUSTOM(L"visible", OnAttrVisible)

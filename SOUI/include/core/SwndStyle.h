@@ -54,10 +54,13 @@ public:
 	void SetScale(int nScale);
 	void SetAlign(UINT uAlign);
 	void SetVAlign(UINT uAlign);
+
+	BOOL GetMultiLines() const { return m_bMultiLines; }
+	void SetMultiLines(BOOL bMultiLines) { m_bMultiLines = bMultiLines; }
 protected:
 	SLayoutSize    m_rcMargin[4];   /**< 4周非客户区大小 */
 	SLayoutSize    m_rcInset[4];    /**< 文字区4个方向的内边距 */
-
+	BOOL		   m_bMultiLines;   /**< multiple lines flag */
     UINT m_nTextAlign;      /**<文本对齐 */
     UINT m_uAlign,m_uVAlign;/**<水平及垂直对齐 */
     COLORREF m_crText[4];   /**<文字4种状态下的颜色 */
@@ -75,7 +78,7 @@ protected:
 	void _ParseLayoutSize4(const SStringW & strValue, SLayoutSize layoutSizes[]);
     SOUI_ATTRS_BEGIN()
         ATTR_HEX(L"textMode", m_nTextAlign, TRUE)
-
+		ATTR_BOOL(L"multiLines",m_bMultiLines,TRUE)
         ATTR_ENUM_BEGIN(L"align", UINT, TRUE)
             ATTR_ENUM_VALUE(L"left", Align_Left)
             ATTR_ENUM_VALUE(L"center", Align_Center)

@@ -21,7 +21,11 @@ private:
 private:
     SkTDArray<wchar_t> m_text;   //文本内容
     SkTDArray<int>  m_prefix;    //前缀符索引
-    SkTDArray<int> m_lines;      //分行索引
+	struct LineInfo {
+		int nOffset;
+		int nLen;
+	};
+    SkTDArray<LineInfo> m_lines;      //分行索引
     UINT            m_uFormat;    //显示标志
     SkRect          m_rcBound;    //限制矩形
     const SkPaint  *m_paint;

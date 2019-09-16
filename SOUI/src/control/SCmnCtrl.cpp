@@ -22,7 +22,7 @@ namespace SOUI
 // Static Control
 //
 	
-SStatic::SStatic() :m_bMultiLines(0),m_nLineInter(5)
+SStatic::SStatic() :m_nLineInter(5)
 {
 	m_bMsgTransparent=TRUE;
 	m_style.SetAlign(DT_LEFT);
@@ -30,7 +30,7 @@ SStatic::SStatic() :m_bMultiLines(0),m_nLineInter(5)
 
 void SStatic::DrawText(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
-    if(!m_bMultiLines)
+    if(!GetStyle().GetMultiLines())
     {
 		OnDrawLine(pRT, pszBuf, 0, cchText, pRect, uFormat);
     }
@@ -82,24 +82,7 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
     while(i<cchText)
     {
         LPTSTR p2=CharNext(p1);
-        if(*p1==_T('\\') && p2 && *p2==_T('n'))
-        {
-            if(pLineTail > pLineHead && !(uFormat & DT_CALCRECT))
-            {
-                CRect rcText(pRect->left,pt.y,nRight, pt.y + nLineHei);
-				OnDrawLine(pRT,pszBuf, (int)(pLineHead-pszBuf),(int)(pLineTail-pLineHead),&rcText,uFormat);
-            }
-            pt.y+=nLineHei+m_nLineInter;
-            pt.x=pRect->left;
-            nLine++;
-            i+=(int)(p2-p1);
-            p1=CharNext(p2);
-            i+=(int)(p1-p2);
-            
-            pLineHead = p2+1;
-            continue;
-        }
-		else if ((*p1 == _T('\n') && p2))
+		if ((*p1 == _T('\n') && p2))
 		{
 			if (pLineTail > pLineHead && !(uFormat & DT_CALCRECT))
 			{
