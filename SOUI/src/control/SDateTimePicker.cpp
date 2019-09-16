@@ -909,6 +909,7 @@ namespace SOUI
 		, m_nDropWidth(220)
 		, m_bTimeEnable(true)
 		, m_wCharNum(0)
+		, m_dwBtnState(WndState_Normal)
 	{
 		m_evtSet.addEvent(EVENTID(EventDateTimeChanged));
 		m_pNcSkin = GETBUILTINSKIN(SKIN_SYS_BORDER);
