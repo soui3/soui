@@ -313,7 +313,9 @@
           <calstyle ncSkin="_skin.sys.border" daySkin="_skin.sys.btn.normal" margin="1"/>
         </dateTimePicker>
       </window>
-      <calendar size="-2,0" weight="1" name="mp_test" daySkin="_skin.sys.btn.normal" footerHeight="30"/>
+      <calendar size="-2,0" weight="1" name="mp_test" daySkin="_skin.sys.btn.normal" todayHeight="0" yearHeight="0" weekHeight="50"
+                textSunday="sunday" textMonday="monday" textTuesday="tuesday" textWednesday="Wednesday"
+                textThursday="thursday" textFriday="friday" textSaturday="saturday"/>
     </page>
     <page title="split">
       <splitrow name="split_row" pos="10,0,-10,-10" sepSize="6">

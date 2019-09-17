@@ -140,7 +140,6 @@ void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory) cons
 	objFactory->TplRegisterFactory<SEdit>();
 	objFactory->TplRegisterFactory<SHotKeyCtrl>();
 	objFactory->TplRegisterFactory<SComboBox>();
-	objFactory->TplRegisterFactory<SCalendar>();
 	objFactory->TplRegisterFactory<SSpinButtonCtrl>();
 	objFactory->TplRegisterFactory<SListView>();
 	objFactory->TplRegisterFactory<SComboView>();
@@ -148,7 +147,7 @@ void SObjectDefaultRegister::RegisterWindows(SObjectFactoryMgr *objFactory) cons
 	objFactory->TplRegisterFactory<STileView>();
 	objFactory->TplRegisterFactory<STreeView>();
 	objFactory->TplRegisterFactory<SMenuBar>();
-	objFactory->TplRegisterFactory<SCalendarEx>();
+	objFactory->TplRegisterFactory<SCalendar>();
 	objFactory->TplRegisterFactory<SDateTimePicker>();
 }
 

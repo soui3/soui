@@ -567,7 +567,7 @@ namespace SOUI
 		{
 			m_arrItems[i].strText.TranslateText();
 		}
-		return S_FALSE;
+		return S_OK;
 	}
 
 	BOOL SHeaderCtrl::OnRelayout(const CRect & rcWnd)

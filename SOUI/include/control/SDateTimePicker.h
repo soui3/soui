@@ -8,133 +8,7 @@
 
 namespace SOUI
 {
-	// 按钮 宏定义
-#define HIT_NULL				-1				// 无
-#define HIT_LEFT				-10			// 上一个月 按钮
-#define HIT_RIGHT				-11			// 下一个月 按钮
-#define HIT_YEAR				-12			//  年月  还没用到
-#define HIT_YEAR_1			-13
-#define HIT_YEAR_2			-14
-#define HIT_YEAR_3			-15
-#define HIT_TODAY				42				//  今天 
 
-	//日历显示的状态
-#define SHOW_MONTH		-101	//显示月份
-#define SHOW_YEAR		-102	//显示年份
-#define SHOW_YEAR_DECADE	-103	//显示近10年
-#define SHOW_YEAR_CENTURY	-104	//显示近100年
-
-class SOUI_EXP SCalendarEx : public SWindow
-{
-	SOUI_CLASS_NAME(SCalendarEx, L"calendarex")   //
-public:
-	SCalendarEx(WORD iYeay, WORD iMonth, WORD iDay);
-	SCalendarEx();
-	~SCalendarEx();
-	WORD GetYear();
-	WORD GetMonth();
-	WORD GetDay();
-	void GetDate(WORD &iYear, WORD &iMonth, WORD &iDay);
-	BOOL SetDate(WORD iYear, WORD iMonth, WORD iDay, int nBtnType=HIT_NULL, bool bNotify=false);
-protected:
-	void Init();
-	int OnCreate(LPVOID);
-	void OnPaint(IRenderTarget *pRT);
-	void OnLButtonDown(UINT nFlags, CPoint point);
-	void OnLButtonUp(UINT nFlags, CPoint point);
-	void OnMouseMove(UINT nFlags, CPoint pt);
-	void OnMouseLeave();
-	BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-
-	SOUI_ATTRS_BEGIN()
-		ATTR_LAYOUTSIZE(L"yearHeight", m_nYearMonthHeight, FALSE)
-		ATTR_LAYOUTSIZE(L"weekHeight", m_nWeekHeight, FALSE)
-		ATTR_LAYOUTSIZE(L"todayHeight", m_nFooterHeight, FALSE)
-		ATTR_COLOR(L"colorSelText", m_crOtherDayText, TRUE)
-		ATTR_COLOR(L"colorOtherText", m_crOtherDayText, TRUE)
-		ATTR_COLOR(L"colorSelBg", m_crSelDayBack, TRUE)
-		ATTR_COLOR(L"colorHoverText", m_crHoverText, TRUE)
-		ATTR_SKIN(L"prevSkin", m_pSkinPrev, FALSE)
-		ATTR_SKIN(L"nextSkin", m_pSkinNext, FALSE)
-		ATTR_SKIN(L"daySkin", m_pSkinDay, FALSE)
-	SOUI_ATTRS_END()
-
-	SOUI_MSG_MAP_BEGIN()
-		MSG_WM_CREATE(OnCreate)
-		MSG_WM_PAINT_EX(OnPaint)
-		MSG_WM_LBUTTONDOWN(OnLButtonDown)
-		MSG_WM_LBUTTONUP(OnLButtonUp)
-		MSG_WM_MOUSEMOVE(OnMouseMove)
-		MSG_WM_MOUSELEAVE(OnMouseLeave)
-		MSG_WM_MOUSEWHEEL(OnMouseWheel)
-	SOUI_MSG_MAP_END()
-protected:
-	// 定位 小于0  是 年月 3个按钮 暂时 没完成   0 - 41  天    42 today按钮
-	int HitTest(const CPoint& pt);
-	// 绘制日历头 中上部分
-	void DrawYearMonth(IRenderTarget* pRT, const CRect& rect);
-	void DrawWeek(IRenderTarget* pRT, const CRect& rect);
-	void DrawDay(IRenderTarget* pRT, CRect& rcDay, int nItem);
-	void DrawToday(IRenderTarget* pRT, CRect& rcDay);
-	void GetItemRect(int nItem, CRect& rcItem);
-	void SetLastMonth();
-	void SetNextMonth();
-	//扩展功能
-	void SetLastYear();
-	void SetNextYear();
-	void SetLastYearDecade();
-	void SetNextYearDecade();
-	void SetLastYearCentury();
-	void SetNextYearCentury();
-	void SetYearMonth(int iYear, int iMonth);
-	void OnPaintMonth(IRenderTarget *pRT);
-	void OnPaintYearDecadeCentury(IRenderTarget *pRT);
-	void DrawYearDecadeCentury(IRenderTarget *pRT, const CRect& rect, int nItem);
-public:
-	void SetShowType(int showType);
-	void SetYearDecadeCentury();
-
-protected:
-	SLayoutSize			m_nYearMonthHeight;   //年月
-	SLayoutSize			m_nWeekHeight;				//星期高度
-	SLayoutSize			m_nFooterHeight;			
-	
-	COLORREF				m_crSelText;
-	COLORREF				m_crOtherDayText;			//其他 天 的 字体颜色 
-	COLORREF				m_crSelDayBack;			// 选中 的 天 背颜色
-	COLORREF				m_crHoverText;
-	
-	ISkinObj*				m_pSkinPrev;
-	ISkinObj*				m_pSkinNext;
-	ISkinObj*				m_pSkinDay;					// 天 皮肤 
-
-	STrText					m_strWeek[7];  /**< 表头文本 */
-	
-	struct wDayInfo
-	{
-		WORD			iDay;				// 日历 天 
-		int					nType;			// -1 前一个月 0 当月 1 下一个月
-	};
-	wDayInfo				m_arrDays[42];
-	CRect						m_rcDays;
-	CRect						m_rcToday;
-
-	int							m_nSelItem;
-	int							m_nHoverItem;
-
-	WORD					m_iYear;
-	WORD					m_iMonth;
-	SYSTEMTIME			m_Today;
-
-	int					m_showType;			//日历显示状态
-	int					m_showTypeLbdown;	//鼠标按下时，日历的显示状态
-	struct wMonthOrYearInfo
-	{
-		WORD			iMonthOrYear;	//日历 月-年-年代-世纪
-		int				nType;			//-1前一 0 当前 1后一
-	};
-	wMonthOrYearInfo m_arrMonthOrYear[12];
-};
     //
     // 日期 选择控件
     //
@@ -186,7 +60,6 @@ protected:
 	void OnDestroy();
 	void OnSetFocus(SWND wndOld);
 	void OnKillFocus(SWND wndFocus);
-	void DrawFocus(IRenderTarget *pRT);
 	void TimeWheel(bool bUp);
 	void CircluNum(bool bUp, WORD& wNum, WORD wMin, WORD wMax);				// 循环 子 
 	
@@ -225,7 +98,7 @@ protected:
 
 	int										m_nDropWidth;
 	bool									m_bTimeEnable;				// 是否 有 时 分 秒
-	SCalendarEx*						m_pCalendar;
+	SCalendar*						m_pCalendar;
 	WORD								m_wCharNum;
 };
 }

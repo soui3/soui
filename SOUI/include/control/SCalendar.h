@@ -129,218 +129,144 @@ namespace SOUI
 
     };
 
-    /**
-     * @class      SCalendar
-     * @brief      日历类
-     * 
-     * Describe    此类是日历的核心类 大部分函数都是静态函数
-     */
-    class SOUI_EXP SCalendar : public SWindow
-    {
-    public:
-        SOUI_CLASS_NAME(SCalendar, L"calendar")
-        
-        /**
-         * SCalendarCore::SCalendar
-         * @brief    构造函数
-         * @param    WORD iYear -- 年
-         * @param    WORD iMonth -- 月
-         * @param    WORD iDay -- 日
-         *
-         * Describe  构造函数
-         */
-        SCalendar(WORD iYear, WORD iMonth, WORD iDay);
+	// 按钮 宏定义
+#define HIT_NULL				-1				// 无
+#define HIT_LEFT				-10			// 上一个月 按钮
+#define HIT_RIGHT				-11			// 下一个月 按钮
+#define HIT_YEAR				-12			//  年月  还没用到
+#define HIT_YEAR_1			-13
+#define HIT_YEAR_2			-14
+#define HIT_YEAR_3			-15
+#define HIT_TODAY				42				//  今天 
 
-        /**
-         * SCalendar::SCalendar
-         * @brief    构造函数
-         *
-         * Describe  构造函数
-         */
-        SCalendar();
+	//日历显示的状态
+#define SHOW_MONTH		-101	//显示月份
+#define SHOW_YEAR		-102	//显示年份
+#define SHOW_YEAR_DECADE	-103	//显示近10年
+#define SHOW_YEAR_CENTURY	-104	//显示近100年
 
-    public:
-        /**
-         * SCalendar::GetYear
-         * @brief    获得年
-         *
-         * Describe  获得年
-         */
-        WORD GetYear(){return m_iYear;}
-        
-        /**
-         * SCalendar::GetMonth
-         * @brief    获得月
-         *
-         * Describe  获得月
-         */
-        WORD GetMonth(){return m_iMonth;}
+	class SOUI_EXP SCalendar : public SWindow
+	{
+		SOUI_CLASS_NAME(SCalendar, L"calendar")   //
+	public:
+		SCalendar(WORD iYeay, WORD iMonth, WORD iDay);
+		SCalendar();
+		~SCalendar();
+		WORD GetYear();
+		WORD GetMonth();
+		WORD GetDay();
+		void GetDate(WORD &iYear, WORD &iMonth, WORD &iDay);
+		BOOL SetDate(WORD iYear, WORD iMonth, WORD iDay, int nBtnType = HIT_NULL, bool bNotify = false);
 
-        /**
-         * SCalendar::GetDay
-         * @brief    获得天
-         *
-         * Describe  获得天
-         */
-        WORD GetDay(){return m_iDay;}
-        
-        /**
-         * SCalendar::GetDate
-         * @brief    获得日期
-         * @param    WORD iYear -- 年
-         * @param    WORD iMonth -- 月
-         * @param    WORD iDay -- 日         
-         *
-         * Describe  获得日期
-         */
-        void GetDate(WORD &iYear, WORD &iMonth, WORD &iDay);
+	protected:
+		virtual HRESULT OnLanguageChanged();
+	protected:
+		void Init();
+		void OnPaint(IRenderTarget *pRT);
+		void OnLButtonDown(UINT nFlags, CPoint point);
+		void OnLButtonUp(UINT nFlags, CPoint point);
+		void OnMouseMove(UINT nFlags, CPoint pt);
+		void OnMouseLeave();
+		BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
-        /**
-         * SCalendar::SetDate
-         * @brief    设置日期
-         * @param    WORD iYear -- 年
-         * @param    WORD iMonth -- 月
-         * @param    WORD iDay -- 日         
-         *
-         * Describe  设置日期
-         */        
-        BOOL SetDate(WORD iYear, WORD iMonth, WORD iDay,BOOL bNotify=TRUE);
+		SOUI_ATTRS_BEGIN()
+			ATTR_LAYOUTSIZE(L"yearHeight", m_nYearMonthHeight, TRUE)
+			ATTR_LAYOUTSIZE(L"weekHeight", m_nWeekHeight, TRUE)
+			ATTR_LAYOUTSIZE(L"todayHeight", m_nFooterHeight, TRUE)
+			ATTR_COLOR(L"colorSelText", m_crOtherDayText, TRUE)
+			ATTR_COLOR(L"colorOtherText", m_crOtherDayText, TRUE)
+			ATTR_COLOR(L"colorSelBg", m_crSelDayBack, TRUE)
+			ATTR_COLOR(L"colorHoverText", m_crHoverText, TRUE)
+			ATTR_SKIN(L"prevSkin", m_pSkinPrev, TRUE)
+			ATTR_SKIN(L"nextSkin", m_pSkinNext, TRUE)
+			ATTR_SKIN(L"daySkin", m_pSkinDay, TRUE)
+			ATTR_SKIN(L"weekSkin", m_pSkinWeek,TRUE)
+			ATTR_I18NSTRT(L"textSunday", m_strWeek[0], TRUE)
+			ATTR_I18NSTRT(L"textMonday", m_strWeek[1], TRUE)
+			ATTR_I18NSTRT(L"textTuesday", m_strWeek[2], TRUE)
+			ATTR_I18NSTRT(L"textWednesday", m_strWeek[3], TRUE)
+			ATTR_I18NSTRT(L"textThursday", m_strWeek[4], TRUE)
+			ATTR_I18NSTRT(L"textFriday", m_strWeek[5], TRUE)
+			ATTR_I18NSTRT(L"textSaturday", m_strWeek[6], TRUE)
+		SOUI_ATTRS_END()
 
-    protected:
-      /**
-       * SCalendar::Init
-       * @brief    初始化函数
-       *
-       * Describe  初始化函数
-       */            
-        void Init();
-
+	protected:
 		int OnCreate(LPVOID);
-
-        /**
-         * SCalendar::OnPaint
-         * @brief    绘画消息
-         * @param    IRenderTarget *pRT -- 绘制设备句柄
-         *
-         * Describe  此函数是消息响应函数
-         */
-        void OnPaint(IRenderTarget *pRT);
-        
-        /**
-         * SCalendar::OnLButtonDown
-         * @brief    鼠标左键抬起事件
-         * @param    UINT nFlags -- 标志
-         * @param    CPoint point -- 鼠标坐标
-         *
-         * Describe  此函数是消息响应函数
-         */
-        void OnLButtonDown(UINT nFlags, CPoint point);
-        
-        /**
-         * SCalendar::OnMouseMove
-         * @brief    鼠标移动事件
-         * @param    UINT nFlags -- 标志
-         * @param    CPoint point -- 鼠标坐标
-         *
-         * Describe  此函数是消息响应函数
-         */
-        void OnMouseMove(UINT nFlags,CPoint pt);
-        
-        /**
-         * SCalendar::OnMouseLeave
-         * @brief    鼠标离开事件
-         *
-         * Describe  此函数是消息响应函数
-         */
-        void OnMouseLeave();
-
-    protected:
-        /**
-         * SCalendar::GetDayRect
-         * @brief    获得日期的坐标
-         * @param    WORD iDay  -- 日期         
-         *
-         * Describe  根据日期所在的周以及星期几，来计算坐标
-         */    
-        CRect GetDayRect(WORD iDay);
-        WORD HitTest(CPoint  pt);
-
-        /**
-         * SCalendar::DrawTitle
-         * @brief    绘制标题
-         * @param    IRenderTarget *pRT -- 绘制设备句柄         
-         *
-         * Describe  返回只是该日期所在的坐标，采用CRect表示
-         */    
-        virtual void DrawTitle(IRenderTarget *pRT);
-        
-        /**
-         * SCalendar::DrawDay
-         * @brief    绘制日期--天
-         * @param    IRenderTarget *pRT -- 绘制设备句柄         
-         *
-         * Describe  绘制日期--天
-         */    
-        virtual void DrawDay(IRenderTarget *pRT,CRect & rcDay,WORD iDay );
-
-        /**
-         * SCalendar::DrawDate
-         * @brief    绘制日期
-         * @param    IRenderTarget *pRT -- 绘制设备句柄         
-         *
-         * Describe  绘制日期
-         */            
-        void DrawDate(IRenderTarget *pRT);
-
-        
-        /**
-         * SCalendar::RedrawDay
-         * @brief    重新绘制日期--天
-         * @param    CDCHandle dc -- 绘制设备句柄         
-         *
-         * Describe  重新绘制日期--天
-         */    
-        void RedrawDay(WORD iDay);
-
-        SOUI_ATTRS_BEGIN()
-            ATTR_LAYOUTSIZE(L"titleHeight", m_nTitleHei, FALSE)
-            ATTR_LAYOUTSIZE(L"footerHeight", m_nFooterHei, FALSE)
-            ATTR_COLOR(L"colorWeekend", m_crWeekend, FALSE)
-            ATTR_COLOR(L"colorTitleBack", m_crTitleBack, FALSE)
-            ATTR_COLOR(L"colorDay", m_crDay, FALSE)
-            ATTR_SKIN(L"daySkin", m_pDaySkin, FALSE)
-            ATTR_SKIN(L"titleSkin", m_pTitleSkin, FALSE)
-            ATTR_I18NSTRT(L"title-1", m_strTitle[0], FALSE)
-            ATTR_I18NSTRT(L"title-2", m_strTitle[1], FALSE)
-            ATTR_I18NSTRT(L"title-3", m_strTitle[2], FALSE)
-            ATTR_I18NSTRT(L"title-4", m_strTitle[3], FALSE)
-            ATTR_I18NSTRT(L"title-5", m_strTitle[4], FALSE)
-            ATTR_I18NSTRT(L"title-6", m_strTitle[5], FALSE)
-            ATTR_I18NSTRT(L"title-7", m_strTitle[6], FALSE)
-        SOUI_ATTRS_END()
-
-        SOUI_MSG_MAP_BEGIN()
+		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_CREATE(OnCreate)
-            MSG_WM_PAINT_EX(OnPaint)
-            MSG_WM_LBUTTONDOWN(OnLButtonDown)
-            MSG_WM_MOUSEMOVE(OnMouseMove)
-            MSG_WM_MOUSELEAVE(OnMouseLeave)
-        SOUI_MSG_MAP_END()
-    protected:
-        SLayoutSize     m_nTitleHei;    /**< 表头高度 */
-        SLayoutSize     m_nFooterHei;   /**< 表尾高度 */
-        ISkinObj    *m_pDaySkin;    /**< 日期项皮肤 */
-        ISkinObj    *m_pTitleSkin;  /**< 表头皮肤 */
+			MSG_WM_PAINT_EX(OnPaint)
+			MSG_WM_LBUTTONDOWN(OnLButtonDown)
+			MSG_WM_LBUTTONUP(OnLButtonUp)
+			MSG_WM_MOUSEMOVE(OnMouseMove)
+			MSG_WM_MOUSELEAVE(OnMouseLeave)
+			MSG_WM_MOUSEWHEEL(OnMouseWheel)
+			SOUI_MSG_MAP_END()
+	protected:
+		// 定位 小于0  是 年月 3个按钮 暂时 没完成   0 - 41  天    42 today按钮
+		int HitTest(const CPoint& pt);
+		// 绘制日历头 中上部分
+		void DrawYearMonth(IRenderTarget* pRT, const CRect& rect);
+		void DrawWeek(IRenderTarget* pRT, const CRect& rect);
+		void DrawDay(IRenderTarget* pRT, CRect& rcDay, int nItem);
+		void DrawToday(IRenderTarget* pRT, CRect& rcDay);
+		void GetItemRect(int nItem, CRect& rcItem);
+		void SetLastMonth();
+		void SetNextMonth();
+		//扩展功能
+		void SetLastYear();
+		void SetNextYear();
+		void SetLastYearDecade();
+		void SetNextYearDecade();
+		void SetLastYearCentury();
+		void SetNextYearCentury();
+		void SetYearMonth(int iYear, int iMonth);
+		void OnPaintMonth(IRenderTarget *pRT);
+		void OnPaintYearDecadeCentury(IRenderTarget *pRT);
+		void DrawYearDecadeCentury(IRenderTarget *pRT, const CRect& rect, int nItem);
+	public:
+		void SetShowType(int showType);
+		void SetYearDecadeCentury();
 
-        COLORREF        m_crWeekend;    /**< 周末文字颜色 */
-        COLORREF        m_crTitleBack;  /**< 表头背景色 */
-        COLORREF        m_crDay;        /**< 选中日期颜色 */
-        COLORREF        m_crDayBack;    /**< 选中日期背景颜色 */
-        STrText			m_strTitle[7];  /**< 表头文本 */
+	protected:
+		SLayoutSize			m_nYearMonthHeight;   //年月
+		SLayoutSize			m_nWeekHeight;				//星期高度
+		SLayoutSize			m_nFooterHeight;
 
-        WORD    m_iYear, m_iMonth, m_iDay; /**< 年月日 */
-        int        m_iHoverDay;
+		COLORREF				m_crSelText;
+		COLORREF				m_crOtherDayText;			//其他 天 的 字体颜色 
+		COLORREF				m_crSelDayBack;			// 选中 的 天 背颜色
+		COLORREF				m_crHoverText;
 
-    };
+		ISkinObj*				m_pSkinPrev;
+		ISkinObj*				m_pSkinNext;
+		ISkinObj*				m_pSkinDay;					// 天 皮肤 
+		ISkinObj*				m_pSkinWeek;
+		STrText					m_strWeek[7];/**< 表头文本 */
+
+		struct wDayInfo
+		{
+			WORD			iDay;				// 日历 天 
+			int					nType;			// -1 前一个月 0 当月 1 下一个月
+		};
+		wDayInfo				m_arrDays[42];
+		CRect						m_rcDays;
+		CRect						m_rcToday;
+
+		int							m_nSelItem;
+		int							m_nHoverItem;
+
+		WORD					m_iYear;
+		WORD					m_iMonth;
+		SYSTEMTIME			m_Today;
+
+		int					m_showType;			//日历显示状态
+		int					m_showTypeLbdown;	//鼠标按下时，日历的显示状态
+		struct wMonthOrYearInfo
+		{
+			WORD			iMonthOrYear;	//日历 月-年-年代-世纪
+			int				nType;			//-1前一 0 当前 1后一
+		};
+		wMonthOrYearInfo m_arrMonthOrYear[12];
+	};
 }//end of namespace
 
