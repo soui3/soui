@@ -631,32 +631,10 @@
     <Attribute name="dropWidth" default="0" type="INT" comment="下拉框的宽度"/>
   </dateTimePicker>
 
-
-  <!-- 范例    日历类
-    <calendar size="-2,0" weight="1" name="mp_test" daySkin="_skin.sys.btn.normal" footerHeight="30"/>
+  <!-- 范例    日历类的扩展  可以进行上一个月 和下一个月的标题切换。同时日历会显示相邻月份的日期
+    <calendar size="-2,0" weight="1" name="mp_test" daySkin="_skin.sys.btn.normal" todayHeight="30"/>
 -->
   <calendar parent="SWindow" comment=" 日历类"  classname="SCalendar">
-    <Attribute name="titleHeight" default="0" type="INT" comment="标题高度"/>
-    <Attribute name="footerHeight" default="0" type="INT" comment="底部高度"/>
-    <Attribute name="colorWeekend" default="#0000ff" type="COLOR" comment="周末颜色"/>
-    <Attribute name="colorTitleBack" default="#0000ff" type="COLOR" comment="标题颜色"/>
-    <Attribute name="colorDay" default="#0000ff" type="COLOR" comment="日期颜色"/>
-    <Attribute name="daySkin" default="skin_tip_bg" type="STRING" comment="默认按钮皮肤  ISkinObj对象"/>
-    <Attribute name="titleSkin" default="skin_tip_bg" type="STRING" comment="默认标题皮肤  ISkinObj对象"/>
-    <Attribute name="title-1" default="周一" type="STRING" comment="标题周1的文字"/>
-    <Attribute name="title-2" default="周2" type="STRING" comment="标题周2的文字"/>
-    <Attribute name="title-3" default="周3" type="STRING" comment="标题周3的文字"/>
-    <Attribute name="title-4" default="周4" type="STRING" comment="标题周4的文字"/>
-    <Attribute name="title-5" default="周5" type="STRING" comment="标题周5的文字"/>
-    <Attribute name="title-6" default="周6" type="STRING" comment="标题周6的文字"/>
-    <Attribute name="title-7" default="周7" type="STRING" comment="标题周7的文字"/>
-  </calendar>
-
-
-  <!-- 范例    日历类的扩展  可以进行上一个月 和下一个月的标题切换。同时日历会显示相邻月份的日期
-    <calendarex size="-2,0" weight="1" name="mp_test" daySkin="_skin.sys.btn.normal" footerHeight="30"/>
--->
-  <calendarex parent="SWindow" comment=" 日历类"  classname="SCalendar">
     <Attribute name="yearHeight" default="0" type="INT" comment="年月高度"/>
     <Attribute name="weekHeight" default="0" type="INT" comment="星期高度"/>
     <Attribute name="todayHeight" default="0" type="INT" comment="日期高度"/>
@@ -664,10 +642,18 @@
     <Attribute name="colorOtherText" default="#0000ff" type="COLOR" comment="其他 天 的 字体颜色 "/>
     <Attribute name="colorSelBg" default="#0000ff" type="COLOR" comment="选中 的 天 背景颜色"/>
     <Attribute name="colorHoverText" default="#0000ff" type="COLOR" comment="标题颜色"/>
-    <Attribute name="prevSkin" default="skin_tip_bg" type="STRING" comment="上个月日期的皮肤  ISkinObj对象"/>
-    <Attribute name="nextSkin" default="skin_tip_bg" type="STRING" comment="下个月日期的皮肤  ISkinObj对象"/>
-    <Attribute name="daySkin" default="skin_tip_bg" type="STRING" comment="日  皮肤  ISkinObj对象"/>
-  </calendarex>
+    <Attribute name="prevSkin" default="skin_tip_bg" type="Skin" comment="上个月日期的皮肤  ISkinObj对象"/>
+    <Attribute name="nextSkin" default="skin_tip_bg" type="Skin" comment="下个月日期的皮肤  ISkinObj对象"/>
+    <Attribute name="daySkin" default="skin_tip_bg" type="Skin" comment="日  皮肤  ISkinObj对象"/>
+    <Attribute name="textSunday" default="日" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textMonday" default="一" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textTuesday" default="二" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textWednesday" default="三" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textThursday" default="四" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textFriday" default="五" type="STRING" comment="可翻译文本"/>
+    <Attribute name="textSaturday" default="六" type="STRING" comment="可翻译文本"/>
+    <Attribute name="weekSkin" default="NULL" type="Skin" comment="星期背景皮肤"/>
+  </calendar>
   
   <!-- 范例    activex 控件
     <activex pos="0,0,-0,-0" name="ctrl_flash"  delay="1"/>
@@ -681,7 +667,7 @@
  <!-- 范例    flash 控件
     <flash pos="0,0,-0,-0" name="ctrl_flash" url="http://127.0.0.1:82/flash/apple.swf" delay="1"/>
 -->
-  <flash parent="SWindow" comment=" flash 控件"  classname="SCalendar">	
+  <flash parent="SWindow" comment=" flash 控件"  classname="SFlash">	
 	<Attribute name="url" default="http://127.0.0.1:82/flash/apple.swf" type="STRING" comment="url播放地址"/>	
   </flash>
 
