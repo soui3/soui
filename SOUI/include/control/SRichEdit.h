@@ -942,18 +942,8 @@ namespace SOUI
         */
         
         virtual HRESULT OnTxNotify(DWORD iNotify,LPVOID pv);
-        /**
-        * SRichEdit::DefAttributeProc
-        * @brief    默认属性处理函数
-        * @param    const SStringW & strAttribName -- 属性名
-        * @param    const SStringW & strValue -- 值
-        * @param    BOOL bLoading -- 是否加载
-        *
-        * Describe  默认属性处理函数
-        */
-        virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
-        
-        /**
+
+		/**
         * SRichEdit::OnLButtonDown
         * @brief    左键按下事件
         * @param    UINT nFlags -- 标志
@@ -1136,6 +1126,33 @@ namespace SOUI
             MESSAGE_HANDLER_EX(EM_EXLIMITTEXT,OnSetLimitText)
         SOUI_MSG_MAP_END()
 
+	public:
+        /**
+        * SRichEdit::OnAttrTextColor
+        * @brief    设置文本颜色
+        * @param    const SStringW &  strValue -- 字符串
+        * @param    BOOL bLoading -- 是否加载
+        * @return   返回HRESULT 
+        *
+        * Describe  设置文本颜色
+        */
+        HRESULT OnAttrTextColor(const SStringW &  strValue,BOOL bLoading);
+        HRESULT OnAttrRTF(const SStringW &  strValue,BOOL bLoading);
+        HRESULT OnAttrAlign(const SStringW &  strValue,BOOL bLoading);
+        HRESULT OnAttrNotifyChange(const SStringW &  strValue,BOOL bLoading);
+		HRESULT OnAttrHscrollBar(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrVscrollBar(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrAutoHscrollBar(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrAutoVscrollBar(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrMultiLines(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrReadOnly(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrWantReturn(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrPassword(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrNumber(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrAutoSel(const SStringW & strValue,BOOL bLoading);
+
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"style",m_dwStyle,FALSE)
             ATTR_INT(L"maxBuf",m_cchTextMost,FALSE)
@@ -1152,28 +1169,21 @@ namespace SOUI
             ATTR_CUSTOM(L"align",OnAttrAlign)
             ATTR_CUSTOM(L"notifyChange",OnAttrNotifyChange)
 			ATTR_BOOL(L"wantTab",m_fWantTab,FALSE)
-            //更多属性见SRichEdit::DefAttributeProc代码
-            //包括：hscrollBar，vscrollBar，autoHscroll，autoVscroll，multiLines，readOnly，wantReturn，password
-            //      number,passwordChar,enableDragdrop,autoSel
-        SOUI_ATTRS_END()
+			ATTR_CUSTOM(L"hscrollBar",OnAttrHscrollBar)
+			ATTR_CUSTOM(L"vscrollBar",OnAttrVscrollBar)
+			ATTR_CUSTOM(L"autoHscroll",OnAttrAutoHscrollBar)
+			ATTR_CUSTOM(L"autoVscroll",OnAttrAutoVscrollBar)
+			ATTR_CUSTOM(L"multiLines",OnAttrMultiLines)
+			ATTR_CUSTOM(L"readOnly",OnAttrReadOnly)
+			ATTR_CUSTOM(L"wantReturn",OnAttrWantReturn)
+			ATTR_CUSTOM(L"password",OnAttrPassword)
+			ATTR_CUSTOM(L"passwordChar",OnAttrPasswordChar)
+			ATTR_CUSTOM(L"number",OnAttrNumber)
+			ATTR_CUSTOM(L"enableDragdrop",OnAttrEnableDragdrop)
+			ATTR_CUSTOM(L"autoSel",OnAttrAutoSel)
+       SOUI_ATTRS_END()
 
     protected:
-        /**
-        * SRichEdit::OnAttrTextColor
-        * @brief    设置文本颜色
-        * @param    const SStringW &  strValue -- 字符串
-        * @param    BOOL bLoading -- 是否加载
-        * @return   返回HRESULT 
-        *
-        * Describe  设置文本颜色
-        */
-        HRESULT OnAttrTextColor(const SStringW &  strValue,BOOL bLoading);
-
-        HRESULT OnAttrRTF(const SStringW &  strValue,BOOL bLoading);
-
-        HRESULT OnAttrAlign(const SStringW &  strValue,BOOL bLoading);
-
-        HRESULT OnAttrNotifyChange(const SStringW &  strValue,BOOL bLoading);
         
         CHARFORMAT2W   m_cfDef;              /**< Default character format  */
         PARAFORMAT2    m_pfDef;              /**< Default paragraph format  */
