@@ -283,7 +283,13 @@ void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)
 		m_sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 		ReleaseRenderTarget(pRT);
 	}
-	else
+	else if(iPart == SB_PAGEDOWN || iPart == SB_PAGEUP)
+	{
+		CRect rc = m_sbHandler.GetPartRect(iPart);
+		IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND);
+		m_sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+		ReleaseRenderTarget(pRT);
+	}else
 	{
 		CRect rc = m_sbHandler.GetPartRect(iPart);
 		IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND);

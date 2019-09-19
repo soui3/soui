@@ -90,11 +90,16 @@ namespace SOUI
 			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
 			sbHandler.OnDraw(pRT, SB_THUMBTRACK);
 			ReleaseRenderTarget(pRT);
-		}
-		else
+		}else if(iPart == SB_PAGEDOWN || iPart == SB_PAGEUP)
 		{
-			CRect rcPart = sbHandler.GetPartRect(iPart);
-			SAutoRefPtr<IRenderTarget> pRT = GetRenderTarget(&rcPart, GRT_PAINTBKGND, FALSE);
+			CRect rc = sbHandler.GetPartRect(iPart);
+			IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND,FALSE);
+			sbHandler.OnDraw(pRT, SScrollBarHandler::kSbRail);
+			ReleaseRenderTarget(pRT);
+		}else
+		{
+			CRect rc = sbHandler.GetPartRect(iPart);
+			IRenderTarget *pRT = GetRenderTarget(&rc, GRT_PAINTBKGND,FALSE);
 			sbHandler.OnDraw(pRT, iPart);
 			ReleaseRenderTarget(pRT);
 		}
