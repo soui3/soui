@@ -24,6 +24,7 @@ namespace SOUI
 		virtual void OnScrollKillTimer(bool bVert, char id) = 0;
 		virtual const IInterpolator * GetScrollInterpolator() const = 0;
 		virtual int  GetScrollFadeFrames() const = 0;
+		virtual BYTE GetScrollThumbTrackMinAlpha() const = 0;
 	};
 
 	class SOUI_EXP SScrollBarHandler :  ITimelineHandler
@@ -73,7 +74,7 @@ namespace SOUI
 
 		const IInterpolator * GetInterpolator() const;
 
-		BYTE GetAlpha() const;
+		BYTE GetAlpha(int iPart) const;
 
 		int GetFadeStep() const;
 

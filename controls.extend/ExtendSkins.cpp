@@ -13,7 +13,7 @@ SColorMask::SColorMask()
     m_crStates[3]=(RGB(0xE0, 0xE0, 0xE0));
 }
 
-void SColorMask::_Draw(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState, BYTE byAlpha)
+void SColorMask::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int dwState, BYTE byAlpha) const
 {
     CRect rcDraw = *prcDraw;
 

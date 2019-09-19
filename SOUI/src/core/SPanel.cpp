@@ -152,6 +152,11 @@ namespace SOUI
 		return m_fadeFrames;
 	}
 
+	BYTE SPanel::GetScrollThumbTrackMinAlpha() const
+	{
+		return m_bySbThumbTrackMinAlpha;
+	}
+
 SPanel::SPanel()
     :m_dragSb(SSB_NULL)
 	,m_hitSb(SSB_NULL)
@@ -163,6 +168,7 @@ SPanel::SPanel()
 	, m_sbVert(this,true)
 	, m_sbHorz(this,false)
 	, m_fadeFrames(20)
+	, m_bySbThumbTrackMinAlpha(128)
 {
 	m_nSbWid.setInvalid();
 	m_nSbArrowSize.setInvalid();

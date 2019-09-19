@@ -12,6 +12,7 @@ SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
     , m_uAllowSize((UINT)-1)
 	, m_fadeFrame(30)
+	, m_byThumbTrackMinAlpha(128)
     , m_sbHandler(this)
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
@@ -255,6 +256,11 @@ const IInterpolator * SScrollBar::GetScrollInterpolator() const
 int SScrollBar::GetScrollFadeFrames() const
 {
 	return m_fadeFrame;
+}
+
+BYTE SScrollBar::GetScrollThumbTrackMinAlpha() const
+{
+	return m_byThumbTrackMinAlpha;
 }
 
 void SScrollBar::OnScrollUpdatePart(bool bVert, int iPart)

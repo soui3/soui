@@ -139,7 +139,7 @@ end:
 		CRect rcPart = GetPartRect(iPart);
 		DWORD dwState = GetPartState(iPart);
 		if (iPart == kSbRail) iPart = SB_PAGEUP;
-		BYTE byAlpha = GetAlpha();
+		BYTE byAlpha = GetAlpha(iPart);
 		m_pSbHost->GetScrollBarSkin(IsVertical())->DrawByState(pRT,rcPart,MAKESBSTATE(iPart,dwState,IsVertical()), byAlpha);
 	}
 
@@ -357,12 +357,19 @@ end:
 	}
 
 
-	BYTE SScrollBarHandler::GetAlpha() const
+	BYTE SScrollBarHandler::GetAlpha(int iPart) const
 	{
 		if(!GetInterpolator())
 			return 0xFF;
 		float fProg = GetInterpolator()->getInterpolation(m_iFrame*1.0f/ m_pSbHost->GetScrollFadeFrames());
-		return (BYTE)(fProg * 0xFF);
+		if (iPart == SB_THUMBTRACK)
+		{
+			return (BYTE)(fProg * (0xFF-m_pSbHost->GetScrollThumbTrackMinAlpha()) + m_pSbHost->GetScrollThumbTrackMinAlpha());
+		}
+		else
+		{
+			return (BYTE)(fProg * 0xFF);
+		}
 	}
 
 	int SScrollBarHandler::GetFadeStep() const

@@ -25,9 +25,8 @@ namespace SOUI
  */
 class SOUI_EXP SScrollBar: public SWindow, protected IScrollBarHost
 {
-// Construction
+	SOUI_CLASS_NAME(SScrollBar, L"scrollbar")
 public:
-    SOUI_CLASS_NAME(SScrollBar, L"scrollbar")
     /**
      * SScrollBar::SScrollBar
      * @brief    构造函数
@@ -36,7 +35,7 @@ public:
      */
     SScrollBar();
     /**
-     * SScrollBar::SScrollBar
+     * SScrollBar::~SScrollBar
      * @brief    析构函数
      *
      * Describe  析构函数  
@@ -112,6 +111,7 @@ protected:
 
 	virtual const IInterpolator * GetScrollInterpolator() const override;
 	virtual int GetScrollFadeFrames() const override;
+	virtual BYTE GetScrollThumbTrackMinAlpha() const override;
 protected:    
 
     /**
@@ -143,8 +143,9 @@ protected:
         ATTR_INT(L"max", m_si.nMax, TRUE)
         ATTR_INT(L"value", m_si.nPos, TRUE)
         ATTR_INT(L"page", m_si.nPage, TRUE)
-		ATTR_INT(L"fadeSpeed", m_fadeFrame,FALSE)
 		ATTR_CUSTOM(L"vertical",OnAttrVertical)
+		ATTR_INT(L"fadeSpeed", m_fadeFrame, FALSE)
+		ATTR_INT(L"thumbTrackMinAlpha", m_byThumbTrackMinAlpha,FALSE)
 		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
 		ATTR_CHAIN_PTR(m_fadeInterpolator,0)
     SOUI_ATTRS_END()
@@ -262,7 +263,7 @@ protected:
 
 	int			m_fadeFrame;
 	SAutoRefPtr<IInterpolator> m_fadeInterpolator;
-
+	BYTE		m_byThumbTrackMinAlpha;
 	SScrollBarHandler m_sbHandler;
 
 };

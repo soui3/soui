@@ -69,6 +69,7 @@ namespace SOUI
 		virtual void OnScrollKillTimer(bool bVert, char id) override;
 		virtual const IInterpolator * GetScrollInterpolator() const override;
 		virtual int GetScrollFadeFrames() const override;
+		virtual BYTE GetScrollThumbTrackMinAlpha() const override;
 
     protected:
         virtual int  GetScrollLineSize(BOOL bVertical);
@@ -113,7 +114,7 @@ namespace SOUI
 
 		SAutoRefPtr<IInterpolator> m_fadeInterpolator;
 		int			m_fadeFrames;
-
+		BYTE		m_bySbThumbTrackMinAlpha;
 		
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"sbSkin",OnAttrScrollbarSkin)
@@ -129,6 +130,7 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"sbBottom", m_nSbBottom, TRUE)
 
 			ATTR_INT(L"sbFadeSpeed", m_fadeFrames, FALSE)
+			ATTR_INT(L"sbTrumbTrackMinAlpha", m_bySbThumbTrackMinAlpha,FALSE)
 			ATTR_INTERPOLATOR(L"sbFadeInterpolator", m_fadeInterpolator, FALSE)
 			ATTR_CHAIN_PTR(m_fadeInterpolator, 0)
         SOUI_ATTRS_END()

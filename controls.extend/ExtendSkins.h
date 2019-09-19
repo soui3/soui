@@ -20,13 +20,13 @@ class SColorMask : public SSkinObjBase
 public:
     SColorMask();
     virtual BOOL IgnoreState()  { return FALSE;     }
-    virtual int  GetStates()    { return STATE_COUNT;}
-    virtual SIZE GetSkinSize()  { return m_size;    }
+    virtual int  GetStates() const    { return STATE_COUNT;}
+    virtual SIZE GetSkinSize() const { return m_size;    }
 
     void SetColors(COLORREF cr[4]);
 
 protected:
-    virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha);
+    virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha) const;
     HRESULT      OnAttrMask(const SStringW & strValue,BOOL bLoading);
     void         MakeCacheApha();
 
