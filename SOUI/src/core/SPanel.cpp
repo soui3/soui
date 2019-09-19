@@ -343,10 +343,7 @@ void SPanel::OnNcPaint(IRenderTarget *pRT)
 
 void SPanel::GetClientRect(LPRECT pRect) const
 {
-    pRect->left=m_rcClient.left;
-    pRect->right=m_rcClient.right;
-    pRect->top=m_rcClient.top;
-    pRect->bottom=m_rcClient.bottom;
+	*pRect = m_rcClient;
 }
 
 CRect SPanel::GetClientRect() const
