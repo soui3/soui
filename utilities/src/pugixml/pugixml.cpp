@@ -5402,10 +5402,10 @@ namespace pugi
 	}
 
 #define SXML_VER	2
-	static const uint8_t SXML_BOM[4] = { 's','x','m','l' };
+	static const unsigned char SXML_BOM[4] = { 's','x','m','l' };
     struct sxml_info
     {
-		uint8_t flag[4];//bom of sxml
+		unsigned char flag[4];//bom of sxml
         int  ver;    //version
         int  nStrMapSize;   //str map size
         int  nStrMapLen;    //str map length
