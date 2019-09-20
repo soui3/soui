@@ -167,7 +167,8 @@ namespace pugi
 		encoding_utf32_be,	// Big-endian UTF32
 		encoding_utf32,		// UTF32 with native endianness
 		encoding_wchar,		// The same encoding wchar_t has (either UTF16 or UTF32)
-		encoding_latin1
+		encoding_latin1,
+		encoding_bin,		// bin xml
 	};
 
 	// Formatting flags
@@ -909,10 +910,14 @@ namespace pugi
 
 
         void _load_bin(xml_node_struct * xmlNode,LPCSTR & buf,int & nLen, char_t ** ppStrMap,int nMapSize);
-        void _save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f);
-        void _save_bin(FILE *f);
+        void _save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) const;
         void _AddStr2Map(STRMAP & strMap, const char_t * str) const;
         void _build_str_map(xml_node xmlNode,STRMAP &strMap) const;
+
+		xml_parse_result load_bin(const char * buf, int nLen);
+		void save_bin(FILE *f) const;
+
+		bool save_file_impl(FILE * file, const char_t * indent, unsigned int flags, xml_encoding encoding) const;
 
 	public:
 		// Default constructor, makes empty document
@@ -952,15 +957,7 @@ namespace pugi
 		xml_parse_result load_buffer_inplace_own(void* contents, size_t size, unsigned int options = parse_default, xml_encoding encoding = encoding_auto);
 
 		// Save XML document to writer (semantics is slightly different from xml_node::print, see documentation for details).
-		void save(xml_writer& writer, const char_t* indent = PUGIXML_TEXT("\t"), unsigned int flags = format_default, xml_encoding encoding = encoding_auto) const;
-
-        xml_parse_result load_bin(const char * buf,int nLen);
-        xml_parse_result load_bin_file(const char* path);
-        xml_parse_result load_bin_file(const wchar_t* path);
-        
-        bool save_bin(const char * path);
-        bool save_bin(const wchar_t *path);
-        
+		void save(xml_writer& writer, const char_t* indent = PUGIXML_TEXT("\t"), unsigned int flags = format_default, xml_encoding encoding = encoding_auto) const;        
 
 	#ifndef PUGIXML_NO_STL
 		// Save XML document to stream (semantics is slightly different from xml_node::print, see documentation for details).

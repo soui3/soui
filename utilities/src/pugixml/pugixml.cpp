@@ -1113,26 +1113,48 @@ PUGI__NS_BEGIN
 			return is_little_endian() ? encoding_utf32_le : encoding_utf32_be;
 	}
 
-	PUGI__FN xml_encoding guess_buffer_encoding(uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
+	struct BomInfo
 	{
-		// look for BOM in first few bytes
-		if (d0 == 0 && d1 == 0 && d2 == 0xfe && d3 == 0xff) return encoding_utf32_be;
-		if (d0 == 0xff && d1 == 0xfe && d2 == 0 && d3 == 0) return encoding_utf32_le;
-		if (d0 == 0xfe && d1 == 0xff) return encoding_utf16_be;
-		if (d0 == 0xff && d1 == 0xfe) return encoding_utf16_le;
-		if (d0 == 0xef && d1 == 0xbb && d2 == 0xbf) return encoding_utf8;
+		char len;
+		uint8_t bom[4];
+		xml_encoding encoding;
+	};
+	BomInfo bomMap[] = {
+		{ 4,{ 0,0,0xfe,0xff },encoding_utf32_be },
+		{ 4,{ 0xff,0xfe,0,0 },encoding_utf32_le },
+		{ 2,{ 0xfe,0xff },encoding_utf16_be },
+		{ 2,{ 0xff,0xfe },encoding_utf16_le },
+		{ 3,{ 0xef,0xbb,0xbf },encoding_utf8 },
+		{ 4,{ 's','x','m','l' },encoding_bin },
 
 		// look for <, <? or <?xm in various encodings
-		if (d0 == 0 && d1 == 0 && d2 == 0 && d3 == 0x3c) return encoding_utf32_be;
-		if (d0 == 0x3c && d1 == 0 && d2 == 0 && d3 == 0) return encoding_utf32_le;
-		if (d0 == 0 && d1 == 0x3c && d2 == 0 && d3 == 0x3f) return encoding_utf16_be;
-		if (d0 == 0x3c && d1 == 0 && d2 == 0x3f && d3 == 0) return encoding_utf16_le;
-		if (d0 == 0x3c && d1 == 0x3f && d2 == 0x78 && d3 == 0x6d) return encoding_utf8;
+		{ 4,{ 0,0,0,0x3c },encoding_utf32_be },
+		{ 4,{ 0x3c,0,0,0 },encoding_utf32_le },
+		{ 4,{ 0,0x3c,0,0x3f },encoding_utf16_be },
+		{ 4,{ 0x3c,0,0x3f,0 },encoding_utf16_le },
+		{ 4,{ 0x3c,0x3f,0x78,0x6d },encoding_utf8 },
 
 		// look for utf16 < followed by node name (this may fail, but is better than utf8 since it's zero terminated so early)
-		if (d0 == 0 && d1 == 0x3c) return encoding_utf16_be;
-		if (d0 == 0x3c && d1 == 0) return encoding_utf16_le;
+		{ 2,{ 0,0x3c },encoding_utf16_be },
+		{ 2,{ 0x3c ,0},encoding_utf16_le },
+	};
 
+	PUGI__FN xml_encoding guess_buffer_encoding(const uint8_t d[4])
+	{
+		for (int i = 0; i < ARRAYSIZE(bomMap); i++)
+		{
+			bool bFind = true;
+			for (char j = 0; j < bomMap[i].len; j++)
+			{
+				if (bomMap[i].bom[j] != d[j])
+				{
+					bFind = false;
+					break;
+				}
+			}
+			if (bFind)
+				return bomMap[i].encoding;
+		}
 		// no known BOM detected, assume utf8
 		return encoding_utf8;
 	}
@@ -1157,9 +1179,7 @@ PUGI__NS_BEGIN
 		// try to guess encoding (based on XML specification, Appendix F.1)
 		const uint8_t* data = static_cast<const uint8_t*>(contents);
 
-		PUGI__DMC_VOLATILE uint8_t d0 = data[0], d1 = data[1], d2 = data[2], d3 = data[3];
-
-		return guess_buffer_encoding(d0, d1, d2, d3);
+		return guess_buffer_encoding(data);
 	}
 
 	PUGI__FN bool get_mutable_buffer(char_t*& out_buffer, size_t& out_length, const void* contents, size_t size, bool is_mutable)
@@ -3645,19 +3665,6 @@ PUGI__NS_BEGIN
 	}
 #endif
 
-	PUGI__FN bool save_file_impl(const xml_document& doc, FILE* file, const char_t* indent, unsigned int flags, xml_encoding encoding)
-	{
-		if (!file) return false;
-
-		xml_writer_file writer(file);
-		doc.save(writer, indent, flags, encoding);
-
-		int result = ferror(file);
-
-		fclose(file);
-
-		return result == 0;
-	}
 PUGI__NS_END
 
 namespace pugi
@@ -5272,6 +5279,10 @@ namespace pugi
 
 		// get actual encoding
 		xml_encoding buffer_encoding = impl::get_buffer_encoding(encoding, contents, size);
+		if (buffer_encoding == encoding_bin)
+		{
+			return load_bin((const char *)contents, size);
+		}
 
 		// get private buffer
 		char_t* buffer = 0;
@@ -5351,16 +5362,34 @@ namespace pugi
 	}
 #endif
 
+
+	PUGI__FN bool xml_document::save_file_impl( FILE* file, const char_t* indent, unsigned int flags, xml_encoding encoding) const
+	{
+		if (!file) return false;
+		if (encoding == encoding_bin)
+		{
+			save_bin(file);
+		}
+		else
+		{
+			xml_writer_file writer(file);
+			save(writer, indent, flags, encoding);
+		}
+		int result = ferror(file);
+		fclose(file);
+		return result == 0;
+	}
+
 	PUGI__FN bool xml_document::save_file(const char* path_, const char_t* indent, unsigned int flags, xml_encoding encoding) const
 	{
 		FILE* file = fopen(path_, (flags & format_save_file_text) ? "w" : "wb");
-		return impl::save_file_impl(*this, file, indent, flags, encoding);
+		return save_file_impl( file, indent, flags, encoding);
 	}
 
 	PUGI__FN bool xml_document::save_file(const wchar_t* path_, const char_t* indent, unsigned int flags, xml_encoding encoding) const
 	{
 		FILE* file = impl::open_file_wide(path_, (flags & format_save_file_text) ? L"w" : L"wb");
-		return impl::save_file_impl(*this, file, indent, flags, encoding);
+		return save_file_impl( file, indent, flags, encoding);
 	}
 
 	PUGI__FN xml_node xml_document::document_element() const
@@ -5373,9 +5402,10 @@ namespace pugi
 	}
 
 #define SXML_VER	2
+	static const uint8_t SXML_BOM[4] = { 's','x','m','l' };
     struct sxml_info
     {
-        char flag[4];//sxml
+		uint8_t flag[4];//bom of sxml
         int  ver;    //version
         int  nStrMapSize;   //str map size
         int  nStrMapLen;    //str map length
@@ -5384,51 +5414,7 @@ namespace pugi
     //const char  pugi_xml_in  = '+';
     //const char  pugi_xml_out = '-';
     //const char  pugi_xml_child_end = 0;
-    
-    PUGI__FN pugi::xml_parse_result xml_document::load_bin_file(const char* path)
-    {
-        xml_parse_result res;
-        FILE *f = fopen(path,"rb");
-        if(!f)
-        {
-            res.status = status_io_error;
-            return res;
-        }
-        fseek(f,0,SEEK_END);
-        int nLen = ftell(f);
-        fseek(f,0,SEEK_SET);
-        char *buf = (char*)malloc(nLen);
-        fread(buf,1,nLen,f);
-        fclose(f);
 
-        res = load_bin(buf,nLen);
-        free(buf);
-        res.status = status_ok;
-        return res;
-    }
-
-    PUGI__FN pugi::xml_parse_result xml_document::load_bin_file(const wchar_t* path)
-    {
-        xml_parse_result res;
-        FILE *f = _wfopen(path,L"rb");
-        if(!f)
-        {
-            res.status = status_io_error;
-            return res;
-        }
-        fseek(f,0,SEEK_END);
-        int nLen = ftell(f);
-        fseek(f,0,SEEK_SET);
-
-        char *buf = (char*)malloc(nLen);
-        fread(buf,1,nLen,f);
-        fclose(f);
-        res = load_bin(buf,nLen);
-        free(buf);
-        
-        res.status = status_ok;
-        return res;
-    }
 
     template<typename T>
     T read_buf(LPCSTR &p, int &nLen)
@@ -5453,7 +5439,7 @@ namespace pugi
     {
         xml_parse_result res;
         sxml_info header = read_buf<sxml_info>(buf,nLen);
-        if(memcmp(header.flag,"sxml",4)!=0 || header.ver!= SXML_VER)
+        if(memcmp(header.flag, SXML_BOM, 4)!=0 || header.ver!= SXML_VER)
         {
             res.status = status_bad_doctype;
             return res;
@@ -5604,39 +5590,14 @@ namespace pugi
         }
     }
 
-    bool xml_document::save_bin(const char *path)
-    {
-        FILE *f = fopen(path,"wb");
-        if(!f)
-        {
-            return false;
-        }
-        _save_bin(f);
-        fclose(f);
-        return true;
-    }
-    
-    
-    bool xml_document::save_bin(const wchar_t *path)
-    {
-        FILE *f = _wfopen(path,L"wb");
-        if(!f)
-        {
-            return false;
-        }
-        _save_bin(f);
-        fclose(f);
-        return true;
-    }
-
-    void xml_document::_save_bin(FILE *f)
+    void xml_document::save_bin(FILE *f) const
     {
         STRMAP strMap;
         _build_str_map(*this,strMap);
         int nSize = _index_str_map(strMap);
 
         //write header
-        sxml_info info={{'s','x','m','l'},SXML_VER,(int)strMap.GetCount(),nSize};//update ver to 2
+		sxml_info info = { {SXML_BOM[0],SXML_BOM [1],SXML_BOM [2],SXML_BOM [3]},SXML_VER,(int)strMap.GetCount(),nSize };//update ver to 2
         fwrite(&info,1,sizeof(info),f);
         
         //write str map
@@ -5664,7 +5625,7 @@ namespace pugi
         fwrite(&nIdx,1,nIdxSize,f);
     }
     
-    void xml_document::_save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f)
+    void xml_document::_save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) const
     {
         //save node type
         xml_node_type type = xmlNode.type();
