@@ -84,42 +84,44 @@ public:
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
-    
-    //必须要调用OleInitialize来初始化运行环境
-    HRESULT hRes = OleInitialize(NULL);
-    SASSERT(SUCCEEDED(hRes));
-
-
-    //LoadLibrary(L"E:\\soui.taobao\\richedit\\Debug\\riched20.dll");
-    
 	/* XML预编译前面加载效率比较
-	pugi::xml_document doc;
+	for(int i=0;i<100;i++)
+	{
+		int spanText=0,spanBin=0;
+		{
+			pugi::xml_document doc;
 
-	LARGE_INTEGER perf;
-	QueryPerformanceFrequency(&perf);
-	LARGE_INTEGER t1, t2;
-	QueryPerformanceCounter(&t1);
-	doc.load_file(L"d:\\test.xml");
-	QueryPerformanceCounter(&t2);
-	doc.save_file(L"d:\\test_save_from_xml.xml");
+			LARGE_INTEGER perf;
+			QueryPerformanceFrequency(&perf);
+			LARGE_INTEGER t1, t2;
+			QueryPerformanceCounter(&t1);
+			doc.load_file(L"d:\\test.xml");
+			QueryPerformanceCounter(&t2);
+			spanText= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
+		}
 
+		{
+			pugi::xml_document doc;
 
-	doc.save_file(L"d:\\test.xml.bin", 0, 0, pugi::encoding_bin);
-	pugi::xml_document doc2;
-	LARGE_INTEGER t21, t22;
-	QueryPerformanceCounter(&t21);
-	doc2.load_file(L"d:\\test.xml.bin");
-	QueryPerformanceCounter(&t22);
-	doc2.save_file(L"d:\\test_save_from_bin.xml");
-
-	LONGLONG SP1 = (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
-	LONGLONG SP2 = (t22.QuadPart - t21.QuadPart) * 1000000 / perf.QuadPart;
-
-	SStringW str;
-	str.Format(L"!!!!!sp2=%d,sp1=%d\n", (int)SP2, (int)SP1);
-	MessageBoxW(GetActiveWindow(), str, L"span", MB_OK);
+			LARGE_INTEGER perf;
+			QueryPerformanceFrequency(&perf);
+			LARGE_INTEGER t1, t2;
+			QueryPerformanceCounter(&t1);
+			doc.load_file(L"d:\\test.xml.bin");
+			QueryPerformanceCounter(&t2);
+			spanBin= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
+		}
+		SStringA strRes = SStringA().Format("text xml: %d, bin xml:%d",spanText,spanBin);
+		OutputDebugStringA(strRes);
+	}
 	return 0;
     //*/
+
+	//必须要调用OleInitialize来初始化运行环境
+	HRESULT hRes = OleInitialize(NULL);
+	SASSERT(SUCCEEDED(hRes));
+	//LoadLibrary(L"E:\\soui.taobao\\richedit\\Debug\\riched20.dll");
+
     int nRet = 0; 
 
     //使用imgdecoder-png图片解码模块演示apng动画
