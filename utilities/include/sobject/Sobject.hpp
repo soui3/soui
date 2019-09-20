@@ -38,7 +38,7 @@ namespace SOUI
 		BOOL InitFromXml(pugi::xml_node xmlNode)
 		{
 			if (!xmlNode) return FALSE;
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(PUGIXML_WCHAR_MODE)
 			{
 				pugi::xml_writer_buff writer;
 				xmlNode.print(writer, L"\t", pugi::format_default, pugi::encoding_utf16);

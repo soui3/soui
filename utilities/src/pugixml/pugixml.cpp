@@ -23,6 +23,7 @@
 #include <wchar.h>
 #include <souicoll.h>
 #include <soui_mem_wrapper.h>
+#include <string/strcpcvt.h>
 
 #ifndef PUGIXML_NO_XPATH
 #	include <math.h>
@@ -5371,6 +5372,7 @@ namespace pugi
 		return xml_node();
 	}
 
+#define SXML_VER	2
     struct sxml_info
     {
         char flag[4];//sxml
@@ -5451,20 +5453,25 @@ namespace pugi
     {
         xml_parse_result res;
         sxml_info header = read_buf<sxml_info>(buf,nLen);
-        if(memcmp(header.flag,"sxml",4)!=0 || header.ver!=1)
+        if(memcmp(header.flag,"sxml",4)!=0 || header.ver!= SXML_VER)
         {
             res.status = status_bad_doctype;
             return res;
         }
         
         char_t ** strMap = (char_t **)malloc(header.nStrMapSize*sizeof(char_t *));
-        
-        char_t * strBuf = static_cast<char_t *>(impl::xml_memory::allocate(header.nStrMapLen*sizeof(char_t)));
+		char_t * strBuf = NULL;
 
-        memcpy(strBuf,buf,header.nStrMapLen*sizeof(char_t));
-        
-        buf += header.nStrMapLen*sizeof(char_t);
-        nLen -= header.nStrMapLen*sizeof(char_t);
+#ifdef PUGIXML_WCHAR_MODE
+		int nStrLen = MultiByteToWideChar(CP_UTF8, 0, buf, header.nStrMapLen, NULL, 0);//convert utf8 2 wide char.
+		strBuf = static_cast<wchar_t *>(impl::xml_memory::allocate(nStrLen * sizeof(wchar_t)));
+		MultiByteToWideChar(CP_UTF8, 0, buf, header.nStrMapLen, strBuf, nStrLen);
+#else
+		strBuf = static_cast<char *>(impl::xml_memory::allocate(nLen));
+		memcpy(strBuf, buf, nLen);
+#endif        
+        buf += header.nStrMapLen;
+        nLen -= header.nStrMapLen;
         
         char_t * p = strBuf;
         strMap[0] = p;
@@ -5539,14 +5546,13 @@ namespace pugi
         if(str!=NULL)
         {
 #ifdef PUGIXML_WCHAR_MODE
-            SOUI::SStringW str2(str);
+			SOUI::SStringA str2 = SOUI::S_CW2A(str,CP_UTF8);
 #else
-            SOUI::SStringA str2(str);
+			SOUI::SStringA str2(str);// = SOUI::S_CA2A(str, CP_ACP, CP_UTF8);
 #endif
-
             if(!str2.IsEmpty() && strMap.Lookup(str2)==NULL)
             {
-                strMap[str] = -1;
+                strMap[str2] = -1;//add to map.
             }
         }
     }
@@ -5573,6 +5579,7 @@ namespace pugi
         }
     }
     
+	//build StrMap index and return total buffer length.
     int _index_str_map(STRMAP & strMap)
     {
         int nRet = 0;
@@ -5582,7 +5589,7 @@ namespace pugi
         {
             STRMAP::CPair *p = strMap.GetNext(pos);
             p->m_value = idx++;
-            nRet += impl::strlength(p->m_key)+1;
+            nRet += p->m_key.GetLength()+1;
         }
         return nRet;
     }
@@ -5593,7 +5600,7 @@ namespace pugi
         while(pos)
         {
             STRMAP::CPair *p = strMap.GetNext(pos);
-            fwrite(p->m_key,sizeof(char_t),impl::strlength(p->m_key)+1,f);
+            fwrite(p->m_key.c_str(),1,p->m_key.GetLength()+1,f);
         }
     }
 
@@ -5629,7 +5636,7 @@ namespace pugi
         int nSize = _index_str_map(strMap);
 
         //write header
-        sxml_info info={{'s','x','m','l'},1,(int)strMap.GetCount(),nSize};
+        sxml_info info={{'s','x','m','l'},SXML_VER,(int)strMap.GetCount(),nSize};//update ver to 2
         fwrite(&info,1,sizeof(info),f);
         
         //write str map
@@ -5646,13 +5653,13 @@ namespace pugi
         int nIdx = 0;
         
 #ifdef PUGIXML_WCHAR_MODE
-        SOUI::SStringW str2(str);
+		SOUI::SStringA str2 = SOUI::S_CW2A(str, CP_UTF8);
 #else
-        SOUI::SStringA str2(str);
+		SOUI::SStringA str2(str);// = SOUI::S_CA2A(str, CP_ACP, CP_UTF8);
 #endif
         if(!str2.IsEmpty())
         {
-            nIdx = strMap.Lookup(str)->m_value;
+            nIdx = strMap.Lookup(str2)->m_value;
         }
         fwrite(&nIdx,1,nIdxSize,f);
     }

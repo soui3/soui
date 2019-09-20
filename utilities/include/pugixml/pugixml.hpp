@@ -888,11 +888,7 @@ namespace pugi
 		bool isOK() const;
 	};
 
-#ifdef PUGIXML_WCHAR_MODE
-    typedef SOUI::SMap<SOUI::SStringW,int> STRMAP;
-#else
-    typedef SOUI::SMap<SOUI::SStringA,int> STRMAP;
-#endif
+	typedef SOUI::SMap<SOUI::SStringA, int> STRMAP;	//utf8_name ->index
 
 	// Document class (DOM tree root)
 	class PUGIXML_CLASS xml_document: public xml_node

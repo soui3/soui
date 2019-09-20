@@ -16,7 +16,7 @@
 #ifndef HEADER_PUGICONFIG_HPP
 #define HEADER_PUGICONFIG_HPP
 
-// Uncomment this to enable wchar_t mode
+// Uncomment this to enable char mode
 #define PUGIXML_WCHAR_MODE
 
 // Uncomment this to disable XPath
