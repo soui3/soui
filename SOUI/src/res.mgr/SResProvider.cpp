@@ -375,7 +375,7 @@ namespace SOUI
 
         pugi::xml_document xmlDoc;
         SStringT strFileName;
-        if(!xmlDoc.load_file(strPathIndex,pugi::parse_default,pugi::encoding_utf8)) return FALSE;
+        if(!xmlDoc.load_file(strPathIndex,pugi::parse_default,pugi::encoding_auto)) return FALSE;
 
         pugi::xml_node xmlResource=xmlDoc.child(L"resource");
         if(!xmlResource) return FALSE;

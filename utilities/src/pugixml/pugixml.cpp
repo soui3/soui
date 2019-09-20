@@ -1120,12 +1120,12 @@ PUGI__NS_BEGIN
 		xml_encoding encoding;
 	};
 	BomInfo bomMap[] = {
+		{ 3,{ 0xef,0xbb,0xbf },encoding_utf8 },
+		{ 4,{ 's','x','m','l' },encoding_bin },
 		{ 4,{ 0,0,0xfe,0xff },encoding_utf32_be },
 		{ 4,{ 0xff,0xfe,0,0 },encoding_utf32_le },
 		{ 2,{ 0xfe,0xff },encoding_utf16_be },
 		{ 2,{ 0xff,0xfe },encoding_utf16_le },
-		{ 3,{ 0xef,0xbb,0xbf },encoding_utf8 },
-		{ 4,{ 's','x','m','l' },encoding_bin },
 
 		// look for <, <? or <?xm in various encodings
 		{ 4,{ 0,0,0,0x3c },encoding_utf32_be },

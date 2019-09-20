@@ -33,7 +33,7 @@ namespace SOUI{
 
 					strXml.Allocate(dwSize);
 					pResProvider->GetRawBuffer(strList[0],strList[1],strXml,dwSize);
-					pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_utf8);
+					pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
 					if(result) nodeData = docInit.child(pszName);
 				}
 			}
@@ -98,7 +98,7 @@ namespace SOUI{
 
 			pResProvider->GetRawBuffer(strUiDef[0],strUiDef[1],strXml,dwSize);
 
-			pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_utf8);
+			pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
 
 			if(!result)
 			{//load xml failed
