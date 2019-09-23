@@ -13,8 +13,8 @@
 
 #pragma once
 #include "core/SWnd.h"
-#include "core/Accelerator.h"
-#include "core/FocusManager.h"
+#include "core/SAccelerator.h"
+#include "core/SFocusManager.h"
 
 namespace SOUI
 {

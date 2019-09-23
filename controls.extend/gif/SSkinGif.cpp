@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "SSkinGif.h"
 #include <helper/SplitString.h>
-#include <interface/imgdecoder-i.h>
-#include <interface/render-i.h>
+#include <interface/SImgDecoder-i.h>
+#include <interface/SRender-i.h>
 
 #include <GdiPlus.h>
 using namespace Gdiplus;

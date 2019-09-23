@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F72D96A9-7BB4-3D32-A832-099EFD826EBE}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>..\obj\release\demo\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>..\obj\debug\demo\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;.;..\utilities\include;..\soui\include;..\third-part\wke\include;..\third-part\mhook\mhook-lib;..\components;..\config;..\tools\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>..\obj\release\demo\</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4101;4102;4189;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <ObjectFileName>..\obj\release\demo\</ObjectFileName>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeaderOutputFile>$(IntDir)demo.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>utilities.lib;soui.lib;mhook.lib;smiley.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration />
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)demo.exe</OutputFile>
+      <ProgramDatabaseFile />
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;.;..\utilities\include;..\soui\include;..\third-part\wke\include;..\third-part\mhook\mhook-lib;..\components;..\config;..\tools\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>..\obj\debug\demo\</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4101;4102;4189;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <ObjectFileName>..\obj\debug\demo\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeaderOutputFile>$(IntDir)demod.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>utilitiesd.lib;souid.lib;mhookd.lib;smileyd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration />
+      <OutputFile>$(OutDir)demod.exe</OutputFile>
+      <ProgramDatabaseFile />
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\controls.extend\gif\SGifPlayer.cpp" />
+    <ClCompile Include="..\controls.extend\gif\SSkinAPNG.cpp" />
+    <ClCompile Include="..\controls.extend\gif\SSkinGif.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\propitem\spropertyitem-color.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\propitem\spropertyitem-option.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\propitem\spropertyitem-size.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\propitem\spropertyitem-text.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\spropertygrid.cpp" />
+    <ClCompile Include="..\controls.extend\propgrid\spropertyitembase.cpp" />
+    <ClCompile Include="..\controls.extend\reole\dataobject.cpp" />
+    <ClCompile Include="..\controls.extend\reole\richeditole.cpp" />
+    <ClCompile Include="..\controls.extend\saniwindow.cpp" />
+    <ClCompile Include="..\controls.extend\scalendar2.cpp" />
+    <ClCompile Include="..\controls.extend\schatedit.cpp" />
+    <ClCompile Include="..\controls.extend\SChromeTabCtrl.cpp" />
+    <ClCompile Include="..\controls.extend\SDocHostUIHandler.cpp" />
+    <ClCompile Include="..\controls.extend\sfadeframe.cpp" />
+    <ClCompile Include="..\controls.extend\SFreeMoveWindow.cpp" />
+    <ClCompile Include="..\controls.extend\sgrouplist.cpp" />
+    <ClCompile Include="..\controls.extend\siectrl.cpp" />
+    <ClCompile Include="..\controls.extend\simagemaskwnd.cpp" />
+    <ClCompile Include="..\controls.extend\sipaddressctrl.cpp" />
+    <ClCompile Include="..\controls.extend\slistctrlex.cpp" />
+    <ClCompile Include="..\controls.extend\SMcListViewEx\SHeaderCtrlEx.cpp" />
+    <ClCompile Include="..\controls.extend\SMcListViewEx\SMCListViewEx.cpp" />
+    <ClCompile Include="..\controls.extend\SMcListViewEx\STabCtrlHeaderBinder.cpp" />
+    <ClCompile Include="..\controls.extend\sprogressring.cpp" />
+    <ClCompile Include="..\controls.extend\sradiobox2.cpp" />
+    <ClCompile Include="..\controls.extend\SRatingBar.cpp" />
+    <ClCompile Include="..\controls.extend\sscrolltext.cpp" />
+    <ClCompile Include="..\controls.extend\SSkinImgFrame3.cpp" />
+    <ClCompile Include="..\controls.extend\SWkeWebkit.cpp" />
+    <ClCompile Include="..\controls.extend\tipwnd.cpp" />
+    <ClCompile Include="appledock\sdesktopdock.cpp" />
+    <ClCompile Include="clock\sclock.cpp" />
+    <ClCompile Include="demo.cpp" />
+    <ClCompile Include="FormatMsgDlg.cpp" />
+    <ClCompile Include="httpsvr\genericserver.cpp" />
+    <ClCompile Include="httpsvr\httpserver.cpp" />
+    <ClCompile Include="magnet\magnetframe.cpp" />
+    <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="memflash.cpp" />
+    <ClCompile Include="qrcode\QR_Encode.cpp" />
+    <ClCompile Include="qrcode\SQrCtrl.cpp" />
+    <ClCompile Include="SCheckBox2.cpp" />
+    <ClCompile Include="SInterpolatorView.cpp" />
+    <ClCompile Include="skin\SDemoSkin.cpp" />
+    <ClCompile Include="skin\SetSkinWnd2.cpp" />
+    <ClCompile Include="skin\SSkinLoader.cpp" />
+    <ClCompile Include="smatrixwindow.cpp" />
+    <ClCompile Include="SmileyCreateHook.cpp" />
+    <ClCompile Include="SPathView.cpp" />
+    <ClCompile Include="sroundimage.cpp" />
+    <ClCompile Include="stdafx.h.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ForcedIncludeFiles>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ForcedIncludeFiles>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="threadObject.cpp" />
+    <ClCompile Include="trayicon\SShellNofityHwnd2.cpp" />
+    <ClCompile Include="trayicon\SShellNotifyIcon.cpp" />
+    <ClCompile Include="uianimation\uianimationwnd.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\controls.extend\FileHelper.h" />
+    <ClInclude Include="..\controls.extend\gif\SAniImgFrame.h" />
+    <ClInclude Include="..\controls.extend\gif\SGifPlayer.h" />
+    <ClInclude Include="..\controls.extend\gif\SSkinAPNG.h" />
+    <ClInclude Include="..\controls.extend\gif\SSkinGif.h" />
+    <ClInclude Include="..\controls.extend\propgrid\SPropertyGrid.h" />
+    <ClInclude Include="..\controls.extend\reole\dataobject.h" />
+    <ClInclude Include="..\controls.extend\reole\richeditole.h" />
+    <ClInclude Include="..\controls.extend\saniwindow.h" />
+    <ClInclude Include="..\controls.extend\scalendar2.h" />
+    <ClInclude Include="..\controls.extend\schatedit.h" />
+    <ClInclude Include="..\controls.extend\SChromeTabCtrl.h" />
+    <ClInclude Include="..\controls.extend\SDocHostUIHandler.h" />
+    <ClInclude Include="..\controls.extend\sfadeframe.h" />
+    <ClInclude Include="..\controls.extend\SFreeMoveWindow.h" />
+    <ClInclude Include="..\controls.extend\sgrouplist.h" />
+    <ClInclude Include="..\controls.extend\siectrl.h" />
+    <ClInclude Include="..\controls.extend\simagemaskwnd.h" />
+    <ClInclude Include="..\controls.extend\sipaddressctrl.h" />
+    <ClInclude Include="..\controls.extend\slistctrlex.h" />
+    <ClInclude Include="..\controls.extend\SMcListViewEx\SHeaderCtrlEx.h" />
+    <ClInclude Include="..\controls.extend\SMcListViewEx\SMcListViewEx.h" />
+    <ClInclude Include="..\controls.extend\SMcListViewEx\STabCtrlHeaderBinder.h" />
+    <ClInclude Include="..\controls.extend\smiley\SSmileyCtrl.h" />
+    <ClInclude Include="..\controls.extend\sprogressring.h" />
+    <ClInclude Include="..\controls.extend\sradiobox2.h" />
+    <ClInclude Include="..\controls.extend\SRatingBar.h" />
+    <ClInclude Include="..\controls.extend\sscrolltext.h" />
+    <ClInclude Include="..\controls.extend\SSkinImgFrame3.h" />
+    <ClInclude Include="..\controls.extend\SSkinNewScrollbar.h" />
+    <ClInclude Include="..\controls.extend\SVscrollbar.h" />
+    <ClInclude Include="..\controls.extend\SWkeWebkit.h" />
+    <ClInclude Include="..\controls.extend\tipwnd.h" />
+    <ClInclude Include="adapter.h" />
+    <ClInclude Include="appledock\sdesktopdock.h" />
+    <ClInclude Include="clock\sclock.h" />
+    <ClInclude Include="FormatMsgDlg.h" />
+    <ClInclude Include="httpsvr\filereader-i.h" />
+    <ClInclude Include="httpsvr\genericserver.h" />
+    <ClInclude Include="httpsvr\httpserver.h" />
+    <ClInclude Include="magnet\magnetframe.h" />
+    <ClInclude Include="MainDlg.h" />
+    <ClInclude Include="memflash.h" />
+    <ClInclude Include="qrcode\QR_Encode.h" />
+    <ClInclude Include="qrcode\SQrCtrl.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SCheckBox2.h" />
+    <ClInclude Include="SInterpolatorView.h" />
+    <ClInclude Include="skin\SDemoSkin.h" />
+    <ClInclude Include="skin\SetSkinWnd2.h" />
+    <ClInclude Include="skin\SSkinLoader.h" />
+    <ClInclude Include="smatrixwindow.h" />
+    <ClInclude Include="SmileyCreateHook.h" />
+    <ClInclude Include="SPathView.h" />
+    <ClInclude Include="sroundimage.h" />
+    <CustomBuild Include="stdafx.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">echo /*-------------------------------------------------------------------- &gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Precompiled header source file used by Visual Studio.NET to generate&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * the .pch file.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Due to issues with the dependencies checker within the IDE, it&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * sometimes fails to recompile the PCH file, if we force the IDE to&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * create the PCH file directly from the header file.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * This file is auto-generated by qmake since no PRECOMPILED_SOURCE was&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * specified, and is used as the common stdafx.cpp. The file is only&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * generated when creating .vcproj project files, and is not used for&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * command line compilations by nmake.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * WARNING: All changes made in this file will be lost.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo --------------------------------------------------------------------*/&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo #include "stdafx.h"&gt;&gt;stdafx.h.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating precompiled header source file %27stdafx.h.cpp%27 ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h.cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">echo /*-------------------------------------------------------------------- &gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Precompiled header source file used by Visual Studio.NET to generate&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * the .pch file.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Due to issues with the dependencies checker within the IDE, it&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * sometimes fails to recompile the PCH file, if we force the IDE to&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * create the PCH file directly from the header file.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * This file is auto-generated by qmake since no PRECOMPILED_SOURCE was&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * specified, and is used as the common stdafx.cpp. The file is only&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * generated when creating .vcproj project files, and is not used for&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * command line compilations by nmake.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo * WARNING: All changes made in this file will be lost.&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo --------------------------------------------------------------------*/&gt;&gt;stdafx.h.cpp
+if errorlevel 1 goto VCReportError
+echo #include "stdafx.h"&gt;&gt;stdafx.h.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating precompiled header source file %27stdafx.h.cpp%27 ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+    <ClInclude Include="threadObject.h" />
+    <ClInclude Include="trayicon\SShellNofityHwnd2.h" />
+    <ClInclude Include="trayicon\SShellNotifyIcon.h" />
+    <ClInclude Include="uianimation\uianimation.h" />
+    <ClInclude Include="uianimation\uianimationwnd.h" />
+    <ClInclude Include="wtlhelper\whwindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="demo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\components\imgdecoder-gdip\imgdecoder-gdip.vcxproj">
+      <Project>{8e75c591-5c72-30b3-afec-bfcee2005573}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\imgdecoder-png\imgdecoder-png.vcxproj">
+      <Project>{4e60033e-d862-35e8-84f3-b50b9e55b3b4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\imgdecoder-stb\imgdecoder-stb.vcxproj">
+      <Project>{9c55ff14-3f9d-314a-8b83-2d4c72927775}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\imgdecoder-wic\imgdecoder-wic.vcxproj">
+      <Project>{9b26d6bb-5272-3c95-9b59-9fe0c76d5fb9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\render-gdi\render-gdi.vcxproj">
+      <Project>{dac77da3-60a5-3718-a033-13f1e13fbba2}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\render-skia\render-skia.vcxproj">
+      <Project>{b211d5bb-6d70-36dd-873c-3049573e1cdc}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\resprovider-7zip\resprovider-7zip.vcxproj">
+      <Project>{f7ed4069-e0dd-3c1f-986b-753b12449cfb}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\resprovider-zip\resprovider-zip.vcxproj">
+      <Project>{8d2dcd32-e977-3e73-a7a5-d0dfd76cdb9f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\ScriptModule-LUA\scriptmodule-lua.vcxproj">
+      <Project>{39c639da-830f-3cb8-aebc-b7a88ccce06b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\components\translator\translator.vcxproj">
+      <Project>{50f44f7a-49c3-3d59-9ab1-3877c9b30ff2}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SOUI\soui.vcxproj">
+      <Project>{7b004d56-d83c-3777-b5a0-ea3e116c2312}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\third-part\mhook\mhook.vcxproj">
+      <Project>{c8565e06-fb75-33e1-ae68-fc58763b0442}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\third-part\smiley\smiley.vcxproj">
+      <Project>{5a9bd830-d64b-32be-a0e5-53509ed7cc74}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

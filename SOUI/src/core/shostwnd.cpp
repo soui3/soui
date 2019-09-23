@@ -1,9 +1,9 @@
 ﻿#include "souistd.h"
 
 #include "SApp.h"
-#include "core/shostwnd.h"
+#include "core/SHostWnd.h"
 #include "helper/SAutoBuf.h"
-#include "helper/color.h"
+#include "helper/SColor.h"
 #include "helper/SplitString.h"
 
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"

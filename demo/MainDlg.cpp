@@ -11,7 +11,7 @@
 #include "SMatrixWindow.h"
 #include "FormatMsgDlg.h"
 #include <math.h>
-#include <valueAnimator/ValueAnimator.h>
+#include <valueAnimator/SValueAnimator.h>
 #include <helper/SMenuEx.h>
 #include <helper/SDibHelper.h>
 

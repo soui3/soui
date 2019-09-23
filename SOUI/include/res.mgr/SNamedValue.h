@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "helper/color.h"
+#include "helper/SColor.h"
 #include "layout/SLayoutSize.h"
 
 namespace SOUI

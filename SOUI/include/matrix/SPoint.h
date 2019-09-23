@@ -9,7 +9,7 @@
 #define _SPoint_DEFINED_
 
 #include "Sfloat.h"
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 namespace SOUI{
 
 struct SOUI_EXP SPoint : public fPoint {

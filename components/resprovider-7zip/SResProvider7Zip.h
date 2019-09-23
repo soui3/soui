@@ -8,7 +8,7 @@
 #define _COLL_NS SOUI
 #define SOUI_EXP
 #include <helper/SResID.h>
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 
 #include "Zip7Archive.h"
 #include "zip7resprovider-param.h"

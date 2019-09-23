@@ -36,6 +36,6 @@ target_include_directories(soui
 target_link_libraries(soui utilities)
 
 set_target_properties(soui PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "include/souistd.h")
-cotire(soui)
+#cotire(soui)
 
 set(CORE_LIBS ${CORE_LIBS} soui CACHE INTERNAL "core_lib")

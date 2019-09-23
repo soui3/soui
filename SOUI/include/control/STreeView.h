@@ -2,8 +2,8 @@
 
 #include "core/Swnd.h"
 #include "core/SItemPanel.h"
-#include "interface/Adapter-i.h"
-#include "interface/TvItemLocator-i.h"
+#include "interface/SAdapter-i.h"
+#include "interface/STreeViewItemLocator-i.h"
 
 namespace SOUI
 {

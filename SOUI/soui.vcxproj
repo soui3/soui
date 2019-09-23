@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7B004D56-D83C-3777-B5A0-EA3E116C2312}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>..\obj\release\soui\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>..\obj\debug\soui\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\config;.;include;..\utilities\include;..\tools\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>..\obj\release\soui\</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4101;4102;4189;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForcedIncludeFiles>include\souistd.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <ObjectFileName>..\obj\release\soui\</ObjectFileName>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeaderOutputFile>$(IntDir)soui.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>include\souistd.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;SOUI_EXPORTS;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>utilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration />
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)soui.dll</OutputFile>
+      <ProgramDatabaseFile />
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;SOUI_EXPORTS;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\config;.;include;..\utilities\include;..\tools\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>..\obj\debug\soui\</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4101;4102;4189;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForcedIncludeFiles>include\souistd.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <ObjectFileName>..\obj\debug\soui\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeaderOutputFile>$(IntDir)souid.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>include\souistd.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;SOUI_EXPORTS;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>utilitiesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration />
+      <OutputFile>$(OutDir)souid.dll</OutputFile>
+      <ProgramDatabaseFile />
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;SOUI_EXPORTS;_CRT_SECURE_NO_WARNINGS;QT_NO_DYNAMIC_CAST;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="include\souistd.h.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ForcedIncludeFiles>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">souistd.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ForcedIncludeFiles>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">souistd.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\activex\SAxContainer.cpp" />
+    <ClCompile Include="src\activex\SBStr.cpp" />
+    <ClCompile Include="src\animation\SAlphaAnimation.cpp" />
+    <ClCompile Include="src\animation\SAnimation.cpp" />
+    <ClCompile Include="src\animation\SAnimationSet.cpp" />
+    <ClCompile Include="src\animation\SCaleAnimation.cpp" />
+    <ClCompile Include="src\animation\SInterpolatorImpl.cpp" />
+    <ClCompile Include="src\animation\SRotateAnimation.cpp" />
+    <ClCompile Include="src\animation\STransformation.cpp" />
+    <ClCompile Include="src\animation\STranslateAnimation.cpp" />
+    <ClCompile Include="src\control\SActiveX.cpp" />
+    <ClCompile Include="src\control\SCalendar.cpp" />
+    <ClCompile Include="src\control\SCaption.cpp" />
+    <ClCompile Include="src\control\SCmnCtrl.cpp" />
+    <ClCompile Include="src\control\SComboBase.cpp" />
+    <ClCompile Include="src\control\SComboBox.cpp" />
+    <ClCompile Include="src\control\SComboView.cpp" />
+    <ClCompile Include="src\control\SDateTimePicker.cpp" />
+    <ClCompile Include="src\control\SDropDown.cpp" />
+    <ClCompile Include="src\control\SHeaderCtrl.cpp" />
+    <ClCompile Include="src\control\SHotKeyCtrl.cpp" />
+    <ClCompile Include="src\control\SListbox.cpp" />
+    <ClCompile Include="src\control\SListCtrl.cpp" />
+    <ClCompile Include="src\control\SListView.cpp" />
+    <ClCompile Include="src\control\SMcListView.cpp" />
+    <ClCompile Include="src\control\SMenuBar.cpp" />
+    <ClCompile Include="src\control\SMessageBox.cpp" />
+    <ClCompile Include="src\control\SRealWnd.cpp" />
+    <ClCompile Include="src\control\SRichEdit.cpp" />
+    <ClCompile Include="src\control\SScrollbar.cpp" />
+    <ClCompile Include="src\control\SSliderBar.cpp" />
+    <ClCompile Include="src\control\SSpinButtonCtrl.cpp" />
+    <ClCompile Include="src\control\SSplitWnd.cpp" />
+    <ClCompile Include="src\control\STabCtrl.cpp" />
+    <ClCompile Include="src\control\STileView.cpp" />
+    <ClCompile Include="src\control\STreeCtrl.cpp" />
+    <ClCompile Include="src\control\STreeView.cpp" />
+    <ClCompile Include="src\core\SAccelerator.cpp" />
+    <ClCompile Include="src\core\scaret.cpp" />
+    <ClCompile Include="src\core\SDropTargetDispatcher.cpp" />
+    <ClCompile Include="src\core\SFocusManager.cpp" />
+    <ClCompile Include="src\core\SHostDialog.cpp" />
+    <ClCompile Include="src\core\shostwnd.cpp" />
+    <ClCompile Include="src\core\SItemPanel.cpp" />
+    <ClCompile Include="src\core\SMsgLoop.cpp" />
+    <ClCompile Include="src\core\SNativeWnd.cpp" />
+    <ClCompile Include="src\core\SObjectFactory.cpp" />
+    <ClCompile Include="src\core\SPanel.cpp" />
+    <ClCompile Include="src\core\SScrollBarHandler.cpp" />
+    <ClCompile Include="src\core\SSkin.cpp" />
+    <ClCompile Include="src\core\SSkinObjBase.cpp" />
+    <ClCompile Include="src\core\STimerlineHandlerMgr.cpp" />
+    <ClCompile Include="src\core\SWindowMgr.cpp" />
+    <ClCompile Include="src\core\SWnd.cpp" />
+    <ClCompile Include="src\core\SWndAccessible.cpp" />
+    <ClCompile Include="src\core\SWndContainerImpl.cpp" />
+    <ClCompile Include="src\core\SWndStyle.cpp" />
+    <ClCompile Include="src\event\SEventSet.cpp" />
+    <ClCompile Include="src\event\SNotifyCenter.cpp" />
+    <ClCompile Include="src\helper\SAppDir.cpp" />
+    <ClCompile Include="src\helper\SDIBHelper.cpp" />
+    <ClCompile Include="src\helper\SDpiScale.cpp" />
+    <ClCompile Include="src\helper\SDragWnd.cpp" />
+    <ClCompile Include="src\helper\SListViewItemLocator.cpp" />
+    <ClCompile Include="src\helper\SMemDC.cpp" />
+    <ClCompile Include="src\helper\SMenu.cpp" />
+    <ClCompile Include="src\helper\SMenuEx.cpp" />
+    <ClCompile Include="src\helper\SMenuWndHook.cpp" />
+    <ClCompile Include="src\helper\SScriptTimer.cpp" />
+    <ClCompile Include="src\helper\STaskHandler.cpp" />
+    <ClCompile Include="src\helper\STileViewItemLocator.cpp" />
+    <ClCompile Include="src\helper\STime.cpp" />
+    <ClCompile Include="src\helper\STimerEx.cpp" />
+    <ClCompile Include="src\helper\SToolTip.cpp" />
+    <ClCompile Include="src\helper\SWndFinder.cpp" />
+    <ClCompile Include="src\layout\SGridLayout.cpp" />
+    <ClCompile Include="src\layout\SLayoutSize.cpp" />
+    <ClCompile Include="src\layout\SLinearLayout.cpp" />
+    <ClCompile Include="src\layout\SouiLayout.cpp" />
+    <ClCompile Include="src\matrix\SCamera.cpp" />
+    <ClCompile Include="src\matrix\SMatrix.cpp" />
+    <ClCompile Include="src\matrix\SPoint.cpp" />
+    <ClCompile Include="src\matrix\SRect.cpp" />
+    <ClCompile Include="src\msaa\SAccProxyCmnCtrl.cpp" />
+    <ClCompile Include="src\msaa\SAccProxyWindow.cpp" />
+    <ClCompile Include="src\res.mgr\SDpiAwareFont.cpp" />
+    <ClCompile Include="src\res.mgr\SFontPool.cpp" />
+    <ClCompile Include="src\res.mgr\SNamedValue.cpp" />
+    <ClCompile Include="src\res.mgr\SObjDefAttr.cpp" />
+    <ClCompile Include="src\res.mgr\SResProvider.cpp" />
+    <ClCompile Include="src\res.mgr\SResProviderMgr.cpp" />
+    <ClCompile Include="src\res.mgr\SSkinPool.cpp" />
+    <ClCompile Include="src\res.mgr\SStylePool.cpp" />
+    <ClCompile Include="src\res.mgr\SUiDef.cpp" />
+    <ClCompile Include="src\SApp.cpp" />
+    <ClCompile Include="src\updatelayeredwindow\SUpdateLayeredWindow.cpp" />
+    <ClCompile Include="src\valueAnimator\SValueAnimator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\activex\SBStr.h" />
+    <ClInclude Include="include\animation\SAlphaAnimation.h" />
+    <ClInclude Include="include\animation\SAnimation.h" />
+    <ClInclude Include="include\animation\SAnimationSet.h" />
+    <ClInclude Include="include\animation\SRotateAnimation.h" />
+    <ClInclude Include="include\animation\SCaleAnimation.h" />
+    <ClInclude Include="include\animation\SInterpolatorImpl.h" />
+    <ClInclude Include="include\animation\STransformation.h" />
+    <ClInclude Include="include\animation\STranslateAnimation.h" />
+    <ClInclude Include="include\control\SRealWndHandler-i.h" />
+    <ClInclude Include="include\control\SActiveX.h" />
+    <ClInclude Include="include\control\SCalendar.h" />
+    <ClInclude Include="include\control\SCaption.h" />
+    <ClInclude Include="include\control\SCmnCtrl.h" />
+    <ClInclude Include="include\control\SComboBase.h" />
+    <ClInclude Include="include\control\SComboBox.h" />
+    <ClInclude Include="include\control\SComboView.h" />
+    <ClInclude Include="include\control\SDateTimePicker.h" />
+    <ClInclude Include="include\control\SDropDown.h" />
+    <ClInclude Include="include\control\SHeaderCtrl.h" />
+    <ClInclude Include="include\control\SHotKeyCtrl.h" />
+    <ClInclude Include="include\control\SListbox.h" />
+    <ClInclude Include="include\control\SListCtrl.h" />
+    <ClInclude Include="include\control\SListView.h" />
+    <ClInclude Include="include\control\SMcListView.h" />
+    <ClInclude Include="include\control\SMenuBar.h" />
+    <ClInclude Include="include\control\SMessageBox.h" />
+    <ClInclude Include="include\control\SouiCtrls.h" />
+    <ClInclude Include="include\control\SRealWnd.h" />
+    <ClInclude Include="include\control\SRichEdit.h" />
+    <ClInclude Include="include\control\SScrollbar.h" />
+    <ClInclude Include="include\control\SSliderBar.h" />
+    <ClInclude Include="include\control\SSpinButtonCtrl.h" />
+    <ClInclude Include="include\control\SSplitWnd.h" />
+    <ClInclude Include="include\control\STabCtrl.h" />
+    <ClInclude Include="include\control\STileView.h" />
+    <ClInclude Include="include\control\STree.h" />
+    <ClInclude Include="include\control\STreeCtrl.h" />
+    <ClInclude Include="include\control\STreeView.h" />
+    <ClInclude Include="include\core\SAccelerator.h" />
+    <ClInclude Include="include\core\SFocusManager.h" />
+    <ClInclude Include="include\core\SHostMsgDef.h" />
+    <ClInclude Include="include\core\SCaret.h" />
+    <ClInclude Include="include\core\SDefine.h" />
+    <ClInclude Include="include\core\SDropTargetDispatcher.h" />
+    <ClInclude Include="include\core\SHostDialog.h" />
+    <ClInclude Include="include\core\SHostWnd.h" />
+    <ClInclude Include="include\core\SItemPanel.h" />
+    <ClInclude Include="include\core\SMsgLoop.h" />
+    <ClInclude Include="include\core\SNativeWnd.h" />
+    <ClInclude Include="include\core\SObjectFactory.h" />
+    <ClInclude Include="include\core\SObjType.h" />
+    <ClInclude Include="include\core\SPanel.h" />
+    <ClInclude Include="include\core\SScrollBarHandler.h" />
+    <ClInclude Include="include\core\SSingleton.h" />
+    <ClInclude Include="include\core\SSingleton2.h" />
+    <ClInclude Include="include\core\SSingletonMap.h" />
+    <ClInclude Include="include\core\SSkin.h" />
+    <ClInclude Include="include\core\SSkinObjBase.h" />
+    <ClInclude Include="include\core\STimerlineHandlerMgr.h" />
+    <ClInclude Include="include\core\SWindowMgr.h" />
+    <ClInclude Include="include\core\SWnd.h" />
+    <ClInclude Include="include\core\SWndAccessible.h" />
+    <ClInclude Include="include\core\SWndContainer-i.h" />
+    <ClInclude Include="include\core\SWndContainerImpl.h" />
+    <ClInclude Include="include\core\SWndStyle.h" />
+    <ClInclude Include="include\event\SEventCrack.h" />
+    <ClInclude Include="include\event\SEvents.h" />
+    <ClInclude Include="include\event\SEventSet.h" />
+    <ClInclude Include="include\event\SEventSubscriber.h" />
+    <ClInclude Include="include\event\SNotifyCenter.h" />
+    <ClInclude Include="include\helper\SAppDir.h" />
+    <ClInclude Include="include\helper\SColor.h" />
+    <ClInclude Include="include\helper\SDragWnd.h" />
+    <ClInclude Include="include\helper\SMemDC.h" />
+    <ClInclude Include="include\helper\SMenuWndHook.h" />
+    <ClInclude Include="include\helper\SAdapterBase.h" />
+    <ClInclude Include="include\helper\SAttrCracker.h" />
+    <ClInclude Include="include\helper\SDIBHelper.h" />
+    <ClInclude Include="include\helper\SDpiHelper.hpp" />
+    <ClInclude Include="include\helper\SDpiScale.h" />
+    <ClInclude Include="include\helper\SFunctor.hpp" />
+    <ClInclude Include="include\helper\SIpcParamHelper.hpp" />
+    <ClInclude Include="include\helper\SListViewItemLocator.h" />
+    <ClInclude Include="include\helper\SLogDef.h" />
+    <ClInclude Include="include\helper\SLog.h" />
+    <ClInclude Include="include\helper\SMenu.h" />
+    <ClInclude Include="include\helper\SMenuEx.h" />
+    <ClInclude Include="include\helper\SplitString.h" />
+    <ClInclude Include="include\helper\SResID.h" />
+    <ClInclude Include="include\helper\SScriptTimer.h" />
+    <ClInclude Include="include\helper\STaskHandler.h" />
+    <ClInclude Include="include\helper\STileViewItemLocator.h" />
+    <ClInclude Include="include\helper\STime.h" />
+    <ClInclude Include="include\helper\STimerEx.h" />
+    <ClInclude Include="include\helper\SToolTip.h" />
+    <ClInclude Include="include\helper\SWndFinder.h" />
+    <ClInclude Include="include\helper\SWndMsgCracker.h" />
+    <ClInclude Include="include\helper\SWndSpy.h" />
+    <ClInclude Include="include\helper\SUnknown.h" />
+    <ClInclude Include="include\interface\SAccHelper-i.h" />
+    <ClInclude Include="include\interface\SAccProxy-i.h" />
+    <ClInclude Include="include\interface\SAdapter-i.h" />
+    <ClInclude Include="include\interface\SAttrStorage-i.h" />
+    <ClInclude Include="include\interface\SCaret-i.h" />
+    <ClInclude Include="include\interface\SImgDecoder-i.h" />
+    <ClInclude Include="include\interface\sipcobj-i.h" />
+    <ClInclude Include="include\interface\SLayout-i.h" />
+    <ClInclude Include="include\interface\SListViewItemLocator-i.h" />
+    <ClInclude Include="include\interface\SLog-i.h" />
+    <ClInclude Include="include\interface\SPathEffect-i.h" />
+    <ClInclude Include="include\interface\SResProvider-i.h" />
+    <ClInclude Include="include\interface\SScriptModule-i.h" />
+    <ClInclude Include="include\interface\SSkinobj-i.h" />
+    <ClInclude Include="include\interface\STaskLoop-i.h" />
+    <ClInclude Include="include\interface\STimelineHandler-i.h" />
+    <ClInclude Include="include\interface\STooltip-i.h" />
+    <ClInclude Include="include\interface\STranslator-i.h" />
+    <ClInclude Include="include\interface\STreeViewItemLocator-i.h" />
+    <ClInclude Include="include\interface\SValueAnimator-i.h" />
+    <ClInclude Include="include\layout\SGridLayout.h" />
+    <ClInclude Include="include\layout\SGridLayoutParamStruct.h" />
+    <ClInclude Include="include\layout\SLayoutSize.h" />
+    <ClInclude Include="include\layout\SLinearLayout.h" />
+    <ClInclude Include="include\layout\SLinearLayoutParamStruct.h" />
+    <ClInclude Include="include\layout\SouiLayout.h" />
+    <ClInclude Include="include\layout\SouiLayoutParamStruct.h" />
+    <ClInclude Include="include\matrix\SCamera.h" />
+    <ClInclude Include="include\matrix\SFloat.h" />
+    <ClInclude Include="include\matrix\SFloatBits.h" />
+    <ClInclude Include="include\matrix\SMatrix.h" />
+    <ClInclude Include="include\matrix\SPoint.h" />
+    <ClInclude Include="include\matrix\SRect.h" />
+    <ClInclude Include="include\matrix\STypes.h" />
+    <ClInclude Include="include\msaa\SAccProxyCmnCtrl.h" />
+    <ClInclude Include="include\msaa\SAccProxyWindow.h" />
+    <ClInclude Include="include\res.mgr\SDpiAwareFont.h" />
+    <ClInclude Include="include\res.mgr\SFontPool.h" />
+    <ClInclude Include="include\res.mgr\SNamedValue.h" />
+    <ClInclude Include="include\res.mgr\SObjDefAttr.h" />
+    <ClInclude Include="include\res.mgr\SResProvider.h" />
+    <ClInclude Include="include\res.mgr\SResProviderMgr.h" />
+    <ClInclude Include="include\res.mgr\SSkinPool.h" />
+    <ClInclude Include="include\res.mgr\SStylePool.h" />
+    <ClInclude Include="include\res.mgr\SUiDef.h" />
+    <ClInclude Include="include\SApp.h" />
+    <ClInclude Include="include\soui-version.h" />
+    <CustomBuild Include="include\souistd.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">echo /*-------------------------------------------------------------------- &gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Precompiled header source file used by Visual Studio.NET to generate&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * the .pch file.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Due to issues with the dependencies checker within the IDE, it&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * sometimes fails to recompile the PCH file, if we force the IDE to&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * create the PCH file directly from the header file.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * This file is auto-generated by qmake since no PRECOMPILED_SOURCE was&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * specified, and is used as the common stdafx.cpp. The file is only&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * generated when creating .vcproj project files, and is not used for&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * command line compilations by nmake.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * WARNING: All changes made in this file will be lost.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo --------------------------------------------------------------------*/&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo #include "souistd.h"&gt;&gt;include\souistd.h.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating precompiled header source file %27include\souistd.h.cpp%27 ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">include\souistd.h.cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">echo /*-------------------------------------------------------------------- &gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Precompiled header source file used by Visual Studio.NET to generate&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * the .pch file.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * Due to issues with the dependencies checker within the IDE, it&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * sometimes fails to recompile the PCH file, if we force the IDE to&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * create the PCH file directly from the header file.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * This file is auto-generated by qmake since no PRECOMPILED_SOURCE was&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * specified, and is used as the common stdafx.cpp. The file is only&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * generated when creating .vcproj project files, and is not used for&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * command line compilations by nmake.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo *&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo * WARNING: All changes made in this file will be lost.&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo --------------------------------------------------------------------*/&gt;&gt;include\souistd.h.cpp
+if errorlevel 1 goto VCReportError
+echo #include "souistd.h"&gt;&gt;include\souistd.h.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating precompiled header source file %27include\souistd.h.cpp%27 ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">include\souistd.h.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+    <ClInclude Include="include\valueAnimator\TypeEvaluator.h" />
+    <ClInclude Include="src\activex\SAxContainer.h" />
+    <ClInclude Include="src\activex\SAxUtil.h" />
+    <ClInclude Include="src\updatelayeredwindow\SUpdateLayeredWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="soui.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\soui-sys-resource\soui-sys-resource.vcxproj">
+      <Project>{01edeb62-60aa-397a-a283-39a26573cc3f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\utilities.vcxproj">
+      <Project>{6de24f7c-fb5c-3def-9008-06b025fb8ae8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

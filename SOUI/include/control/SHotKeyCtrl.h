@@ -12,7 +12,7 @@
  */
 #pragma once
 #include "core/SWnd.h"
-#include "core/Accelerator.h"
+#include "core/SAccelerator.h"
 
 namespace SOUI
 {

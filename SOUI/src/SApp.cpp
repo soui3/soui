@@ -10,7 +10,7 @@
 #include "helper/SScriptTimer.h"
 #include "helper/SAutoBuf.h"
 #include "helper/SToolTip.h"
-#include "helper/AppDir.h"
+#include "helper/SAppDir.h"
 #include "helper/SwndFinder.h"
 
 #include "control/Smessagebox.h"
@@ -24,18 +24,18 @@
 #include "layout/SLinearLayout.h"
 #include "layout/SGridLayout.h"
 #include "animation/SInterpolatorImpl.h"
-#include "core/SwndAccessible.h"
+#include "core/SWndAccessible.h"
 
 #include "msaa/SAccProxyWindow.h"
 #include "msaa/SAccProxyCmnCtrl.h"
 
-#include "animation/Animation.h"
-#include "animation/AnimationSet.h"
+#include "animation/SAnimation.h"
+#include "animation/SAnimationSet.h"
 #include "animation/ScaleAnimation.h"
-#include "animation/RotateAnimation.h"
-#include "animation/AlphaAnimation.h"
-#include "animation/TranslateAnimation.h"
-#include "valueAnimator/ValueAnimator.h"
+#include "animation/SRotateAnimation.h"
+#include "animation/SAlphaAnimation.h"
+#include "animation/STranslateAnimation.h"
+#include "valueAnimator/SValueAnimator.h"
 
 namespace SOUI
 {
