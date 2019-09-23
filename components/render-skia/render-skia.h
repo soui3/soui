@@ -1,17 +1,17 @@
 ﻿#pragma once
 
 
-#include <helper/color.h>
+#include <helper/SColor.h>
+#include <helper/SAttrCracker.h>
 #include <unknown/obj-ref-impl.hpp>
-#include <Shlwapi.h>
-#include <core\SkCanvas.h>
-#include <core\SkBitmap.h>
-#include <core\SkTypeface.h>
-#include <helper\SAttrCracker.h>
-#include <string\tstring.h>
-#include <string\strcpcvt.h>
-#include <interface/render-i.h>
+#include <core/SkCanvas.h>
+#include <core/SkBitmap.h>
+#include <core/SkTypeface.h>
+#include <string/tstring.h>
+#include <string/strcpcvt.h>
+#include <interface/SRender-i.h>
 #include <souicoll.h>
+#include <Shlwapi.h>
 
 namespace SOUI
 {

@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "interface/Adapter-i.h"
+#include "interface/SAdapter-i.h"
 #include <souicoll.h>
-#include "control/stree.hpp"
+#include "control/STree.h"
 
 namespace SOUI
 {

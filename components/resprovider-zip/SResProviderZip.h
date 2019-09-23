@@ -7,7 +7,7 @@
 #include <souicoll.h>
 #define _COLL_NS SOUI
 #include <helper/SResID.h>
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 
 #include "ZipArchive.h"
 #include "zipresprovider-param.h"

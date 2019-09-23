@@ -18,7 +18,7 @@
 
 #define SCOM_MASK 0xfffffff		//使用SOUI静态库时，可以使用这个mask来指定加载哪些库。
 #include <commgr2.h>
-#include <event/notifycenter.h>
+#include <event/SNotifyCenter.h>
 
 #include "resource.h"	//APP资源
 #define R_IN_CPP

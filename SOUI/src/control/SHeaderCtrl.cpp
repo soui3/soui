@@ -1,6 +1,6 @@
 ﻿#include "souistd.h"
 #include "control/SHeaderCtrl.h"
-#include "helper/DragWnd.h"
+#include "helper/SDragWnd.h"
 
 namespace SOUI
 {

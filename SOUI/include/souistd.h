@@ -64,15 +64,15 @@
 
 
 
-#include <interface/render-i.h>
-#include <interface/imgdecoder-i.h>
+#include <interface/SRender-i.h>
+#include <interface/SImgDecoder-i.h>
 
 #include <soui-version.h>
 #include <SApp.h>
 #include <helper/SAttrCracker.h>
-#include <helper/color.h>
-#include <helper/slog.h>
-#include <helper/slog-def.h>
+#include <helper/SColor.h>
+#include <helper/SLog.h>
+#include <helper/SLogDef.h>
 #include <res.mgr/sfontpool.h>
 #include <res.mgr/sresprovider.h>
 

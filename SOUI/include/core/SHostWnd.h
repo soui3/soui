@@ -5,18 +5,17 @@
 
 #pragma once
 
-#include "SwndContainerImpl.h"
-
+#include "SWndContainerImpl.h"
 #include "SNativeWnd.h"
 #include "SDropTargetDispatcher.h"
-#include "event/eventcrack.h"
+#include "event/SEventcrack.h"
 #include "interface/stooltip-i.h"
-#include "helper/swndspy.h"
-#include "helper/SScriptTimer.h"
 #include "core/SCaret.h"
-#include "core/hostmsg.h"
-#include "layout/slayoutsize.h"
+#include "core/SHostMsgDef.h"
+#include "layout/SLayoutsize.h"
 #include "helper/SplitString.h"
+#include "helper/SWndSpy.h"
+#include "helper/SScriptTimer.h"
 
 namespace SOUI
 {

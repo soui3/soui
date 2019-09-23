@@ -7,7 +7,7 @@
 #pragma comment(lib,"gdiplus")
 
 #include "imgdecoder-gdip.h"
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 
 using namespace Gdiplus;
 

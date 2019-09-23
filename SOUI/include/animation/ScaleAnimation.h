@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#include <animation/animation.h>
+#include <animation/SAnimation.h>
 namespace SOUI {
 	/**
 	* An animation that controls the scale of an object. You can specify the point

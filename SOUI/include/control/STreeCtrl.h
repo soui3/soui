@@ -6,7 +6,7 @@
 
 #pragma once
 #include "core/SPanel.h"
-#include "stree.hpp"
+#include "STree.h"
 
 namespace SOUI{
 

@@ -12,7 +12,7 @@
 
 #include "SRect.h"
 
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 
 namespace SOUI{
 

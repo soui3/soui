@@ -1,12 +1,12 @@
 ﻿#include "souistd.h"
 #include "core/SWnd.h"
-#include "helper/color.h"
+#include "helper/SColor.h"
 #include "helper/SplitString.h"
 #include "layout/SouiLayout.h"
 #include "interface/sacchelper-i.h"
 #include "helper/SwndFinder.h"
-#include "helper/stime.h"
-#include "animation/Transformation.h"
+#include "helper/STime.h"
+#include "animation/STransformation.h"
 
 namespace SOUI
 {

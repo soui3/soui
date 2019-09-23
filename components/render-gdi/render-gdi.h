@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include <helper/color.h>
+#include <helper/SColor.h>
 #include <unknown/obj-ref-impl.hpp>
 
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
-#include <interface/render-i.h>
+#include <interface/SRender-i.h>
 #include <souicoll.h>
 
 namespace SOUI

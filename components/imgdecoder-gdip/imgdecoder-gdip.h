@@ -3,7 +3,7 @@
 
 
 #include <unknown/obj-ref-impl.hpp>
-#include <interface/imgdecoder-i.h>
+#include <interface/SImgDecoder-i.h>
 
 namespace Gdiplus
 {

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include <helper/MenuWndHook.h>
+#include <helper/SMenuWndHook.h>
 #include <helper/SAutoBuf.h>
 #include "httpsvr/HTTPServer.h"
 #include "MemFlash.h"
@@ -29,7 +29,7 @@
 //<--定一个filter="demo"的slog输出
 #undef LOG_FILTER
 #define LOG_FILTER "demo"
-#include <helper/slog-def.h>
+#include <helper/SLogDef.h>
 //-->
 
 #include "MainDlg.h"

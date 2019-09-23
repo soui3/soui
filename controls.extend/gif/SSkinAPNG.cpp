@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "SSkinAPNG.h"
 #include <helper/SplitString.h>
-#include <interface/imgdecoder-i.h>
-#include <interface/render-i.h>
+#include <interface/SImgDecoder-i.h>
+#include <interface/SRender-i.h>
 
 
 namespace SOUI

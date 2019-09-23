@@ -19,7 +19,7 @@
 #include <string/tstring.h>
 #include <souicoll.h>
 
-#include "render-i.h"
+#include "SRender-i.h"
 
 #define UIRES_INDEX    _T("uires.idx")        //文件夹资源的文件映射表索引表文件名
 

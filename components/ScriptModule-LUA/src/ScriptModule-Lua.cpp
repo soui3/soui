@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include <event/EventSubscriber.h>
+#include <event/SEventSubscriber.h>
 #include "ScriptModule-Lua.h"
 #include "../lua_tinker/lua_tinker.h"
 #include <string/strcpcvt.h>

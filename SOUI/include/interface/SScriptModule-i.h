@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "event/EventSubscriber.h"
+#include "event/SEventSubscriber.h"
 #include <unknown/obj-ref-i.h>
 
 // Start of SOUI namespace section
