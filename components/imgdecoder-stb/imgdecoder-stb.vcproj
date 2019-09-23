@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="imgdecoder-stb"
-	ProjectGUID="{639FC6D5-A5DA-34EF-894D-9C7032F05487}"
+	ProjectGUID="{5167DDB6-75C4-3FF6-819B-626D4F32A91F}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform

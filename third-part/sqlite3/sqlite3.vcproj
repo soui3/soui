@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="jsoncpp"
-	ProjectGUID="{1BE589F9-332B-370E-9498-F5937337318E}"
+	Name="sqlite3"
+	ProjectGUID="{070337AE-9D21-352B-A6E6-CE2F43C4FA38}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -16,20 +16,20 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			ConfigurationType="4"
-			IntermediateDirectory="..\..\obj\release\jsoncpp\"
+			IntermediateDirectory="..\..\obj\release\sqlite3\"
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
-				AssemblerListingLocation="..\..\obj\release\jsoncpp\"
+				AssemblerListingLocation="..\..\obj\release\sqlite3\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"
 				ExceptionHandling="1"
 				GeneratePreprocessedFile="0"
-				ObjectFile="..\..\obj\release\jsoncpp\"
+				ObjectFile="..\..\obj\release\sqlite3\"
 				Optimization ="1"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,NDEBUG"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,SQLITE_ENABLE_COLUMN_METADATA,_CRT_SECURE_NO_WARNINGS,SQLITE_HAS_CODEC=1,CODEC_TYPE=CODEC_TYPE_AES128,SQLITE_CORE,THREADSAFE,SQLITE_SECURE_DELETE,SQLITE_SOUNDEX,QT_NO_DYNAMIC_CAST,NDEBUG"
 				ProgramDataBaseFileName="$(IntDir)"
 				RuntimeLibrary="0"
 				SuppressStartupBanner="true"
@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\jsoncpp.lib"
+				OutputFile="$(OutDir)\sqlite3.lib"
 				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
@@ -56,7 +56,7 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,SQLITE_ENABLE_COLUMN_METADATA,_CRT_SECURE_NO_WARNINGS,SQLITE_HAS_CODEC=1,CODEC_TYPE=CODEC_TYPE_AES128,SQLITE_CORE,THREADSAFE,SQLITE_SECURE_DELETE,SQLITE_SOUNDEX,QT_NO_DYNAMIC_CAST"
 				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 		<Configuration
@@ -65,20 +65,20 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			ConfigurationType="4"
-			IntermediateDirectory="..\..\obj\debug\jsoncpp\"
+			IntermediateDirectory="..\..\obj\debug\sqlite3\"
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
-				AssemblerListingLocation="..\..\obj\debug\jsoncpp\"
+				AssemblerListingLocation="..\..\obj\debug\sqlite3\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"
 				ExceptionHandling="1"
 				GeneratePreprocessedFile="0"
-				ObjectFile="..\..\obj\debug\jsoncpp\"
+				ObjectFile="..\..\obj\debug\sqlite3\"
 				Optimization ="4"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,SQLITE_ENABLE_COLUMN_METADATA,_CRT_SECURE_NO_WARNINGS,SQLITE_HAS_CODEC=1,CODEC_TYPE=CODEC_TYPE_AES128,SQLITE_CORE,THREADSAFE,SQLITE_SECURE_DELETE,SQLITE_SOUNDEX,QT_NO_DYNAMIC_CAST"
 				ProgramDataBaseFileName="$(IntDir)"
 				RuntimeLibrary="1"
 				SuppressStartupBanner="true"
@@ -88,7 +88,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\jsoncppd.lib"
+				OutputFile="$(OutDir)\sqlite3d.lib"
 				SuppressStartupBanner="true" />
 			<Tool
 				Name="VCManifestTool" />
@@ -105,7 +105,7 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_WARNINGS,SQLITE_ENABLE_COLUMN_METADATA,_CRT_SECURE_NO_WARNINGS,SQLITE_HAS_CODEC=1,CODEC_TYPE=CODEC_TYPE_AES128,SQLITE_CORE,THREADSAFE,SQLITE_SECURE_DELETE,SQLITE_SOUNDEX,QT_NO_DYNAMIC_CAST,_DEBUG"
 				ResourceOutputFileName="$(OutDir)\$(InputName).res" />
 		</Configuration>
 	</Configurations>
@@ -115,42 +115,24 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="src\lib_json\json_reader.cpp" />
-			<File
-				RelativePath="src\lib_json\json_value.cpp" />
-			<File
-				RelativePath="src\lib_json\json_writer.cpp" />
+				RelativePath="sqlite3secure.c" />
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="include\json\allocator.h" />
+				RelativePath="codec.h" />
 			<File
-				RelativePath="include\json\assertions.h" />
+				RelativePath="rijndael.h" />
 			<File
-				RelativePath="include\json\autolink.h" />
+				RelativePath="sha2.h" />
 			<File
-				RelativePath="include\json\config.h" />
+				RelativePath="sqlite3.h" />
 			<File
-				RelativePath="include\json\features.h" />
+				RelativePath="sqlite3ext.h" />
 			<File
-				RelativePath="include\json\forwards.h" />
-			<File
-				RelativePath="include\json\json.h" />
-			<File
-				RelativePath="src\lib_json\json_tool.h" />
-			<File
-				RelativePath="src\lib_json\json_valueiterator.inl" />
-			<File
-				RelativePath="include\json\reader.h" />
-			<File
-				RelativePath="include\json\value.h" />
-			<File
-				RelativePath="include\json\version.h" />
-			<File
-				RelativePath="include\json\writer.h" />
+				RelativePath="sqlite3userauth.h" />
 		</Filter>
 	</Files>
 	<Globals>

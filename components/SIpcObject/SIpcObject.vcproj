@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="SIpcObject"
-	ProjectGUID="{322B7BFD-0E2F-3934-A862-6D9467716C74}"
+	ProjectGUID="{EB966D40-3F78-3914-9C5A-0DF5EB652780}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
