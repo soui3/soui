@@ -15,9 +15,9 @@ namespace SOUI
 		    m_pOwner->onBranchChanged(hBranch);
 		}
 		
-		virtual void onBranchInvalidated(HTREEITEM hBranch)
+		virtual void onBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren)
 		{
-		    m_pOwner->onBranchInvalidated(hBranch);
+		    m_pOwner->onBranchInvalidated(hBranch, bInvalidChildren);
 		}
 		
         virtual void onBranchExpandedChanged(HTREEITEM hBranch,BOOL bExpandedOld,BOOL bExpandedNew)
@@ -935,8 +935,7 @@ namespace SOUI
 	}
 
 	void STreeView::OnItemRequestRelayout( SItemPanel *pItem )
-	{
-		  //pItem->UpdateChildrenPosition();
+	{//do nothing
 	}
 
 	void STreeView::onBranchChanged(HTREEITEM hBranch)
@@ -950,9 +949,41 @@ namespace SOUI
         UpdateVisibleItems();
 	}
 	
-    void STreeView::onBranchInvalidated(HTREEITEM hBranch)
+    void STreeView::onBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren)
     {
-        onBranchChanged(hBranch);
+		if (m_adapter == NULL)
+		{
+			return;
+		}
+		if (!bInvalidChildren)
+		{
+			SItemPanel *pItem = GetItemPanel(hBranch);
+			if (pItem)
+				pItem->InvalidateRect(NULL);
+		}
+		else
+		{
+			SPOSITION pos = m_visible_items.GetHeadPosition();
+			while (pos)
+			{
+				const ItemInfo &ii = m_visible_items.GetNext(pos);
+				bool bInvalid = false;
+				HSTREEITEM hItem = (HSTREEITEM)ii.pItem->GetItemIndex();
+				while (hItem)
+				{
+					if (hItem == hBranch)
+					{
+						bInvalid = true;
+						break;
+					}
+					hItem = m_adapter->GetParentItem(hItem);
+				}
+				if (bInvalid)
+				{
+					ii.pItem->InvalidateRect(NULL);
+				}
+			}
+		}
     }
 
     void STreeView::onBranchExpandedChanged(HTREEITEM hBranch,BOOL bExpandedOld,BOOL bExpandedNew)

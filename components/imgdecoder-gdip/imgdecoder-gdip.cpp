@@ -140,7 +140,7 @@ namespace SOUI
         // Get the number of frames in the first dimension.
         m_nFrameCount = max(1, bmpSrc->GetFrameCount(&pageGuid));
         
-        SIZE imSize={bmpSrc->GetWidth(),bmpSrc->GetHeight()};
+        SIZE imSize={(LONG)bmpSrc->GetWidth(),(LONG)bmpSrc->GetHeight()};
 
         if (m_nFrameCount>1)
         {

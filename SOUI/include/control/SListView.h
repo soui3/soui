@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "core/SWnd.h"
 #include "core/SItemPanel.h"
 #include "interface/SAdapter-i.h"
 #include "interface/SListViewItemLocator-i.h"

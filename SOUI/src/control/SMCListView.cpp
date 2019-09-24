@@ -722,9 +722,7 @@ void SMCListView::OnDestroy()
 
 //////////////////////////////////////////////////////////////////////////
 void SMCListView::OnItemRequestRelayout(SItemPanel *pItem)
-{
-    //pItem->UpdateChildrenPosition();
-
+{//do nothing
 }
 
 BOOL SMCListView::IsItemRedrawDelay() const

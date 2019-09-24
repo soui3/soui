@@ -162,7 +162,7 @@ namespace SOUI
         * most likely through a call to {@link Cursor#deactivate()} or {@link Cursor#close()} on a
         * {@link Cursor}.
         */
-        virtual void onBranchInvalidated(HTREEITEM hBranch)  PURE;
+        virtual void onBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren)  PURE;
         
         virtual void onBranchExpandedChanged(HTREEITEM hBranch,BOOL bExpandedOld,BOOL bExpandedNew) PURE;
     };
