@@ -240,13 +240,13 @@ namespace SOUI
             }
         }
         
-        void notifyInvalidated(HTREEITEM hBranch,bool invalidChildren)
+        void notifyInvalidated(HTREEITEM hBranch,bool bInalidParents,bool invalidChildren)
         {
             SPOSITION pos = m_lstObserver.GetHeadPosition();
             while(pos)
             {
                 ITvDataSetObserver *pObserver = m_lstObserver.GetNext(pos);
-                pObserver->onBranchInvalidated(hBranch, invalidChildren);
+                pObserver->onBranchInvalidated(hBranch, bInalidParents,invalidChildren);
             }
         }
         
@@ -277,8 +277,8 @@ namespace SOUI
         * or available. Once invoked this adapter is no longer valid and should
         * not report further data set changes.
         */
-        void notifyBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren=false) {
-            m_obzMgr.notifyInvalidated(hBranch, bInvalidChildren);
+        void notifyBranchInvalidated(HTREEITEM hBranch,bool bInvalidParents=true,bool bInvalidChildren=true) {
+            m_obzMgr.notifyInvalidated(hBranch, bInvalidParents, bInvalidChildren);
         }
 
         void notifyBranchExpandChanged(HTREEITEM hBranch,BOOL bExpandedOld,BOOL bExpandedNew) {

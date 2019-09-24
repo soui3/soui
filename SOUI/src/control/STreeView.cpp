@@ -15,9 +15,9 @@ namespace SOUI
 		    m_pOwner->onBranchChanged(hBranch);
 		}
 		
-		virtual void onBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren)
+		virtual void onBranchInvalidated(HTREEITEM hBranch, bool bInvalidParents, bool bInvalidChildren)
 		{
-		    m_pOwner->onBranchInvalidated(hBranch, bInvalidChildren);
+		    m_pOwner->onBranchInvalidated(hBranch, bInvalidParents,bInvalidChildren);
 		}
 		
         virtual void onBranchExpandedChanged(HTREEITEM hBranch,BOOL bExpandedOld,BOOL bExpandedNew)
@@ -949,11 +949,22 @@ namespace SOUI
         UpdateVisibleItems();
 	}
 	
-    void STreeView::onBranchInvalidated(HTREEITEM hBranch,bool bInvalidChildren)
+    void STreeView::onBranchInvalidated(HTREEITEM hBranch,bool bInvalidParents,bool bInvalidChildren)
     {
 		if (m_adapter == NULL)
 		{
 			return;
+		}
+		if (bInvalidParents)
+		{
+			HTREEITEM hParent = m_adapter->GetParentItem(hBranch);
+			while (hParent)
+			{
+				SItemPanel *pItem = GetItemPanel(hParent);
+				if (pItem)
+					pItem->InvalidateRect(NULL);
+				hParent = m_adapter->GetParentItem(hParent);
+			}
 		}
 		if (!bInvalidChildren)
 		{
