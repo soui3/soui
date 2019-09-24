@@ -46,19 +46,19 @@
   <tabctrl pos="[0,0,-0,-0" name="tab_ctrls" font="style:StrokeAndFill,blurStyle:solid,blurRadius:3" animateSteps="10" animateType="1" tabHeight="0">
     <page title="listctrl">
       <listctrl name="lc_test" hotTrack="1" pos="10,0,-10,-10" itemHeight="20" headerHeight="30" cursor="CUR_TST" font="underline:1" itemSkin="skin_tab_left"  sbSkin="skin_new_scrollbar">
-        <header align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
+        <headerStyle align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
           <items>
             <item width="150">name</item>
             <item width="150">gender</item>
             <item width="150">age</item>
             <item width="150">score</item>
           </items>
-        </header>
+        </headerStyle>
       </listctrl>
     </page>
     <page title="mclistview">
       <mclistview name="mclv_test" colorBkgnd="@color/white" pos="10,10,-10,-10" headerHeight="30">
-        <header align="center" name="mclv_test_header"  sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" itemSwapEnable="1" fixWidth="0" font="underline:0,adding:-3" sortHeader="1" colorBkgnd="#ffffff" >
+        <headerStyle wndclass="header" align="center" name="mclv_test_header"  sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" itemSwapEnable="1" fixWidth="0" font="underline:0,adding:-3" sortHeader="1" colorBkgnd="#ffffff" >
           <items>
             <item width="480">@string/mccol_1</item>
             <item width="95">@string/mccol_2</item>
@@ -68,7 +68,7 @@
             <item width="100">@string/mccol_6</item>
           </items>
           <check name="chk_mclv_sel" text="select all"/>
-        </header>
+        </headerStyle>
         <template itemHeight="80" colorHover="#cccccc" colorSelected="#0000ff">
           <window name="col1" clipClient="1">
             <img name="img_icon" skin="skin_icon6" pos="10,8,@64,@64"/>
@@ -148,14 +148,14 @@
     </page>
     <page title="mclistviewex">
       <mclistviewex name="musiclist" headerHeight="48" colorSwapLine="rgb(0,0,255)" colorDropBk="rgb(0,0,255)" pos="20,20,-20,-20" sbTop="48"  sbFadeInterpolator="Accelerate">
-        <header2 align="center" matchParent="1" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" cursor="hand" itemSwapEnable="1" sortHeader="0" colorText="#000000ff">
+        <headerStyle wndclass="header2" align="center" matchParent="1" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" cursor="hand" itemSwapEnable="1" sortHeader="0" colorText="#000000ff">
           <items>
             <item width="150">歌曲</item>
             <item width="120">歌手</item>
             <item width="120">专辑</item>
             <item width="120">时长</item>
           </items>
-        </header2>
+        </headerStyle>
         <template itemHeight="48" colorHover="#666666" colorSelected="#555555" fond="adding:-4">
           <window name="col1" clipClient="1">
             <hr pos="0,0,-0,1" colorLine="#666666" />

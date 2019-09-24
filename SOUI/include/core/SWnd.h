@@ -593,6 +593,30 @@ namespace SOUI
             return FindChildByName2<T>(S_CA2W(pszName),nDeep);
         }
 
+		template<class T>
+		T * FindChildByClass(int nDeep=-1) const
+		{
+			SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+			while (pChild)
+			{
+				if (pChild->IsClass(T::GetClassName()))
+					return (T*)pChild;
+				pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			}
+
+			if (nDeep>0) nDeep--;
+			if (nDeep == 0) return NULL;
+
+			pChild = GetWindow(GSW_FIRSTCHILD);
+			while (pChild)
+			{
+				SWindow *pChildFind = pChild->FindChildByClass<T>(nDeep);
+				if (pChildFind) return (T*)pChildFind;
+				pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			}
+
+			return NULL;
+		}
         /**
         * CreateChildren
         * @brief    从XML创建子窗口

@@ -51,8 +51,7 @@ namespace SOUI
 			m_pCalendar->InitFromXml(xmlCal);
 
 		m_pCalendar->SetAttribute(L"pos", L"0,0,-0,-0", TRUE);
-		m_pCalendar->SetOwner(this);    //chain notify message to combobox
-		//m_pCalendar->SetID(IDC_DROPDOWN_LIST);
+		m_pCalendar->SetOwner(this);    //chain notify message to SDateTimePicker
 
 		m_pCalendar->GetEventSet()->subscribeEvent(&SDateTimePicker::OnDateChanged, this);
 		m_pCalendar->GetEventSet()->subscribeEvent(&SDateTimePicker::OnDateCmd, this);

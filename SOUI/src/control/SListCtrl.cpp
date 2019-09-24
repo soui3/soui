@@ -57,27 +57,25 @@ int SListCtrl::InsertColumn(int nIndex, LPCTSTR pszText, int nWidth, LPARAM lPar
 
 BOOL SListCtrl::CreateChildren(pugi::xml_node xmlNode)
 {
-    //  listctrl的子控件只能是一个header控件
     if (!__super::CreateChildren(xmlNode))
         return FALSE;
-    m_pHeader=NULL;
-    
-    SWindow *pChild=GetWindow(GSW_FIRSTCHILD);
-    while(pChild)
-    {
-        if(pChild->IsClass(SHeaderCtrl::GetClassName()))
-        {
-            m_pHeader=(SHeaderCtrl*)pChild;
-            break;
-        }
-        pChild=pChild->GetWindow(GSW_NEXTSIBLING);
-    }
+
+	m_pHeader = NULL;
+	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
+	if (!xmlHeader)
+	{
+		m_pHeader = FindChildByClass<SHeaderCtrl>(0);
+	}
+	else
+	{
+		m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
+		SASSERT(m_pHeader);
+		InsertChild(m_pHeader);
+		m_pHeader->InitFromXml(xmlHeader);
+	}
+
     if(!m_pHeader) return FALSE;
         
-    SStringW strPos;
-    strPos.Format(L"0,0,-0,%d",m_nHeaderHeight);
-    m_pHeader->SetAttribute(L"pos",strPos,TRUE);
-
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemChanging::EventID, Subscriber(&SListCtrl::OnHeaderSizeChanging,this));
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemSwap::EventID, Subscriber(&SListCtrl::OnHeaderSwap,this));
 
