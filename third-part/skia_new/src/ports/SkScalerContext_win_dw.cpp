@@ -619,7 +619,7 @@ void SkScalerContext_DW::generatePngMetrics(SkGlyph* glyph) {
                                               &ReleaseProc,
                                               context);
 
-    std::unique_ptr<SkCodec> codec = SkCodec::MakeFromData(std::move(data));
+	std::unique_ptr<SkCodec> codec = nullptr;//todo: SkCodec::MakeFromData(std::move(data)); hjx
     if (!codec) {
         return;
     }

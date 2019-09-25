@@ -23,7 +23,7 @@
 #include <vector>
 #include <map>
 
-#define getTotalClip internal_private_getTotalClip
+#define getTotalClip temporary_internal_getRgnClip
 // #include <vld.h>
 
 #ifndef PI	//PI
@@ -55,7 +55,7 @@ namespace SOUI
 	bool String2Bool(const SStringW & value)
 	{
 		SASSERT(!value.IsEmpty());
-		return !(value == L"false" || value == L"0");
+		return value.CompareNoCase(L"false")!=0 && value!=L"0" ;
 	}
 
     SkIRect toSkIRect(LPCRECT pRc)
@@ -307,7 +307,7 @@ namespace SOUI
         SRegion_Skia *pRgn=new SRegion_Skia(m_pRenderFactory);
         //SkRegion rgn = m_SkCanvas->getTotalClip();
 		SkRegion rgn;
-		m_SkCanvas->temporary_internal_getRgnClip(&rgn);
+		m_SkCanvas->getTotalClip(&rgn);
         //需要将rect的viewOrg还原
         rgn.translate((int)-m_ptOrg.fX,(int)-m_ptOrg.fY);
         pRgn->SetRegion(rgn);
@@ -874,7 +874,7 @@ namespace SOUI
         }else
         {
 			SkRegion rgn;
-			m_SkCanvas->temporary_internal_getRgnClip(&rgn);
+			m_SkCanvas->getTotalClip(&rgn);
             SkRegion::Iterator it(rgn);
             int nCount=0;
             for(;!it.done();it.next())
@@ -1812,8 +1812,8 @@ namespace SOUI
 		(xmlNode);
 		if(m_blurStyle != -1 && m_blurRadius > 0.0f)
 		{
-			m_skPaint.setMaskFilter(SkBlurMaskFilter::Make(m_blurStyle,
-				SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
+			//m_skPaint.setMaskFilter(SkBlurMaskFilter::Make(m_blurStyle,
+			//	SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
 		}
 	}
 

@@ -53,7 +53,7 @@ namespace SOUI
 	bool String2Bool(const SStringW & value)
 	{
 		SASSERT(!value.IsEmpty());
-		return !(value == L"false" || value == L"0");
+		return value.CompareNoCase(L"false") != 0 && value != L"0";
 	}
 
     SkIRect toSkIRect(LPCRECT pRc)
