@@ -297,15 +297,26 @@
         <window size="20,-2" />
       </window>
     </page>
-    <page title="prog and slider">
-      <progress name="prog_test" pos="100,100,@200,@15" font="adding:-8" value="20" min="0" max="100" showPercent="1"/>
-      <sliderbar name="slider_test" thumbInRail="0" pos="100,[10" alpha="200" width="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test2" thumbInRail="1" pos="100,[10" alpha="200" width="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test3" thumbInRail="0" vertical="1" pos="10,10" alpha="200" height="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test4" thumbInRail="1" vertical="1" pos="[10,10" alpha="200" height="200" value="20" min="0" max="100"/>
-      <scrollbar name="sb_test1" pos="[10,10,@200,@16" min="0" max="100" value="10" page="10" vertical="0"/>
-      <scrollbar name="sb_test2" pos="[50,10,@16,@200" min="0" max="100" value="10" page="10" vertical="1" fadeInterpolator="Accelerate" fadeSpeed="20"/>
-      <progressRing name="prog_ring" pos="100,[10,@200,@200" arcRate="0.5" min="0" max="100" value="32" showPercent="1"/>
+    <page title="prog and slider" layout="vbox" interval="10">
+      <window size="-2,0" weight="1" layout="hbox" interval="50">
+        <window size="0,-2" weight="1" layout="vbox" interval="10" padding="20">
+          <!--horz prog ,scrollbar and slider-->
+          <window size="0,0" weight="1" visible="0"/>
+          <progress name="prog_test" size="-2,15" font="adding:-8" value="20" min="0" max="100" showPercent="1"/>
+          <sliderbar name="slider_test" size="-2,-1" thumbInRail="0" alpha="200"  value="20" min="0" max="100"/>
+          <scrollbar name="sb_test1" size="-2,16" min="0" max="100" value="10" page="10"/>
+          <window size="0,0" weight="1" visible="0"/>
+        </window>
+        <window size="0,-2" weight="1" layout="hbox" interval="10">
+          <!--vert prog ,scrollbar and slider-->
+          <progress name="prog_test2" size="15,-2" vertical="1" alpha="200" value="20" min="0" max="100"/>
+          <sliderbar name="slider_test2" size="-1,-2" thumbInRail="1" vertical="1" alpha="200" value="20" min="0" max="100"/>
+          <scrollbar name="sb_test2" size="16,-2" vertical="1" min="0" max="100" value="10" page="10"/>
+        </window>
+      </window>
+      <window size="-2,0" weight="1">
+        <progressRing name="prog_ring" pos="|0,|0,@200,@200" offset="-0.5,-0.5" arcRate="0.5" min="0" max="100" value="32" showPercent="1"/>
+      </window>
     </page>
     <page title="calendar" layout="vbox">
       <window size="-2,-1" layout="hbox" padding="5,5,5,5">

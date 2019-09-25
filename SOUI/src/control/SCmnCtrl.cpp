@@ -745,7 +745,8 @@ void SProgress::OnPaint(IRenderTarget *pRT)
 
     if(IsVertical())
     {
-        rcValue.bottom=rcValue.top+(int)(((__int64)rcValue.Height())*(m_nValue-m_nMinValue)/(__int64)(m_nMaxValue-m_nMinValue));
+		rcValue.bottom = rcClient.bottom;
+        rcValue.top=rcValue.bottom - (int)(((__int64)rcValue.Height())*(m_nValue-m_nMinValue)/(__int64)(m_nMaxValue-m_nMinValue));
     }
     else
     {

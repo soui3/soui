@@ -99,7 +99,7 @@ CRect SSliderBar::GetPartRect(UINT uSBCode)
     if(IsVertical())
     {
         RANGE r = _GetPartRange(rcClient.Height(),szThumb.cy,m_bThumbInRail,m_nMinValue,m_nMaxValue,m_nValue,uSBCode);
-        CRect rc(rcClient.left,r.value1,rcClient.right,r.value2);
+        CRect rc(rcClient.left, rcClient.Height()-r.value2,rcClient.right, rcClient.Height()-r.value1);
         rc.OffsetRect(0,rcClient.top);
         int   nSliderSize = (std::max)(szThumb.cx,szRail.cx);
         rc.DeflateRect((rcClient.Width()-nSliderSize)/2,0);
@@ -178,7 +178,7 @@ void SSliderBar::OnLButtonDown(UINT nFlags, CPoint point)
         int nValue=0;
         if(IsVertical())
         {
-            nValue= (point.y-rcRail.top)*(m_nMaxValue-m_nMinValue+1)/rcRail.Height()+m_nMinValue;
+            nValue= (rcRail.bottom - point.y)*(m_nMaxValue-m_nMinValue+1)/rcRail.Height()+m_nMinValue;
         }else
         {
             nValue= (point.x-rcRail.left)*(m_nMaxValue-m_nMinValue+1)/rcRail.Width()+m_nMinValue;
@@ -201,7 +201,7 @@ void SSliderBar::OnMouseMove(UINT nFlags, CPoint point)
         CRect rcRail=GetPartRect(SC_RAIL);
 
         int nInterHei=(IsVertical()?rcRail.Height():rcRail.Width());
-        int nDragLen=IsVertical()?(point.y-m_ptDrag.y):(point.x-m_ptDrag.x);
+        int nDragLen=IsVertical()?(m_ptDrag.y-point.y):(point.x-m_ptDrag.x);
         int nSlide=nDragLen*(m_nMaxValue-m_nMinValue+1)/nInterHei;
 
         int nNewTrackPos=m_nDragValue+nSlide;
