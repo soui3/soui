@@ -112,7 +112,7 @@ namespace SOUI
 		short		 m_zDelta;
         int          m_nScrollSpeed;
 
-		SAutoRefPtr<IInterpolator> m_fadeInterpolator;
+		mutable SAutoRefPtr<IInterpolator> m_fadeInterpolator;
 		int			m_fadeFrames;
 		BYTE		m_bySbThumbTrackMinAlpha;
 		
@@ -129,7 +129,7 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"sbTop", m_nSbTop, TRUE)
 			ATTR_LAYOUTSIZE(L"sbBottom", m_nSbBottom, TRUE)
 
-			ATTR_INT(L"sbFadeSpeed", m_fadeFrames, FALSE)
+			ATTR_INT(L"sbFadeFrames", m_fadeFrames, FALSE)
 			ATTR_INT(L"sbTrumbTrackMinAlpha", m_bySbThumbTrackMinAlpha,FALSE)
 			ATTR_INTERPOLATOR(L"sbFadeInterpolator", m_fadeInterpolator, FALSE)
 			ATTR_CHAIN_PTR(m_fadeInterpolator, 0)

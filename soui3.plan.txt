@@ -8,7 +8,7 @@
 7、解决root设置margin的问题。done 2019.8.8
 8、解决xxView::SetAdapter的重入问题。
 9、增加STreeView刷新单一项的问题。done 2019.9.24
-10、将xxView抽象出一个统一的基类。
+10、将xxView抽象出一个统一的基类。canceled 2019.9.25
 11、实现xxView的多选及框选。
 12、完善向导。 2019.7
 13、滚动条支持动画显示、隐藏。done 2019.6.13

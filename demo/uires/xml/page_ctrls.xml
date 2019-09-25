@@ -99,7 +99,7 @@
       </mclistview>
     </page>
     <page title="listview(fix)">
-      <listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1"  sbFadeInterpolator="Accelerate">
+      <listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1"  sbFadeFrames="30">
         <template itemHeight="50" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1">
           <button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
           <animateimg pos="[10,{0" skin="skin_busy" name="ani_test" tip="animateimg is used here" msgTransparent="0" />
@@ -120,7 +120,7 @@
       </listview>
     </page>
     <page title="listview(flex)" >
-      <listview pos="5,0,-5,-5" name="lv_test_flex" dividerSize="5"  sbFadeInterpolator="Accelerate">
+      <listview pos="5,0,-5,-5" name="lv_test_flex" dividerSize="5"  sbFadeFrames="30">
         <template defHeight="50" oddHeight="50" evenHeight="60" evenSelHeight="90">
           <itemOdd colorHover="#cccccc" colorSelected="#0000ff">
             <button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
@@ -139,7 +139,7 @@
 
     </page>
     <page title="tileview">
-      <tileview pos="5,0,-5,-5" name="lv_test_tile" wantTab="1" marginSize="5" colorBkgnd="#FFFFFF"  sbFadeInterpolator="Accelerate">
+      <tileview pos="5,0,-5,-5" name="lv_test_tile" wantTab="1" marginSize="5" colorBkgnd="#FFFFFF" sbFadeFrames="30">
         <template itemHeight="130" itemWidth="135" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1" skin="skin_item_bk">
           <img pos="|0,0,@100,@100" offset="-0.5,0" name="img_file_icon"/>
           <button pos="|0,[5,@115,@22" offset="-0.5,0" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
@@ -147,7 +147,7 @@
       </tileview>
     </page>
     <page title="mclistviewex">
-      <mclistviewex name="musiclist" headerHeight="48" colorSwapLine="rgb(0,0,255)" colorDropBk="rgb(0,0,255)" pos="20,20,-20,-20" sbTop="48"  sbFadeInterpolator="Accelerate">
+      <mclistviewex name="musiclist" headerHeight="48" colorSwapLine="rgb(0,0,255)" colorDropBk="rgb(0,0,255)" pos="20,20,-20,-20" sbTop="48" sbFadeFrames="30">
         <headerStyle wndclass="header2" align="center" matchParent="1" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" cursor="hand" itemSwapEnable="1" sortHeader="0" colorText="#000000ff">
           <items>
             <item width="150">歌曲</item>
@@ -212,7 +212,7 @@
         <button name="btn_richedit_open" pos="[5,0,@120,@25">open from rtf</button>
         <button name="btn_richedit_save" pos="[5,0,@120,@25">save to rtf</button>
       </window>
-      <chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" sbFadeInterpolator="Accelerate" enableDragdrop="1" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1"  autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test"/>
+      <chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" sbFadeFrames="30" enableDragdrop="1" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1"  autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test"/>
     </page>
     <page title="buttons" >
       <imgbtn name="btn_msgbox" pos="10,40" width="200" height="40" accel="ctrl+alt+f9" font="bold:1" skin="win10btn" animate="1">show msg box</imgbtn>
@@ -297,15 +297,26 @@
         <window size="20,-2" />
       </window>
     </page>
-    <page title="prog and slider">
-      <progress name="prog_test" pos="100,100,@200,@15" font="adding:-8" value="20" min="0" max="100" showPercent="1"/>
-      <sliderbar name="slider_test" thumbInRail="0" pos="100,[10" alpha="200" width="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test2" thumbInRail="1" pos="100,[10" alpha="200" width="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test3" thumbInRail="0" vertical="1" pos="10,10" alpha="200" height="200" value="20" min="0" max="100"/>
-      <sliderbar name="slider_test4" thumbInRail="1" vertical="1" pos="[10,10" alpha="200" height="200" value="20" min="0" max="100"/>
-      <scrollbar name="sb_test1" pos="[10,10,@200,@16" min="0" max="100" value="10" page="10" vertical="0"/>
-      <scrollbar name="sb_test2" pos="[50,10,@16,@200" min="0" max="100" value="10" page="10" vertical="1" fadeInterpolator="Accelerate" fadeSpeed="20"/>
-      <progressRing name="prog_ring" pos="100,[10,@200,@200" arcRate="0.5" min="0" max="100" value="32" showPercent="1"/>
+    <page title="prog and slider" layout="vbox" interval="10">
+      <window size="-2,0" weight="1" layout="hbox" interval="50">
+        <window size="0,-2" weight="1" layout="vbox" interval="10" padding="20">
+          <!--horz prog ,scrollbar and slider-->
+          <window size="0,0" weight="1" visible="0"/>
+          <progress name="prog_test" size="-2,15" font="adding:-8" value="20" min="0" max="100" showPercent="1"/>
+          <sliderbar name="slider_test" size="-2,-1" thumbInRail="0" alpha="200"  value="20" min="0" max="100"/>
+          <scrollbar name="sb_test1" size="-2,16" min="0" max="100" value="10" page="10"/>
+          <window size="0,0" weight="1" visible="0"/>
+        </window>
+        <window size="0,-2" weight="1" layout="hbox" interval="10">
+          <!--vert prog ,scrollbar and slider-->
+          <progress name="prog_test2" size="15,-2" vertical="1" alpha="200" value="20" min="0" max="100"/>
+          <sliderbar name="slider_test2" size="-1,-2" thumbInRail="1" vertical="1" alpha="200" value="20" min="0" max="100"/>
+          <scrollbar name="sb_test2" size="16,-2" vertical="1" min="0" max="100" value="10" page="10"/>
+        </window>
+      </window>
+      <window size="-2,0" weight="1">
+        <progressRing name="prog_ring" pos="|0,|0,@200,@200" offset="-0.5,-0.5" arcRate="0.5" min="0" max="100" value="32" showPercent="1"/>
+      </window>
     </page>
     <page title="calendar" layout="vbox">
       <window size="-2,-1" layout="hbox" padding="5,5,5,5">

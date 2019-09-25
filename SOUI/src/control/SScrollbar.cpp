@@ -11,7 +11,7 @@ namespace SOUI
 SScrollBar::SScrollBar()
     : m_pSkin(GETBUILTINSKIN(SKIN_SYS_SCROLLBAR))
     , m_uAllowSize((UINT)-1)
-	, m_fadeFrame(30)
+	, m_fadeFrames(0)
 	, m_byThumbTrackMinAlpha(128)
     , m_sbHandler(this)
 {
@@ -250,12 +250,16 @@ int SScrollBar::GetScrollBarArrowSize(bool bVert) const
 
 const IInterpolator * SScrollBar::GetScrollInterpolator() const
 {
+	if (m_fadeFrames > 0 && !m_fadeInterpolator)
+	{
+		m_fadeInterpolator = CREATEINTERPOLATOR(L"Accelerate");
+	}
 	return m_fadeInterpolator;
 }
 
 int SScrollBar::GetScrollFadeFrames() const
 {
-	return m_fadeFrame;
+	return m_fadeFrames;
 }
 
 BYTE SScrollBar::GetScrollThumbTrackMinAlpha() const
