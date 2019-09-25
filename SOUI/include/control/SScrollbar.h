@@ -144,7 +144,7 @@ protected:
         ATTR_INT(L"value", m_si.nPos, TRUE)
         ATTR_INT(L"page", m_si.nPage, TRUE)
 		ATTR_CUSTOM(L"vertical",OnAttrVertical)
-		ATTR_INT(L"fadeSpeed", m_fadeFrame, FALSE)
+		ATTR_INT(L"fadeFrames", m_fadeFrames, FALSE)
 		ATTR_INT(L"thumbTrackMinAlpha", m_byThumbTrackMinAlpha,FALSE)
 		ATTR_INTERPOLATOR(L"fadeInterpolator", m_fadeInterpolator,FALSE)
 		ATTR_CHAIN_PTR(m_fadeInterpolator,0)
@@ -261,8 +261,8 @@ protected:
 
     SCROLLINFO  m_si;         /**< 结构体 */
 
-	int			m_fadeFrame;
-	SAutoRefPtr<IInterpolator> m_fadeInterpolator;
+	int			m_fadeFrames;
+	mutable SAutoRefPtr<IInterpolator> m_fadeInterpolator;
 	BYTE		m_byThumbTrackMinAlpha;
 	SScrollBarHandler m_sbHandler;
 

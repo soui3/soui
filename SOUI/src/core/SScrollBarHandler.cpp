@@ -186,7 +186,7 @@ end:
 
 		if (m_iClickPart == -1)
 		{
-			if (GetInterpolator())
+			if (m_pSbHost->GetScrollFadeFrames()>0)
 			{
 				m_iFrame = 1;
 				m_fadeMode = FADEIN;//to show
@@ -213,7 +213,7 @@ end:
 
 		if (m_iClickPart == -1)
 		{
-			if (!GetInterpolator())
+			if (m_pSbHost->GetScrollFadeFrames()==0)
 			{
 				if (iOldHit != -1) m_pSbHost->OnScrollUpdatePart(m_bVert, iOldHit);
 			}
@@ -359,7 +359,7 @@ end:
 
 	BYTE SScrollBarHandler::GetAlpha(int iPart) const
 	{
-		if(!GetInterpolator())
+		if(m_pSbHost->GetScrollFadeFrames()<=0)
 			return 0xFF;
 		float fProg = GetInterpolator()->getInterpolation(m_iFrame*1.0f/ m_pSbHost->GetScrollFadeFrames());
 		if (iPart == SB_THUMBTRACK)

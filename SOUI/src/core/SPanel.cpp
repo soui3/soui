@@ -149,6 +149,10 @@ namespace SOUI
 
 	const IInterpolator * SPanel::GetScrollInterpolator() const
 	{
+		if (m_fadeFrames > 0 && !m_fadeInterpolator)
+		{
+			m_fadeInterpolator = CREATEINTERPOLATOR(L"Accelerate");
+		}
 		return m_fadeInterpolator;
 	}
 
@@ -172,7 +176,7 @@ SPanel::SPanel()
 	, m_zDelta(0)
 	, m_sbVert(this,true)
 	, m_sbHorz(this,false)
-	, m_fadeFrames(20)
+	, m_fadeFrames(0)
 	, m_bySbThumbTrackMinAlpha(128)
 {
 	m_nSbWid.setInvalid();
