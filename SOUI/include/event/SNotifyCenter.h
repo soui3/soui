@@ -4,6 +4,9 @@
 #include <helper/SCriticalSection.h>
 
 #if _MSC_VER >= 1700	//VS2012
+#define ENABLE_RUNONUI
+#endif
+#ifdef ENABLE_RUNONUI
 #include <functional>
 // 将 闭包 传递到了 UI线程 
 // 所以 这里 尽量 将 相同类型的 处理 放到一起 执行  而不是分开调用。
@@ -114,8 +117,8 @@ namespace SOUI
 
 		SCriticalSection	m_cs;
 		SList<EventArgs *> m_ayncEvent;
-		
-#if _MSC_VER >= 1700	//VS2012
+#ifdef ENABLE_RUNONUI
+		SList < std::function<void(void)> * > m_asyncFuns;
 	public:
 		void RunOnUISync(std::function<void(void)> fn);
 		void RunOnUIAsync(std::function<void(void)> fn);

@@ -10,7 +10,7 @@ class SNotifyReceiver:public SNativeWnd
 {
 public:
 	enum{
-		UM_NOTIFYEVENT = (WM_USER+1000),
+		UM_RUNONUISYNC = (WM_USER+1000),
 		TIMERID_ASYNC = 100,
 	};
 
@@ -24,13 +24,13 @@ public:
 
 	}
 
-	LRESULT OnNotifyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+	LRESULT OnRunOnUISync(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 	void OnTimer(UINT_PTR uID);
 
 	BEGIN_MSG_MAP_EX(SNotifyReceiver)
 		MSG_WM_TIMER(OnTimer)
-		MESSAGE_HANDLER_EX(UM_NOTIFYEVENT, OnNotifyEvent)
+		MESSAGE_HANDLER_EX(UM_RUNONUISYNC, OnRunOnUISync)
 	END_MSG_MAP()
 
 protected:
@@ -38,27 +38,11 @@ protected:
 };
 
 
-LRESULT SNotifyReceiver::OnNotifyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
+LRESULT SNotifyReceiver::OnRunOnUISync(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-#if _MSC_VER >= 1700	//VS2012
-	switch (wParam)
-	{
-	case 1:
-		{
-			std::function<void(void)>* f = (std::function<void(void)>*)lParam;
-			(*f)();
-		}
-		break;
-	case 2:
-		{
-			std::function<void(void)>* f = (std::function<void(void)>*)lParam;
-			(*f)();
-			delete f;
-		}
-		break;
-	default:
-		break;
-	}
+#ifdef ENABLE_RUNONUI
+	std::function<void(void)>* f = (std::function<void(void)>*)lParam;
+	(*f)();
 #endif//_MSC_VER >= 1700	//VS2012
 	return 0;
 }
@@ -135,24 +119,39 @@ void SNotifyCenter::OnFireEvent( EventArgs *e )
 void SNotifyCenter::OnFireEvts()
 {
 	SList<EventArgs *> evts;
+#ifdef ENABLE_RUNONUI
+	SList< std::function<void(void)> *> cbs;
+#endif
 	{
 		SAutoLock lock(m_cs);
-		SPOSITION pos = m_ayncEvent.GetHeadPosition();
+		evts = m_ayncEvent;
+		m_ayncEvent.RemoveAll();
+#ifdef ENABLE_RUNONUI
+		cbs = m_asyncFuns;
+		m_asyncFuns.RemoveAll();
+#endif
+	}
+	{
+		SPOSITION pos = evts.GetHeadPosition();
 		while (pos)
 		{
-			EventArgs *e = m_ayncEvent.GetNext(pos);
-			evts.AddTail(e);
+			EventArgs *e = evts.GetNext(pos);
+			OnFireEvent(e);
+			e->Release();
 		}
-		m_ayncEvent.RemoveAll();
 	}
-
-	SPOSITION pos = evts.GetHeadPosition();
-	while(pos)
+#ifdef ENABLE_RUNONUI
 	{
-		EventArgs *e = evts.GetNext(pos);
-		OnFireEvent(e);
-		e->Release();
+		SPOSITION pos = cbs.GetHeadPosition();
+		while (pos)
+		{
+			std::function<void(void)>* f = cbs.GetNext(pos);
+			(*f)();
+			delete f;
+		}
 	}
+#endif
+
 }
 
 
@@ -183,15 +182,16 @@ bool SNotifyCenter::UnregisterEventMap( const ISlotFunctor &slot )
 	return false;
 }
 
-#if _MSC_VER >= 1700	//VS2012
+#ifdef ENABLE_RUNONUI
 void SNotifyCenter::RunOnUISync(std::function<void(void)> fn)
 {
-	m_pReceiver->SendMessage(SNotifyReceiver::UM_NOTIFYEVENT, 1, (LPARAM)&fn);
+	m_pReceiver->SendMessage(SNotifyReceiver::UM_RUNONUISYNC, 0, (LPARAM)&fn);
 }
 void SNotifyCenter::RunOnUIAsync(std::function<void(void)> fn)
 {
-	auto f = new std::function<void()>(std::move(fn));
-	m_pReceiver->PostMessage(SNotifyReceiver::UM_NOTIFYEVENT, 2, (LPARAM)f);
+	std::function<void(void)>* f = new std::function<void()>(std::move(fn));
+	SAutoLock lock(m_cs);
+	m_asyncFuns.AddTail(f);
 }
 #endif
 
