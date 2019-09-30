@@ -1153,6 +1153,12 @@ namespace SOUI
 		SPainter painter;
 		BeforePaint(pRT,painter);
 
+		CRect rcText;
+		GetTextRect(rcText);
+		if(rcText != rcClient && IsClipClient())
+		{
+			pRT->PushClipRect(rcText);
+		}
 		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
@@ -1186,6 +1192,10 @@ namespace SOUI
 		}
 		AfterPaint(pRT,painter);
 
+		if(rcText != rcClient && IsClipClient())
+		{
+			pRT->PopClip();
+		}
 		if(IsClipClient())
 		{
 			pRT->PopClip();
@@ -2293,6 +2303,7 @@ namespace SOUI
 
 	void SWindow::SetMatrix(const SMatrix & mtx)
 	{
+		InvalidateRect(NULL);
 		m_transform.setMatrix(mtx);
 		InvalidateRect(NULL);
 	}
