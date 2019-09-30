@@ -14,23 +14,24 @@
     <!-- Soui的属性-->
     <Attribute name="trCtx" default="" type="STRING" comment="在语言翻译时作为context使用 xml名称"/>
     <Attribute name="title" default="SOUI-DEMO" type="STRING" comment="窗口标题 只能在STabCtrl中使用"/>
-    <Attribute name="bigIcon" default="ICON_LOGO:32" type="STRING" comment="标题栏大图标 格式：iconname:size"/>
-    <Attribute name="smallIcon" default="ICON_LOGO:16" type="STRING" comment="标题栏小图标 格式:iconname:size"/>
-    <Attribute name="width" default="666" type="INT" comment="窗口预设的宽度，如(666)  自动计算就设置为-1"/>
-    <Attribute name="height" default="400" type="INT" comment="窗口预设的高度，如(400) 自动计算就设置为-1"/>
-    <Attribute name="wndType" default="undefine" type="STRING" comment="窗口类型傎为 appMain 为主窗口 undefine 未定义 normal常规窗口"/>
-    <Attribute name="wndStyle" default="0" type="STRING" comment="窗口样式"/>
+	<Attribute name="maxInset" default="0,0,0,0" type="RECT" comment="窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效"/>
+	<Attribute name="margin" default="10,10,10,10" type="INT" comment="拉伸窗口感应区大小"/>
+	<Attribute name="minsize" default="0,0,0,0" type="RECT" comment="窗口最小值"/>	
+	<Attribute name="wndStyle" default="0" type="STRING" comment="窗口样式"/>
     <Attribute name="wndStyleEx" default="0" type="DWORD" comment="窗口扩展样式"/>
-    <Attribute name="margin" default="10,10,10,10" type="INT" comment="拉伸窗口感应区大小"/>
-    <Attribute name="resizable" default="1" type="INT" comment="窗口是否可以改变大小 1 可以改变  0不可以改变"/>
+	<Attribute name="resizable" default="1" type="INT" comment="窗口是否可以改变大小 1 可以改变  0不可以改变"/>
     <Attribute name="translucent" default="1" type="INT" comment="窗口透明此属性子窗口不能使用真窗口  0不透明  1透明"/>
     <Attribute name="sendWheel2Hover" default="1" type="INT" comment="发送鼠标滚轮消息发送到 hover 窗口 1发送  0不发送"/>
-    <Attribute name="alpha" default="255" type="INT" comment="窗口的alpha值(0-255),0为完全透明"/>
-    <Attribute name="toolwindow" default="1" type="INT" comment="窗口对应 WS_EX_TOOLWINDOW"/>
     <Attribute name="appWnd" default="1" type="INT" comment="窗口是否为主窗口（主窗口关闭程序会退出），在任务栏上显示按钮 窗口对应 WS_EX_APPWINDOW"/>
+	<Attribute name="toolwindow" default="1" type="INT" comment="窗口对应 WS_EX_TOOLWINDOW"/>
+	<Attribute name="smallIcon" default="ICON_LOGO:16" type="STRING" comment="标题栏小图标 格式:iconname:size"/>
+	<Attribute name="bigIcon" default="ICON_LOGO:32" type="STRING" comment="标题栏大图标 格式：iconname:size"/>
+    <Attribute name="alpha" default="255" type="INT" comment="窗口的alpha值(0-255),0为完全透明"/>
     <Attribute name="allowSpy" default="1" type="INT" comment="是否允许 SouiSpy 探测窗口"/> 
+	<Attribute name="wndType" default="undefine" type="STRING" comment="窗口类型傎为 appMain 为主窗口 undefine 未定义 normal常规窗口"/>
+    <Attribute name="width" default="666" type="INT" comment="窗口预设的宽度，如(666)  自动计算就设置为-1"/>
+    <Attribute name="height" default="400" type="INT" comment="窗口预设的高度，如(400) 自动计算就设置为-1"/> 
     <Attribute name="size" default="0,0" type="SIZE" comment="窗口的初始化大小,如(800,500) 自动计算就设置为-1,1"/>
-    <Attribute name="maxInset" default="0,0,0,0" type="RECT" comment="窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效"/>
   </SOUI>
 
   <!-- 范例
@@ -324,7 +325,7 @@
     <Attribute name="vscrollbar" default="0" type="INT" comment="是不支持垂直的滚动条  0--禁止（默认）  1--允许"/>
     <Attribute name="autoHscroll" default="0" type="INT" comment="自动横向滚动  0--禁止（默认）  1--允许"/>
     <Attribute name="autoVscroll" default="0" type="INT" comment="自动垂直滚动  0--禁止（默认）  1--允许"/>
-    <Attribute name="multiLines" default="0" type="INT" comment="是否显示分割符  0--禁止（默认）  1--允许"/>
+    <Attribute name="multiLines" default="0" type="INT" comment=" 代表这个richedit支持多行显示。 是否显示分割符  0--禁止（默认）  1--允许"/>
     <Attribute name="readOnly" default="0" type="INT" comment="只读  0--禁止（默认）  1--允许"/>
     <Attribute name="wantReturn" default="0" type="INT" comment="支持回车键换行  0--禁止（默认）  1--允许"/>
     <Attribute name="password" default="0" type="INT" comment="密码输入类型  0--否（默认）  1--是"/>
@@ -453,8 +454,9 @@
     <Attribute name="checkSkin" default="skin_tree_icon" type="STRING" comment="复选框皮肤 属性值为BUILDIN_SKIN_NAME "/>
     <Attribute name="colorItemBkgnd" default="#0000ff" type="COLOR" comment="子项未选中时候的颜色"/>
     <Attribute name="colorItemSelBkgnd" default="#0000ff" type="COLOR" comment="选中背景色"/>
-    <Attribute name="colorText" default="#0000ff" type="COLOR" comment="文字颜色"/>
-    <Attribute name="colorSelText" default="rgb(255,0,0)" type="COLOR" comment="选中文字时的颜色"/>
+     <Attribute name="colorItemText" default="#0000ff" type="COLOR" comment="文字颜色"/>
+    <Attribute name="colorItemSelText" default="rgb(255,0,0)" type="COLOR" comment="选中文字时的颜色"/>
+	<Attribute name="hasLines" default="0" type="INT" comment="是否有虚线 0--没有 1--有(默认) "/>
   </treectrl>
 
   <!-- 范例  树形控件  子项在xml里面写 treeview的列表项可以由XML定义。treectrl不行
@@ -696,6 +698,20 @@
 
 
 
+ps:
+soui2升级到soui3 需要修改的点
+1 修改环境变量 去系统变量那边吧SOUIPATH的地址改为soui3的路径
+2 直接替换
+
+
+error :
+无法打开包括文件: “event/notifycenter.h”:
+answer
+搜索项目中的notifycenter.h   改为 SNotifyCenter.h
+
+
+error C1083: 无法打开包括文件: “core\SimpleWnd.h”: No such file or directory
+搜索项目中的SimpleWnd.h   改为 SNativeWnd.h
 
 
 
