@@ -228,13 +228,7 @@ namespace SOUI
 	{
 		LRESULT lResult = 0;
 
-		if ( Msg < WM_USER
-			&& Msg != WM_DESTROY
-			&& Msg != WM_CLOSE
-			)
-		{
-			TestMainThread();
-		}
+		ASSERT_UI_THREAD();
 		AddRef();
 		SWNDMSG msgCur= {Msg,wParam,lParam};
 		SWNDMSG *pOldMsg=m_pCurMsg;
@@ -269,7 +263,7 @@ namespace SOUI
 
 	void SWindow::Move(LPCRECT prect)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 
 		if(prect)
 		{
@@ -310,7 +304,7 @@ namespace SOUI
 	// Modify SWindow state
 	DWORD SWindow::ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate/*=FALSE*/)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 
 		DWORD dwOldState = m_dwState;
 
@@ -319,12 +313,14 @@ namespace SOUI
 		dwNewState |= dwStateAdd;
 
 		OnStateChanging(dwOldState,dwNewState);
-
 		m_dwState = dwNewState;
-
-		MarkCacheDirty(true);
 		OnStateChanged(dwOldState,dwNewState);
-		if(bUpdate && NeedRedrawWhenStateChange()) InvalidateRect(GetWindowRect());
+
+		if(bUpdate && NeedRedrawWhenStateChange()) 
+		{
+			MarkCacheDirty(true);
+			InvalidateRect(GetWindowRect());
+		}
 		return dwOldState;
 	}
 
@@ -398,7 +394,7 @@ namespace SOUI
 
 	BOOL SWindow::DestroyWindow()
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(!GetParent()) 
 		{
 			SSendMessage(WM_DESTROY);
@@ -413,7 +409,7 @@ namespace SOUI
 
 	BOOL SWindow::DestroyChild(SWindow *pChild)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(this != pChild->GetParent())
 			return FALSE;
 		if(pChild->m_isDestroying)
@@ -432,7 +428,7 @@ namespace SOUI
 
 	void SWindow::InsertChild(SWindow *pNewChild,SWindow *pInsertAfter/*=ICWND_LAST*/)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(pNewChild->m_pParent == this) 
 			return;
 
@@ -491,7 +487,7 @@ namespace SOUI
 
 	BOOL SWindow::RemoveChild(SWindow *pChild)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(this != pChild->GetParent()) 
 			return FALSE;
 
@@ -569,7 +565,7 @@ namespace SOUI
 
 	void SWindow::SetContainer(ISwndContainer *pContainer)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		m_pContainer=pContainer;
 
 		SWindow *pChild=GetWindow(GSW_FIRSTCHILD);
@@ -688,7 +684,7 @@ namespace SOUI
 
 	BOOL SWindow::CreateChildren(pugi::xml_node xmlNode)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		for (pugi::xml_node xmlChild=xmlNode.first_child(); xmlChild; xmlChild=xmlChild.next_sibling())
 		{
 			if(xmlChild.type() != pugi::node_element) continue;
@@ -803,7 +799,7 @@ namespace SOUI
 	// Create SWindow from xml element
 	BOOL SWindow::InitFromXml(pugi::xml_node xmlNode)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		SASSERT(m_pContainer);
 		if (xmlNode)
 		{
@@ -960,13 +956,7 @@ namespace SOUI
 
 					MarkCacheDirty(false);
 				}
-				CRect rcClip , rcInter;
-				pRT->GetClipBox(&rcClip);
-				rcInter.IntersectRect(rcClip,rcWnd);
-				if(!rcInter.IsRectEmpty())
-				{
-					pRT->AlphaBlend(rcInter, pRTCache, rcInter, 255);
-				}
+				pRT->AlphaBlend(rcWnd, pRTCache, rcWnd, 255);
 			}
 		}else
 		{
@@ -1262,7 +1252,7 @@ namespace SOUI
 	//当前函数中的参数包含zorder,为了保证传递进来的zorder是正确的,必须在外面调用zorder重建.
 	void SWindow::_PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if (!IsVisible(TRUE))
 			return;
 		BeforePaintEx(pRT);
@@ -1271,7 +1261,7 @@ namespace SOUI
 
 	void SWindow::RedrawRegion(IRenderTarget *pRT, IRegion *pRgn)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if (!IsVisible(TRUE))
 			return;
 		_PaintRegion2(pRT, pRgn, (UINT)ZORDER_MIN, (UINT)ZORDER_MAX);
@@ -1304,7 +1294,7 @@ namespace SOUI
 
 	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
 
 		//只能更新窗口有效区域
@@ -1368,7 +1358,7 @@ namespace SOUI
 
 	bool SWindow::AdjustZOrder(SWindow *pInsertAfter)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		SWindow *pParent=GetParent();
 		if(!pParent)
 			return true;
@@ -1390,7 +1380,7 @@ namespace SOUI
 
 	BOOL SWindow::FireEvent(EventArgs &evt)
 	{
-		TestMainThread();
+		ASSERT_UI_THREAD();
 		if(m_evtSet.isMuted()) return FALSE;
 
 		//调用事件订阅的处理方法
@@ -2450,6 +2440,15 @@ namespace SOUI
 		return evt.bCancel;
 	}
 
+	bool SWindow::IsCacheDirty() const
+	{
+		return m_bCacheDirty && IsDrawToCache();
+	}
+
+	void SWindow::MarkCacheDirty(bool bDirty)
+	{
+		m_bCacheDirty = bDirty;
+	}
 	//////////////////////////////////////////////////////////////////////////
 
 	HRESULT SWindow::OnAttrVisible( const SStringW& strValue, BOOL bLoading )
