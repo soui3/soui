@@ -70,10 +70,10 @@ uint8_t SMatrix::computePerspectiveTypeMask() const {
         // transform flags - this does not disable any optimizations, respects
         // the rule that the type mask must be conservative, and speeds up
         // type mask computation.
-        return SkToU8(kORableMasks);
+        return SiToU8(kORableMasks);
     }
 
-    return SkToU8(kOnlyPerspectiveValid_Mask | kUnknown_Mask);
+    return SiToU8(kOnlyPerspectiveValid_Mask | kUnknown_Mask);
 }
 
 uint8_t SMatrix::computeTypeMask() const {
@@ -82,7 +82,7 @@ uint8_t SMatrix::computeTypeMask() const {
     if (fMat[kMPersp0] != 0 || fMat[kMPersp1] != 0 || fMat[kMPersp2] != 1) {
         // Once it is determined that that this is a perspective transform,
         // all other flags are moot as far as optimizations are concerned.
-        return SkToU8(kORableMasks);
+        return SiToU8(kORableMasks);
     }
 
     if (fMat[kMTransX] != 0 || fMat[kMTransY] != 0) {
@@ -134,7 +134,7 @@ uint8_t SMatrix::computeTypeMask() const {
         mask |= (m00 & m11) << kRectStaysRect_Shift;
     }
 
-    return SkToU8(mask);
+    return SiToU8(mask);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

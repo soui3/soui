@@ -8,8 +8,9 @@
 #ifndef _SPoint_DEFINED_
 #define _SPoint_DEFINED_
 
-#include "Sfloat.h"
 #include <interface/SRender-i.h>
+#include <matrix/SFloat.h>
+
 namespace SOUI{
 
 struct SOUI_EXP SPoint : public fPoint {
@@ -47,18 +48,12 @@ struct SOUI_EXP SPoint : public fPoint {
     /** Set the point's X and Y coordinates by automatically promoting (x,y) to
         float values.
     */
-    void iset(int32_t x, int32_t y) {
-        fX = SkIntToScalar(x);
-        fY = SkIntToScalar(y);
-    }
+    void iset(int32_t x, int32_t y);
 
     /** Set the point's X and Y coordinates by automatically promoting p's
         coordinates to float values.
     */
-    void iset(const POINT & p) {
-        fX = SkIntToScalar(p.x);
-        fY = SkIntToScalar(p.y);
-    }
+    void iset(const POINT & p);
 
     /** Return the euclidian distance from (0,0) to the point
     */
@@ -116,18 +111,11 @@ struct SOUI_EXP SPoint : public fPoint {
 
     /** Returns the dot product of a and b, treating them as 2D vectors
     */
-    static float DotProduct(const SPoint& a, const SPoint& b) {
-        return a.fX * b.fX + a.fY * b.fY;
-    }
-    float dot(const SPoint& vec) const {
-        return DotProduct(*this, vec);
-    }
+    static float DotProduct(const SPoint& a, const SPoint& b);
 
-	POINT toPoint() const
-	{
-		POINT pt = {SFloatRoundToInt(fX),SFloatRoundToInt(fY)};
-		return pt;
-	}
+    float dot(const SPoint& vec) const;
+
+	POINT toPoint() const;
 };
 
 typedef SPoint SVector2D;

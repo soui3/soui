@@ -131,7 +131,7 @@ public:
      *  Returns true if the matrix contains perspective elements.
      */
     bool hasPerspective() const {
-        return SkToBool(this->getPerspectiveTypeMaskOnly() &
+        return SToBool(this->getPerspectiveTypeMaskOnly() &
                         kPerspective_Mask);
     }
 
@@ -644,12 +644,12 @@ private:
         SASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
                  ((kUnknown_Mask | kOnlyPerspectiveValid_Mask) & mask)
                  == (kUnknown_Mask | kOnlyPerspectiveValid_Mask));
-        fTypeMask = SkToU8(mask);
+        fTypeMask = SiToU8(mask);
     }
 
     void orTypeMask(int mask) {
         SASSERT((mask & kORableMasks) == mask);
-        fTypeMask = SkToU8(fTypeMask | mask);
+        fTypeMask = SiToU8(fTypeMask | mask);
     }
 
     void clearTypeMask(int mask) {
