@@ -640,18 +640,9 @@ private:
     uint8_t computeTypeMask() const;
     uint8_t computePerspectiveTypeMask() const;
 
-    void setTypeMask(int mask) {
-        // allow kUnknown or a valid mask
-        SASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
-                 ((kUnknown_Mask | kOnlyPerspectiveValid_Mask) & mask)
-                 == (kUnknown_Mask | kOnlyPerspectiveValid_Mask));
-        fTypeMask = SiToU8(mask);
-    }
+    void setTypeMask(int mask);
 
-    void orTypeMask(int mask) {
-        SASSERT((mask & kORableMasks) == mask);
-        fTypeMask = SiToU8(fTypeMask | mask);
-    }
+    void orTypeMask(int mask);
 
     void clearTypeMask(int mask) {
         // only allow a valid mask
