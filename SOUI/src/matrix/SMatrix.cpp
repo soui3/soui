@@ -24,6 +24,7 @@
 // chrome's layouttests.
 //
 #define SK_LEGACY_MATRIX_MATH_ORDER
+#define SiToU8(x)   ((uint8_t)(x))
 
 namespace SOUI{
 static inline float SkDoubleToFloat(double x) {
@@ -1614,4 +1615,20 @@ SMatrix &SMatrix::operator=(const SMatrix &src)
 	fTypeMask = src.fTypeMask;
 	return *this;
 }
+
+void SMatrix::setTypeMask(int mask)
+{
+	// allow kUnknown or a valid mask
+	SASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
+		((kUnknown_Mask | kOnlyPerspectiveValid_Mask) & mask)
+		== (kUnknown_Mask | kOnlyPerspectiveValid_Mask));
+	fTypeMask = SiToU8(mask);
+}
+
+void SMatrix::orTypeMask(int mask)
+{
+	SASSERT((mask & kORableMasks) == mask);
+	fTypeMask = SiToU8(fTypeMask | mask);
+}
+
 }//end of namespace SOUI
