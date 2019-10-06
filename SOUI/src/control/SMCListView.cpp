@@ -76,7 +76,15 @@ namespace SOUI
             SASSERT_FMT(FALSE,_T("error: A item locator is in need before setting adapter!!!"));
             return FALSE;
         }
-
+		if(m_adapter == adapter)
+		{
+			SLOG_WARN("the new adapter is same to previous set adapter, same as notifyDatasetChanged");
+			if(m_adapter)
+			{
+				onDataSetChanged();
+			}
+			return TRUE;
+		}
         if(m_adapter)
         {
             m_adapter->unregisterDataSetObserver(m_observer);

@@ -13,6 +13,7 @@
 #include "SRect.h"
 
 #include <interface/SRender-i.h>
+#define SToBool(cond)  ((cond) != 0)
 
 namespace SOUI{
 

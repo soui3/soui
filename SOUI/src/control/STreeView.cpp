@@ -410,6 +410,15 @@ namespace SOUI
 		{
 			m_adapter->unregisterDataSetObserver(m_observer);
 		}
+		if(m_adapter == adapter)
+		{
+			SLOG_WARN("the new adapter is same to previous set adapter, same as onBranchChanged");
+			if(m_adapter)
+			{
+				onBranchChanged(ITvAdapter::ITEM_ROOT);
+			}
+			return TRUE;
+		}
 		m_adapter = adapter;
 		if (m_adapter)
 		{
