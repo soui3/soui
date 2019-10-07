@@ -56,6 +56,7 @@ namespace SOUI
 			ATTR_CUSTOM(L"size",OnAttrSize)
 			ATTR_GRIDGRAVITY(L"layout_xGravity",layoutGravityX,TRUE)
 			ATTR_GRIDGRAVITY(L"layout_yGravity",layoutGravityY,TRUE)
+			ATTR_GRIDGRAVITY(L"layout_gravity",layoutGravityX=layoutGravityY,TRUE)
 			ATTR_FLOAT(L"columnWeight",fColWeight,TRUE)
 			ATTR_FLOAT(L"rowWeight",fRowWeight,TRUE)
 		SOUI_ATTRS_BREAK()
