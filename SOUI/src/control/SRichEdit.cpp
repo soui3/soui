@@ -1616,22 +1616,24 @@ HRESULT SRichEdit::OnAttrAutoVscrollBar(const SStringW & strValue,BOOL bLoading)
 HRESULT SRichEdit::OnAttrMultiLines(const SStringW & strValue,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
+	DWORD dwBit = 0;
 	if(!bValue)
 		m_dwStyle&=~ES_MULTILINE;
 	else
-		m_dwStyle|=ES_MULTILINE;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_MULTILINE,TXTBIT_MULTILINE);
+		m_dwStyle|=ES_MULTILINE,dwBit = TXTBIT_MULTILINE;
+	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_MULTILINE,dwBit);
 	return bLoading?S_FALSE:S_OK;
 }
 
 HRESULT SRichEdit::OnAttrReadOnly(const SStringW & strValue,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
+	DWORD dwBit = 0;
 	if(!bValue)
 		m_dwStyle&=~ES_READONLY;
 	else
-		m_dwStyle|=ES_READONLY;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_READONLY,TXTBIT_READONLY);
+		m_dwStyle|=ES_READONLY,dwBit = TXTBIT_READONLY;
+	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_READONLY,dwBit);
 	return bLoading?S_FALSE:S_OK;
 
 }
@@ -1649,11 +1651,12 @@ HRESULT SRichEdit::OnAttrWantReturn(const SStringW & strValue,BOOL bLoading)
 HRESULT SRichEdit::OnAttrPassword(const SStringW & strValue,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
+	DWORD dwBit = 0;
 	if(!bValue)
 		m_dwStyle&=~ES_PASSWORD;
 	else
-		m_dwStyle|=ES_PASSWORD;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_USEPASSWORD,TXTBIT_USEPASSWORD);
+		m_dwStyle|=ES_PASSWORD,dwBit = TXTBIT_USEPASSWORD;
+	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_USEPASSWORD,dwBit);
 	return bLoading?S_FALSE:S_OK;
 
 }
