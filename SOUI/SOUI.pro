@@ -139,7 +139,6 @@ HEADERS += include/SApp.h \
            include/helper/SwndFinder.h \
            include/helper/SwndMsgCracker.h \
            include/helper/swndspy.h \
-           include/interface/imgdecoder-i.h \
            include/interface/sacchelper-i.h \
            include/interface/saccproxy-i.h \
            include/interface/SAdapter-i.h \
@@ -176,7 +175,6 @@ HEADERS += include/SApp.h \
            include/matrix/SMatrix.h \
            include/matrix/SPoint.h \
            include/matrix/SRect.h \
-           include/matrix/STypes.h \
            include/msaa/SAccProxyCmnCtrl.h \
            include/msaa/SAccProxyWindow.h \
            include/res.mgr/SDpiAwareFont.h \

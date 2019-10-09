@@ -20,6 +20,8 @@ namespace SOUI
 			SASSERT(pTabCtrl);
 			SASSERT(pInterpolator);
 
+			pTabCtrl->GetRoot()->UpdateLayout();
+
 			CRect rcPage = pTabCtrl->GetChildrenLayoutRect();
 			if (nType == 0)
 			{				
@@ -135,7 +137,6 @@ namespace SOUI
 						pt.x = pt.y = 0;
 						m_nFrom = 0;
 						m_nTo = rcPage.Height();
-						//m_nAniRange = rcPage.Height();
 					}
 					else
 					{// move down
@@ -143,7 +144,6 @@ namespace SOUI
 						m_ptOffset.y = rcPage.Height();
 						m_nFrom = rcPage.Height();
 						m_nTo = 0;
-						//m_nAniRange = -rcPage.Height();
 					}
 				}
 				else
@@ -153,7 +153,6 @@ namespace SOUI
 						pt.x = pt.y = 0;
 						m_nFrom = 0;
 						m_nTo = rcPage.Width();
-						//m_nAniRange = rcPage.Width();
 					}
 					else
 					{
@@ -161,7 +160,6 @@ namespace SOUI
 						m_ptOffset.x = rcPage.Width();
 						m_nFrom = rcPage.Width();
 						m_nTo = 0;
-						//m_nAniRange = -rcPage.Width();
 					}
 				}
 				pt -= rcPage.TopLeft();
@@ -238,7 +236,6 @@ namespace SOUI
 		void OnPaint(IRenderTarget *pRT)
 		{
 			CRect rcWnd = GetWindowRect();
-			//pRT->BitBlt(rcWnd, m_memRT, m_ptOffset.x, m_ptOffset.y, SRCCOPY);
 			CRect rcSrc(m_ptOffset.x, m_ptOffset.y, m_ptOffset.x + rcWnd.Width(), m_ptOffset.y + rcWnd.Height());
 			pRT->AlphaBlend(rcWnd, m_memRT, rcSrc, 255);
 		}
@@ -247,7 +244,6 @@ namespace SOUI
 		{
 			SWindow::OnSize(fType, sz);
 			if (!m_memRT) return;
-			//resize slidewnd as animitor running, just stop the animation
 			Stop();
 		}
 
@@ -259,7 +255,6 @@ namespace SOUI
 
 		SAutoRefPtr<IRenderTarget> m_memRT;
 		CPoint                     m_ptOffset;
-		//int                        m_nAniRange;
 		int						   m_nFrom,m_nTo;
 		int                        m_nSteps;
 		int                        m_iStep;
@@ -308,45 +303,47 @@ void STabCtrl::OnPaint(IRenderTarget *pRT)
     SPainter painter;
     BeforePaint(pRT,painter);
     
-    CRect rcItem,rcItemPrev;
-    CRect rcSplit;
-    DWORD dwState;
     CRect rcTitle=GetTitleRect();
-    
 
-    pRT->PushClipRect(&rcTitle,RGN_AND);
+	if(!rcTitle.IsRectEmpty())
+	{
+		CRect rcItem,rcItemPrev;
+		CRect rcSplit;
+		DWORD dwState;
 
-    for(int i=0; i<(int)GetItemCount(); i++)
-    {
-        dwState=WndState_Normal;
-        if(i == m_nCurrentPage) dwState=WndState_PushDown;
-        else if(i== m_nHoverTabItem) dwState=WndState_Hover;
+		pRT->PushClipRect(&rcTitle,RGN_AND);
 
-        GetItemRect(i,rcItem);
-		if(rcItem.IsRectEmpty()) continue;
+		for(int i=0; i<(int)GetItemCount(); i++)
+		{
+			dwState=WndState_Normal;
+			if(i == m_nCurrentPage) dwState=WndState_PushDown;
+			else if(i== m_nHoverTabItem) dwState=WndState_Hover;
 
-        //画分隔线
-        if(i>0 && m_pSkinTabInter)
-        {
-            rcSplit=rcItem;
-            if(m_nTabAlign==AlignLeft)
-            {
-                rcSplit.top=rcItemPrev.bottom;
-                rcSplit.bottom = rcSplit.top + m_nTabInterSize.toPixelSize(GetScale());
-            }
-            else
-            {
-                rcSplit.left=rcItemPrev.right;
-                rcSplit.right=rcSplit.left + m_nTabInterSize.toPixelSize(GetScale());
-            }
-            m_pSkinTabInter->DrawByIndex(pRT,rcSplit,0);
-        }
+			GetItemRect(i,rcItem);
+			if(rcItem.IsRectEmpty()) continue;
 
-        DrawItem(pRT,rcItem,i,dwState);
-        rcItemPrev=rcItem;
-    }
-    pRT->PopClip();
-    
+			//画分隔线
+			if(i>0 && m_pSkinTabInter)
+			{
+				rcSplit=rcItem;
+				if(m_nTabAlign==AlignLeft)
+				{
+					rcSplit.top=rcItemPrev.bottom;
+					rcSplit.bottom = rcSplit.top + m_nTabInterSize.toPixelSize(GetScale());
+				}
+				else
+				{
+					rcSplit.left=rcItemPrev.right;
+					rcSplit.right=rcSplit.left + m_nTabInterSize.toPixelSize(GetScale());
+				}
+				m_pSkinTabInter->DrawByIndex(pRT,rcSplit,0);
+			}
+
+			DrawItem(pRT,rcItem,i,dwState);
+			rcItemPrev=rcItem;
+		}
+		pRT->PopClip();
+	}
     if (m_pSkinFrame)
     {
         CRect rcPage = GetChildrenLayoutRect();

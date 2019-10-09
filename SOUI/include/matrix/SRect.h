@@ -14,6 +14,12 @@
 
 namespace SOUI{
 
+template <typename T> inline void STSwap(T& a, T& b) {
+	T c(a);
+	a = b;
+	b = c;
+}
+
 /** \struct SkRect
 */
 struct SOUI_EXP SRect : public fRect {

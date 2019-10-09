@@ -8,7 +8,7 @@
 #ifndef _SFloat_DEFINED_
 #define _SFloat_DEFINED_
 
-#include "STypes.h"
+#include <stdint.h>
 #include <math.h>
 
 #define sk_float_sqrt(x)        sqrtf(x)

@@ -68,6 +68,22 @@ bool SColorParser::ParseValue(const SStringW & strValue, COLORREF & value)
     if(strValueL.Left(1)==L"#")
     {
         nSeg = swscanf(strValueL,L"#%02x%02x%02x%02x",&r,&g,&b,&a);
+    }else if(strValueL.Left(5).CompareNoCase(L"rgba2")==0)
+    {
+		float  percent=100.0f;
+        nSeg = swscanf(strValueL,L"rgba2(%d,%d,%d,%f%%)",&r,&g,&b,&percent);
+		if(nSeg == 4)
+		{
+			a = (int)(percent*255/100);
+		}
+    }else if(strValueL.Left(5).CompareNoCase(L"rgba3")==0)
+    {
+		float  ratio=1.0f;
+        nSeg = swscanf(strValueL,L"rgba3(%d,%d,%d,%f)",&r,&g,&b,&ratio);
+		if(nSeg == 4)
+		{
+			a = (int)(ratio*255);
+		}
     }else if(strValueL.Left(4).CompareNoCase(L"rgba")==0)
     {
         nSeg = swscanf(strValueL,L"rgba(%d,%d,%d,%d)",&r,&g,&b,&a);                

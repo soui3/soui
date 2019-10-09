@@ -43,6 +43,12 @@
 #define UM_SETLANGUAGE   (WM_USER+1001)
 #define UM_SETCOLORIZE	 (WM_USER+1002)
 
+#ifdef _DEBUG
+#define ASSERT_UI_THREAD() SOUI::SWindow::TestMainThread()
+#else 
+#define ASSERT_UI_THREAD() 
+#endif
+
 namespace SOUI
 {
 
@@ -1195,7 +1201,7 @@ namespace SOUI
         * @return   bool -- true表示Cache已经Dirty
         * Describe  
         */    
-        bool IsCacheDirty() const  {return IsDrawToCache()&&m_bCacheDirty;}
+        bool IsCacheDirty() const;
         
         /**
         * MarkCacheDirty
@@ -1204,7 +1210,7 @@ namespace SOUI
         * @return   void
         * Describe  
         */    
-        void MarkCacheDirty(bool bDirty) {m_bCacheDirty = bDirty;}
+        void MarkCacheDirty(bool bDirty);
 
 
 		/**

@@ -24,6 +24,7 @@
 // chrome's layouttests.
 //
 #define SK_LEGACY_MATRIX_MATH_ORDER
+#define SiToU8(x)   ((uint8_t)(x))
 
 namespace SOUI{
 static inline float SkDoubleToFloat(double x) {
@@ -70,10 +71,10 @@ uint8_t SMatrix::computePerspectiveTypeMask() const {
         // transform flags - this does not disable any optimizations, respects
         // the rule that the type mask must be conservative, and speeds up
         // type mask computation.
-        return SkToU8(kORableMasks);
+        return SiToU8(kORableMasks);
     }
 
-    return SkToU8(kOnlyPerspectiveValid_Mask | kUnknown_Mask);
+    return SiToU8(kOnlyPerspectiveValid_Mask | kUnknown_Mask);
 }
 
 uint8_t SMatrix::computeTypeMask() const {
@@ -82,7 +83,7 @@ uint8_t SMatrix::computeTypeMask() const {
     if (fMat[kMPersp0] != 0 || fMat[kMPersp1] != 0 || fMat[kMPersp2] != 1) {
         // Once it is determined that that this is a perspective transform,
         // all other flags are moot as far as optimizations are concerned.
-        return SkToU8(kORableMasks);
+        return SiToU8(kORableMasks);
     }
 
     if (fMat[kMTransX] != 0 || fMat[kMTransY] != 0) {
@@ -134,7 +135,7 @@ uint8_t SMatrix::computeTypeMask() const {
         mask |= (m00 & m11) << kRectStaysRect_Shift;
     }
 
-    return SkToU8(mask);
+    return SiToU8(mask);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1614,4 +1615,20 @@ SMatrix &SMatrix::operator=(const SMatrix &src)
 	fTypeMask = src.fTypeMask;
 	return *this;
 }
+
+void SMatrix::setTypeMask(int mask)
+{
+	// allow kUnknown or a valid mask
+	SASSERT(kUnknown_Mask == mask || (mask & kAllMasks) == mask ||
+		((kUnknown_Mask | kOnlyPerspectiveValid_Mask) & mask)
+		== (kUnknown_Mask | kOnlyPerspectiveValid_Mask));
+	fTypeMask = SiToU8(mask);
+}
+
+void SMatrix::orTypeMask(int mask)
+{
+	SASSERT((mask & kORableMasks) == mask);
+	fTypeMask = SiToU8(fTypeMask | mask);
+}
+
 }//end of namespace SOUI

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="soui3"
-	ProjectGUID="{EC46199C-BB5C-3F86-95A1-452AD3EFC902}"
+	ProjectGUID="{A278536F-80DF-3C47-A1FD-14BAACB6B8C6}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -591,8 +591,6 @@
 			<File
 				RelativePath="include\interface\STreeViewItemLocator-i.h" />
 			<File
-				RelativePath="include\matrix\STypes.h" />
-			<File
 				RelativePath="include\res.mgr\SUiDef.h" />
 			<File
 				RelativePath="include\helper\SUnknown.h" />
@@ -630,8 +628,6 @@
 				RelativePath="include\helper\SwndMsgCracker.h" />
 			<File
 				RelativePath="include\valueAnimator\TypeEvaluator.h" />
-			<File
-				RelativePath="include\interface\imgdecoder-i.h" />
 			<File
 				RelativePath="include\interface\sacchelper-i.h" />
 			<File
