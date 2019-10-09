@@ -4,7 +4,9 @@
   <red value="rgb(255,0,0)"/>
   <green value="rgb(0,255,0)"/>
   <blue value="rgb(0,0,255)"/>
-  <white value="rgb(255,255,255)"/>
+  <white value="rgba(255,255,255)"/>
+  <white_30 value="rgba2(255,255,255,30%)"/>
+  <white_50 value="rgba3(255,255,255,0.5)"/>
   <gray value="#808080"/>
 </color> 
  
