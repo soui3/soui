@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="soui属性列表.xslt"?>
-<soui_property soui_ver="2.9">
+<soui_property soui_ver="3.0">
   <doc_ver>
+    <ver name="0.3" date="2019年10月9日" author="智力糖" comment="*树形控件 的属性修改  *富文本框的多行显示属性修改*SOUI主节点属性修改"/>
     <ver name="0.2" date="2019年5月23日" author="智力糖" comment="新增了四个控件的注释"/>
-    <ver name="0.1" date="2019年5月21日" author="智力糖" email="zhichao281@163.com"/>
+    <ver name="0.1" date="2019年5月21日" author="智力糖" comment="初始版本"/>/>
   </doc_ver>
   <!-- 范例
 <SOUI trCtx="dlg_main"   title="SOUI-DEMO"   bigIcon="ICON_LOGO:32"  smallIcon="ICON_LOGO:16"   width="666"  height="400"  wndType="appMain"  margin="10,10,10,10"
