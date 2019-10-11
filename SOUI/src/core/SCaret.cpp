@@ -7,7 +7,7 @@ namespace SOUI{
     SCaret::SCaret(ISwndContainer *pContainer)
 		:m_pContainer(pContainer)
 		,m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
-		,m_crCaret(RGBA(0,0,0,255)), m_nAniFrames(20),m_nShowFrames(10),m_bAniCaret(FALSE)
+		,m_crCaret(RGBA(0,0,0,255)), m_nAniFrames(20),m_nShowFrames(20),m_bAniCaret(FALSE)
     {
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
 	}
@@ -115,6 +115,10 @@ namespace SOUI{
 		{
 			m_bDrawCaret = TRUE;
 		}
+		if(bVisible)
+			m_pContainer->RegisterTimelineHandler(this);
+		else
+			m_pContainer->UnregisterTimelineHandler(this);
 		return TRUE;
 	}
 

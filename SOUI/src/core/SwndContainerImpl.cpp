@@ -470,7 +470,6 @@ void SwndContainerImpl::OnNextFrame()
 	if(!IsVisible(FALSE))
 		return;
 	m_timelineHandlerMgr.OnNextFrame();
-	m_caret->OnNextFrame();
 }
 
 }//namespace SOUI
