@@ -73,7 +73,7 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/__cmake/")
 include(__cmake/cotire.cmake)
 include(__cmake/internal_utils.cmake)
 include(__cmake/global.cmake)
-include(__cmake/soui-demo.cmake)
+include(__cmake/soui3-demo.cmake)
 
 
 option(USE_UNICODE "Use Unicode" ON)
