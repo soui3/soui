@@ -89,13 +89,6 @@ namespace SOUI
       }
 
       /**
-       * SHotKeyCtrl::OnCreate
-       * @brief    创建
-       *
-       * Describe  消息响应函数  
-       */  
-      int OnCreate(LPVOID);
-      /**
        * SHotKeyCtrl::OnLButtonDown
        * @brief    左键按下事件
        * @param    UINT nFlags -- 标志
@@ -175,7 +168,7 @@ namespace SOUI
 
       void UpdateModifier();
 
-      void UpdateCaret();
+      void UpdateCaret(IRenderTarget *pRT);
 
 	  UINT GetTextAlign();
 
@@ -187,7 +180,6 @@ namespace SOUI
       SOUI_ATTRS_END()
 
       SOUI_MSG_MAP_BEGIN()
-          MSG_WM_CREATE(OnCreate)
           MSG_WM_PAINT_EX(OnPaint)
           MSG_WM_LBUTTONDOWN(OnLButtonDown)
           MSG_WM_SETFOCUS_EX(OnSetFocus)
@@ -201,7 +193,6 @@ namespace SOUI
       WORD     m_wInvalidModifier; /**< 对无效组合键的替换方案,默认方案 */
 
       BOOL    m_bInSetting;        /**< 正在设置中 */
-      SAutoRefPtr<IFont> m_curFont;/**< 当前字体，用于计算文字大小 */
   };
 }
 //namespace SOUI

@@ -195,11 +195,15 @@ namespace SOUI
 		WORD wModifier = HIWORD(dwAccel);
 		WORD wVk = LOWORD(dwAccel);
 
-		if (wModifier == 0 && wVk == 0) return _T("无");
+		if (wModifier == 0 && wVk == 0)
+			return _T("无");
 		SStringT str;
-		if (wModifier & MOD_CONTROL) str = _T("Ctrl+");
-		if (wModifier & MOD_SHIFT) str += _T("Shift+");
-		if (wModifier & MOD_ALT) str += _T("Alt+");
+		if (wModifier & MOD_CONTROL)
+			str = _T("Ctrl+");
+		if (wModifier & MOD_SHIFT)
+			str += _T("Shift+");
+		if (wModifier & MOD_ALT)
+			str += _T("Alt+");
 
 		str += GetKeyName(wVk);
 		return str;

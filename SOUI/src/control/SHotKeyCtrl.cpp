@@ -18,18 +18,6 @@ SHotKeyCtrl::~SHotKeyCtrl(void)
 {
 }
 
-int SHotKeyCtrl::OnCreate( LPVOID )
-{
-    int nRet=__super::OnCreate(NULL);
-    if(nRet!=0) return nRet;
-    
-    SAutoRefPtr<IRenderTarget> pRT;
-    GETRENDERFACTORY->CreateRenderTarget(&pRT,0,0);
-    BeforePaintEx(pRT);
-    m_curFont=(IFont*)pRT->GetCurrentObject(OT_FONT);
-    return 0;
-}
-
 void SHotKeyCtrl::OnLButtonDown( UINT nFlags,CPoint pt )
 {
     __super::OnLButtonDown(nFlags,pt);
@@ -48,16 +36,11 @@ void SHotKeyCtrl::OnPaint( IRenderTarget * pRT )
     AfterPaint(pRT,painter);
 }
 
-void SHotKeyCtrl::UpdateCaret()
+void SHotKeyCtrl::UpdateCaret(IRenderTarget *pRT)
 {
     SStringT str=GetWindowText();
-    IRenderTarget *pRT=GetRenderTarget(NULL,GRT_NODRAW);
-    SAutoRefPtr<IFont> oldFont;
-    pRT->SelectObject(m_curFont,(IRenderObj**)&oldFont);
     SIZE szTxt;
     pRT->MeasureText(str,str.GetLength(),&szTxt);
-    pRT->SelectObject(oldFont);
-    ReleaseRenderTarget(pRT);
     
     CRect rcClient;
     GetTextRect(&rcClient);
@@ -84,17 +67,17 @@ UINT SHotKeyCtrl::GetTextAlign()
 void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 {
     IRenderTarget *pRT=GetRenderTarget(NULL,GRT_NODRAW);
-    SAutoRefPtr<IFont> oldFont;
-    pRT->SelectObject(m_curFont,(IRenderObj**)&oldFont);
+	BeforePaintEx(pRT);
     SIZE szTxt;
     pRT->MeasureText(_T("A"),1,&szTxt);
-    pRT->SelectObject(oldFont);
-    ReleaseRenderTarget(pRT);
     
     CreateCaret(NULL,1,szTxt.cy);
 
-    UpdateCaret();
-    GetContainer()->GetCaret()->SetVisible(true);
+    UpdateCaret(pRT);
+
+	ReleaseRenderTarget(pRT);
+	
+	GetContainer()->GetCaret()->SetVisible(true);
     
     __super::OnSetFocus(wndOld);
     
@@ -141,17 +124,22 @@ void SHotKeyCtrl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
     SStringT strKey=GetKeyName(nChar);
     if(!strKey.IsEmpty())
     {
-        //
         m_wVK=nChar;
     }
     UpdateModifier();
-    UpdateCaret();
+	IRenderTarget *pRT = GetRenderTarget(NULL, GRT_NODRAW);
+	BeforePaintEx(pRT);
+    UpdateCaret(pRT);
+	ReleaseRenderTarget(pRT);
     Invalidate();
 }
 
 void SHotKeyCtrl::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
     if(!m_bInSetting) return;
+
+	IRenderTarget *pRT = GetRenderTarget(NULL, GRT_NODRAW);
+	BeforePaintEx(pRT);
 
     if(nChar == m_wVK)
     {
@@ -161,15 +149,16 @@ void SHotKeyCtrl::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
     {
         m_bInSetting=FALSE;
         UpdateModifier();
-        UpdateCaret();
+        UpdateCaret(pRT);
         Invalidate();
     }
     else if(nChar==VK_SHIFT || nChar==VK_MENU || nChar== VK_CONTROL)
     {
         UpdateModifier();
-        UpdateCaret();
+        UpdateCaret(pRT);
         Invalidate();
     }
+	ReleaseRenderTarget(pRT);
 }
 
 void SHotKeyCtrl::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
@@ -194,7 +183,10 @@ void SHotKeyCtrl::SetHotKey( WORD vKey,WORD wModifiers )
 {
     m_wVK=vKey;
     m_wModifier=wModifiers;
-    UpdateCaret();
+	IRenderTarget *pRT = GetRenderTarget(NULL, GRT_NODRAW);
+	BeforePaintEx(pRT);
+    UpdateCaret(pRT);
+	ReleaseRenderTarget(pRT);
     Invalidate();
 }
 
