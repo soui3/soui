@@ -2,10 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="soui属性列表.xslt"?>
 <soui_property soui_ver="3.0">
   <doc_ver>
+    <ver name="0.4" date="2019年10月10日" author="智力糖" comment="颜色值定义增加了两个rgba2,rgba3"/>
     <ver name="0.3" date="2019年10月9日" author="智力糖" comment="*树形控件 的属性修改  *富文本框的多行显示属性修改*SOUI主节点属性修改"/>
     <ver name="0.2" date="2019年5月23日" author="智力糖" comment="新增了四个控件的注释"/>
     <ver name="0.1" date="2019年5月21日" author="智力糖" comment="初始版本"/>/>
-  </doc_ver>
+  </doc_ver>  
   <!-- 范例
 <SOUI trCtx="dlg_main"   title="SOUI-DEMO"   bigIcon="ICON_LOGO:32"  smallIcon="ICON_LOGO:16"   width="666"  height="400"  wndType="appMain"  margin="10,10,10,10"
       resizable="1"  translucent="1"  sendWheel2Hover="1"  alpha="255">
@@ -76,7 +77,7 @@
       <Attribute name="colorDownDisable" default="#cccccc" type="COLOR" comment="禁用状态的渐变色下颜色，格式:#rgba"/>
       <Attribute name="cornerPercent" default="0.5" type="DWORD" comment="圆角百分比，数值范围0-1"/>
     </button>
-    <colorrect comment="颜色样式">
+    <ccolorrect comment="颜色样式">
       <Attribute name="normal" default="#cccccc" type="COLOR" comment="无操作时颜色值，格式:#rgba"/>
       <Attribute name="hover" default="#cccccc" type="COLOR" comment="鼠标悬浮颜色，格式:#rgba"/>
       <Attribute name="pushdown" default="#cccccc" type="COLOR" comment="鼠标按下颜色，格式:#rgba"/>
@@ -121,6 +122,22 @@
   <Include  comment="包含文件">
     <Attribute name="src" default="layout:page_misc" type="STRING" comment="XML布局文件"/>
   </Include>
+  
+  <!-- 范例  颜色的设置
+<color>
+  <red value="rgb(255,0,0)"/>
+  <green value="rgb(0,255,0)"/>
+  <blue value="rgb(0,0,255)"/>
+  <white value="rgba(255,255,255)"/>
+  <white_30 value="rgba2(255,255,255,30%)"/>
+  <white_50 value="rgba3(255,255,255,0.5)"/>
+  <gray value="#808080"/>
+</color> 
+-->
+  <color  comment="颜色值设定">
+    <Attribute name="value" default="rgb(255,0,0)" type="STRING" comment="颜色值设定的几种方法"/>
+  </color>
+
 
   <!-- 范例 一般窗口控件 支持对style中的属性定制
    <window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1" colorBkgnd="#ffffff" alpha="100">
