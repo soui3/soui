@@ -4,8 +4,6 @@
 
 namespace SOUI
 {
-#define CX_HDITEM_MARGIN    4
-
 	SHeaderCtrl::SHeaderCtrl(void)
 		:m_bFixWidth(FALSE)
 		, m_bItemSwapEnable(TRUE)
@@ -15,6 +13,7 @@ namespace SOUI
 		, m_dwHitTest((DWORD)-1)
 		, m_bDragging(FALSE)
 		, m_hDragImg(NULL)
+		, m_nScale(100)
 	{
 		m_bClipClient = TRUE;
 		m_evtSet.addEvent(EVENTID(EventHeaderClick));
@@ -40,7 +39,7 @@ namespace SOUI
 		if (iItem == -1) iItem = (int)m_arrItems.GetCount();
 		SHDITEM item;
 		item.mask = 0xFFFFFFFF;
-		item.cx.setSize((float)nWidth, unit);
+		item.cx = nWidth;
 		item.strText.SetCtxProvider(this);
 		item.strText.SetText(pszText);
 		item.stFlag = stFlag;
@@ -102,7 +101,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx.toPixelSize(GetScale());
+			rcItem.right = rcItem.left + m_arrItems[i].cx;
 			DrawItem(pRT, rcItem, m_arrItems.GetData() + i);
 			if (rcItem.right >= rcClient.right) break;
 		}
@@ -179,7 +178,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx.toPixelSize(GetScale());
+			rcItem.right = rcItem.left + m_arrItems[i].cx;
 		}
 		return rcItem;
 	}
@@ -206,18 +205,19 @@ namespace SOUI
 	{
 		SetCapture();
 		m_ptClick = pt;
+
 		m_dwHitTest = HitTest(pt);
 		if (IsItemHover(m_dwHitTest))
 		{
 			if (m_bSortHeader)
 			{
-				m_arrItems[LOWORD(m_dwHitTest)].state = 2;//pushdown
+				m_arrItems[LOWORD(m_dwHitTest)].state = WndState_PushDown;
 				RedrawItem(LOWORD(m_dwHitTest));
 			}
 		}
 		else if (m_dwHitTest != -1)
 		{
-			m_nAdjItemOldWidth = m_arrItems[LOWORD(m_dwHitTest)].cx.toPixelSize(GetScale());
+			m_nAdjItemOldWidth = m_arrItems[LOWORD(m_dwHitTest)].cx;
 		}
 	}
 
@@ -233,7 +233,7 @@ namespace SOUI
 					DeleteObject(m_hDragImg);
 					m_hDragImg = NULL;
 
-					m_arrItems[LOWORD(m_dwHitTest)].state = 0;//normal
+					m_arrItems[LOWORD(m_dwHitTest)].state = WndState_Normal;
 
 					if (m_dwDragTo != m_dwHitTest && IsItemHover(m_dwDragTo))
 					{
@@ -251,6 +251,7 @@ namespace SOUI
 						EventHeaderRelayout e(this);
 						FireEvent(e);
 					}
+
 					m_dwHitTest = HitTest(pt);
 					m_dwDragTo = (DWORD)-1;
 					Invalidate();
@@ -260,7 +261,7 @@ namespace SOUI
 			{//点击表头项
 				if (m_bSortHeader)
 				{
-					m_arrItems[LOWORD(m_dwHitTest)].state = 1;//hover
+					m_arrItems[LOWORD(m_dwHitTest)].state = WndState_Hover;
 					RedrawItem(LOWORD(m_dwHitTest));
 					EventHeaderClick evt(this);
 					evt.iItem = LOWORD(m_dwHitTest);
@@ -272,7 +273,7 @@ namespace SOUI
 		{//调整表头宽度，发送一个调整完成消息
 			EventHeaderItemChanged evt(this);
 			evt.iItem = LOWORD(m_dwHitTest);
-			evt.nWidth = m_arrItems[evt.iItem].cx.toPixelSize(GetScale());
+			evt.nWidth = m_arrItems[evt.iItem].cx;
 			FireEvent(evt);
 
 			EventHeaderRelayout e(this);
@@ -320,14 +321,10 @@ namespace SOUI
 				{
 					int cxNew = m_nAdjItemOldWidth + pt.x - m_ptClick.x;
 					if (cxNew < 0) cxNew = 0;
-                    if (m_arrItems[LOWORD(m_dwHitTest)].cx.unit == SLayoutSize::px)
-                        m_arrItems[LOWORD(m_dwHitTest)].cx.setSize((float)cxNew, SLayoutSize::px);
-                    else if(m_arrItems[LOWORD(m_dwHitTest)].cx.unit == SLayoutSize::dp)
-                        m_arrItems[LOWORD(m_dwHitTest)].cx.setSize(cxNew * 1.0f / GetScale(), SLayoutSize::dp);
-                    // TODO: dip 和 sp 的处理（AYK）
+					m_arrItems[LOWORD(m_dwHitTest)].cx = cxNew;
 
 					Invalidate();
-					GetContainer()->UpdateWindow();//立即更新窗口
+					UpdateWindow();//立即更新窗口
 					//发出调节宽度消息
 					EventHeaderItemChanging evt(this);
 					evt.iItem = LOWORD(m_dwHitTest);
@@ -349,17 +346,19 @@ namespace SOUI
 					if (IsItemHover(m_dwHitTest))
 					{
 						WORD iHover = LOWORD(m_dwHitTest);
-						m_arrItems[iHover].state = 0;
+						m_arrItems[iHover].state = WndState_Normal;
 						RedrawItem(iHover);
 					}
 					if (IsItemHover(dwHitTest))
 					{
 						WORD iHover = LOWORD(dwHitTest);
-						m_arrItems[iHover].state = 1;//hover
+						m_arrItems[iHover].state = WndState_Hover;
 						RedrawItem(iHover);
 					}
 				}
+
 				m_dwHitTest = dwHitTest;
+				SLOG_INFO("!!!!!!header::onMouseMove3 hiword(hittest):"<<HIWORD(m_dwHitTest)<<" loword(hittest):"<<LOWORD(m_dwHitTest));
 			}
 		}
 
@@ -369,12 +368,15 @@ namespace SOUI
 	{
 		if (!m_bDragging)
 		{
-			if (IsItemHover(m_dwHitTest) && m_bSortHeader)
+			if (IsItemHover(m_dwHitTest))
 			{
-				m_arrItems[LOWORD(m_dwHitTest)].state = 0;
-				RedrawItem(LOWORD(m_dwHitTest));
+				if(m_bSortHeader)
+				{
+					m_arrItems[LOWORD(m_dwHitTest)].state = WndState_Normal;
+					RedrawItem(LOWORD(m_dwHitTest));
+				}
+				m_dwHitTest = (DWORD)-1;
 			}
-			m_dwHitTest = (DWORD)-1;
 		}
 	}
 
@@ -397,7 +399,8 @@ namespace SOUI
 			SStringW strText = xmlItem.text().get();
 			strText.TrimBlank();
 			item.strText.SetText(S_CW2T(GETSTRING(strText)));
-            item.cx = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));// .as_int(50);
+			SLayoutSize szItem = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));
+            item.cx = szItem.toPixelSize(GetScale());
 			item.lParam = xmlItem.attribute(L"userData").as_uint(0);
 			item.stFlag = (SHDSORTFLAG)xmlItem.attribute(L"sortFlag").as_uint(ST_NULL);
 			item.bVisible = xmlItem.attribute(L"visible").as_bool(true);
@@ -425,13 +428,13 @@ namespace SOUI
 		if (!rcClient.PtInRect(pt)) return (DWORD)-1;
 
 		CRect rcItem(rcClient.left, rcClient.top, rcClient.left, rcClient.bottom);
-		int nMargin = m_bSortHeader ? CX_HDITEM_MARGIN : 2;
+		int nMargin = m_bFixWidth ? MARGIN_ADJUST_DISABLE:MARGIN_ADJUST_ENABLE ;
 		for (UINT i = 0; i < m_arrItems.GetCount(); i++)
 		{
-			if (m_arrItems[i].cx.toPixelSize(GetScale()) == 0 || !m_arrItems[i].bVisible) continue;    //越过宽度为0的项
+			if (m_arrItems[i].cx == 0 || !m_arrItems[i].bVisible) continue;    //越过宽度为0的项
 
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx.toPixelSize(GetScale());
+			rcItem.right = rcItem.left + m_arrItems[i].cx;
 			if (pt.x < rcItem.left + nMargin)
 			{
 				int nLeft = i > 0 ? i - 1 : 0;
@@ -456,7 +459,7 @@ namespace SOUI
 		if (iItem >= m_arrItems.GetCount()) return NULL;
 		CRect rcClient;
 		GetClientRect(rcClient);
-		CRect rcItem(0, 0, m_arrItems[iItem].cx.toPixelSize(GetScale()), rcClient.Height());
+		CRect rcItem(0, 0, m_arrItems[iItem].cx, rcClient.Height());
 
 		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcItem.Width(), rcItem.Height());
@@ -520,7 +523,7 @@ namespace SOUI
 	{
 		if (iItem < 0 || (UINT)iItem >= m_arrItems.GetCount()) return -1;
 		if(!m_arrItems[iItem].bVisible) return 0;
-		return m_arrItems[iItem].cx.toPixelSize(GetScale());
+		return m_arrItems[iItem].cx;
 	}
 
 	void SHeaderCtrl::OnActivateApp(BOOL bActive, DWORD dwThreadID)
@@ -529,7 +532,7 @@ namespace SOUI
 		{
 			if (m_bSortHeader && m_dwHitTest != -1)
 			{
-				m_arrItems[LOWORD(m_dwHitTest)].state = 0;//normal
+				m_arrItems[LOWORD(m_dwHitTest)].state = WndState_Normal;
 			}
 			m_dwHitTest = (DWORD)-1;
 
@@ -568,6 +571,19 @@ namespace SOUI
 			m_arrItems[i].strText.TranslateText();
 		}
 		return S_OK;
+	}
+
+	void SHeaderCtrl::OnScaleChanged(int nScale)
+	{
+		SWindow::OnScaleChanged(nScale);
+		if(nScale != m_nScale)
+		{
+			for(size_t i=0;i<m_arrItems.GetCount();i++)
+			{
+				m_arrItems[i].cx = m_arrItems[i].cx*nScale/m_nScale;
+			}
+			m_nScale = nScale;
+		}
 	}
 
 	BOOL SHeaderCtrl::OnRelayout(const CRect & rcWnd)

@@ -2957,7 +2957,6 @@ namespace SOUI
 		return GetContainer()?GetContainer()->GetScale():100;
 	}
 
-
 	void SWindow::OnScaleChanged(int scale)
 	{
 		GetStyle().SetScale(scale);

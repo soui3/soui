@@ -352,7 +352,7 @@ namespace SOUI
 			hdi.mask=SHDI_WIDTH|SHDI_ORDER;
 			m_pHeader->GetItem(nCol,&hdi);
 			rcCol.left=rcCol.right;
-			rcCol.right = rcCol.left + hdi.cx.toPixelSize(GetScale());
+			rcCol.right = rcCol.left + hdi.cx;
 
 			CRect rcVisiblePart(rcCol);
 
