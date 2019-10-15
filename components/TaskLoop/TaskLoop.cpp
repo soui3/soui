@@ -252,10 +252,11 @@ namespace SOUI
 		return true;
 	}
 
-}
 
-SOUI_COM_C BOOL SOUI_COM_API SOUI::TASKLOOP::SCreateInstance(IObjRef **ppTaskLoop)
-{
-	*ppTaskLoop = new STaskLoop();
-     return TRUE;
+	SOUI_COM_C BOOL SOUI_COM_API TASKLOOP::SCreateInstance(IObjRef **ppTaskLoop)
+	{
+		*ppTaskLoop = new STaskLoop();
+		return TRUE;
+	}
+
 }

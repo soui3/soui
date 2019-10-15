@@ -1903,8 +1903,13 @@ void LogerManager::setOutputListener(IOutputListener *pListener){
 	m_pListener = pListener;
 }
 
-SOUI_COM_C BOOL SOUI_COM_API SOUI::LOG4Z::SCreateInstance(IObjRef **ppLogMgr)
-{
-     *ppLogMgr = new LogerManager;
-     return TRUE;
+namespace SOUI{
+	namespace LOG4Z{
+		SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **ppLogMgr)
+		{
+			*ppLogMgr = new LogerManager;
+			return TRUE;
+		}
+	}
 }
+
