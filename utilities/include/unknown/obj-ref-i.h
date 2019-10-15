@@ -11,12 +11,14 @@
 #define SOUI_COM_C  EXTERN_C
 #endif//SOUI_COM_DLL
 
-
-struct IObjRef
+namespace SOUI
 {
-	virtual long AddRef() PURE;
+	struct IObjRef
+	{
+		virtual long AddRef() PURE;
 
-	virtual long Release() PURE;
+		virtual long Release() PURE;
 	
-	virtual void OnFinalRelease() PURE;
-};
+		virtual void OnFinalRelease() PURE;
+	};
+}

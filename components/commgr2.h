@@ -182,6 +182,7 @@ namespace SOUI
 	}
 }//end of soui
 
+namespace SOUI{
 class SComMgr2
 {
 public:
@@ -189,25 +190,25 @@ public:
     {
     }
 
-	void SetDllPath(const SOUI::SStringT & strDllPath){}
+	void SetDllPath(const SStringT & strDllPath){}
 
     BOOL CreateImgDecoder(IObjRef ** ppObj)
     {
 #if(SCOM_MASK&scom_mask_imgdecoder_wic)
         if(m_strImgDecoder == _T("imgdecoder-wic"))
-            return SOUI::IMGDECODOR_WIC::SCreateInstance(ppObj);
+            return IMGDECODOR_WIC::SCreateInstance(ppObj);
 #endif
 #if(SCOM_MASK&scom_mask_imgdecoder_stb)
         if(m_strImgDecoder == _T("imgdecoder-stb"))
-            return SOUI::IMGDECODOR_STB::SCreateInstance(ppObj);
+            return IMGDECODOR_STB::SCreateInstance(ppObj);
 #endif
 #if(SCOM_MASK&scom_mask_imgdecoder_png)
         if(m_strImgDecoder == _T("imgdecoder-png"))
-            return SOUI::IMGDECODOR_PNG::SCreateInstance(ppObj);
+            return IMGDECODOR_PNG::SCreateInstance(ppObj);
 #endif
 #if(SCOM_MASK&scom_mask_imgdecoder_gdip)
         if(m_strImgDecoder == _T("imgdecoder-gdip"))
-            return SOUI::IMGDECODOR_GDIP::SCreateInstance(ppObj);
+            return IMGDECODOR_GDIP::SCreateInstance(ppObj);
 #endif
          SASSERT(0);
          return FALSE;
@@ -216,35 +217,35 @@ public:
 #if(SCOM_MASK&scom_mask_render_gdi)
     BOOL CreateRender_GDI(IObjRef **ppObj)
     {
-        return SOUI::RENDER_GDI::SCreateInstance(ppObj);
+        return RENDER_GDI::SCreateInstance(ppObj);
     }
 #endif
 
 #if(SCOM_MASK&scom_mask_render_skia)
     BOOL CreateRender_Skia(IObjRef **ppObj)
     {
-        return SOUI::RENDER_SKIA::SCreateInstance(ppObj);
+        return RENDER_SKIA::SCreateInstance(ppObj);
     }
 #endif
 
 #if(SCOM_MASK&scom_mask_script_lua)
     BOOL CreateScrpit_Lua(IObjRef **ppObj)
     {
-        return SOUI::SCRIPT_LUA::SCreateInstance(ppObj);
+        return SCRIPT_LUA::SCreateInstance(ppObj);
     }
 #endif
 
 #if(SCOM_MASK&scom_mask_translator)
     BOOL CreateTranslator(IObjRef **ppObj)
     {
-        return SOUI::TRANSLATOR::SCreateInstance(ppObj);
+        return TRANSLATOR::SCreateInstance(ppObj);
     }
 #endif
 
 #if(SCOM_MASK&scom_mask_resprovider_zip)
     BOOL CreateResProvider_ZIP(IObjRef **ppObj)
     {
-        return SOUI::RESPROVIDER_ZIP::SCreateInstance(ppObj);
+        return RESPROVIDER_ZIP::SCreateInstance(ppObj);
     }
 #endif
 
@@ -252,36 +253,38 @@ public:
 #if(SCOM_MASK&scom_mask_resprovider_7z)
 	BOOL CreateResProvider_7ZIP(IObjRef **ppObj)
 	{
-		return SOUI::RESPROVIDER_7ZIP::SCreateInstance(ppObj);
+		return RESPROVIDER_7ZIP::SCreateInstance(ppObj);
 	}
 #endif
     
 #if(SCOM_MASK&scom_mask_log4z)
     BOOL CreateLog4z(IObjRef **ppObj)
     {
-        return SOUI::LOG4Z::SCreateInstance(ppObj);
+        return LOG4Z::SCreateInstance(ppObj);
     }
 #endif
 
 #if(SCOM_MASK&scom_mask_taskloop)
 	BOOL CreateTaskLoop(IObjRef **ppObj)
 	{
-		return SOUI::TASKLOOP::SCreateInstance(ppObj);
+		return TASKLOOP::SCreateInstance(ppObj);
 	}
 #endif
 #if(SCOM_MASK&scom_mask_ipcobject)
 	BOOL CreateIpcObject(IObjRef **ppObj)
 	{
-		return SOUI::IPC::SCreateInstance(ppObj);
+		return IPC::SCreateInstance(ppObj);
 	}
 #endif
-	SOUI::SStringT m_strImgDecoder;
+	SStringT m_strImgDecoder;
 };
 
+}//end of soui
 #else
 	
 #include <com-loader.hpp>
 
+namespace SOUI{
 
 class SComMgr2
 {
@@ -292,7 +295,7 @@ public:
         else m_strImgDecoder = COM_IMGDECODER;
     }
 
-	void SetDllPath(const SOUI::SStringT & strDllPath)
+	void SetDllPath(const SStringT & strDllPath)
 	{
 		m_strDllPath = strDllPath;
 		if(!m_strDllPath.IsEmpty())
@@ -307,9 +310,9 @@ public:
     BOOL CreateImgDecoder(IObjRef ** ppObj)
     {
 #ifdef _DEBUG
-        SOUI::SStringT strImgDecoder = m_strImgDecoder+_T("d.dll");
+        SStringT strImgDecoder = m_strImgDecoder+_T("d.dll");
 #else
-        SOUI::SStringT strImgDecoder = m_strImgDecoder+_T(".dll");
+        SStringT strImgDecoder = m_strImgDecoder+_T(".dll");
 #endif
         return imgDecLoader.CreateInstance(m_strDllPath+strImgDecoder,ppObj);
     }
@@ -368,7 +371,9 @@ protected:
 	SComLoader taskLoopLoader;
 	SComLoader ipcLoader;
 
-    SOUI::SStringT m_strImgDecoder;
-	SOUI::SStringT m_strDllPath;
+    SStringT m_strImgDecoder;
+	SStringT m_strDllPath;
 };
+
+}
 #endif

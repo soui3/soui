@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+namespace SOUI {
 //加载组件辅助类
 //组件需要提供SCreateInstance接口。接口定义必须是funSCreateInstance
 class SComLoader
@@ -38,3 +39,5 @@ protected:
     funSCreateInstance m_funCreateInst;
     TCHAR   m_szDllPath[MAX_PATH];
 };
+
+}//end of soui
