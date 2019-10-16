@@ -39,7 +39,8 @@ namespace SOUI
 		if (iItem == -1) iItem = (int)m_arrItems.GetCount();
 		SHDITEM item;
 		item.mask = 0xFFFFFFFF;
-		item.cx = nWidth;
+		SLayoutSize szWid((float)nWidth,unit);
+		item.cx = szWid.toPixelSize(GetScale());
 		item.bDpiAware = (unit!=SLayoutSize::px);
 		item.strText.SetCtxProvider(this);
 		item.strText.SetText(pszText);
