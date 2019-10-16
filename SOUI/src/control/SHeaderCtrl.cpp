@@ -40,6 +40,7 @@ namespace SOUI
 		SHDITEM item;
 		item.mask = 0xFFFFFFFF;
 		item.cx = nWidth;
+		item.bDpiAware = (unit!=SLayoutSize::px);
 		item.strText.SetCtxProvider(this);
 		item.strText.SetText(pszText);
 		item.stFlag = stFlag;
@@ -401,6 +402,7 @@ namespace SOUI
 			item.strText.SetText(S_CW2T(GETSTRING(strText)));
 			SLayoutSize szItem = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));
             item.cx = szItem.toPixelSize(GetScale());
+			item.bDpiAware = (szItem.unit != SLayoutSize::px);
 			item.lParam = xmlItem.attribute(L"userData").as_uint(0);
 			item.stFlag = (SHDSORTFLAG)xmlItem.attribute(L"sortFlag").as_uint(ST_NULL);
 			item.bVisible = xmlItem.attribute(L"visible").as_bool(true);
@@ -580,6 +582,8 @@ namespace SOUI
 		{
 			for(size_t i=0;i<m_arrItems.GetCount();i++)
 			{
+				if (!m_arrItems[i].bDpiAware)
+					continue;
 				m_arrItems[i].cx = m_arrItems[i].cx*nScale/m_nScale;
 			}
 			m_nScale = nScale;

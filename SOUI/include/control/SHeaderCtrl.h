@@ -41,10 +41,11 @@ namespace SOUI
    * Describe   列表头项
    */
   typedef struct SHDITEM {
-	  SHDITEM():mask(0),cx(0),stFlag(ST_NULL),lParam(0),state(WndState_Normal),iOrder(0),bVisible(true){
+	  SHDITEM():mask(0),cx(0), bDpiAware(false),stFlag(ST_NULL),lParam(0),state(WndState_Normal),iOrder(0),bVisible(true){
 	  }
     UINT    mask; 
     int     cx;
+	bool    bDpiAware;
 	STrText strText;
     SHDSORTFLAG stFlag;
     LPARAM  lParam; 
