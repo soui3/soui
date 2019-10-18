@@ -1,9 +1,5 @@
 #include <souistd.h>
 #include <helper/STaskHandler.h>
-#include <algorithm>
-#include <cassert>
-#include <deque>
-#include <limits>
 
 namespace SOUI
 {
