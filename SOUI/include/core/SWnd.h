@@ -1058,8 +1058,8 @@ namespace SOUI
         /**
         * BeforePaint
         * @brief    为RT准备好当前窗口的绘图环境
-        * @param    IRenderTarget * pRT --  
-        * @param    SPainter & painter --  
+        * @param    IRenderTarget * pRT --  渲染RT
+        * @param    SPainter & painter --  painter storage
         * @return   void 
         *
         * Describe  
@@ -1069,15 +1069,35 @@ namespace SOUI
         /**
         * AfterPaint
         * @brief    恢复由BeforePaint设置的RT状态
-        * @param    IRenderTarget * pRT --  
-        * @param    SPainter & painter --  
+        * @param    IRenderTarget * pRT --  渲染RT
+        * @param    SPainter & painter --  painter storage
         * @return   void 
         *
         * Describe  
         */
         virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
         
+		/**
+		* GetTrCtx
+		* @brief    Get Translator Context for The Window
+		* @return   SStringW, Translator Context for The Window
+		*
+		* Describe
+		*/
 		virtual const SStringW & GetTrCtx() const;
+
+		/**
+		* DispatchPaint
+		* @brief    
+		* @param    IRenderTarget * pRT -- 渲染RT
+		* @param    IRegion *pRgn -- paint region
+		* @param    UINT iBeginZorder -- begin zorder
+		* @param    UINT iEndZorder -- end zorder
+		* @return   void
+		*
+		* Describe
+		*/
+		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder);
     public://caret相关方法
         virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
         virtual void ShowCaret(BOOL bShow);   

@@ -1082,6 +1082,42 @@ namespace SOUI
 		return RgnInRgn(rgn, rgn2);
 	}
 
+
+	void SWindow::DispatchPaint(IRenderTarget * pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder) {
+		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+		while (pChild)
+		{
+			if (pChild->m_uZorder >= iEndZorder) break;
+			if (pChild->m_uZorder< iBeginZorder)
+			{//看整个分枝的zorder是不是在绘制范围内
+				SWindow *pNextChild = pChild->GetWindow(GSW_NEXTSIBLING);
+				if (pNextChild)
+				{
+					if (pNextChild->m_uZorder <= iBeginZorder)
+					{
+						pChild = pNextChild;
+						continue;
+					}
+				}
+				else
+				{//最后一个节点时查看最后子窗口的zorder
+					SWindow *pLastChild = pChild;
+					while (pLastChild->GetChildrenCount())
+					{
+						pLastChild = pLastChild->GetWindow(GSW_LASTCHILD);
+					}
+					if (pLastChild->m_uZorder < iBeginZorder)
+					{
+						break;
+					}
+				}
+			}
+
+			pChild->_PaintRegion2(pRT, pRgn, iBeginZorder, iEndZorder);
+			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+		}
+	}
+
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
 	void SWindow::_PaintRegion2( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
 	{
@@ -1149,37 +1185,9 @@ namespace SOUI
 		{
 			pRT->PushClipRect(rcText);
 		}
-		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
-		while(pChild)
-		{
-			if(pChild->m_uZorder >= iZorderEnd) break;
-			if(pChild->m_uZorder< iZorderBegin)
-			{//看整个分枝的zorder是不是在绘制范围内
-				SWindow *pNextChild = pChild->GetWindow(GSW_NEXTSIBLING);
-				if(pNextChild)
-				{
-					if(pNextChild->m_uZorder<=iZorderBegin)
-					{
-						pChild = pNextChild;
-						continue;
-					}
-				}else
-				{//最后一个节点时查看最后子窗口的zorder
-					SWindow *pLastChild = pChild;
-					while(pLastChild->GetChildrenCount())
-					{
-						pLastChild = pLastChild->GetWindow(GSW_LASTCHILD);
-					}
-					if(pLastChild->m_uZorder < iZorderBegin)
-					{
-						break;
-					}
-				}
-			}
+		
+		DispatchPaint(pRT,pRgn,iZorderBegin,iZorderEnd);
 
-			pChild->_PaintRegion2(pRT, pRgn, iZorderBegin, iZorderEnd);
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
-		}
 		AfterPaint(pRT,painter);
 
 		if(rcText != rcClient && IsClipClient())
@@ -2770,8 +2778,11 @@ namespace SOUI
 		return hr;
 	}
 
+
+
 	//////////////////////////////////////////////////////////////////////////
 	// caret functions
+
 
 	BOOL SWindow::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
 	{
