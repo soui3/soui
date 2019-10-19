@@ -5,7 +5,7 @@
 #include "helper/SAutoBuf.h"
 #include "helper/SColor.h"
 #include "helper/SplitString.h"
-
+#include "helper/STime.h"
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
 
 namespace SOUI
@@ -130,7 +130,7 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
     m_privateSkinPool.Attach(new SSkinPool);
 	m_privateTemplatePool.Attach(new STemplatePool);
     SetContainer(this);
-
+	m_hostAnimationHandler.m_pHostWnd=this;
     m_evtSet.addEvent(EVENTID(EventInit));
     m_evtSet.addEvent(EVENTID(EventExit));
 }
@@ -1533,6 +1533,60 @@ void SHostWnd::OnScaleChanged(int scale)
 	m_nScale = scale;
 	m_layoutDirty = dirty_self;
 	SWindow::InvalidateRect(NULL);
+}
+
+void SHostWnd::SetHostAnimation(IAnimation *pAni,bool startNow /*= true*/)
+{
+	m_hostAnimation = pAni;
+	if(m_hostAnimation)
+	{
+		if(startNow)
+		{
+			StartHostAnimation();
+		}
+	}
+
+}
+
+bool SHostWnd::StartHostAnimation()
+{
+	if(!m_hostAnimation)
+		return false;
+	if(!IsWindow())
+		return false;
+	m_hostAnimation->startNow();
+	RegisterTimelineHandler(&m_hostAnimationHandler);
+	return true;
+}
+
+bool SHostWnd::StopHostAnimation()
+{
+	if(!m_hostAnimation)
+		return false;
+	m_hostAnimation->cancel();
+	UnregisterTimelineHandler(&m_hostAnimationHandler);
+	return true;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//  SHostWnd::SHostAnimationHandler
+void SHostWnd::SHostAnimationHandler::OnNextFrame()
+{
+	if(!m_pHostWnd->m_hostAnimation)
+		return;
+	IAnimation *pAni = m_pHostWnd->m_hostAnimation;
+	uint64_t tm = pAni->getStartTime();
+	if (tm == -1)
+	{
+		m_pHostWnd->OnHostAnimationStarted(pAni);
+	}
+	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),m_hostTransform);
+	if(!bMore)
+	{
+		m_pHostWnd->GetContainer()->UnregisterTimelineHandler(this);
+		m_pHostWnd->OnHostAnimationStoped(pAni);
+	}
 }
 
 
