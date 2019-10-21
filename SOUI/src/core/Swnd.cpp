@@ -981,31 +981,13 @@ namespace SOUI
 			if(pRTCache)
 			{
 				SSendMessage(WM_NCPAINT, (WPARAM)pRTCache);
-				int nSave =-1;
-				pRT->SaveClip(&nSave);
 				pRT->PushClipRect(&rcClient,RGN_DIFF);
-				if(m_rgnWnd)
-				{
-					m_rgnWnd->Offset(rcWnd.TopLeft());
-					pRT->PushClipRegion(m_rgnWnd);
-					m_rgnWnd->Offset(-rcWnd.TopLeft());
-				}
 				pRT->AlphaBlend(rcWnd,pRTCache,rcWnd,255);
-				pRT->RestoreClip(nSave);
+				pRT->PopClip();
 			}
 		}else
 		{
-			if(m_rgnWnd)
-			{
-				m_rgnWnd->Offset(rcWnd.TopLeft());
-				pRT->PushClipRegion(m_rgnWnd);
-				m_rgnWnd->Offset(-rcWnd.TopLeft());
-			}
 			SSendMessage(WM_NCPAINT, (WPARAM)pRT);
-			if(m_rgnWnd)
-			{
-				pRT->PopClip();
-			}
 		}
 	}
 
@@ -1017,15 +999,21 @@ namespace SOUI
 		CRect rcClient = SWindow::GetClientRect();
 		rgn->CombineRect(&rcWnd,RGN_COPY);
 		rgn->CombineRect(&rcClient,RGN_DIFF);
-		if(m_rgnWnd)
+		if(m_clipRgn)
 		{
-			m_rgnWnd->Offset(GetWindowRect().TopLeft());
-			rgn->CombineRgn(m_rgnWnd,RGN_AND);
-			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
+			m_clipRgn->Offset(GetWindowRect().TopLeft());
+			rgn->CombineRgn(m_clipRgn,RGN_AND);
+			m_clipRgn->Offset(-GetWindowRect().TopLeft());
 		}
 		if (!rgn->IsEmpty())
 		{
 			IRenderTarget *pRT = GetRenderTarget(GRT_OFFSCREEN, rgn);//不自动画背景
+			if(m_clipPath)
+			{
+				m_clipPath->offset((float)rcWnd.left,(float)rcWnd.top);
+				pRT->ClipPath(m_clipPath,RGN_AND,true);
+				m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
+			}
 			PaintBackground(pRT, &rcWnd);
 			SSendMessage(WM_NCPAINT, (WPARAM)pRT);
 			PaintForeground(pRT, &rcWnd);
@@ -1083,7 +1071,7 @@ namespace SOUI
 	}
 
 
-	void SWindow::DispatchPaint(IRenderTarget * pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder) {
+	void SWindow::_PaintChildren(IRenderTarget * pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder) {
 		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
 		while (pChild)
 		{
@@ -1113,13 +1101,13 @@ namespace SOUI
 				}
 			}
 
-			pChild->_PaintRegion2(pRT, pRgn, iBeginZorder, iEndZorder);
+			pChild->DispatchPaint(pRT, pRgn, iBeginZorder, iEndZorder);
 			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 	}
 
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
-	void SWindow::_PaintRegion2( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
+	void SWindow::DispatchPaint( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
 	{
 		if(!IsVisible(FALSE))
 			return;
@@ -1155,11 +1143,20 @@ namespace SOUI
 			pRT->SetTextColor(pRTBackup->GetTextColor());
 			pRT->ClearRect(&rcWnd,0);
 		}
-		if(m_rgnWnd)
+		//save clip state
+		int nClipState=-1;
+		pRT->SaveClip(&nClipState);
+		if(m_clipRgn)
 		{
-			m_rgnWnd->Offset(GetWindowRect().TopLeft());
-			pRT->PushClipRegion(m_rgnWnd,RGN_AND);
-			m_rgnWnd->Offset(-GetWindowRect().TopLeft());
+			m_clipRgn->Offset(rcWnd.TopLeft());
+			pRT->PushClipRegion(m_clipRgn,RGN_AND);
+			m_clipRgn->Offset(-rcWnd.TopLeft());
+		}
+		if(m_clipPath)
+		{
+			m_clipPath->offset((float)rcWnd.left,(float)rcWnd.top);
+			pRT->ClipPath(m_clipPath,RGN_AND,true);
+			m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
 		}
 		if(IsClipClient())
 		{
@@ -1186,22 +1183,10 @@ namespace SOUI
 			pRT->PushClipRect(rcText);
 		}
 		
-		DispatchPaint(pRT,pRgn,iZorderBegin,iZorderEnd);
+		_PaintChildren(pRT,pRgn,iZorderBegin,iZorderEnd);
 
 		AfterPaint(pRT,painter);
 
-		if(rcText != rcClient && IsClipClient())
-		{
-			pRT->PopClip();
-		}
-		if(IsClipClient())
-		{
-			pRT->PopClip();
-		}
-		if(m_rgnWnd)
-		{
-			pRT->PopClip();
-		}
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
 			&& !bRgnInClient
@@ -1210,6 +1195,8 @@ namespace SOUI
 		{//paint nonclient
 			_PaintNonClient(pRT);
 		}
+		//restore clip state.
+		pRT->RestoreClip(nClipState);
 
 		if(IsLayeredWindow())
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
@@ -1264,7 +1251,7 @@ namespace SOUI
 		if (!IsVisible(TRUE))
 			return;
 		BeforePaintEx(pRT);
-		_PaintRegion2(pRT,pRgn,iZorderBegin,iZorderEnd);
+		DispatchPaint(pRT,pRgn,iZorderBegin,iZorderEnd);
 	}
 
 	void SWindow::RedrawRegion(IRenderTarget *pRT, IRegion *pRgn)
@@ -1272,7 +1259,7 @@ namespace SOUI
 		ASSERT_UI_THREAD();
 		if (!IsVisible(TRUE))
 			return;
-		_PaintRegion2(pRT, pRgn, (UINT)ZORDER_MIN, (UINT)ZORDER_MAX);
+		DispatchPaint(pRT, pRgn, (UINT)ZORDER_MIN, (UINT)ZORDER_MAX);
 	}
 
 
@@ -2825,31 +2812,39 @@ namespace SOUI
 		BOOL bRet = FALSE;
 		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
 		bRet = rc.PtInRect(pt);
-		if(m_rgnWnd)
+		if(m_clipRgn)
 		{
 			CPoint ptTmp = pt;
 			ptTmp -= GetWindowRect().TopLeft();
-			bRet = m_rgnWnd->PtInRegion(ptTmp);
+			bRet = m_clipRgn->PtInRegion(ptTmp);
 		}
 		return bRet;
 	}
 
 	void SWindow::SetWindowRgn(IRegion *pRgn,BOOL bRedraw/*=TRUE*/)
 	{
-		m_rgnWnd = NULL;
+		m_clipRgn = NULL;
 		if(pRgn)
 		{
-			GETRENDERFACTORY->CreateRegion(&m_rgnWnd);
-			m_rgnWnd->CombineRgn(pRgn,RGN_COPY);
+			GETRENDERFACTORY->CreateRegion(&m_clipRgn);
+			m_clipRgn->CombineRgn(pRgn,RGN_COPY);
 		}
 		if(bRedraw) InvalidateRect(NULL);
 	}
 
+
+	void SWindow::SetClipPath(IPath *pPath,BOOL bRedraw/*=TRUE*/)
+	{
+		m_clipPath = pPath;
+		if(bRedraw) InvalidateRect(NULL);
+	}
+
+
 	BOOL SWindow::GetWindowRgn(IRegion *pRgn)
 	{
 		SASSERT(pRgn);
-		if(!m_rgnWnd) return FALSE;
-		pRgn->CombineRgn(m_rgnWnd,RGN_COPY);
+		if(!m_clipRgn) return FALSE;
+		pRgn->CombineRgn(m_clipRgn,RGN_COPY);
 		return TRUE;
 	}
 

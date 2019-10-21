@@ -380,7 +380,6 @@ void SHostWnd::OnWindowTextChanged(LPCTSTR pszTitle)
 void SHostWnd::_Redraw()
 {
     m_bNeedAllRepaint = TRUE;
-    m_bNeedRepaint = TRUE;
     m_rgnInvalidate->Clear();
 	_Invalidate(NULL);
 }
@@ -754,7 +753,6 @@ void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid )
 {
     if(m_hostAttr.m_bTranslucent)
     {
-        SASSERT(m_hostAttr.m_byAlpha>5);
         UpdateLayerFromRenderTarget(m_memRT,m_hostAttr.m_byAlpha,&rcInvalid);
     }
     else
@@ -1555,6 +1553,21 @@ bool SHostWnd::StartHostAnimation()
 	if(!IsWindow())
 		return false;
 	m_hostAnimation->startNow();
+	CRect rcWnd = SWindow::GetWindowRect();
+	CRect rcParent;
+	HWND hParent = SNativeWnd::GetParent();
+	if(hParent)
+	{
+		::GetClientRect(hParent,&rcParent);
+	}else
+	{
+		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
+		MONITORINFO info;
+		GetMonitorInfo(hMonitor,&info);
+		rcParent = info.rcWork;
+	}
+	m_hostAnimation->initialize(rcWnd.Width(),rcWnd.Height(),rcParent.Width(),rcParent.Height());
+	m_hostAnimationHandler.m_hostTransform.setAlpha(m_hostAttr.m_byAlpha);
 	RegisterTimelineHandler(&m_hostAnimationHandler);
 	return true;
 }
@@ -1567,7 +1580,6 @@ bool SHostWnd::StopHostAnimation()
 	UnregisterTimelineHandler(&m_hostAnimationHandler);
 	return true;
 }
-
 
 //////////////////////////////////////////////////////////////////
 //  SHostWnd::SHostAnimationHandler
@@ -1582,6 +1594,32 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 		m_pHostWnd->OnHostAnimationStarted(pAni);
 	}
 	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),m_hostTransform);
+	SMatrix mtx = m_hostTransform.getMatrix();
+	CRect rcWnd;
+	m_pHostWnd->GetNative()->GetWindowRect(&rcWnd);
+	if(mtx.getType()&SMatrix::kTranslate_Mask)
+	{//translate
+		rcWnd.MoveToXY(sround(mtx.get(SMatrix::kMTransX)),sround(mtx.get(SMatrix::kMTransY)));
+	}
+	if(mtx.getType()&SMatrix::kScale_Mask)
+	{//scale
+		CSize sz = rcWnd.Size();
+		sz.cx = sround(sz.cx * mtx.get(SMatrix::kMScaleX));
+		sz.cy = sround(sz.cy * mtx.get(SMatrix::kMScaleY));
+		rcWnd = CRect(rcWnd.TopLeft(),sz);
+	}
+	::SetWindowPos(m_pHostWnd->m_hWnd,NULL,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),SWP_NOZORDER|SWP_NOACTIVATE);
+	if(m_hostTransform.hasAlpha())
+	{//change alpha.
+		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
+		{
+			rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
+			m_pHostWnd->UpdateHost(0,rcWnd);
+		}else if(m_pHostWnd->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYERED)
+		{
+			::SetLayeredWindowAttributes(m_pHostWnd->m_hWnd,0,m_hostTransform.getAlpha(),LWA_ALPHA);
+		}
+	}
 	if(!bMore)
 	{
 		m_pHostWnd->GetContainer()->UnregisterTimelineHandler(this);

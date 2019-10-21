@@ -167,6 +167,12 @@ public:
         return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);
     }
 
+	HWND GetParent()
+	{
+		SASSERT(::IsWindow(m_hWnd));
+		return ::GetParent(m_hWnd);
+	}
+
 	HWND SetParent(HWND hWndNewParent)
 	{
 		SASSERT(::IsWindow(m_hWnd));
