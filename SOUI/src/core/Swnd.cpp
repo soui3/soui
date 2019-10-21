@@ -1144,8 +1144,8 @@ namespace SOUI
 			pRT->ClearRect(&rcWnd,0);
 		}
 		//save clip state
-		int nClipState=-1;
-		pRT->SaveClip(&nClipState);
+		int nSave1=-1;
+		pRT->SaveClip(&nSave1);
 		if(m_clipRgn)
 		{
 			m_clipRgn->Offset(rcWnd.TopLeft());
@@ -1158,6 +1158,9 @@ namespace SOUI
 			pRT->ClipPath(m_clipPath,RGN_AND,true);
 			m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
 		}
+		int nSave2=-1;
+		pRT->SaveClip(&nSave2);
+
 		if(IsClipClient())
 		{
 			pRT->PushClipRect(rcClient);
@@ -1184,8 +1187,8 @@ namespace SOUI
 		}
 		
 		_PaintChildren(pRT,pRgn,iZorderBegin,iZorderEnd);
-
 		AfterPaint(pRT,painter);
+		pRT->RestoreClip(nSave2);
 
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
@@ -1196,7 +1199,7 @@ namespace SOUI
 			_PaintNonClient(pRT);
 		}
 		//restore clip state.
-		pRT->RestoreClip(nClipState);
+		pRT->RestoreClip(nSave1);
 
 		if(IsLayeredWindow())
 		{//将绘制到窗口的缓存上的图像返回到上一级RT
