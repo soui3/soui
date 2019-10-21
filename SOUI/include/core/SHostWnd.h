@@ -183,6 +183,7 @@ protected:
 	public:
 		STransformation			m_hostTransform;
 		SHostWnd *				m_pHostWnd;
+		CRect					m_rcInit;
 	protected:
 		virtual void OnNextFrame()override;
 	} m_hostAnimationHandler;
@@ -239,7 +240,7 @@ protected:
     void OnSetFocus(HWND wndOld);
     void OnKillFocus(HWND wndFocus);
         
-    void UpdateHost(HDC dc,const CRect &rc);
+    void UpdateHost(HDC dc,const CRect &rc,BYTE byAlpha=255);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
     void OnCaptureChanged(HWND wnd);
