@@ -754,7 +754,6 @@ void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid )
 {
     if(m_hostAttr.m_bTranslucent)
     {
-        SASSERT(m_hostAttr.m_byAlpha>5);
         UpdateLayerFromRenderTarget(m_memRT,m_hostAttr.m_byAlpha,&rcInvalid);
     }
     else
