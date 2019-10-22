@@ -250,7 +250,6 @@ protected:
 		
 		//<--在新版本的uiresbuilder生成的resource.h中定义了R.id, R.name两个对象，可以使用如下方式来关联变量。
 		EVENT_ID_COMMAND(R.id.btnSelectGif,OnBtnSelectGIF)
-        EVENT_ID_RANGE_HANDLER(R.id.radio2_1,R.id.radio2_6,EventSwndStateChanged::EventID,OnTabPageRadioSwitch)    //10000-10005是XML中定义的radio2的ID
         EVENT_NAME_COMMAND(R.name.btn_menu,OnBtnMenu)
         EVENT_NAME_COMMAND(R.name.btn_webkit_go,OnBtnWebkitGo)
         EVENT_ID_COMMAND(R.id.btn_createchildren,OnBtnCreateChildren)
