@@ -45,7 +45,6 @@ HEADERS += MainDlg.h \
           ../controls.extend/SMcListViewEx/SHeaderCtrlEx.h\
           ../controls.extend/SMcListViewEx/SMcListViewEx.h\
           ../controls.extend/SWkeWebkit.h \
-          ../controls.extend/gif/SAniImgFrame.h \
           ../controls.extend/gif/SGifPlayer.h \
           ../controls.extend/gif/SSkinGif.h \
           ../controls.extend/gif/SSkinAPNG.h \

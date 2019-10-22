@@ -1611,6 +1611,7 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 	}
 	if(m_hostTransform.hasAlpha())
 	{//change alpha.
+		SLOG_INFO("alpha:"<<m_hostTransform.getAlpha()<<" bMore:"<<bMore);
 		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
 		{
 			CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
