@@ -16,5 +16,5 @@
     </window>
     <toggle size="-1,-1" name="tgl_left" skin="skin_btn_expand" checked="true"/>
   </window>
-  <button pos="-0,0,@100,@30" offset="-1,0" name="btn_ani_hostwnd" text="SetHostAnimation"/>
+  <button pos="-0,0,@180,@30" offset="-1,0" name="btn_ani_hostwnd" text="SetHostAnimation"/>
 </window>
