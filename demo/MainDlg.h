@@ -234,8 +234,10 @@ protected:
 
 	void OnSouiClick();
 
+	void OnSetHostAnimation();
     //UI控件的事件及响应函数映射表
 	EVENT_MAP_BEGIN()
+		EVENT_NAME_COMMAND(L"btn_ani_hostwnd", OnSetHostAnimation)
 		EVENT_HANDLER(EventPath::EventID,OnEventPath)
 		EVENT_ID_HANDLER(R.id.cbx_interpolator,EventCBSelChange::EventID,OnCbxInterpolotorChange)
 		EVENT_ID_COMMAND(1, OnClose)

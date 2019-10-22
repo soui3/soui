@@ -452,7 +452,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     m_lstUpdatedRect.RemoveAll();
     m_bRendering = FALSE;
 
-    UpdateHost(dc,rcInvalid);
+    UpdateHost(dc,rcInvalid, m_hostAnimationHandler.m_hostTransform.getAlpha());
 }
 
 void SHostWnd::OnPaint(HDC dc)
@@ -739,7 +739,7 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag
         if(!m_bRendering)
         {
             HDC dc=GetDC();
-            UpdateHost(dc,rc);
+            UpdateHost(dc,rc, m_hostAnimationHandler.m_hostTransform.getAlpha());
             ReleaseDC(dc);
         }else
         {
@@ -1019,6 +1019,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         RedrawRegion(m_memRT,m_rgnInvalidate);
 
         int nSteps=dwTime/10;
+		BYTE byAlpha = (BYTE)((int)(m_hostAttr.m_byAlpha) * m_hostAnimationHandler.m_hostTransform.getAlpha() / 255);
         if(dwFlags & AW_HIDE)
         {
             if(dwFlags& AW_SLIDE)
@@ -1062,7 +1063,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     if(dwFlags & AW_HOR_NEGATIVE)
                         ptAnchor.x=rcWnd.right-rcShow.Width();
                     _BitBlt(pRT,m_memRT,rcShow,ptAnchor);
-                    UpdateLayerFromRenderTarget(pRT,m_hostAttr.m_byAlpha);
+                    UpdateLayerFromRenderTarget(pRT, byAlpha);
                     Sleep(10);
                 }
                 ShowWindow(SW_HIDE);
@@ -1083,11 +1084,11 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                 return TRUE;
             }else if(dwFlags&AW_BLEND)
             {
-                BYTE byAlpha=255;
+                BYTE byAlpha2= byAlpha;
                 for(int i=0;i<nSteps;i++)
                 {
-                    byAlpha-=255/nSteps;
-                    UpdateLayerFromRenderTarget(m_memRT,byAlpha);
+                    byAlpha2-=255/nSteps;
+                    UpdateLayerFromRenderTarget(m_memRT,byAlpha2);
                     Sleep(10);
                 }
                 ShowWindow(SW_HIDE);
@@ -1141,10 +1142,10 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     if(dwFlags & AW_HOR_POSITIVE)
                         ptAnchor.x=rcWnd.right-rcShow.Width();
                      _BitBlt(pRT,m_memRT,rcShow,ptAnchor);
-                    UpdateLayerFromRenderTarget(pRT, m_hostAttr.m_byAlpha);
+                    UpdateLayerFromRenderTarget(pRT, byAlpha);
                     Sleep(10);
                 }
-                UpdateLayerFromRenderTarget(m_memRT,m_hostAttr.m_byAlpha);
+                UpdateLayerFromRenderTarget(m_memRT,byAlpha);
                 
             
                 return TRUE;
@@ -1166,14 +1167,14 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                 return TRUE;
             }else if(dwFlags&AW_BLEND)
             {
-                BYTE byAlpha=0;
+                BYTE byAlpha2=0;
                 for(int i=0;i<nSteps;i++)
                 {
-                    byAlpha+=255/nSteps;
-                    UpdateLayerFromRenderTarget(m_memRT,byAlpha);
+                    byAlpha2+=byAlpha/nSteps;
+                    UpdateLayerFromRenderTarget(m_memRT, byAlpha2);
                     Sleep(10);
                 }
-                UpdateLayerFromRenderTarget(m_memRT,m_hostAttr.m_byAlpha);
+                UpdateLayerFromRenderTarget(m_memRT,byAlpha);
                 return TRUE;
             }
         }
@@ -1556,6 +1557,7 @@ bool SHostWnd::StartHostAnimation()
 	if(!IsWindow())
 		return false;
 	m_hostAnimation->startNow();
+
 	CRect rcWnd; GetNative()->GetWindowRect(&rcWnd);
 	CRect rcParent;
 	HWND hParent = SNativeWnd::GetParent();
@@ -1571,7 +1573,6 @@ bool SHostWnd::StartHostAnimation()
 	}
 	m_hostAnimation->initialize(rcWnd.Width(),rcWnd.Height(),rcParent.Width(),rcParent.Height());
 	m_hostAnimationHandler.m_rcInit = rcWnd;
-	m_hostAnimationHandler.m_hostTransform.setAlpha(255);
 	RegisterTimelineHandler(&m_hostAnimationHandler);
 	return true;
 }
