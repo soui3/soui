@@ -1011,7 +1011,7 @@ namespace SOUI
 			if(m_clipPath)
 			{
 				m_clipPath->offset((float)rcWnd.left,(float)rcWnd.top);
-				pRT->ClipPath(m_clipPath,RGN_AND,true);
+				pRT->PushClipPath(m_clipPath,RGN_AND,true);
 				m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
 			}
 			PaintBackground(pRT, &rcWnd);
@@ -1155,7 +1155,7 @@ namespace SOUI
 		if(m_clipPath)
 		{
 			m_clipPath->offset((float)rcWnd.left,(float)rcWnd.top);
-			pRT->ClipPath(m_clipPath,RGN_AND,true);
+			pRT->PushClipPath(m_clipPath,RGN_AND,true);
 			m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
 		}
 		int nSave2=-1;

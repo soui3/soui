@@ -1303,7 +1303,7 @@ namespace SOUI
 		return crRet;
 	}
 
-	HRESULT SRenderTarget_Skia::ClipPath(const IPath * path, UINT mode, bool doAntiAlias /*= false*/)
+	HRESULT SRenderTarget_Skia::PushClipPath(const IPath * path, UINT mode, bool doAntiAlias /*= false*/)
 	{
 		const SPath_Skia * path2 = (const SPath_Skia *)path;
 		m_SkCanvas->clipPath(path2->m_skPath,SRegion_Skia::RGNMODE2SkRgnOP(mode),doAntiAlias);
