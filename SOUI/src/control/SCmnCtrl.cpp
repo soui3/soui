@@ -1299,7 +1299,7 @@ void SGroup::OnPaint(IRenderTarget *pRT)
     CSize szFnt;
     pRT->MeasureText(m_strText.GetText(FALSE), m_strText.GetText(FALSE).GetLength(),&szFnt);
 
-    CRect rcText=GetWindowRect();
+    CRect rcText=GetClientRect();
     rcText.left+=GROUP_HEADER,rcText.right-=GROUP_HEADER;
     rcText.bottom=rcText.top+szFnt.cy+2;
     if(GetTextAlign() & DT_CENTER)
@@ -1325,7 +1325,7 @@ void SGroup::OnPaint(IRenderTarget *pRT)
     }
 
     {
-        CRect rcGroupBox = GetWindowRect();
+        CRect rcGroupBox = GetClientRect();
 
         if(!m_strText.GetText(FALSE).IsEmpty()) rcGroupBox.top+=szFnt.cy/2;
         rcGroupBox.DeflateRect(1,1,1,0);

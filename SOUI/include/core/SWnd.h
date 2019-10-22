@@ -784,6 +784,18 @@ namespace SOUI
         */
         BOOL GetWindowRgn(IRegion *pRgn);
         
+		/**
+        * SetClipPath
+        * @brief    设置窗口Path
+        * @param    IPath *pPath --  有效区域,区域左上角坐标为(0,0)
+        * @param    BOOL bRedraw -- 重绘标志
+        * @return   void 
+        *
+        * Describe 
+        */
+		void SetClipPath(IPath *pPath,BOOL bRedraw=TRUE);
+
+		
         /**
         * SetTimer
         * @brief    利用窗口定时器来设置一个ID为0-127的SWND定时器
@@ -1086,18 +1098,6 @@ namespace SOUI
 		*/
 		virtual const SStringW & GetTrCtx() const;
 
-		/**
-		* DispatchPaint
-		* @brief    
-		* @param    IRenderTarget * pRT -- 渲染RT
-		* @param    IRegion *pRgn -- paint region
-		* @param    UINT iBeginZorder -- begin zorder
-		* @param    UINT iEndZorder -- end zorder
-		* @return   void
-		*
-		* Describe
-		*/
-		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder);
     public://caret相关方法
         virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
         virtual void ShowCaret(BOOL bShow);   
@@ -1258,6 +1258,19 @@ namespace SOUI
          */    
         virtual BOOL IsLayeredWindow() const;
     
+		/**
+		* DispatchPaint
+		* @brief    
+		* @param    IRenderTarget * pRT -- 渲染RT
+		* @param    IRegion *pRgn -- paint region
+		* @param    UINT iBeginZorder -- begin zorder
+		* @param    UINT iEndZorder -- end zorder
+		* @return   void
+		*
+		* Describe
+		*/
+		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
+
     protected://helper functions
 
 		SWindow* _FindChildByID(int nID, int nDeep);
@@ -1284,7 +1297,8 @@ namespace SOUI
         void _PaintNonClient(IRenderTarget *pRT);
 		void _RedrawNonClient();
         void _PaintRegion(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
-		void _PaintRegion2(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
+		
+		void _PaintChildren(IRenderTarget *pRT, IRegion *pRgn, UINT iBeginZorder, UINT iEndZorder);
 
         void DrawDefFocusRect(IRenderTarget *pRT,CRect rc);
         
@@ -1489,7 +1503,8 @@ namespace SOUI
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
-        SAutoRefPtr<IRegion>       m_rgnWnd;    /**< 窗口Region */
+        SAutoRefPtr<IRegion>       m_clipRgn;    /**< 窗口Region */
+		SAutoRefPtr<IPath>		   m_clipPath;  /**< 窗口Path */
         ISkinObj *          m_pBgSkin;          /**< 背景skin */
         ISkinObj *          m_pNcSkin;          /**< 非客户区skin */
         ULONG_PTR           m_uData;            /**< 窗口的数据位,可以通过GetUserData获得 */

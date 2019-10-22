@@ -271,8 +271,6 @@
 			<File
 				RelativePath="qrcode\QR_Encode.h" />
 			<File
-				RelativePath="..\controls.extend\gif\SAniImgFrame.h" />
-			<File
 				RelativePath="SCheckBox2.h" />
 			<File
 				RelativePath="..\controls.extend\SChromeTabCtrl.h" />

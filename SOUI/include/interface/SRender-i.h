@@ -1196,7 +1196,7 @@ namespace SOUI
 		 *  @param mode The region op to apply to the current clip
 		 *  @param doAntiAlias true if the clip should be anti aliased
 		 */
-		virtual HRESULT ClipPath(const IPath * path, UINT mode, bool doAntiAlias = false) = 0;
+		virtual HRESULT PushClipPath(const IPath * path, UINT mode, bool doAntiAlias = false) = 0;
 
 		/** Draw the specified path frame using current selected pen
 		@param path     The path to be drawn
