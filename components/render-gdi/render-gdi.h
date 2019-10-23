@@ -379,7 +379,7 @@ namespace SOUI
 
 		virtual HRESULT CreateRegion( IRegion ** ppRegion );
 
-		virtual HRESULT ClipPath(const IPath * path, UINT mode, bool doAntiAlias = false);
+		virtual HRESULT PushClipPath(const IPath * path, UINT mode, bool doAntiAlias = false);
 
 		virtual HRESULT DrawPath(const IPath * path,IPathEffect * pathEffect=NULL);
 

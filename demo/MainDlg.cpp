@@ -1187,6 +1187,16 @@ void CMainDlg::OnSouiClick()
 	}
 }
 
+void CMainDlg::OnSetHostAnimation()
+{
+	IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:anihost"));
+	if (pAni)
+	{
+		SetHostAnimation(pAni);
+		pAni->Release();
+	}
+}
+
 void CMainDlg::onAnimationEnd(IValueAnimator * pAnimator)
 {
 	SWindow *pTst = FindChildByName(L"tree_test");

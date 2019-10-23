@@ -1179,7 +1179,7 @@ namespace SOUI
 		return m_pRenderFactory->CreateRegion(ppRegion)?S_OK:E_OUTOFMEMORY;
 	}
 
-	HRESULT SRenderTarget_GDI::ClipPath(const IPath * path, UINT mode, bool doAntiAlias /*= false*/)
+	HRESULT SRenderTarget_GDI::PushClipPath(const IPath * path, UINT mode, bool doAntiAlias /*= false*/)
 	{
 		return E_NOTIMPL;
 	}

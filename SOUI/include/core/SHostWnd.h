@@ -132,6 +132,8 @@ protected:
 	CSize					m_szAppSetted;		/**<应用层设置的窗口大小 */
 	int						m_nAutoSizing;		/**<自动计算大小触发的WM_SIZE消息 */
 	bool                    m_bResizing;        /**<执行WM_SIZE*/
+
+	SAutoRefPtr<IAnimation> m_hostAnimation;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
@@ -171,6 +173,23 @@ public:
 	IToolTip * GetToolTip() const {
 		return m_pTipCtrl;
 	}
+
+	void SetHostAnimation(IAnimation *pAni,bool startNow = true);
+	bool StartHostAnimation();
+	bool StopHostAnimation();
+protected:
+	class SHostAnimationHandler : public ITimelineHandler
+	{
+	public:
+		STransformation			m_hostTransform;
+		SHostWnd *				m_pHostWnd;
+		CRect					m_rcInit;
+	protected:
+		virtual void OnNextFrame()override;
+	} m_hostAnimationHandler;
+
+	virtual void OnHostAnimationStarted(IAnimation * pAni){}
+	virtual void OnHostAnimationStoped(IAnimation * pAni){}
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
@@ -221,7 +240,7 @@ protected:
     void OnSetFocus(HWND wndOld);
     void OnKillFocus(HWND wndFocus);
         
-    void UpdateHost(HDC dc,const CRect &rc);
+    void UpdateHost(HDC dc,const CRect &rc,BYTE byAlpha=255);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
     void OnCaptureChanged(HWND wnd);

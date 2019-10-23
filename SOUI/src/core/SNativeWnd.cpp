@@ -225,7 +225,7 @@ LRESULT SNativeWnd::ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_CTLCOLORSCROLLBAR:
     case WM_CTLCOLORSTATIC:
         bHandled = TRUE;
-        lResult = ::SendMessage(GetParent(m_hWnd),uMsg, wParam, lParam);
+        lResult = ::SendMessage(GetParent(),uMsg, wParam, lParam);
         break;
     default:
         bHandled = FALSE;

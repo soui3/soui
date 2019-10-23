@@ -26,31 +26,24 @@ namespace SOUI {
 		return mAlpha;
 	}
 
-	void STransformation::updateType()
+	void STransformation::updateMatrixType()
 	{
-		mTransformationType = TYPE_IDENTITY;
-		if (mAlpha != 0xFF)
-			mTransformationType |= TYPE_ALPHA;
-		if (!mMatrix.isIdentity())
+		if(mMatrix.isIdentity())
+			mTransformationType &= ~TYPE_MATRIX;
+		else 
 			mTransformationType |= TYPE_MATRIX;
 	}
 
 	void STransformation::setAlpha(BYTE alpha)
 	{
 		mAlpha = alpha;
-		if (mAlpha == 0xFF)
-			mTransformationType &= ~TYPE_ALPHA;
-		else
-			mTransformationType |= TYPE_ALPHA;
+		mTransformationType |= TYPE_ALPHA;
 	}
 
 	void STransformation::setMatrix(const SMatrix & mtx)
 	{
 		mMatrix = mtx;
-		if (!mMatrix.isIdentity())
-			mTransformationType |= TYPE_MATRIX;
-		else
-			mTransformationType &= ~TYPE_MATRIX;
+		updateMatrixType();
 	}
 
 	SMatrix & STransformation::getMatrix()
@@ -65,16 +58,30 @@ namespace SOUI {
 
 	void STransformation::postCompose(STransformation t)
 	{
-		if(t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha*t.getAlpha()/255);
-		if(t.hasMatrix()) mMatrix *= t.getMatrix();
-		updateType();
+		if(t.hasAlpha())
+		{
+			mAlpha = (BYTE)((int)mAlpha*t.getAlpha()/255);
+			mTransformationType |= TYPE_ALPHA;
+		}
+		if(t.hasMatrix()) 
+		{
+			mMatrix *= t.getMatrix();
+			updateMatrixType();
+		}
 	}
 
 	void STransformation::compose(STransformation t)
 	{
-		if (t.hasAlpha()) mAlpha = (BYTE)((int)mAlpha * t.getAlpha()/255);
-		if (t.hasMatrix()) mMatrix = t.getMatrix() * mMatrix;
-		updateType();
+		if (t.hasAlpha()) 
+		{
+			mAlpha = (BYTE)((int)mAlpha * t.getAlpha()/255);
+			mTransformationType |= TYPE_ALPHA;
+		}
+		if (t.hasMatrix())
+		{
+			mMatrix = t.getMatrix() * mMatrix;
+			updateMatrixType();
+		}
 	}
 
 	void STransformation::set(STransformation t)

@@ -188,6 +188,7 @@
     <file name="slide_show" path="anim\slide_show.xml"/>
     <file name="slide_hide" path="anim\slide_hide.xml"/>
     <file name="rotate" path="anim\rotate.xml"/>
+    <file name="anihost" path="anim\anihost.xml"/>
   </anim>
   <valueAni>
     <file name="alphaAni" path="valueAni\alpha.xml"/>

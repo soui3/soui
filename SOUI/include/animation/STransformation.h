@@ -109,7 +109,7 @@ public:
      */
     void setAlpha(BYTE alpha);
 
-	void updateType();
+	void updateMatrixType();
 
     /**
      * @return The degree of transparency
