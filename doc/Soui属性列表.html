@@ -1119,9 +1119,9 @@
             <div class="toc">
                 <ul>
                     <li><a href="#SOUI">SOUI</a></li>
-                    <li><a href="#import">Import</a></li>
-                    <li><a href="#default">Default</a></li>
-                    <li><a href="#style">Style</a></li>
+                    <li><a href="#uires.idx">uires.idx</a></li>
+                    <li><a href="#init.xml">init.xml</a></li>
+                    <li><a href="#skins.xml">skins.xml</a></li>
                     <li><a href="#font">Font</a></li>
                     <li><a href="#window">Window</a></li>
                     <li><a href="#control">Control</a></li>
@@ -1169,7 +1169,8 @@
             <hr/>
             <p style="color:red;font-size:18px;">提示：HOME键可以立即回到页面的头部，本属性列表仅支持 <a target="_blank" href="https://github.com/soui3/soui">3.0版本</a></p>
             <p></p>
-            <h3 id="SOUI"><a href="#SOUI">SOUI</a></h3>
+            <h3 id="SOUI"><a href="#SOUI">SOUI文件概论</a></h3>
+			 <p style="color:black;font-size:18px;">soui包含了资源索引XML文件介绍(uires.idx)</p>
             <table>
                 <thead>
                 <tr>
@@ -1181,39 +1182,31 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>trCtx</td>
-                    <td align="right">dlg_main</td>
+                    <td>uires.idx</td>
+                    <td align="right">< file name="webbtn_back" path="image\webbtn_back.png" / ></td>
                     <td align="center">STRING</td>
-                    <td align="left">xml名称</td>
+                    <td align="left">	SOUI资源的入口，定义了程序中使用的各种资源，以"resource"为根节点。 在uires.idx中，可以定义了UIDEF，ICON，CURSOR，LAYOUT，IMGX，GIF，rtf，script，translator这些资源类型。</td>
                 </tr>
-                <tr>
-                    <td>bigIcon</td>
-                    <td align="right">ICON_LOGO:32</td>
-                    <td align="center">STRING</td>
-                    <td align="left">大图标 格式：iconname:size</td>
-                </tr>
+               
 				    <tr>
-                    <td>title</td>
-                    <td align="right">SOUI-DEMO</td>
+                    <td>init.xml</td>
+                    <td align="right">< font face="宋体" size="15"/ >
+									  < string src="values:string" / >
+									  < skin src="values:skin"/ >
+									  < color src="values:color"/ ></td>
                     <td align="center">STRING</td>
-                    <td align="left">标题</td>
+                    <td align="left">定义SOUI中使用的全局UI定义。一般定义font，string，skins，style，objattr五个子节点</td>
                 </tr>
-				    <tr>
-                    <td>title</td>
-                    <td align="right">SOUI-DEMO</td>
+				<tr>
+                    <td>skins.xml</td>
+                    <td align="right">< imglist name="skin_page_icons" src="imgx:png_page_icons" states="9"/ ></td>
                     <td align="center">STRING</td>
-                    <td align="left">标题</td>
-                </tr>
-				    <tr>
-                    <td>title</td>
-                    <td align="right">SOUI-DEMO</td>
-                    <td align="center">STRING</td>
-                    <td align="left">标题</td>
+                    <td align="left">定义SOUI中使用的全局窗口元素绘制对象，每一个对象都对应一个SOUI::ISkinObj的派生类。</td>
                 </tr>
 				
                 </tbody>
             </table>
-            <h3 id="import"><a href="#import">Import</a></h3>
+            <h3 id="uires.idx"><a href="#uires.idx">uires.idx</a></h3>
             <table>
                 <thead>
                 <tr>
@@ -1224,46 +1217,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>fontfile</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">字体的文件路径</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="default"><a href="#default">Default</a></h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
+              <tr>
                     <td>name</td>
-                    <td align="right"></td>
+                    <td align="right">gif_penguin</td>
                     <td align="center">STRING</td>
-                    <td align="left">控件的名称</td>
+                    <td align="left">UI布局的XML文件引用该资源的标识</td>
                 </tr>
-                <tr>
-                    <td>value</td>
-                    <td align="right"></td>
+				    <tr>
+                    <td>path</td>
+                    <td align="right">image\penguin.gif	</td>
                     <td align="center">STRING</td>
-                    <td align="left">控件的属性</td>
-                </tr>
-                <tr>
-                    <td>shared</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否共享</td>
+                    <td align="left">该资源真实的文件存储路径。</td>
                 </tr>
                 </tbody>
             </table>
-            <h3 id="style"><a href="#style">Style</a></h3>
+            <h3 id="init.xml"><a href="#init.xml">init.xml</a></h3>
+			<p style="color:black;font-size:18px;">这个xml_init必须是以UIDEF为唯一根节点</p>	
+			1.font   
+			<p>范例: < font face="微软雅黑" size="18"/ ></p>
             <table>
                 <thead>
                 <tr>
@@ -1275,26 +1246,213 @@
                 </thead>
                 <tbody>
                 <tr>
+                    <td>face</td>
+                    <td align="right">微软雅黑</td>
+                    <td align="center">STRING</td>
+                    <td align="left">字体的名称</td>
+                </tr>
+                <tr>
+                    <td>size</td>
+                    <td align="right">18</td>
+                    <td align="center">INT</td>
+                    <td align="left">字体的大小</td>
+                </tr>       
+                </tbody>
+            </table>
+			2.string    
+			<p>范例:< string >< ver value="1.0"/ >< /string ></p>
+			<p>定义一个"name-字符串"映射，在布局的XML文件中可以通过引用字符串的name来获得字符串</p>
+            <h3 id="skins.xml"><a href="#skins.xml">skins.xml</a></h3>
+			<p>SOUI系统默认实现了SSkinImgList(imglist), SSkinImgFrame(imgframe), SSkinButton(button), SSkinGradation(gradation), SSkinScrollbar(scrollbar), SSkinMenuBorder(border)这几种绘图类型。SSkinImgList为SOUI中的C++类名，imglist为在skins节点中的元素类型名。</p>
+			1、imglist 
+			<p>范例：< imglist name="skin_tree_icon" src="imgx:png_treeicon" states="3" / ></p>
+			<p>imglist是一个图片序列对象，可以包含一组小图片，常见的如按钮需要使用的4种状态图。</p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				  <tr>
                     <td>name</td>
-                    <td align="right"></td>
+                    <td align="right">skin_page_icons</td>
                     <td align="center">STRING</td>
-                    <td align="left">样式的名称</td>
+                    <td align="left">皮肤名字，同一窗口内必须唯一，如(skin_page_icons)</td>
                 </tr>
                 <tr>
-                    <td>value</td>
-                    <td align="right"></td>
+                    <td>src</td>
+                    <td align="right">imgx:btn_nex</td>
                     <td align="center">STRING</td>
-                    <td align="left">样式的属性</td>
+                    <td align="left">skinObj引用的图片文件定义在uires.idx中的name属性。资源引用格式为type:name</td>
                 </tr>
                 <tr>
-                    <td>shared</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否共享</td>
+                    <td>tile</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">定义图片在放大显示时平铺还是拉伸，0--位伸（默认）其它--平铺 </td>
+                </tr>
+                <tr>
+                    <td>vertical</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">子图是否垂直排列，0--水平排列(默认), 其它--垂直排列</td>
+                </tr>
+				<tr>
+                    <td>states</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">子图数量,默认为1</td>
+                </tr>
+				<tr>
+                    <td>autoFit</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">自适应尺寸 窗口拉伸的时候，是不是变形充满 1 变形充满 0不变形</td>
+                </tr>
+				<tr>
+                    <td>filterLevel</td>
+                    <td align="right">high</td>
+                    <td align="center">STRING</td>
+                    <td align="left">缩放级别 高图片缩放没锯齿 取值high、medium,none、low </td>
                 </tr>
                 </tbody>
             </table>
-            <h3 id="font"><a href="#font">Font</a></h3>
+        	2、imgframe  <p>范例： < imgframe name="skin_tab_left" src="imgx:png_tab_left" states="3" margin="1,1,1,1" / ></p>
+			<p>imgframe是一个提供九宫格显示的绘图对象，SSkinImgFrame派生自SSkinImgList，因此imgframe也拥有imglist的全部属性。</p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>left</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格左边距</td>
+                </tr>
+               	  <tr>
+                    <td>top</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格上边距</td>
+                </tr>
+                	  <tr>
+                    <td>right</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格右边距</td>
+                </tr>
+               	  <tr>
+                    <td>bottom</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格下边距</td>
+                </tr>
+					  <tr>
+                    <td>margin-x</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格左右边距</td>
+                </tr>
+				<tr>
+                    <td>margin-y</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格上下边距</td>
+                </tr>
+				<tr>
+                    <td>margin</td>
+                    <td align="right">10,10,10,10</td>
+                    <td align="center">RECT</td>
+                    <td align="left">外边距, 九宫格 4 周 </td>
+                </tr>
+                </tbody>
+            </table>
+           	3、button 
+			<p>范例：< button name="win10btn" colorBorder="#ADADAD" colorUp="#E1E1E1" colorDown="#E1E1E1" colorBorderHover="#0078D7" colorUpHover="#E5F1FB" colorDownHover="#E5F1FB" colorBorderPush="#005499" colorUpPush="#CCE4F7" colorDownPush="#CCE4F7" cornerPercent="0.5" / ></p>
+			<p>button绘图对象是绘制按钮时使用的，它使用渐变实现绘制按钮的4种状态。</p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>cornerPercent</td>
+                    <td align="right">0.5</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">圆角百分比，数值范围0-1</td>
+                </tr>
+				  <tr>
+                    <td>colorBorder</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">边框颜色，格式:#rgba</td>
+                </tr>
+               	  <tr>
+                    <td>colorUp</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">正常状态的渐变色上颜色，格式:#rgba</td>
+                </tr>
+                	  <tr>
+                    <td>colorDown</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">正常状态渐变终止颜色，格式:#rgba"</td>
+                </tr>
+               	  <tr>
+                    <td>colorUpHover</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">浮动状态渐变起始颜色</td>
+                </tr>
+					  <tr>
+                    <td>colorDownHover</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">浮动状态渐变终止颜色</td>
+                </tr>
+				<tr>
+                    <td>colorUpPush</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">下压状态渐变起始颜色</td>
+                </tr>
+				<tr>
+                    <td>colorDownPush</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">下压状态渐变终止颜色</td>
+                </tr>
+					<tr>
+                    <td>colorUpDisable</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">禁用状态渐变起始颜色</td>
+                </tr>
+					<tr>
+                    <td>colorDownDisable</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">禁用状态渐变终止颜色</td>
+                </tr>
+                </tbody>
+            </table>
+		   <h3 id="font"><a href="#font">Font</a></h3>
             <table>
                 <thead>
                 <tr>

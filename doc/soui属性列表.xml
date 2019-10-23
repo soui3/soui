@@ -44,7 +44,7 @@
   <skin comment="soui界面的皮肤设置 skin 定义一组皮肤源">
     <!-- skin的通用属性-->
     <Attribute name="name" default="skin_page_icons" type="STRING" comment="皮肤名字，同一窗口内必须唯一，如(skin_page_icons)"/>
-    <Attribute name="src" default="bkimg:skin_pic_0" type="STRING" comment="资源文件img的地址"/>
+    <Attribute name="src" default="bkimg:skin_pic_0" type="STRING" comment="资源文件img的地址 skinObj引用的图片文件定义在uires.idx中的name属性。资源引用格式为type:name"/>
     <Attribute name="colorizeEnable" default="0" type="INT" comment="标识是否支持色调调节 0不支持  1支持"/>
     <Attribute name="scale" default="0" type="INT" comment="比例"/>
     <imglist comment="图片列表皮肤">
@@ -52,7 +52,7 @@
       <Attribute name="tile" default="0" type="INT" comment="绘制是否平铺 0--位伸（默认）其它--平铺 "/>
       <Attribute name="autoFit" default="0" type="INT" comment="自适应尺寸 窗口拉伸的时候，是不是变形充满 1 变形充满 0不变形"/>
       <Attribute name="filterLevel" default="high" type="STRING" comment="缩放级别 高图片缩放没锯齿 取值high、medium,none、low "/>
-      <Attribute name="vertical" default="0" type="INT" comment="子图是否垂直排列 0--水平排列(默认)其它--垂直排列 0--水平(默认)1--垂直"/>
+      <Attribute name="vertical" default="0" type="INT" comment="子图是否垂直排列 0--水平排列(默认)其它--垂直排列 0--水平(默认)1--垂直"/>	  
     </imglist>
     <imgframe parent="imglist" comment="九宫格图片皮肤">
       <Attribute name="left" default="5" type="INT" comment="九宫格左边距"/>
