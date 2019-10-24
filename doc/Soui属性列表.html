@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>SOUI属性列表</title>
+    <style>
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+            display: block;
+        }
+
+        audio, canvas, progress, video {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+
+        audio:not([controls]) {
+            display: none;
+            height: 0;
+        }
+
+        [hidden], template {
+            display: none;
+        }
+
+        a {
+            background: transparent;
+        }
+
+        a:active, a:hover {
+            outline: 0;
+        }
+
+        abbr[title] {
+            border-bottom: 1px dotted;
+        }
+
+        b, strong {
+            font-weight: bold;
+        }
+
+        dfn {
+            font-style: italic;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 0.67em 0;
+        }
+
+        mark {
+            background: #ff0;
+            color: #000;
+        }
+
+        small {
+            font-size: 80%;
+        }
+
+        sub, sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sup {
+            top: -0.5em;
+        }
+
+        sub {
+            bottom: -0.25em;
+        }
+
+        img {
+            border: 0;
+        }
+
+        svg:not(:root) {
+            overflow: hidden;
+        }
+
+        figure {
+            margin: 1em 40px;
+        }
+
+        hr {
+            box-sizing: content-box;
+            height: 0;
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        code, kbd, pre, samp {
+            font-family: monospace, monospace;
+            font-size: 1em;
+        }
+
+        button, input, optgroup, select, textarea {
+            color: inherit;
+            font: inherit;
+            margin: 0;
+        }
+
+        button {
+            overflow: visible;
+        }
+
+        button, select {
+            text-transform: none;
+        }
+
+        button, html input[type="button"], input[type="reset"], input[type="submit"] {
+            -webkit-appearance: button;
+            cursor: pointer;
+        }
+
+        button[disabled], html input[disabled] {
+            cursor: default;
+        }
+
+        button::-moz-focus-inner, input::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+
+        input {
+            line-height: normal;
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+            height: auto;
+        }
+
+        input[type="search"] {
+            -webkit-appearance: textfield;
+            box-sizing: content-box;
+        }
+
+        input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+
+        fieldset {
+            border: 1px solid #c0c0c0;
+            margin: 0 2px;
+            padding: 0.35em 0.625em 0.75em;
+        }
+
+        legend {
+            border: 0;
+            padding: 0;
+        }
+
+        textarea {
+            overflow: auto;
+        }
+
+        optgroup {
+            font-weight: bold;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        td, th {
+            padding: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input, select, textarea, button {
+            font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        body {
+            min-width: 1020px;
+            font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+            color: #333;
+            background-color: #fff;
+        }
+
+        a {
+            color: #4183c4;
+            text-decoration: none;
+        }
+
+        a:hover, a:active {
+            text-decoration: underline;
+        }
+
+        hr, .rule {
+            height: 0;
+            margin: 15px 0;
+            overflow: hidden;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        hr:before, .rule:before {
+            display: table;
+            content: "";
+        }
+
+        hr:after, .rule:after {
+            display: table;
+            clear: both;
+            content: "";
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        h2 {
+            font-size: 21px;
+        }
+
+        h3 {
+            font-size: 16px;
+        }
+
+        h4 {
+            font-size: 14px;
+        }
+
+        h5 {
+            font-size: 12px;
+        }
+
+        h6 {
+            font-size: 11px;
+        }
+
+        small {
+            font-size: 90%;
+        }
+
+        blockquote {
+            margin: 0;
+        }
+
+        .lead {
+            margin-bottom: 30px;
+            font-size: 20px;
+            font-weight: 300;
+            color: #555;
+        }
+
+        .text-muted {
+            color: #999;
+        }
+
+        .text-danger {
+            color: #bd2c00;
+        }
+
+        .text-emphasized {
+            font-weight: bold;
+            color: #333;
+        }
+
+        ul, ol {
+            padding: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        ol ol, ul ol {
+            list-style-type: lower-roman;
+        }
+
+        ul ul ol, ul ol ol, ol ul ol, ol ol ol {
+            list-style-type: lower-alpha;
+        }
+
+        dd {
+            margin-left: 0;
+        }
+
+        tt, code {
+            font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 12px;
+        }
+
+        pre {
+            margin-top: 0;
+            margin-bottom: 0;
+            font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        #realtime .status {
+            overflow: visible;
+            position: absolute;
+            top: -5px;
+            left: 0;
+            background: url("/public/images/github-status.png");
+            width: 26px;
+            height: 26px;
+            display: block;
+            margin: 0 5px 0 0;
+        }
+
+        #realtime .up {
+            background-position: 0 0;
+        }
+
+        #realtime .problem {
+            background-position: 0 -53px;
+        }
+
+        #realtime .down {
+            background-position: 0 -26px;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto 20px auto;
+        }
+
+        #header {
+            background: #FAFAFA;
+            background: -moz-linear-gradient(#FAFAFA, #EAEAEA);
+            background: -webkit-linear-gradient(#FAFAFA, #EAEAEA);
+            -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eaeaea')";
+            border-bottom: 1px solid #CACACA;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #markup {
+            padding: 3px;
+        }
+
+        #markup article {
+            padding-top: 30px;
+        }
+
+        .markdown-body {
+            overflow: hidden;
+            font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .markdown-body > *:first-child {
+            margin-top: 0 !important;
+        }
+
+        .markdown-body > *:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .markdown-body .absent {
+            color: #c00;
+        }
+
+        .markdown-body .anchor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            padding-right: 6px;
+            padding-left: 30px;
+            margin-left: -30px;
+        }
+
+        .markdown-body .anchor:focus {
+            outline: none;
+        }
+
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+            position: relative;
+            margin-top: 1em;
+            margin-bottom: 16px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+            display: none;
+            color: #000;
+            vertical-align: middle;
+        }
+
+        .markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+            padding-left: 8px;
+            margin-left: -30px;
+            text-decoration: none;
+        }
+
+        .markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+            display: inline-block;
+        }
+
+        .markdown-body h1 tt, .markdown-body h1 code, .markdown-body h2 tt, .markdown-body h2 code, .markdown-body h3 tt, .markdown-body h3 code, .markdown-body h4 tt, .markdown-body h4 code, .markdown-body h5 tt, .markdown-body h5 code, .markdown-body h6 tt, .markdown-body h6 code {
+            font-size: inherit;
+        }
+
+        .markdown-body h1 {
+            padding-bottom: 0.3em;
+            font-size: 2.25em;
+            line-height: 1.2;
+            border-bottom: 1px solid #eee;
+        }
+
+        .markdown-body h1 .anchor {
+            line-height: 1;
+        }
+
+        .markdown-body h2 {
+            padding-bottom: 0.3em;
+            font-size: 1.75em;
+            line-height: 1.225;
+            border-bottom: 1px solid #eee;
+        }
+
+        .markdown-body h2 .anchor {
+            line-height: 1;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.5em;
+            line-height: 1.43;
+        }
+
+        .markdown-body h3 .anchor {
+            line-height: 1.2;
+        }
+
+        .markdown-body h4 {
+            font-size: 1.25em;
+        }
+
+        .markdown-body h4 .anchor {
+            line-height: 1.2;
+        }
+
+        .markdown-body h5 {
+            font-size: 1em;
+        }
+
+        .markdown-body h5 .anchor {
+            line-height: 1.1;
+        }
+
+        .markdown-body h6 {
+            font-size: 1em;
+            color: #777;
+        }
+
+        .markdown-body h6 .anchor {
+            line-height: 1.1;
+        }
+
+        .markdown-body p, .markdown-body blockquote, .markdown-body ul, .markdown-body ol, .markdown-body dl, .markdown-body table, .markdown-body pre {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .markdown-body hr {
+            height: 4px;
+            padding: 0;
+            margin: 16px 0;
+            background-color: #e7e7e7;
+            border: 0 none;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 2em;
+        }
+
+        .markdown-body ul.no-list, .markdown-body ol.no-list {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .markdown-body ul ul, .markdown-body ul ol, .markdown-body ol ol, .markdown-body ol ul {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .markdown-body li > p {
+            margin-top: 16px;
+        }
+
+        .markdown-body dl {
+            padding: 0;
+        }
+
+        .markdown-body dl dt {
+            padding: 0;
+            margin-top: 16px;
+            font-size: 1em;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .markdown-body dl dd {
+            padding: 0 16px;
+            margin-bottom: 16px;
+        }
+
+        .markdown-body blockquote {
+            padding: 0 15px;
+            color: #777;
+            border-left: 4px solid #ddd;
+        }
+
+        .markdown-body blockquote > :first-child {
+            margin-top: 0;
+        }
+
+        .markdown-body blockquote > :last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-body table {
+            display: block;
+            width: 100%;
+            overflow: auto;
+            word-break: normal;
+            word-break: keep-all;
+        }
+
+        .markdown-body table th {
+            font-weight: bold;
+        }
+
+        .markdown-body table th, .markdown-body table td {
+            padding: 6px 13px;
+            border: 1px solid #ddd;
+        }
+
+        .markdown-body table tr {
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+        .markdown-body table tr:nth-child(2n) {
+            background-color: #f8f8f8;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .markdown-body span.frame {
+            display: block;
+            overflow: hidden;
+        }
+
+        .markdown-body span.frame > span {
+            display: block;
+            float: left;
+            width: auto;
+            padding: 7px;
+            margin: 13px 0 0;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .markdown-body span.frame span img {
+            display: block;
+            float: left;
+        }
+
+        .markdown-body span.frame span span {
+            display: block;
+            padding: 5px 0 0;
+            clear: both;
+            color: #333;
+        }
+
+        .markdown-body span.align-center {
+            display: block;
+            overflow: hidden;
+            clear: both;
+        }
+
+        .markdown-body span.align-center > span {
+            display: block;
+            margin: 13px auto 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .markdown-body span.align-center span img {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .markdown-body span.align-right {
+            display: block;
+            overflow: hidden;
+            clear: both;
+        }
+
+        .markdown-body span.align-right > span {
+            display: block;
+            margin: 13px 0 0;
+            overflow: hidden;
+            text-align: right;
+        }
+
+        .markdown-body span.align-right span img {
+            margin: 0;
+            text-align: right;
+        }
+
+        .markdown-body span.float-left {
+            display: block;
+            float: left;
+            margin-right: 13px;
+            overflow: hidden;
+        }
+
+        .markdown-body span.float-left span {
+            margin: 13px 0 0;
+        }
+
+        .markdown-body span.float-right {
+            display: block;
+            float: right;
+            margin-left: 13px;
+            overflow: hidden;
+        }
+
+        .markdown-body span.float-right > span {
+            display: block;
+            margin: 13px auto 0;
+            overflow: hidden;
+            text-align: right;
+        }
+
+        .markdown-body code, .markdown-body tt {
+            padding: 0;
+            padding-top: 0.2em;
+            padding-bottom: 0.2em;
+            margin: 0;
+            font-size: 85%;
+            background-color: rgba(0, 0, 0, 0.04);
+            border-radius: 3px;
+        }
+
+        .markdown-body code:before, .markdown-body code:after, .markdown-body tt:before, .markdown-body tt:after {
+            letter-spacing: -0.2em;
+            content: "\00a0";
+        }
+
+        .markdown-body code br, .markdown-body tt br {
+            display: none;
+        }
+
+        .markdown-body del code {
+            text-decoration: inherit;
+        }
+
+        .markdown-body pre > code {
+            padding: 0;
+            margin: 0;
+            font-size: 100%;
+            word-break: normal;
+            white-space: pre;
+            background: transparent;
+            border: 0;
+        }
+
+        .markdown-body .highlight {
+            margin-bottom: 16px;
+        }
+
+        .markdown-body .highlight pre, .markdown-body pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #f7f7f7;
+            border-radius: 3px;
+        }
+
+        .markdown-body .highlight pre {
+            margin-bottom: 0;
+            word-break: normal;
+        }
+
+        .markdown-body pre {
+            word-wrap: normal;
+        }
+
+        .markdown-body pre code, .markdown-body pre tt {
+            display: inline;
+            max-width: initial;
+            padding: 0;
+            margin: 0;
+            overflow: initial;
+            line-height: inherit;
+            word-wrap: normal;
+            background-color: transparent;
+            border: 0;
+        }
+
+        .markdown-body pre code:before, .markdown-body pre code:after, .markdown-body pre tt:before, .markdown-body pre tt:after {
+            content: normal;
+        }
+
+        .markdown-body kbd {
+            display: inline-block;
+            padding: 3px 5px;
+            font-size: 11px;
+            line-height: 10px;
+            color: #555;
+            vertical-align: middle;
+            background-color: #fcfcfc;
+            border: solid 1px #ccc;
+            border-bottom-color: #bbb;
+            border-radius: 3px;
+            box-shadow: inset 0 -1px 0 #bbb;
+        }
+
+        /* Syntax highlight */
+        .codehilite {
+            background: #ffffff;
+        }
+
+        .codehilite .c {
+            color: #999988;
+            font-style: italic
+        }
+
+        /* Comment */
+        .codehilite .err {
+            color: #a61717;
+            background-color: #e3d2d2
+        }
+
+        /* Error */
+        .codehilite .k {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Keyword */
+        .codehilite .o {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Operator */
+        .codehilite .cm {
+            color: #999988;
+            font-style: italic
+        }
+
+        /* Comment.Multiline */
+        .codehilite .cp {
+            color: #999999;
+            font-weight: bold
+        }
+
+        /* Comment.Preproc */
+        .codehilite .c1 {
+            color: #999988;
+            font-style: italic
+        }
+
+        /* Comment.Single */
+        .codehilite .cs {
+            color: #999999;
+            font-weight: bold;
+            font-style: italic
+        }
+
+        /* Comment.Special */
+        .codehilite .gd {
+            color: #000000;
+            background-color: #ffdddd
+        }
+
+        /* Generic.Deleted */
+        .codehilite .gd .x {
+            color: #000000;
+            background-color: #ffaaaa
+        }
+
+        /* Generic.Deleted.Specific */
+        .codehilite .ge {
+            color: #000000;
+            font-style: italic
+        }
+
+        /* Generic.Emph */
+        .codehilite .gr {
+            color: #aa0000
+        }
+
+        /* Generic.Error */
+        .codehilite .gh {
+            color: #999999
+        }
+
+        /* Generic.Heading */
+        .codehilite .gi {
+            color: #000000;
+            background-color: #ddffdd
+        }
+
+        /* Generic.Inserted */
+        .codehilite .gi .x {
+            color: #000000;
+            background-color: #aaffaa
+        }
+
+        /* Generic.Inserted.Specific */
+        .codehilite .go {
+            color: #888888
+        }
+
+        /* Generic.Output */
+        .codehilite .gp {
+            color: #555555
+        }
+
+        /* Generic.Prompt */
+        .codehilite .gs {
+            font-weight: bold
+        }
+
+        /* Generic.Strong */
+        .codehilite .gu {
+            color: #aaaaaa
+        }
+
+        /* Generic.Subheading */
+        .codehilite .gt {
+            color: #aa0000
+        }
+
+        /* Generic.Traceback */
+        .codehilite .kc {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Keyword.Constant */
+        .codehilite .kd {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Keyword.Declaration */
+        .codehilite .kp {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Keyword.Pseudo */
+        .codehilite .kr {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Keyword.Reserved */
+        .codehilite .kt {
+            color: #445588;
+            font-weight: bold
+        }
+
+        /* Keyword.Type */
+        .codehilite .m {
+            color: #009999
+        }
+
+        /* Literal.Number */
+        .codehilite .s {
+            color: #d14
+        }
+
+        /* Literal.String */
+        .codehilite .na {
+            color: #008080
+        }
+
+        /* Name.Attribute */
+        .codehilite .nb {
+            color: #0086B3
+        }
+
+        /* Name.Builtin */
+        .codehilite .nc {
+            color: #445588;
+            font-weight: bold
+        }
+
+        /* Name.Class */
+        .codehilite .no {
+            color: #008080
+        }
+
+        /* Name.Constant */
+        .codehilite .ni {
+            color: #800080
+        }
+
+        /* Name.Entity */
+        .codehilite .ne {
+            color: #990000;
+            font-weight: bold
+        }
+
+        /* Name.Exception */
+        .codehilite .nf {
+            color: #990000;
+            font-weight: bold
+        }
+
+        /* Name.Function */
+        .codehilite .nn {
+            color: #555555
+        }
+
+        /* Name.Namespace */
+        .codehilite .nt {
+            color: #000080
+        }
+
+        /* Name.Tag */
+        .codehilite .nv {
+            color: #008080
+        }
+
+        /* Name.Variable */
+        .codehilite .ow {
+            color: #000000;
+            font-weight: bold
+        }
+
+        /* Operator.Word */
+        .codehilite .w {
+            color: #bbbbbb
+        }
+
+        /* Text.Whitespace */
+        .codehilite .mf {
+            color: #009999
+        }
+
+        /* Literal.Number.Float */
+        .codehilite .mh {
+            color: #009999
+        }
+
+        /* Literal.Number.Hex */
+        .codehilite .mi {
+            color: #009999
+        }
+
+        /* Literal.Number.Integer */
+        .codehilite .mo {
+            color: #009999
+        }
+
+        /* Literal.Number.Oct */
+        .codehilite .sb {
+            color: #d14
+        }
+
+        /* Literal.String.Backtick */
+        .codehilite .sc {
+            color: #d14
+        }
+
+        /* Literal.String.Char */
+        .codehilite .sd {
+            color: #d14
+        }
+
+        /* Literal.String.Doc */
+        .codehilite .s2 {
+            color: #d14
+        }
+
+        /* Literal.String.Double */
+        .codehilite .se {
+            color: #d14
+        }
+
+        /* Literal.String.Escape */
+        .codehilite .sh {
+            color: #d14
+        }
+
+        /* Literal.String.Heredoc */
+        .codehilite .si {
+            color: #d14
+        }
+
+        /* Literal.String.Interpol */
+        .codehilite .sx {
+            color: #d14
+        }
+
+        /* Literal.String.Other */
+        .codehilite .sr {
+            color: #009926
+        }
+
+        /* Literal.String.Regex */
+        .codehilite .s1 {
+            color: #d14
+        }
+
+        /* Literal.String.Single */
+        .codehilite .ss {
+            color: #990073
+        }
+
+        /* Literal.String.Symbol */
+        .codehilite .bp {
+            color: #999999
+        }
+
+        /* Name.Builtin.Pseudo */
+        .codehilite .vc {
+            color: #008080
+        }
+
+        /* Name.Variable.Class */
+        .codehilite .vg {
+            color: #008080
+        }
+
+        /* Name.Variable.Global */
+        .codehilite .vi {
+            color: #008080
+        }
+
+        /* Name.Variable.Instance */
+        .codehilite .il {
+            color: #009999
+        }
+
+        /* Literal.Number.Integer.Long */
+        table {
+            font-family: Arial;
+            font-size: 14px;
+        }
+        tr > th {
+            background-color: #bbb;
+            font-family: 微软雅黑;
+            font-size: 16px;
+            width:100px;
+        }
+        tr > td:first-child {
+            width:300px;
+            background: rgb(242, 222, 222);
+            font-family: Consolas;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        tr > td:last-child {
+            width:450px;
+            word-break: break-all;
+            word-wrap: break-word;
+            font-family: 宋体;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        ul {
+            display: block;
+            font-family: Arial;
+            font-weight: bold;
+        }
+
+        ul li {
+            margin-left: 20px;
+            list-style-type: none;
+            float: left;
+            width: 230px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="markup">
+        <article id="content" class="markdown-body">
+            <h3 style="text-align:center;">Soui属性列表一览</h3>
+            <h5 style="text-align:right;">作者：智力糖</h5>
+            <hr/>
+            <div class="toc">
+                <ul>
+                    <li><a href="#SOUI文件概论">SOUI文件概论</a></li>
+                    <li><a href="#uires.idx">uires.idx</a></li>
+                    <li><a href="#init.xml">init.xml</a></li>
+                    <li><a href="#skins.xml">skins.xml</a></li>
+                    <li><a href="#style">style</a></li>
+					<li><a href="#SOUI">SOUI</a></li>
+                    <li><a href="#window">window</a></li>
+                    <li><a href="#button">button</a></li>                    
+                </ul>
+            </div>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <hr/>
+            <p style="color:red;font-size:18px;">提示：HOME键可以立即回到页面的头部，本属性列表仅支持 <a target="_blank" href="https://github.com/soui3/soui">3.0版本</a></p>
+            <p></p>
+            <h3 id="SOUI文件概论"><a href="#SOUI文件概论">SOUI文件概论</a></h3>
+			 <p style="color:black;font-size:18px;">soui包含了资源索引XML文件介绍(uires.idx)</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>uires.idx</td>
+                    <td align="right">< file name="webbtn_back" path="image\webbtn_back.png" / ></td>
+                    <td align="center">STRING</td>
+                    <td align="left">	SOUI资源的入口，定义了程序中使用的各种资源，以"resource"为根节点。 在uires.idx中，可以定义了UIDEF，ICON，CURSOR，LAYOUT，IMGX，GIF，rtf，script，translator这些资源类型。</td>
+                </tr>
+               
+				    <tr>
+                    <td>init.xml</td>
+                    <td align="right">< font face="宋体" size="15"/ >
+									  < string src="values:string" / >
+									  < skin src="values:skin"/ >
+									  < color src="values:color"/ ></td>
+                    <td align="center">STRING</td>
+                    <td align="left">定义SOUI中使用的全局UI定义。一般定义font，string，skins，style，objattr五个子节点</td>
+                </tr>
+				<tr>
+                    <td>skins.xml</td>
+                    <td align="right">< imglist name="skin_page_icons" src="imgx:png_page_icons" states="9"/ ></td>
+                    <td align="center">STRING</td>
+                    <td align="left">定义SOUI中使用的全局窗口元素绘制对象，每一个对象都对应一个SOUI::ISkinObj的派生类。</td>
+                </tr>
+				
+                </tbody>
+            </table>
+            <h3 id="uires.idx"><a href="#uires.idx">uires.idx</a></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+              <tr>
+                    <td>name</td>
+                    <td align="right">gif_penguin</td>
+                    <td align="center">STRING</td>
+                    <td align="left">UI布局的XML文件引用该资源的标识</td>
+                </tr>
+				    <tr>
+                    <td>path</td>
+                    <td align="right">image\penguin.gif	</td>
+                    <td align="center">STRING</td>
+                    <td align="left">该资源真实的文件存储路径。</td>
+                </tr>
+                </tbody>
+            </table>
+            <h3 id="init.xml"><a href="#init.xml">init.xml</a></h3>
+			<p style="color:black;font-size:18px;">这个xml_init必须是以UIDEF为唯一根节点</p>	
+			1.font   
+			<p>范例: < font face="微软雅黑" size="18"/ ></p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>face</td>
+                    <td align="right">微软雅黑</td>
+                    <td align="center">STRING</td>
+                    <td align="left">字体的名称</td>
+                </tr>
+                <tr>
+                    <td>size</td>
+                    <td align="right">18</td>
+                    <td align="center">INT</td>
+                    <td align="left">字体的大小</td>
+                </tr>       
+                </tbody>
+            </table>
+			2.string  
+			<p>定义一个"name-字符串"映射，在布局的XML文件中可以通过引用字符串的name来获得字符串</p>			
+			<p>范例:< string >< ver value="1.0"/ >< /string ></p>	
+			
+            <h3 id="skins.xml"><a href="#skins.xml">skins.xml</a></h3>
+			<p>SOUI系统默认实现了SSkinImgList(imglist), SSkinImgFrame(imgframe), SSkinButton(button), SSkinGradation(gradation), SSkinScrollbar(scrollbar), SSkinMenuBorder(border)这几种绘图类型。SSkinImgList为SOUI中的C++类名，imglist为在skins节点中的元素类型名。</p>
+			<p> < !-- skin的通用属性-- ></p>
+			 <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>name</td>
+                    <td align="right">skin_page_icons</td>
+                    <td align="center">STRING</td>
+                    <td align="left">皮肤名字，同一窗口内必须唯一，如(skin_page_icons)</td>
+                </tr>
+                <tr>
+                    <td>src</td>
+                    <td align="right">imgx:btn_nex</td>
+                    <td align="center">STRING</td>
+                    <td align="left">skinObj引用的图片文件定义在uires.idx中的name属性。资源引用格式为type:name</td>
+                </tr>
+                <tr>
+                    <td>colorizeEnable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">标识是否支持色调调节 0不支持  1支持 </td>
+                </tr>
+                <tr>
+                    <td>scale</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">比例缩放</td>
+                </tr>		
+                </tbody>
+            </table>
+			
+			1、imglist 
+			<p>imglist是一个图片序列对象，可以包含一组小图片，常见的如按钮需要使用的4种状态图。</p>
+			<p>范例：< imglist name="skin_tree_icon" src="imgx:png_treeicon" states="3" / ></p>			
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>	
+                <tr>
+                    <td>tile</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">定义图片在放大显示时平铺还是拉伸，0--位伸（默认）其它--平铺 </td>
+                </tr>
+                <tr>
+                    <td>vertical</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">子图是否垂直排列，0--水平排列(默认), 其它--垂直排列</td>
+                </tr>
+				<tr>
+                    <td>states</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">子图数量,默认为1</td>
+                </tr>
+				<tr>
+                    <td>autoFit</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">自适应尺寸 窗口拉伸的时候，是不是变形充满 1 变形充满 0不变形</td>
+                </tr>
+				<tr>
+                    <td>filterLevel</td>
+                    <td align="right">high</td>
+                    <td align="center">STRING</td>
+                    <td align="left">缩放级别 高图片缩放没锯齿 取值high、medium,none、low </td>
+                </tr>
+                </tbody>
+            </table>
+        	2、imgframe 
+			<p>imgframe是一个提供九宫格显示的绘图对象，SSkinImgFrame派生自SSkinImgList，因此imgframe也拥有imglist的全部属性。</p>
+			<p>范例： < imgframe name="skin_tab_left" src="imgx:png_tab_left" states="3" margin="1,1,1,1" / ></p>
+		
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>left</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格左边距</td>
+                </tr>
+               	  <tr>
+                    <td>top</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格上边距</td>
+                </tr>
+                	  <tr>
+                    <td>right</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格右边距</td>
+                </tr>
+               	  <tr>
+                    <td>bottom</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格下边距</td>
+                </tr>
+					  <tr>
+                    <td>margin-x</td>
+                    <td align="right">5</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格左右边距</td>
+                </tr>
+				<tr>
+                    <td>margin-y</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">九宫格上下边距</td>
+                </tr>
+				<tr>
+                    <td>margin</td>
+                    <td align="right">10,10,10,10</td>
+                    <td align="center">RECT</td>
+                    <td align="left">外边距, 九宫格 4 周 </td>
+                </tr>
+                </tbody>
+            </table>
+           	3、button 
+			<p>button绘图对象是绘制按钮时使用的，它使用渐变实现绘制按钮的4种状态。</p>
+			<p>范例：< button name="win10btn" colorBorder="#ADADAD" colorUp="#E1E1E1" colorDown="#E1E1E1" colorBorderHover="#0078D7" colorUpHover="#E5F1FB" colorDownHover="#E5F1FB" colorBorderPush="#005499" colorUpPush="#CCE4F7" colorDownPush="#CCE4F7" cornerPercent="0.5" / ></p>
+		
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>cornerPercent</td>
+                    <td align="right">0.5</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">圆角百分比，数值范围0-1</td>
+                </tr>
+				  <tr>
+                    <td>colorBorder</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">边框颜色，格式:#rgba</td>
+                </tr>
+               	  <tr>
+                    <td>colorUp</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">正常状态的渐变色上颜色，格式:#rgba</td>
+                </tr>
+                	  <tr>
+                    <td>colorDown</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">正常状态渐变终止颜色，格式:#rgba"</td>
+                </tr>
+               	  <tr>
+                    <td>colorUpHover</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">浮动状态渐变起始颜色</td>
+                </tr>
+					  <tr>
+                    <td>colorDownHover</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">浮动状态渐变终止颜色</td>
+                </tr>
+				<tr>
+                    <td>colorUpPush</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">下压状态渐变起始颜色</td>
+                </tr>
+				<tr>
+                    <td>colorDownPush</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">下压状态渐变终止颜色</td>
+                </tr>
+					<tr>
+                    <td>colorUpDisable</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">禁用状态渐变起始颜色</td>
+                </tr>
+					<tr>
+                    <td>colorDownDisable</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">禁用状态渐变终止颜色</td>
+                </tr>
+                </tbody>
+            </table>
+			 4、gradation 
+			<p>渐变绘图对象，提供3个属性</p>
+			<p>范例：< gradation name="skin_caption" colorFrom="#0000bb" colorTo="#0000ff" vertical="0" / ></p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>vertical</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">渐变方向,0--水平(默认), 1--垂直</td>
+                </tr>
+				  <tr>
+                    <td>colorFrom</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">渐变起始颜色，格式:#rgba</td>
+                </tr>
+               	  <tr>
+                    <td>colorTo</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">渐变终止颜色，格式:#rgba</td>
+                </tr>
+                
+                </tbody>
+            </table>			
+			5、scrollbar
+			<p>动条皮肤，虽然它派生自imglist，实际上imglist中实现的属性在scrollbar中没有意义，只是为了省点代码
+			如果没有帮手也没有禁用状态，图片应该是8*3的正方形网格。
+			有帮手则X增加一个网格，有禁用状态则Y增加一个网格。</p>
+			<p>范例：	< vscrollbar name="skin_vscrollbar" src="imgx:png_vscroll" states="3" margin="4" / ></p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>margin</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">边缘拉伸大小</td>
+                </tr>
+				  <tr>
+                    <td>hasGripper</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">滑块上是否有帮手(gripper)</td>
+                </tr>
+               	  <tr>
+                    <td>hasInactive</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否有禁用态</td>
+                </tr>
+                
+                </tbody>
+            </table>
+		   <h3 id="style"><a href="#style">style</a></h3>
+		   <p>在style节点中，定义UI布局中SOUI窗口对象的属性集合，它们是SWindow对象的属性，所有SWindow对象都可以通过class属性来引用style节点中定义的属性集合。</p>
+		   	<p>范例：	 < class name="cls_btn_weblink" cursor="hand" colorText="#1e78d5" colorTextHover="#1e78d5" font="italic:1" fontHover="underline:1,italic:1" / ></p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>name</td>
+                    <td align="right">cls_edit</td>
+                    <td align="center">STRING</td>
+                    <td align="left">风格样式名称</td>
+                </tr>
+                <tr>
+                    <td>ncSkin</td>
+                    <td align="right"></td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口绘制非客户区边框时引用的ISkinObj对象名称 属性值为BUILDIN_SKIN_NAMES</td>
+                </tr>
+                <tr>
+                    <td>margin-x</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">非客户区left及right宽度</td>
+                </tr>
+                <tr>
+                    <td>margin-y</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">非客户区top及bottom宽度</td>
+                </tr>
+                <tr>
+                    <td>textMode</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">文本对齐  0--对齐(默认)1--不对齐</td>
+                </tr>
+                <tr>
+                    <td>align</td>
+                    <td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">文字横向对齐方式,取值left、center、right  在没有指定textMode时有效</td>
+                </tr>
+                <tr>
+                    <td>valign</td>
+                    <td align="right">center</td>
+                    <td align="center">STRING</td>
+                    <td align="left">文字纵向对齐方式,取值top、center、bottom 在没有指定textMode时有效</td>
+                </tr>
+                <tr>
+                    <td>colorBkgnd</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">背景颜色  与skin属性冲突，优先使用skin对象绘制背景</td>
+                </tr>
+				    <tr>
+                    <td>colorBorder</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">边框颜色  与skin属性冲突，优先使用skin对象绘制背景</td>
+                </tr>
+				     </tr>
+				    <tr>
+                    <td>font</td>
+					<td align="right">adding:5,bold:1</td>
+                    <td align="center">STRING</td>
+                    <td align="left">默认字体  字体属性可以分解为5个子属性 adding:5,bold:1 solid,blurRadius:3  underline:1    bold 加粗  adding 相对默认字号加大   solid 实线 blurRadius  模糊半径 skia渲染支持字体模糊  underline下划线</td>
+                </tr>
+				<tr>
+                    <td>fontHover</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">悬停时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>fontPush</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">按下时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>fontDisable</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">失效时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>colorText</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">默认字体颜色</td>
+                </tr>
+						<tr>
+                    <td>colorTextHover</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">悬停时字体颜色</td>
+                </tr>
+				<tr>
+                   <td>colorTextPush</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">按下时字体颜色</td>
+                </tr>
+				<tr>
+                   <td>colorTextDisable</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">失效时字体颜色</td>
+                </tr>
+					<tr>
+                   <td>dotted</td>
+					<td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用</td>
+                </tr>
+					<tr>
+                   <td>cursor</td>
+					<td align="right">hand</td>
+                    <td align="center">STRING</td>
+                    <td align="left">鼠标移入时的样式 指定光标资源名称 如 hand ANI_ARROW</td>
+                </tr>
+                </tbody>
+            </table>
+			<h3 id="SOUI"><a href="#SOUI">SOUI</a></h3>
+			 <p style="color:black;font-size:18px;">soui界面的主节点。定义了主界面的真窗口的各种属性</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>trCtx</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">在语言翻译时作为context使用 xml名称</td>
+                </tr>
+               
+				    <tr>
+                    <td>title</td>
+                    <td align="right">SOUI-DEMO</td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口标题 只能在STabCtrl中使用</td>
+                </tr>
+				<tr>
+                    <td>maxInset</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效</td>
+                </tr>
+				<tr>
+				<td>margin</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">拉伸窗口感应区大小</td>
+                </tr>
+				<tr>
+				<td>minsize</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">窗口最小值</td>
+                </tr>
+				<tr>
+				<td>wndStyle</td>
+                    <td align="right">0</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">窗口样式，参考windows的窗口属性WS_BORDER WS_CAPTION</td>
+                </tr>
+				<tr>
+				<td>wndStyleEx</td>
+                    <td align="right">0</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">窗口扩展样式</td>
+                </tr>
+				<tr>
+				<td>resizable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否可以改变大小 1 可以改变  0不可以改变</td>
+                </tr>
+				<tr>
+				<td>translucent</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口透明,此属性子窗口不能使用真窗口  0不透明  1透明</td>
+                </tr>
+				<tr>
+				<td>sendWheel2Hover</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">发送鼠标滚轮消息发送到 hover 窗口 1发送  0不发送</td>
+                </tr>
+				<tr>
+				<td>appWnd</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否为主窗口（主窗口关闭程序会退出），在任务栏上显示按钮 窗口对应 WS_EX_APPWINDOW</td>
+                </tr>
+				<tr>
+					<td>toolwindow</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">设置WS_ES_TOOLWINDOW属性</td>
+                </tr>
+				<tr>
+					<td>smallIcon</td>
+                    <td align="right">ICON_LOGO:16</td>
+                    <td align="center">STRING</td>
+                    <td align="left">题栏小图标 格式:iconname:size</td>
+                </tr>				
+					<tr>
+					<td>bigIcon</td>
+                    <td align="right">ICON_LOGO:32</td>
+                    <td align="center">STRING</td>
+                    <td align="left">标题栏大图标 格式:iconname:size</td>
+                </tr>		
+				<tr>
+					<td>alpha</td>
+                    <td align="right">255</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口的alpha值(0-255),0为完全透明</td>
+                </tr>		
+				<tr>
+					<td>allowSpy</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否允许 SouiSpy 探测窗口</td>
+                </tr>	
+				<tr>
+					<td>wndType</td>
+                    <td align="right">undefine</td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口类型傎为 appMain 为主窗口 undefine 未定义 normal常规窗口 主窗口标志,有该标志的窗口关闭时自动发送WM_QUIT</td>
+                </tr>	
+				<tr>
+					<td>width</td>
+                    <td align="right">666</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口预设的宽度，如(666)  自动计算就设置为-1</td>
+                </tr>	
+				<tr>
+					<td>height</td>
+                    <td align="right">400</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口预设的高度，如(666)  自动计算就设置为-1</td>
+                </tr>	
+				<tr>
+					<td>size</td>
+                    <td align="right">0,0</td>
+                    <td align="center">SIZE</td>
+                    <td align="left">窗口的初始化大小,如(800,500) 自动计算就设置为-1,1</td>
+                </tr>					
+                </tbody>
+            </table>
+			
+            <h3 id="window"><a href="#window">Window</a></h3>
+			<p> 一般窗口控件 支持对style中的属性定制</p>
+			<p> 范例： < window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1" colorBkgnd="#ffffff" alpha="100" >/p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>class</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">style名称，style是一组属性的集合)</td>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口ID SWindow的FindChildByID根据本属性来查找子窗口。</td>
+                </tr>
+				  <tr>
+                    <td>name</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口名称 SWindow的FindChildByName根据本属性来查找子窗口。</td>
+                </tr>
+                <tr>
+                    <td>cache</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">绘制缓存 0--无绘制缓存（默认） 1--有绘制缓存  无缓存时每次刷新时发送WM_PAINT消息重绘；有缓存时为窗口创建一个绘制缓存，只有自己窗口更新后重绘，否则在绘制链中直接调用缓存绘制。</td>
+                </tr>
+                <tr>
+                    <td>skin</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">定义皮肤样式 skin名称</td>
+                </tr>
+                <tr>
+                    <td>ncSkin</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口绘制非客户区边框时引用的ISkinObj对象名称</td>
+                </tr>
+                <tr>
+                    <td>data</td>
+                    <td align="right">data</td>
+                    <td align="center">STRING</td>
+                    <td align="left">可以在XML中指定一个对象的附加数据，通过GetUserData访问。</td>
+                </tr>
+                <tr>
+                    <td>enable</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">控件是否可用  0--不可用  1--可用</td>
+                </tr>
+                <tr>
+                    <td>visible</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">控件是否可见  0--隐藏  1--可见</td>
+                </tr>
+                <tr>
+                    <td>pos</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">控件位置 如(0,0,100,100)</td>
+                </tr>
+                <tr>
+                    <td>display</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">显示  0--隐藏不占位 1--隐藏占位（默认）</td>
+                </tr>
+                <tr>
+                    <td>tip</td>
+                    <td align="right">this is tip</td>
+                    <td align="center">STRING</td>
+                    <td align="left">提示框</td>
+                </tr>
+                <tr>
+                    <td>msgTransparent</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">鼠标消息穿透 决定是否可以收到鼠标消息 0--窗口接收鼠标键盘消息（默认） 1--不接收消息</td>
+                </tr>
+                <tr>
+                    <td>sep</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口默认间距 在下一个窗口没有指定pos属性时，自动横向布局时与本窗口的间距</td>
+                </tr>
+                <tr>
+                    <td>maxwidth</td>
+                    <td align="right">9999</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口最大宽度，根据内容自适应窗口大小时窗口的最大宽度 如(100)</td>
+                </tr>
+                <tr>
+                    <td>maxheight</td>
+                    <td align="right">9999</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口最大高度，如(30)</td>
+                </tr>
+                <tr>
+                    <td>clipClient</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否在绘制窗口时限制内容只绘制在客户区，  如果窗口内容绘制时可能超出窗口，则将该属性设置为1 0--不剪裁（默认） 1--剪裁</td>
+                </tr>
+                <tr>
+                    <td>focusable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否接受焦点，0--不接受  1--接受（默认）</td>
+                </tr>
+                <tr>
+                    <td>float</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否使用绝对定位 ,0--不接受（默认）  1--接受</td>
+                </tr>
+                <tr>
+                    <td>alpha</td>
+                    <td align="right">255</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口的alpha值(0-255),如(100)</td>
+                </tr>
+                <tr>
+                    <td>dotted</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用</td>
+                </tr>
+                <tr>
+                    <td>cursor</td>
+                    <td align="right">hand</td>
+                    <td align="center">STRING</td>
+                    <td align="left">光标 指定光标资源名称 如 hand ANI_ARROW</td>
+                </tr>
+                <tr>
+                    <td>offset</td>
+                    <td align="right">0,0</td>
+                    <td align="center">STRING</td>
+                    <td align="left">pos 属性完成坐标定位后再将坐标进行偏移的属性</td>
+                </tr>
+                <tr>
+                    <td>layeredWindow</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">指示是否是一个分层窗口</td>
+                </tr>
+                <tr>
+                    <td>trackMouseEvent</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">鼠标事件跟踪,捕获子窗口鼠标消息 </td>
+                </tr>
+                <tr>
+                    <td>text</td>
+                    <td align="right">测试文本</td>
+                    <td align="center">STRING</td>
+                    <td align="left">从text属性中获取显示文本,如(测试文本)</td>
+                </tr>
+                <tr>
+                    <td>drawFocusRect</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">绘制默认的焦点虚框 0--不绘制  1--绘制（默认）</td>
+                </tr>
+				     <tr>
+                    <td>layout</td>
+                    <td align="right">soui</td>
+                    <td align="center">STRING</td>
+                    <td align="left">布局样式，支持4种布局：soui（相对布局），gridLayout（网格布局）， vbox（垂直线性布局）， hbox（水平线性布局）</td>
+                </tr>
+                </tbody>
+            </table>
+          <h3 id="button"><a href="#button">button</a></h3>
+		   <p>按钮控件类    通过属性ID绑定click事件 Use id attribute to process click event</p>
+		   	<p>范例：< button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function" >btn< /button ></p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>accel</td>
+                    <td align="right">ctrl+alt+f11</td>
+                    <td align="center">STRING</td>
+                    <td align="left">键盘快捷键 如:ctrl+alt+f11</td>
+                </tr>
+                <tr>
+                    <td>animate</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">动画效果 0--关闭（默认） 1--启用</td>
+                </tr>
+                <tr>
+                    <td>animateStep</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">动画的组成帧数 alpha for an animate step</td>
+                </tr>
+                <tr>
+                    <td>disableAccelIfInvisible</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">当控件不可见的时候禁止快捷键disable accel if invisible   0--关闭（默认） 1--启用  </td>
+                </tr>                
+                </tbody>
+            </table>
+        </article>
+    </div>
+</div>
+</body>
+</html>

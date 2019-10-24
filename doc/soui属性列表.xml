@@ -21,10 +21,10 @@
 	<Attribute name="minsize" default="0,0,0,0" type="RECT" comment="窗口最小值"/>	
 	<Attribute name="wndStyle" default="0" type="STRING" comment="窗口样式"/>
     <Attribute name="wndStyleEx" default="0" type="DWORD" comment="窗口扩展样式"/>
-	<Attribute name="resizable" default="1" type="INT" comment="窗口是否可以改变大小 1 可以改变  0不可以改变"/>
-    <Attribute name="translucent" default="1" type="INT" comment="窗口透明此属性子窗口不能使用真窗口  0不透明  1透明"/>
-    <Attribute name="sendWheel2Hover" default="1" type="INT" comment="发送鼠标滚轮消息发送到 hover 窗口 1发送  0不发送"/>
-    <Attribute name="appWnd" default="1" type="INT" comment="窗口是否为主窗口（主窗口关闭程序会退出），在任务栏上显示按钮 窗口对应 WS_EX_APPWINDOW"/>
+	<Attribute name="resizable" default="0" type="INT" comment="窗口是否可以改变大小 1 可以改变  0不可以改变"/>
+    <Attribute name="translucent" default="0" type="INT" comment="窗口透明此属性子窗口不能使用真窗口  0不透明  1透明"/>
+    <Attribute name="sendWheel2Hover" default="0" type="INT" comment="发送鼠标滚轮消息发送到 hover 窗口 1发送  0不发送"/>
+    <Attribute name="appWnd" default="0" type="INT" comment="窗口是否为主窗口（主窗口关闭程序会退出），在任务栏上显示按钮 窗口对应 WS_EX_APPWINDOW"/>
 	<Attribute name="toolwindow" default="1" type="INT" comment="窗口对应 WS_EX_TOOLWINDOW"/>
 	<Attribute name="smallIcon" default="ICON_LOGO:16" type="STRING" comment="标题栏小图标 格式:iconname:size"/>
 	<Attribute name="bigIcon" default="ICON_LOGO:32" type="STRING" comment="标题栏大图标 格式：iconname:size"/>
@@ -44,7 +44,7 @@
   <skin comment="soui界面的皮肤设置 skin 定义一组皮肤源">
     <!-- skin的通用属性-->
     <Attribute name="name" default="skin_page_icons" type="STRING" comment="皮肤名字，同一窗口内必须唯一，如(skin_page_icons)"/>
-    <Attribute name="src" default="bkimg:skin_pic_0" type="STRING" comment="资源文件img的地址"/>
+    <Attribute name="src" default="bkimg:skin_pic_0" type="STRING" comment="资源文件img的地址 skinObj引用的图片文件定义在uires.idx中的name属性。资源引用格式为type:name"/>
     <Attribute name="colorizeEnable" default="0" type="INT" comment="标识是否支持色调调节 0不支持  1支持"/>
     <Attribute name="scale" default="0" type="INT" comment="比例"/>
     <imglist comment="图片列表皮肤">
@@ -52,7 +52,7 @@
       <Attribute name="tile" default="0" type="INT" comment="绘制是否平铺 0--位伸（默认）其它--平铺 "/>
       <Attribute name="autoFit" default="0" type="INT" comment="自适应尺寸 窗口拉伸的时候，是不是变形充满 1 变形充满 0不变形"/>
       <Attribute name="filterLevel" default="high" type="STRING" comment="缩放级别 高图片缩放没锯齿 取值high、medium,none、low "/>
-      <Attribute name="vertical" default="0" type="INT" comment="子图是否垂直排列 0--水平排列(默认)其它--垂直排列 0--水平(默认)1--垂直"/>
+      <Attribute name="vertical" default="0" type="INT" comment="子图是否垂直排列 0--水平排列(默认)其它--垂直排列 0--水平(默认)1--垂直"/>	  
     </imglist>
     <imgframe parent="imglist" comment="九宫格图片皮肤">
       <Attribute name="left" default="5" type="INT" comment="九宫格左边距"/>
@@ -106,7 +106,7 @@
       <Attribute name="valign" default="center" type="STRING" comment="文字纵向对齐方式,取值top、center、bottom 在没有指定textMode时有效"/>
       <Attribute name="colorBkgnd" default="#0000ff" type="COLOR" comment="背景颜色  与skin属性冲突，优先使用skin对象绘制背景"/>
       <Attribute name="colorBorder" default="#0000ff" type="COLOR" comment="边框颜色  与skin属性冲突，优先使用skin对象绘制背景"/>
-      <Attribute name="font" default="adding:5,bold:1" type="STRING" comment="默认字体  字体属性可以分解为5个子属性 adding:5,bold:1 solid,blurRadius:3  underline:1    bold 加粗  adding 相对默认字号加大   solid 实线吧 blurRadius  不知道  underline下划线 "/>  （待群主修改）
+      <Attribute name="font" default="adding:5,bold:1" type="STRING" comment="默认字体  字体属性可以分解为5个子属性 adding:5,bold:1 solid,blurRadius:3  underline:1    bold 加粗  adding 相对默认字号加大   solid 实线 blurRadius  模糊半径 skia渲染支持字体模糊  underline下划线 "/>  
       <Attribute name="fontHover" default="left" type="STRING" comment="悬停时字体  字体属性可以分解为5个子属性"/>
       <Attribute name="fontPush" default="left" type="STRING" comment="按下时字体  字体属性可以分解为5个子属性"/>
       <Attribute name="fontDisable" default="left" type="STRING" comment="失效时字体  字体属性可以分解为5个子属性"/>
@@ -114,7 +114,7 @@
       <Attribute name="colorTextHover" default="#0000ff" type="COLOR" comment="悬停时字体颜色"/>
       <Attribute name="colorTextPush" default="#0000ff" type="COLOR" comment="按下时字体颜色"/>
       <Attribute name="colorTextDisable" default="#0000ff" type="COLOR" comment="失效时字体颜色"/>
-      <Attribute name="dotted" default="0" type="INT" comment="在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用"/>
+      <Attribute name="dotted" default="0" type="" comment="在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用"/>
       <Attribute name="cursor" default="hand" type="STRING" comment="鼠标移入时的样式 指定光标资源名称 如 hand ANI_ARROW"/>
     </class>
   </style>
@@ -162,7 +162,7 @@
     <Attribute name="clipClient" default="0" type="INT" comment="是否在绘制窗口时限制内容只绘制在客户区，  如果窗口内容绘制时可能超出窗口，则将该属性设置为1 0--不剪裁（默认） 1--剪裁"/>
     <Attribute name="focusable" default="0" type="INT" comment="窗口是否接受焦点，0--不接受  1--接受（默认）"/>
     <Attribute name="float" default="0" type="INT" comment="是否使用绝对定位 ,0--不接受（默认）  1--接受"/>
-    <Attribute name="alpha" default="255" type="BYTE" comment="窗口的alpha值(0-255),如(100)"/>
+    <Attribute name="alpha" default="255" type="INT" comment="窗口的alpha值(0-255),如(100)"/>
     <Attribute name="dotted" default="0" type="INT" comment="在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用"/>
     <Attribute name="cursor" default="hand" type="STRING" comment="光标 指定光标资源名称 如 hand ANI_ARROW"/>
     <Attribute name="offset" default="0.5,0.5" type="SIZE" comment="pos 属性完成坐标定位后再将坐标进行偏移的属性"/>
