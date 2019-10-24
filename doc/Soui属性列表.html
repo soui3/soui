@@ -1118,58 +1118,21 @@
             <hr/>
             <div class="toc">
                 <ul>
-                    <li><a href="#SOUI">SOUI</a></li>
+                    <li><a href="#SOUI文件概论">SOUI文件概论</a></li>
                     <li><a href="#uires.idx">uires.idx</a></li>
                     <li><a href="#init.xml">init.xml</a></li>
                     <li><a href="#skins.xml">skins.xml</a></li>
-                    <li><a href="#font">Font</a></li>
-                    <li><a href="#window">Window</a></li>
-                    <li><a href="#control">Control</a></li>
-                    <li><a href="#container">Container</a></li>
-                    <li><a href="#childlayout">ChildLayout</a></li>
-                    <li><a href="#verticallayout">VerticalLayout</a></li>
-                    <li><a href="#horizontallayout">HorizontalLayout</a></li>
-                    <li><a href="#tilelayout">TileLayout</a></li>
-                    <li><a href="#tablayout">TabLayout</a></li>
-                    <li><a href="#animationtablayout">AnimationTabLayout</a></li>
-                    <li><a href="#groupbox">GroupBox</a></li>
-                    <li><a href="#activex">ActiveX</a></li>
-                    <li><a href="#webbrowser">WebBrowser</a></li>
-                    <li><a href="#flash">Flash</a></li>
-                    <li><a href="#combo">Combo</a></li>
-                    <li><a href="#richedit">RichEdit</a></li>
-                    <li><a href="#gifanim">GifAnim</a></li>
-                    <li><a href="#label">Label</a></li>
-                    <li><a href="#text">Text</a></li>
-                    <li><a href="#ring">Ring</a></li>
-                    <li><a href="#rolltext">RollText</a></li>
-                    <li><a href="#datetime">DateTime</a></li>
-                    <li><a href="#ipaddress">IPAddress</a></li>
-                    <li><a href="#hotkey">HotKey</a></li>
-                    <li><a href="#button">Button</a></li>
-                    <li><a href="#fadebutton">FadeButton</a></li>
-                    <li><a href="#option">Option</a></li>
-                    <li><a href="#progress">Progress</a></li>
-                    <li><a href="#slider">Slider</a></li>
-                    <li><a href="#edit">Edit</a></li>
-                    <li><a href="#scrollbar">ScrollBar</a></li>
-                    <li><a href="#list">List</a></li>
-                    <li><a href="#listheader">ListHeader</a></li>
-                    <li><a href="#listheaderitem">ListHeaderItem</a></li>
-                    <li><a href="#listcontainerelement">ListContainerElement</a></li>
-                    <li><a href="#listlabelelement">ListLabelElement</a></li>
-                    <li><a href="#listtextelement">ListTextElement</a></li>
-                    <li><a href="#treeview">TreeView</a></li>
-                    <li><a href="#treenode">TreeNode</a></li>
-                    <li><a href="#menu">Menu</a></li>
-                    <li><a href="#menuelement">MenuElement</a></li>
+                    <li><a href="#style">style</a></li>
+					<li><a href="#SOUI">SOUI</a></li>
+                    <li><a href="#window">window</a></li>
+                    <li><a href="#button">button</a></li>                    
                 </ul>
             </div>
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             <hr/>
             <p style="color:red;font-size:18px;">提示：HOME键可以立即回到页面的头部，本属性列表仅支持 <a target="_blank" href="https://github.com/soui3/soui">3.0版本</a></p>
             <p></p>
-            <h3 id="SOUI"><a href="#SOUI">SOUI文件概论</a></h3>
+            <h3 id="SOUI文件概论"><a href="#SOUI文件概论">SOUI文件概论</a></h3>
 			 <p style="color:black;font-size:18px;">soui包含了资源索引XML文件介绍(uires.idx)</p>
             <table>
                 <thead>
@@ -1552,7 +1515,9 @@
                 
                 </tbody>
             </table>
-		   <h3 id="font"><a href="#font">Font</a></h3>
+		   <h3 id="style"><a href="#style">style</a></h3>
+		   <p>在style节点中，定义UI布局中SOUI窗口对象的属性集合，它们是SWindow对象的属性，所有SWindow对象都可以通过class属性来引用style节点中定义的属性集合。</p>
+		   	<p>范例：	 < class name="cls_btn_weblink" cursor="hand" colorText="#1e78d5" colorTextHover="#1e78d5" font="italic:1" fontHover="underline:1,italic:1" / ></p>
             <table>
                 <thead>
                 <tr>
@@ -1565,2462 +1530,443 @@
                 <tbody>
                 <tr>
                     <td>name</td>
+                    <td align="right">cls_edit</td>
+                    <td align="center">STRING</td>
+                    <td align="left">风格样式名称</td>
+                </tr>
+                <tr>
+                    <td>ncSkin</td>
+                    <td align="right"></td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口绘制非客户区边框时引用的ISkinObj对象名称 属性值为BUILDIN_SKIN_NAMES</td>
+                </tr>
+                <tr>
+                    <td>margin-x</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">非客户区left及right宽度</td>
+                </tr>
+                <tr>
+                    <td>margin-y</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">非客户区top及bottom宽度</td>
+                </tr>
+                <tr>
+                    <td>textMode</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">文本对齐  0--对齐(默认)1--不对齐</td>
+                </tr>
+                <tr>
+                    <td>align</td>
+                    <td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">文字横向对齐方式,取值left、center、right  在没有指定textMode时有效</td>
+                </tr>
+                <tr>
+                    <td>valign</td>
+                    <td align="right">center</td>
+                    <td align="center">STRING</td>
+                    <td align="left">文字纵向对齐方式,取值top、center、bottom 在没有指定textMode时有效</td>
+                </tr>
+                <tr>
+                    <td>colorBkgnd</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">背景颜色  与skin属性冲突，优先使用skin对象绘制背景</td>
+                </tr>
+				    <tr>
+                    <td>colorBorder</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">边框颜色  与skin属性冲突，优先使用skin对象绘制背景</td>
+                </tr>
+				     </tr>
+				    <tr>
+                    <td>font</td>
+					<td align="right">adding:5,bold:1</td>
+                    <td align="center">STRING</td>
+                    <td align="left">默认字体  字体属性可以分解为5个子属性 adding:5,bold:1 solid,blurRadius:3  underline:1    bold 加粗  adding 相对默认字号加大   solid 实线 blurRadius  模糊半径 skia渲染支持字体模糊  underline下划线</td>
+                </tr>
+				<tr>
+                    <td>fontHover</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">悬停时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>fontPush</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">按下时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>fontDisable</td>
+					<td align="right">left</td>
+                    <td align="center">STRING</td>
+                    <td align="left">失效时字体  参照Font属性</td>
+                </tr>
+					<tr>
+                    <td>colorText</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">默认字体颜色</td>
+                </tr>
+						<tr>
+                    <td>colorTextHover</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">悬停时字体颜色</td>
+                </tr>
+				<tr>
+                   <td>colorTextPush</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">按下时字体颜色</td>
+                </tr>
+				<tr>
+                   <td>colorTextDisable</td>
+					<td align="right">#0000ff</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">失效时字体颜色</td>
+                </tr>
+					<tr>
+                   <td>dotted</td>
+					<td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用</td>
+                </tr>
+					<tr>
+                   <td>cursor</td>
+					<td align="right">hand</td>
+                    <td align="center">STRING</td>
+                    <td align="left">鼠标移入时的样式 指定光标资源名称 如 hand ANI_ARROW</td>
+                </tr>
+                </tbody>
+            </table>
+			<h3 id="SOUI"><a href="#SOUI">SOUI</a></h3>
+			 <p style="color:black;font-size:18px;">soui界面的主节点。定义了主界面的真窗口的各种属性</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>trCtx</td>
                     <td align="right"></td>
                     <td align="center">STRING</td>
-                    <td align="left">字体的名称</td>
+                    <td align="left">在语言翻译时作为context使用 xml名称</td>
+                </tr>
+               
+				    <tr>
+                    <td>title</td>
+                    <td align="right">SOUI-DEMO</td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口标题 只能在STabCtrl中使用</td>
+                </tr>
+				<tr>
+                    <td>maxInset</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效</td>
+                </tr>
+				<tr>
+				<td>margin</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">拉伸窗口感应区大小</td>
+                </tr>
+				<tr>
+				<td>minsize</td>
+                    <td align="right">0,0,0,0</td>
+                    <td align="center">RECT</td>
+                    <td align="left">窗口最小值</td>
+                </tr>
+				<tr>
+				<td>wndStyle</td>
+                    <td align="right">0</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">窗口样式，参考windows的窗口属性WS_BORDER WS_CAPTION</td>
+                </tr>
+				<tr>
+				<td>wndStyleEx</td>
+                    <td align="right">0</td>
+                    <td align="center">DWORD</td>
+                    <td align="left">窗口扩展样式</td>
+                </tr>
+				<tr>
+				<td>resizable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否可以改变大小 1 可以改变  0不可以改变</td>
+                </tr>
+				<tr>
+				<td>translucent</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口透明,此属性子窗口不能使用真窗口  0不透明  1透明</td>
+                </tr>
+				<tr>
+				<td>sendWheel2Hover</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">发送鼠标滚轮消息发送到 hover 窗口 1发送  0不发送</td>
+                </tr>
+				<tr>
+				<td>appWnd</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否为主窗口（主窗口关闭程序会退出），在任务栏上显示按钮 窗口对应 WS_EX_APPWINDOW</td>
+                </tr>
+				<tr>
+					<td>toolwindow</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">设置WS_ES_TOOLWINDOW属性</td>
+                </tr>
+				<tr>
+					<td>smallIcon</td>
+                    <td align="right">ICON_LOGO:16</td>
+                    <td align="center">STRING</td>
+                    <td align="left">题栏小图标 格式:iconname:size</td>
+                </tr>				
+					<tr>
+					<td>bigIcon</td>
+                    <td align="right">ICON_LOGO:32</td>
+                    <td align="center">STRING</td>
+                    <td align="left">标题栏大图标 格式:iconname:size</td>
+                </tr>		
+				<tr>
+					<td>alpha</td>
+                    <td align="right">255</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口的alpha值(0-255),0为完全透明</td>
+                </tr>		
+				<tr>
+					<td>allowSpy</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否允许 SouiSpy 探测窗口</td>
+                </tr>	
+				<tr>
+					<td>wndType</td>
+                    <td align="right">undefine</td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口类型傎为 appMain 为主窗口 undefine 未定义 normal常规窗口 主窗口标志,有该标志的窗口关闭时自动发送WM_QUIT</td>
+                </tr>	
+				<tr>
+					<td>width</td>
+                    <td align="right">666</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口预设的宽度，如(666)  自动计算就设置为-1</td>
+                </tr>	
+				<tr>
+					<td>height</td>
+                    <td align="right">400</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口预设的高度，如(666)  自动计算就设置为-1</td>
+                </tr>	
+				<tr>
+					<td>size</td>
+                    <td align="right">0,0</td>
+                    <td align="center">SIZE</td>
+                    <td align="left">窗口的初始化大小,如(800,500) 自动计算就设置为-1,1</td>
+                </tr>					
+                </tbody>
+            </table>
+			
+            <h3 id="window"><a href="#window">Window</a></h3>
+			<p> 一般窗口控件 支持对style中的属性定制</p>
+			<p> 范例： < window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1" colorBkgnd="#ffffff" alpha="100" >/p>
+            <table>
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>class</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">style名称，style是一组属性的集合)</td>
                 </tr>
                 <tr>
                     <td>id</td>
-                    <td align="right"></td>
-                    <td align="center">INT</td>
-                    <td align="left">字体的编号</td>
-                </tr>
-                <tr>
-                    <td>size</td>
-                    <td align="right"></td>
-                    <td align="center">INT</td>
-                    <td align="left">字体的大小</td>
-                </tr>
-                <tr>
-                    <td>bold</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">粗体</td>
-                </tr>
-                <tr>
-                    <td>underline</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">下划线</td>
-                </tr>
-                <tr>
-                    <td>italic</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">斜体</td>
-                </tr>
-                <tr>
-                    <td>default</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否设为全局默认字体</td>
-                </tr>
-                <tr>
-                    <td>shared</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否共享</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="window"><a href="#window">Window</a></h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>size</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">窗口的初始化大小,如(800,600)</td>
-                </tr>
-                <tr>
-                    <td>sizebox</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">窗口可拖动改变窗口大小的边距,如(4,4,6,6)</td>
-                </tr>
-                <tr>
-                    <td>caption</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">窗口可拖动的标题栏大小的边距,最后一个参数是指离上边框的距离,如(0,0,0,28)</td>
-                </tr>
-                <tr>
-                    <td>roundcorner</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">窗口圆角大小,如(4,4)</td>
-                </tr>
-                <tr>
-                    <td>mininfo</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">窗口最小大小,如(320,240)</td>
-                </tr>
-                <tr>
-                    <td>maxinfo</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">窗口最大大小,如(1600,1200)</td>
-                </tr>
-                <tr>
-                    <td>showdirty</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">ShowUpdateRect显示更新区域</td>
-                </tr>
-                <tr>
-                    <td>alpha|opacity</td>
-                    <td align="right"></td>
-                    <td align="center">255</td>
-                    <td align="left">BYTE</td>
-                </tr>
-                <tr>
-                    <td>layeredopacity</td>
                     <td align="right">0</td>
-                    <td align="center">int</td>
-                    <td align="left">分层不透明</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口ID SWindow的FindChildByID根据本属性来查找子窗口。</td>
                 </tr>
-                <tr>
-                    <td>layered|bktrans</td>
-                    <td align="right"></td>
-                    <td align="center">false</td>
-                    <td align="left">BOOL</td>
-                </tr>
-                <tr>
-                    <td>disabledfontcolor</td>
-                    <td align="right">0xFFA7A6AA</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">默认的disabled字体颜色,如(0xFFA7A6AA)</td>
-                </tr>
-                <tr>
-                    <td>defaultfontcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">默认的字体颜色,如(0xFF000000)</td>
-                </tr>
-                <tr>
-                    <td>linkfontcolor</td>
-                    <td align="right">0xFF0000FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">默认的link字体颜色,如(0xFF0000FF)</td>
-                </tr>
-                <tr>
-                    <td>linkhoverfontcolor</td>
-                    <td align="right">0xFFD3215F</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">默认的linkhoverfont字体颜色,如(0xFFD3215F)</td>
-                </tr>
-                <tr>
-                    <td>selectedcolor</td>
-                    <td align="right">0xFFBAE4FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">默认的selected字体颜色,如(0xFFBAE4FF)</td>
-                </tr>
-                <tr>
-                    <td>shadowsize</td>
-                    <td align="right">0</td>
-                    <td align="center">BYTE</td>
-                    <td align="left">算法阴影的宽度(-20到20)</td>
-                </tr>
-                <tr>
-                    <td>shadowsharpness</td>
-                    <td align="right">255</td>
-                    <td align="center">BYTE</td>
-                    <td align="left">算法阴影的锐度</td>
-                </tr>
-                <tr>
-                    <td>shadowdarkness</td>
-                    <td align="right">255</td>
-                    <td align="center">BYTE</td>
-                    <td align="left">算法阴影的深度(相当于透明度)</td>
-                </tr>
-                <tr>
-                    <td>shadowposition</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">算法阴影的偏移量</td>
-                </tr>
-                <tr>
-                    <td>shadowcolor</td>
-                    <td align="right">0x000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">算法阴影的颜色，RGB格式，不支持透明度，使用shadowdarkness设置透明度</td>
-                </tr>
-                <tr>
-                    <td>shadowcorner</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">图片阴影的九宫格描述</td>
-                </tr>
-                <tr>
-                    <td>shadowimage</td>
+				  <tr>
+                    <td>name</td>
                     <td align="right"></td>
                     <td align="center">STRING</td>
-                    <td align="left">阴影图片，使用此属性后自动屏蔽算法阴影(不支持source等属性设置)</td>
+                    <td align="left">窗口名称 SWindow的FindChildByName根据本属性来查找子窗口。</td>
                 </tr>
                 <tr>
-                    <td>showshadow</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否启用窗体阴影</td>
-                </tr>
-                <tr>
-                    <td>gdiplustext</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否用gdi+渲染文字（抗锯齿效果更好，默认开启，但是效率低）</td>
-                </tr>
-                <tr>
-                    <td>textrenderinghint</td>
+                    <td>cache</td>
                     <td align="right">0</td>
-                    <td align="center">int</td>
-                    <td align="left">gdi+渲染文字提示（0-5），字体大的时候可以设置为4</td>
+                    <td align="center">INT</td>
+                    <td align="left">绘制缓存 0--无绘制缓存（默认） 1--有绘制缓存  无缓存时每次刷新时发送WM_PAINT消息重绘；有缓存时为窗口创建一个绘制缓存，只有自己窗口更新后重绘，否则在绘制链中直接调用缓存绘制。</td>
                 </tr>
                 <tr>
-                    <td>tooltiphovertime</td>
-                    <td align="right">0</td>
-                    <td align="center">int</td>
-                    <td align="left">提示框的弹出需要多久的停留时间，如（3）</td>
+                    <td>skin</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">定义皮肤样式 skin名称</td>
                 </tr>
-                </tbody>
-            </table>
-            <h3 id="control"><a href="#control">Control</a></h3>
-            <table>
-                <thead>
                 <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
+                    <td>ncSkin</td>
+                    <td align="right"></td>
+                    <td align="center">STRING</td>
+                    <td align="left">窗口绘制非客户区边框时引用的ISkinObj对象名称</td>
                 </tr>
-                </thead>
-                <tbody>
+                <tr>
+                    <td>data</td>
+                    <td align="right">data</td>
+                    <td align="center">STRING</td>
+                    <td align="left">可以在XML中指定一个对象的附加数据，通过GetUserData访问。</td>
+                </tr>
+                <tr>
+                    <td>enable</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">控件是否可用  0--不可用  1--可用</td>
+                </tr>
+                <tr>
+                    <td>visible</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">控件是否可见  0--隐藏  1--可见</td>
+                </tr>
                 <tr>
                     <td>pos</td>
                     <td align="right">0,0,0,0</td>
                     <td align="center">RECT</td>
-                    <td align="left">位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)</td>
+                    <td align="left">控件位置 如(0,0,100,100)</td>
                 </tr>
                 <tr>
-                    <td>float</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用绝对定位,如(true)，或0,0,0,0这种左上右下FloatPercent百分比</td>
+                    <td>display</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">显示  0--隐藏不占位 1--隐藏占位（默认）</td>
                 </tr>
                 <tr>
-                    <td>floatalign</td>
-                    <td align="right"></td>
-                    <td align="center">string</td>
-                    <td align="left">用于控制float控件先对于父控件的对齐方式（left\center\right、top\vcenter\bottom）</td>
-                </tr>
-                <tr>
-                    <td>padding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">外边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>gradient</td>
-                    <td align="right">hor</td>
+                    <td>tip</td>
+                    <td align="right">this is tip</td>
                     <td align="center">STRING</td>
-                    <td align="left">颜色的渐变方向,hor是水平方向,ver是垂直方向</td>
+                    <td align="left">提示框</td>
                 </tr>
                 <tr>
-                    <td>bkcolor|bkcolor1</td>
-                    <td align="right"></td>
-                    <td align="center">0x00000000</td>
-                    <td align="left">DWORD</td>
-                </tr>
-                <tr>
-                    <td>bkcolor2</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">背景渐变色2,和bkcolor配合使用,如(0xFFFFFF00)</td>
-                </tr>
-                <tr>
-                    <td>bkcolor3</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">背景渐变色3,和bkcolor、bkcolor2配合使用,如(0xFFFF00FF)</td>
-                </tr>
-                <tr>
-                    <td>forecolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">前景色,如(0xFF000000)</td>
-                </tr>
-                <tr>
-                    <td>bordercolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">边框颜色,如(0xFF000000)</td>
-                </tr>
-                <tr>
-                    <td>focusbordercolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">获取焦点时,边框颜色,如(0xFF000000)</td>
-                </tr>
-                <tr>
-                    <td>colorhsl</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">本控件的颜色是否随窗口的hsl变化而变化,如(false)</td>
-                </tr>
-                <tr>
-                    <td>bordersize</td>
+                    <td>msgTransparent</td>
                     <td align="right">0</td>
                     <td align="center">INT</td>
-                    <td align="left">RECT</td>
+                    <td align="left">鼠标消息穿透 决定是否可以收到鼠标消息 0--窗口接收鼠标键盘消息（默认） 1--不接收消息</td>
                 </tr>
                 <tr>
-                    <td>leftbordersize</td>
+                    <td>sep</td>
                     <td align="right">0</td>
                     <td align="center">INT</td>
-                    <td align="left">左边边框大小，如(1)，设置该值大于0，则将忽略bordersize属性的设置</td>
-                </tr>
-                <tr>
-                    <td>topbordersize</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">顶部边框大小，如(1)，设置该值大于0，则将忽略bordersize属性的设置</td>
-                </tr>
-                <tr>
-                    <td>rightbordersize</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">右边边框大小，如(1)，设置该值大于0，则将忽略bordersize属性的设置</td>
-                </tr>
-                <tr>
-                    <td>bottombordersize</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">底部边框大小，如(1)，设置该值大于0，则将忽略bordersize属性的设置</td>
-                </tr>
-                <tr>
-                    <td>borderstyle</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">边框样式的设置,数值范围0-5</td>
-                </tr>
-                <tr>
-                    <td>borderround</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">边框圆角半径,如(2,2)</td>
-                </tr>
-                <tr>
-                    <td>bkimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">背景图片,如(bk.bmp或file=’aaa.jpg’ res=’‘ restype=‘0’ dest=‘0,0,0,0’ source=‘0,0,0,0’
-                        corner=‘0,0,0,0’ mask=’#FF0000’ fade=‘255’ hole=’false’ xtiled=’false’ ytiled=’false’)
-                    </td>
-                </tr>
-                <tr>
-                    <td>foreimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">前景图片</td>
-                </tr>
-                <tr>
-                    <td>width</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">控件预设的宽度，如(100)</td>
-                </tr>
-                <tr>
-                    <td>height</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">控件预设的高度，如(30)</td>
-                </tr>
-                <tr>
-                    <td>minwidth</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">控件的最小宽度，如(100)</td>
-                </tr>
-                <tr>
-                    <td>minheight</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">控件的最小高度，如(30)</td>
+                    <td align="left">窗口默认间距 在下一个窗口没有指定pos属性时，自动横向布局时与本窗口的间距</td>
                 </tr>
                 <tr>
                     <td>maxwidth</td>
                     <td align="right">9999</td>
                     <td align="center">INT</td>
-                    <td align="left">控件的最大宽度，如(100)</td>
+                    <td align="left">窗口最大宽度，根据内容自适应窗口大小时窗口的最大宽度 如(100)</td>
                 </tr>
                 <tr>
                     <td>maxheight</td>
                     <td align="right">9999</td>
                     <td align="center">INT</td>
-                    <td align="left">控件的最大高度，如(30)</td>
+                    <td align="left">窗口最大高度，如(30)</td>
                 </tr>
                 <tr>
-                    <td>name</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">控件名字，同一窗口内必须唯一，如(testbtn)</td>
+                    <td>clipClient</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否在绘制窗口时限制内容只绘制在客户区，  如果窗口内容绘制时可能超出窗口，则将该属性设置为1 0--不剪裁（默认） 1--剪裁</td>
                 </tr>
                 <tr>
-                    <td>drag</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否可以拖拽</td>
+                    <td>focusable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口是否接受焦点，0--不接受  1--接受（默认）</td>
                 </tr>
                 <tr>
-                    <td>drop</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否可以下拉</td>
+                    <td>float</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否使用绝对定位 ,0--不接受（默认）  1--接受</td>
                 </tr>
                 <tr>
-                    <td>resourcetext</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持多语言，为true文字绘制会走多语言接口</td>
+                    <td>alpha</td>
+                    <td align="right">255</td>
+                    <td align="center">INT</td>
+                    <td align="left">窗口的alpha值(0-255),如(100)</td>
                 </tr>
                 <tr>
-                    <td>text</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">显示文本,如(测试文本)</td>
-                </tr>
-                <tr>
-                    <td>tooltip</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮提示,如(请在这里输入你的密码)</td>
-                </tr>
-                <tr>
-                    <td>userdata</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">自定义标识</td>
-                </tr>
-                <tr>
-                    <td>enabled</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否可以响应用户操作,如(true)</td>
-                </tr>
-                <tr>
-                    <td>mouse</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">本控件是否可以响应鼠标操作,如(true)</td>
-                </tr>
-                <tr>
-                    <td>keyboard</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">非CButtonUI类忽略该值，为false时不支持TAB_STOP,且该对象不处理键盘信息</td>
-                </tr>
-                <tr>
-                    <td>visible</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否可见,如(true)</td>
-                </tr>
-                <tr>
-                    <td>shortcut</td>
-                    <td align="right"></td>
-                    <td align="center">CHAR</td>
-                    <td align="left">对应的快捷键,如(P)</td>
-                </tr>
-                <tr>
-                    <td>menu</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否需要右键菜单,如(true)</td>
+                    <td>dotted</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用</td>
                 </tr>
                 <tr>
                     <td>cursor</td>
+                    <td align="right">hand</td>
+                    <td align="center">STRING</td>
+                    <td align="left">光标 指定光标资源名称 如 hand ANI_ARROW</td>
+                </tr>
+                <tr>
+                    <td>offset</td>
                     <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">
-                        鼠标类型:arrow,ibeam,wait,cross,uparrow,size,icon,sizenwse,sizenesw,sizewe,sizens,sizeall,no,hand
-                    </td>
-                </tr>
-                <tr>
-                    <td>virtualwnd</td>
-                    <td align="right"></td>
-                    <td align="center">string</td>
-                    <td align="left">设置控件的虚拟窗体的名字</td>
-                </tr>
-                <tr>
-                    <td>innerstyle</td>
-                    <td align="right"></td>
-                    <td align="center">string</td>
-                    <td align="left">通过样式表设置控件的样式，如bkcolor2=”#FFFFAAAA”</td>
-                </tr>
-                <tr>
-                    <td>style</td>
-                    <td align="right"></td>
-                    <td align="center">string</td>
-                    <td align="left">通过样式名称设置控件的样式</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="container"><a href="#container">Container</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>inset</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">容器的内边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>mousechild</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">本控件的子控件是否可以响应用户操作,如(true)</td>
-                </tr>
-                <tr>
-                    <td>vscrollbar</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用竖向滚动条,如(true)</td>
-                </tr>
-                <tr>
-                    <td>vscrollbarstyle</td>
-                    <td align="right"></td>
                     <td align="center">STRING</td>
-                    <td align="left">设置本容器的纵向滚动条的样式</td>
+                    <td align="left">pos 属性完成坐标定位后再将坐标进行偏移的属性</td>
                 </tr>
                 <tr>
-                    <td>hscrollbar</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用横向滚动条,如(true)</td>
-                </tr>
-                <tr>
-                    <td>hscrollbarstyle</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">设置本容器的横向滚动条的样式</td>
-                </tr>
-                <tr>
-                    <td>childpadding</td>
+                    <td>layeredWindow</td>
                     <td align="right">0</td>
                     <td align="center">INT</td>
-                    <td align="left">子控件之间的额外距离,如(4)</td>
+                    <td align="left">指示是否是一个分层窗口</td>
                 </tr>
                 <tr>
-                    <td>childalign</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">子空间的水平对齐方式,left</td>
-                </tr>
-                <tr>
-                    <td>childvalign</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">子空间的垂直对齐方式,top</td>
-                </tr>
-                <tr>
-                    <td>scrollstepsize</td>
+                    <td>trackMouseEvent</td>
                     <td align="right">0</td>
                     <td align="center">INT</td>
-                    <td align="left">容器的滚动条滚动步长，0代表使用默认步长</td>
+                    <td align="left">鼠标事件跟踪,捕获子窗口鼠标消息 </td>
                 </tr>
-                </tbody>
-            </table>
-            <h3 id="childlayout"><a href="#childlayout">ChildLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>xmlfile</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">子窗体XML布局文件</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="verticallayout"><a href="#verticallayout">VerticalLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>sepheight</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">分隔符高度,正负表示分隔符在顶部还是底部,如(4)</td>
-                </tr>
-                <tr>
-                    <td>sepimm</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">拖动分隔符是否立即改变大小,如(false)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="horizontallayout"><a href="#horizontallayout">HorizontalLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>sepwidth</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">分隔符宽,正负表示分隔符在左边还是右边,如(-4)</td>
-                </tr>
-                <tr>
-                    <td>sepimm</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">拖动分隔符是否立即改变大小,如(false)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="tilelayout"><a href="#tilelayout">TileLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>columns</td>
-                    <td align="right">1</td>
-                    <td align="center">INT</td>
-                    <td align="left">列数,如(4)</td>
-                </tr>
-                <tr>
-                    <td>itemsize</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">子项固定大小，如(128,128)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="tablayout"><a href="#tablayout">TabLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>selectedid</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">默认选中的页面id,如(0)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="animationtablayout"><a href="#animationtablayout">AnimationTabLayout</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#tablayout">TabLayout</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>animation_direction</td>
-                    <td align="right">0</td>
-                    <td align="center">STRING</td>
-                    <td align="left">动画方向左右、上下，默认是左右,如(vertical、horizontal)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="groupbox"><a href="#groupbox">GroupBox</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#verticallayout">VerticalLayout</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">字体颜色，需要搭配bkcolor，不然字体背景不遮盖</td>
-                </tr>
-                <tr>
-                    <td>disabledtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">禁用时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>font</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">字体id,如(0)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="activex"><a href="#activex">ActiveX</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>clsid</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td 8856f961-340a-11d0-a96b-00c04fd705a2="" align="left">activex的clsid,如(</td>
-                </tr>
-                <tr>
-                    <td>modulename</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">activex从指定位置加载,如(flash/flash.ocx)</td>
-                </tr>
-                <tr>
-                    <td>delaycreate</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否需要延迟创建activex,如(false)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="webbrowser"><a href="#webbrowser">WebBrowser</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#activex">ActiveX</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>homepage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">默认首页</td>
-                </tr>
-                <tr>
-                    <td>autonavi</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否打开默认首页</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="flash"><a href="#flash">Flash</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#activex">ActiveX</a></p>
-            </blockquote>
-            <h3 id="combo"><a href="#combo">Combo</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>align</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字的水平对齐方式,left</td>
-                </tr>
-                <tr>
-                    <td>valign</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字的垂直对齐方式,top</td>
-                </tr>
-                <tr>
-                    <td>endellipsis</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">显示不全是否使用…代替,如(true)</td>
-                </tr>
-                <tr>
-                    <td>wordbreak</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持多行文字</td>
-                </tr>
-                <tr>
-                    <td>font</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">字体颜色</td>
-                </tr>
-                <tr>
-                    <td>disabledtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">禁用时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>textpadding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>showhtml</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用类html富文本绘制,如(false)</td>
-                </tr>
-                <tr>
-                    <td>showshadow</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否启用阴影</td>
-                </tr>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的状态图片</td>
-                </tr>
-                <tr>
-                    <td>pushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标按下的状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点时的状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用的状态图片</td>
-                </tr>
-                <tr>
-                    <td>scrollselect</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否随滚动改变选中项,如(false)</td>
-                </tr>
-                <tr>
-                    <td>dropbox</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">弹出框属性列表设置</td>
-                </tr>
-                <tr>
-                    <td>dropboxsize</td>
-                    <td align="right">0,150</td>
-                    <td align="center">STRING</td>
-                    <td align="left">弹出框大小设置</td>
-                </tr>
-                <tr>
-                    <td>itemfont</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">item的字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>itemalign</td>
-                    <td align="right">center</td>
-                    <td align="center">STRING</td>
-                    <td align="left">item对齐方式,取值left、right、center，如(center)</td>
-                </tr>
-                <tr>
-                    <td>itemendellipsis</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item句末显示不全是否使用…代替,如(true)</td>
-                </tr>
-                <tr>
-                    <td>itemtextpadding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">item文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>itemtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itembkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itembkimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemaltbk</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否使用隔行交替背景</td>
-                </tr>
-                <tr>
-                    <td>itemselectedtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemselectedbkcolor</td>
-                    <td align="right">0xFFC1E3FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemselectedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item被选中时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemhottextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item鼠标悬浮时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhotbkcolor</td>
-                    <td align="right">0xFFE9F5FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item鼠标悬浮时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item鼠标悬浮时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledtextcolor</td>
-                    <td align="right">0xFFCCCCCC</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item禁用时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledbkcolor</td>
-                    <td align="right">0xFFFFFFFF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item禁用时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item禁用时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemlinecolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item行分割线颜色</td>
-                </tr>
-                <tr>
-                    <td>itemshowhtml</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否使用类html富文本绘制,如(false)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="richedit"><a href="#richedit">RichEdit</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>vscrollbar</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用竖向滚动条,如(true)</td>
-                </tr>
-                <tr>
-                    <td>autovscroll</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否随输入竖向滚动,如(true)</td>
-                </tr>
-                <tr>
-                    <td>hscrollbar</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用横向滚动条,如(true)</td>
-                </tr>
-                <tr>
-                    <td>autohscroll</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否随输入横向滚动,如(true)</td>
-                </tr>
-                <tr>
-                    <td>wanttab</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否接受tab按键消息,如(true)</td>
-                </tr>
-                <tr>
-                    <td>wantreturn</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否接受return按键消息,如(true)</td>
-                </tr>
-                <tr>
-                    <td>wantctrlreturn</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否接受ctrl+return按键消息,如(true)</td>
-                </tr>
-                <tr>
-                    <td>rich</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用富格式,如(true)</td>
-                </tr>
-                <tr>
-                    <td>multiline</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用多行,如(true)</td>
-                </tr>
-                <tr>
-                    <td>readonly</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否只读,如(false)</td>
-                </tr>
-                <tr>
-                    <td>password</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示密码符,如(true)</td>
-                </tr>
-                <tr>
-                    <td>align</td>
-                    <td align="right">left</td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字对齐方式,取值left、right、center，如(center)</td>
-                </tr>
-                <tr>
-                    <td>font</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">字体颜色，如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>maxchar</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">输入字符最大长度，如(100),默认为无限制</td>
-                </tr>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>textpadding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>tipvalue</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文本框内提示文字，当文本框text为空时显示并失去焦点时显示</td>
-                </tr>
-                <tr>
-                    <td>tipvaluecolor</td>
-                    <td align="right">0xFFBAC0C5</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">文本框内提示文字的颜色</td>
-                </tr>
-                <tr>
-                    <td>tipvaluealign</td>
-                    <td align="right">left</td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字对齐方式,取值left、right、center，如(center)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="gifanim"><a href="#gifanim">GifAnim</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>autoplay</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否自动播放GIF动画</td>
-                </tr>
-                <tr>
-                    <td>autosize</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否根据图片自动设置控件大小(开启后width和height属性失效)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="label"><a href="#label">Label</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>align</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字的水平对齐方式,left</td>
-                </tr>
-                <tr>
-                    <td>valign</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字的垂直对齐方式,top</td>
-                </tr>
-                <tr>
-                    <td>endellipsis</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">显示不全是否使用…代替,如(true)</td>
-                </tr>
-                <tr>
-                    <td>wordbreak</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持多行文字</td>
-                </tr>
-                <tr>
-                    <td>noprefix</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持’&amp;’字符转义为下划线,如(false)</td>
-                </tr>
-                <tr>
-                    <td>font</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">字体颜色</td>
-                </tr>
-                <tr>
-                    <td>disabledtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">禁用时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>textpadding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>showhtml</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用类html富文本绘制,如(false)</td>
-                </tr>
-                <tr>
-                    <td>autocalcwidth</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否自动计算宽度</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="text"><a href="#text">Text</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <h3 id="ring"><a href="#ring">Ring</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <h3 id="rolltext"><a href="#rolltext">RollText</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <h3 id="datetime"><a href="#datetime">DateTime</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <h3 id="ipaddress"><a href="#ipaddress">IPAddress</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <h3 id="hotkey"><a href="#hotkey">HotKey</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的背景状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点时的状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用的状态图片</td>
-                </tr>
-                <tr>
-                    <td>nativebkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">windows原生控件的背景颜色,如(0xFFFFFFFF)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="button"><a href="#button">Button</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotforeimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的前景状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的背景状态图片</td>
-                </tr>
-                <tr>
-                    <td>pushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标按下的状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点时的状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用的状态图片</td>
-                </tr>
-                <tr>
-                    <td>stateimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">状态图片</td>
-                </tr>
-                <tr>
-                    <td>statecount</td>
-                    <td align="right"></td>
-                    <td align="center">INT</td>
-                    <td align="left">跟stateimage搭配使用，代表几分图</td>
-                </tr>
-                <tr>
-                    <td>bindtabindex</td>
-                    <td align="right"></td>
-                    <td align="center">INT</td>
-                    <td align="left">点击后将触发绑定TabLayout控件的对应索引号</td>
-                </tr>
-                <tr>
-                    <td>bindtablayoutname</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">绑定TabLayout控件</td>
-                </tr>
-                <tr>
-                    <td>hotbkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标悬浮的背景颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>pushedbkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标按下的背景颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>hottextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标悬浮的文字颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>pushedtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标按下的文字颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>focusedtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">获得焦点时的文字颜色,如(0xFFFF0000)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="fadebutton"><a href="#fadebutton">FadeButton</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#button">Button</a></p>
-            </blockquote>
-            <h3 id="option"><a href="#option">Option</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#button">Button</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>group</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">所属组的名称，可不设</td>
-                </tr>
-                <tr>
-                    <td>selected</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否选中</td>
-                </tr>
-                <tr>
-                    <td>selectedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">选中的状态图片</td>
-                </tr>
-                <tr>
-                    <td>selectedhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">选中鼠标悬浮的的状态图片</td>
-                </tr>
-                <tr>
-                    <td>selectedpushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">选中鼠标按下的的状态图片</td>
-                </tr>
-                <tr>
-                    <td>selectedforeimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">选中的前景图片</td>
-                </tr>
-                <tr>
-                    <td>selectedstateimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">状态图片</td>
-                </tr>
-                <tr>
-                    <td>selectedstatecount</td>
-                    <td align="right"></td>
-                    <td align="center">INT</td>
-                    <td align="left">跟stateimage搭配使用，代表几分图</td>
-                </tr>
-                <tr>
-                    <td>selectedbkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">背景颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>selectedtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">文字颜色,如(0xFFFF0000)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="progress"><a href="#progress">Progress</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>hor</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">水平或垂直,如(true)</td>
-                </tr>
-                <tr>
-                    <td>min</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">进度最小值，如(0)</td>
-                </tr>
-                <tr>
-                    <td>max</td>
-                    <td align="right">100</td>
-                    <td align="center">INT</td>
-                    <td align="left">进度最大值，如(100)</td>
-                </tr>
-                <tr>
-                    <td>value</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">进度值，如(50)</td>
-                </tr>
-                <tr>
-                    <td>isstretchfore</td>
-                    <td align="right">TRUE</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">指定前景图片是否缩放显示</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="slider"><a href="#slider">Slider</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#progress">Progress</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>thumbimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">拖动滑块普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">拖动滑块鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbpushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">拖动滑块鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbsize</td>
-                    <td align="right">10,10</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">拖动滑块大小,如(10,10)</td>
-                </tr>
-                <tr>
-                    <td>step</td>
-                    <td align="right">1</td>
-                    <td align="center">INT</td>
-                    <td align="left">进度步长，如(1)</td>
-                </tr>
-                <tr>
-                    <td>sendmove</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否发送movevaluechanged消息</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="edit"><a href="#edit">Edit</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#label">Label</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>readonly</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否只读,如(false)</td>
-                </tr>
-                <tr>
-                    <td>numberonly</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否只允许数字输入,如(false)</td>
-                </tr>
-                <tr>
-                    <td>password</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示密码字符,如(false)</td>
-                </tr>
-                <tr>
-                    <td>passwordchar</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">设置密码字符</td>
-                </tr>
-                <tr>
-                    <td>maxchar</td>
-                    <td align="right">255</td>
-                    <td align="center">INT</td>
-                    <td align="left">输入字符最大长度，如(100)</td>
-                </tr>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的背景状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点时的状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用的状态图片</td>
-                </tr>
-                <tr>
-                    <td>tipvalue</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文本框内提示文字，当文本框text为空时显示并失去焦点时显示</td>
-                </tr>
-                <tr>
-                    <td>tipvaluecolor</td>
-                    <td align="right">0xFFBAC0C5</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">文本框内提示文字的颜色</td>
-                </tr>
-                <tr>
-                    <td>nativebkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">windows原生edit控件的背景颜色,如(0xFFFFFFFF)</td>
-                </tr>
-                <tr>
-                    <td>nativetextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">windows原生edit控件的文字颜色,如(0xFFFFFFFF)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="scrollbar"><a href="#scrollbar">ScrollBar</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>button1normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">左或上按钮普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>button1hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">左或上按钮鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>button1pushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">左或上按钮鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>button1disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">左或上按钮禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>button2normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">右或下按钮普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>button2hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">右或下按钮鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>button2pushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">右或下按钮鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>button2disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">右或下按钮禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbnormalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbpushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>thumbdisabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>railnormalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块中间标识普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>railhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块中间标识鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>railpushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块中间标识鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>raildisabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">滑块中间标识禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>bknormalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">背景普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>bkhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">背景鼠标悬浮状态图片</td>
-                </tr>
-                <tr>
-                    <td>bkpushedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">背景鼠标按下状态图片</td>
-                </tr>
-                <tr>
-                    <td>bkdisabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">背景禁用状态图片</td>
-                </tr>
-                <tr>
-                    <td>hor</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">水平或垂直,如(true)</td>
-                </tr>
-                <tr>
-                    <td>linesize</td>
-                    <td align="right">8</td>
-                    <td align="center">INT</td>
-                    <td align="left">滚动一行的大小，如(8)</td>
-                </tr>
-                <tr>
-                    <td>range</td>
-                    <td align="right">100</td>
-                    <td align="center">INT</td>
-                    <td align="left">滚动范围，如(100)</td>
-                </tr>
-                <tr>
-                    <td>value</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">滚动位置，如(0)</td>
-                </tr>
-                <tr>
-                    <td>showbutton1</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示左或上按钮,如(true)</td>
-                </tr>
-                <tr>
-                    <td>showbutton2</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示右或下按钮,如(true)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="list"><a href="#list">List</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#verticallayout">VerticalLayout</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>header</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示表头,如(true),隐藏则设置为hidden</td>
-                </tr>
-                <tr>
-                    <td>headerbkimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">表头背景图片</td>
-                </tr>
-                <tr>
-                    <td>scrollselect</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否随滚动改变选中项,如(false)</td>
-                </tr>
-                <tr>
-                    <td>fixedscrollbar</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否自适应滚动条,如(false)</td>
-                </tr>
-                <tr>
-                    <td>multiexpanding</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持多个item同时打开,如(false)</td>
-                </tr>
-                <tr>
-                    <td>itemfont</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">item的字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>itemalign</td>
-                    <td align="right">center</td>
-                    <td align="center">STRING</td>
-                    <td align="left">item对齐方式,取值left、right、center，如(center)</td>
-                </tr>
-                <tr>
-                    <td>itemvalign</td>
-                    <td align="right">vcenter</td>
-                    <td align="center">STRING</td>
-                    <td align="left">item对齐方式,取值top、bottom、vcenter，如(vcenter)</td>
-                </tr>
-                <tr>
-                    <td>itemendellipsis</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item句末显示不全是否使用…代替,如(true)</td>
-                </tr>
-                <tr>
-                    <td>itemtextpadding</td>
-                    <td align="right">0,0,0,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">item文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>itemtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itembkcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itembkimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemaltbk</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否使用隔行交替背景</td>
-                </tr>
-                <tr>
-                    <td>itemselectedtextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemselectedbkcolor</td>
-                    <td align="right">0xFFC1E3FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemselectedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item被选中时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemhottextcolor</td>
-                    <td align="right">0xFF000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item鼠标悬浮时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhotbkcolor</td>
-                    <td align="right">0xFFE9F5FF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item鼠标悬浮时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item鼠标悬浮时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledtextcolor</td>
-                    <td align="right">0xFFCCCCCC</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item禁用时的字体颜色</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledbkcolor</td>
-                    <td align="right">0xFFFFFFFF</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item禁用时的背景颜色</td>
-                </tr>
-                <tr>
-                    <td>itemdisabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item禁用时的背景图片</td>
-                </tr>
-                <tr>
-                    <td>itemlinecolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item行分割线颜色</td>
-                </tr>
-                <tr>
-                    <td>itemshowrowline</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否绘制行线,如(false)</td>
-                </tr>
-                <tr>
-                    <td>itemshowcolumnline</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否绘制列线,如(false)</td>
-                </tr>
-                <tr>
-                    <td>itemshowhtml</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">item是否使用类html富文本绘制,如(false)</td>
-                </tr>
-                <tr>
-                    <td>multiselect</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持多选,如(false)</td>
-                </tr>
-                <tr>
-                    <td>itemrselected</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">如(false)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="listheader"><a href="#listheader">ListHeader</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#horizontallayout">HorizontalLayout</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>scaleheader</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">每个表头的宽度是否按照百分比来设置</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="listheaderitem"><a href="#listheaderitem">ListHeaderItem</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>dragable</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否支持拖拽改变宽度</td>
-                </tr>
-                <tr>
-                    <td>sepwidth</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">分隔符宽,正负表示分隔符在左边还是右边,如(-4)</td>
-                </tr>
-                <tr>
-                    <td>align</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">文字的水平对齐方式,left</td>
-                </tr>
-                <tr>
-                    <td>endellipsis</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">句末显示不全是否使用…代替,如(true)</td>
-                </tr>
-                <tr>
-                    <td>font</td>
-                    <td align="right">-1</td>
-                    <td align="center">INT</td>
-                    <td align="left">字体id,如(0)</td>
-                </tr>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">字体颜色，0表示使用默认字体颜色,如(0xFFFF0000)</td>
-                </tr>
-                <tr>
-                    <td>textpadding</td>
-                    <td align="right">2,0,2,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">文字显示的边距,如(2,2,2,2)</td>
-                </tr>
-                <tr>
-                    <td>normalimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">普通状态图片</td>
-                </tr>
-                <tr>
-                    <td>hotimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">鼠标悬浮的背景状态图片</td>
-                </tr>
-                <tr>
-                    <td>focusedimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">获得焦点时的状态图片</td>
-                </tr>
-                <tr>
-                    <td>disabledimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">禁用的状态图片</td>
-                </tr>
-                <tr>
-                    <td>showhtml</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否使用类html富文本绘制,如(false)</td>
-                </tr>
-                <tr>
-                    <td>sepimage</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">拖动条图片</td>
-                </tr>
-                <tr>
-                    <td>scale</td>
-                    <td align="right">0</td>
-                    <td align="center">INT</td>
-                    <td align="left">设置子表头所占总表头的百分比宽度，如40（代表占40%的宽度）</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="listcontainerelement"><a href="#listcontainerelement">ListContainerElement</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#container">Container</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>selected</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否选中,如(true)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="listlabelelement"><a href="#listlabelelement">ListLabelElement</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#control">Control</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>selected</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否选中,如(true)</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="listtextelement"><a href="#listtextelement">ListTextElement</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#listlabelelement">ListLabelElement</a></p>
-            </blockquote>
-            <h3 id="treeview"><a href="#treeview">TreeView</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#list">List</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>visiblefolderbtn</td>
-                    <td align="right">true</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示展开与收缩按钮对象</td>
-                </tr>
-                <tr>
-                    <td>visiblecheckbtn</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示复选框对象</td>
-                </tr>
-                <tr>
-                    <td>itemminwidth</td>
-                    <td align="right">0</td>
-                    <td align="center">UINT</td>
-                    <td align="left">设置Item的最小宽度，当hscrollbar为真且itemminwidth大于TreeView宽度时才会显示横向滚动条</td>
-                </tr>
-                <tr>
-                    <td>itemtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item文本颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhottextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标进入item时文本颜色</td>
-                </tr>
-                <tr>
-                    <td>selitemtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时文本颜色</td>
-                </tr>
-                <tr>
-                    <td>selitemhottextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时且鼠标进入时的文本颜色</td>
-                </tr>
-                </tbody>
-            </table>
-            <h3 id="treenode"><a href="#treenode">TreeNode</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#listcontainerelement">ListContainerElement</a></p>
-            </blockquote>
-            <table>
-                <thead>
-                <tr>
-                    <th>属性</th>
-                    <th align="right">默认值</th>
-                    <th align="center">类型</th>
-                    <th align="left">说明</th>
-                </tr>
-                </thead>
-                <tbody>
                 <tr>
                     <td>text</td>
-                    <td align="right"></td>
+                    <td align="right">测试文本</td>
                     <td align="center">STRING</td>
-                    <td align="left">显示文本,如(测试文本)</td>
+                    <td align="left">从text属性中获取显示文本,如(测试文本)</td>
                 </tr>
                 <tr>
-                    <td>horizattr</td>
-                    <td align="right"></td>
+                    <td>drawFocusRect</td>
+                    <td align="right">1</td>
+                    <td align="center">INT</td>
+                    <td align="left">绘制默认的焦点虚框 0--不绘制  1--绘制（默认）</td>
+                </tr>
+				     <tr>
+                    <td>layout</td>
+                    <td align="right">soui</td>
                     <td align="center">STRING</td>
-                    <td align="left">item虚线、复选框、展开与收缩、文本按钮等对象容器属性设置，格式参考Default元素的属性设置</td>
-                </tr>
-                <tr>
-                    <td>dotlineattr</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item虚线对象属性设置，格式参考Default元素的属性设置</td>
-                </tr>
-                <tr>
-                    <td>folderattr</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item展开与收缩按钮对象属性设置，格式参考Default元素的属性设置</td>
-                </tr>
-                <tr>
-                    <td>checkboxattr</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item复选框对象属性设置，格式参考Default元素的属性设置</td>
-                </tr>
-                <tr>
-                    <td>itemattr</td>
-                    <td align="right"></td>
-                    <td align="center">STRING</td>
-                    <td align="left">item按钮对象属性设置，格式参考Default元素的属性设置</td>
-                </tr>
-                <tr>
-                    <td>textcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item文本颜色</td>
-                </tr>
-                <tr>
-                    <td>texthotcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标进入item时文本颜色</td>
-                </tr>
-                <tr>
-                    <td>itemtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">文本颜色</td>
-                </tr>
-                <tr>
-                    <td>itemhottextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">鼠标进入时的文本颜色</td>
-                </tr>
-                <tr>
-                    <td>selitemtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时文本颜色</td>
-                </tr>
-                <tr>
-                    <td>selhotitemtextcolor</td>
-                    <td align="right">0x00000000</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">item被选中时且鼠标进入时的文本颜色</td>
+                    <td align="left">布局样式，支持4种布局：soui（相对布局），gridLayout（网格布局）， vbox（垂直线性布局）， hbox（水平线性布局）</td>
                 </tr>
                 </tbody>
             </table>
-            <h3 id="menu"><a href="#menu">Menu</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#list">List</a></p>
-            </blockquote>
-            <h3 id="menuelement"><a href="#menuelement">MenuElement</a></h3>
-            <blockquote>
-                <p>本控件继承自 <a href="#listcontainerelement">ListContainerElement</a></p>
-            </blockquote>
+          <h3 id="button"><a href="#button">button</a></h3>
+		   <p>按钮控件类    通过属性ID绑定click事件 Use id attribute to process click event</p>
+		   	<p>范例：< button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function" >btn< /button ></p>
             <table>
                 <thead>
                 <tr>
@@ -4032,59 +1978,29 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>icon</td>
-                    <td align="right"></td>
+                    <td>accel</td>
+                    <td align="right">ctrl+alt+f11</td>
                     <td align="center">STRING</td>
-                    <td align="left">菜单项的图标图片</td>
+                    <td align="left">键盘快捷键 如:ctrl+alt+f11</td>
                 </tr>
                 <tr>
-                    <td>iconsize</td>
-                    <td align="right">0,0</td>
-                    <td align="center">SIZE</td>
-                    <td align="left">图片的大小，最大为26x26</td>
-                </tr>
-                <tr>
-                    <td>checkitem</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否有复选功能</td>
-                </tr>
-                <tr>
-                    <td>ischeck</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否被选中（前提是开启了复选功能，复选功能属性应该写在本属性的前面）</td>
-                </tr>
-                <tr>
-                    <td>linetype</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否是分割线（开启后将不会显示图标）</td>
-                </tr>
-                <tr>
-                    <td>linepadding</td>
-                    <td align="right">29,0,7,0</td>
-                    <td align="center">RECT</td>
-                    <td align="left">分割线的外边据</td>
-                </tr>
-                <tr>
-                    <td>linecolor</td>
-                    <td align="right">0xFFBCBFC4</td>
-                    <td align="center">DWORD</td>
-                    <td align="left">分割线的颜色</td>
-                </tr>
-                <tr>
-                    <td>expland</td>
-                    <td align="right">false</td>
-                    <td align="center">BOOL</td>
-                    <td align="left">是否显示下级菜单的小三角图片（需要通过Default标签设置ExplandIcon属性图片的路径）</td>
-                </tr>
-                <tr>
-                    <td>height</td>
-                    <td align="right">30</td>
+                    <td>animate</td>
+                    <td align="right">0</td>
                     <td align="center">INT</td>
-                    <td align="left">菜单项高度（分割线默认高度是6）</td>
+                    <td align="left">动画效果 0--关闭（默认） 1--启用</td>
                 </tr>
+                <tr>
+                    <td>animateStep</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">动画的组成帧数 alpha for an animate step</td>
+                </tr>
+                <tr>
+                    <td>disableAccelIfInvisible</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">当控件不可见的时候禁止快捷键disable accel if invisible   0--关闭（默认） 1--启用  </td>
+                </tr>                
                 </tbody>
             </table>
         </article>
