@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set>
   <!--note: set alpha and scale will result in abnormal refresh-->
-  <alpha2 interpolator="Linear" duration="500" fromAlpha="1.0" toAlpha="0.5" repeatMode="reverse" repeatCount="1"/>
+  <!--<alpha interpolator="Linear" duration="500" fromAlpha="1.0" toAlpha="0.5" repeatMode="reverse" repeatCount="1"/>-->
   <scale duration="500" fromYScale="1.0" toYScale="0.5" pivotY="50%" fromxScale="1.0" toXScale="0.5" pivotX="50%" repeatMode="reverse" repeatCount="1"/>
 </set>
