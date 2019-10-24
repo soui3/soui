@@ -1259,15 +1259,14 @@
                 </tr>       
                 </tbody>
             </table>
-			2.string    
-			<p>范例:< string >< ver value="1.0"/ >< /string ></p>
-			<p>定义一个"name-字符串"映射，在布局的XML文件中可以通过引用字符串的name来获得字符串</p>
+			2.string  
+			<p>定义一个"name-字符串"映射，在布局的XML文件中可以通过引用字符串的name来获得字符串</p>			
+			<p>范例:< string >< ver value="1.0"/ >< /string ></p>	
+			
             <h3 id="skins.xml"><a href="#skins.xml">skins.xml</a></h3>
 			<p>SOUI系统默认实现了SSkinImgList(imglist), SSkinImgFrame(imgframe), SSkinButton(button), SSkinGradation(gradation), SSkinScrollbar(scrollbar), SSkinMenuBorder(border)这几种绘图类型。SSkinImgList为SOUI中的C++类名，imglist为在skins节点中的元素类型名。</p>
-			1、imglist 
-			<p>范例：< imglist name="skin_tree_icon" src="imgx:png_treeicon" states="3" / ></p>
-			<p>imglist是一个图片序列对象，可以包含一组小图片，常见的如按钮需要使用的4种状态图。</p>
-            <table>			
+			<p> < !-- skin的通用属性-- ></p>
+			 <table>			
                 <thead>
                 <tr>
                     <th>属性</th>
@@ -1289,6 +1288,34 @@
                     <td align="center">STRING</td>
                     <td align="left">skinObj引用的图片文件定义在uires.idx中的name属性。资源引用格式为type:name</td>
                 </tr>
+                <tr>
+                    <td>colorizeEnable</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">标识是否支持色调调节 0不支持  1支持 </td>
+                </tr>
+                <tr>
+                    <td>scale</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">比例缩放</td>
+                </tr>		
+                </tbody>
+            </table>
+			
+			1、imglist 
+			<p>imglist是一个图片序列对象，可以包含一组小图片，常见的如按钮需要使用的4种状态图。</p>
+			<p>范例：< imglist name="skin_tree_icon" src="imgx:png_treeicon" states="3" / ></p>			
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>	
                 <tr>
                     <td>tile</td>
                     <td align="right">0</td>
@@ -1321,8 +1348,10 @@
                 </tr>
                 </tbody>
             </table>
-        	2、imgframe  <p>范例： < imgframe name="skin_tab_left" src="imgx:png_tab_left" states="3" margin="1,1,1,1" / ></p>
+        	2、imgframe 
 			<p>imgframe是一个提供九宫格显示的绘图对象，SSkinImgFrame派生自SSkinImgList，因此imgframe也拥有imglist的全部属性。</p>
+			<p>范例： < imgframe name="skin_tab_left" src="imgx:png_tab_left" states="3" margin="1,1,1,1" / ></p>
+		
             <table>			
                 <thead>
                 <tr>
@@ -1378,8 +1407,9 @@
                 </tbody>
             </table>
            	3、button 
-			<p>范例：< button name="win10btn" colorBorder="#ADADAD" colorUp="#E1E1E1" colorDown="#E1E1E1" colorBorderHover="#0078D7" colorUpHover="#E5F1FB" colorDownHover="#E5F1FB" colorBorderPush="#005499" colorUpPush="#CCE4F7" colorDownPush="#CCE4F7" cornerPercent="0.5" / ></p>
 			<p>button绘图对象是绘制按钮时使用的，它使用渐变实现绘制按钮的4种状态。</p>
+			<p>范例：< button name="win10btn" colorBorder="#ADADAD" colorUp="#E1E1E1" colorDown="#E1E1E1" colorBorderHover="#0078D7" colorUpHover="#E5F1FB" colorDownHover="#E5F1FB" colorBorderPush="#005499" colorUpPush="#CCE4F7" colorDownPush="#CCE4F7" cornerPercent="0.5" / ></p>
+		
             <table>			
                 <thead>
                 <tr>
@@ -1450,6 +1480,76 @@
                     <td align="center">COLOR</td>
                     <td align="left">禁用状态渐变终止颜色</td>
                 </tr>
+                </tbody>
+            </table>
+			 4、gradation 
+			<p>渐变绘图对象，提供3个属性</p>
+			<p>范例：< gradation name="skin_caption" colorFrom="#0000bb" colorTo="#0000ff" vertical="0" / ></p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>vertical</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">渐变方向,0--水平(默认), 1--垂直</td>
+                </tr>
+				  <tr>
+                    <td>colorFrom</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">渐变起始颜色，格式:#rgba</td>
+                </tr>
+               	  <tr>
+                    <td>colorTo</td>
+                    <td align="right">#cccccc</td>
+                    <td align="center">COLOR</td>
+                    <td align="left">渐变终止颜色，格式:#rgba</td>
+                </tr>
+                
+                </tbody>
+            </table>			
+			5、scrollbar
+			<p>动条皮肤，虽然它派生自imglist，实际上imglist中实现的属性在scrollbar中没有意义，只是为了省点代码
+			如果没有帮手也没有禁用状态，图片应该是8*3的正方形网格。
+			有帮手则X增加一个网格，有禁用状态则Y增加一个网格。</p>
+			<p>范例：	< vscrollbar name="skin_vscrollbar" src="imgx:png_vscroll" states="3" margin="4" / ></p>
+            <table>			
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th align="right">默认值</th>
+                    <th align="center">类型</th>
+                    <th align="left">说明</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr>
+                    <td>margin</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">边缘拉伸大小</td>
+                </tr>
+				  <tr>
+                    <td>hasGripper</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">滑块上是否有帮手(gripper)</td>
+                </tr>
+               	  <tr>
+                    <td>hasInactive</td>
+                    <td align="right">0</td>
+                    <td align="center">INT</td>
+                    <td align="left">是否有禁用态</td>
+                </tr>
+                
                 </tbody>
             </table>
 		   <h3 id="font"><a href="#font">Font</a></h3>
