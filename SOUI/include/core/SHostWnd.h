@@ -100,7 +100,9 @@ class SOUI_EXP SHostWnd
     , public SNativeWnd
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
+    friend class SDummyWnd;
 protected:    
+    SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */
     SStringT             m_strXmlLayout;        /**<布局资源名称,如xml:main_wnd */
 
@@ -315,6 +317,8 @@ protected:
 	virtual IToolTip * CreateTooltip() const;
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 
+protected:
+	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);

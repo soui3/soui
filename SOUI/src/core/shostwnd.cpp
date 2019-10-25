@@ -11,6 +11,37 @@
 namespace SOUI
 {
 
+#define KConstDummyPaint    0x80000000
+
+
+//////////////////////////////////////////////////////////////////////////
+//    SDummyWnd
+//////////////////////////////////////////////////////////////////////////
+	class SDummyWnd : public SNativeWnd
+	{
+	public:
+		SDummyWnd(SHostWnd* pOwner) :m_pOwner(pOwner)
+		{
+		}
+
+		void OnPaint(HDC dc);
+
+		BEGIN_MSG_MAP_EX(SDummyWnd)
+			MSG_WM_PAINT(OnPaint)
+			END_MSG_MAP()
+	private:
+		SHostWnd *m_pOwner;
+	};
+
+void SDummyWnd::OnPaint( HDC dc )
+{
+    PAINTSTRUCT ps;
+    ::BeginPaint(m_hWnd, &ps);
+    ::EndPaint(m_hWnd, &ps);
+    m_pOwner->OnPrint(NULL,KConstDummyPaint);
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 //    SHostWndAttr
 //////////////////////////////////////////////////////////////////////////
@@ -87,6 +118,7 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_bNeedRepaint(FALSE)
 , m_bNeedAllRepaint(TRUE)
 , m_pTipCtrl(NULL)
+, m_dummyWnd(NULL)
 , m_bRendering(FALSE)
 , m_nScale(100)
 , m_szAppSetted(0,0)
@@ -260,16 +292,19 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	SStringT strTitle = m_hostAttr.m_strTitle.GetText(FALSE);
     SNativeWnd::SetWindowText(strTitle);
     
-	if (m_hostAttr.m_byAlpha != 0xFF || m_hostAttr.m_bTranslucent)    {
-		if (!(dwExStyle & WS_EX_LAYERED)) 
-		{
-			ModifyStyleEx(0,WS_EX_LAYERED);
-		}
-		if(!m_hostAttr.m_bTranslucent)
-		{
-			::SetLayeredWindowAttributes(m_hWnd,0,m_hostAttr.m_byAlpha,LWA_ALPHA);
-		}
-	}
+    if(m_hostAttr.m_bTranslucent)
+    {
+        SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		m_dummyWnd = new SDummyWnd(this);
+        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
+        m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+        ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+        m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+    }else if(dwExStyle & WS_EX_LAYERED || m_hostAttr.m_byAlpha!=0xFF)
+    {
+        if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
+        ::SetLayeredWindowAttributes(m_hWnd,0,m_hostAttr.m_byAlpha,LWA_ALPHA);
+    }
     if(m_hostAttr.m_hAppIconSmall)
     {
         SendMessage(WM_SETICON,FALSE,(LPARAM)m_hostAttr.m_hAppIconSmall);
@@ -334,6 +369,14 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     return TRUE;
 }
 
+void SHostWnd::OnWindowTextChanged(LPCTSTR pszTitle)
+{
+	if (m_dummyWnd)
+	{
+		m_dummyWnd->SetWindowText(pszTitle);
+	}
+}
+
 void SHostWnd::_Redraw()
 {
     m_bNeedAllRepaint = TRUE;
@@ -346,7 +389,6 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     //刷新前重新布局，会自动检查布局脏标志
 	UpdateLayout();
     
-
     if (m_bNeedAllRepaint)
     {
         m_rgnInvalidate->Clear();
@@ -354,9 +396,8 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
         m_bNeedRepaint=TRUE;
     }
 
-	CRect rcInvalid;
+    CRect rcInvalid;
 	CRect rcWnd = SWindow::GetWindowRect();
-
     if (m_bNeedRepaint)
     {
         m_bNeedRepaint = FALSE;
@@ -393,6 +434,11 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     {//缓存已经更新好了，只需要重新更新到窗口
         m_rgnInvalidate->GetRgnBox(&rcInvalid);
         m_rgnInvalidate->Clear();
+    }
+    
+    if(uFlags != KConstDummyPaint) //由系统发的WM_PAINT或者WM_PRINT产生的重绘请求
+    {
+        rcInvalid = rcWnd;
     }
     
     //渲染非背景混合窗口,设置m_bRending=TRUE以保证只执行一次UpdateHost
@@ -473,6 +519,12 @@ void SHostWnd::OnDestroy()
         GetMsgLoop()->RemoveMessageFilter(m_pTipCtrl);
 		DestroyTooltip(m_pTipCtrl);
         m_pTipCtrl = NULL;
+    }
+    if(m_dummyWnd)
+    {
+        m_dummyWnd->DestroyWindow();
+		delete m_dummyWnd;
+		m_dummyWnd = NULL;
     }
 
 	m_memRT = NULL;
@@ -709,10 +761,7 @@ void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid, BYTE byAlpha)
     else
     {
         HDC hdc=m_memRT->GetDC(0);
-		CRect rcClip;
-		::GetClipBox(dc,&rcClip);
-		rcClip |= rcInvalid;
-        ::BitBlt(dc,rcClip.left,rcClip.top,rcClip.Width(),rcClip.Height(),hdc,rcClip.left,rcClip.top,SRCCOPY);
+        ::BitBlt(dc,rcInvalid.left,rcInvalid.top,rcInvalid.Width(),rcInvalid.Height(),hdc,rcInvalid.left,rcInvalid.top,SRCCOPY);
         m_memRT->ReleaseDC(hdc);
     }
 }
@@ -760,7 +809,10 @@ BOOL SHostWnd::IsSendWheel2Hover() const
 BOOL SHostWnd::UpdateWindow()
 {
     if(m_bResizing) return FALSE;
-	::UpdateWindow(m_hWnd);
+    if(m_dummyWnd) 
+		::UpdateWindow(m_dummyWnd->m_hWnd);
+    else 
+		::UpdateWindow(m_hWnd);
     return TRUE;
 }
 
@@ -1458,16 +1510,23 @@ void SHostWnd::_RestoreClickState()
 
 void SHostWnd::_Invalidate(LPCRECT prc)
 {
-	if(prc)
-		SNativeWnd::InvalidateRect(prc, FALSE);
-	else
-		SNativeWnd::Invalidate(FALSE);
+	if (!m_hostAttr.m_bTranslucent)
+	{
+		if(prc)
+			SNativeWnd::InvalidateRect(prc, FALSE);
+		else
+			SNativeWnd::Invalidate(FALSE);
+	}
+	else if (m_dummyWnd)
+	{
+		m_dummyWnd->Invalidate(FALSE);
+	}
 }
 
 HRESULT SHostWnd::OnLanguageChanged()
 {
 	SNativeWnd::SetWindowText(m_hostAttr.m_strTitle.GetText(FALSE));
-	return S_OK;
+	return 3;
 }
 
 
