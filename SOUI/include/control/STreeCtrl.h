@@ -133,7 +133,7 @@ protected:
 
     void SetChildrenState(HSTREEITEM hItem, int nCheckValue);
     BOOL CheckChildrenState(HSTREEITEM hItem, BOOL bCheck);    
-    void CheckState(HSTREEITEM hItem, BOOL bCheck, BOOL bCheckChild = TRUE);    
+    void CheckState(HSTREEITEM hItem);
 
     virtual void ItemLayout();
     virtual void CalcItemContentWidth(LPTVITEM pItem);
