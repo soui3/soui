@@ -110,14 +110,11 @@ BOOL STreeCtrl::RemoveItem(HSTREEITEM hItem)
         CalcItemContentWidth(pParent);            
     }
 
-    if(m_bCheckBox && hParent && GetChildItem(hParent))
+    if(m_bCheckBox && hParent)
     {
-        //原结点复选框选中，检查父结点是否由半选变不选    
-        if (nCheckBoxValue == STVICheckBox_Checked )
-            CheckState(hParent, FALSE);    
-        //原结点复选框未选中，检查父结点是否由半选变全选    
-        else
-            CheckState(hParent, TRUE);    
+		//如果父节点同为不选或全选，则不用改变状态，其他情况都需要重新判断
+		if (nCheckBoxValue != GetItem(hParent)->nCheckBoxValue || nCheckBoxValue == STVICheckBox_PartChecked)
+			CheckState(hParent);
     }
 
     if(bVisible)
@@ -286,17 +283,20 @@ BOOL STreeCtrl::SetCheckState(HSTREEITEM hItem, BOOL bCheck)
 
     int nCheck = bCheck ? STVICheckBox_Checked : STVICheckBox_UnChecked;   
 
-    LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
-    pItem->nCheckBoxValue = nCheck;
+    LPTVITEM pItem = CSTree<LPTVITEM>::GetItem(hItem);
+	if (pItem->nCheckBoxValue != nCheck)
+	{
+		pItem->nCheckBoxValue = nCheck;
 
-    //置子孙结点
-    if (CSTree<LPTVITEM>::GetChildItem(hItem))
-        SetChildrenState(hItem, nCheck);
+		//置子孙结点
+		if (CSTree<LPTVITEM>::GetChildItem(hItem))
+			SetChildrenState(hItem, nCheck);
 
-    //检查父结点状态
-    CheckState(GetParentItem(hItem), bCheck);
+		//检查父结点状态
+		CheckState(GetParentItem(hItem));
 
-    Invalidate();
+		Invalidate();
+	}
 
     return TRUE;
 }
@@ -535,23 +535,40 @@ BOOL STreeCtrl::CheckChildrenState(HSTREEITEM hItem, BOOL bCheck)
     return TRUE;
 }
 
-void STreeCtrl::CheckState(HSTREEITEM hItem, BOOL bCheck, BOOL bCheckChild)
+void STreeCtrl::CheckState(HSTREEITEM hItem)
 {        
     if(hItem)
     {
-        LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
+		LPTVITEM pItem = CSTree<LPTVITEM>::GetItem(hItem);
+		int nOldState = pItem->nCheckBoxValue;
+		pItem->nCheckBoxValue = STVICheckBox_UnChecked;
+		bool bHasUnChecked = false;
+		bool bHasChecked = false;
+		bool bHasPartChecked = false;
 
-        if (bCheckChild && CheckChildrenState(hItem, bCheck))
-        {
-            int nCheckValue = bCheck ? STVICheckBox_Checked : STVICheckBox_UnChecked;
-            pItem->nCheckBoxValue = nCheckValue;
-            CheckState(GetParentItem(hItem), bCheck, TRUE);
-        }
-        else
-        {
-            pItem->nCheckBoxValue = STVICheckBox_PartChecked;
-            CheckState(GetParentItem(hItem),bCheck,  FALSE);
-        }
+		HSTREEITEM hChild = GetChildItem(hItem);
+		while (hChild)
+		{
+			LPTVITEM pChild = CSTree<LPTVITEM>::GetItem(hChild);
+			if (pChild->nCheckBoxValue == STVICheckBox_UnChecked)
+				bHasUnChecked = true;
+			else if (pChild->nCheckBoxValue == STVICheckBox_Checked)
+				bHasChecked = true;
+			else if (pChild->nCheckBoxValue == STVICheckBox_PartChecked)
+				bHasPartChecked = true;
+
+			if (bHasPartChecked || (bHasUnChecked && bHasChecked))
+				break; //已确定半选，提前结束循环
+			hChild = GetNextSiblingItem(hChild);
+		}
+
+		if (bHasPartChecked || (bHasUnChecked && bHasChecked)) //子节点有半选，则父节点也要半选
+			pItem->nCheckBoxValue = STVICheckBox_PartChecked;
+		else if (bHasChecked && !bHasUnChecked) //子节点都是全选，则父节点也是全选
+			pItem->nCheckBoxValue = STVICheckBox_Checked;
+
+		if (pItem->nCheckBoxValue != nOldState)
+			CheckState(GetParentItem(hItem));
     }        
 }
 
