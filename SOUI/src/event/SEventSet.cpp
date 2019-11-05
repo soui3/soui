@@ -87,7 +87,7 @@ namespace SOUI
 
     //////////////////////////////////////////////////////////////////////////
     // SEventSet
-    SEventSet::SEventSet(void):m_bMuted(FALSE)
+    SEventSet::SEventSet(void):m_nMuted(0)
     {
     }
 
@@ -96,7 +96,16 @@ namespace SOUI
         removeAllEvents();
     }
 
-    SEvent * SEventSet::GetEventObject(const DWORD dwEventID )
+	void SEventSet::setMutedState(bool setting)
+	{
+		if (setting)
+			m_nMuted++;
+		else
+			m_nMuted--;
+		SASSERT(m_nMuted >= 0);
+	}
+
+	SEvent * SEventSet::GetEventObject(const DWORD dwEventID )
     {
         for(UINT i=0;i<m_evtArr.GetCount();i++)
         {
@@ -111,7 +120,7 @@ namespace SOUI
         SEvent* ev = GetEventObject(args.GetID());
 
         // fire the event if present and set is not muted
-        if ((ev != 0) && !m_bMuted)
+        if ((ev != 0) && m_nMuted==0)
         {
             (*ev)(args);
         }

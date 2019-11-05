@@ -605,7 +605,7 @@ namespace SOUI{
 	class SOUI_EXP SIntAnimator : public TValueAnimator<int> {
 		SOUI_CLASS_NAME(SIntAnimator, L"IntAnimator")
 	public:
-		SIntAnimator():TValueAnimator<int>(0,1)
+		SIntAnimator():TValueAnimator<int>(0,100)
 		{
 		}
 

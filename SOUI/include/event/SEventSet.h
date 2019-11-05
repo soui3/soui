@@ -149,7 +149,7 @@ namespace SOUI
     */
     bool    isMuted(void) const
     {
-        return m_bMuted;
+        return m_nMuted>0;
     }
 
 
@@ -164,15 +164,12 @@ namespace SOUI
     \return
         Nothing.
     */
-    void    setMutedState(bool setting)
-    {
-        m_bMuted=setting;
-    }
+	void    setMutedState(bool setting);
 
     protected:
         SEvent * GetEventObject(const DWORD dwEventID);
         SArray<SEvent *> m_evtArr;
-        bool                    m_bMuted;
+        int      m_nMuted;
     };
 
 

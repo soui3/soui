@@ -96,25 +96,23 @@ namespace SOUI
         SASSERT(m_pSkinBtn);
 		m_xmlDropdownStyle.append_copy(xmlNode.child(KStyle_Dropdown));
         //创建edit对象
-        if(!m_bDropdown)
-        {            
-            m_pEdit=new SComboEdit(this);
-            SApplication::getSingleton().SetSwndDefAttr(m_pEdit);
+		m_pEdit = new SComboEdit(this);
+		SApplication::getSingleton().SetSwndDefAttr(m_pEdit);
 
-            InsertChild(m_pEdit);
-            pugi::xml_node xmlEditStyle=xmlNode.child(KStyle_Edit);
-            m_pEdit->GetEventSet()->setMutedState(true);
-            if(xmlEditStyle)
-                m_pEdit->InitFromXml(xmlEditStyle);
-            else
-                m_pEdit->SSendMessage(WM_CREATE);
-            m_pEdit->GetEventSet()->setMutedState(false);
-			
-            m_pEdit->SetID(IDC_CB_EDIT);
-            m_pEdit->SSendMessage(EM_SETEVENTMASK,0 ,ENM_CHANGE );
+		InsertChild(m_pEdit);
+		pugi::xml_node xmlEditStyle = xmlNode.child(KStyle_Edit);
+		m_pEdit->GetEventSet()->setMutedState(true);
+		if (xmlEditStyle)
+			m_pEdit->InitFromXml(xmlEditStyle);
+		else
+			m_pEdit->SSendMessage(WM_CREATE);
+		m_pEdit->GetEventSet()->setMutedState(false);
 
-        }
-        return CreateListBox(xmlNode);
+		m_pEdit->SetID(IDC_CB_EDIT);
+		m_pEdit->SSendMessage(EM_SETEVENTMASK, 0, ENM_CHANGE);
+		m_pEdit->SetVisible(!m_bDropdown);
+
+		return CreateListBox(xmlNode);
     }
 
 
@@ -148,7 +146,7 @@ namespace SOUI
         SPainter painter;
 
         BeforePaint(pRT, painter);
-        if(GetCurSel() != -1 && m_pEdit==NULL)
+        if(GetCurSel() != -1 && m_bDropdown)
         {
             CRect rcText;
             GetTextRect(rcText);
@@ -309,7 +307,7 @@ namespace SOUI
 
     void SComboBase::OnDestroyDropDown(SDropDownWnd *pDropDown)
     {
-        if (!m_bDropdown && m_pEdit)
+        if (!m_bDropdown)
         {
             m_pEdit->SetFocus();
         }
@@ -403,7 +401,7 @@ namespace SOUI
 
     void SComboBase::OnSetFocus(SWND wndOld)
     {
-        if(m_pEdit) 
+        if(!m_bDropdown) 
             m_pEdit->SetFocus();
         else
             __super::OnSetFocus(wndOld);
@@ -515,11 +513,8 @@ namespace SOUI
     {
         SWindow::SetWindowText(pszText);
         SetCurSel(-1);
-        if(!m_bDropdown)
-        {
-            m_pEdit->SetWindowText(pszText);
-        }
-    }
+		m_pEdit->SetWindowText(pszText);
+	}
 
     void SComboBase::OnKillFocus(SWND wndFocus)
     {
@@ -527,11 +522,17 @@ namespace SOUI
         CloseUp();
     }
 
+	LRESULT SComboBase::OnAttrDropDown(const SStringW & strValue, BOOL bLoading)
+	{
+		m_bDropdown = STRINGASBOOL(strValue);
+		if (bLoading) return S_OK;
+		m_pEdit->SetVisible(!m_bDropdown, TRUE);
+		return S_OK;
+	}
+
 	void SComboBase::UpdateChildrenPosition()
 	{
 		__super::UpdateChildrenPosition();
-		if (!m_pEdit)
-			return;
 		SIZE szBtn = m_pSkinBtn->GetSkinSize();		
 		CRect rcPadding = GetStyle().GetPadding();
 		CRect rcEdit = GetClientRect();
