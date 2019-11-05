@@ -80,6 +80,7 @@ namespace SOUI
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_RECT(L"margin",m_rcMargin,TRUE)
+			ATTR_MARGIN(L"margin2",m_rcMargin,TRUE)
 			ATTR_BOOL(L"tile",m_bTile,TRUE)
 			ATTR_ENUM_BEGIN(L"filterLevel",FilterLevel,TRUE)
 				ATTR_ENUM_VALUE(L"none",kNone_FilterLevel)
