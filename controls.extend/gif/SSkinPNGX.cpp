@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "SSkinPNGX.h"
 #include <helper/SplitString.h>
-#include <interface/imgdecoder-i.h>
-#include <interface/render-i.h>
+#include <interface/simgdecoder-i.h>
+#include <interface/srender-i.h>
 
 
 namespace SOUI
@@ -10,6 +10,7 @@ namespace SOUI
 
 HRESULT SSkinPNGX::OnAttrDelay(const SStringW &strValue,BOOL bLoading)
 {
+	//解析每一帧的延时，格式为：10,10,20[5],10, 其中[5]代表连续5帧的时延都是20ms。
 	SStringWList strDelays;
 	int nSegs = (int)SplitString(strValue,L',',strDelays);
 	m_nDelays.RemoveAll();
@@ -62,7 +63,11 @@ void SSkinPNGX::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BY
 			rcSrc.OffsetRect(0,rcSrc.Height()*dwState);
 		else
 			rcSrc.OffsetRect(rcSrc.Width()*dwState,0);
-		pRT->DrawBitmapEx(rcDraw,m_pngx,rcSrc,EM_STRETCH,byAlpha);
+
+		if(m_rcMargin.IsRectNull())
+			pRT->DrawBitmapEx(rcDraw,m_pngx,rcSrc,GetExpandCode(),byAlpha);
+		else
+			pRT->DrawBitmap9Patch(rcDraw,m_pngx,rcSrc,m_rcMargin,GetExpandCode(),byAlpha);
 	}
 }
 

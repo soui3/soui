@@ -14,7 +14,7 @@ namespace SOUI
 			int                  nDelay;
 		};
     public:
-        SSkinAni():m_nFrames(0),m_iFrame(0)
+        SSkinAni():m_nFrames(0),m_iFrame(0),m_bTile(FALSE),m_filterLevel(kLow_FilterLevel)
         {
 
         }
@@ -74,13 +74,29 @@ namespace SOUI
 			_DrawByIndex2(pRT, rcDraw, m_iFrame, byAlpha);
 		}
 
+		LONG GetExpandCode() const{
+			return MAKELONG(m_bTile?EM_TILE:EM_STRETCH,m_filterLevel);
+		}
+	public:
+		SOUI_ATTRS_BEGIN()
+			ATTR_RECT(L"margin",m_rcMargin,TRUE)
+			ATTR_BOOL(L"tile",m_bTile,TRUE)
+			ATTR_ENUM_BEGIN(L"filterLevel",FilterLevel,TRUE)
+				ATTR_ENUM_VALUE(L"none",kNone_FilterLevel)
+				ATTR_ENUM_VALUE(L"low",kLow_FilterLevel)
+				ATTR_ENUM_VALUE(L"medium",kMedium_FilterLevel)
+				ATTR_ENUM_VALUE(L"high",kHigh_FilterLevel)
+			ATTR_ENUM_END(m_filterLevel)
+		SOUI_ATTRS_END()
 	protected:
 		virtual void _DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int iFrame, BYTE byAlpha/*=0xFF*/) const = 0;
 
 	protected:
 		int m_nFrames;
         mutable int m_iFrame;
-
+		CRect		m_rcMargin;
+		FilterLevel	m_filterLevel;
+		BOOL		m_bTile;
     };
 
 }
