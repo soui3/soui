@@ -73,11 +73,13 @@ namespace SOUI
     void SComboView::OnSelChanged()
     {
         m_pListBox->GetSel();
-		SStringT strText = GetLBText(m_pListBox->GetSel(), FALSE);
-		m_pEdit->GetEventSet()->setMutedState(true);
-		m_pEdit->SetWindowText(strText);
-		m_pEdit->GetEventSet()->setMutedState(false);
-
+        if(m_pEdit && !m_pEdit->GetEventSet()->isMuted())
+        {
+            SStringT strText=GetLBText(m_pListBox->GetSel(),FALSE);
+            m_pEdit->GetEventSet()->setMutedState(true);
+            m_pEdit->SetWindowText(strText);
+            m_pEdit->GetEventSet()->setMutedState(false);
+        }
         Invalidate();
         __super::OnSelChanged();
     }

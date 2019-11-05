@@ -78,8 +78,8 @@ namespace SOUI
 		,m_bAutoFitDropBtn(TRUE)
     {
         m_bFocusable=TRUE;
-		m_style.SetAlign(DT_LEFT);
-		m_style.SetVAlign(DT_VCENTER);
+		m_style.SetAlign(SwndStyle::Align_Left);
+		m_style.SetVAlign(SwndStyle::VAlign_Middle);
 
         m_evtSet.addEvent(EVENTID(EventCBSelChange));
         m_evtSet.addEvent(EVENTID(EventRENotify));
@@ -134,7 +134,6 @@ namespace SOUI
     {
         CRect rc = GetClientRect();
         rc.DeflateRect(GetStyle().GetPadding());
-        //SIZE szBtn=m_pSkinBtn->GetSkinSize();
 		CRect rcBtn;
 		GetDropBtnRect(&rcBtn);
         rc.right-= rcBtn.Width();
@@ -206,9 +205,6 @@ namespace SOUI
 
     void SComboBase::OnKeyDown( TCHAR nChar, UINT nRepCnt, UINT nFlags )
     {    
-        //if ( nChar == VK_DOWN)
-        //    DropDown();
-		
 		//方向键改变当前选项
         switch (nChar) 
         {
@@ -573,5 +569,16 @@ namespace SOUI
 		}
         GetScaleSkin(m_pSkinBtn, nScale);
     }
+
+	bool SComboBase::IsDropdown() const
+	{
+		return m_bDropdown;
+	}
+
+	void SComboBase::SetDropdown(bool bDropdown)
+	{
+		m_bDropdown = bDropdown;
+		m_pEdit->SetVisible(!m_bDropdown, TRUE);
+	}
 
 }
