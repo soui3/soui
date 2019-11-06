@@ -172,6 +172,9 @@ namespace SOUI
 
 	bool SSpinButtonCtrl::OnBuddyChange(EventArgs* pEvt)
 	{
+		EventRENotify *pEvt2 = sobj_cast<EventRENotify>(pEvt);
+		if (pEvt2->iNotify != EN_CHANGE)
+			return false;
 		SWindow *pBuddy = GetBuddy();
 		if(pBuddy)
 		{
