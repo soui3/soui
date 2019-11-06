@@ -173,7 +173,7 @@ namespace SOUI
 	{	
 		if (!szTip.IsEmpty())
 		{
-			m_strTip = S_CW2T(szTip);
+			m_strTip = S_CW2T(GETSTRING(szTip));
 			if (!bLoading)
 			{
 				nid.uFlags |= NIF_TIP;
