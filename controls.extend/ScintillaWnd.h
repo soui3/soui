@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/simplewnd.h>
+#include <core/SNativeWnd.h>
 #include <Scintilla.h>
 
 
 // CScintillaWnd
-class CScintillaWnd : public CSimpleWnd
+class CScintillaWnd : public SNativeWnd
 {
 public:
 	static int InitScintilla(HINSTANCE hInst);
@@ -39,7 +39,7 @@ protected:
 
 	BEGIN_MSG_MAP_EX(CScintillaWnd)
 		MSG_OCM_NOTIFY(OnNotify)
-		CHAIN_MSG_MAP(CSimpleWnd)
+		CHAIN_MSG_MAP(SNativeWnd)
 		REFLECT_NOTIFICATIONS_EX();
 	END_MSG_MAP()
 
