@@ -5281,7 +5281,7 @@ namespace pugi
 		xml_encoding buffer_encoding = impl::get_buffer_encoding(encoding, contents, size);
 		if (buffer_encoding == encoding_bin)
 		{
-			return load_bin((const char *)contents, size);
+			return load_bin((const char *)contents, (int)size);
 		}
 
 		// get private buffer
@@ -5610,7 +5610,7 @@ namespace pugi
     void _write_str(const STRMAP & strMap,const char_t * str,FILE * f)
     {
         //size_t sz = strMap.GetCount();
-        int nIdxSize= index_size(strMap.GetCount());
+        int nIdxSize= index_size((int)strMap.GetCount());
         int nIdx = 0;
         
 #ifdef PUGIXML_WCHAR_MODE
