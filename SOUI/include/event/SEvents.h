@@ -141,6 +141,7 @@ namespace SOUI
 		EVT_ANI_STOP,
 
 		EVT_SELECTMENU = 22150,
+		EVT_POPMENU,
 
 
         EVT_EXTERNAL_BEGIN=10000000,
@@ -552,10 +553,14 @@ namespace SOUI
 	SEVENT_BEGIN_EX(EventAnimateStop, EVT_ANI_STOP, EVT_ANI_STOP, SOUI_EXP)
 	SEVENT_END()
 
-	class SMenuEx;
+	class SMenu;
 	SEVENT_BEGIN_EX(EventSelectMenu, EVT_SELECTMENU, on_select_menu, SOUI_EXP)
 		UINT m_id;
-		SMenuEx *m_pMenu;
+		SMenu *m_pMenu;
+	SEVENT_END()
+	SEVENT_BEGIN_EX(EventPopMenu, EVT_POPMENU, on_pop_menu, SOUI_EXP)
+		UINT m_index;
+		SMenu* m_pMenu;
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventSetHotKey, EVT_HOT_KEY_SET, on_hot_key_set_event, SOUI_EXP)
