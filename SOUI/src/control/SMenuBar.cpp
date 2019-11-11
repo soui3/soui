@@ -9,8 +9,8 @@ namespace SOUI
 	HHOOK SMenuBar::m_hMsgHook = NULL;
 	SMenuBar* SMenuBar::m_pMenuBar = NULL;
 
-	const TCHAR XmlBtnStyle[] = _T("btnStyle");
-	const TCHAR XmlMenus[] = _T("menus");
+	const wchar_t XmlBtnStyle[] = L"btnStyle";
+	const wchar_t XmlMenus[] = L"menus";
 
 	class SMenuBarItem :
 		public SButton,
@@ -39,13 +39,13 @@ namespace SOUI
 
 		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_TIMER(OnTimer)
-			SOUI_MSG_MAP_END()
+		SOUI_MSG_MAP_END()
 
-			SOUI_ATTRS_BEGIN()
-			ATTR_CUSTOM(_T("src"), OnAttrSrc)
-			SOUI_ATTRS_END()
+		SOUI_ATTRS_BEGIN()
+			ATTR_CUSTOM(L"src", OnAttrSrc)
+		SOUI_ATTRS_END()
 
-			ULONG_PTR m_data;
+		ULONG_PTR m_data;
 		SMenuBar* m_pHostMenu;
 		BOOL m_bIsRegHotKey;
 		int m_iIndex;
@@ -126,7 +126,7 @@ namespace SOUI
 
 	HRESULT SMenuBarItem::OnAttrSrc(const SStringW& strValue, BOOL bLoading)
 	{
-		return LoadMenu(strValue) ? S_OK : E_INVALIDARG;
+		return LoadMenu(S_CW2T(strValue)) ? S_OK : E_INVALIDARG;
 	}
 
 	CSize SMenuBarItem::GetDesiredSize(int nParentWid, int nParentHei)
@@ -205,7 +205,7 @@ namespace SOUI
 		SStringT strText = pszTitle;
 		int nPos = strText.ReverseFind('&');
 		if (nPos > -1)
-			pNewMenu->SetAttribute(_T("accel"), SStringT().Format(_T("alt+%c"), strText[nPos + 1]));
+			pNewMenu->SetAttribute(L"accel", SStringW().Format(L"alt+%c", strText[nPos + 1]));
 
 		if (iPos < 0) iPos = m_lstMenuItem.GetCount();
 		m_lstMenuItem.InsertAt(iPos, pNewMenu);
@@ -235,10 +235,10 @@ namespace SOUI
 			return FALSE;
 		}
 
-		SStringT strText = xmlNode.first_child().value();
-		int nPos = strText.ReverseFind('&');
+		SStringW strText = xmlNode.first_child().value();
+		int nPos = strText.ReverseFind(L'&');
 		if (nPos > -1)
-			pNewMenu->SetAttribute(_T("accel"), SStringT().Format(_T("alt+%c"), strText[nPos + 1]));
+			pNewMenu->SetAttribute(L"accel", SStringW().Format(L"alt+%c", strText[nPos + 1]));
 
 		if (iPos < 0) iPos = m_lstMenuItem.GetCount();
 		m_lstMenuItem.InsertAt(iPos, pNewMenu);
@@ -285,7 +285,7 @@ namespace SOUI
 		{
 			for (pugi::xml_node xmlChild = xmlTMenus.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 			{
-				if (_tcsicmp(xmlChild.name(), SMenuBarItem::GetClassName()) != 0)
+				if (_wcsicmp(xmlChild.name(), SMenuBarItem::GetClassName()) != 0)
 					continue;
 				Insert(xmlChild);
 			}
