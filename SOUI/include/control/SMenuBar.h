@@ -6,7 +6,7 @@ namespace SOUI
 {
 	class SMenuItem;
 
-	class SMenuBar :
+	class SOUI_EXP SMenuBar :
 		public SWindow
 	{
 		SOUI_CLASS_NAME(SMenuBar, L"menubar")
