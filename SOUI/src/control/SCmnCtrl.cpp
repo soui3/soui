@@ -910,12 +910,8 @@ void SCheckBox::OnLButtonUp(UINT nFlags, CPoint point)
 {
     if((GetState()&WndState_PushDown) && GetWindowRect().PtInRect(point))
     {
-        if (IsChecked())
-            ModifyState(0, WndState_Check,TRUE);
-        else
-            ModifyState(WndState_Check, 0,TRUE);
+		SetCheck(!IsChecked());
     }
-
     SWindow::OnLButtonUp(nFlags,point);
 }
 
@@ -1115,8 +1111,11 @@ void SRadioBox::OnSetFocus(SWND wndOld,SFocusManager::FocusChangeReason reason)
 
 void SRadioBox::OnLButtonUp(UINT nFlags,CPoint pt)
 {
-    __super::OnLButtonUp(nFlags, pt);
-    if(!IsChecked()) SetCheck(TRUE);
+	if ((GetState()&WndState_PushDown) && GetWindowRect().PtInRect(pt))
+	{
+		if(!IsChecked()) SetCheck(TRUE);
+	}
+	SWindow::OnLButtonUp(nFlags, pt);
 }
 
 SWindow * SRadioBox::GetSelectedSiblingInGroup()
