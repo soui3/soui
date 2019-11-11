@@ -1,6 +1,6 @@
 <skin>
-  <imglist name="_skin.sys.checkbox" src="PNG:SYS_CHECKBOX" states="8"/>
-  <imglist name="_skin.sys.radio" src="PNG:SYS_RADIO" states="8"/>
+  <imglist name="_skin.sys.checkbox" src="PNG:SYS_CHECKBOX" states="8" checkAsPushdown="0"/>
+  <imglist name="_skin.sys.radio" src="PNG:SYS_RADIO" states="8" checkAsPushdown="0"/>
   <imglist name="_skin.sys.focuscheckbox" src="PNG:SYS_FOCUS_CHECKBOX"/>
   <imglist name="_skin.sys.focusradio" src="PNG:SYS_FOCUS_RADIO"/>
   <button name="_skin.sys.btn.normal" colorBorder="#7D9EBC" colorUp="#FEFEFE" colorDown="#C6E2FD" colorUpHover="#FEFEFE" colorDownHover="#DBEDFE" colorUpPush="#C6E2FD" colorDownPush="#FEFEFE"/>

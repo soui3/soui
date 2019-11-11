@@ -12,15 +12,15 @@ namespace SOUI
 	const TCHAR XmlBtnStyle[] = _T("btnStyle");
 	const TCHAR XmlMenus[] = _T("menus");
 
-	class SMenuItem :
+	class SMenuBarItem :
 		public SButton,
 		public SMenu
 	{
-		SOUI_CLASS_NAME(SMenuItem, L"menuItem")
+		SOUI_CLASS_NAME(SMenuBarItem, L"menuItem")
 			friend class SMenuBar;
 	public:
-		SMenuItem(SMenuBar* pHostMenu);
-		~SMenuItem();
+		SMenuBarItem(SMenuBar* pHostMenu);
+		~SMenuBarItem();
 
 		void SetData(ULONG_PTR data) { m_data = data; }
 		ULONG_PTR GetData() { return m_data; }
@@ -52,7 +52,7 @@ namespace SOUI
 		TCHAR m_cAccessKey;
 	};
 
-	SMenuItem::SMenuItem(SMenuBar* pHostMenu) :
+	SMenuBarItem::SMenuBarItem(SMenuBar* pHostMenu) :
 		m_data(0),
 		m_pHostMenu(pHostMenu),
 		m_bIsRegHotKey(FALSE),
@@ -60,19 +60,19 @@ namespace SOUI
 		m_cAccessKey(0)
 	{
 		m_bDrawFocusRect = FALSE;
-		GetEventSet()->subscribeEvent(EventCmd::EventID, Subscriber(&SMenuItem::OnCmd, this));
+		GetEventSet()->subscribeEvent(EventCmd::EventID, Subscriber(&SMenuBarItem::OnCmd, this));
 	}
 
-	SMenuItem::~SMenuItem()
+	SMenuBarItem::~SMenuBarItem()
 	{
 	}
 
-	bool SMenuItem::IsMenuLoaded() const
+	bool SMenuBarItem::IsMenuLoaded() const
 	{
 		return true;
 	}
 
-	UINT SMenuItem::PopMenu()
+	UINT SMenuBarItem::PopMenu()
 	{
 		if (m_pHostMenu->m_pNowMenu != NULL)
 			return 0;
@@ -124,12 +124,12 @@ namespace SOUI
 		return iRet;
 	}
 
-	HRESULT SMenuItem::OnAttrSrc(const SStringW& strValue, BOOL bLoading)
+	HRESULT SMenuBarItem::OnAttrSrc(const SStringW& strValue, BOOL bLoading)
 	{
 		return LoadMenu(strValue) ? S_OK : E_INVALIDARG;
 	}
 
-	CSize SMenuItem::GetDesiredSize(int nParentWid, int nParentHei)
+	CSize SMenuBarItem::GetDesiredSize(int nParentWid, int nParentHei)
 	{
 		CSize size = SWindow::GetDesiredSize(nParentWid, nParentHei);
 		size.cx += 13;
@@ -137,7 +137,7 @@ namespace SOUI
 		return size;
 	}
 
-	bool SMenuItem::OnCmd(EventArgs* e)
+	bool SMenuBarItem::OnCmd(EventArgs* e)
 	{
 		if (!::IsWindow(m_pHostMenu->m_hWnd))
 			m_pHostMenu->m_hWnd = GetContainer()->GetHostHwnd();
@@ -147,7 +147,7 @@ namespace SOUI
 		return true;
 	}
 
-	void SMenuItem::OnTimer(UINT_PTR timerID)
+	void SMenuBarItem::OnTimer(UINT_PTR timerID)
 	{
 		if (timerID == TIMER_POP)
 		{
@@ -182,7 +182,7 @@ namespace SOUI
 		if (!pszResName)
 			return FALSE;
 
-		SMenuItem* pNewMenu = new SMenuItem(this);
+		SMenuBarItem* pNewMenu = new SMenuBarItem(this);
 		SASSERT(pNewMenu);
 		InsertChild(pNewMenu);
 
@@ -220,7 +220,7 @@ namespace SOUI
 
 	BOOL SMenuBar::Insert(pugi::xml_node xmlNode, int iPos)
 	{
-		SMenuItem* pNewMenu = new SMenuItem(this);
+		SMenuBarItem* pNewMenu = new SMenuBarItem(this);
 		SASSERT(pNewMenu);
 		InsertChild(pNewMenu);
 
@@ -260,14 +260,14 @@ namespace SOUI
 	{
 		for (size_t i = 0; i < m_lstMenuItem.GetCount(); i++)
 		{
-			SMenuItem* pItem = m_lstMenuItem[i];
+			SMenuBarItem* pItem = m_lstMenuItem[i];
 			CRect rcItem = pItem->GetClientRect();
 			if (rcItem.PtInRect(pt))
 				return i;
 		}
 		return -1;
 	}
-	SMenuItem* SMenuBar::GetMenuItem(DWORD dwPos)
+	SMenuBarItem* SMenuBar::GetMenuItem(DWORD dwPos)
 	{
 		if (dwPos >= m_lstMenuItem.GetCount())
 			return NULL;
@@ -285,7 +285,7 @@ namespace SOUI
 		{
 			for (pugi::xml_node xmlChild = xmlTMenus.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 			{
-				if (_tcsicmp(xmlChild.name(), SMenuItem::GetClassName()) != 0)
+				if (_tcsicmp(xmlChild.name(), SMenuBarItem::GetClassName()) != 0)
 					continue;
 				Insert(xmlChild);
 			}
@@ -313,7 +313,7 @@ namespace SOUI
 					int nIndex = SMenuBar::m_pMenuBar->HitTest(pt);
 					if (nIndex != -1)
 					{
-						SMenuItem* menuItem = SMenuBar::m_pMenuBar->GetMenuItem(nIndex);
+						SMenuBarItem* menuItem = SMenuBar::m_pMenuBar->GetMenuItem(nIndex);
 						if (menuItem && SMenuBar::m_pMenuBar->m_iNowMenu != nIndex)
 						{
 							SMenuBar::m_pMenuBar->m_pNowMenu = menuItem;
@@ -335,7 +335,7 @@ namespace SOUI
 				{
 					int nRevIndex = SMenuBar::m_pMenuBar->m_iNowMenu - 1;
 					if (nRevIndex < 0) nRevIndex = SMenuBar::m_pMenuBar->m_lstMenuItem.GetCount() - 1;
-					SMenuItem* menuItem = SMenuBar::m_pMenuBar->m_lstMenuItem[nRevIndex];
+					SMenuBarItem* menuItem = SMenuBar::m_pMenuBar->m_lstMenuItem[nRevIndex];
 					if (menuItem)
 					{
 						SMenuBar::m_pMenuBar->m_pNowMenu = menuItem;
@@ -349,7 +349,7 @@ namespace SOUI
 				{
 					int nNextIndex = SMenuBar::m_pMenuBar->m_iNowMenu + 1;
 					if (nNextIndex >= (int)SMenuBar::m_pMenuBar->m_lstMenuItem.GetCount()) nNextIndex = 0;
-					SMenuItem* menuItem = SMenuBar::m_pMenuBar->GetMenuItem(nNextIndex);
+					SMenuBarItem* menuItem = SMenuBar::m_pMenuBar->GetMenuItem(nNextIndex);
 					if (menuItem)
 					{
 						SMenuBar::m_pMenuBar->m_pNowMenu = menuItem;

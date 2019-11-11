@@ -4,13 +4,13 @@
 
 namespace SOUI
 {
-	class SMenuItem;
+	class SMenuBarItem;
 
 	class SOUI_EXP SMenuBar :
 		public SWindow
 	{
 		SOUI_CLASS_NAME(SMenuBar, L"menubar")
-			friend class SMenuItem;
+		friend class SMenuBarItem;
 	public:
 		SMenuBar();
 		~SMenuBar();
@@ -22,16 +22,16 @@ namespace SOUI
 
 		int HitTest(CPoint pt);
 	protected:
-		SMenuItem* GetMenuItem(DWORD dwPos);
+		SMenuBarItem* GetMenuItem(DWORD dwPos);
 		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
 
 		static LRESULT CALLBACK MenuSwitch(int code, WPARAM wParam, LPARAM lParam);
 
-		SArray<SMenuItem*> m_lstMenuItem;
+		SArray<SMenuBarItem*> m_lstMenuItem;
 		HWND m_hWnd;
 		pugi::xml_document  m_xmlStyle;
 		BOOL m_bIsShow;
-		SMenuItem* m_pNowMenu;
+		SMenuBarItem* m_pNowMenu;
 		int m_iNowMenu;
 		CPoint m_ptMouse;
 

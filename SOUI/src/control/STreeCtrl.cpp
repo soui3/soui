@@ -853,14 +853,14 @@ void STreeCtrl::DrawItem(IRenderTarget *pRT, const CRect & rc, HSTREEITEM hItem)
     if (pItem->bHasChildren &&
         STVIMask_Toggle == (m_uItemMask & STVIMask_Toggle) && !m_bHasLines)
     {
-		int nImage = SState2Index::GetDefIndex(pItem->dwToggleState);
+		int nImage = SState2Index::GetDefIndex(pItem->dwToggleState,false);
         if (!pItem->bCollapsed) nImage += 3;
         m_pToggleSkin->DrawByIndex(pRT, m_rcToggle, nImage);
     }
     
     if (STVIMask_CheckBox == (m_uItemMask & STVIMask_CheckBox))
     {
-		int nImage = SState2Index::GetDefIndex(pItem->dwCheckBoxState);
+		int nImage = SState2Index::GetDefIndex(pItem->dwCheckBoxState,false);
         if (pItem->nCheckBoxValue == STVICheckBox_Checked)
             nImage += 3;
         else if (pItem->nCheckBoxValue == STVICheckBox_PartChecked)
