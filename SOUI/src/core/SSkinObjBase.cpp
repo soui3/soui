@@ -130,6 +130,7 @@ namespace SOUI
 		pSkinObj->m_bEnableColorize = m_bEnableColorize;
 		pSkinObj->m_crColorize = m_crColorize;
 		pSkinObj->m_strName = m_strName;
+		pSkinObj->m_checkAsPushdown = m_checkAsPushdown;
 	}
 
 	ISkinObj * SSkinObjBase::Scale(int nScale)
