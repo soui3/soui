@@ -4,11 +4,7 @@
 * 
 * @file       soui-version.h
 * @brief      
-* @version    v1.0      
-* @author     SOUI group   
-* @date       2016/02/23
-* 
-* Describe    SOUI version
+* soui version: ${SOUI_VER1}.${SOUI_VER2}.${SOUI_VER3}.${SOUI_VER4}
 */
 
 
@@ -17,4 +13,4 @@
 #define SOUI_VER1   3
 #define SOUI_VER2   0
 #define SOUI_VER3   0
-#define SOUI_VER4   11
+#define SOUI_VER4   12
