@@ -672,7 +672,7 @@ namespace SOUI
         *
         * Describe   设置选中
         */
-        void SetSel(DWORD dwSelection, BOOL bNoScroll = FALSE);
+        void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项

@@ -1331,9 +1331,9 @@ void SRichEdit::ReplaceSel(LPCWSTR pszText,BOOL bCanUndo)
     SSendMessage(EM_REPLACESEL,(WPARAM)bCanUndo,(LPARAM)pszText);
 }
 
-void SRichEdit::SetSel(DWORD dwSelection, BOOL bNoScroll)
+void SRichEdit::SetSel(long nStartChar, long nEndChar, BOOL bNoScroll)
 {
-    SSendMessage(EM_SETSEL, LOWORD(dwSelection), HIWORD(dwSelection));
+    SSendMessage(EM_SETSEL, nStartChar, nEndChar);
     if(!bNoScroll)
         SSendMessage(EM_SCROLLCARET, 0, 0L);
 }
