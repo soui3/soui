@@ -75,6 +75,16 @@ static bool IsNumber(TCHAR c)
 	return c>='0' && c<='9';
 }
 
+static bool IsHex(TCHAR c)
+{
+	return IsNumber(c) || (c>='a' && c<='f') ||(c>='A' && c<='F');
+}
+
+static bool IsDigit(TCHAR c)
+{
+	return IsNumber(c) || c=='.' || c==',';
+}
+
 static LPCTSTR SkipWord(LPCTSTR p)
 {
 	if(IsAlpha(*p))
@@ -96,7 +106,7 @@ static LPCTSTR SkipNumber(LPCTSTR p)
 		p=p+2;
 		while(*p)
 		{
-			if(!IsNumber(*p))
+			if(!IsHex(*p))
 				break;
 			p++;
 		}
@@ -105,7 +115,7 @@ static LPCTSTR SkipNumber(LPCTSTR p)
 	{
 		while(*p)
 		{
-			if(!IsNumber(*p) && *p!='.' && *p!=',')
+			if(!IsDigit(*p))
 				break;
 			p++;
 		}
