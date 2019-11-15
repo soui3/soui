@@ -226,7 +226,7 @@ namespace SOUI {
 		if (_cur < _end)
 		{
 			int len = 0;
-			int count = (int)(_end - _cur);
+			int count = (int)(_end - _cur)-1;
 #if defined (WIN32) || defined(_WIN64)
 			len = _snprintf(_cur, count, ft, t);
 			if (len == count || (len == -1 && errno == E_RANGE))
