@@ -163,9 +163,11 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 			pLineHead = p2;
 			continue;
 		}
-		if(m_bWordbreak && *p1==0x20 && pt.x==pRect->left && pPrev && *pPrev!=0x20)
+		if(m_bWordbreak && *p1==0x20 && pt.x==pRect->left && (!pPrev || *pPrev!=0x20))
 		{//skip the first space for a new line.
-			pPrev = p2;
+			i += (int)(p2 - p1);
+			pPrev = p1;
+			p1=p2;
 			pLineTail = pLineHead = p2;
 			continue;
 		}
@@ -224,8 +226,8 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
         pt.x+=szWord.cx;
         if(pt.x>pRect->right && uFormat & DT_CALCRECT) pRect->right=pt.x;
         i+=(int)(p2-p1);
+		pPrev = p1;
         pLineTail = p1 = p2;
-		pPrev = p2;
     }
 
     if(uFormat & DT_CALCRECT)
