@@ -22,7 +22,7 @@ namespace SOUI
 // Static Control
 //
 	
-SStatic::SStatic() :m_nLineInter(5)
+SStatic::SStatic() :m_nLineInter(5),m_bWordbreak(false)
 {
 	m_bMsgTransparent=TRUE;
 	m_style.SetAlign(DT_LEFT);
@@ -65,23 +65,89 @@ void SStatic::OnDrawLine(IRenderTarget * pRT, LPCTSTR pszBuf, int iBegin, int cc
 	pRT->DrawText(pszBuf + iBegin, cchText, pRect, uFormat);
 }
 
+static bool IsAlpha(TCHAR c)
+{
+	return (c>='a' && c<='z') || (c>='A'&&c<='Z') || c=='_';
+}
+
+static bool IsNumber(TCHAR c)
+{
+	return c>='0' && c<='9';
+}
+
+static LPCTSTR SkipWord(LPCTSTR p)
+{
+	if(IsAlpha(*p))
+	{
+		while(*p)
+		{
+			p = CharNext(p);
+			if(!IsAlpha(*p))
+				break;
+		}
+	}
+	return p;
+}
+
+static LPCTSTR SkipNumber(LPCTSTR p)
+{
+	if(*p && *(p+1) && (_tcsncmp(p,_T("0x"),2)==0 || _tcsncmp(p,_T("0X"),2)==0))
+	{//test for hex number
+		p=p+2;
+		while(*p)
+		{
+			if(!IsNumber(*p))
+				break;
+			p++;
+		}
+		return p;
+	}else
+	{
+		while(*p)
+		{
+			if(!IsNumber(*p) && *p!='.' && *p!=',')
+				break;
+			p++;
+		}
+		return p;
+	}
+}
+
+static LPCTSTR WordNext(LPCTSTR pszBuf,bool bWordbreak)
+{
+	SASSERT(pszBuf);
+	LPCTSTR p = CharNext(pszBuf);
+	if(!bWordbreak)
+		return p;
+	LPCTSTR pWord = SkipWord(pszBuf);
+	if(pWord>pszBuf)
+		return pWord;
+	LPCTSTR pNum = SkipNumber(pszBuf);
+	if(pNum>pszBuf)
+		return pNum;
+	return p;
+}
+
 void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
-    SIZE szChar;
+    SIZE szWord;
     int i=0, nLine=1;
     if(cchText==-1) cchText=(int)_tcslen(pszBuf);
     LPCTSTR p1=pszBuf;
     POINT pt= {pRect->left,pRect->top};
-    pRT->MeasureText(_T("A"),1,&szChar);
-    int nLineHei=szChar.cy;
+    pRT->MeasureText(_T("A"),1,&szWord);
+    int nLineHei=szWord.cy;
     int nRight=pRect->right;
+	int nLineWid = pRect->right-pRect->left;
     pRect->right=pRect->left;
     
     LPCTSTR pLineHead = p1, pLineTail=p1;
     
+	LPCTSTR pPrev = NULL;
     while(i<cchText)
     {
-        LPTSTR p2=CharNext(p1);
+        LPCTSTR p2=WordNext(p1,m_bWordbreak);
+		SASSERT(p2>p1);
 		if ((*p1 == _T('\n') && p2))
 		{
 			if (pLineTail > pLineHead && !(uFormat & DT_CALCRECT))
@@ -97,34 +163,69 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 			pLineHead = p2;
 			continue;
 		}
-        pRT->MeasureText(p1,(int)(p2-p1),&szChar);
-        if(pt.x+szChar.cx > nRight && pLineTail>pLineHead)
+		if(m_bWordbreak && *p1==0x20 && pt.x==pRect->left && pPrev && *pPrev!=0x20)
+		{//skip the first space for a new line.
+			pPrev = p2;
+			pLineTail = pLineHead = p2;
+			continue;
+		}
+        pRT->MeasureText(p1,(int)(p2-p1),&szWord);
+        if(pt.x+szWord.cx > nRight)
         {//检测到一行超过边界时还要保证当前行不为空
-            if(!(uFormat & DT_CALCRECT))
-            {
-                CRect rcText(pRect->left,pt.y,nRight, pt.y + nLineHei);
-				OnDrawLine(pRT, pszBuf, (int)(pLineHead - pszBuf), (int)(pLineTail - pLineHead), &rcText, uFormat);
+
+			if(pLineTail>pLineHead)
+			{
+				if(!(uFormat & DT_CALCRECT))
+				{
+					CRect rcText(pRect->left,pt.y,nRight, pt.y + nLineHei);
+					OnDrawLine(pRT, pszBuf, (int)(pLineHead - pszBuf), (int)(pLineTail - pLineHead), &rcText, uFormat);
+				}
+
+				// modify by baozi 20190312 显示多行文本时，如果下一行文字的高度超过了文本框，则不再输出下一行文字内容。
+				if(pt.y+nLineHei + m_nLineInter>pRect->bottom)
+				{//将绘制限制在有效区。
+					pLineHead = pLineTail;
+					break;
+				}
+
+				pLineHead = p1;
+	            
+				pt.y+=nLineHei+m_nLineInter;
+				pt.x=pRect->left;
+				nLine++;
+
+				continue;
+			}else
+			{//word is too long to draw in a single line
+				LPCTSTR p3=p1;
+				SIZE szChar;
+				szWord.cx=0;
+				while(p3<p2)
+				{
+					LPCTSTR p4=CharNext(p3);
+					pRT->MeasureText(p3,p4-p3,&szChar);
+					if(szWord.cx + szChar.cx > nLineWid)
+					{
+						if(p3==p1)
+						{//a line will contain at least one char.
+							p2=p4;
+							szWord.cx = szChar.cx;
+						}else
+						{
+							p2=p3;
+						}
+						break;
+					}
+					szWord.cx += szChar.cx;
+					p3=p4;
+				}
 			}
-
-			// modify by baozi 20190312 显示多行文本时，如果下一行文字的高度超过了文本框，则不再输出下一行文字内容。
-			if(pt.y+nLineHei + m_nLineInter>pRect->bottom)
-			{//将绘制限制在有效区。
-				pLineHead = pLineTail;
-				break;
-			}
-
-            pLineHead = p1;
-            
-            pt.y+=nLineHei+m_nLineInter;
-            pt.x=pRect->left;
-            nLine++;
-
-            continue;
         }
-        pt.x+=szChar.cx;
+        pt.x+=szWord.cx;
         if(pt.x>pRect->right && uFormat & DT_CALCRECT) pRect->right=pt.x;
         i+=(int)(p2-p1);
         pLineTail = p1 = p2;
+		pPrev = p2;
     }
 
     if(uFormat & DT_CALCRECT)
