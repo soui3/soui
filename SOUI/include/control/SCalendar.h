@@ -173,7 +173,7 @@ namespace SOUI
 			ATTR_LAYOUTSIZE(L"yearHeight", m_nYearMonthHeight, TRUE)
 			ATTR_LAYOUTSIZE(L"weekHeight", m_nWeekHeight, TRUE)
 			ATTR_LAYOUTSIZE(L"todayHeight", m_nFooterHeight, TRUE)
-			ATTR_COLOR(L"colorSelText", m_crOtherDayText, TRUE)
+			ATTR_COLOR(L"colorSelText", m_crSelText, TRUE)
 			ATTR_COLOR(L"colorOtherText", m_crOtherDayText, TRUE)
 			ATTR_COLOR(L"colorSelBg", m_crSelDayBack, TRUE)
 			ATTR_COLOR(L"colorHoverText", m_crHoverText, TRUE)
