@@ -12,11 +12,11 @@ namespace SOUI
 		SState2Index() {};
 		SState2Index(const SState2Index &src);
 
-		int GetIndex(DWORD dwState) const;
+		int GetIndex(DWORD dwState, bool checkAsPushdown) const;
 
 		BOOL Init(pugi::xml_node xmlNode);
 
-		static int GetDefIndex(DWORD dwState);
+		static int GetDefIndex(DWORD dwState,bool checkAsPushdown=false);
 
 		static DWORD String2State(const SStringW & strState);
 	protected:
@@ -27,7 +27,7 @@ namespace SOUI
     {
 		SOUI_CLASS_NAME_EX(SSkinObjBase, L"skinObjBase", Skin)
     public:
-        SSkinObjBase():m_byAlpha(0xFF),m_bEnableColorize(TRUE),m_crColorize(0),m_nScale(100){}
+		SSkinObjBase();
 
         /**
         * GetAlpha
@@ -65,7 +65,8 @@ namespace SOUI
 
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"alpha",m_byAlpha,TRUE)   //皮肤透明度
-            ATTR_INT(L"enableColorize",m_bEnableColorize,TRUE)
+			ATTR_BOOL(L"enableColorize",m_bEnableColorize,TRUE)
+			ATTR_BOOL(L"checkAsPushdown",m_checkAsPushdown,TRUE)
 			ATTR_INT(L"scale",m_nScale,FALSE)
 			ATTR_STRINGW(L"name",m_strName,FALSE)
         SOUI_ATTRS_END()
@@ -81,8 +82,9 @@ namespace SOUI
 
         BYTE		m_byAlpha;
         COLORREF    m_crColorize;
-        BOOL        m_bEnableColorize;
+        bool        m_bEnableColorize;
 		int			m_nScale;
+		bool		m_checkAsPushdown;
 
 		SStringW	m_strName;
 

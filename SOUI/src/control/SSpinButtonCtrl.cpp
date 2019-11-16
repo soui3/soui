@@ -142,7 +142,7 @@ namespace SOUI
 		CRect rcClient = GetClientRect();
 		CRect rcUp = rcClient, rcDown = rcClient;
 		rcUp.bottom = rcDown.top = rcClient.top + rcClient.Height() / 2;
-		int iState = SState2Index::GetDefIndex(GetState());
+		int iState = SState2Index::GetDefIndex(GetState(),true);
 		if (m_iActionBtn == ACTION_UP)
 		{
 			m_pUpSkin->DrawByIndex(pRT, rcUp, iState);

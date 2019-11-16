@@ -1511,28 +1511,16 @@ namespace SOUI
 		}
 		else
 		{
-			int nState=0;
-
-			if(GetState()&WndState_Disable)
-			{
-				nState=3;
-			}
-			else if(GetState()&WndState_Check || GetState()&WndState_PushDown)
-			{
-				nState=2;
-			}else if(GetState()&WndState_Hover)
-			{
-				nState=1;
-			}
-			if(nState>=m_pBgSkin->GetStates()) nState=0;
-			m_pBgSkin->DrawByIndex(pRT, rcClient, nState); 
+			int idx = SState2Index::GetDefIndex(GetState(),true);
+			if (idx >= m_pBgSkin->GetStates()) idx = 0;
+			m_pBgSkin->DrawByIndex(pRT, rcClient, idx);
 		}
 		return TRUE;
 	}
 
 	void SWindow::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 	{
-		int iState = SState2Index::GetDefIndex(GetState());
+		int iState = SState2Index::GetDefIndex(GetState(),true);
 		IFontPtr pFont = GetStyle().GetTextFont(iState);
 		if(pFont) 
 			pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);

@@ -36,7 +36,7 @@ namespace SOUI
 		return TRUE;
 	}
 
-	int SState2Index::GetDefIndex(DWORD dwState)
+	int SState2Index::GetDefIndex(DWORD dwState, bool checkAsPushdown /*= false*/)
 	{
 		int idx = 0;
 		if (dwState & WndState_Disable)
@@ -48,15 +48,22 @@ namespace SOUI
 		else // WndState_Normal
 			idx = 0;
 		if (dwState & WndState_Check)
-			idx += 4;
+		{
+			if (checkAsPushdown)
+				idx = 2;
+			else
+				idx += 4;
+		}
 		return idx;
 	}
 
-	int SState2Index::GetIndex(DWORD dwState) const
+	int SState2Index::GetIndex(DWORD dwState,bool checkAsPushdown) const
 	{
 		if(m_mapOfStates.IsEmpty())
 		{
-			return GetDefIndex(dwState);
+			int iRet = GetDefIndex(dwState, checkAsPushdown);
+			
+			return iRet;
 		}else
 		{
 			const SMap<DWORD,int>::CPair *p = m_mapOfStates.Lookup(dwState);
@@ -92,6 +99,14 @@ namespace SOUI
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+	SSkinObjBase::SSkinObjBase() 
+		:m_byAlpha(0xFF)
+		, m_bEnableColorize(true)
+		, m_crColorize(0)
+		, m_nScale(100) 
+		, m_checkAsPushdown(true)
+	{}
+
 	void SSkinObjBase::OnInitFinished(pugi::xml_node xmlNode)
 	{
 		m_state2Index.Init(xmlNode);
@@ -99,7 +114,7 @@ namespace SOUI
 
 	int SSkinObjBase::State2Index(DWORD dwState) const
 	{
-		return m_state2Index.GetIndex(dwState);
+		return m_state2Index.GetIndex(dwState,m_checkAsPushdown);
 	}
 
 	BYTE SSkinObjBase::GetAlpha() const
@@ -115,6 +130,7 @@ namespace SOUI
 		pSkinObj->m_bEnableColorize = m_bEnableColorize;
 		pSkinObj->m_crColorize = m_crColorize;
 		pSkinObj->m_strName = m_strName;
+		pSkinObj->m_checkAsPushdown = m_checkAsPushdown;
 	}
 
 	ISkinObj * SSkinObjBase::Scale(int nScale)
@@ -164,7 +180,8 @@ namespace SOUI
 
 	void SSkinObjBase::_DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const
 	{
-		DrawByIndex(pRT,rcDraw,State2Index(dwState),byAlpha);
+		int idx = State2Index(dwState);
+		DrawByIndex(pRT,rcDraw,idx,byAlpha);
 	}
 
 	void SSkinObjBase::SetAlpha(BYTE byAlpha)

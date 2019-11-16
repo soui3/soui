@@ -88,7 +88,7 @@ namespace SOUI
 	{
 		if (!isRunning())
 			return false;
-		GetWindowTextA(m_hWnd,pszBuf,nBufLen);
+		::GetWindowTextA(m_hWnd,pszBuf,nBufLen);
 		return true;
 	}
 

@@ -720,7 +720,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
     if(rcItem.IsRectEmpty()) return;
     if(m_pSkinTab)
         m_pSkinTab->DrawByState(pRT,rcItem, dwState);
-	int iState = SState2Index::GetDefIndex(dwState);
+	int iState = SState2Index::GetDefIndex(dwState,true);
     //根据状态从style中获得字体，颜色
     IFontPtr font=m_style.GetTextFont(iState);
     COLORREF crTxt = m_style.GetTextColor(iState);

@@ -56,9 +56,10 @@ protected:
     void DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
     
     int m_nLineInter;   /**< 行间距 */
-
+	bool m_bWordbreak; 
     SOUI_ATTRS_BEGIN()
-        ATTR_INT(L"interHeight", m_nLineInter, FALSE)
+        ATTR_INT(L"interHeight", m_nLineInter, TRUE)
+		ATTR_BOOL(L"wordBreak",m_bWordbreak,TRUE)
     SOUI_ATTRS_END()
 };
 
