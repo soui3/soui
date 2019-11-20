@@ -434,11 +434,16 @@ HSTREEITEM STreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM
 
     pItemObj->nLevel = GetItemLevel(hParent)+1;
 
+	BOOL bCheckState = FALSE;
+
     if(hParent!=STVI_ROOT)
     {        
         LPTVITEM pParentItem= GetItem(hParent);
         if(pParentItem->bCollapsed || !pParentItem->bVisible) 
             pItemObj->bVisible=FALSE;
+
+		if(pParentItem->nCheckBoxValue != pItemObj->nCheckBoxValue)
+			bCheckState = TRUE;
 
         if (!GetChildItem(hParent) && !pParentItem->bHasChildren)
         {
@@ -465,6 +470,7 @@ HSTREEITEM STreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM
         Invalidate();
     }
 
+	if(bCheckState) CheckState(hParent);
     if(bEnsureVisible) EnsureVisible(hRet);
     return hRet;
 }
