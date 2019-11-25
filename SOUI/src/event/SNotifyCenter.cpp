@@ -58,7 +58,10 @@ void SNotifyReceiver::OnTimer(UINT_PTR uID)
 
 
 //////////////////////////////////////////////////////////////////////////
-SNotifyCenter::SNotifyCenter(void):m_pReceiver(NULL)
+SNotifyCenter::SNotifyCenter(int nInterval)
+:m_pReceiver(NULL)
+,m_bRunning(FALSE)
+,m_nInterval(nInterval)
 {
 	m_dwMainTrdID = GetCurrentThreadId();
 	m_pReceiver = new SNotifyReceiver(this);
@@ -91,9 +94,10 @@ void SNotifyCenter::FireEventAsync( EventArgs *e )
 {
 	SAutoLock lock(m_cs);
 	e->AddRef();
-	if(m_ayncEvent.GetCount()==0)
+	if(!m_bRunning)
 	{
-		m_pReceiver->SetTimer(SNotifyReceiver::TIMERID_ASYNC,20,NULL);
+		m_pReceiver->SetTimer(SNotifyReceiver::TIMERID_ASYNC,m_nInterval,NULL);
+		m_bRunning = TRUE;
 	}
 	m_ayncEvent.AddTail(e);
 }
@@ -151,7 +155,7 @@ void SNotifyCenter::OnFireEvts()
 		}
 	}
 #endif
-
+	m_bRunning = FALSE;
 }
 
 
@@ -187,10 +191,16 @@ void SNotifyCenter::RunOnUISync(std::function<void(void)> fn)
 {
 	m_pReceiver->SendMessage(SNotifyReceiver::UM_RUNONUISYNC, 0, (LPARAM)&fn);
 }
+
 void SNotifyCenter::RunOnUIAsync(std::function<void(void)> fn)
 {
-	std::function<void(void)>* f = new std::function<void()>(std::move(fn));
 	SAutoLock lock(m_cs);
+	if(!m_bRunning)
+	{
+		m_pReceiver->SetTimer(SNotifyReceiver::TIMERID_ASYNC,m_nInterval,NULL);
+		m_bRunning = TRUE;
+	}
+	std::function<void(void)>* f = new std::function<void()>(std::move(fn));
 	m_asyncFuns.AddTail(f);
 }
 #endif
