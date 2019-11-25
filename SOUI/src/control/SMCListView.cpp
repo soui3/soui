@@ -561,11 +561,13 @@ void SMCListView::UpdateVisibleItems()
                     pItemInfos[iItem].pItem = NULL;//标记该行已经被重用
                 }
             }
+			BOOL bNewItem = FALSE;
             if(!ii.pItem)
             {//create new visible item
                 SList<SItemPanel *> *lstRecycle = m_itemRecycle.GetAt(ii.nType);
                 if(lstRecycle->IsEmpty())
                 {//创建一个新的列表项
+					bNewItem = TRUE;
                     ii.pItem = SItemPanel::Create(this,pugi::xml_node(),this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&SMCListView::OnItemClick,this));
                 }else
@@ -590,7 +592,12 @@ void SMCListView::UpdateVisibleItems()
             
             //应用可以根据ii.pItem的状态来决定如何初始化列表数据
             m_adapter->getView(iNewLastVisible,ii.pItem,m_xmlTemplate.first_child());
-			ii.pItem->DoColorize(GetColorizeColor());
+			if(bNewItem)
+			{
+				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
+				ii.pItem->SDispatchMessage(UM_SETLANGUAGE,0,0);
+				ii.pItem->DoColorize(GetColorizeColor());
+			}
 
             if(!m_lvItemLocator->IsFixHeight())
             {//计算出列表行高度
