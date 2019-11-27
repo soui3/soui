@@ -233,9 +233,9 @@ public:
 
     BOOL LoadMenu(pugi::xml_node xmlMenu);
 
-    BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon=0);
+    BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon=-1);
 
-	BOOL AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon=0);
+	BOOL AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon=-1);
 
 	BOOL CheckMenuItem(UINT uIdCheckItem, UINT uCheck);
 
