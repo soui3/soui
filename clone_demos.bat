@@ -15,6 +15,7 @@ call :update_repo idoudemo
 call :update_repo SouiActivexDemo
 call :update_repo SlogViewer
 call :update_repo SouiWallPaper
+call :update_repo mclistview_demo
 
 SET /p selected=1.是否生成soui_demo.sln工程[1=YES;Other=No]:
 if %selected% neq 1 (
