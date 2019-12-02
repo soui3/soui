@@ -874,7 +874,7 @@ namespace SOUI
 
         BOOL LoadString(UINT nID,HINSTANCE hInst)
         {
-            SASSERT_FMT(hInst, TEXT("hInstance is null"));
+            SASSERT(hInst);
             tchar buf[1024 + 1];
             int nChar = tchar_traits::LoadString(hInst, nID, buf, 1024);
             if (nChar == 0) return FALSE;

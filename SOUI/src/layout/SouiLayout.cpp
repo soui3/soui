@@ -197,7 +197,7 @@ namespace SOUI{
         SplitString(strValue,L',',strLst);
         if(strLst.GetCount() != 2 && strLst.GetCount() != 4) 
         {
-            SASSERT_FMTW(L"Parse pos attribute failed, strPos=%s",strValue);
+            SASSERT_FMTW(false,L"Parse pos attribute failed, strPos=%s",strValue.c_str());
             return E_INVALIDARG;
         }
         //增加pos属性中的空格兼容。

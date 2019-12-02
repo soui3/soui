@@ -201,8 +201,14 @@ namespace SOUI
 #endif
 
             IResProvider *pResProvider=GetMatchResProvider(pszType,pszResName);
-            if(!pResProvider) return NULL;
-            return pResProvider->LoadImage(pszType,pszResName);
+            if(!pResProvider)
+			{
+				SASSERT_FMT(false,_T("load image failed, resource index %s:%s not found!"),pszType,pszResName);
+				return NULL;
+			}
+            IBitmap *pRet = pResProvider->LoadImage(pszType,pszResName);
+			SASSERT_FMT(pRet,_T("load image failed, resource content %s:%s not found!"),pszType,pszResName);
+			return pRet;
         }
     }
 
@@ -219,8 +225,14 @@ namespace SOUI
 #endif
 
             IResProvider *pResProvider=GetMatchResProvider(KTypeBitmap,pszResName);
-            if(!pResProvider) return NULL;
-            return pResProvider->LoadBitmap(pszResName);
+            if(!pResProvider) 
+			{
+				SASSERT_FMT(false,_T("load bitmap failed, resource index %s not found!"),pszResName);
+				return NULL;
+			}
+			HBITMAP hBmp = pResProvider->LoadBitmap(pszResName);
+			SASSERT_FMT(hBmp,_T("load bitmap failed, resource content %s not found!"),pszResName);
+			return hBmp;
         }
     }
 
@@ -250,13 +262,21 @@ namespace SOUI
 #endif
 
             IResProvider *pResProvider=GetMatchResProvider(KTypeCursor,pszResName);
-            if(pResProvider)
-                hRet =pResProvider->LoadCursor(pszResName);
+            if(!pResProvider)
+			{
+				SASSERT_FMT(false,_T("load cursor failed, resource index %s not found!"),pszResName);
+			}else
+			{
+				hRet =pResProvider->LoadCursor(pszResName);
+			}
         }
         if(hRet)
         {
             m_mapCachedCursor[pszResName]=hRet;
-        }
+        }else
+		{
+			SASSERT_FMT(false,_T("load cursor failed, resource content %s not found!"),pszResName);
+		}
         return hRet;
     }
 
@@ -272,8 +292,14 @@ namespace SOUI
             m_mapResUsageCount[SStringT().Format(_T("icon:%s"),pszResName).MakeLower()] ++;
 #endif
             IResProvider *pResProvider=GetMatchResProvider(KTypeIcon,pszResName);
-            if(!pResProvider) return NULL;
-            return pResProvider->LoadIcon(pszResName,cx,cy);
+            if(!pResProvider)
+			{
+				SASSERT_FMT(false,_T("load icon failed, resource %s not found!"),pszResName);
+				return NULL;
+			}
+            HICON hRet = pResProvider->LoadIcon(pszResName,cx,cy);
+			SASSERT_FMT(false,_T("load icon failed, resource content %s not found!"),pszResName);
+			return hRet;
         }
     }
 

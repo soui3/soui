@@ -93,7 +93,6 @@ bool SColorParser::ParseValue(const SStringW & strValue, COLORREF & value)
     }
     if(nSeg!=3 && nSeg != 4)
     {
-        SASSERT_FMT(FALSE,TEXT("ParseColor Failed with [%s]"),S_CW2T(strValue));
         return false;
     }else
     {

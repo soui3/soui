@@ -29,10 +29,14 @@ namespace SOUI
 
             for (pugi::xml_node xmlStr=xmlNode.first_child(); xmlStr; xmlStr=xmlStr.next_sibling())
             {
+				if(xmlStr.type() != pugi::node_element)
+					continue;
                 NAMEDVALUE namedValue;
                 wcscpy_s(namedValue.strName,MAX_NAME,xmlStr.name());
                 if(ValueParser::ParseValue(xmlStr.attribute(L"value").as_string(),namedValue.value))
                     m_lstNamedValue.Add(namedValue);
+				else
+					SASSERT_FMT(false,L"parse value failed, name=%s,value=%s",xmlStr.name(),xmlStr.attribute(L"value").as_string());
             }
             qsort(m_lstNamedValue.GetData(),m_lstNamedValue.GetCount(),sizeof(NAMEDVALUE),Compare);
             return TRUE;

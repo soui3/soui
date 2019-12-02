@@ -1,12 +1,10 @@
 ﻿#pragma once
 #include <intrin.h>
 #include <stdio.h>
+#include <interface/slog-i.h>
 
 #ifndef GETLOGMGR
-#include <SApp.h>
 #define GETLOGMGR() SOUI::SApplication::getSingletonPtr()?SOUI::SApplication::getSingleton().GetLogManager():NULL
-#else
-#include <interface/slog-i.h>
 #endif
 
 #ifndef E_RANGE
