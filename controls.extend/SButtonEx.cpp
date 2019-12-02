@@ -68,10 +68,8 @@ namespace SOUI
         {
             if(m_byAlphaAni==0xFF)
             {//不在动画过程中
-                m_pBgSkin->Draw(
-                    pRT, rcClient,
-                    IIF_STATE4(GetState(), 0, 1, 2, 3)
-                    );
+				int iState = SState2Index::GetDefIndex(GetState(), true);
+                m_pBgSkin->DrawByIndex(pRT, rcClient, iState);
             }
             else
             {//在动画过程中
@@ -79,14 +77,14 @@ namespace SOUI
                 if(GetState()&WndState_Hover)
                 {
                     //get hover
-                    m_pBgSkin->Draw(pRT, rcClient, 0, m_pBgSkin->GetAlpha());
-                    m_pBgSkin->Draw(pRT, rcClient, 1, byNewAlpha);
+                    m_pBgSkin->DrawByIndex(pRT, rcClient, 0, m_pBgSkin->GetAlpha());
+                    m_pBgSkin->DrawByIndex(pRT, rcClient, 1, byNewAlpha);
                 }
                 else
                 {
                     //lose hover
-                    m_pBgSkin->Draw(pRT, rcClient,0, m_pBgSkin->GetAlpha());
-                    m_pBgSkin->Draw(pRT, rcClient, 1, m_pBgSkin->GetAlpha()-byNewAlpha);
+                    m_pBgSkin->DrawByIndex(pRT, rcClient,0, m_pBgSkin->GetAlpha());
+                    m_pBgSkin->DrawByIndex(pRT, rcClient, 1, m_pBgSkin->GetAlpha()-byNewAlpha);
                 }
             }
         }
@@ -176,8 +174,8 @@ namespace SOUI
             pRT->DrawIconEx(rcIcon.left,rcIcon.top,m_hIcon,rcIcon.Width(),rcIcon.Height(),DI_NORMAL);
         }else
         {
-            int iState = m_iIcon!=-1?m_iIcon:IIF_STATE4(GetState(),0,1,2,3);
-            m_pIcon->Draw(pRT,rcIcon,iState);
+            int iState = m_iIcon!=-1?m_iIcon: SState2Index::GetDefIndex(GetState(), true);
+            m_pIcon->DrawByIndex(pRT,rcIcon,iState);
         }
     }
 
