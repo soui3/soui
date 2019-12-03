@@ -4,7 +4,7 @@
       <gifplayer pos="10,10" skin="gif_horse" name="giftest" cursor="ANI_ARROW" show="1"/>
       <button width="250" height="30" name="btnSelectGif">load gif file</button>
       <gifplayer pos="10,150" skin="gif_penguin" show="1" id="1000" name="gif_test"/>
-      <icon pos="[10,{0" src="LOGO:64"/>
+      <icon pos="[10,{0" src="ICON_LOGO:64"/>
       <gifplayer pos="[10,{0" skin="apng_haha" />
       <animateimg pos="[10,{0" skin="skin_page_icons" autoStart="1"/>
       <scrolltext show="1" pos="{0,[10,@200,@30" rollType="1" colorText="#ff0000" speed="10">Pay attention! apng would be played only if imgdecoder-png is used here!</scrolltext>
