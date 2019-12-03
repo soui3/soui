@@ -298,7 +298,7 @@ namespace SOUI
 				return NULL;
 			}
             HICON hRet = pResProvider->LoadIcon(pszResName,cx,cy);
-			SASSERT_FMT(false,_T("load icon failed, resource content %s not found!"),pszResName);
+			SASSERT_FMT(hRet,_T("load icon failed, resource content %s not found!"),pszResName);
 			return hRet;
         }
     }
