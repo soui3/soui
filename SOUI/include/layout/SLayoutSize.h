@@ -7,7 +7,11 @@ namespace SOUI
 	{
 	public:
 		enum Unit{
-			px=0,dp,dip,sp
+			unknow=-1,
+			px=0,
+			dp,
+			dip,
+			sp
 		};
 
 		SLayoutSize();
@@ -41,9 +45,10 @@ namespace SOUI
 		bool valueEqual(float value);
 
 		static SLayoutSize fromString(const SStringW & strSize);
-		static void setDefUnit(SStringW & strUnit);
+		static Unit setDefUnit(Unit unit);
 		static bool fequal(float a, float b);
-
+		
+		static Unit unitFromString(const SStringW & strUnit);
 		static SLayoutSize::Unit defUnit;
 	};
 

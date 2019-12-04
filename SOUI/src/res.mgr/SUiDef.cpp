@@ -149,8 +149,10 @@ namespace SOUI{
 					xmlUnit = root.child(L"unit");
 					if (xmlUnit)
 					{
-						SStringW unit = xmlUnit.attribute(L"defUnit").as_string(L"dp");
-						SLayoutSize::setDefUnit(unit);
+						SStringW strUnit = xmlUnit.attribute(L"defUnit").as_string(L"px");
+						SLayoutSize::Unit unit= SLayoutSize::unitFromString(strUnit);
+						if(unit != SLayoutSize::unknow)
+							SLayoutSize::setDefUnit(unit);
 					}
 
 					xmlCaret.reset();

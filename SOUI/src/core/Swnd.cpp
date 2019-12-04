@@ -1493,6 +1493,7 @@ namespace SOUI
 		m_pFirstChild=m_pLastChild=NULL;
 		m_nChildrenCount=0;
 		ClearAnimation();
+		m_style = SwndStyle();
 		m_isDestroying = false;
 	}
 

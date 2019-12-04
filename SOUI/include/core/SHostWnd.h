@@ -70,9 +70,12 @@ namespace SOUI
                 ATTR_ENUM_VALUE(L"appMain",WT_APPMAIN)
                 ATTR_ENUM_VALUE(L"normal",WT_NORMAL)
             ATTR_ENUM_END(m_byWndType)
+			ATTR_CUSTOM(L"defUnit",OnAttrDefUnit)
         SOUI_ATTRS_END()
 
 	protected:
+		LRESULT OnAttrDefUnit(const SStringW & strValue,BOOL bLoading);
+
         SLayoutSize m_rcMargin[4];       //窗口拉伸的边缘检测大小
 		SLayoutSize m_szMin[2];          //窗口最小值
 		SLayoutSize m_rcMaxInset[4];     //窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效
@@ -93,6 +96,7 @@ namespace SOUI
         STrText  m_strTitle;
         HICON   m_hAppIconSmall;
         HICON   m_hAppIconBig;
+		SLayoutSize::Unit m_defUnit;
     };
 
 class SOUI_EXP SHostWnd
@@ -177,6 +181,7 @@ public:
 	void SetHostAnimation(IAnimation *pAni,bool startNow = true);
 	bool StartHostAnimation();
 	bool StopHostAnimation();
+	void UpdateAutoSizeCount(bool bInc);
 protected:
 	class SHostAnimationHandler : public ITimelineHandler
 	{
@@ -317,6 +322,8 @@ protected:
 	virtual IToolTip * CreateTooltip() const;
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 
+protected:
+	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
 protected:
 	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
 public:

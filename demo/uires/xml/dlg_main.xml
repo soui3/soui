@@ -10,6 +10,7 @@
       translucent="1"
       sendWheel2Hover="1"
       alpha="255">
+  <user test="0"/>
   <skin>
     <!--局部skin对象-->
     <gif name="gif_penguin" src="gif:gif_penguin"/>

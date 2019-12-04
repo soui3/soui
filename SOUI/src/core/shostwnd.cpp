@@ -109,6 +109,12 @@ CSize SHostWndAttr::GetMinSize(int nScale) const
 	return szRet;
 }
 
+LRESULT SHostWndAttr::OnAttrDefUnit(const SStringW & strValue,BOOL bLoading)
+{
+	m_defUnit = SLayoutSize::unitFromString(strValue);
+	return S_FALSE;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // SHostWnd
 //////////////////////////////////////////////////////////////////////////
@@ -146,9 +152,9 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
 {
     if (NULL != m_hWnd)
         return m_hWnd;
-	m_nAutoSizing++;
+	UpdateAutoSizeCount(true);
     HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
-	m_nAutoSizing--;
+	UpdateAutoSizeCount(false);
 	if(!hWnd) return NULL;
 
     if(nWidth==0 || nHeight==0) CenterWindow(hWndParent);
@@ -165,9 +171,9 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	if (!m_bResizing)
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
-		m_nAutoSizing++;
+		UpdateAutoSizeCount(true);
 		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
-		m_nAutoSizing--;
+		UpdateAutoSizeCount(false);
 	}
 	return true;
 }
@@ -194,13 +200,16 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     //create new script module
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
+	SLayoutSize::Unit oldDefUnit = SLayoutSize::setDefUnit(m_hostAttr.m_defUnit);
 
     if(m_privateStylePool->GetCount())
     {
         m_privateStylePool->RemoveAll();
         GETSTYLEPOOLMGR->PopStylePool(m_privateStylePool);
     }
-    m_privateStylePool->Init(xmlNode.child(L"style"));
+	pugi::xml_node xmlStyle = xmlNode.child(L"style");
+	xmlStyle.set_userdata(1);
+    m_privateStylePool->Init(xmlStyle);
     if(m_privateStylePool->GetCount())
     {
         GETSTYLEPOOLMGR->PushStylePool(m_privateStylePool);
@@ -210,7 +219,9 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         m_privateSkinPool->RemoveAll();
         GETSKINPOOLMGR->PopSkinPool(m_privateSkinPool);
     }
-    m_privateSkinPool->LoadSkins(xmlNode.child(L"skin"));//从xmlNode加加载私有skin
+	pugi::xml_node xmlSkin = xmlNode.child(L"skin");
+	xmlSkin.set_userdata(1);
+    m_privateSkinPool->LoadSkins(xmlSkin);//从xmlNode加加载私有skin
     if(m_privateSkinPool->GetCount())
     {
         GETSKINPOOLMGR->PushSkinPool(m_privateSkinPool);
@@ -221,13 +232,16 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		m_privateTemplatePool->RemoveAll();
 		GETTEMPLATEPOOLMR->PopTemplatePool(m_privateTemplatePool);
 	}
-	m_privateTemplatePool->Init(xmlNode.child(L"template"));
+	pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+	xmlTemplate.set_userdata(1);
+	m_privateTemplatePool->Init(xmlTemplate);
 	if(m_privateTemplatePool->GetCount())
 	{
 		GETTEMPLATEPOOLMR->PushTemplatePool(m_privateTemplatePool);
 	}
     //加载脚本数据
     pugi::xml_node xmlScript = xmlNode.child(L"script");
+	xmlScript.set_userdata(1);
     if(m_pScriptModule && xmlScript)
     {
         pugi::xml_attribute attrSrc = xmlScript.attribute(L"src");
@@ -318,12 +332,13 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	pugi::xml_attribute attrWid = xmlNode.attribute(L"width");
 	pugi::xml_attribute attrHei = xmlNode.attribute(L"height");
 	pugi::xml_node xmlRoot = xmlNode.child(L"root");
+	xmlRoot.set_userdata(1);
 	if (attrWid && !xmlRoot.attribute(attrWid.name()))
 		xmlRoot.append_copy(attrWid);
 	if (attrHei && !xmlRoot.attribute(attrHei.name()))
 		xmlRoot.append_copy(attrHei);
 
-    SWindow::InitFromXml(xmlNode.child(L"root"));
+    SWindow::InitFromXml(xmlRoot);
     BuildWndTreeZorder();
 
 	int nWidth = m_szAppSetted.cx;
@@ -349,9 +364,9 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
 	if(nWidth != m_szAppSetted.cx || nHeight != m_szAppSetted.cy)
 	{
-		m_nAutoSizing++;
+		UpdateAutoSizeCount(true);
 		SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
-		m_nAutoSizing--;
+		UpdateAutoSizeCount(false);
 	}
 
     CRect rcClient;
@@ -366,6 +381,21 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     EventInit evt(this);
     FireEvent(evt);
 
+	SLayoutSize::setDefUnit(oldDefUnit);
+
+	//handle user xml node
+	pugi::xml_node xmlChild = xmlNode.first_child();
+	while(xmlChild)
+	{
+		if(xmlChild.get_userdata()!=1)
+		{
+			OnUserXmlNode(xmlChild);
+		}else
+		{
+			xmlChild.set_userdata(0);
+		}
+		xmlChild = xmlChild.next_sibling();
+	}
     return TRUE;
 }
 
@@ -481,7 +511,7 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	m_nAutoSizing++;
+	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
     m_pTipCtrl = CreateTooltip();
@@ -503,7 +533,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 			SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
 		}
 	}
-	m_nAutoSizing--;
+	UpdateAutoSizeCount(false);
     return 0;
 }
 
@@ -1595,6 +1625,19 @@ bool SHostWnd::StopHostAnimation()
 	m_hostAnimation->cancel();
 	UnregisterTimelineHandler(&m_hostAnimationHandler);
 	return true;
+}
+
+void SHostWnd::OnUserXmlNode(pugi::xml_node xmlUser)
+{
+	SLOG_DEBUG("unhandled xml node:"<<xmlUser.name());
+}
+
+void SHostWnd::UpdateAutoSizeCount(bool bInc)
+{
+	if(bInc)
+		m_nAutoSizing++;
+	else
+		m_nAutoSizing--;
 }
 
 //////////////////////////////////////////////////////////////////
