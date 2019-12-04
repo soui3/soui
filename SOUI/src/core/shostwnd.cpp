@@ -1315,8 +1315,19 @@ void SHostWnd::_UpdateNonBkgndBlendSwnd()
 
 void SHostWnd::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 {
-    pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()));
-    pRT->SetTextColor(RGBA(0,0,0,255));
+	int iState = SState2Index::GetDefIndex(GetState(),true);
+	SwndStyle & style = SWindow::GetStyle();
+	IFontPtr pFont = style.GetTextFont(iState);
+	if(pFont) 
+		pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
+	else
+		pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()));
+
+	COLORREF crTxt =style.GetTextColor(iState);
+	if(crTxt != CR_INVALID)
+		painter.oldTextColor = pRT->SetTextColor(crTxt);
+	else
+		pRT->SetTextColor(RGBA(0,0,0,255));
 }
 
 void SHostWnd::AfterPaint(IRenderTarget *pRT, SPainter &painter)
