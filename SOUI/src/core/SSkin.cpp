@@ -721,7 +721,7 @@ void SSKinGroup::_Scale(ISkinObj * skinObj, int nScale)
 	for(int i=0;i<ARRAYSIZE(m_skins);i++)
 	{
 		if (!m_skins[i]) continue;
-		pRet->m_skins[i] = m_skins[i]->Scale(nScale);
+		pRet->m_skins[i].Attach(m_skins[i]->Scale(nScale));
 	}
 }
 

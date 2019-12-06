@@ -103,6 +103,7 @@ namespace SOUI
 		:m_byAlpha(0xFF)
 		, m_bEnableColorize(true)
 		, m_crColorize(0)
+		, m_bEnableScale(true)
 		, m_nScale(100) 
 		, m_checkAsPushdown(true)
 	{}
@@ -135,6 +136,11 @@ namespace SOUI
 
 	ISkinObj * SSkinObjBase::Scale(int nScale)
 	{
+		if(!m_bEnableScale)
+		{
+			AddRef();
+			return this;
+		}
 		ISkinObj * skinObj = SApplication::getSingleton().CreateSkinByName(GetObjectClass());
 		if(!skinObj) return NULL;
 		_Scale(skinObj,nScale);
