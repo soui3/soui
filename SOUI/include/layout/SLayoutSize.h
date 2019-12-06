@@ -14,7 +14,7 @@ namespace SOUI
 			sp
 		};
 
-		SLayoutSize();
+		SLayoutSize(float fSize=0.0f);
 
 		SLayoutSize(float fSize,Unit unit);
 		float fSize;

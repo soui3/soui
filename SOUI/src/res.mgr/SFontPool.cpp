@@ -134,7 +134,8 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 	else
 	{
 		FONTSTYLE fontStyle(GetDefFontInfo().style);
-		fntStyle.attr.cSize = fontStyle.attr.cSize * scale/100 + cAdding;  //cAdding为正代表字体变大，否则变小
+		SLayoutSize defSize((float)fontStyle.attr.cSize);
+		fntStyle.attr.cSize = defSize.toPixelSize(scale) + cAdding;  //cAdding为正代表字体变大，否则变小
 	}
 
     return GetFont(strName,fntStyle, strFace,nodePropEx);

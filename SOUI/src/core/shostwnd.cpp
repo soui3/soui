@@ -109,11 +109,6 @@ CSize SHostWndAttr::GetMinSize(int nScale) const
 	return szRet;
 }
 
-LRESULT SHostWndAttr::OnAttrDefUnit(const SStringW & strValue,BOOL bLoading)
-{
-	m_defUnit = SLayoutSize::unitFromString(strValue);
-	return S_FALSE;
-}
 
 //////////////////////////////////////////////////////////////////////////
 // SHostWnd
@@ -200,7 +195,8 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     //create new script module
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
-	SLayoutSize::Unit oldDefUnit = SLayoutSize::setDefUnit(m_hostAttr.m_defUnit);
+	m_hostAttr.Init();
+	m_hostAttr.InitFromXml(xmlNode);
 
     if(m_privateStylePool->GetCount())
     {
@@ -274,9 +270,6 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     DWORD dwStyle =SNativeWnd::GetStyle();
     DWORD dwExStyle  = SNativeWnd::GetExStyle();
     
-    m_hostAttr.Init();
-    m_hostAttr.InitFromXml(xmlNode);
-
     if (m_hostAttr.m_bResizable)
     {
         dwStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
@@ -380,8 +373,6 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     
     EventInit evt(this);
     FireEvent(evt);
-
-	SLayoutSize::setDefUnit(oldDefUnit);
 
 	//handle user xml node
 	pugi::xml_node xmlChild = xmlNode.first_child();

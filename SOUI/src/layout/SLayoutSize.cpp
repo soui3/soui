@@ -15,7 +15,7 @@ namespace SOUI
 		L"sp",
 	};
 
-	SLayoutSize::SLayoutSize() :fSize(0.0f),unit(defUnit)
+	SLayoutSize::SLayoutSize(float _fSize) :fSize(_fSize),unit(defUnit)
 	{
 
 	}
