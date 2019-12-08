@@ -70,7 +70,7 @@ namespace SOUI
 		if(pszUidef) 
 		{
 			IUiDefInfo * pUiDef = SUiDef::getSingleton().CreateUiDefInfo(pResProvider,pszUidef);
-			SUiDef::getSingleton().SetUiDef(pUiDef);
+			SUiDef::getSingleton().SetUiDef(pUiDef,true);
 			pUiDef->Release();
 		}
     }

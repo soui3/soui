@@ -15,6 +15,7 @@
 
 #include <unknown/obj-ref-i.h>
 #include <string/tstring.h>
+#include <res.mgr/SFontInfo.h>
 
 namespace SOUI
 {
@@ -67,19 +68,7 @@ namespace SOUI
          */
         virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
 
-		/**
-         * updateLogfont
-         * @brief    更新字体信息
-		 * @param    const SStringW & strName -- 布局中定义的一种字体的name属性
-         * @param    LOGFONT * pfont --  字体信息
-         * @return   true-修改完成，false-不需要修改
-         *
-         * Describe  多语言翻译的时候可能需要对字体信息进行更新，包含字符集，字体名等，这些信息可以在语言包中定义。
-		 *           启程软件，2018年4月27日
-         */
-		virtual BOOL updateLogfont(const SStringW & strName,LOGFONT *pFont){return FALSE;}
-
-		virtual BYTE charsetFromString(const SStringW & strCharset) const {return GB2312_CHARSET;}
+		virtual FontInfo * getFontInfo() const = 0;
     };
 
 
@@ -148,21 +137,6 @@ namespace SOUI
          * Describe  调用ITranslator的tr接口执行具体翻译过程
          */
         virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
-
-		/**
-         * updateLogfont
-         * @brief    更新字体信息
-		 * @param    const SStringW & strName -- 布局中定义的一种字体的name属性
-         * @param    LOGFONT * pfont --  字体信息
-         * @return   true-修改完成，false-不需要修改
-         *
-         * Describe  多语言翻译的时候可能需要对字体信息进行更新，包含字符集，字体名等，这些信息可以在语言包中定义。
-		 *           启程软件，2018年4月27日
-         */
-		virtual BOOL updateLogfont(const SStringW & strName,LOGFONT * pfont){
-			return FALSE;
-		}
-
     };
 
 }

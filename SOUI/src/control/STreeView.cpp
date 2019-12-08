@@ -1284,4 +1284,10 @@ namespace SOUI
 		}
 	}
 
+	void STreeView::OnDefFontChanged()
+	{
+		__super::OnDefFontChanged();
+		DispatchMessage2Items(UM_UPDATEFONT,0,0);
+	}
+
 }

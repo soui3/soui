@@ -2867,6 +2867,12 @@ namespace SOUI
 	}
 
 
+	LRESULT SWindow::OnUpdateFont(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		OnDefFontChanged();
+		return 0;
+	}
+
 	HRESULT SWindow::OnAttrLayout(const SStringW& strValue, BOOL bLoading)
 	{
 		ILayout *pLayout = (ILayout*)SApplication::getSingleton().CreateObject(SObjectInfo(strValue, Layout));
@@ -2965,6 +2971,7 @@ namespace SOUI
 		m_layoutDirty = dirty_self;
 	}
 
+
 	void SWindow::GetScaleSkin(ISkinObj * &pSkin,int nScale)
 	{
 		if(!pSkin) return;
@@ -2974,6 +2981,11 @@ namespace SOUI
 			ISkinObj * pNewSkin =   GETSKIN(strName,nScale);
 			if(pNewSkin) pSkin = pNewSkin;
 		}
+	}
+
+	void SWindow::OnDefFontChanged()
+	{
+		m_style.UpdateFont();
 	}
 
 	IAccessible * SWindow::GetAccessible()

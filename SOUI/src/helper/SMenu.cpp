@@ -72,14 +72,14 @@ SAutoRefPtr<IFont> SMenuAttr::GetFontPtr()
 {
 	SAutoRefPtr<IFont> font = m_dpiFont.GetFontPtr();
 	if(font) return font;
-	return SFontPool::getSingleton().GetFont(L"",m_scale);
+	return SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,m_scale);
 }
 
 void SMenuAttr::SetScale(int scale)
 {
 	if(m_scale == scale) return;
 	m_scale = scale;
-	m_dpiFont.SetScale(m_scale);
+	m_dpiFont.UpdateFont(m_scale);
 	if (m_pIconSkin)
 		m_pIconSkin = GETSKIN(m_pIconSkin->GetName(), m_scale);
 	if (m_pItemSkin)

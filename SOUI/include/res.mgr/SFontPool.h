@@ -13,32 +13,10 @@
 
 #pragma once
 
-#include "core/ssingletonmap.h"
-#include "interface/SRender-i.h"
-#include "interface/STranslator-i.h"
-#include "unknown/obj-ref-impl.hpp"
-
-/**
-* @union      FONTSTYLE
-* @brief      FONT的风格
-* 
-* Describe    
-*/
-union FONTSTYLE{
-    DWORD     dwStyle;  //DWORD版本的风格
-    struct 
-    {
-		DWORD byCharset:8;  //字符集
-		DWORD byWeight :8;  //weight/4
-		DWORD fItalic:1;//斜体标志位
-        DWORD fUnderline:1;//下划线标志位
-        DWORD fBold:1;//粗体标志位
-        DWORD fStrike:1;//删除线标志位
-		DWORD cSize : 12; //字体大小，为short有符号类型
-	}attr;
-    
-    FONTSTYLE(DWORD _dwStyle=0):dwStyle(_dwStyle){}
-}; 
+#include <core/ssingletonmap.h>
+#include <interface/SRender-i.h>
+#include <res.mgr/SFontInfo.h>
+#include <unknown/obj-ref-impl.hpp>
 
 #define FF_DEFAULTFONT L""
 
@@ -50,15 +28,6 @@ union FONTSTYLE{
 */
 namespace SOUI
 {
-	struct FontInfo
-	{
-		SStringW strName;
-		FONTSTYLE style;
-		SStringT strFaceName;
-		SStringT strPropEx;
-	};
-
-
     /**
     * @class     CElementTraits< FontKey >
     * @brief      FontKey的Hash及比较模板
@@ -73,7 +42,6 @@ namespace SOUI
         static ULONG Hash( INARGTYPE fontKey )
         {
             ULONG uRet=SOUI::CElementTraits<SStringT>::Hash(fontKey.strFaceName);
-			uRet = (uRet<<5) + SOUI::CElementTraits<SStringW>::Hash(fontKey.strName);
             uRet = (uRet<<5) + SOUI::CElementTraits<SStringT>::Hash(fontKey.strPropEx);
             uRet = (uRet<<5) +(UINT)fontKey.style.dwStyle+1;
             return uRet;
@@ -98,6 +66,10 @@ namespace SOUI
     };
 
     typedef IFont * IFontPtr;
+
+	struct IDefFontListener{
+		virtual void OnDefFontChanged() = 0;
+	};
 
     /**
     * @class      SFontPool
@@ -130,30 +102,26 @@ namespace SOUI
          * @return   IFontPtr -- font对象
          * Describe  
          */    
-		IFontPtr GetFont(const SStringW & strName,FONTSTYLE style,const SStringW& strFaceName = SStringW(),pugi::xml_node xmlExProp = pugi::xml_node());
+		IFontPtr GetFont(FONTSTYLE style,const SStringW& strFaceName = SStringW(),pugi::xml_node xmlExProp = pugi::xml_node());
 
+		void SetDefFontInfo(const FontInfo & fontInfo);
 
-	    /**
-         * UpdateFontsByTranslator
-         * @brief    调用翻译接口来更新字体
-         * Describe  
-         */    
-		void UpdateFonts();
+		bool AddDefFontListener(IDefFontListener * pListener);
 
+		bool RemoveDefFontListener(IDefFontListener *pListener);
     protected:
 
 		const FontInfo & GetDefFontInfo() const;
 
-        static void OnKeyRemoved(const IFontPtr & obj)
-        {
-            obj->Release();
-        }
+        static void OnKeyRemoved(const IFontPtr & obj);
 
 		IFontPtr _CreateFont(const LOGFONT &lf);
         
 		IFontPtr _CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExProp);
 
         SAutoRefPtr<IRenderFactory> m_RenderFactory;
+		FontInfo					m_defFontInfo;
+		SMap<IDefFontListener*,bool>	m_lstDefFontListener;
     };
 
 }//namespace SOUI

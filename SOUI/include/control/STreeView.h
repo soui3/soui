@@ -169,6 +169,7 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
 		virtual void OnScaleChanged(int nScale);
 		virtual HRESULT OnLanguageChanged();
+		virtual void OnDefFontChanged();
 
 		virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 		virtual int  GetScrollLineSize(BOOL bVertical);

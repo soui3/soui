@@ -1232,4 +1232,10 @@ SHeaderCtrl * SMCListView::GetHeaderCtrl() const
 	return m_pHeader;
 }
 
+void SMCListView::OnDefFontChanged()
+{
+	__super::OnDefFontChanged();
+	DispatchMessage2Items(UM_UPDATEFONT,0,0);
+}
+
 }//end of namespace 

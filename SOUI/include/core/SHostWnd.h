@@ -98,6 +98,7 @@ namespace SOUI
 class SOUI_EXP SHostWnd
     : public SwndContainerImpl
     , public SNativeWnd
+	, protected IDefFontListener
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
@@ -322,6 +323,8 @@ protected:
 	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
 protected:
 	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
+protected:
+	virtual void OnDefFontChanged() override; 
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
@@ -367,8 +370,6 @@ public://事件处理接口
     #endif
         REFLECT_NOTIFY_CODE(NM_CUSTOMDRAW)
     END_MSG_MAP()
-
-
 };
 
 }//namespace SOUI

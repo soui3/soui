@@ -47,7 +47,7 @@ namespace SOUI
 		
 		IUiDefInfo * GetUiDef(){return m_pCurUiDef;}
 		
-		void SetUiDef(IUiDefInfo* pUiDefInfo);
+		void SetUiDef(IUiDefInfo* pUiDefInfo ,bool bUpdateDefFont);
 
 		static void SetFontChecker(FunFontCheck fontCheck);
 

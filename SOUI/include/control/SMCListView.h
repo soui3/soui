@@ -103,6 +103,7 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
 		virtual void OnScaleChanged(int nScale);
 		virtual HRESULT OnLanguageChanged();
+		virtual void OnDefFontChanged();
     protected:
 		void DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam);
 

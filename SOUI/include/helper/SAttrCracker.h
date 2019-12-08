@@ -302,7 +302,7 @@ public:                                                             \
         else                                                        \
  
 
-//font="face:宋体;bold:1;italic:1;underline:1;adding:10"
+//DpiAwareFont="face:宋体;bold:1;italic:1;underline:1;adding:10"
 #define ATTR_FONT(attribname, varname, allredraw)                       \
     if (0 == strAttribName.CompareNoCase(attribname))                   \
     {                                                                   \
@@ -310,16 +310,6 @@ public:                                                             \
         hRet = allredraw ? S_OK : S_FALSE;                              \
     }                                                                   \
     else                                                                \
-
-//font="face:宋体;bold:1;italic:1;underline:1;adding:10"
-#define ATTR_FONT2(attribname, varname, allredraw)                       \
-	if (0 == strAttribName.CompareNoCase(attribname))                   \
-	{                                                                   \
-	varname=SFontPool::getSingleton().GetFont(strValue,GetScale());     \
-	hRet = allredraw ? S_OK : S_FALSE;                              \
-	}                                                                   \
-	else                                                                \
-
 
 // Value In {String1 : Value1, String2 : Value2 ...}
 #define ATTR_ENUM_BEGIN(attribname, vartype, allredraw)        \

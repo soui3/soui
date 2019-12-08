@@ -502,6 +502,7 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	SFontPool::getSingletonPtr()->AddDefFontListener(this);
 	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
@@ -550,7 +551,8 @@ void SHostWnd::OnDestroy()
 
 	m_memRT = NULL;
 	m_rgnInvalidate = NULL;
-
+	m_nScale = 100;//restore to 100
+	SFontPool::getSingletonPtr()->RemoveDefFontListener(this);
     //exit app. (copy from wtl)
     if(m_hostAttr.m_byWndType == SHostWndAttr::WT_APPMAIN 
     || (m_hostAttr.m_byWndType == SHostWndAttr::WT_UNDEFINE && (SNativeWnd::GetStyle() & (WS_CHILD | WS_POPUP)) == 0 && (SNativeWnd::GetExStyle()&WS_EX_TOOLWINDOW) == 0))
@@ -1629,6 +1631,12 @@ void SHostWnd::UpdateAutoSizeCount(bool bInc)
 		m_nAutoSizing++;
 	else
 		m_nAutoSizing--;
+}
+
+void SHostWnd::OnDefFontChanged()
+{
+	SDispatchMessage(UM_UPDATEFONT,0,0);
+	RequestRelayout(m_swnd,TRUE);
 }
 
 //////////////////////////////////////////////////////////////////

@@ -78,7 +78,7 @@ namespace SOUI
 
     //////////////////////////////////////////////////////////////////////////
     // SLang
-    STranslator::STranslator()
+	STranslator::STranslator():m_pFontInfo(NULL)
     {
 		m_szLangName[0]=0;
         m_arrEntry = new SArray<SStrMapEntry*>;
@@ -89,6 +89,10 @@ namespace SOUI
         for(UINT i=0;i<m_arrEntry->GetCount();i++)
             delete m_arrEntry->GetAt(i);
         delete m_arrEntry;
+		if(m_pFontInfo)
+		{
+			delete m_pFontInfo;
+		}
     }
 
     void STranslator::GetName(wchar_t szName[TR_MAX_NAME_LEN])
@@ -167,18 +171,22 @@ namespace SOUI
         qsort(m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::Compare);
 
 
-		//加载字体更换信息
-		pugi::xml_node nodeFonts = xmlLang.child(L"fonts");
-		pugi::xml_node nodeFont = nodeFonts.child(L"font");
-		while(nodeFont)
+		pugi::xml_node xmlFont = xmlLang.child(L"font");
+		if(xmlFont)
 		{
-			SStringW strName = nodeFont.attribute(L"name").as_string();
-			TrFontInfo info;
-			info.lfCharset =charsetFromString(nodeFont.attribute(L"charset").as_string());
-			info.strFaceName = S_CW2T(nodeFont.attribute(L"face").as_string());
-			m_mapFonts[strName] = info;
-			nodeFont = nodeFont.next_sibling(L"font");
+			SASSERT(m_pFontInfo==NULL);
+			m_pFontInfo = new FontInfo;
+			FONTSTYLE & fontStyle = m_pFontInfo->style;
+			fontStyle.attr.cSize=xmlFont.attribute(L"size").as_int(12);
+			fontStyle.attr.byCharset =(BYTE)xmlFont.attribute(L"charset").as_int(DEFAULT_CHARSET);
+			fontStyle.attr.fBold = xmlFont.attribute(L"bold").as_bool(false);
+			fontStyle.attr.fUnderline = xmlFont.attribute(L"underline").as_bool(false);
+			fontStyle.attr.fStrike = xmlFont.attribute(L"strike").as_bool(false);
+			fontStyle.attr.fItalic = xmlFont.attribute(L"italic").as_bool(false);
+			fontStyle.attr.byWeight = (xmlFont.attribute(L"weight").as_uint(0) + 2) / 4; //scale weight from [0-1000] to [0,250].
+			m_pFontInfo->strFaceName = S_CW2T(xmlFont.attribute(L"face").value());
 		}
+
         return TRUE;
     }
 
@@ -208,53 +216,10 @@ namespace SOUI
         return FALSE;
     }
 
-	BOOL STranslator::updateLogfont(const SStringW & strName,LOGFONT *pFont)
+	FontInfo * STranslator::getFontInfo() const
 	{
-		if(!m_mapFonts.Lookup(strName))
-			return FALSE;
-		TrFontInfo trFontInfo = m_mapFonts[strName];
-		SASSERT(trFontInfo.strFaceName.GetLength()<LF_FACESIZE);
-		pFont->lfCharSet = trFontInfo.lfCharset;
-		_tcscpy(pFont->lfFaceName,trFontInfo.strFaceName);
-		return TRUE;
+		return m_pFontInfo;
 	}
-
-	BYTE STranslator::charsetFromString(const SStringW & strCharset) const
-	{
-		const struct {
-			wchar_t name[40];
-			BYTE    value;
-		}CharsetMap []={
-			{L"ANSI",0},
-			{L"DEFAULT",1},
-			{L"SYMBOL",2},
-			{L"SHIFTJIS",128},
-			{L"HANGEUL",129},
-			{L"HANGUL",129},
-			{L"GB2312",134},
-			{L"CHINESEBIG5",136},
-			{L"OEM",255},
-			{L"JOHAB",130},
-			{L"HEBREW",177},
-			{L"ARABIC",178},
-			{L"GREEK",161},
-			{L"TURKISH",162},
-			{L"VIETNAMESE",163},
-			{L"THAI",222},
-			{L"EASTEUROPE",238},
-			{L"RUSSIAN",204},
-			{L"MAC",77},
-			{L"BALTIC",186}
-		};
-		
-			for(int i=0;i<ARRAYSIZE(CharsetMap);i++)
-			{
-				if(strCharset.CompareNoCase(CharsetMap[i].name) == 0)
-					return CharsetMap[i].value;
-			}
-			return _wtoi(strCharset);
-	}
-
 
     //////////////////////////////////////////////////////////////////////////
     //  STranslator
@@ -353,12 +318,6 @@ namespace SOUI
 	void STranslatorMgr::GetLanguage(wchar_t szName[TR_MAX_NAME_LEN]) const
 	{
 		wcscpy_s(szName,TR_MAX_NAME_LEN,m_szLangName);
-	}
-
-	BOOL STranslatorMgr::updateLogfont(const SStringW & strName,LOGFONT * pfont)
-	{
-		if(m_lstLang->IsEmpty()) return FALSE;
-		return m_lstLang->GetHead()->updateLogfont(strName,pfont);
 	}
 
     //////////////////////////////////////////////////////////////////////////

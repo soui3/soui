@@ -125,7 +125,6 @@ namespace SOUI{
 						fontStyle.attr.fStrike = xmlFont.attribute(L"strike").as_bool(false);
 						fontStyle.attr.fItalic = xmlFont.attribute(L"italic").as_bool(false);
 						fontStyle.attr.byWeight = (xmlFont.attribute(L"weight").as_uint(0) + 2) / 4; //scale weight from [0-1000] to [0,250].
-						defFontInfo.strName = xmlFont.attribute(L"name").as_string(L"default");
 						defFontInfo.style = fontStyle;
 						defFontInfo.strFaceName = S_CW2T(xmlFont.attribute(L"face").value());
 
@@ -137,9 +136,6 @@ namespace SOUI{
 					{
 						fontStyle.attr.cSize = 12;
 						fontStyle.attr.byCharset =DEFAULT_CHARSET;
-						
-
-						defFontInfo.strName = L"default";
 						defFontInfo.style = fontStyle;
 						defFontInfo.strFaceName = KDefFontFace;
 					}
@@ -324,15 +320,17 @@ namespace SOUI{
 		SUiDefInfo *pRet = new SUiDefInfo();
 		//将新uidef设置到系统中，在皮肤初始化的时候可以引用当前定义的颜色表。
 		SAutoRefPtr<IUiDefInfo> pOldUiDef = SUiDef::getSingleton().GetUiDef();
-		SUiDef::getSingleton().SetUiDef(pRet);
+		SUiDef::getSingleton().SetUiDef(pRet,false);
 		pRet->Init(pResProvider, pszUiDef);
-		SUiDef::getSingleton().SetUiDef(pOldUiDef);
+		SUiDef::getSingleton().SetUiDef(pOldUiDef,false);
 		return pRet;
 	}
 
-	void SUiDef::SetUiDef( IUiDefInfo* pUiDefInfo )
+	void SUiDef::SetUiDef( IUiDefInfo* pUiDefInfo ,bool bUpdateDefFont)
 	{
 		m_pCurUiDef = pUiDefInfo;
+		if(bUpdateDefFont)
+			SFontPool::getSingletonPtr()->SetDefFontInfo(m_pCurUiDef->GetDefFontInfo());
 	}
 
 	void SUiDef::SetFontChecker(FunFontCheck fontCheck)

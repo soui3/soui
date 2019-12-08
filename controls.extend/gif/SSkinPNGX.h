@@ -25,10 +25,7 @@ namespace SOUI
     {
         SOUI_CLASS_NAME(SSkinPNGX, L"pngx")
     public:
-		SSkinPNGX():m_bVert(FALSE)
-        {
-
-        }
+		SSkinPNGX();
 
         SOUI_ATTRS_BEGIN()
             ATTR_IMAGEAUTOREF(L"src",m_pngx,FALSE)   //XML文件中指定的图片资源名,(type:name)
@@ -60,10 +57,13 @@ namespace SOUI
         * Describe  
         */    
         virtual void _DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha=0xFF) const override;
+
+		virtual void _Scale(ISkinObj *pObj, int nScale) override;
+
     protected:
 		HRESULT OnAttrDelay(const SStringW &strValue,BOOL bLoading);
  
-		CAutoRefPtr<IBitmap> m_pngx;
+		SAutoRefPtr<IBitmap> m_pngx;
 		SArray<int>			 m_nDelays;
 		BOOL				 m_bVert;
     };

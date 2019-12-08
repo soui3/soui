@@ -20,8 +20,12 @@ SFontPool::SFontPool(IRenderFactory *pRendFactory)
     m_pFunOnKeyRemoved=OnKeyRemoved;
 }
 
+void SFontPool::OnKeyRemoved(const IFontPtr & obj)
+{
+	obj->Release();
+}
 
-IFontPtr SFontPool::GetFont(const SStringW & strName,FONTSTYLE style, const SStringW & fontFaceName,pugi::xml_node xmlExProp)
+IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,pugi::xml_node xmlExProp)
 {
 	IFontPtr hftRet=0;
 
@@ -32,9 +36,7 @@ IFontPtr SFontPool::GetFont(const SStringW & strName,FONTSTYLE style, const SStr
 	xmlExProp.print(writer,L"\t",pugi::format_default,pugi::encoding_utf16);
 	SStringT strXmlProp= S_CW2T(SStringW(writer.buffer(),writer.size()));
 
-	FontInfo info = {strName,style.dwStyle,strFace,strXmlProp};
-	if(strName.IsEmpty())//使用系统字体的name属性
-		info.strName = GetDefFontInfo().strName;
+	FontInfo info = {style.dwStyle,strFace,strXmlProp};
 
 	if(HasKey(info))
 	{
@@ -49,19 +51,18 @@ IFontPtr SFontPool::GetFont(const SStringW & strName,FONTSTYLE style, const SStr
 
 }
 
-static const WCHAR  KFontPropSeprator=   (L',');   //字体属性之间的分隔符，不再支持其它符号。
-static const WCHAR  KPropSeprator    =   (L':');   //一个属性name:value对之间的分隔符
-static const WCHAR  KAttrFalse[]     =   (L"0");
-static const WCHAR  KFontFace[]      =   (L"face");
-static const WCHAR  KFontBold[]      =   (L"bold");
-static const WCHAR  KFontUnderline[] =   (L"underline");
-static const WCHAR  KFontItalic[]    =   (L"italic");
-static const WCHAR  KFontStrike[]    =   (L"strike");
-static const WCHAR  KFontAdding[]    =   (L"adding");
-static const WCHAR  KFontSize[]      =   (L"size");
-static const WCHAR  KFontCharset[]   =   (L"charset");
-static const WCHAR  KFontName[]      =   (L"name");
-static const WCHAR KFontWeight[] = L"weight";
+static const WCHAR  KFontPropSeprator=   L',';   //字体属性之间的分隔符，不再支持其它符号。
+static const WCHAR  KPropSeprator    =   L':';   //一个属性name:value对之间的分隔符
+static const WCHAR  KAttrFalse[]     =   L"0";
+static const WCHAR  KFontFace[]      =   L"face";
+static const WCHAR  KFontBold[]      =   L"bold";
+static const WCHAR  KFontUnderline[] =   L"underline";
+static const WCHAR  KFontItalic[]    =   L"italic";
+static const WCHAR  KFontStrike[]    =   L"strike";
+static const WCHAR  KFontAdding[]    =   L"adding";
+static const WCHAR  KFontSize[]      =   L"size";
+static const WCHAR  KFontCharset[]   =   L"charset";
+static const WCHAR  KFontWeight[]    =   L"weight";
 
 IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 {
@@ -69,7 +70,6 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 	fntStyle.attr.cSize = 0;
 
     SStringW strFace;//不需要默认字体, 在后面GetFont里会检查.
-	SStringW strName;
     SStringW attr=strFont; 
     attr.MakeLower();                                        
     SStringWList fontProp;
@@ -114,11 +114,7 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
         }else if(strPair[0] == KFontCharset)
         {
             fntStyle.attr.byCharset = (BYTE)_wtoi(strPair[1]);
-        }else if(strPair[0] == KFontName)
-		{
-			strName = strPair[1];
-		}
-		else if (strPair[0] == KFontWeight)
+		}else if (strPair[0] == KFontWeight)
 		{
 			fntStyle.attr.byWeight = (_wtoi(strPair[1]) +2)/ 4;//+2 for 四舍五入. /4是为了把weight scale到0-250.
 		}else
@@ -138,7 +134,7 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 		fntStyle.attr.cSize = defSize.toPixelSize(scale) + cAdding;  //cAdding为正代表字体变大，否则变小
 	}
 
-    return GetFont(strName,fntStyle, strFace,nodePropEx);
+    return GetFont(fntStyle, strFace,nodePropEx);
 }
 
 
@@ -170,9 +166,6 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
     
     
     _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), fontInfo.strFaceName);
-    
-	ITranslatorMgr *pTransMgr = SApplication::getSingleton().GetTranslator();
-	if(pTransMgr) pTransMgr->updateLogfont(fontInfo.strName,&lfNew);
 
     IFontPtr ret = _CreateFont(lfNew);
 	if(ret) ret->InitFromXml(xmlExProp);
@@ -181,29 +174,33 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
 
 const FontInfo & SFontPool::GetDefFontInfo() const
 {
-	SUiDef *pUiDef = SUiDef::getSingletonPtr();
-	return pUiDef->GetUiDef()->GetDefFontInfo();
+	return m_defFontInfo;
 }
 
-void SFontPool::UpdateFonts()
+void SFontPool::SetDefFontInfo(const FontInfo & fontInfo)
 {
-	ITranslatorMgr *pTransMgr = SApplication::getSingleton().GetTranslator();
-	if(!pTransMgr) return;
+	m_defFontInfo = fontInfo;
+	RemoveAll();
 
-	SPOSITION pos = m_mapNamedObj->GetStartPosition();
+	SPOSITION pos = m_lstDefFontListener.GetStartPosition();
 	while(pos)
 	{
-		FontInfo info;
-		IFontPtr fontPtr;
-		m_mapNamedObj->GetNextAssoc(pos,info,fontPtr);
-		LOGFONT lf;
-		memcpy(&lf,fontPtr->LogFont(),sizeof(lf));
-		if(pTransMgr->updateLogfont(info.strName,&lf))
-		{
-			fontPtr->UpdateFont(&lf);
-		}
+		IDefFontListener *pListener = m_lstDefFontListener.GetNextKey(pos);
+		pListener->OnDefFontChanged();
 	}
 }
 
+bool SFontPool::AddDefFontListener(IDefFontListener * pListener)
+{
+	if(m_lstDefFontListener.Lookup(pListener))
+		return false;
+	m_lstDefFontListener[pListener]=true;
+	return true;
+}
+
+bool SFontPool::RemoveDefFontListener(IDefFontListener * pListener)
+{
+	return m_lstDefFontListener.RemoveKey(pListener);
+}
 
 }//namespace SOUI

@@ -958,4 +958,10 @@ namespace SOUI
 		}
 	}
 
+	void SListView::OnDefFontChanged()
+	{
+		__super::OnDefFontChanged();
+		DispatchMessage2Items(UM_UPDATEFONT,0,0);
+	}
+
 }

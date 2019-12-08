@@ -14,8 +14,8 @@ namespace SOUI
 
 		void SetFontDesc(const SStringW & strDesc, int nScale);
 
-		void SetScale(int nScale);
-
+		void UpdateFont(int nScale);
+		
 	protected:
 		IFont * OnGetFont(const SStringW & strDesc,int nScale);
 

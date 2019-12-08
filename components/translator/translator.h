@@ -45,17 +45,14 @@ namespace SOUI
 
         virtual GUID     guid();
         virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nBufLen) const ;
-		virtual BOOL updateLogfont(const SStringW & strName,LOGFONT *pFont);
-		virtual BYTE charsetFromString(const SStringW & strCharset) const;
+		virtual FontInfo * getFontInfo() const;
     protected:
         BOOL LoadFromXml(pugi::xml_node xmlLang);
-
-
 
 		wchar_t	 m_szLangName[TR_MAX_NAME_LEN];
         GUID     m_guid;
         SArray<SStrMapEntry*> * m_arrEntry;
-		SMap<SStringW,TrFontInfo> m_mapFonts;//字体替换信息
+		FontInfo *	m_pFontInfo;
     };
 
     class STranslatorMgr : public TObjRefImpl<ITranslatorMgr>
@@ -74,9 +71,6 @@ namespace SOUI
 		BOOL UninstallTranslator(REFGUID id);
 
 		int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pBuf,int nLen)  const ;
-
-		BOOL updateLogfont(const SStringW & strName,LOGFONT * pfont);
-
 
 	protected:
 

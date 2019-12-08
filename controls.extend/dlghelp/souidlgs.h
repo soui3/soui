@@ -19,7 +19,9 @@
 #endif // (_WIN32_WINNT >= 0x0600) && !defined(_WIN32_WCE)
 #include <core\SNativeWnd.h>
 
-
+#ifndef _Post_writable_byte_size_
+#define _Post_writable_byte_size_(x)
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:
 //
@@ -373,7 +375,7 @@ public: \
 		SOUI::SNativeWnd GetFileDialogWindow() const
 		{
 			ATLASSERT(::IsWindow(m_hWnd));
-			return SOUI::SNativeWnd(GetParent(m_hWnd));
+			return SOUI::SNativeWnd(::GetParent(m_hWnd));
 		}
 
 		int GetFilePath(LPTSTR lpstrFilePath, int nLength) const
@@ -1886,9 +1888,9 @@ public: \
 
 
 			//ModuleHelper::AddCreateWndData(&m_thunk.cd, (CCommonDialogImplBase*)this);
-			CSimpleWndHelper::GetInstance()->LockSharePtr(this);
+			SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
 			BOOL bRet = ::ChooseFont(&m_cf);
-			CSimpleWndHelper::GetInstance()->UnlockSharePtr();
+			SNativeWndHelper::getSingletonPtr()->UnlockSharePtr();
 			m_hWnd = NULL;
 
 			if (bRet)   // copy logical font from user's initialization buffer (if needed)
@@ -2191,10 +2193,10 @@ public: \
 
 			ATLASSERT(m_hWnd == NULL);
 
-			CSimpleWndHelper::GetInstance()->LockSharePtr(this);
+			SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
 
 			BOOL bRet = ::ChooseColor(&m_cc);
-			CSimpleWndHelper::GetInstance()->UnlockSharePtr();
+			SNativeWndHelper::getSingletonPtr()->UnlockSharePtr();
 			m_hWnd = NULL;
 
 			return bRet ? IDOK : IDCANCEL;
@@ -2411,9 +2413,9 @@ public: \
 
 			ATLASSERT(m_hWnd == NULL);
 
-			CSimpleWndHelper::GetInstance()->LockSharePtr(this);
+			SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
 			BOOL bRet = ::PrintDlg(&m_pd);
-			CSimpleWndHelper::GetInstance()->UnlockSharePtr();
+			SNativeWndHelper::getSingletonPtr()->UnlockSharePtr();
 			m_hWnd = NULL;
 			return bRet ? IDOK : IDCANCEL;
 		}

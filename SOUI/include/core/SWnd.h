@@ -39,10 +39,6 @@
 #define ICWND_FIRST    ((SWindow*)-1)   /*子窗口插入在开头*/
 #define ICWND_LAST    NULL              /*子窗口插入在末尾*/
 
-#define UM_SETSCALE		 (WM_USER+1000)
-#define UM_SETLANGUAGE   (WM_USER+1001)
-#define UM_SETCOLORIZE	 (WM_USER+1002)
-
 #ifdef _DEBUG
 #define ASSERT_UI_THREAD() SOUI::SWindow::TestMainThread()
 #else 
@@ -55,7 +51,12 @@ namespace SOUI
     /////////////////////////////////////////////////////////////////////////
     enum {NormalShow=0,ParentShow=1};    //提供WM_SHOWWINDOW消息识别是父窗口显示还是要显示本窗口
     enum {NormalEnable=0,ParentEnable=1};    //提供WM_ENABLE消息识别是父窗口可用还是直接操作当前窗口
-
+	enum{
+		UM_SETSCALE = (WM_USER+1000),
+		UM_SETLANGUAGE,
+		UM_SETCOLORIZE,
+		UM_UPDATEFONT,
+	};
 	// State Define
 	enum WndState
 	{
@@ -1363,6 +1364,7 @@ namespace SOUI
 		LRESULT OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		LRESULT OnSetLanguage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		LRESULT OnSetColorize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT OnUpdateFont(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_PAINT_EX(OnPaint)
@@ -1386,6 +1388,7 @@ namespace SOUI
 			MESSAGE_HANDLER_EX(UM_SETLANGUAGE,OnSetLanguage)
 			MESSAGE_HANDLER_EX(UM_SETSCALE,OnSetScale)
 			MESSAGE_HANDLER_EX(UM_SETCOLORIZE,OnSetColorize)
+			MESSAGE_HANDLER_EX(UM_UPDATEFONT,OnUpdateFont)
         WND_MSG_MAP_END_BASE()  //消息不再往基类传递，此外使用WND_MSG_MAP_END_BASE而不是WND_MSG_MAP_END
 
     protected:
@@ -1444,6 +1447,8 @@ namespace SOUI
 		virtual HRESULT OnLanguageChanged();
 
 		virtual void OnScaleChanged(int scale);
+		
+		virtual void OnDefFontChanged();
 
 		virtual void OnInsertChild(SWindow *pChild) {}
 
