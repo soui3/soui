@@ -78,7 +78,7 @@ namespace SOUI
 
     //////////////////////////////////////////////////////////////////////////
     // SLang
-	STranslator::STranslator():m_pFontInfo(NULL)
+	STranslator::STranslator()
     {
 		m_szLangName[0]=0;
         m_arrEntry = new SArray<SStrMapEntry*>;
@@ -89,10 +89,6 @@ namespace SOUI
         for(UINT i=0;i<m_arrEntry->GetCount();i++)
             delete m_arrEntry->GetAt(i);
         delete m_arrEntry;
-		if(m_pFontInfo)
-		{
-			delete m_pFontInfo;
-		}
     }
 
     void STranslator::GetName(wchar_t szName[TR_MAX_NAME_LEN])
@@ -170,23 +166,7 @@ namespace SOUI
         
         qsort(m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::Compare);
 
-
-		pugi::xml_node xmlFont = xmlLang.child(L"font");
-		if(xmlFont)
-		{
-			SASSERT(m_pFontInfo==NULL);
-			m_pFontInfo = new FontInfo;
-			FONTSTYLE & fontStyle = m_pFontInfo->style;
-			fontStyle.attr.cSize=xmlFont.attribute(L"size").as_int(12);
-			fontStyle.attr.byCharset =(BYTE)xmlFont.attribute(L"charset").as_int(DEFAULT_CHARSET);
-			fontStyle.attr.fBold = xmlFont.attribute(L"bold").as_bool(false);
-			fontStyle.attr.fUnderline = xmlFont.attribute(L"underline").as_bool(false);
-			fontStyle.attr.fStrike = xmlFont.attribute(L"strike").as_bool(false);
-			fontStyle.attr.fItalic = xmlFont.attribute(L"italic").as_bool(false);
-			fontStyle.attr.byWeight = (xmlFont.attribute(L"weight").as_uint(0) + 2) / 4; //scale weight from [0-1000] to [0,250].
-			m_pFontInfo->strFaceName = S_CW2T(xmlFont.attribute(L"face").value());
-		}
-
+		m_strFontInfo = xmlLang.attribute(L"xmlLang").as_string();
         return TRUE;
     }
 
@@ -216,9 +196,9 @@ namespace SOUI
         return FALSE;
     }
 
-	FontInfo * STranslator::getFontInfo() const
+	SStringW STranslator::getFontInfo() const
 	{
-		return m_pFontInfo;
+		return m_strFontInfo;
 	}
 
     //////////////////////////////////////////////////////////////////////////

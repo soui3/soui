@@ -13,7 +13,7 @@ namespace SOUI{
 	const static WCHAR KNodeStyle[]     = L"style";
 	const static WCHAR KNodeTemplate[] = L"template";
 	const static WCHAR KNodeObjAttr[]   = L"objattr";
-	const static TCHAR KDefFontFace[]   = _T("宋体");
+	const static WCHAR KDefFontFace[]   = L"宋体";
 
 
 	static pugi::xml_node GetSourceXmlNode(pugi::xml_node nodeRoot,pugi::xml_document &docInit,IResProvider *pResProvider, const wchar_t * pszName)
@@ -126,7 +126,7 @@ namespace SOUI{
 						fontStyle.attr.fItalic = xmlFont.attribute(L"italic").as_bool(false);
 						fontStyle.attr.byWeight = (xmlFont.attribute(L"weight").as_uint(0) + 2) / 4; //scale weight from [0-1000] to [0,250].
 						defFontInfo.style = fontStyle;
-						defFontInfo.strFaceName = S_CW2T(xmlFont.attribute(L"face").value());
+						defFontInfo.strFaceName = xmlFont.attribute(L"face").value();
 
 						if(defFontInfo.strFaceName.IsEmpty() || !SUiDef::CheckFont(defFontInfo.strFaceName))
 						{
@@ -277,11 +277,12 @@ namespace SOUI{
 		return HASFONT;
 	}
 
-	static BOOL DefFontCheck(const SStringT & strFontName)
+	static BOOL DefFontCheck(const SStringW & strFontName)
 	{
 		//确保字体存在
 		HDC hdc = GetDC(NULL);
-		int hasFont = EnumFonts(hdc,strFontName,DefFontsEnumProc,0);
+		SStringT strFace = S_CW2T(strFontName);
+		int hasFont = EnumFonts(hdc,strFace,DefFontsEnumProc,0);
 		ReleaseDC(NULL,hdc);
 		return hasFont == HASFONT;
 	}
@@ -338,7 +339,7 @@ namespace SOUI{
 		s_funFontCheck = fontCheck;
 	}
 
-	BOOL SUiDef::CheckFont(const SStringT & strFontName)
+	BOOL SUiDef::CheckFont(const SStringW & strFontName)
 	{
 		return s_funFontCheck(strFontName);
 	}

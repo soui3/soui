@@ -29,12 +29,12 @@ IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,pugi:
 {
 	IFontPtr hftRet=0;
 
-	SStringT strFace = S_CW2T(fontFaceName);
+	SStringW strFace = fontFaceName;
 	if(strFace.IsEmpty()) strFace = GetDefFontInfo().strFaceName;
 	
 	pugi::xml_writer_buff writer;
 	xmlExProp.print(writer,L"\t",pugi::format_default,pugi::encoding_utf16);
-	SStringT strXmlProp= S_CW2T(SStringW(writer.buffer(),writer.size()));
+	SStringW strXmlProp= SStringW(writer.buffer(),writer.size());
 
 	FontInfo info = {style.dwStyle,strFace,strXmlProp};
 
@@ -164,8 +164,7 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
 	lfNew.lfHeight = -abs((short)fontInfo.style.attr.cSize);
     lfNew.lfQuality = CLEARTYPE_QUALITY;
     
-    
-    _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), fontInfo.strFaceName);
+    _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), S_CW2T(fontInfo.strFaceName));
 
     IFontPtr ret = _CreateFont(lfNew);
 	if(ret) ret->InitFromXml(xmlExProp);
@@ -201,6 +200,65 @@ bool SFontPool::AddDefFontListener(IDefFontListener * pListener)
 bool SFontPool::RemoveDefFontListener(IDefFontListener * pListener)
 {
 	return m_lstDefFontListener.RemoveKey(pListener);
+}
+
+FontInfo SFontPool::FontInfoFromString(const SStringW &strFontDesc)
+{
+	FontInfo fi;
+	fi.style=0;
+	SArray<SStringW> strLst;
+	int nSeg = SplitString(strFontDesc,KFontPropSeprator,strLst);
+	for(int i=0;i<nSeg;i++)
+	{
+		SArray<SStringW> kv;
+		int n = SplitString(strLst[i],KPropSeprator,kv);
+		if(n!=2) continue;
+		if(kv[0].CompareNoCase(KFontFace)==0)
+		{
+			if(kv[1][0]==L'\'' || kv[1][0]==L'\"')
+				fi.strFaceName = kv[1].Mid(1,kv[1].GetLength()-2);
+			else
+				fi.strFaceName=kv[1];			
+		}else if(kv[0].CompareNoCase(KFontSize)==0)
+		{
+			fi.style.attr.cSize = abs(_wtoi(kv[1]));
+		}else if(kv[0].CompareNoCase(KFontCharset)==0)
+		{
+			fi.style.attr.byCharset = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontWeight)==0)
+		{
+			fi.style.attr.byWeight=_wtoi(kv[1])/4;
+		}else if(kv[0].CompareNoCase(KFontBold)==0)
+		{
+			fi.style.attr.fBold = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontItalic)==0)
+		{
+			fi.style.attr.fItalic = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontStrike)==0)
+		{
+			fi.style.attr.fStrike=_wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontUnderline)==0)
+		{
+			fi.style.attr.fUnderline=_wtoi(kv[1]);
+		}
+	}
+	return fi;
+}
+
+SStringW SFontPool::FontInfoToString(const FontInfo &fi)
+{
+	char szBuf[200];
+	Log4zStream s(szBuf,200);
+	s<<KFontFace<<":\'"<<fi.strFaceName.c_str()<<"\'"<<",";
+	s<<KFontSize<<":"<<(short)fi.style.attr.cSize<<",";
+	s<<KFontCharset<<":"<<fi.style.attr.byCharset<<",";
+	s<<KFontWeight<<":"<<fi.style.attr.byWeight*4<<",";
+	s<<KFontBold<<":"<<(fi.style.attr.fBold?"1":"0")<<",";
+	s<<KFontItalic<<":"<<(fi.style.attr.fItalic?"1":"0")<<",";
+	s<<KFontStrike<<":"<<(fi.style.attr.fStrike?"1":"0")<<",";
+	s<<KFontUnderline<<":"<<(fi.style.attr.fUnderline?"1":"0");
+	return S_CA2W(szBuf);
+
 }
 
 }//namespace SOUI

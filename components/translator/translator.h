@@ -45,14 +45,14 @@ namespace SOUI
 
         virtual GUID     guid();
         virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nBufLen) const ;
-		virtual FontInfo * getFontInfo() const;
+		virtual SStringW getFontInfo() const;
     protected:
         BOOL LoadFromXml(pugi::xml_node xmlLang);
 
 		wchar_t	 m_szLangName[TR_MAX_NAME_LEN];
         GUID     m_guid;
         SArray<SStrMapEntry*> * m_arrEntry;
-		FontInfo *	m_pFontInfo;
+		SStringW m_strFontInfo;
     };
 
     class STranslatorMgr : public TObjRefImpl<ITranslatorMgr>

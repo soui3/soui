@@ -41,8 +41,8 @@ namespace SOUI
     public:
         static ULONG Hash( INARGTYPE fontKey )
         {
-            ULONG uRet=SOUI::CElementTraits<SStringT>::Hash(fontKey.strFaceName);
-            uRet = (uRet<<5) + SOUI::CElementTraits<SStringT>::Hash(fontKey.strPropEx);
+            ULONG uRet=SOUI::CElementTraits<SStringW>::Hash(fontKey.strFaceName);
+            uRet = (uRet<<5) + SOUI::CElementTraits<SStringW>::Hash(fontKey.strPropEx);
             uRet = (uRet<<5) +(UINT)fontKey.style.dwStyle+1;
             return uRet;
         }
@@ -83,7 +83,9 @@ namespace SOUI
     public:
         SFontPool(IRenderFactory *pRendFactory);
 
-        
+		static SStringW FontInfoToString(const FontInfo &fontInfo);
+		static FontInfo FontInfoFromString(const SStringW &strFontInfo);
+
         /**
          * GetFont
          * @brief    获得与指定的strFont对应的IFontPtr

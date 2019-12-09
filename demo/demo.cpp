@@ -306,6 +306,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
                 trans->CreateTranslator(&langCN);
                 langCN->Load(&xmlLang.child(L"language"),1);//1=LD_XML
                 trans->InstallTranslator(langCN);
+				SStringW strFont = langCN->getFontInfo();
+				if(!strFont.IsEmpty())
+				{//从翻译文件中获取并设置程序的字体信息
+					FontInfo fi = SFontPool::FontInfoFromString(strFont);
+					SFontPool::getSingletonPtr()->SetDefFontInfo(fi);
+				}
             }
         }
 #if (defined(DLL_CORE) || defined(LIB_ALL)) && !defined(_WIN64)

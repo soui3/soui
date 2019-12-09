@@ -36,7 +36,7 @@ namespace SOUI
                 if(ValueParser::ParseValue(xmlStr.attribute(L"value").as_string(),namedValue.value))
                     m_lstNamedValue.Add(namedValue);
 				else
-					SASSERT_FMT(false,L"parse value failed, name=%s,value=%s",xmlStr.name(),xmlStr.attribute(L"value").as_string());
+					SASSERT_FMT(false,_T("parse value failed, name=%s,value=%s"),S_CW2T(xmlStr.name()).c_str(),S_CW2T(xmlStr.attribute(L"value").as_string()).c_str());
             }
             qsort(m_lstNamedValue.GetData(),m_lstNamedValue.GetCount(),sizeof(NAMEDVALUE),Compare);
             return TRUE;

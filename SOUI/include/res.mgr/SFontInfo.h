@@ -28,7 +28,7 @@ namespace SOUI
 	struct FontInfo
 	{
 		FONTSTYLE style;
-		SStringT strFaceName;
-		SStringT strPropEx;
+		SStringW strFaceName;
+		SStringW strPropEx;
 	};
 }

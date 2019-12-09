@@ -68,7 +68,7 @@ namespace SOUI
          */
         virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
 
-		virtual FontInfo * getFontInfo() const = 0;
+		virtual SStringW getFontInfo() const = 0;
     };
 
 
