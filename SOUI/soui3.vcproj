@@ -794,6 +794,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\res.mgr\SFontInfo.h"
+				>
+			</File>
+			<File
 				RelativePath="include\res.mgr\SFontPool.h"
 				>
 			</File>
