@@ -108,6 +108,8 @@ namespace SOUI
 
 		void SetDefFontInfo(const FontInfo & fontInfo);
 
+		void SetDefFontInfo(const SStringW & strFontInfo);
+
 		bool AddDefFontListener(IDefFontListener * pListener);
 
 		bool RemoveDefFontListener(IDefFontListener *pListener);

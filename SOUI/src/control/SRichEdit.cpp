@@ -1539,6 +1539,12 @@ void SRichEdit::OnScaleChanged(int nScale)
 	OnSetFont(NULL,FALSE);//更新默认字体
 }
 
+void SRichEdit::OnRebuildFont()
+{
+	__super::OnRebuildFont();
+	OnSetFont(NULL,FALSE);//更新默认字体
+}
+
 void SRichEdit::OnEnable(BOOL bEnable, UINT nStatus)
 {
 	__super::OnEnable(bEnable, nStatus);
@@ -1700,6 +1706,7 @@ HRESULT SRichEdit::OnAttrAutoSel(const SStringW & strValue,BOOL bLoading)
 	m_fAutoSel = STRINGASBOOL(strValue);
 	return S_FALSE;
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 

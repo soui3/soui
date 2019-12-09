@@ -698,7 +698,7 @@ namespace SOUI
         *
         * Describe  遍历所有子窗口发送消息
         */
-        void SDispatchMessage(UINT uMsg,WPARAM wParam,LPARAM lParam);
+        void SDispatchMessage(UINT uMsg,WPARAM wParam=0,LPARAM lParam=0);
 
         /**
         * GetCurMsg

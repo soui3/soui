@@ -919,6 +919,8 @@ namespace SOUI
         virtual BOOL SwndProc(UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResult);
 
 		virtual void OnScaleChanged(int nScale);
+		
+		virtual void OnRebuildFont();
 
 		virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
 

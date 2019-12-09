@@ -189,6 +189,12 @@ void SFontPool::SetDefFontInfo(const FontInfo & fontInfo)
 	}
 }
 
+void SFontPool::SetDefFontInfo(const SStringW & strFontInfo)
+{
+	FontInfo fi = FontInfoFromString(strFontInfo);
+	SetDefFontInfo(fi);
+}
+
 bool SFontPool::AddDefFontListener(IDefFontListener * pListener)
 {
 	if(m_lstDefFontListener.Lookup(pListener))
