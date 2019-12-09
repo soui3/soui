@@ -166,7 +166,7 @@ namespace SOUI
         
         qsort(m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::Compare);
 
-		m_strFontInfo = xmlLang.attribute(L"xmlLang").as_string();
+		m_strFontInfo = xmlLang.attribute(L"font").as_string();
         return TRUE;
     }
 
