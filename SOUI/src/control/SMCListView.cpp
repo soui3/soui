@@ -1232,9 +1232,9 @@ SHeaderCtrl * SMCListView::GetHeaderCtrl() const
 	return m_pHeader;
 }
 
-void SMCListView::OnDefFontChanged()
+void SMCListView::OnRebuildFont()
 {
-	__super::OnDefFontChanged();
+	__super::OnRebuildFont();
 	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 

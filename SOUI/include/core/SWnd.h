@@ -1448,7 +1448,7 @@ namespace SOUI
 
 		virtual void OnScaleChanged(int scale);
 		
-		virtual void OnDefFontChanged();
+		virtual void OnRebuildFont();
 
 		virtual void OnInsertChild(SWindow *pChild) {}
 

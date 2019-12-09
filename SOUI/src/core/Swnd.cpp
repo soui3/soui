@@ -2869,7 +2869,7 @@ namespace SOUI
 
 	LRESULT SWindow::OnUpdateFont(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		OnDefFontChanged();
+		OnRebuildFont();
 		return 0;
 	}
 
@@ -2983,7 +2983,7 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::OnDefFontChanged()
+	void SWindow::OnRebuildFont()
 	{
 		m_style.UpdateFont();
 	}

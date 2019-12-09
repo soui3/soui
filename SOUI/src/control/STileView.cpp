@@ -991,9 +991,9 @@ void STileView::OnShowWindow(BOOL bShow, UINT nStatus)
 
 }
 
-void STileView::OnDefFontChanged()
+void STileView::OnRebuildFont()
 {
-	__super::OnDefFontChanged();
+	__super::OnRebuildFont();
 	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 

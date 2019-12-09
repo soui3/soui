@@ -65,7 +65,7 @@ protected:
     virtual void OnColorize(COLORREF cr);
 	virtual void OnScaleChanged(int nScale);
 	virtual HRESULT OnLanguageChanged();
-	virtual void OnDefFontChanged();
+	virtual void OnRebuildFont();
 protected:
     void DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam);
     void UpdateScrollBar();
