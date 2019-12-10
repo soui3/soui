@@ -7,6 +7,7 @@
 #include "helper/SplitString.h"
 #include "helper/STime.h"
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
+#include <helper/SHostMgr.h>
 
 namespace SOUI
 {
@@ -502,7 +503,7 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	SFontPool::getSingletonPtr()->AddDefFontListener(this);
+	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
 	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
@@ -552,7 +553,7 @@ void SHostWnd::OnDestroy()
 	m_memRT = NULL;
 	m_rgnInvalidate = NULL;
 	m_nScale = 100;//restore to 100
-	SFontPool::getSingletonPtr()->RemoveDefFontListener(this);
+	SHostMgr::getSingletonPtr()->RemoveHostMsgHandler(this);
     //exit app. (copy from wtl)
     if(m_hostAttr.m_byWndType == SHostWndAttr::WT_APPMAIN 
     || (m_hostAttr.m_byWndType == SHostWndAttr::WT_UNDEFINE && (SNativeWnd::GetStyle() & (WS_CHILD | WS_POPUP)) == 0 && (SNativeWnd::GetExStyle()&WS_EX_TOOLWINDOW) == 0))
@@ -698,7 +699,7 @@ LRESULT SHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return lRet;
 }
 
-LRESULT SHostWnd::OnHostMsg( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT SHostWnd::OnActivateApp( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
     return DoFrameEvent(uMsg,wParam,lParam);
 }
@@ -1633,10 +1634,13 @@ void SHostWnd::UpdateAutoSizeCount(bool bInc)
 		m_nAutoSizing--;
 }
 
-void SHostWnd::OnDefFontChanged()
+void SHostWnd::OnHostMsg(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
 {
-	SDispatchMessage(UM_UPDATEFONT,0,0);
-	RequestRelayout(m_swnd,TRUE);
+	SDispatchMessage(uMsg,wp,lp);
+	if(bRelayout)
+	{
+		RequestRelayout(m_swnd,TRUE);
+	}
 }
 
 //////////////////////////////////////////////////////////////////

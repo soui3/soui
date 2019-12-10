@@ -109,10 +109,6 @@ namespace SOUI
 		void SetDefFontInfo(const FontInfo & fontInfo);
 
 		void SetDefFontInfo(const SStringW & strFontInfo);
-
-		bool AddDefFontListener(IDefFontListener * pListener);
-
-		bool RemoveDefFontListener(IDefFontListener *pListener);
     protected:
 
 		const FontInfo & GetDefFontInfo() const;
@@ -125,7 +121,6 @@ namespace SOUI
 
         SAutoRefPtr<IRenderFactory> m_RenderFactory;
 		FontInfo					m_defFontInfo;
-		SMap<IDefFontListener*,bool>	m_lstDefFontListener;
     };
 
 }//namespace SOUI

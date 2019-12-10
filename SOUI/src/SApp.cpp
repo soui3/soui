@@ -12,6 +12,7 @@
 #include "helper/SToolTip.h"
 #include "helper/SAppDir.h"
 #include "helper/SwndFinder.h"
+#include "helper/SHostMgr.h"
 
 #include "control/Smessagebox.h"
 #include "updatelayeredwindow/SUpdateLayeredWindow.h"
@@ -256,6 +257,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 	m_pSingletons[STextServiceHelper::GetType()] = new STextServiceHelper();
 	m_pSingletons[SRicheditMenuDef::GetType()] = new SRicheditMenuDef();
 	m_pSingletons[SNativeWndHelper::GetType()] =   new SNativeWndHelper(hInst, pszHostClassName, bImeApp);
+	m_pSingletons[SHostMgr::GetType()] =   new SHostMgr();
 }
 
 #define DELETE_SINGLETON(x) \
@@ -264,6 +266,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 
 void SApplication::_DestroySingletons()
 {
+	DELETE_SINGLETON(SHostMgr);
 	DELETE_SINGLETON(SNativeWndHelper);
 	DELETE_SINGLETON(SRicheditMenuDef);
 	DELETE_SINGLETON(STextServiceHelper);

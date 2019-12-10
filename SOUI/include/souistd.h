@@ -76,6 +76,7 @@
 
 #include <helper/SAttrCracker.h>
 #include <helper/SColor.h>
+#include <helper/SHostMgr.h>
 #include <res.mgr/sfontpool.h>
 #include <res.mgr/sresprovider.h>
 

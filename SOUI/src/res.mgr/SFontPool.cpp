@@ -8,6 +8,7 @@
 #include "res.mgr/sfontpool.h"
 #include "helper/SplitString.h"
 #include "layout/SLayoutSize.h"
+#include "helper/SHostMgr.h"
 
 namespace SOUI
 {
@@ -180,32 +181,13 @@ void SFontPool::SetDefFontInfo(const FontInfo & fontInfo)
 {
 	m_defFontInfo = fontInfo;
 	RemoveAll();
-
-	SPOSITION pos = m_lstDefFontListener.GetStartPosition();
-	while(pos)
-	{
-		IDefFontListener *pListener = m_lstDefFontListener.GetNextKey(pos);
-		pListener->OnDefFontChanged();
-	}
+	SHostMgr::getSingletonPtr()->DispatchMessage(true,UM_UPDATEFONT);
 }
 
 void SFontPool::SetDefFontInfo(const SStringW & strFontInfo)
 {
 	FontInfo fi = FontInfoFromString(strFontInfo);
 	SetDefFontInfo(fi);
-}
-
-bool SFontPool::AddDefFontListener(IDefFontListener * pListener)
-{
-	if(m_lstDefFontListener.Lookup(pListener))
-		return false;
-	m_lstDefFontListener[pListener]=true;
-	return true;
-}
-
-bool SFontPool::RemoveDefFontListener(IDefFontListener * pListener)
-{
-	return m_lstDefFontListener.RemoveKey(pListener);
 }
 
 FontInfo SFontPool::FontInfoFromString(const SStringW &strFontDesc)
