@@ -1569,6 +1569,7 @@ void SHostWnd::OnScaleChanged(int scale)
 {
 	m_nScale = scale;
 	m_layoutDirty = dirty_self;
+	SWindow::OnScaleChanged(scale);
 	SWindow::InvalidateRect(NULL);
 }
 
