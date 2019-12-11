@@ -565,11 +565,11 @@ namespace SOUI{
 			int nScale = wndPos.pWnd->GetScale();
             if(!IsWaitingPos(wndPos.rc.right))
             {
-                nMaxX = (std::max)(nMaxX,(int)(wndPos.rc.right + pParam->GetExtraSize(Horz,nScale)));
+                nMaxX = smax(nMaxX,(int)(wndPos.rc.right + pParam->GetExtraSize(Horz,nScale)));
             }
             if(!IsWaitingPos(wndPos.rc.bottom))
             {
-                nMaxY = (std::max)(nMaxY,(int)(wndPos.rc.bottom + pParam->GetExtraSize(Vert, nScale)));
+                nMaxY = smax(nMaxY,(int)(wndPos.rc.bottom + pParam->GetExtraSize(Vert, nScale)));
             }
         }
 

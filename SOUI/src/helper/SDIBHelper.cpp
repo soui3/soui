@@ -88,8 +88,8 @@ namespace SOUI
         G = lRGBColor.rgbGreen;
         B = lRGBColor.rgbBlue;
 
-        cMax = (std::max)( (std::max)(R,G), B);	/* calculate lightness */
-        cMin = (std::min)( (std::min)(R,G), B);
+        cMax = smax( smax(R,G), B);	/* calculate lightness */
+        cMin = smin( smin(R,G), B);
         L = (BYTE)((((cMax+cMin)*HSLMAX)+RGBMAX)/(2*RGBMAX));
 
         if (cMax==cMin){			/* r=g=b --> achromatic case */

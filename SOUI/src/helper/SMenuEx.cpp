@@ -108,7 +108,7 @@ namespace SOUI
 			{
 				CSize szItem = pItem->GetDesiredSize(wid,hei);
 				if (szItem.cx < WIDTH_MENU_MAX)
-					szRet.cx = (std::max)(szRet.cx, szItem.cx);
+					szRet.cx = smax(szRet.cx, szItem.cx);
 				szRet.cy += szItem.cy;
 				pItem = pItem->GetWindow(GSW_NEXTSIBLING);
 			}
