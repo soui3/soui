@@ -71,14 +71,14 @@ protected:
 
 struct SMenuItemData
 {
-	SMenuItemData():iIcon(-1),vHotKey(0),dwUserData(0)
-	{
+	SMenuItemData();
 
-	}
+	~SMenuItemData();
 	int iIcon;
 	SStringT strText;
 	UINT vHotKey;
 	ULONG_PTR dwUserData;
+	HICON	 hIcon;
 };
 
 template <class T>
@@ -233,9 +233,18 @@ public:
 
     BOOL LoadMenu(pugi::xml_node xmlMenu);
 
-    BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon=-1);
+	/**
+     * SMenu::InsertMenu
+     * @brief    插入一个菜单项,参数和Windows API类似。
+     * @param    int iIcon -- 显示的标图在iconSkin中的索引
+	 * @param    HICON hIcon -- 标图，默认为0，有值时，iIocn失效
+	 * @return   BOOL - TRUE:成功 
+     *
+     * Describe  hIcon会在菜单退出时自动调用DestroyIcon.
+     */
+    BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon=-1,HICON hIcon=0);
 
-	BOOL AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon=-1);
+	BOOL AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon=-1,HICON hIcon=0);
 
 	BOOL CheckMenuItem(UINT uIdCheckItem, UINT uCheck);
 

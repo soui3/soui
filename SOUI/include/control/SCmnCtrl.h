@@ -360,17 +360,17 @@ protected:
      */
     virtual CSize GetDesiredSize(int wid, int hei) ;
 
-	int m_iTile;	//绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺
-    BOOL m_bManaged;  /**< 是否要自动释放当前的m_pSkin对象 */
-    int m_iFrame;  /**< 资源图片ID */
+	int m_iTile;		/**<绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺 */
+    BOOL m_bManaged;	/**< 是否要自动释放当前的m_pSkin对象 */
+    int m_iIcon;		/**< 绘制状态索引 */
     ISkinObj *m_pSkin;  /**< ISkinObj对象 */
-    SAutoRefPtr<IBitmap>    m_pImg;//使用代码设定的图片
-    FilterLevel             m_fl;
+    SAutoRefPtr<IBitmap>    m_pImg;/**<使用代码设定的图片*/
+    FilterLevel             m_fl;/**<绘制图片的放大精度*/
 	bool m_bKeepAspect; /**< keep aspect ratio */
 
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"skin", m_pSkin, TRUE)
-        ATTR_INT(L"iconIndex", m_iFrame, FALSE)
+        ATTR_INT(L"iconIndex", m_iIcon, FALSE)
 		ATTR_INT(L"tile", m_iTile, TRUE)
 		ATTR_BOOL(L"keepAspect",m_bKeepAspect,TRUE)
     SOUI_ATTRS_END()
