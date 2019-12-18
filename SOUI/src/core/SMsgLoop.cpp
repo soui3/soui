@@ -30,21 +30,19 @@ namespace SOUI
 		m_bQuit = FALSE;
         for(;;)
         {
-            while(bDoIdle && !::PeekMessage(&m_msg, NULL, 0, 0, PM_NOREMOVE))
-            {
-                if(!OnIdle(nIdleCount++))
-                    bDoIdle = FALSE;
-				if (m_bQuit) goto exit_loop;
-            }
-
-            bRet = ::GetMessage(&m_msg, NULL, 0, 0);
-
-            if(bRet == -1)
-            {
-				SLOGFMTD(_T("::GetMessage returned -1 (error)"));
-                continue;   // error, don't process
-            }
-            else if(!bRet)
+            bRet = ::PeekMessage(&m_msg, NULL, 0, 0,PM_REMOVE);
+ 			if(!bRet)
+			{
+				if(bDoIdle)
+				{
+					if(!OnIdle(nIdleCount++))
+						bDoIdle = FALSE;
+					if (m_bQuit) 
+						goto exit_loop;
+				}
+ 				continue;
+			}
+            if(m_msg.message==WM_QUIT)
             {
 				SLOGFMTD(_T("SMessageLoop::Run - exiting,code = %d"),(int)m_msg.wParam);
                 break;   // WM_QUIT, exit message loop
@@ -57,7 +55,8 @@ namespace SOUI
                 bDoIdle = TRUE;
                 nIdleCount = 0;
             }
-			if (m_bQuit) break;
+			if (m_bQuit) 
+				break;
         }
 
 	exit_loop:
