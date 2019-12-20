@@ -25,22 +25,32 @@ namespace SOUI
 		{
 		}
 
-		void OnPaint(HDC dc);
+		void OnPaint(HDC dc)
+		{
+			PAINTSTRUCT ps;
+			::BeginPaint(m_hWnd, &ps);
+			::EndPaint(m_hWnd, &ps);
+			m_pOwner->OnPrint(NULL,KConstDummyPaint);
+		}
+
+		void OnDestroy()
+		{
+			m_pOwner->m_dummyWnd = NULL;
+		}
+
+		virtual void OnFinalMessage(HWND hWnd)
+		{
+			delete this;
+		}
 
 		BEGIN_MSG_MAP_EX(SDummyWnd)
 			MSG_WM_PAINT(OnPaint)
-			END_MSG_MAP()
+			MSG_WM_DESTROY(OnDestroy)
+		END_MSG_MAP()
 	private:
 		SHostWnd *m_pOwner;
 	};
 
-void SDummyWnd::OnPaint( HDC dc )
-{
-    PAINTSTRUCT ps;
-    ::BeginPaint(m_hWnd, &ps);
-    ::EndPaint(m_hWnd, &ps);
-    m_pOwner->OnPrint(NULL,KConstDummyPaint);
-}
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -304,7 +314,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     {
         SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 		m_dummyWnd = new SDummyWnd(this);
-        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
+        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
         m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
         ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
         m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
@@ -542,12 +552,6 @@ void SHostWnd::OnDestroy()
         GetMsgLoop()->RemoveMessageFilter(m_pTipCtrl);
 		DestroyTooltip(m_pTipCtrl);
         m_pTipCtrl = NULL;
-    }
-    if(m_dummyWnd)
-    {
-        m_dummyWnd->DestroyWindow();
-		delete m_dummyWnd;
-		m_dummyWnd = NULL;
     }
 
 	m_memRT = NULL;
