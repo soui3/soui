@@ -368,15 +368,14 @@ public:
 				lRet = reg.QueryStringValue(_T("Path"), pBuf, &dwSize);
 				str.ReleaseBuffer();
 
-				CString strSouiBin(szSouiDir);
-				strSouiBin += _T("\\bin");
+				CString strSouiBin(_T("%SOUI3PATH%\\bin"));
 				if (StrStrI(str, strSouiBin) == NULL)
 				{//已经设置后不再设置
 					if (str.IsEmpty())
 						str = strSouiBin;
 					else
-						str = strSouiBin + _T(";") + str;
-					reg.SetStringValue(_T("Path"), str);
+					{	str += _T(";");str += strSouiBin;}
+					reg.SetStringValue(_T("Path"), str,REG_EXPAND_SZ);
 				}
 			}
 			reg.Close();
