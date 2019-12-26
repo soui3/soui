@@ -83,7 +83,7 @@ namespace SOUI
 
         void OnFrameMouseWheel(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
-        void OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+        LRESULT OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
         void OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 

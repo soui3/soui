@@ -1112,6 +1112,7 @@ namespace SOUI
         
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
+		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1137,6 +1138,7 @@ namespace SOUI
             MESSAGE_HANDLER_EX(EM_SETCHARFORMAT,OnSetCharFormat)
             MESSAGE_HANDLER_EX(EM_SETREADONLY,OnSetReadOnly)
             MESSAGE_HANDLER_EX(EM_EXLIMITTEXT,OnSetLimitText)
+			MESSAGE_HANDLER_EX(EM_GETRECT,OnGetRect)
         SOUI_MSG_MAP_END()
 
 	public:

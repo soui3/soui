@@ -830,12 +830,6 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
 {
     if(m_pTxtHost && m_pTxtHost->GetTextService())
     {
-        if(uMsg == EM_GETRECT)
-        {
-            SetMsgHandled(TRUE);
-            GetClientRect((LPRECT)lParam);
-            return TRUE;
-        }
         if(m_pTxtHost->GetTextService()->TxSendMessage(uMsg,wParam,lParam,&lResult)==S_OK)
         {
             SetMsgHandled(TRUE);
@@ -1705,6 +1699,12 @@ HRESULT SRichEdit::OnAttrAutoSel(const SStringW & strValue,BOOL bLoading)
 {
 	m_fAutoSel = STRINGASBOOL(strValue);
 	return S_FALSE;
+}
+
+LRESULT SRichEdit::OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp)
+{
+	GetClientRect((LPRECT)lp);
+	return TRUE;
 }
 
 

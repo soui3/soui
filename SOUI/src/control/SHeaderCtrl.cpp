@@ -360,7 +360,6 @@ namespace SOUI
 				}
 
 				m_dwHitTest = dwHitTest;
-				SLOG_INFO("!!!!!!header::onMouseMove3 hiword(hittest):"<<HIWORD(m_dwHitTest)<<" loword(hittest):"<<LOWORD(m_dwHitTest));
 			}
 		}
 

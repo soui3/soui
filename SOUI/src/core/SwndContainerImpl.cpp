@@ -73,7 +73,8 @@ LRESULT SwndContainerImpl::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     case WM_IME_ENDCOMPOSITION:
     case WM_IME_COMPOSITION:
     case WM_IME_CHAR:
-        OnFrameKeyEvent(uMsg,wParam,lParam);
+	case WM_IME_REQUEST:
+        lRet = OnFrameKeyEvent(uMsg,wParam,lParam);
         break;
     case WM_MOUSEWHEEL:
     case 0x20E: //WM_MOUSEHWHEEL
@@ -345,24 +346,27 @@ void SwndContainerImpl::OnFrameMouseWheel( UINT uMsg,WPARAM wParam,LPARAM lParam
     }
 }
 
-void SwndContainerImpl::OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
+LRESULT SwndContainerImpl::OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
+	LRESULT lRet = 0;
 	if(GetKeyState(VK_MENU)&0x80)
 	{//todo:处理alt+x的快捷键组合，暂时这样处理。应该还有更好的方法。
 		if(wParam>='a' && wParam <='z') wParam -= 0x20;//转换成VK
-		if(m_focusMgr.OnKeyDown((UINT)wParam)) return; //首先处理焦点切换
+		if(m_focusMgr.OnKeyDown((UINT)wParam))
+			return lRet; //首先处理焦点切换
 	}
 
     SWindow *pFocus=SWindowMgr::GetWindow(m_focusMgr.GetFocusedHwnd());
     if(pFocus)
     {
         BOOL bMsgHandled = FALSE;
-        pFocus->SSendMessage(uMsg,wParam,lParam,&bMsgHandled);
+        lRet = pFocus->SSendMessage(uMsg,wParam,lParam,&bMsgHandled);
         SetMsgHandled(bMsgHandled);
     }else
     {
         SetMsgHandled(FALSE);
     }
+	return lRet;
 }
 
 void SwndContainerImpl::OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
