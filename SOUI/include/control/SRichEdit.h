@@ -12,7 +12,6 @@
 */
 #pragma once
 
-#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
@@ -1227,7 +1226,6 @@ namespace SOUI
         BYTE    m_byDbcsLeadByte; /**< DBCS输入时的中文头字节*/
         SStringW m_strRtfSrc;     /**< 在XML中指定的RTF数据源*/
         STextHost    *m_pTxtHost; /**< Host of Richedit*/
-		HIMC m_hCurIMC;			// 当前输入法 
     };
 
     /**

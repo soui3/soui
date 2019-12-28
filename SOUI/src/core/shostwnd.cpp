@@ -8,6 +8,8 @@
 #include "helper/STime.h"
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
 #include <helper/SHostMgr.h>
+#include <Imm.h>
+#pragma comment(lib,"imm32.lib")
 
 namespace SOUI
 {
@@ -1645,6 +1647,27 @@ void SHostWnd::OnHostMsg(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
 	if(bRelayout)
 	{
 		RequestRelayout(m_swnd,TRUE);
+	}
+}
+
+void SHostWnd::EnableIME(BOOL bEnable)
+{
+	if(bEnable)
+	{
+		HIMC hImc = ImmGetContext(m_hWnd);
+		if(!hImc)
+		{
+			hImc = ImmCreateContext();
+			ImmAssociateContext(m_hWnd,hImc);
+		}
+	}else
+	{
+		HIMC hImc = ImmGetContext(m_hWnd);
+		ImmAssociateContext(m_hWnd,NULL);
+		if(hImc)
+		{
+			ImmDestroyContext(hImc);
+		}
 	}
 }
 

@@ -7,8 +7,6 @@
 #include <gdialpha.h>
 #include <WinSCard.h>
 
-#pragma comment(lib,"imm32.lib")
-
 #ifndef LY_PER_INCH
 #define LY_PER_INCH 1440
 #endif
@@ -602,7 +600,6 @@ SRichEdit::SRichEdit()
     ,m_lAccelPos(-1)
     ,m_dwStyle(ES_LEFT|ES_AUTOHSCROLL)
     ,m_byDbcsLeadByte(0)
-	, m_hCurIMC(NULL)
 {
     m_pNcSkin = GETBUILTINSKIN(SKIN_SYS_BORDER);
 
@@ -724,12 +721,17 @@ void SRichEdit::OnSetFocus(SWND wndOld)
 
 	if (ES_PASSWORD & m_dwStyle || ES_NUMBER & m_dwStyle)
 	{
-		m_hCurIMC = ImmAssociateContext(GetContainer()->GetHostHwnd(), NULL);
+		GetContainer()->EnableIME(FALSE);
 	}
 }
 
 void SRichEdit::OnKillFocus(SWND wndFocus)
 {
+	if (ES_PASSWORD & m_dwStyle || ES_NUMBER & m_dwStyle)
+	{
+		GetContainer()->EnableIME(TRUE);
+	}
+
     __super::OnKillFocus(wndFocus);
     if(m_pTxtHost)
     {
@@ -739,10 +741,6 @@ void SRichEdit::OnKillFocus(SWND wndFocus)
         m_pTxtHost->TxShowCaret(FALSE);
     }
 
-	if (ES_PASSWORD & m_dwStyle || ES_NUMBER & m_dwStyle)
-	{
-		ImmAssociateContext(GetContainer()->GetHostHwnd(), m_hCurIMC);
-	}
 }
 
 void SRichEdit::OnTimer( char idEvent )

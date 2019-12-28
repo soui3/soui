@@ -100,6 +100,8 @@ namespace SOUI
 		virtual ICaret* GetCaret() = 0;
 
 		virtual void OnCavasInvalidate(SWND swnd) = 0;
+
+		virtual void EnableIME(BOOL bEnable) = 0;
     };
 
 
