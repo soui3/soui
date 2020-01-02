@@ -307,6 +307,8 @@ protected:// IContainer
 	virtual int GetScale() const;
 
 	virtual void OnCavasInvalidate(SWND swnd);
+
+	virtual void EnableIME(BOOL bEnable);
 protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);

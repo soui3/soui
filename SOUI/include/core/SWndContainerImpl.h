@@ -69,6 +69,7 @@ namespace SOUI
 		virtual ICaret* GetCaret();
 
 		virtual void OnCavasInvalidate(SWND swnd) {}
+
     public://ITimelineHandler
         virtual void OnNextFrame();
     protected:
