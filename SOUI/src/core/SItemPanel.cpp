@@ -378,4 +378,9 @@ int SItemPanel::GetScale() const
 	return m_pFrmHost->GetContainer()->GetScale();
 }
 
+void SItemPanel::EnableIME(BOOL bEnable)
+{
+	m_pFrmHost->GetContainer()->EnableIME(bEnable);
+}
+
 }//namespace SOUI
