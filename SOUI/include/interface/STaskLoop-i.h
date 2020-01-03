@@ -27,7 +27,7 @@ namespace SOUI
 		* Start a thread to run.
 		* @param priority the thread priority
 		*/
-		virtual void start(const char * pszName,Priority priority) = 0;
+		virtual void start(const char * pszName,Priority priority = Normal) = 0;
 
 		/**
 		* Stop thread synchronized.
