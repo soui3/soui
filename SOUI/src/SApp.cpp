@@ -501,7 +501,8 @@ HWND SApplication::GetMainWnd()
 
 BOOL SApplication::SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac)
 {
-    if(m_pMsgLoop->IsRunning()) return FALSE;
+	if(m_lstMsgLoop.GetCount()>0)
+		return FALSE;
     m_msgLoopFactory->DestoryMsgLoop(m_pMsgLoop);
     m_msgLoopFactory = pMsgLoopFac;
     m_pMsgLoop = m_msgLoopFactory->CreateMsgLoop();
@@ -598,6 +599,21 @@ void SApplication::SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFacto
 	m_pAttrStroageFactory = pAttrStorageFactory;
 }
 
+void SApplication::PushMsgLoop(SMessageLoop * pMsgLoop)
+{
+	m_lstMsgLoop.AddTail(pMsgLoop);
+}
+
+SMessageLoop * SApplication::PopMsgLoop()
+{
+	return m_lstMsgLoop.RemoveTail();
+}
+
+SMessageLoop * SApplication::GetMsgLoop()
+{
+	SASSERT(!m_lstMsgLoop.IsEmpty());
+	return m_lstMsgLoop.GetTail();
+}
 
 
 }//namespace SOUI
