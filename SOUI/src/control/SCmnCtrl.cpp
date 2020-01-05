@@ -335,11 +335,10 @@ void SLink::OnLButtonUp( UINT nFlags,CPoint pt )
     }
     __super::OnLButtonUp(nFlags,pt);
     
-    if (! m_strLinkUrl.IsEmpty())
-    {
-        ::ShellExecute(NULL, _T("open"), m_strLinkUrl, NULL, NULL, SW_SHOWNORMAL);
-    }
-
+	SStringT strUrl = m_strLinkUrl;
+	if(m_strLinkUrl.IsEmpty())
+		strUrl = GetWindowText();
+	::ShellExecute(NULL, _T("open"), strUrl, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void SLink::OnMouseMove( UINT nFlags,CPoint pt )
