@@ -226,7 +226,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
     m_strAppDir = appDir.AppDir();
     
     m_pMsgLoop = GetMsgLoopFactory()->CreateMsgLoop();
-
+	PushMsgLoop(m_pMsgLoop);
 	sysObjRegister.RegisterLayouts(this);
 	sysObjRegister.RegisterSkins(this);
 	sysObjRegister.RegisterWindows(this);
@@ -237,6 +237,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 
 SApplication::~SApplication(void)
 {
+	PopMsgLoop();
     GetMsgLoopFactory()->DestoryMsgLoop(m_pMsgLoop);
     
 	SResProviderMgr::RemoveAll();
