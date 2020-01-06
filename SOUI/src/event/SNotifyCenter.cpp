@@ -134,6 +134,7 @@ void SNotifyCenter::OnFireEvts()
 		cbs = m_asyncFuns;
 		m_asyncFuns.RemoveAll();
 #endif
+		m_bRunning = FALSE;
 	}
 	{
 		SPOSITION pos = evts.GetHeadPosition();
@@ -155,7 +156,6 @@ void SNotifyCenter::OnFireEvts()
 		}
 	}
 #endif
-	m_bRunning = FALSE;
 }
 
 
