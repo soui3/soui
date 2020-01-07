@@ -102,7 +102,12 @@ namespace SOUI
 		m_evtSet.addEvent(EVENTID(EventCtxMenu));
 		m_evtSet.addEvent(EVENTID(EventSetFocus));
 		m_evtSet.addEvent(EVENTID(EventKillFocus));
-
+		
+		IAttrStorageFactory * pAttrFac = SApplication::getSingleton().GetAttrStorageFactory();
+		if(pAttrFac)
+		{
+			pAttrFac->CreateAttrStorage(&m_attrStorage);
+		}
 	}
 
 	SWindow::~SWindow()
@@ -2886,14 +2891,9 @@ namespace SOUI
 
 	HRESULT SWindow::AfterAttribute(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading,HRESULT hr)
 	{
-		if(!m_attrStorage)
-		{
-			IAttrStorageFactory * pFactory = SApplication::getSingleton().GetAttrStorageFactory();
-			if(pFactory) pFactory->CreateAttrStorage(this,strAttribName,strValue,&m_attrStorage);
-		}
 		if(m_attrStorage)
 		{
-			m_attrStorage->OnSetAttribute(strAttribName,strValue);
+			m_attrStorage->OnSetAttribute(strAttribName,strValue,SUCCEEDED(hr));
 		}
 		if((hr&0x0000ffff) == S_OK && !bLoading)
 		{
@@ -2923,7 +2923,7 @@ namespace SOUI
 			return m_attrStorage->OnGetAttribute(strAttr);
 		}else
 		{
-			return __super::GetAttribute(strAttr);
+			return SObject::GetAttribute(strAttr);
 		}
 	}
 
