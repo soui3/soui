@@ -18,24 +18,24 @@
 
 
 // Attribute Declaration
-#define SOUI_ATTRS_BEGIN()                            \
-public:                                                             \
-    virtual HRESULT SetAttribute(                                   \
-    const SOUI::SStringW & strAttribName,                                     \
-    const SOUI::SStringW &  strValue,                                          \
-    BOOL     bLoading=FALSE)                                    \
-    {                                                               \
-    HRESULT hRet = E_FAIL;                                        \
+#define SOUI_ATTRS_BEGIN()                                       \
+public:                                                          \
+    virtual HRESULT SetAttribute(                                \
+    const SOUI::SStringW & strAttribName,                        \
+    const SOUI::SStringW &  strValue,                            \
+    BOOL     bLoading=FALSE)                                     \
+    {                                                            \
+    HRESULT hRet = E_FAIL;                                       \
  
 
 //从SObject派生的类是属性结尾
 #define SOUI_ATTRS_END()                                        \
-		return __super::SetAttribute(                           \
+		if(FAILED(hRet)) return __super::SetAttribute(           \
 						strAttribName,                          \
 						strValue,                               \
 						bLoading                                \
 						);                                      \
-    return AfterAttribute(strAttribName,strValue,bLoading,hRet);         \
+    return AfterAttribute(strAttribName,strValue,bLoading,hRet);\
     }                                                           \
     
 
@@ -47,14 +47,14 @@ public:                                                             \
 
  
 #define ATTR_CHAIN(varname,flag)                               \
-    if (SUCCEEDED(hRet = varname.SetAttribute(strAttribName, strValue, bLoading)))   \
+    if (FAILED(hRet) && SUCCEEDED(hRet = varname.SetAttribute(strAttribName, strValue, bLoading)))   \
         {                                                           \
 			hRet |= flag;											\
         }                                                           \
         else                                                        \
 
 #define ATTR_CHAIN_PTR(varname,flag)                               \
-	if (varname!= NULL && SUCCEEDED(hRet = varname->SetAttribute(strAttribName, strValue, bLoading)))   \
+	if (FAILED(hRet) && varname!= NULL && SUCCEEDED(hRet = varname->SetAttribute(strAttribName, strValue, bLoading)))   \
 		{                                                           \
 			hRet |= flag;											\
 		}                                                           \

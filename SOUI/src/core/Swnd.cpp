@@ -2759,6 +2759,11 @@ namespace SOUI
 				hr = S_FALSE;
 			}
 		}
+		if(m_attrStorage)
+		{
+			m_attrStorage->OnSetAttribute(strAttribName,strValue,false);
+		}
+
 		return hr;
 	}
 
@@ -2893,7 +2898,7 @@ namespace SOUI
 	{
 		if(m_attrStorage)
 		{
-			m_attrStorage->OnSetAttribute(strAttribName,strValue,SUCCEEDED(hr));
+			m_attrStorage->OnSetAttribute(strAttribName,strValue,true);
 		}
 		if((hr&0x0000ffff) == S_OK && !bLoading)
 		{
