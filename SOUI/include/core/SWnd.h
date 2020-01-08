@@ -1099,6 +1099,7 @@ namespace SOUI
 		*/
 		virtual const SStringW & GetTrCtx() const;
 
+		virtual SStringW GetAttribute(const SStringW & strAttr) const;
     public://caret相关方法
         virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
         virtual void ShowCaret(BOOL bShow);   
@@ -1410,8 +1411,6 @@ namespace SOUI
         HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
 
         virtual HRESULT AfterAttribute(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading,HRESULT hr);
-
-		virtual SStringW GetAttribute(const SStringW & strAttr) const;
 
         SOUI_ATTRS_BEGIN()
 			ATTR_CUSTOM(L"layout",OnAttrLayout)
