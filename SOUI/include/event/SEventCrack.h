@@ -46,7 +46,7 @@ protected:                                          \
     }                                               \
  
 #define CHAIN_EVENT_MAP(ChainClass)                 \
-    if(pEvt->bubbleUp))                             \
+    if(pEvt->bubbleUp)                              \
 	{\
 		BOOL bRet = ChainClass::_HandleEvent(pEvt);  \
 		nCount += bRet?1:0;                          \
@@ -55,6 +55,7 @@ protected:                                          \
 	}
  
 #define CHAIN_EVENT_MAP_MEMBER(theChainMember)      \
+	if(pEvt->bubbleUp)                              \
 	{\
 		BOOL bRet = (theChainMember)._HandleEvent(pEvt);  \
 		nCount += bRet?1:0;                          \
