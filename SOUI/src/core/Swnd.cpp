@@ -106,7 +106,7 @@ namespace SOUI
 		IAttrStorageFactory * pAttrFac = SApplication::getSingleton().GetAttrStorageFactory();
 		if(pAttrFac)
 		{
-			pAttrFac->CreateAttrStorage(&m_attrStorage);
+			pAttrFac->CreateAttrStorage(this,&m_attrStorage);
 		}
 	}
 

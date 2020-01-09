@@ -10,7 +10,7 @@ namespace SOUI
 
 	struct IAttrStorageFactory : public IObjRef
 	{
-		virtual HRESULT CreateAttrStorage(IAttrStorage** ppAttrStorage) const=0; 
+		virtual HRESULT CreateAttrStorage(SWindow * owner,IAttrStorage** ppAttrStorage) const=0; 
 	};
 
 }
