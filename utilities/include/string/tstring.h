@@ -39,8 +39,8 @@ namespace SOUI
         }
         inline void Release()
         {
-            SASSERT(nRefs != 0);
-            if (InterlockedDecrement(&nRefs) <= 0)
+            SASSERT(nRefs > 0);
+            if (InterlockedDecrement(&nRefs) == 0)
                 soui_mem_wrapper::SouiFree(this);
         }
         inline bool IsShared() const
@@ -49,24 +49,28 @@ namespace SOUI
         }
         inline bool IsLocked() const
         {
-            return nRefs < 0;
+            return nRefs < -1;
         }
 
         inline void Lock()
         {
-            SASSERT(nRefs <= 1);
-            nRefs--;  // Locked buffers can't be shared, so no interlocked operation necessary
-            if (nRefs == 0)
-                nRefs = -1;
+            SASSERT(nRefs == 1 || nRefs < -1);
+            // Locked buffers can't be shared, so no interlocked operation necessary
+            if (nRefs == 1)
+                nRefs = -2;
+            else if (nRefs < -1)
+                --nRefs;
         }
         inline void Unlock()
         {
             SASSERT(IsLocked());
             if (IsLocked())
             {
-                nRefs++;  // Locked buffers can't be shared, so no interlocked operation necessary
-                if (nRefs == 0)
+                // Locked buffers can't be shared, so no interlocked operation necessary
+                if (nRefs == -2)
                     nRefs = 1;
+                else
+                    ++nRefs;
             }
         }
     };
@@ -321,7 +325,7 @@ namespace SOUI
         {
             //  free any attached data
             TStringData* pData = GetData();
-            if (pData != _tstr_initDataNil)
+            if (pData->nRefs != -1)
                 pData->Release();
         }
 
@@ -389,7 +393,7 @@ namespace SOUI
             if (m_pszData != stringSrc.m_pszData)
             {
                 TStringData* pData = GetData();
-                if ((pData->IsLocked() && pData != _tstr_initDataNil) || stringSrc.GetData()->IsLocked())
+                if ((pData->IsLocked() && pData->nRefs != -1) || stringSrc.GetData()->IsLocked())
                 {
                     // actual copy necessary since one of the strings is locked
                     AssignCopy(stringSrc.GetData()->nDataLength, stringSrc.m_pszData);
@@ -398,9 +402,10 @@ namespace SOUI
                 {
                     // can just copy references around
                     Release();
-                    SASSERT(stringSrc.GetData() != _tstr_initDataNil);
-                    m_pszData = stringSrc.m_pszData;
-                    GetData()->AddRef();
+                    if (stringSrc.GetData()->nRefs != -1) {
+                        m_pszData = stringSrc.m_pszData;
+                        GetData()->AddRef();
+                    }
                 }
             }
             return *this;
@@ -1011,7 +1016,7 @@ namespace SOUI
         }
         void UnlockBuffer()
         {
-            if (GetData() != _tstr_initDataNil)
+            if (GetData()->nRefs != -1)
                 GetData()->Unlock();
         }
 
@@ -1322,7 +1327,7 @@ namespace SOUI
 #define TSTRING_REALLOC
 #ifdef TSTRING_REALLOC
             TStringData* pData = GetData();
-            if (!pData->IsShared() && pData != _tstr_initDataNil)
+            if (!pData->IsShared() && pData->nRefs != -1)
             {
                 pData = AllocData(nNewLength, pData);
                 if (pData != NULL)
@@ -1349,7 +1354,7 @@ namespace SOUI
         void Release()
         {
             TStringData* pData = GetData();
-            if (pData != _tstr_initDataNil)
+            if (pData->nRefs != -1)
             {
                 SASSERT(pData->nRefs != 0);
                 pData->Release();
@@ -1392,7 +1397,7 @@ namespace SOUI
         }
         static void ReleaseData(TStringData* pData)
         {
-            if (pData != _tstr_initDataNil)
+            if (pData->nRefs != -1)
             {
                 SASSERT(pData->nRefs != 0);
                 pData->Release();
