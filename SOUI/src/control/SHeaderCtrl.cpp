@@ -103,7 +103,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemRect(i);
 			DrawItem(pRT, rcItem, m_arrItems.GetData() + i);
 			if (rcItem.right >= rcClient.right) break;
 		}
@@ -166,7 +166,7 @@ namespace SOUI
 		GetEventSet()->setMutedState(true);
 		DeleteAllItems();
 		GetEventSet()->setMutedState(false);
-		__super::OnDestroy();
+		SWindow::OnDestroy();
 	}
 
 	CRect SHeaderCtrl::GetItemRect(UINT iItem) const
@@ -323,6 +323,29 @@ namespace SOUI
 				{
 					int cxNew = m_nAdjItemOldWidth + pt.x - m_ptClick.x;
 					if (cxNew < 0) cxNew = 0;
+					CRect rc = GetClientRect();
+					int nTotalWid = 0;
+					float fTotalWeight = 0.0f;
+					for(int i=0;i<m_arrItems.GetCount();i++)
+					{
+						if(!m_arrItems[i].bVisible)
+							continue;
+						nTotalWid += m_arrItems[i].cx;
+						fTotalWeight += m_arrItems[i].fWeight;
+					}
+					if(nTotalWid != rc.Width() && fTotalWeight>0.0f)
+					{
+						int nRemain = rc.Width()-nTotalWid;
+						for(int i=0;i<m_arrItems.GetCount();i++)
+						{
+							if(!m_arrItems[i].bVisible)
+								continue;
+							int nAppend = nRemain*m_arrItems[i].fWeight/fTotalWeight;
+							m_arrItems[i].cx += nAppend;
+							nRemain -= nAppend;
+							fTotalWeight -= m_arrItems[i].fWeight;
+						}
+					}
 					m_arrItems[LOWORD(m_dwHitTest)].cx = cxNew;
 
 					Invalidate();
@@ -402,6 +425,7 @@ namespace SOUI
 			item.strText.SetText(S_CW2T(GETSTRING(strText)));
 			SLayoutSize szItem = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));
             item.cx = szItem.toPixelSize(GetScale());
+			item.fWeight = xmlItem.attribute(L"weight").as_float();
 			item.bDpiAware = (szItem.unit != SLayoutSize::px);
 			item.lParam = xmlItem.attribute(L"userData").as_uint(0);
 			item.stFlag = (SHDSORTFLAG)xmlItem.attribute(L"sortFlag").as_uint(ST_NULL);
@@ -511,21 +535,60 @@ namespace SOUI
 		ReleaseRenderTarget(pRT);
 	}
 
-	int SHeaderCtrl::GetTotalWidth()
+	int SHeaderCtrl::GetTotalWidth() const
 	{
 		int nRet = 0;
+		CRect rc = GetClientRect();
+
 		for (UINT i = 0; i < m_arrItems.GetCount(); i++)
 		{
-			nRet += GetItemWidth(i);
+			if(!m_arrItems[i].bVisible)
+				continue;
+			if(m_arrItems[i].fWeight>0.0f && !rc.IsRectEmpty())
+			{
+				return rc.Width();
+			}
+			nRet += m_arrItems[i].cx;
 		}
 		return nRet;
 	}
 
-	int SHeaderCtrl::GetItemWidth(int iItem)
+	int SHeaderCtrl::GetItemWidth(int iItem) const
 	{
-		if (iItem < 0 || (UINT)iItem >= m_arrItems.GetCount()) return -1;
-		if(!m_arrItems[iItem].bVisible) return 0;
-		return m_arrItems[iItem].cx;
+		if (iItem < 0 || (UINT)iItem >= m_arrItems.GetCount()) 
+			return -1;
+		if(!m_arrItems[iItem].bVisible)
+			return 0;
+		const SHDITEM & item = m_arrItems[iItem];
+		if(SLayoutSize::fequal(item.fWeight,0.0f))
+			return item.cx;
+		else
+		{
+			CRect rc = GetClientRect();
+			if(rc.IsRectEmpty())
+			{
+				return item.cx;
+			}else
+			{
+				float fTotalWeight = 0.0f;
+				int   nTotalWidth = 0;
+				for(UINT i=0;i<m_arrItems.GetCount();i++)
+				{
+					if(!m_arrItems[i].bVisible)
+						continue;
+					fTotalWeight += m_arrItems[i].fWeight;
+					nTotalWidth += m_arrItems[i].cx;
+				}
+				int nRemain=rc.Width()-nTotalWidth;
+				for(UINT i=0;i<iItem-1;i++)
+				{
+					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
+					nRemain-=nAppend;
+					fTotalWeight-=m_arrItems[i].fWeight;
+				}
+				return item.cx + (int)(nRemain*item.fWeight/fTotalWeight);
+			}
+		}
 	}
 
 	void SHeaderCtrl::OnActivateApp(BOOL bActive, DWORD dwThreadID)

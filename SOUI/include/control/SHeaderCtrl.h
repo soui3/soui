@@ -41,10 +41,11 @@ namespace SOUI
    * Describe   列表头项
    */
   typedef struct SHDITEM {
-	  SHDITEM():mask(0),cx(0), bDpiAware(false),stFlag(ST_NULL),lParam(0),state(WndState_Normal),iOrder(0),bVisible(true){
+	  SHDITEM():mask(0),cx(0), bDpiAware(false),stFlag(ST_NULL),lParam(0),state(WndState_Normal),iOrder(0),bVisible(true),fWeight(0.0f){
 	  }
     UINT    mask; 
     int     cx;
+	float   fWeight;
 	bool    bDpiAware;
 	STrText strText;
     SHDSORTFLAG stFlag;
@@ -127,7 +128,7 @@ namespace SOUI
        *
        * Describe  获得所有宽度  
        */      
-      int GetTotalWidth();
+      int GetTotalWidth() const;
 
       /**
        * SHeaderCtrl::GetItemWidth
@@ -137,7 +138,7 @@ namespace SOUI
        *
        * Describe  获得新项  
        */            
-      int GetItemWidth(int iItem);
+      int GetItemWidth(int iItem) const;
       /**
        * SHeaderCtrl::DeleteItem
        * @brief    删除指定项
