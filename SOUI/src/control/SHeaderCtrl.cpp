@@ -103,7 +103,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + GetItemRect(i);
+			rcItem.right = rcItem.left + GetItemWidth(i);
 			DrawItem(pRT, rcItem, m_arrItems.GetData() + i);
 			if (rcItem.right >= rcClient.right) break;
 		}
@@ -180,7 +180,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemWidth(i);
 		}
 		return rcItem;
 	}
@@ -219,7 +219,7 @@ namespace SOUI
 		}
 		else if (m_dwHitTest != -1)
 		{
-			m_nAdjItemOldWidth = m_arrItems[LOWORD(m_dwHitTest)].cx;
+			m_nAdjItemOldWidth = GetItemWidth(LOWORD(m_dwHitTest));
 		}
 	}
 
@@ -275,7 +275,7 @@ namespace SOUI
 		{//调整表头宽度，发送一个调整完成消息
 			EventHeaderItemChanged evt(this);
 			evt.iItem = LOWORD(m_dwHitTest);
-			evt.nWidth = m_arrItems[evt.iItem].cx;
+			evt.nWidth = GetItemWidth(evt.iItem);
 			FireEvent(evt);
 
 			EventHeaderRelayout e(this);
@@ -326,7 +326,7 @@ namespace SOUI
 					CRect rc = GetClientRect();
 					int nTotalWid = 0;
 					float fTotalWeight = 0.0f;
-					for(int i=0;i<m_arrItems.GetCount();i++)
+					for(UINT i=0;i<m_arrItems.GetCount();i++)
 					{
 						if(!m_arrItems[i].bVisible)
 							continue;
@@ -334,13 +334,13 @@ namespace SOUI
 						fTotalWeight += m_arrItems[i].fWeight;
 					}
 					if(nTotalWid != rc.Width() && fTotalWeight>0.0f)
-					{
+					{//set cx to visible width.
 						int nRemain = rc.Width()-nTotalWid;
-						for(int i=0;i<m_arrItems.GetCount();i++)
+						for(UINT i=0;i<m_arrItems.GetCount();i++)
 						{
 							if(!m_arrItems[i].bVisible)
 								continue;
-							int nAppend = nRemain*m_arrItems[i].fWeight/fTotalWeight;
+							int nAppend = (int)(nRemain*m_arrItems[i].fWeight/fTotalWeight);
 							m_arrItems[i].cx += nAppend;
 							nRemain -= nAppend;
 							fTotalWeight -= m_arrItems[i].fWeight;
@@ -349,12 +349,13 @@ namespace SOUI
 					m_arrItems[LOWORD(m_dwHitTest)].cx = cxNew;
 
 					Invalidate();
-					UpdateWindow();//立即更新窗口
 					//发出调节宽度消息
 					EventHeaderItemChanging evt(this);
 					evt.iItem = LOWORD(m_dwHitTest);
 					evt.nWidth = cxNew;
 					FireEvent(evt);
+
+					UpdateWindow();//立即更新窗口
 
 					EventHeaderRelayout e(this);
 					FireEvent(e);
@@ -460,7 +461,7 @@ namespace SOUI
 			if (m_arrItems[i].cx == 0 || !m_arrItems[i].bVisible) continue;    //越过宽度为0的项
 
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemWidth(i);
 			if (pt.x < rcItem.left + nMargin)
 			{
 				int nLeft = i > 0 ? i - 1 : 0;
@@ -485,7 +486,7 @@ namespace SOUI
 		if (iItem >= m_arrItems.GetCount()) return NULL;
 		CRect rcClient;
 		GetClientRect(rcClient);
-		CRect rcItem(0, 0, m_arrItems[iItem].cx, rcClient.Height());
+		CRect rcItem(0, 0, GetItemWidth(iItem), rcClient.Height());
 
 		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcItem.Width(), rcItem.Height());
@@ -537,20 +538,24 @@ namespace SOUI
 
 	int SHeaderCtrl::GetTotalWidth() const
 	{
-		int nRet = 0;
 		CRect rc = GetClientRect();
 
+		int nTotalWidth = 0;
+		float fTotalWeight=0.0f;
 		for (UINT i = 0; i < m_arrItems.GetCount(); i++)
 		{
 			if(!m_arrItems[i].bVisible)
 				continue;
-			if(m_arrItems[i].fWeight>0.0f && !rc.IsRectEmpty())
-			{
-				return rc.Width();
-			}
-			nRet += m_arrItems[i].cx;
+			nTotalWidth += m_arrItems[i].cx;
+			fTotalWeight += m_arrItems[i].fWeight;
 		}
-		return nRet;
+		if(fTotalWeight>0.0f)
+		{
+			return smax(nTotalWidth,rc.Width());
+		}else
+		{
+			return nTotalWidth;
+		}
 	}
 
 	int SHeaderCtrl::GetItemWidth(int iItem) const
@@ -580,7 +585,11 @@ namespace SOUI
 					nTotalWidth += m_arrItems[i].cx;
 				}
 				int nRemain=rc.Width()-nTotalWidth;
-				for(UINT i=0;i<iItem-1;i++)
+				if(nRemain<=0)
+				{
+					return m_arrItems[iItem].cx;
+				}
+				for(int i=0;i<iItem-1;i++)
 				{
 					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
 					nRemain-=nAppend;

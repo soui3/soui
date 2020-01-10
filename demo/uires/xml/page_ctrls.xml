@@ -48,7 +48,7 @@
       <listctrl name="lc_test" hotTrack="1" pos="10,0,-10,-10" itemHeight="20" headerHeight="30" cursor="CUR_TST" font="underline:1" itemSkin="skin_tab_left"  sbSkin="skin_new_scrollbar">
         <headerStyle align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
           <items>
-            <item width="150">name</item>
+            <item width="150" weight="1">name</item>
             <item width="150">gender</item>
             <item width="150">age</item>
             <item width="150">score</item>
