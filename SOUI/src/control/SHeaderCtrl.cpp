@@ -70,7 +70,10 @@ namespace SOUI
 		{
 			pItem->strText.SetText(m_arrItems[iItem].strText.GetText(FALSE));
 		}
-		if (pItem->mask & SHDI_WIDTH) pItem->cx = m_arrItems[iItem].cx;
+		if (pItem->mask & SHDI_WIDTH)
+		{
+			pItem->cx = GetItemWidth(iItem);
+		}
 		if (pItem->mask & SHDI_LPARAM) pItem->lParam = m_arrItems[iItem].lParam;
 		if (pItem->mask & SHDI_SORTFLAG) pItem->stFlag = m_arrItems[iItem].stFlag;
 		if (pItem->mask & SHDI_ORDER) pItem->iOrder = m_arrItems[iItem].iOrder;
@@ -336,7 +339,7 @@ namespace SOUI
 					if(nTotalWid != rc.Width() && fTotalWeight>0.0f)
 					{//set cx to visible width.
 						int nRemain = rc.Width()-nTotalWid;
-						for(UINT i=0;i<m_arrItems.GetCount();i++)
+						for(UINT i=0;i<m_arrItems.GetCount() && nRemain>0 && fTotalWeight>0.0f;i++)
 						{
 							if(!m_arrItems[i].bVisible)
 								continue;
@@ -354,8 +357,6 @@ namespace SOUI
 					evt.iItem = LOWORD(m_dwHitTest);
 					evt.nWidth = cxNew;
 					FireEvent(evt);
-
-					UpdateWindow();//立即更新窗口
 
 					EventHeaderRelayout e(this);
 					FireEvent(e);
