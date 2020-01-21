@@ -172,11 +172,14 @@ namespace SOUI
 
 	  UINT GetTextAlign();
 
+	protected:
+		HRESULT OnAttrInvalidComb(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrInvalidModifier(const SStringW & value, BOOL bLoading);
+		HRESULT OnAttrHotKey(const SStringW & value, BOOL bLoading);
       SOUI_ATTRS_BEGIN()
-          ATTR_WORD(L"invalidComb",m_wInvalidComb,FALSE)
-          ATTR_WORD(L"defCombKey",m_wInvalidModifier,FALSE)
-          ATTR_WORD(L"combKey",m_wModifier,FALSE)
-          ATTR_WORD(L"hotKey",m_wVK,FALSE)
+          ATTR_CUSTOM(L"invalidComb",OnAttrInvalidComb)
+          ATTR_CUSTOM(L"invalidModifier",OnAttrInvalidModifier)
+          ATTR_CUSTOM(L"hotKey",OnAttrHotKey)
       SOUI_ATTRS_END()
 
       SOUI_MSG_MAP_BEGIN()
