@@ -517,6 +517,10 @@ public:
         MSG_WM_KILLFOCUS_EX(OnKillFocus)
         MSG_WM_NCCALCSIZE(OnNcCalcSize)
     SOUI_MSG_MAP_END()
+
+        // Í¨¹ý IItemContainer ¼Ì³Ð
+        virtual BOOL OnItemGetRect(const SItemPanel* pItem, CRect& rcItem) const override;
+    virtual BOOL IsItemRedrawDelay() const override;
 };
 
 }//namespace SOUI

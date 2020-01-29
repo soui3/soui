@@ -245,7 +245,7 @@ public:
      *
      * Describe  …Ë÷√»’∆⁄
      */
-    virtual void SetDateTime(CTime tm);
+    virtual void SetDateTime(STime tm);
     
     /**
      * SDateEdit::GetWindowDateTime

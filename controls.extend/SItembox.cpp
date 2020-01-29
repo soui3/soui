@@ -34,8 +34,8 @@ SWindow* SItemBox::InsertItem(LPCWSTR pszXml,int iItem/*=-1*/,BOOL bEnsureVisibl
 
     pPanel->CreateChildren(xmlDoc.first_child());
     pPanel->SetVisible(TRUE);
-    pPanel->GetLayout()->SetWidth(m_nItemWid);
-    pPanel->GetLayout()->SetHeight(m_nItemHei);
+    pPanel->GetLayoutParam()->SetSpecifiedSize(Horz,m_nItemWid);
+    pPanel->GetLayoutParam()->SetSpecifiedSize(Vert, m_nItemHei);
 
     UpdateScroll();
     ReLayout();
@@ -63,8 +63,9 @@ SWindow* SItemBox::InsertItem(pugi::xml_node xmlNode,int iItem/*=-1*/,BOOL bEnsu
 
     pPanel->CreateChildren(xmlNode);
     pPanel->SetVisible(TRUE);
-    pPanel->GetLayout()->SetWidth(m_nItemWid);
-    pPanel->GetLayout()->SetHeight(m_nItemHei);
+
+    pPanel->GetLayoutParam()->SetSpecifiedSize(Horz,m_nItemWid);
+    pPanel->GetLayoutParam()->SetSpecifiedSize(Vert,m_nItemHei);
 
     UpdateScroll();
     ReLayout();
@@ -236,7 +237,7 @@ void SItemBox::UpdateScroll()
     int nPageItems=nPageCols*nPageRows;
     if(nPageItems<(int)GetItemCount())
     {
-        rcClient.right-=m_nSbWid;
+        rcClient.right-= GetSbWidth();
         nPageCols=(rcClient.Width()+m_nSepWid)/(m_nItemWid+m_nSepWid);
         if(nPageCols<1) nPageCols=1;
         nPageItems=nPageCols*nPageRows;
@@ -265,7 +266,7 @@ CRect SItemBox::GetItemRect(int iItem)
     int nPageItems=nPageCols*nPageRows;
     if(nPageItems<(int)GetItemCount())
     {
-        rcClient.right-=m_nSbWid;
+        rcClient.right-=GetSbWidth();
         nPageCols=(rcClient.Width()+m_nSepWid)/(m_nItemWid+m_nSepWid);
         if(nPageCols<1) nPageCols=1;
         nPageItems=nPageCols*nPageRows;
@@ -336,8 +337,9 @@ BOOL SItemBox::CreateChildren(pugi::xml_node xmlNode)
 
         pChild->InitFromXml(xmlItem);
         pChild->SetVisible(TRUE);
-        pChild->GetLayout()->SetWidth(m_nItemWid);
-        pChild->GetLayout()->SetHeight(m_nItemHei);
+
+        pChild->GetLayoutParam()->SetSpecifiedSize(Horz,m_nItemWid);
+        pChild->GetLayoutParam()->SetSpecifiedSize(Vert,m_nItemHei);
 
 
         xmlItem=xmlItem.next_sibling(L"item");

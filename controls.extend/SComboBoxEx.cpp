@@ -83,11 +83,12 @@ namespace SOUI
 
     int SComboBoxEx::GetListBoxHeight()
     {
-        int nDropHeight=m_nDropHeight;
+        int nDropHeight=m_nDropHeight.toPixelSize(GetScale());
         if(GetCount()) 
         {
             int nItemHeight=m_pListBox->GetItemHeight();
-            nDropHeight = min(nDropHeight,nItemHeight*GetCount()+m_pListBox->GetStyle().m_rcMargin.top + m_pListBox->GetStyle().m_rcMargin.bottom);
+            CRect rcMargin = m_pListBox->GetStyle().GetMargin();
+            nDropHeight = min(nDropHeight,nItemHeight*GetCount()+ rcMargin.top + rcMargin.bottom);
         }
         return nDropHeight;    
     }

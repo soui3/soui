@@ -4,7 +4,7 @@
 #define EVT_BTNSEL_CHANGING EVT_EXTERNAL_BEGIN+100
 #define EVT_BTNSEL_CHANGED EVT_BTNSEL_CHANGING+1
 
-class SOUI_EXP EventBtnSelChanging : public TplEventArgs<EventBtnSelChanging>
+class EventBtnSelChanging : public TplEventArgs<EventBtnSelChanging>
 {
 	SOUI_CLASS_NAME(EventTCSelChanging, L"on_btn_sel_changing")
 public:
@@ -16,7 +16,7 @@ public:
 	int iNewSel;
 	BOOL bCancel;
 };
-class SOUI_EXP EventBtnSelChanged : public TplEventArgs<EventBtnSelChanged>
+class EventBtnSelChanged : public TplEventArgs<EventBtnSelChanged>
 {
 	SOUI_CLASS_NAME(EventTCSelChanging, L"on_btn_sel_changed")
 public:
@@ -63,12 +63,7 @@ protected:
 			return 0;
 		return iNext;
 	}
-	int GetSkinState()
-	{
-		int state = IIF_STATE4(GetState(), 0, 1, 2, 3);
-		state = min(m_iSkinStates - 1, state);
-		return (m_iCurState*m_iSkinStates + state);
-	}
+	
 	SOUI_MSG_MAP_BEGIN()
 		MSG_WM_PAINT_EX(OnPaint)
 		MSG_WM_LBUTTONDOWN(OnLButtonDown)
