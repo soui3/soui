@@ -977,16 +977,22 @@ namespace SOUI
 			while (hParent)
 			{
 				SItemPanel *pItem = GetItemPanel(hParent);
-				if (pItem)
-					pItem->InvalidateRect(NULL);
+                if (pItem)
+                {
+                    m_adapter->getView(hParent, pItem, m_xmlTemplate.first_child());
+                    pItem->InvalidateRect(NULL);
+                }
 				hParent = m_adapter->GetParentItem(hParent);
 			}
 		}
 		if (!bInvalidChildren)
 		{
 			SItemPanel *pItem = GetItemPanel(hBranch);
-			if (pItem)
-				pItem->InvalidateRect(NULL);
+            if (pItem)
+            {
+                m_adapter->getView(hBranch, pItem, m_xmlTemplate.first_child());
+                pItem->InvalidateRect(NULL);
+            }
 		}
 		else
 		{
@@ -1007,6 +1013,7 @@ namespace SOUI
 				}
 				if (bInvalid)
 				{
+                    m_adapter->getView(hBranch, ii.pItem, m_xmlTemplate.first_child());
 					ii.pItem->InvalidateRect(NULL);
 				}
 			}
