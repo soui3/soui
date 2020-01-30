@@ -886,7 +886,7 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint &pt)
+	SWND SWindow::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 	{
 		CPoint pt2(pt);
 		TransformPoint(pt2);
@@ -904,9 +904,9 @@ namespace SOUI
 		SWindow *pChild=GetWindow(GSW_LASTCHILD);
 		while(pChild)
 		{
-			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
+			if (pChild->IsVisible(TRUE) && (bIncludeMsgTransparent||!pChild->IsMsgTransparent()))
 			{
-				swndChild = pChild->SwndFromPoint(pt2);
+				swndChild = pChild->SwndFromPoint(pt2,bIncludeMsgTransparent);
 
 				if (swndChild)
 				{

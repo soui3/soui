@@ -961,7 +961,7 @@ namespace SOUI
 
         virtual SStringW tr(const SStringW &strSrc);
 
-        virtual SWND SwndFromPoint(CPoint &pt);
+        virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
 
         virtual BOOL FireEvent(EventArgs &evt);
 
