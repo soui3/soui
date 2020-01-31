@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "SIPAddressCtrl.h"
+#include <inaddr.h>
 
 #define SEP_EDIT    2
 
