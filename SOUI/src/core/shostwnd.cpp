@@ -507,10 +507,10 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 
 BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 {
-	if(!resId.IsEmpty())
+	if(resId.IsEmpty())
 		return FALSE;
 	pugi::xml_document xmlDoc;
-	LOADXML(xmlDoc,m_strXmlLayout);
+	LOADXML(xmlDoc,resId);
 	if(xmlDoc)
 	{
 		return InitFromXml(xmlDoc.child(L"SOUI"));
