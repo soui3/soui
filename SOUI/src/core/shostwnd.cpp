@@ -403,14 +403,6 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     return TRUE;
 }
 
-void SHostWnd::OnWindowTextChanged(LPCTSTR pszTitle)
-{
-	if (m_dummyWnd)
-	{
-		m_dummyWnd->SetWindowText(pszTitle);
-	}
-}
-
 void SHostWnd::_Redraw()
 {
     m_bNeedAllRepaint = TRUE;
@@ -513,6 +505,22 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 	GETTOOLTIPFACTORY->DestroyToolTip(pTooltip);
 }
 
+BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
+{
+	if(!resId.IsEmpty())
+		return FALSE;
+	pugi::xml_document xmlDoc;
+	LOADXML(xmlDoc,m_strXmlLayout);
+	if(xmlDoc)
+	{
+		return InitFromXml(xmlDoc.child(L"SOUI"));
+	}else
+	{
+		SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
+		return FALSE;
+	}
+}
+
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
 	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
@@ -525,19 +533,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
-
-	if(!m_strXmlLayout.IsEmpty())
-	{
-		pugi::xml_document xmlDoc;
-		LOADXML(xmlDoc,m_strXmlLayout);
-		if(xmlDoc)
-		{
-			InitFromXml(xmlDoc.child(L"SOUI"));
-		}else
-		{
-			SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
-		}
-	}
+	OnLoadLayoutFromResourceID(m_strXmlLayout);
 	UpdateAutoSizeCount(false);
     return 0;
 }
