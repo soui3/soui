@@ -525,14 +525,14 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
 	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
-    GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
-    m_pTipCtrl = CreateTooltip();
-    if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
-    
+    GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);    
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
-	OnLoadLayoutFromResourceID(m_strXmlLayout);
+	if(!OnLoadLayoutFromResourceID(m_strXmlLayout))
+		return -1;
+	m_pTipCtrl = CreateTooltip();
+	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
 	UpdateAutoSizeCount(false);
     return 0;
 }
