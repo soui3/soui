@@ -510,8 +510,7 @@ BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 	if(resId.IsEmpty())
 		return FALSE;
 	pugi::xml_document xmlDoc;
-	LOADXML(xmlDoc,resId);
-	if(xmlDoc)
+	if(LOADXML(xmlDoc,resId))
 	{
 		return InitFromXml(xmlDoc.child(L"SOUI"));
 	}else
