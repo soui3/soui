@@ -322,9 +322,8 @@ protected:
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 
 protected:
+	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
 	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
-protected:
-	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
 protected:
 	virtual void OnHostMsg(bool bRelayout,UINT uMsg, WPARAM wParam, LPARAM lParam) override; 
 public:

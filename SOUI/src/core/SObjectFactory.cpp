@@ -58,8 +58,7 @@ IObject * SObjectFactoryMgr::CreateObject(const SObjectInfo & objInfo) const
 {
     if(!HasKey(objInfo))
     {
-		SLOGFMTD(L"Warning: no object %s of type:%d in SOUI!!", (LPCWSTR)objInfo.mName, objInfo.mType);
-        return NULL;
+		return OnCreateUnknownObject(objInfo);
     }
     IObject * pRet = GetKeyObject(objInfo)->NewObject();
     SASSERT(pRet);
@@ -115,4 +114,10 @@ void SObjectFactoryMgr::SetSwndDefAttr(IObject * pObject) const
     }
 }
 
-}//namesspace SOUI
+IObject * SObjectFactoryMgr::OnCreateUnknownObject(const SObjectInfo & objInfo) const
+{
+	SLOGFMTD(L"Warning: no object %s of type:%d in SOUI!!", (LPCWSTR)objInfo.mName, objInfo.mType);
+	return NULL;
+}
+
+}//namespace SOUI
