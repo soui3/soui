@@ -88,6 +88,7 @@ namespace SOUI
 		m_pLayoutParam->SetMatchParent(Both);
 
 		m_evtSet.addEvent(EVENTID(EventSwndCreate));
+		m_evtSet.addEvent(EVENTID(EventSwndInitFinish));
 		m_evtSet.addEvent(EVENTID(EventSwndDestroy));
 		m_evtSet.addEvent(EVENTID(EventSwndSize));
 		m_evtSet.addEvent(EVENTID(EventSwndMouseHover));
@@ -873,6 +874,8 @@ namespace SOUI
 		//请求根窗口重新布局。由于布局涉及到父子窗口同步进行，同步执行布局操作可能导致布局过程重复执行。
 		RequestRelayout();
 
+		EventSwndInitFinish evt(this);
+		FireEvent(evt);
 		return TRUE;
 	}
 
