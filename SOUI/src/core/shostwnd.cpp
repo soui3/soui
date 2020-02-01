@@ -529,8 +529,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
-	if(!OnLoadLayoutFromResourceID(m_strXmlLayout))
-		return -1;
+	OnLoadLayoutFromResourceID(m_strXmlLayout);
 	m_pTipCtrl = CreateTooltip();
 	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
 	UpdateAutoSizeCount(false);
