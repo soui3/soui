@@ -46,6 +46,7 @@ int SSkinImgList::GetStates() const
 
 void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const
 {
+	if(!m_pImg) return;
 	SIZE sz = GetSkinSize();
 	RECT rcSrc = {0, 0, sz.cx, sz.cy};
 	if(m_bVertical) 
