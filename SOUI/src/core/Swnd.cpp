@@ -699,8 +699,7 @@ namespace SOUI
 			{//在窗口布局中支持include标签
 				SStringT strSrc = S_CW2T(xmlChild.attribute(L"src").value());
 				pugi::xml_document xmlDoc;
-				LOADXML(xmlDoc,strSrc);
-				if(xmlDoc)
+				if(LOADXML(xmlDoc,strSrc))
 				{
 					pugi::xml_node xmlInclude = xmlDoc.first_child();
 					if(wcsicmp(xmlInclude.name(),KLabelInclude)==0)

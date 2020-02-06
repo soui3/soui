@@ -590,8 +590,7 @@ void SPanel::OnEnable(BOOL bEnable, UINT uStatus)
 HRESULT SPanel::OnAttrScrollbarSkin( SStringW strValue,BOOL bLoading )
 {
     ISkinObj *pSbSkin=GETSKIN(strValue,GetScale());
-    SASSERT(pSbSkin);
-    if(!pSbSkin->IsClass(SSkinScrollbar::GetClassName())) return E_FAIL;
+    if(!pSbSkin || !pSbSkin->IsClass(SSkinScrollbar::GetClassName())) return E_FAIL;
     m_pSkinSb=(SSkinScrollbar*)pSbSkin;
     SASSERT(m_pSkinSb);
     return bLoading?S_FALSE:S_OK;
