@@ -12,11 +12,11 @@
 */
 #pragma once
 
+#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
 #include "core/SSingleton2.h"
-
 namespace SOUI
 {
     enum{
