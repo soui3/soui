@@ -8,6 +8,16 @@
 namespace SOUI
 {
 
+	SSkinAPNG::~SSkinAPNG()
+	{
+		if(m_pFrames) delete [] m_pFrames;
+	}
+
+	SSkinAPNG::SSkinAPNG() :m_pFrames(NULL)
+	{
+
+	}
+
     HRESULT SSkinAPNG::OnAttrSrc( const SStringW &strValue,BOOL bLoading )
     {
         SStringTList strLst;
@@ -119,5 +129,28 @@ IBitmap * SSkinAPNG::GetFrameImage(int iFrame/*=-1*/)
 		return NULL;
 	}
 }
+
+
+int SSkinAPNG::GetStates() const 
+{
+	return m_nFrames;
+}
+
+void SSkinAPNG::_Scale(ISkinObj *pObj, int nScale)
+{
+	SSkinAni::_Scale(pObj,nScale);
+	SSkinAPNG * pClone = sobj_cast<SSkinAPNG>(pObj);
+	pClone->m_pFrames = new SAniFrame[m_nFrames];
+
+	CSize szSkin = GetSkinSize();
+	szSkin.cx = MulDiv(szSkin.cx, nScale, 100);
+	szSkin.cy = MulDiv(szSkin.cy, nScale, 100);
+	for(int i=0;i<m_nFrames;i++)
+	{
+		m_pFrames[i].pBmp->Scale(&pClone->m_pFrames[i].pBmp, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
+		pClone->m_pFrames[i].nDelay = m_pFrames[i].nDelay;
+	}
+}
+
 
 }//end of namespace SOUI

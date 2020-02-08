@@ -31,7 +31,7 @@ namespace SOUI
 		virtual pugi::xml_node GetCaretInfo() = 0;
 	};
 
-	typedef BOOL (*FunFontCheck)(const SStringT & strFontName);
+	typedef BOOL (*FunFontCheck)(const SStringW & strFontName);
 
 	class SOUI_EXP SUiDef : public SSingleton2<SUiDef>
 	{
@@ -47,11 +47,11 @@ namespace SOUI
 		
 		IUiDefInfo * GetUiDef(){return m_pCurUiDef;}
 		
-		void SetUiDef(IUiDefInfo* pUiDefInfo);
+		void SetUiDef(IUiDefInfo* pUiDefInfo ,bool bUpdateDefFont);
 
 		static void SetFontChecker(FunFontCheck fontCheck);
 
-		static BOOL CheckFont(const SStringT & strFontName);
+		static BOOL CheckFont(const SStringW & strFontName);
 	protected:
 
 		static FunFontCheck	s_funFontCheck;

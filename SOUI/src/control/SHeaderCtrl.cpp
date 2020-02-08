@@ -70,7 +70,10 @@ namespace SOUI
 		{
 			pItem->strText.SetText(m_arrItems[iItem].strText.GetText(FALSE));
 		}
-		if (pItem->mask & SHDI_WIDTH) pItem->cx = m_arrItems[iItem].cx;
+		if (pItem->mask & SHDI_WIDTH)
+		{
+			pItem->cx = GetItemWidth(iItem);
+		}
 		if (pItem->mask & SHDI_LPARAM) pItem->lParam = m_arrItems[iItem].lParam;
 		if (pItem->mask & SHDI_SORTFLAG) pItem->stFlag = m_arrItems[iItem].stFlag;
 		if (pItem->mask & SHDI_ORDER) pItem->iOrder = m_arrItems[iItem].iOrder;
@@ -103,7 +106,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemWidth(i);
 			DrawItem(pRT, rcItem, m_arrItems.GetData() + i);
 			if (rcItem.right >= rcClient.right) break;
 		}
@@ -166,7 +169,7 @@ namespace SOUI
 		GetEventSet()->setMutedState(true);
 		DeleteAllItems();
 		GetEventSet()->setMutedState(false);
-		__super::OnDestroy();
+		SWindow::OnDestroy();
 	}
 
 	CRect SHeaderCtrl::GetItemRect(UINT iItem) const
@@ -180,7 +183,7 @@ namespace SOUI
 		{
 			if(!m_arrItems[i].bVisible) continue;
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemWidth(i);
 		}
 		return rcItem;
 	}
@@ -219,7 +222,7 @@ namespace SOUI
 		}
 		else if (m_dwHitTest != -1)
 		{
-			m_nAdjItemOldWidth = m_arrItems[LOWORD(m_dwHitTest)].cx;
+			m_nAdjItemOldWidth = GetItemWidth(LOWORD(m_dwHitTest));
 		}
 	}
 
@@ -275,7 +278,7 @@ namespace SOUI
 		{//调整表头宽度，发送一个调整完成消息
 			EventHeaderItemChanged evt(this);
 			evt.iItem = LOWORD(m_dwHitTest);
-			evt.nWidth = m_arrItems[evt.iItem].cx;
+			evt.nWidth = GetItemWidth(evt.iItem);
 			FireEvent(evt);
 
 			EventHeaderRelayout e(this);
@@ -323,10 +326,32 @@ namespace SOUI
 				{
 					int cxNew = m_nAdjItemOldWidth + pt.x - m_ptClick.x;
 					if (cxNew < 0) cxNew = 0;
+					CRect rc = GetClientRect();
+					int nTotalWid = 0;
+					float fTotalWeight = 0.0f;
+					for(UINT i=0;i<m_arrItems.GetCount();i++)
+					{
+						if(!m_arrItems[i].bVisible)
+							continue;
+						nTotalWid += m_arrItems[i].cx;
+						fTotalWeight += m_arrItems[i].fWeight;
+					}
+					if(nTotalWid != rc.Width() && fTotalWeight>0.0f)
+					{//set cx to visible width.
+						int nRemain = rc.Width()-nTotalWid;
+						for(UINT i=0;i<m_arrItems.GetCount() && nRemain>0 && fTotalWeight>0.0f;i++)
+						{
+							if(!m_arrItems[i].bVisible)
+								continue;
+							int nAppend = (int)(nRemain*m_arrItems[i].fWeight/fTotalWeight);
+							m_arrItems[i].cx += nAppend;
+							nRemain -= nAppend;
+							fTotalWeight -= m_arrItems[i].fWeight;
+						}
+					}
 					m_arrItems[LOWORD(m_dwHitTest)].cx = cxNew;
 
 					Invalidate();
-					UpdateWindow();//立即更新窗口
 					//发出调节宽度消息
 					EventHeaderItemChanging evt(this);
 					evt.iItem = LOWORD(m_dwHitTest);
@@ -360,7 +385,6 @@ namespace SOUI
 				}
 
 				m_dwHitTest = dwHitTest;
-				SLOG_INFO("!!!!!!header::onMouseMove3 hiword(hittest):"<<HIWORD(m_dwHitTest)<<" loword(hittest):"<<LOWORD(m_dwHitTest));
 			}
 		}
 
@@ -403,6 +427,7 @@ namespace SOUI
 			item.strText.SetText(S_CW2T(GETSTRING(strText)));
 			SLayoutSize szItem = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));
             item.cx = szItem.toPixelSize(GetScale());
+			item.fWeight = xmlItem.attribute(L"weight").as_float();
 			item.bDpiAware = (szItem.unit != SLayoutSize::px);
 			item.lParam = xmlItem.attribute(L"userData").as_uint(0);
 			item.stFlag = (SHDSORTFLAG)xmlItem.attribute(L"sortFlag").as_uint(ST_NULL);
@@ -437,7 +462,7 @@ namespace SOUI
 			if (m_arrItems[i].cx == 0 || !m_arrItems[i].bVisible) continue;    //越过宽度为0的项
 
 			rcItem.left = rcItem.right;
-			rcItem.right = rcItem.left + m_arrItems[i].cx;
+			rcItem.right = rcItem.left + GetItemWidth(i);
 			if (pt.x < rcItem.left + nMargin)
 			{
 				int nLeft = i > 0 ? i - 1 : 0;
@@ -462,7 +487,7 @@ namespace SOUI
 		if (iItem >= m_arrItems.GetCount()) return NULL;
 		CRect rcClient;
 		GetClientRect(rcClient);
-		CRect rcItem(0, 0, m_arrItems[iItem].cx, rcClient.Height());
+		CRect rcItem(0, 0, GetItemWidth(iItem), rcClient.Height());
 
 		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcItem.Width(), rcItem.Height());
@@ -512,21 +537,68 @@ namespace SOUI
 		ReleaseRenderTarget(pRT);
 	}
 
-	int SHeaderCtrl::GetTotalWidth()
+	int SHeaderCtrl::GetTotalWidth() const
 	{
-		int nRet = 0;
+		CRect rc = GetClientRect();
+
+		int nTotalWidth = 0;
+		float fTotalWeight=0.0f;
 		for (UINT i = 0; i < m_arrItems.GetCount(); i++)
 		{
-			nRet += GetItemWidth(i);
+			if(!m_arrItems[i].bVisible)
+				continue;
+			nTotalWidth += m_arrItems[i].cx;
+			fTotalWeight += m_arrItems[i].fWeight;
 		}
-		return nRet;
+		if(fTotalWeight>0.0f)
+		{
+			return smax(nTotalWidth,rc.Width());
+		}else
+		{
+			return nTotalWidth;
+		}
 	}
 
-	int SHeaderCtrl::GetItemWidth(int iItem)
+	int SHeaderCtrl::GetItemWidth(int iItem) const
 	{
-		if (iItem < 0 || (UINT)iItem >= m_arrItems.GetCount()) return -1;
-		if(!m_arrItems[iItem].bVisible) return 0;
-		return m_arrItems[iItem].cx;
+		if (iItem < 0 || (UINT)iItem >= m_arrItems.GetCount()) 
+			return -1;
+		if(!m_arrItems[iItem].bVisible)
+			return 0;
+		const SHDITEM & item = m_arrItems[iItem];
+		if(SLayoutSize::fequal(item.fWeight,0.0f))
+			return item.cx;
+		else
+		{
+			CRect rc = GetClientRect();
+			if(rc.IsRectEmpty())
+			{
+				return item.cx;
+			}else
+			{
+				float fTotalWeight = 0.0f;
+				int   nTotalWidth = 0;
+				for(UINT i=0;i<m_arrItems.GetCount();i++)
+				{
+					if(!m_arrItems[i].bVisible)
+						continue;
+					fTotalWeight += m_arrItems[i].fWeight;
+					nTotalWidth += m_arrItems[i].cx;
+				}
+				int nRemain=rc.Width()-nTotalWidth;
+				if(nRemain<=0)
+				{
+					return m_arrItems[iItem].cx;
+				}
+				for(int i=0;i<iItem-1;i++)
+				{
+					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
+					nRemain-=nAppend;
+					fTotalWeight-=m_arrItems[i].fWeight;
+				}
+				return item.cx + (int)(nRemain*item.fWeight/fTotalWeight);
+			}
+		}
 	}
 
 	void SHeaderCtrl::OnActivateApp(BOOL bActive, DWORD dwThreadID)

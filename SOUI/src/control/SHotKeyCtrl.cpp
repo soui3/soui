@@ -201,4 +201,53 @@ SStringT SHotKeyCtrl::GetWindowText(BOOL bRawText)
 	return FormatHotkey();
 }
 
+HRESULT SHotKeyCtrl::OnAttrInvalidComb(const SStringW & value, BOOL bLoading)
+{
+	DWORD dwKey = TranslateAccelKey(S_CW2T(value));
+	WORD  wComb = HIWORD(dwKey);
+	switch(wComb)
+	{
+	case MOD_ALT:
+		m_wInvalidComb = HKCOMB_A;
+		break;
+	case MOD_CONTROL:
+		m_wInvalidComb = HKCOMB_C;
+		break;
+	case MOD_SHIFT:
+		m_wInvalidComb = HKCOMB_S;
+		break;
+	case MOD_CONTROL|MOD_ALT:
+		m_wInvalidComb = HKCOMB_CA;
+		break;
+	case MOD_SHIFT|MOD_ALT:
+		m_wInvalidComb = HKCOMB_SA;
+		break;
+	case MOD_SHIFT|MOD_CONTROL:
+		m_wInvalidComb = HKCOMB_SC;
+		break;
+	case MOD_SHIFT|MOD_CONTROL|MOD_ALT:
+		m_wInvalidComb = HKCOMB_SCA;
+		break;
+	default:
+		m_wInvalidComb = HKCOMB_NONE;
+		break;
+	}
+	return bLoading?S_OK:S_FALSE;
+}
+
+HRESULT SHotKeyCtrl::OnAttrInvalidModifier(const SStringW & value, BOOL bLoading)
+{
+	DWORD dwKey = TranslateAccelKey(S_CW2T(value));
+	m_wInvalidModifier = HIWORD(dwKey);
+	return S_FALSE;
+}
+
+HRESULT SHotKeyCtrl::OnAttrHotKey(const SStringW & value, BOOL bLoading)
+{
+	DWORD dwKey = TranslateAccelKey(S_CW2T(value));
+	m_wModifier = HIWORD(dwKey);
+	m_wVK = LOWORD(dwKey);
+	return bLoading?S_OK:S_FALSE;
+}
+
 }//namespace SOUI

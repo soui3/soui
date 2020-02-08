@@ -15,16 +15,21 @@ call :update_repo idoudemo
 call :update_repo SouiActivexDemo
 call :update_repo SlogViewer
 call :update_repo SouiWallPaper
+call :update_repo mclistview_demo
+call :update_repo MultiLangs
+call :update_repo SouiChartDemo
+call :update_repo souispy
+call :update_repo SweepingEdge
 
 SET /p selected=1.是否生成soui_demo.sln工程[1=YES;Other=No]:
 if %selected% neq 1 (
 	goto :eof
 ) 
 :createsln
-If Defined SOUIPATH (
-Echo %SOUIPATH%
+If Defined SOUI3PATH (
+Echo %SOUI3PATH%
 ) Else (
-Echo can't find env variable SOUIPATH, clone soui core and install wizard first, please.
+Echo can't find env variable SOUI3PATH, clone soui core and install wizard first, please.
 goto error
 )
 
@@ -63,7 +68,7 @@ goto :inputfilelist
 
 SET cfg=
 
-set file=%SOUIPATH%\config\build.cfg
+set file=%SOUI3PATH%\config\build.cfg
 for /f "tokens=1,2* delims==" %%i in (%file%) do (
 if "%%i"=="UNICODE" set cfg_unicode=%%j
 if "%%i"=="WCHAR" set cfg_wchar=%%j
@@ -159,9 +164,9 @@ if %selected%==1 (
 
 :built
 if %specs%==win32-msvc2017 (	
-	%SOUIPATH%\tools\qmake2017 -tp vc -r -spec %SOUIPATH%\tools\mkspecs\%specs% "CONFIG += !cfg! "
+	%SOUI3PATH%\tools\qmake2017 -tp vc -r -spec %SOUI3PATH%\tools\mkspecs\%specs% "CONFIG += !cfg! "
 ) else (
-	%SOUIPATH%\tools\qmake -tp vc -r -spec %SOUIPATH%\tools\mkspecs\%specs% "CONFIG += !cfg! "
+	%SOUI3PATH%\tools\qmake -tp vc -r -spec %SOUI3PATH%\tools\mkspecs\%specs% "CONFIG += !cfg! "
 )
 pause
 goto :eof

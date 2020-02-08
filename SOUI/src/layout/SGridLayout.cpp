@@ -373,6 +373,8 @@ namespace SOUI
 		float * pCellsRowWeight = new float[cells];
 		SWindow **pCellsChild = new SWindow*[cells];
 		CPoint * pCellsSpan = new CPoint[cells];
+		bool *  pCellsSpanFlagX	= new bool[cells];
+		bool *  pCellsSpanFlagY	= new bool[cells];
 
 		for(int i=0;i<cells;i++)
 		{
@@ -426,6 +428,8 @@ namespace SOUI
 				pCellsRowWeight[iCell] = rowWeight;
 				pCellsSpan[iCell].x = 0;
 				pCellsSpan[iCell].y = 0;
+				pCellsSpanFlagX[iCell] = colSpan>1;
+				pCellsSpanFlagY[iCell] = rowSpan>1;
 			}
 			pCellsSpan[iRow*nCols+iCol]=CPoint(colSpan,rowSpan);
 
@@ -467,6 +471,8 @@ namespace SOUI
 			for(int y=0;y<nRows;y++)
 			{
 				int iCell=y*nCols+x;
+				if(pCellsSpanFlagX[iCell])
+					continue;
 				maxWid = smax(pCellsSize[iCell].cx,maxWid);
 				maxWeight = smax(pCellsColWeight[iCell],maxWeight);
 			}
@@ -487,6 +493,8 @@ namespace SOUI
 			for(int x=0;x<nCols;x++)
 			{
 				int iCell=y*nCols+x;
+				if(pCellsSpanFlagY[iCell])
+					continue;
 				maxHei = smax(pCellsSize[iCell].cy,maxHei);
 				maxWeight = smax(pCellsRowWeight[iCell],maxWeight);
 			}
@@ -500,6 +508,8 @@ namespace SOUI
 
 		delete []pCellsColWeight;
 		delete []pCellsRowWeight;
+		delete []pCellsSpanFlagY;
+		delete []pCellsSpanFlagX;
 
 		//分配weight
 		int netParentWid = rcParent.Width()-(nCols-1)*xInter;

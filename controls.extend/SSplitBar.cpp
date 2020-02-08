@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SSplitBar.h"
+#include <layout\SouiLayoutParamStruct.h>
+#include <layout\SouiLayout.h>
 namespace SOUI
 {
 
@@ -20,8 +22,8 @@ SSplitBar::~SSplitBar()
 LRESULT SSplitBar::OnCreate( LPVOID )
 {
     if(0 != __super::OnCreate(NULL)) return 1;
-    int pi = m_bVertical ? PI_LEFT : PI_TOP;
-    m_nOrginPos = static_cast<SouiLayoutParamStruct*>(GetLayoutParam()->GetRawData())->pos[pi].nPos;
+    ORIENTATION pi = m_bVertical ? Vert : Horz;
+    m_nOrginPos = GetLayoutParam()->GetSpecifiedSize(pi).toPixelSize(GetScale());
     m_nTrackingPos = m_nOrginPos;
 
     return 0;
@@ -47,8 +49,8 @@ void SSplitBar::OnLButtonUp(UINT nFlags,CPoint pt)
     SWindow::OnLButtonUp(nFlags, pt);
 
     m_bDragging = FALSE;
-    int pi = m_bVertical ? PI_LEFT : PI_TOP;
-    m_nOrginPos = static_cast<SouiLayoutParamStruct*>(GetLayoutParam()->GetRawData())->pos[pi].nPos;
+    ORIENTATION pi = m_bVertical ? Vert : Horz;
+    m_nOrginPos = GetLayoutParam()->GetSpecifiedSize(pi).toPixelSize(GetScale());
     m_nTrackingPos = m_nOrginPos;
 }
 
@@ -78,10 +80,10 @@ void SSplitBar::OnMouseMove(UINT nFlags,CPoint pt)
     // 计算分隔栏新的位置
 
     //SwndLayout * pLayout = GetLayout();
-    SouiLayoutParam *pSouiLayoutParam = GetLayoutParamT<SouiLayoutParam>();
-    SouiLayoutParamStruct *pLayout = (SouiLayoutParamStruct*)pSouiLayoutParam->GetRawData();
-    int pi = m_bVertical?PI_LEFT:PI_TOP;
-    int nNewPos = m_nOrginPos + nOffset * pLayout->pos[pi].cMinus;
+    ORIENTATION pi = m_bVertical ? Vert : Horz;
+    SouiLayoutParamStruct* pLayout = (SouiLayoutParamStruct*)GetLayoutParamT<SouiLayoutParam>()->GetRawData();
+
+    int nNewPos = m_nOrginPos + nOffset * pLayout->posLeft.cMinus;
 
     /*
      *  - 有一种情况要特殊处理:既要修改hostwnd的尺寸,top/left又是以-XXX的方式定义。
@@ -100,7 +102,7 @@ void SSplitBar::OnMouseMove(UINT nFlags,CPoint pt)
     HWND hWnd = GetContainer()->GetHostHwnd();
     BOOL bZoomed = ::IsZoomed(hWnd);
     BOOL bResizeWnd = m_bResizeHostWnd && !bZoomed;
-    if (!(bResizeWnd && pLayout->pos[pi].cMinus < 0))
+    if (!(bResizeWnd && pLayout->posLeft.cMinus < 0))
     {
         if (nNewPos > m_nSizeMax)
             nNewPos = m_nSizeMax;
@@ -108,16 +110,16 @@ void SSplitBar::OnMouseMove(UINT nFlags,CPoint pt)
         if (nNewPos < m_nSizeMin)
             nNewPos = m_nSizeMin;
 
-        if (nNewPos == pLayout->pos[pi].nPos)
+        if (nNewPos == pLayout->posLeft.nPos.toPixelSize(100))
             return;
 
-        pLayout->pos[pi].nPos = nNewPos;
+        pLayout->posLeft.nPos = nNewPos;
     }
 
     // 调整窗口
 
     nWindowOffset = nNewPos - m_nTrackingPos;
-    nWindowOffset *= pLayout->pos[pi].cMinus;
+    nWindowOffset *= pLayout->posLeft.cMinus;
     m_nTrackingPos = nNewPos;
 
     if (bResizeWnd)

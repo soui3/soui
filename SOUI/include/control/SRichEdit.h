@@ -12,7 +12,6 @@
 */
 #pragma once
 
-#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
@@ -672,7 +671,18 @@ namespace SOUI
         *
         * Describe   设置选中
         */
-        void SetSel(DWORD dwSelection, BOOL bNoScroll = FALSE);
+		void SetSel(DWORD dwSelection, BOOL bNoScroll = FALSE);
+
+		/**
+		* SRichEdit::SetSel
+		* @brief     设置选中
+		* @param     long nStartChar --
+		* @param     long nEndChar --
+		* @param     BOOL bNoScroll --
+		*
+		* Describe   设置选中, 支持超长文本
+		*/
+    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项
@@ -908,6 +918,8 @@ namespace SOUI
         virtual BOOL SwndProc(UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResult);
 
 		virtual void OnScaleChanged(int nScale);
+		
+		virtual void OnRebuildFont();
 
 		virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
 
@@ -1099,6 +1111,7 @@ namespace SOUI
         
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
+		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1124,6 +1137,7 @@ namespace SOUI
             MESSAGE_HANDLER_EX(EM_SETCHARFORMAT,OnSetCharFormat)
             MESSAGE_HANDLER_EX(EM_SETREADONLY,OnSetReadOnly)
             MESSAGE_HANDLER_EX(EM_EXLIMITTEXT,OnSetLimitText)
+			MESSAGE_HANDLER_EX(EM_GETRECT,OnGetRect)
         SOUI_MSG_MAP_END()
 
 	public:
@@ -1212,7 +1226,6 @@ namespace SOUI
         BYTE    m_byDbcsLeadByte; /**< DBCS输入时的中文头字节*/
         SStringW m_strRtfSrc;     /**< 在XML中指定的RTF数据源*/
         STextHost    *m_pTxtHost; /**< Host of Richedit*/
-		HIMC m_hCurIMC;			// 当前输入法 
     };
 
     /**

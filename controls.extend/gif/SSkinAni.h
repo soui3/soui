@@ -74,6 +74,20 @@ namespace SOUI
 			_DrawByIndex2(pRT, rcDraw, m_iFrame, byAlpha);
 		}
 
+		virtual void _Scale(ISkinObj *pObj, int nScale)
+		{
+			SSkinObjBase::_Scale(pObj,nScale);
+			SSkinAni *pClone = sobj_cast<SSkinAni>(pObj);
+			pClone->m_nFrames = m_nFrames;
+			pClone->m_iFrame = m_iFrame;
+			pClone->m_filterLevel = m_filterLevel;
+			pClone->m_bTile = m_bTile;
+			pClone->m_rcMargin.left = MulDiv(m_rcMargin.left,nScale,100);
+			pClone->m_rcMargin.top = MulDiv(m_rcMargin.top,nScale,100);
+			pClone->m_rcMargin.right = MulDiv(m_rcMargin.right,nScale,100);
+			pClone->m_rcMargin.bottom = MulDiv(m_rcMargin.bottom,nScale,100);
+		}
+
 		LONG GetExpandCode() const{
 			return MAKELONG(m_bTile?EM_TILE:EM_STRETCH,m_filterLevel);
 		}

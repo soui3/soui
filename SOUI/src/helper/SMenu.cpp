@@ -8,6 +8,18 @@
 namespace SOUI
 {
 
+	SMenuItemData::SMenuItemData() :iIcon(-1),vHotKey(0),dwUserData(0),hIcon(NULL)
+	{
+
+	}
+
+	SMenuItemData::~SMenuItemData()
+	{
+		if(hIcon) DestroyIcon(hIcon);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
 SMenuAttr::SMenuAttr()
     :m_pItemSkin(GETBUILTINSKIN(SKIN_SYS_MENU_SKIN))
     ,m_pSepSkin(GETBUILTINSKIN(SKIN_SYS_MENU_SEP))
@@ -72,14 +84,14 @@ SAutoRefPtr<IFont> SMenuAttr::GetFontPtr()
 {
 	SAutoRefPtr<IFont> font = m_dpiFont.GetFontPtr();
 	if(font) return font;
-	return SFontPool::getSingleton().GetFont(L"",m_scale);
+	return SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,m_scale);
 }
 
 void SMenuAttr::SetScale(int scale)
 {
 	if(m_scale == scale) return;
 	m_scale = scale;
-	m_dpiFont.SetScale(m_scale);
+	m_dpiFont.UpdateFont(m_scale);
 	if (m_pIconSkin)
 		m_pIconSkin = GETSKIN(m_pIconSkin->GetName(), m_scale);
 	if (m_pItemSkin)
@@ -149,10 +161,14 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
                 m_attr->m_pCheckSkin->DrawByIndex(pRT,rcIcon,bRadio?1:0);
             }
         }
-        else if(pdmmi->iIcon!=-1 && m_attr->m_pIconSkin)
+        else if(pdmmi->hIcon)
+		{
+			pRT->DrawIconEx(rcIcon.left,rcIcon.top,pdmmi->hIcon,rcIcon.Width(),rcIcon.Height(),DI_NORMAL);
+		}
+		else if(pdmmi->iIcon!=-1 && m_attr->m_pIconSkin)
         {
             m_attr->m_pIconSkin->DrawByIndex(pRT,rcIcon,pdmmi->iIcon);
-        }
+		}
         rcItem.left=rcIcon.right+ iconOffset;
 
         //draw text
@@ -314,7 +330,7 @@ void SMenu::InitMenuItemData(SMenuItemData * itemInfo, const SStringW & strTextW
     }
 }
 
-BOOL SMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon)
+BOOL SMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon,HICON hIcon)
 {
     nFlags|=MF_OWNERDRAW;
     if(nFlags&MF_SEPARATOR)
@@ -324,6 +340,7 @@ BOOL SMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTSTR 
 
     SMenuItemData *pMenuData=new SMenuItemData;
     pMenuData->iIcon=iIcon;
+	pMenuData->hIcon=hIcon;
     InitMenuItemData(pMenuData,S_CT2W(strText));
 
     if(!::InsertMenu(m_hMenu,nPosition,nFlags,nIDNewItem,(LPCTSTR)pMenuData))
@@ -496,9 +513,9 @@ BOOL SMenu::DeleteMenu(UINT uPosition, UINT uFlags)
 	return FALSE;
 }
 
-BOOL SMenu::AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon)
+BOOL SMenu::AppendMenu(UINT uFlags,UINT_PTR uIDNewItem, LPCTSTR lpNewItem,int iIcon,HICON hIcon)
 {
-	return InsertMenu(-1,uFlags,uIDNewItem,lpNewItem,iIcon);
+	return InsertMenu(-1,uFlags,uIDNewItem,lpNewItem,iIcon,hIcon);
 }
 
 BOOL SMenu::CheckMenuItem(UINT uIdCheckItem, UINT uCheck)
@@ -560,6 +577,5 @@ ULONG_PTR SMenu::GetMenuUserData(UINT uPosition, UINT uFlags)
 	SMenuItemData *pmid = (SMenuItemData*)mi.dwItemData;
 	return pmid->dwUserData;
 }
-
 
 }//namespace SOUI

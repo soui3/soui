@@ -217,9 +217,9 @@ void SItemPanel::ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove)
     ModifyState(dwStateAdd,dwStateRemove,FALSE);
 }
 
-SWND SItemPanel::SwndFromPoint(CPoint &pt)
+SWND SItemPanel::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 {
-    SWND hRet=SWindow::SwndFromPoint(pt);
+    SWND hRet=SWindow::SwndFromPoint(pt,bIncludeMsgTransparent);
     if(hRet==m_swnd) hRet=NULL;
     return hRet;
 }
@@ -376,6 +376,11 @@ void SItemPanel::OnDestroy()
 int SItemPanel::GetScale() const
 {
 	return m_pFrmHost->GetContainer()->GetScale();
+}
+
+void SItemPanel::EnableIME(BOOL bEnable)
+{
+	m_pFrmHost->GetContainer()->EnableIME(bEnable);
 }
 
 }//namespace SOUI

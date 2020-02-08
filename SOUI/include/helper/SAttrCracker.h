@@ -18,24 +18,24 @@
 
 
 // Attribute Declaration
-#define SOUI_ATTRS_BEGIN()                            \
-public:                                                             \
-    virtual HRESULT SetAttribute(                                   \
-    const SOUI::SStringW & strAttribName,                                     \
-    const SOUI::SStringW &  strValue,                                          \
-    BOOL     bLoading=FALSE)                                    \
-    {                                                               \
-    HRESULT hRet = E_FAIL;                                        \
+#define SOUI_ATTRS_BEGIN()                                       \
+public:                                                          \
+    virtual HRESULT SetAttribute(                                \
+    const SOUI::SStringW & strAttribName,                        \
+    const SOUI::SStringW &  strValue,                            \
+    BOOL     bLoading=FALSE)                                     \
+    {                                                            \
+    HRESULT hRet = E_FAIL;                                       \
  
 
 //从SObject派生的类是属性结尾
 #define SOUI_ATTRS_END()                                        \
-		return __super::SetAttribute(                           \
+		if(FAILED(hRet)) return __super::SetAttribute(           \
 						strAttribName,                          \
 						strValue,                               \
 						bLoading                                \
 						);                                      \
-    return AfterAttribute(strAttribName,strValue,bLoading,hRet);         \
+    return AfterAttribute(strAttribName,strValue,bLoading,hRet);\
     }                                                           \
     
 
@@ -47,14 +47,14 @@ public:                                                             \
 
  
 #define ATTR_CHAIN(varname,flag)                               \
-    if (SUCCEEDED(hRet = varname.SetAttribute(strAttribName, strValue, bLoading)))   \
+    if (FAILED(hRet) && SUCCEEDED(hRet = varname.SetAttribute(strAttribName, strValue, bLoading)))   \
         {                                                           \
 			hRet |= flag;											\
         }                                                           \
         else                                                        \
 
 #define ATTR_CHAIN_PTR(varname,flag)                               \
-	if (varname!= NULL && SUCCEEDED(hRet = varname->SetAttribute(strAttribName, strValue, bLoading)))   \
+	if (FAILED(hRet) && varname!= NULL && SUCCEEDED(hRet = varname->SetAttribute(strAttribName, strValue, bLoading)))   \
 		{                                                           \
 			hRet |= flag;											\
 		}                                                           \
@@ -302,7 +302,7 @@ public:                                                             \
         else                                                        \
  
 
-//font="face:宋体;bold:1;italic:1;underline:1;adding:10"
+//DpiAwareFont="face:宋体;bold:1;italic:1;underline:1;adding:10"
 #define ATTR_FONT(attribname, varname, allredraw)                       \
     if (0 == strAttribName.CompareNoCase(attribname))                   \
     {                                                                   \
@@ -310,16 +310,6 @@ public:                                                             \
         hRet = allredraw ? S_OK : S_FALSE;                              \
     }                                                                   \
     else                                                                \
-
-//font="face:宋体;bold:1;italic:1;underline:1;adding:10"
-#define ATTR_FONT2(attribname, varname, allredraw)                       \
-	if (0 == strAttribName.CompareNoCase(attribname))                   \
-	{                                                                   \
-	varname=SFontPool::getSingleton().GetFont(strValue,GetScale());     \
-	hRet = allredraw ? S_OK : S_FALSE;                              \
-	}                                                                   \
-	else                                                                \
-
 
 // Value In {String1 : Value1, String2 : Value2 ...}
 #define ATTR_ENUM_BEGIN(attribname, vartype, allredraw)        \

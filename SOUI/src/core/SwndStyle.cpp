@@ -137,7 +137,7 @@ void SwndStyle::SetScale(int nScale)
 	m_nScale = nScale;
 	for(int i=0;i<4;i++)
 	{
-		m_ftText[i].SetScale(nScale);
+		m_ftText[i].UpdateFont(nScale);
 	}
 }
 
@@ -170,6 +170,14 @@ void SwndStyle::SetAlign(UINT uAlign)
 void SwndStyle::SetVAlign(UINT uAlign)
 {
 	m_uVAlign = uAlign;
+}
+
+void SwndStyle::UpdateFont()
+{
+	for(int i=0;i<4;i++)
+	{
+		m_ftText[i].UpdateFont(m_nScale);
+	}
 }
 
 

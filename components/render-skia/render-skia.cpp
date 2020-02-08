@@ -347,7 +347,7 @@ namespace SOUI
 		SetPaintXferMode(paint,dwRop);
 
         SRenderTarget_Skia *pRtSourSkia=(SRenderTarget_Skia*)pRTSour;
-        SkBitmap    bmpSrc=pRtSourSkia->m_curBmp->GetSkBitmap();
+        const SkBitmap  &  bmpSrc=pRtSourSkia->m_curBmp->GetSkBitmap();
         POINT ptSourViewport;
         pRtSourSkia->GetViewportOrg(&ptSourViewport);
         xSrc += ptSourViewport.x;
@@ -607,7 +607,7 @@ namespace SOUI
     HRESULT SRenderTarget_Skia::DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/ )
     {
         SBitmap_Skia *pBmp = (SBitmap_Skia*)pBitmap;
-        SkBitmap bmp=pBmp->GetSkBitmap();
+        const SkBitmap & bmp=pBmp->GetSkBitmap();
 
         SIZE szBmp = pBmp->Size();
         int nWid= (std::min)(pRcDest->right-pRcDest->left,szBmp.cx);
@@ -649,7 +649,7 @@ namespace SOUI
             return DrawBitmap(pRcDest,pBitmap,pRcSrc->left,pRcSrc->top,byAlpha);
             
         SBitmap_Skia *pBmp = (SBitmap_Skia*)pBitmap;
-        SkBitmap bmp=pBmp->GetSkBitmap();
+        const SkBitmap & bmp=pBmp->GetSkBitmap();
 
         RECT rcSour={0,0,bmp.width(),bmp.height()};
         if(!pRcSrc) pRcSrc = &rcSour;
@@ -954,6 +954,7 @@ namespace SOUI
         SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
         paint.setShader(pShader)->unref();
+		paint.setAntiAlias(m_bAntiAlias);
 
         m_SkCanvas->drawRect(skrc,paint);
 
@@ -1049,6 +1050,7 @@ namespace SOUI
 		SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
 		paint.setShader(pShader)->unref();
+		paint.setAntiAlias(m_bAntiAlias);
 
 		SkPoint skOffset = {skrc.left(),skrc.top()};
 
@@ -1086,6 +1088,7 @@ namespace SOUI
 		SetPaintXferMode(paint,m_xferMode);
         paint.setShader(pShader);
         pShader->unref();
+		paint.setAntiAlias(m_bAntiAlias);
 
         m_SkCanvas->drawRect(skrc,paint);
         return S_OK;
@@ -1098,7 +1101,8 @@ namespace SOUI
 		SetPaintXferMode(paint,m_xferMode);
         paint.setStyle(SkPaint::kFill_Style);
         paint.setColor(SColor(cr).toARGB());
-        
+		paint.setAntiAlias(m_bAntiAlias);
+      
         SkRect skrc=toSkRect(pRect);
         skrc.offset(m_ptOrg);
         m_SkCanvas->drawRect(skrc,paint);
@@ -1229,6 +1233,7 @@ namespace SOUI
         paint.setStyle(SkPaint::kFill_Style);
 		SetPaintXferMode(paint,m_xferMode);
 
+		paint.setAntiAlias(m_bAntiAlias);
         SkRect skrc=toSkRect(pRect);
         skrc.offset(m_ptOrg);
         m_SkCanvas->drawArc(skrc,startAngle, sweepAngle,true,paint);

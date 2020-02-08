@@ -8,6 +8,7 @@
 #include "res.mgr/sfontpool.h"
 #include "helper/SplitString.h"
 #include "layout/SLayoutSize.h"
+#include "helper/SHostMgr.h"
 
 namespace SOUI
 {
@@ -20,21 +21,23 @@ SFontPool::SFontPool(IRenderFactory *pRendFactory)
     m_pFunOnKeyRemoved=OnKeyRemoved;
 }
 
+void SFontPool::OnKeyRemoved(const IFontPtr & obj)
+{
+	obj->Release();
+}
 
-IFontPtr SFontPool::GetFont(const SStringW & strName,FONTSTYLE style, const SStringW & fontFaceName,pugi::xml_node xmlExProp)
+IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,pugi::xml_node xmlExProp)
 {
 	IFontPtr hftRet=0;
 
-	SStringT strFace = S_CW2T(fontFaceName);
+	SStringW strFace = fontFaceName;
 	if(strFace.IsEmpty()) strFace = GetDefFontInfo().strFaceName;
 	
 	pugi::xml_writer_buff writer;
 	xmlExProp.print(writer,L"\t",pugi::format_default,pugi::encoding_utf16);
-	SStringT strXmlProp= S_CW2T(SStringW(writer.buffer(),writer.size()));
+	SStringW strXmlProp= SStringW(writer.buffer(),writer.size());
 
-	FontInfo info = {strName,style.dwStyle,strFace,strXmlProp};
-	if(strName.IsEmpty())//使用系统字体的name属性
-		info.strName = GetDefFontInfo().strName;
+	FontInfo info = {style.dwStyle,strFace,strXmlProp};
 
 	if(HasKey(info))
 	{
@@ -49,19 +52,18 @@ IFontPtr SFontPool::GetFont(const SStringW & strName,FONTSTYLE style, const SStr
 
 }
 
-static const WCHAR  KFontPropSeprator=   (L',');   //字体属性之间的分隔符，不再支持其它符号。
-static const WCHAR  KPropSeprator    =   (L':');   //一个属性name:value对之间的分隔符
-static const WCHAR  KAttrFalse[]     =   (L"0");
-static const WCHAR  KFontFace[]      =   (L"face");
-static const WCHAR  KFontBold[]      =   (L"bold");
-static const WCHAR  KFontUnderline[] =   (L"underline");
-static const WCHAR  KFontItalic[]    =   (L"italic");
-static const WCHAR  KFontStrike[]    =   (L"strike");
-static const WCHAR  KFontAdding[]    =   (L"adding");
-static const WCHAR  KFontSize[]      =   (L"size");
-static const WCHAR  KFontCharset[]   =   (L"charset");
-static const WCHAR  KFontName[]      =   (L"name");
-static const WCHAR KFontWeight[] = L"weight";
+static const WCHAR  KFontPropSeprator=   L',';   //字体属性之间的分隔符，不再支持其它符号。
+static const WCHAR  KPropSeprator    =   L':';   //一个属性name:value对之间的分隔符
+static const WCHAR  KAttrFalse[]     =   L"0";
+static const WCHAR  KFontFace[]      =   L"face";
+static const WCHAR  KFontBold[]      =   L"bold";
+static const WCHAR  KFontUnderline[] =   L"underline";
+static const WCHAR  KFontItalic[]    =   L"italic";
+static const WCHAR  KFontStrike[]    =   L"strike";
+static const WCHAR  KFontAdding[]    =   L"adding";
+static const WCHAR  KFontSize[]      =   L"size";
+static const WCHAR  KFontCharset[]   =   L"charset";
+static const WCHAR  KFontWeight[]    =   L"weight";
 
 IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 {
@@ -69,7 +71,6 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 	fntStyle.attr.cSize = 0;
 
     SStringW strFace;//不需要默认字体, 在后面GetFont里会检查.
-	SStringW strName;
     SStringW attr=strFont; 
     attr.MakeLower();                                        
     SStringWList fontProp;
@@ -114,11 +115,7 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
         }else if(strPair[0] == KFontCharset)
         {
             fntStyle.attr.byCharset = (BYTE)_wtoi(strPair[1]);
-        }else if(strPair[0] == KFontName)
-		{
-			strName = strPair[1];
-		}
-		else if (strPair[0] == KFontWeight)
+		}else if (strPair[0] == KFontWeight)
 		{
 			fntStyle.attr.byWeight = (_wtoi(strPair[1]) +2)/ 4;//+2 for 四舍五入. /4是为了把weight scale到0-250.
 		}else
@@ -134,10 +131,11 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 	else
 	{
 		FONTSTYLE fontStyle(GetDefFontInfo().style);
-		fntStyle.attr.cSize = fontStyle.attr.cSize * scale/100 + cAdding;  //cAdding为正代表字体变大，否则变小
+		SLayoutSize defSize((float)fontStyle.attr.cSize);
+		fntStyle.attr.cSize = defSize.toPixelSize(scale) + cAdding;  //cAdding为正代表字体变大，否则变小
 	}
 
-    return GetFont(strName,fntStyle, strFace,nodePropEx);
+    return GetFont(fntStyle, strFace,nodePropEx);
 }
 
 
@@ -167,11 +165,7 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
 	lfNew.lfHeight = -abs((short)fontInfo.style.attr.cSize);
     lfNew.lfQuality = CLEARTYPE_QUALITY;
     
-    
-    _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), fontInfo.strFaceName);
-    
-	ITranslatorMgr *pTransMgr = SApplication::getSingleton().GetTranslator();
-	if(pTransMgr) pTransMgr->updateLogfont(fontInfo.strName,&lfNew);
+    _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), S_CW2T(fontInfo.strFaceName));
 
     IFontPtr ret = _CreateFont(lfNew);
 	if(ret) ret->InitFromXml(xmlExProp);
@@ -180,29 +174,79 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
 
 const FontInfo & SFontPool::GetDefFontInfo() const
 {
-	SUiDef *pUiDef = SUiDef::getSingletonPtr();
-	return pUiDef->GetUiDef()->GetDefFontInfo();
+	return m_defFontInfo;
 }
 
-void SFontPool::UpdateFonts()
+void SFontPool::SetDefFontInfo(const FontInfo & fontInfo)
 {
-	ITranslatorMgr *pTransMgr = SApplication::getSingleton().GetTranslator();
-	if(!pTransMgr) return;
+	m_defFontInfo = fontInfo;
+	RemoveAll();
+	SHostMgr::getSingletonPtr()->DispatchMessage(true,UM_UPDATEFONT);
+}
 
-	SPOSITION pos = m_mapNamedObj->GetStartPosition();
-	while(pos)
+void SFontPool::SetDefFontInfo(const SStringW & strFontInfo)
+{
+	FontInfo fi = FontInfoFromString(strFontInfo);
+	SetDefFontInfo(fi);
+}
+
+FontInfo SFontPool::FontInfoFromString(const SStringW &strFontDesc)
+{
+	FontInfo fi;
+	fi.style=0;
+	SArray<SStringW> strLst;
+	int nSeg = SplitString(strFontDesc,KFontPropSeprator,strLst);
+	for(int i=0;i<nSeg;i++)
 	{
-		FontInfo info;
-		IFontPtr fontPtr;
-		m_mapNamedObj->GetNextAssoc(pos,info,fontPtr);
-		LOGFONT lf;
-		memcpy(&lf,fontPtr->LogFont(),sizeof(lf));
-		if(pTransMgr->updateLogfont(info.strName,&lf))
+		SArray<SStringW> kv;
+		int n = SplitString(strLst[i],KPropSeprator,kv);
+		if(n!=2) continue;
+		if(kv[0].CompareNoCase(KFontFace)==0)
 		{
-			fontPtr->UpdateFont(&lf);
+			if(kv[1][0]==L'\'' || kv[1][0]==L'\"')
+				fi.strFaceName = kv[1].Mid(1,kv[1].GetLength()-2);
+			else
+				fi.strFaceName=kv[1];			
+		}else if(kv[0].CompareNoCase(KFontSize)==0)
+		{
+			fi.style.attr.cSize = abs(_wtoi(kv[1]));
+		}else if(kv[0].CompareNoCase(KFontCharset)==0)
+		{
+			fi.style.attr.byCharset = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontWeight)==0)
+		{
+			fi.style.attr.byWeight=_wtoi(kv[1])/4;
+		}else if(kv[0].CompareNoCase(KFontBold)==0)
+		{
+			fi.style.attr.fBold = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontItalic)==0)
+		{
+			fi.style.attr.fItalic = _wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontStrike)==0)
+		{
+			fi.style.attr.fStrike=_wtoi(kv[1]);
+		}else if(kv[0].CompareNoCase(KFontUnderline)==0)
+		{
+			fi.style.attr.fUnderline=_wtoi(kv[1]);
 		}
 	}
+	return fi;
 }
 
+SStringW SFontPool::FontInfoToString(const FontInfo &fi)
+{
+	char szBuf[200];
+	Log4zStream s(szBuf,200);
+	s<<KFontFace<<":\'"<<fi.strFaceName.c_str()<<"\'"<<",";
+	s<<KFontSize<<":"<<(short)fi.style.attr.cSize<<",";
+	s<<KFontCharset<<":"<<fi.style.attr.byCharset<<",";
+	s<<KFontWeight<<":"<<fi.style.attr.byWeight*4<<",";
+	s<<KFontBold<<":"<<(fi.style.attr.fBold?"1":"0")<<",";
+	s<<KFontItalic<<":"<<(fi.style.attr.fItalic?"1":"0")<<",";
+	s<<KFontStrike<<":"<<(fi.style.attr.fStrike?"1":"0")<<",";
+	s<<KFontUnderline<<":"<<(fi.style.attr.fUnderline?"1":"0");
+	return S_CA2W(szBuf);
+
+}
 
 }//namespace SOUI

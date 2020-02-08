@@ -22,7 +22,7 @@ namespace SOUI
 		m_object = OnGetFont(m_strDesc, nScale);
 	}
 
-	void SDpiAwareFont::SetScale(int nScale)
+	void SDpiAwareFont::UpdateFont(int nScale)
 	{
 		if (m_strDesc.IsEmpty()) return;
 		m_object = OnGetFont(m_strDesc, nScale);
@@ -32,6 +32,4 @@ namespace SOUI
 	{
 		return SFontPool::getSingleton().GetFont(strDesc,nScale);
 	}
-
-
 }

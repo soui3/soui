@@ -1,12 +1,10 @@
 ﻿#pragma once
 #include <intrin.h>
 #include <stdio.h>
+#include <interface/slog-i.h>
 
 #ifndef GETLOGMGR
-#include <SApp.h>
 #define GETLOGMGR() SOUI::SApplication::getSingletonPtr()?SOUI::SApplication::getSingleton().GetLogManager():NULL
-#else
-#include <interface/slog-i.h>
 #endif
 
 #ifndef E_RANGE
@@ -168,8 +166,7 @@ namespace SOUI {
 		Log4zStream(char * buf, int len);
 		int getCurrentLen() { return (int)(_cur - _begin); }
 	private:
-		template<class T>
-		Log4zStream & writeData(const char * ft, T t);
+		Log4zStream & writeData(const char * ft, ...);
 		Log4zStream & writeLongLong(long long t);
 		Log4zStream & writeULongLong(unsigned long long t);
 		Log4zStream & writePointer(const void * t);
@@ -219,16 +216,16 @@ namespace SOUI {
 		char *  _cur;
 	};
 
-
-	template<class T>
-	Log4zStream& Log4zStream::writeData(const char * ft, T t)
+	inline Log4zStream & Log4zStream::writeData(const char * fmt,...)
 	{
+		va_list args;
+		va_start(args,fmt);
 		if (_cur < _end)
 		{
 			int len = 0;
 			int count = (int)(_end - _cur)-1;
 #if defined (WIN32) || defined(_WIN64)
-			len = _snprintf(_cur, count, ft, t);
+			len = _vsnprintf(_cur, count, fmt, args);
 			if (len == count || (len == -1 && errno == E_RANGE))
 			{
 				len = count;
@@ -240,7 +237,7 @@ namespace SOUI {
 				len = 0;
 			}
 #else
-			len = snprintf(_cur, count, ft, t);
+			len = vsnprintf(_cur, count, fmt, args);
 			if (len < 0)
 			{
 				*_cur = '\0';
@@ -254,9 +251,10 @@ namespace SOUI {
 #endif
 			_cur += len;
 		}
+		va_end(args);
+
 		return *this;
 	}
-
 
 	inline Log4zStream::Log4zStream(char * buf, int len)
 	{

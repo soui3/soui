@@ -28,14 +28,8 @@ namespace SOUI
     {
         SOUI_CLASS_NAME(SSkinAPNG, L"apng")
     public:
-		SSkinAPNG():m_pFrames(NULL)
-        {
-
-        }
-		~SSkinAPNG()
-		{
-			if(m_pFrames) delete [] m_pFrames;
-		}
+		SSkinAPNG();
+		~SSkinAPNG();
         
         /**
          * LoadFromFile
@@ -68,7 +62,7 @@ namespace SOUI
         * @return   int -- Ö¡Êý
         * Describe  
         */    
-        virtual int GetStates() const override{return m_nFrames;}
+        virtual int GetStates() const override;
 
         /**
         * GetSkinSize
@@ -99,6 +93,7 @@ namespace SOUI
         */    
         virtual void _DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BYTE byAlpha=0xFF) const  override;
 
+		virtual void _Scale(ISkinObj *pObj, int nScale) override;
 
 		IBitmap * GetFrameImage(int iFrame=-1);
 

@@ -50,6 +50,7 @@ namespace SOUI
         EVT_SETFOCUS=8100,
         EVT_KILLFOCUS,
         EVT_CREATE,
+		EVT_INIT_FINISH,
         EVT_DESTROY,
         EVT_SIZE,
         EVT_VISIBLECHANGED,
@@ -240,6 +241,9 @@ namespace SOUI
 	SEVENT_BEGIN_EX(EventSwndCreate, EVT_CREATE, on_create, SOUI_EXP)
 	SEVENT_END()
 
+	SEVENT_BEGIN_EX(EventSwndInitFinish, EVT_INIT_FINISH, on_init_finish, SOUI_EXP)
+	SEVENT_END()
+	
 	SEVENT_BEGIN_EX(EventSwndDestroy, EVT_DESTROY, on_destroy, SOUI_EXP)
 	SEVENT_END()
 

@@ -19,14 +19,14 @@ namespace SOUI
         {
             if(m_pAniIn)
             {
-                m_pAniIn->Draw(pRT,rc, m_iFrame);
+                m_pAniIn->DrawByIndex(pRT,rc, m_iFrame);
                 return TRUE;
             }
         }else if(m_aniStatus == STATUS_OUT)
         {
             if(m_pAniOut) 
             {
-                m_pAniOut->Draw(pRT,rc, m_iFrame);
+                m_pAniOut->DrawByIndex(pRT,rc, m_iFrame);
                 return TRUE;
             }
         }
@@ -111,7 +111,7 @@ namespace SOUI
 		pRT->PushClipRect(&rcTitle,RGN_AND);
 		if(m_pSkinHeadBg)
 		{
-			m_pSkinHeadBg->Draw(pRT,rcTitle,WndState_Normal);
+			m_pSkinHeadBg->DrawByIndex(pRT,rcTitle,WndState_Normal);
 		}
 		for(size_t i=0; i<GetItemCount(); i++)
 		{
@@ -134,7 +134,7 @@ namespace SOUI
 					rcSplit.left=rcItemPrev.right;
 					rcSplit.right=rcSplit.left + m_nTabInterSize.toPixelSize(GetScale());
 				}
-				m_pSkinTabInter->Draw(pRT,rcSplit,0);
+				m_pSkinTabInter->DrawByIndex(pRT,rcSplit,0);
 			}
 			rcItemPrev=rcItem;
 			if (dwState == WndState_PushDown && m_pSkinTabInter)
@@ -157,7 +157,7 @@ namespace SOUI
 		if (m_pSkinFrame)
 		{
 			CRect rcPage = GetChildrenLayoutRect();
-			m_pSkinFrame->Draw(pRT, rcPage, WndState_Normal);
+			m_pSkinFrame->DrawByIndex(pRT, rcPage, WndState_Normal);
 		}
 
 		if(IsFocused() && IsFocusable() && m_bDrawFocusRect)
@@ -175,9 +175,9 @@ namespace SOUI
 	void STabCtrl2::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD dwState )
 	{
 		if(rcItem.IsRectEmpty()) return;
-		int iState = IIF_STATE3(dwState,WndState_Normal,WndState_Hover,WndState_PushDown);
+		int iState = SState2Index::GetDefIndex(dwState,false);
 		if(m_pSkinTab)
-			m_pSkinTab->Draw(pRT,rcItem,iState);
+			m_pSkinTab->DrawByIndex(pRT,rcItem,iState);
 
 		//根据状态从style中获得字体，颜色
 		IFontPtr font=m_style.GetTextFont(iState);
@@ -201,7 +201,7 @@ namespace SOUI
 		{
 			int iIcon=GetItem(iItem)->GetIconIndex();
 			if(iIcon == -1) iIcon = iItem;
-			m_pSkinIcon->Draw(pRT,rcIcon,iIcon);
+			m_pSkinIcon->DrawByIndex(pRT,rcIcon,iIcon);
 		}
 
 		if(!m_ptText[0].valueEqual(-1.f) && !m_ptText[1].valueEqual(-1.f))

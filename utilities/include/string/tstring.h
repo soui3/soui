@@ -6,7 +6,6 @@
 #include <windows.h>
 #include <stdio.h>
 #include <crtdbg.h>
-#include <algorithm>
 #ifndef _MBCS
 #define _MBCS
 #endif
@@ -874,7 +873,7 @@ namespace SOUI
 
         BOOL LoadString(UINT nID,HINSTANCE hInst)
         {
-            SASSERT_FMT(hInst, TEXT("hInstance is null"));
+            SASSERT(hInst);
             tchar buf[1024 + 1];
             int nChar = tchar_traits::LoadString(hInst, nID, buf, 1024);
             if (nChar == 0) return FALSE;
@@ -1316,6 +1315,8 @@ namespace SOUI
             return false;
         }
 
+#define smin_tsr(a,b)            (((a) < (b)) ? (a) : (b))
+
         bool ReallocBuffer(int nNewLength)
         {
 #define TSTRING_REALLOC
@@ -1338,7 +1339,7 @@ namespace SOUI
             tchar* psz = m_pszData;
             if (AllocBuffer(nNewLength))
             {
-                int nLength = (std::min)(pOldData->nDataLength, nNewLength) + 1;
+                int nLength = smin_tsr(pOldData->nDataLength, nNewLength) + 1;
                 memcpy(m_pszData, psz, nLength * sizeof(tchar));
                 ReleaseData(pOldData);
                 return true;

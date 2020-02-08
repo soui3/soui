@@ -335,11 +335,10 @@ void SLink::OnLButtonUp( UINT nFlags,CPoint pt )
     }
     __super::OnLButtonUp(nFlags,pt);
     
-    if (! m_strLinkUrl.IsEmpty())
-    {
-        ::ShellExecute(NULL, _T("open"), m_strLinkUrl, NULL, NULL, SW_SHOWNORMAL);
-    }
-
+	SStringT strUrl = m_strLinkUrl;
+	if(m_strLinkUrl.IsEmpty())
+		strUrl = GetWindowText();
+	::ShellExecute(NULL, _T("open"), strUrl, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void SLink::OnMouseMove( UINT nFlags,CPoint pt )
@@ -562,7 +561,7 @@ CSize SImageButton::GetDesiredSize( int wid, int hei )
 // Usage: <img skin="skin" sub="0"/>
 //
 SImageWnd::SImageWnd()
-    : m_iFrame(0)
+    : m_iIcon(0)
     , m_pSkin(NULL)
     , m_fl(kNone_FilterLevel)
     , m_bManaged(FALSE)
@@ -620,7 +619,7 @@ void SImageWnd::OnPaint(IRenderTarget *pRT)
 	}
 	else if (m_pSkin)
 	{
-		m_pSkin->DrawByState(pRT, rcWnd, m_iFrame);
+		m_pSkin->DrawByIndex(pRT, rcWnd, m_iIcon);
 	}
 }
 
@@ -635,7 +634,7 @@ BOOL SImageWnd::SetSkin(ISkinObj *pSkin,int iFrame/*=0*/,BOOL bAutoFree/*=TRUE*/
     }
     if(!pSkin) return FALSE;
     m_pSkin=pSkin;
-    m_iFrame=iFrame;
+    m_iIcon=iFrame;
 	m_pImg = NULL;
     if(bAutoFree)
     {
@@ -673,7 +672,7 @@ BOOL SImageWnd::SetIcon( int nSubID )
 {
     if(!m_pSkin) return FALSE;
     if(nSubID<0 || nSubID>m_pSkin->GetStates()-1) return FALSE;
-    m_iFrame=nSubID;
+    m_iIcon=nSubID;
     Invalidate();
     return TRUE;
 }

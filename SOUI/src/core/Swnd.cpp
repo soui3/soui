@@ -88,6 +88,7 @@ namespace SOUI
 		m_pLayoutParam->SetMatchParent(Both);
 
 		m_evtSet.addEvent(EVENTID(EventSwndCreate));
+		m_evtSet.addEvent(EVENTID(EventSwndInitFinish));
 		m_evtSet.addEvent(EVENTID(EventSwndDestroy));
 		m_evtSet.addEvent(EVENTID(EventSwndSize));
 		m_evtSet.addEvent(EVENTID(EventSwndMouseHover));
@@ -102,7 +103,12 @@ namespace SOUI
 		m_evtSet.addEvent(EVENTID(EventCtxMenu));
 		m_evtSet.addEvent(EVENTID(EventSetFocus));
 		m_evtSet.addEvent(EVENTID(EventKillFocus));
-
+		
+		IAttrStorageFactory * pAttrFac = SApplication::getSingleton().GetAttrStorageFactory();
+		if(pAttrFac)
+		{
+			pAttrFac->CreateAttrStorage(this,&m_attrStorage);
+		}
 	}
 
 	SWindow::~SWindow()
@@ -693,8 +699,7 @@ namespace SOUI
 			{//在窗口布局中支持include标签
 				SStringT strSrc = S_CW2T(xmlChild.attribute(L"src").value());
 				pugi::xml_document xmlDoc;
-				LOADXML(xmlDoc,strSrc);
-				if(xmlDoc)
+				if(LOADXML(xmlDoc,strSrc))
 				{
 					pugi::xml_node xmlInclude = xmlDoc.first_child();
 					if(wcsicmp(xmlInclude.name(),KLabelInclude)==0)
@@ -868,6 +873,8 @@ namespace SOUI
 		//请求根窗口重新布局。由于布局涉及到父子窗口同步进行，同步执行布局操作可能导致布局过程重复执行。
 		RequestRelayout();
 
+		EventSwndInitFinish evt(this);
+		FireEvent(evt);
 		return TRUE;
 	}
 
@@ -881,7 +888,7 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint &pt)
+	SWND SWindow::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 	{
 		CPoint pt2(pt);
 		TransformPoint(pt2);
@@ -899,9 +906,9 @@ namespace SOUI
 		SWindow *pChild=GetWindow(GSW_LASTCHILD);
 		while(pChild)
 		{
-			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
+			if (pChild->IsVisible(TRUE) && (bIncludeMsgTransparent||!pChild->IsMsgTransparent()))
 			{
-				swndChild = pChild->SwndFromPoint(pt2);
+				swndChild = pChild->SwndFromPoint(pt2,bIncludeMsgTransparent);
 
 				if (swndChild)
 				{
@@ -1493,6 +1500,7 @@ namespace SOUI
 		m_pFirstChild=m_pLastChild=NULL;
 		m_nChildrenCount=0;
 		ClearAnimation();
+		m_style = SwndStyle();
 		m_isDestroying = false;
 	}
 
@@ -2753,6 +2761,11 @@ namespace SOUI
 				hr = S_FALSE;
 			}
 		}
+		if(m_attrStorage)
+		{
+			m_attrStorage->OnSetAttribute(strAttribName,strValue,false);
+		}
+
 		return hr;
 	}
 
@@ -2866,6 +2879,12 @@ namespace SOUI
 	}
 
 
+	LRESULT SWindow::OnUpdateFont(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		OnRebuildFont();
+		return 0;
+	}
+
 	HRESULT SWindow::OnAttrLayout(const SStringW& strValue, BOOL bLoading)
 	{
 		ILayout *pLayout = (ILayout*)SApplication::getSingleton().CreateObject(SObjectInfo(strValue, Layout));
@@ -2879,14 +2898,9 @@ namespace SOUI
 
 	HRESULT SWindow::AfterAttribute(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading,HRESULT hr)
 	{
-		if(!m_attrStorage)
-		{
-			IAttrStorageFactory * pFactory = SApplication::getSingleton().GetAttrStorageFactory();
-			if(pFactory) pFactory->CreateAttrStorage(this,strAttribName,strValue,&m_attrStorage);
-		}
 		if(m_attrStorage)
 		{
-			m_attrStorage->OnSetAttribute(strAttribName,strValue);
+			m_attrStorage->OnSetAttribute(strAttribName,strValue,true);
 		}
 		if((hr&0x0000ffff) == S_OK && !bLoading)
 		{
@@ -2916,7 +2930,7 @@ namespace SOUI
 			return m_attrStorage->OnGetAttribute(strAttr);
 		}else
 		{
-			return __super::GetAttribute(strAttr);
+			return SObject::GetAttribute(strAttr);
 		}
 	}
 
@@ -2964,6 +2978,7 @@ namespace SOUI
 		m_layoutDirty = dirty_self;
 	}
 
+
 	void SWindow::GetScaleSkin(ISkinObj * &pSkin,int nScale)
 	{
 		if(!pSkin) return;
@@ -2973,6 +2988,11 @@ namespace SOUI
 			ISkinObj * pNewSkin =   GETSKIN(strName,nScale);
 			if(pNewSkin) pSkin = pNewSkin;
 		}
+	}
+
+	void SWindow::OnRebuildFont()
+	{
+		m_style.UpdateFont();
 	}
 
 	IAccessible * SWindow::GetAccessible()

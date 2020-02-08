@@ -49,7 +49,7 @@ SOUI是目前为数不多的轻量级可快速开发window桌面程序开源Dire
     ![image](./doc/cmake/07.png)
 
 ### 论坛
-- http://ui520.cn
+- http://www.soui.vip
 ### QQ群
 
 - SOUI讨论#1: [点击加入](http://shang.qq.com/wpa/qunwpa?idkey=9653a811a72365d798a5247d6ba6885a568bdcf51c624f906c8ce7b8fd9e4eda)

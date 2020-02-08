@@ -153,6 +153,7 @@ namespace SOUI
  			MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST,WM_KEYLAST,OnKeyEvent)
  			MESSAGE_RANGE_HANDLER_EX(WM_IME_STARTCOMPOSITION,WM_IME_KEYLAST,OnKeyEvent)
 			MESSAGE_HANDLER_EX(WM_IME_CHAR, OnKeyEvent)
+			MESSAGE_HANDLER_EX(WM_IME_REQUEST,OnKeyEvent)
 		SOUI_MSG_MAP_END()
 		
     protected:
@@ -169,6 +170,7 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
 		virtual void OnScaleChanged(int nScale);
 		virtual HRESULT OnLanguageChanged();
+		virtual void OnRebuildFont();
 
 		virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 		virtual int  GetScrollLineSize(BOOL bVertical);

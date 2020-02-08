@@ -3,6 +3,7 @@
 #include "core/Sskin.h"
 #include "ExtendSkins.h"
 
+namespace SOUI{
 //////////////////////////////////////////////////////////////////////////
 // SColorMask
 SColorMask::SColorMask()
@@ -118,4 +119,6 @@ void SColorMask::MakeCacheApha()
 
     m_bmpSkin->UnlockPixelBits(pBitCache);
     m_bmpMask->UnlockPixelBits(pBitMask);
+}
+
 }

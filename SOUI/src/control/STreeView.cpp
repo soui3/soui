@@ -828,6 +828,7 @@ namespace SOUI
             VISIBLEITEMSMAP::CPair *pFind = pMapOld->Lookup(hItem);
             ItemInfo ii;
 			ii.nType = m_adapter->getViewType(hItem);
+			BOOL bNewItem =FALSE;
             if(pFind && pFind->m_value.nType == ii.nType)
             {//re use the previous item;
 					ii = pFind->m_value;
@@ -837,6 +838,7 @@ namespace SOUI
                 SList<SItemPanel *> *lstRecycle = m_itemRecycle.GetAt(ii.nType);
                 if(lstRecycle->IsEmpty())
                 {//创建一个新的列表项
+					bNewItem = TRUE;
                     ii.pItem = SItemPanel::Create(this,pugi::xml_node(),this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&STreeView::OnItemClick,this));
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelDbclick::EventID,Subscriber(&STreeView::OnItemDblClick,this));
@@ -860,7 +862,12 @@ namespace SOUI
                 ii.pItem->ModifyItemState(0,WndState_Hover);
                 
             m_adapter->getView(hItem,ii.pItem,m_xmlTemplate.first_child());
-			ii.pItem->DoColorize(GetColorizeColor());
+			if(bNewItem)
+			{
+				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
+				ii.pItem->SDispatchMessage(UM_SETLANGUAGE,0,0);
+				ii.pItem->DoColorize(GetColorizeColor());
+			}
 
             rcContainer.left = m_tvItemLocator->GetItemIndent(hItem);
             CSize szItem = m_adapter->getViewDesiredSize(hItem,ii.pItem, rcContainer.Width(), rcContainer.Height());
@@ -970,16 +977,22 @@ namespace SOUI
 			while (hParent)
 			{
 				SItemPanel *pItem = GetItemPanel(hParent);
-				if (pItem)
-					pItem->InvalidateRect(NULL);
+                if (pItem)
+                {
+                    m_adapter->getView(hParent, pItem, m_xmlTemplate.first_child());
+                    pItem->InvalidateRect(NULL);
+                }
 				hParent = m_adapter->GetParentItem(hParent);
 			}
 		}
 		if (!bInvalidChildren)
 		{
 			SItemPanel *pItem = GetItemPanel(hBranch);
-			if (pItem)
-				pItem->InvalidateRect(NULL);
+            if (pItem)
+            {
+                m_adapter->getView(hBranch, pItem, m_xmlTemplate.first_child());
+                pItem->InvalidateRect(NULL);
+            }
 		}
 		else
 		{
@@ -1000,6 +1013,7 @@ namespace SOUI
 				}
 				if (bInvalid)
 				{
+                    m_adapter->getView(hBranch, ii.pItem, m_xmlTemplate.first_child());
 					ii.pItem->InvalidateRect(NULL);
 				}
 			}
@@ -1275,6 +1289,12 @@ namespace SOUI
 				pItem->SDispatchMessage(uMsg, wParam, lParam);
 			}
 		}
+	}
+
+	void STreeView::OnRebuildFont()
+	{
+		__super::OnRebuildFont();
+		DispatchMessage2Items(UM_UPDATEFONT,0,0);
 	}
 
 }

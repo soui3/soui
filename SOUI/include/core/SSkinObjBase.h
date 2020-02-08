@@ -68,6 +68,7 @@ namespace SOUI
 			ATTR_BOOL(L"enableColorize",m_bEnableColorize,TRUE)
 			ATTR_BOOL(L"checkAsPushdown",m_checkAsPushdown,TRUE)
 			ATTR_INT(L"scale",m_nScale,FALSE)
+			ATTR_BOOL(L"enableScale",m_bEnableScale,TRUE)
 			ATTR_STRINGW(L"name",m_strName,FALSE)
         SOUI_ATTRS_END()
 
@@ -84,6 +85,7 @@ namespace SOUI
         COLORREF    m_crColorize;
         bool        m_bEnableColorize;
 		int			m_nScale;
+		bool		m_bEnableScale;
 		bool		m_checkAsPushdown;
 
 		SStringW	m_strName;

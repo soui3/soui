@@ -8,6 +8,11 @@
 namespace SOUI
 {
 
+	SSkinPNGX::SSkinPNGX() :m_bVert(FALSE)
+	{
+
+	}
+
 HRESULT SSkinPNGX::OnAttrDelay(const SStringW &strValue,BOOL bLoading)
 {
 	//解析每一帧的延时，格式为：10,10,20[5],10, 其中[5]代表连续5帧的时延都是20ms。
@@ -69,6 +74,17 @@ void SSkinPNGX::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int dwState,BY
 		else
 			pRT->DrawBitmap9Patch(rcDraw,m_pngx,rcSrc,m_rcMargin,GetExpandCode(),byAlpha);
 	}
+}
+
+void SSkinPNGX::_Scale(ISkinObj *pObj, int nScale)
+{
+	SSkinAni::_Scale(pObj,nScale);
+	SSkinPNGX *pClone = sobj_cast<SSkinPNGX>(pObj);
+	int wid = MulDiv(m_pngx->Width(),nScale,100);
+	int hei = MulDiv(m_pngx->Height(),nScale,100);
+	m_pngx->Scale(&pClone->m_pngx,wid,hei,kHigh_FilterLevel);
+	pClone->m_nDelays = m_nDelays;
+	pClone->m_bVert = m_bVert;
 }
 
 }//end of namespace SOUI

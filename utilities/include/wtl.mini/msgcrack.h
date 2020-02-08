@@ -174,7 +174,7 @@ public: \
             return TRUE; \
     }
 
-// BOOL OnCopyData(CWindow wnd, PCOPYDATASTRUCT pCopyDataStruct)
+// BOOL OnCopyData(HWND wnd, PCOPYDATASTRUCT pCopyDataStruct)
 #define MSG_WM_COPYDATA(func) \
     if (uMsg == WM_COPYDATA) \
     { \
@@ -231,7 +231,7 @@ public: \
             return TRUE; \
     }
 
-// void OnActivate(UINT nState, BOOL bMinimized, CWindow wndOther)
+// void OnActivate(UINT nState, BOOL bMinimized, HWND wndOther)
 #define MSG_WM_ACTIVATE(func) \
     if (uMsg == WM_ACTIVATE) \
     { \
@@ -242,7 +242,7 @@ public: \
             return TRUE; \
     }
 
-// void OnSetFocus(CWindow wndOld)
+// void OnSetFocus(HWND wndOld)
 #define MSG_WM_SETFOCUS(func) \
     if (uMsg == WM_SETFOCUS) \
     { \
@@ -253,7 +253,7 @@ public: \
             return TRUE; \
     }
 
-// void OnKillFocus(CWindow wndFocus)
+// void OnKillFocus(HWND wndFocus)
 #define MSG_WM_KILLFOCUS(func) \
     if (uMsg == WM_KILLFOCUS) \
     { \
@@ -275,7 +275,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPaint(CDCHandle dc)
+// void OnPaint(HDC dc)
 #define MSG_WM_PAINT(func) \
     if (uMsg == WM_PAINT) \
     { \
@@ -317,7 +317,7 @@ public: \
             return TRUE; \
     }
 
-// BOOL OnEraseBkgnd(CDCHandle dc)
+// BOOL OnEraseBkgnd(HDC dc)
 #define MSG_WM_ERASEBKGND(func) \
     if (uMsg == WM_ERASEBKGND) \
     { \
@@ -360,7 +360,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorEdit(CDCHandle dc, CEdit edit)
+// HBRUSH OnCtlColorEdit(HDC dc, HWND edit)
 #define MSG_WM_CTLCOLOREDIT(func) \
     if (uMsg == WM_CTLCOLOREDIT) \
     { \
@@ -370,7 +370,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorListBox(CDCHandle dc, CListBox listBox)
+// HBRUSH OnCtlColorListBox(HDC dc, HWND listBox)
 #define MSG_WM_CTLCOLORLISTBOX(func) \
     if (uMsg == WM_CTLCOLORLISTBOX) \
     { \
@@ -380,7 +380,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorBtn(CDCHandle dc, CButton button)
+// HBRUSH OnCtlColorBtn(HDC dc, HWND button)
 #define MSG_WM_CTLCOLORBTN(func) \
     if (uMsg == WM_CTLCOLORBTN) \
     { \
@@ -390,7 +390,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorDlg(CDCHandle dc, CWindow wnd)
+// HBRUSH OnCtlColorDlg(HDC dc, HWND wnd)
 #define MSG_WM_CTLCOLORDLG(func) \
     if (uMsg == WM_CTLCOLORDLG) \
     { \
@@ -400,7 +400,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorScrollBar(CDCHandle dc, CScrollBar scrollBar)
+// HBRUSH OnCtlColorScrollBar(HDC dc, HWND scrollBar)
 #define MSG_WM_CTLCOLORSCROLLBAR(func) \
     if (uMsg == WM_CTLCOLORSCROLLBAR) \
     { \
@@ -410,7 +410,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnCtlColorStatic(CDCHandle dc, CStatic wndStatic)
+// HBRUSH OnCtlColorStatic(HDC dc, HWND wndStatic)
 #define MSG_WM_CTLCOLORSTATIC(func) \
     if (uMsg == WM_CTLCOLORSTATIC) \
     { \
@@ -486,7 +486,7 @@ public: \
             return TRUE; \
     }
 
-// BOOL OnSetCursor(CWindow wnd, UINT nHitTest, UINT message)
+// BOOL OnSetCursor(HWND wnd, UINT nHitTest, UINT message)
 #define MSG_WM_SETCURSOR(func) \
     if (uMsg == WM_SETCURSOR) \
     { \
@@ -496,7 +496,7 @@ public: \
             return TRUE; \
     }
 
-// int OnMouseActivate(CWindow wndTopLevel, UINT nHitTest, UINT message)
+// int OnMouseActivate(HWND wndTopLevel, UINT nHitTest, UINT message)
 #define MSG_WM_MOUSEACTIVATE(func) \
     if (uMsg == WM_MOUSEACTIVATE) \
     { \
@@ -528,7 +528,7 @@ public: \
             return TRUE; \
     }
 
-// void OnIconEraseBkgnd(CDCHandle dc)
+// void OnIconEraseBkgnd(HDC dc)
 #define MSG_WM_ICONERASEBKGND(func) \
     if (uMsg == WM_ICONERASEBKGND) \
     { \
@@ -583,7 +583,7 @@ public: \
             return TRUE; \
     }
 
-//int OnCharToItem(UINT nChar, UINT nIndex, CListBox listBox)
+//int OnCharToItem(UINT nChar, UINT nIndex, HWND listBox)
 #define MSG_WM_CHARTOITEM(func) \
     if (uMsg == WM_CHARTOITEM) \
     { \
@@ -593,7 +593,7 @@ public: \
             return TRUE; \
     }
 
-// int OnVKeyToItem(UINT nKey, UINT nIndex, CListBox listBox)
+// int OnVKeyToItem(UINT nKey, UINT nIndex, HWND listBox)
 #define MSG_WM_VKEYTOITEM(func) \
     if (uMsg == WM_VKEYTOITEM) \
     { \
@@ -937,7 +937,7 @@ public: \
             return TRUE; \
     }
 
-// void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar)
+// void OnHScroll(int nSBCode, int nPos, HWND pScrollBar)
 #define MSG_WM_HSCROLL(func) \
     if (uMsg == WM_HSCROLL) \
     { \
@@ -948,7 +948,7 @@ public: \
             return TRUE; \
     }
 
-// void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar)
+// void OnVScroll(int nSBCode, int nPos, HWND pScrollBar)
 #define MSG_WM_VSCROLL(func) \
     if (uMsg == WM_VSCROLL) \
     { \
@@ -959,7 +959,7 @@ public: \
             return TRUE; \
     }
 
-// void OnInitMenu(CMenuHandle menu)
+// void OnInitMenu(HMENU menu)
 #define MSG_WM_INITMENU(func) \
     if (uMsg == WM_INITMENU) \
     { \
@@ -992,7 +992,7 @@ public: \
             return TRUE; \
     }
 
-// void OnMenuSelect(UINT nItemID, UINT nFlags, CMenuHandle menu)
+// void OnMenuSelect(UINT nItemID, UINT nFlags, HMENU menu)
 #define MSG_WM_MENUSELECT(func) \
     if (uMsg == WM_MENUSELECT) \
     { \
@@ -1003,7 +1003,7 @@ public: \
             return TRUE; \
     }
 
-// LRESULT OnMenuChar(UINT nChar, UINT nFlags, CMenuHandle menu)
+// LRESULT OnMenuChar(UINT nChar, UINT nFlags, HMENU menu)
 #define MSG_WM_MENUCHAR(func) \
     if (uMsg == WM_MENUCHAR) \
     { \
@@ -1023,7 +1023,7 @@ public: \
             return TRUE; \
     }
 
-// void OnEnterIdle(UINT nWhy, CWindow wndWho)
+// void OnEnterIdle(UINT nWhy, HWND wndWho)
 #define MSG_WM_ENTERIDLE(func) \
     if (uMsg == WM_ENTERIDLE) \
     { \
@@ -1165,7 +1165,7 @@ public: \
             return TRUE; \
     }
 
-// void OnMDIActivate(CWindow wndActivate, CWindow wndDeactivate)
+// void OnMDIActivate(HWND wndActivate, HWND wndDeactivate)
 #define MSG_WM_MDIACTIVATE(func) \
     if (uMsg == WM_MDIACTIVATE) \
     { \
@@ -1220,7 +1220,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPaintClipboard(CWindow wndViewer, const LPPAINTSTRUCT lpPaintStruct)
+// void OnPaintClipboard(HWND wndViewer, const LPPAINTSTRUCT lpPaintStruct)
 #define MSG_WM_PAINTCLIPBOARD(func) \
     if (uMsg == WM_PAINTCLIPBOARD) \
     { \
@@ -1232,7 +1232,7 @@ public: \
             return TRUE; \
     }
 
-// void OnVScrollClipboard(CWindow wndViewer, UINT nSBCode, UINT nPos)
+// void OnVScrollClipboard(HWND wndViewer, UINT nSBCode, UINT nPos)
 #define MSG_WM_VSCROLLCLIPBOARD(func) \
     if (uMsg == WM_VSCROLLCLIPBOARD) \
     { \
@@ -1243,7 +1243,7 @@ public: \
             return TRUE; \
     }
 
-// void OnContextMenu(CWindow wnd, CPoint point)
+// void OnContextMenu(HWND wnd, CPoint point)
 #define MSG_WM_CONTEXTMENU(func) \
     if (uMsg == WM_CONTEXTMENU) \
     { \
@@ -1254,7 +1254,7 @@ public: \
             return TRUE; \
     }
 
-// void OnSizeClipboard(CWindow wndViewer, const LPRECT lpRect)
+// void OnSizeClipboard(HWND wndViewer, const LPRECT lpRect)
 #define MSG_WM_SIZECLIPBOARD(func) \
     if (uMsg == WM_SIZECLIPBOARD) \
     { \
@@ -1277,7 +1277,7 @@ public: \
             return TRUE; \
     }
 
-// void OnChangeCbChain(CWindow wndRemove, CWindow wndAfter)
+// void OnChangeCbChain(HWND wndRemove, HWND wndAfter)
 #define MSG_WM_CHANGECBCHAIN(func) \
     if (uMsg == WM_CHANGECBCHAIN) \
     { \
@@ -1288,7 +1288,7 @@ public: \
             return TRUE; \
     }
 
-// void OnHScrollClipboard(CWindow wndViewer, UINT nSBCode, UINT nPos)
+// void OnHScrollClipboard(HWND wndViewer, UINT nSBCode, UINT nPos)
 #define MSG_WM_HSCROLLCLIPBOARD(func) \
     if (uMsg == WM_HSCROLLCLIPBOARD) \
     { \
@@ -1309,7 +1309,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPaletteChanged(CWindow wndFocus)
+// void OnPaletteChanged(HWND wndFocus)
 #define MSG_WM_PALETTECHANGED(func) \
     if (uMsg == WM_PALETTECHANGED) \
     { \
@@ -1320,7 +1320,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPaletteIsChanging(CWindow wndPalChg)
+// void OnPaletteIsChanging(HWND wndPalChg)
 #define MSG_WM_PALETTEISCHANGING(func) \
     if (uMsg == WM_PALETTEISCHANGING) \
     { \
@@ -1430,7 +1430,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCaptureChanged(CWindow wnd)
+// void OnCaptureChanged(HWND wnd)
 #define MSG_WM_CAPTURECHANGED(func) \
     if (uMsg == WM_CAPTURECHANGED) \
     { \
@@ -1451,7 +1451,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCommand(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl)
 #define MSG_WM_COMMAND(func) \
     if (uMsg == WM_COMMAND) \
     { \
@@ -1611,7 +1611,7 @@ public: \
             return TRUE; \
     }
 
-// int OnNotifyFormat(CWindow wndFrom, int nCommand)
+// int OnNotifyFormat(HWND wndFrom, int nCommand)
 #define MSG_WM_NOTIFYFORMAT(func) \
     if (uMsg == WM_NOTIFYFORMAT) \
     { \
@@ -1631,7 +1631,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPrint(CDCHandle dc, UINT uFlags)
+// void OnPrint(HDC dc, UINT uFlags)
 #define MSG_WM_PRINT(func) \
     if (uMsg == WM_PRINT) \
     { \
@@ -1642,7 +1642,7 @@ public: \
             return TRUE; \
     }
 
-// void OnPrintClient(CDCHandle dc, UINT uFlags)
+// void OnPrintClient(HDC dc, UINT uFlags)
 #define MSG_WM_PRINTCLIENT(func) \
     if (uMsg == WM_PRINTCLIENT) \
     { \
@@ -1758,7 +1758,7 @@ public: \
 
 #if(WINVER >= 0x0500)
 
-// void OnMenuRButtonUp(WPARAM wParam, CMenuHandle menu)
+// void OnMenuRButtonUp(WPARAM wParam, HMENU menu)
 #define MSG_WM_MENURBUTTONUP(func) \
     if (uMsg == WM_MENURBUTTONUP) \
     { \
@@ -1769,7 +1769,7 @@ public: \
             return TRUE; \
     }
 
-// LRESULT OnMenuDrag(WPARAM wParam, CMenuHandle menu)
+// LRESULT OnMenuDrag(WPARAM wParam, HMENU menu)
 #define MSG_WM_MENUDRAG(func) \
     if (uMsg == WM_MENUDRAG) \
     { \
@@ -1789,7 +1789,7 @@ public: \
             return TRUE; \
     }
 
-// void OnUnInitMenuPopup(UINT nID, CMenuHandle menu)
+// void OnUnInitMenuPopup(UINT nID, HMENU menu)
 #define MSG_WM_UNINITMENUPOPUP(func) \
     if (uMsg == WM_UNINITMENUPOPUP) \
     { \
@@ -1800,7 +1800,7 @@ public: \
             return TRUE; \
     }
 
-// void OnMenuCommand(WPARAM nIndex, CMenuHandle menu)
+// void OnMenuCommand(WPARAM nIndex, HMENU menu)
 #define MSG_WM_MENUCOMMAND(func) \
     if (uMsg == WM_MENUCOMMAND) \
     { \
@@ -1815,7 +1815,7 @@ public: \
 
 #if(_WIN32_WINNT >= 0x0500)
 
-// BOOL OnAppCommand(CWindow wndFocus, short cmd, WORD uDevice, int dwKeys)
+// BOOL OnAppCommand(HWND wndFocus, short cmd, WORD uDevice, int dwKeys)
 #define MSG_WM_APPCOMMAND(func) \
     if (uMsg == WM_APPCOMMAND) \
     { \
@@ -2026,7 +2026,7 @@ public: \
 ///////////////////////////////////////////////////////////////////////////////
 // Reflected messages
 
-// void OnReflectedCommand(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnReflectedCommand(UINT uNotifyCode, int nID, HWND wndCtl)
 #define MSG_OCM_COMMAND(func) \
     if (uMsg == OCM_COMMAND) \
     { \
@@ -2101,7 +2101,7 @@ public: \
             return TRUE; \
     }
 
-// int OnReflectedVKeyToItem(UINT nKey, UINT nIndex, CListBox listBox)
+// int OnReflectedVKeyToItem(UINT nKey, UINT nIndex, HWND listBox)
 #define MSG_OCM_VKEYTOITEM(func) \
     if (uMsg == OCM_VKEYTOITEM) \
     { \
@@ -2111,7 +2111,7 @@ public: \
             return TRUE; \
     }
 
-//int OnReflectedCharToItem(UINT nChar, UINT nIndex, CListBox listBox)
+//int OnReflectedCharToItem(UINT nChar, UINT nIndex, HWND listBox)
 #define MSG_OCM_CHARTOITEM(func) \
     if (uMsg == OCM_CHARTOITEM) \
     { \
@@ -2121,7 +2121,7 @@ public: \
             return TRUE; \
     }
 
-// void OnReflectedHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar)
+// void OnReflectedHScroll(UINT nSBCode, UINT nPos, HWND pScrollBar)
 #define MSG_OCM_HSCROLL(func) \
     if (uMsg == OCM_HSCROLL) \
     { \
@@ -2132,7 +2132,7 @@ public: \
             return TRUE; \
     }
 
-// void OnReflectedVScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar)
+// void OnReflectedVScroll(UINT nSBCode, UINT nPos, HWND pScrollBar)
 #define MSG_OCM_VSCROLL(func) \
     if (uMsg == OCM_VSCROLL) \
     { \
@@ -2143,7 +2143,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorEdit(CDCHandle dc, CEdit edit)
+// HBRUSH OnReflectedCtlColorEdit(HDC dc, HWND edit)
 #define MSG_OCM_CTLCOLOREDIT(func) \
     if (uMsg == OCM_CTLCOLOREDIT) \
     { \
@@ -2153,7 +2153,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorListBox(CDCHandle dc, CListBox listBox)
+// HBRUSH OnReflectedCtlColorListBox(HDC dc, HWND listBox)
 #define MSG_OCM_CTLCOLORLISTBOX(func) \
     if (uMsg == OCM_CTLCOLORLISTBOX) \
     { \
@@ -2163,7 +2163,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorBtn(CDCHandle dc, CButton button)
+// HBRUSH OnReflectedCtlColorBtn(HDC dc, HWND button)
 #define MSG_OCM_CTLCOLORBTN(func) \
     if (uMsg == OCM_CTLCOLORBTN) \
     { \
@@ -2173,7 +2173,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorDlg(CDCHandle dc, CWindow wnd)
+// HBRUSH OnReflectedCtlColorDlg(HDC dc, HWND wnd)
 #define MSG_OCM_CTLCOLORDLG(func) \
     if (uMsg == OCM_CTLCOLORDLG) \
     { \
@@ -2183,7 +2183,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorScrollBar(CDCHandle dc, CScrollBar scrollBar)
+// HBRUSH OnReflectedCtlColorScrollBar(HDC dc, HWND scrollBar)
 #define MSG_OCM_CTLCOLORSCROLLBAR(func) \
     if (uMsg == OCM_CTLCOLORSCROLLBAR) \
     { \
@@ -2193,7 +2193,7 @@ public: \
             return TRUE; \
     }
 
-// HBRUSH OnReflectedCtlColorStatic(CDCHandle dc, CStatic wndStatic)
+// HBRUSH OnReflectedCtlColorStatic(HDC dc, HWND wndStatic)
 #define MSG_OCM_CTLCOLORSTATIC(func) \
     if (uMsg == OCM_CTLCOLORSTATIC) \
     { \
@@ -2287,7 +2287,7 @@ public: \
 ///////////////////////////////////////////////////////////////////////////////
 // Commands and notifications
 
-// void OnCommandHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommandHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define COMMAND_HANDLER_EX(id, code, func) \
     if (uMsg == WM_COMMAND && code == HIWORD(wParam) && id == LOWORD(wParam)) \
     { \
@@ -2298,7 +2298,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCommandIDHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommandIDHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define COMMAND_ID_HANDLER_EX(id, func) \
     if (uMsg == WM_COMMAND && id == LOWORD(wParam)) \
     { \
@@ -2309,7 +2309,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCommandCodeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommandCodeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define COMMAND_CODE_HANDLER_EX(code, func) \
     if (uMsg == WM_COMMAND && code == HIWORD(wParam)) \
     { \
@@ -2350,7 +2350,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCommandRangeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommandRangeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define COMMAND_RANGE_HANDLER_EX(idFirst, idLast, func) \
     if(uMsg == WM_COMMAND && LOWORD(wParam) >= idFirst && LOWORD(wParam) <= idLast) \
     { \
@@ -2361,7 +2361,7 @@ public: \
             return TRUE; \
     }
 
-// void OnCommandRangeCodeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnCommandRangeCodeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define COMMAND_RANGE_CODE_HANDLER_EX(idFirst, idLast, code, func) \
     if(uMsg == WM_COMMAND && code == HIWORD(wParam) && LOWORD(wParam) >= idFirst && LOWORD(wParam) <= idLast) \
     { \
@@ -2392,7 +2392,7 @@ public: \
             return TRUE; \
     }
 
-// LRESULT OnReflectedCommandHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// LRESULT OnReflectedCommandHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define REFLECTED_COMMAND_HANDLER_EX(id, code, func) \
     if (uMsg == OCM_COMMAND && code == HIWORD(wParam) && id == LOWORD(wParam)) \
     { \
@@ -2403,7 +2403,7 @@ public: \
             return TRUE; \
     }
 
-// LRESULT OnReflectedCommandIDHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// LRESULT OnReflectedCommandIDHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define REFLECTED_COMMAND_ID_HANDLER_EX(id, func) \
     if (uMsg == OCM_COMMAND && id == LOWORD(wParam)) \
     { \
@@ -2414,7 +2414,7 @@ public: \
             return TRUE; \
     }
 
-// LRESULT OnReflectedCommandCodeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// LRESULT OnReflectedCommandCodeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define REFLECTED_COMMAND_CODE_HANDLER_EX(code, func) \
     if (uMsg == OCM_COMMAND && code == HIWORD(wParam)) \
     { \
@@ -2455,7 +2455,7 @@ public: \
             return TRUE; \
     }
 
-// void OnReflectedCommandRangeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnReflectedCommandRangeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define REFLECTED_COMMAND_RANGE_HANDLER_EX(idFirst, idLast, func) \
     if(uMsg == OCM_COMMAND && LOWORD(wParam) >= idFirst && LOWORD(wParam) <= idLast) \
     { \
@@ -2466,7 +2466,7 @@ public: \
             return TRUE; \
     }
 
-// void OnReflectedCommandRangeCodeHandlerEX(UINT uNotifyCode, int nID, CWindow wndCtl)
+// void OnReflectedCommandRangeCodeHandlerEX(UINT uNotifyCode, int nID, HWND wndCtl)
 #define REFLECTED_COMMAND_RANGE_CODE_HANDLER_EX(idFirst, idLast, code, func) \
     if(uMsg == OCM_COMMAND && code == HIWORD(wParam) && LOWORD(wParam) >= idFirst && LOWORD(wParam) <= idLast) \
     { \

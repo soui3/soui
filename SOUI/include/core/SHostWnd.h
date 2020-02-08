@@ -5,18 +5,18 @@
 
 #pragma once
 
-#include "SWndContainerImpl.h"
-#include "SNativeWnd.h"
-#include "SDropTargetDispatcher.h"
-#include "event/SEventcrack.h"
-#include "interface/stooltip-i.h"
-#include "core/SCaret.h"
-#include "core/SHostMsgDef.h"
-#include "layout/SLayoutsize.h"
-#include "helper/SplitString.h"
-#include "helper/SWndSpy.h"
-#include "helper/SScriptTimer.h"
-
+#include <core/SWndContainerImpl.h>
+#include <core/SNativeWnd.h>
+#include <core/SDropTargetDispatcher.h>
+#include <event/SEventcrack.h>
+#include <interface/stooltip-i.h>
+#include <interface/SHostMsgHandler-i.h>
+#include <core/SCaret.h>
+#include <core/SHostMsgDef.h>
+#include <layout/SLayoutsize.h>
+#include <helper/SplitString.h>
+#include <helper/SWndSpy.h>
+#include <helper/SScriptTimer.h>
 namespace SOUI
 {
     class SHostWndAttr : public SObject, public ITrCtxProvider
@@ -98,6 +98,7 @@ namespace SOUI
 class SOUI_EXP SHostWnd
     : public SwndContainerImpl
     , public SNativeWnd
+	, protected IHostMsgHandler
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
@@ -177,6 +178,7 @@ public:
 	void SetHostAnimation(IAnimation *pAni,bool startNow = true);
 	bool StartHostAnimation();
 	bool StopHostAnimation();
+	void UpdateAutoSizeCount(bool bInc);
 protected:
 	class SHostAnimationHandler : public ITimelineHandler
 	{
@@ -223,7 +225,7 @@ protected:
 
     LRESULT OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    LRESULT OnHostMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
@@ -305,6 +307,8 @@ protected:// IContainer
 	virtual int GetScale() const;
 
 	virtual void OnCavasInvalidate(SWND swnd);
+
+	virtual void EnableIME(BOOL bEnable);
 protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
@@ -318,7 +322,10 @@ protected:
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 
 protected:
-	virtual void OnWindowTextChanged(LPCTSTR pszTitle) override;
+	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
+	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
+protected:
+	virtual void OnHostMsg(bool bRelayout,UINT uMsg, WPARAM wParam, LPARAM lParam) override; 
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
@@ -344,7 +351,8 @@ public://事件处理接口
         MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST, WM_KEYLAST, OnKeyEvent)
         MESSAGE_RANGE_HANDLER_EX(WM_IME_STARTCOMPOSITION,WM_IME_KEYLAST,OnKeyEvent)
         MESSAGE_HANDLER_EX(WM_IME_CHAR, OnKeyEvent)
-        MESSAGE_HANDLER_EX(WM_ACTIVATEAPP,OnHostMsg)
+		MESSAGE_HANDLER_EX(WM_IME_REQUEST, OnKeyEvent)
+        MESSAGE_HANDLER_EX(WM_ACTIVATEAPP,OnActivateApp)
         MSG_WM_SETCURSOR(OnSetCursor)
         MSG_WM_TIMER(OnTimer)
         MSG_WM_NCACTIVATE(OnNcActivate)
@@ -364,8 +372,6 @@ public://事件处理接口
     #endif
         REFLECT_NOTIFY_CODE(NM_CUSTOMDRAW)
     END_MSG_MAP()
-
-
 };
 
 }//namespace SOUI

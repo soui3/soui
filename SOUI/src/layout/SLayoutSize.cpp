@@ -7,12 +7,15 @@
 
 namespace SOUI
 {
-	static const wchar_t* s_pszUnit[] =
+	static const wchar_t * kUnitMap[]=
 	{
-		L"px",L"dp",L"dip",L"sp"
+		L"px",
+		L"dp",
+		L"dip",
+		L"sp",
 	};
 
-	SLayoutSize::SLayoutSize() :fSize(0.0f),unit(defUnit)
+	SLayoutSize::SLayoutSize(float _fSize) :fSize(_fSize),unit(defUnit)
 	{
 
 	}
@@ -38,19 +41,8 @@ namespace SOUI
 
 	SStringW SLayoutSize::toString() const
 	{
-		SStringW strValue = SStringW().Format(L"%f",fSize);
-		//去掉sprintf("%f")生成的小数点最后无效的0
-		LPCWSTR pszData = strValue;
-		for(int i=strValue.GetLength()-1;i>=0;i--)
-		{
-			if(pszData[i]!=L'0')
-			{
-				if(pszData[i]==L'.') i--;
-				strValue = strValue.Left(i+1);
-				break;
-			}
-		}
-		return SStringW().Format(L"%s%s",strValue,s_pszUnit[unit]);
+		//copy from stringstream.
+		return SStringW().Format(L"%.*g%s",8,fSize,kUnitMap[unit]);
 	}
 
 
@@ -115,18 +107,31 @@ namespace SOUI
 	void SLayoutSize::parseString(const SStringW & strSize)
 	{
 		if(strSize.IsEmpty()) return;
-		SStringW strUnit = strSize.Right(2);
-		strUnit.MakeLower();
-		unit = defUnit;
-		for(int i=0; i< ARRAYSIZE(s_pszUnit);i++)
+		int cUnitSize = 0;
+		for(int i=strSize.GetLength()-1;i>=0;i--)
 		{
-			if(strUnit.Compare(s_pszUnit[i]) == 0)
+			wchar_t c = strSize[i];
+			if((c>='a' && c<'z')||
+				(c>='A' && c<='z'))
 			{
-				unit = (Unit)i;
+				cUnitSize++;
+			}else
+			{
 				break;
 			}
 		}
-		fSize = (float)_wtof(strSize);
+		if(cUnitSize>0)
+		{
+			SStringW strUnit= strSize.Right(cUnitSize);
+			unit = unitFromString(strUnit);
+			if(unit == unknow) 
+				unit = defUnit;
+			fSize = (float)_wtof(strSize.Left(strSize.GetLength()-cUnitSize));
+		}else
+		{
+			unit = defUnit;
+			fSize = (float)_wtof(strSize);
+		}
 	}
 
 	//只复制数值,不复制方向
@@ -144,18 +149,29 @@ namespace SOUI
 		return ret;
 	}
 
-	void SLayoutSize::setDefUnit(SStringW &strUnit)
+	SLayoutSize::Unit SLayoutSize::setDefUnit(SLayoutSize::Unit unit)
 	{
-		strUnit.MakeLower();
-		defUnit = px;
-		for (int i = 0; i < ARRAYSIZE(s_pszUnit); i++)
+		if(unit == unknow)
+			return unknow;
+		Unit ret = defUnit;
+		defUnit = unit;
+		return ret;
+	}
+
+	SLayoutSize::Unit SLayoutSize::unitFromString(const SStringW & strUnit)
+	{
+		Unit ret = unknow;
+		SStringW strUnit2 = strUnit;
+		strUnit2.MakeLower();
+		for (int i = 0; i < ARRAYSIZE(kUnitMap); i++)
 		{
-			if (strUnit.Compare(s_pszUnit[i]) == 0)
+			if (strUnit2.Compare(kUnitMap[i]) == 0)
 			{
-				defUnit = (Unit)i;
+				ret = (Unit)i;
 				break;
 			}
 		}
+		return ret;
 	}
 
 	SLayoutSize::Unit SLayoutSize::defUnit = SLayoutSize::px;

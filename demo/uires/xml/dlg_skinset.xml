@@ -22,10 +22,6 @@
     <imglist name="skin_bkimg_15_fit" src="bkimg:skin_pic_15" colorizeEnable="0"/>
     <imglist name="skin_bkimg_16_fit" src="bkimg:skin_pic_16" colorizeEnable="0"/>
     <imglist name="skin_bkimg_17_fit" src="bkimg:skin_pic_17" colorizeEnable="0"/>
-    <imglist name="skin_color" src="img:png_skin_color" colorizeEnable="0"/>
-    <imglist name="skin_tab_bk" src="img:png_tab_set_bk_skin" states="3"/>
-    <imglist name="skin_btn_custom" src="img:png_skin_custom" states="3"/>
-    <imgframe name="skin_page_icons"  src="img:png_tab_page_icons" margin-x="4" top="4" bottom="15" states="2"/>
   </skin>
   <root colorBkgnd="#eeeeee" cache="1" width="758" height="500">
     <window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1">

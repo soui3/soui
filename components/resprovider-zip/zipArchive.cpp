@@ -355,7 +355,6 @@ CZipFile::CZipFile(DWORD dwSize/*=0*/)
 	BOOL CZipArchive::GetFile2(int iIndex, CZipFile& file)
 	{
 		_ASSERTE(IsOpen());
-		_ASSERTE(iIndex >= 0 && iIndex < m_Header.nDirEntries);
 
 		if (m_hFile == INVALID_HANDLE_VALUE)
 			return FALSE;
@@ -438,7 +437,6 @@ CZipFile::CZipFile(DWORD dwSize/*=0*/)
 	BOOL CZipArchive::GetFile(int iIndex, CZipFile& file)
 	{
 		_ASSERTE(IsOpen());
-		_ASSERTE(iIndex >= 0 && iIndex < m_Header.nDirEntries);
 
 		if (m_hFile == INVALID_HANDLE_VALUE)
 			return FALSE;

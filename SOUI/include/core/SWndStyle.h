@@ -57,6 +57,7 @@ public:
 
 	BOOL GetMultiLines() const { return m_bMultiLines; }
 	void SetMultiLines(BOOL bMultiLines) { m_bMultiLines = bMultiLines; }
+	void UpdateFont();
 protected:
 	SLayoutSize    m_rcMargin[4];   /**< 4周非客户区大小 */
 	SLayoutSize    m_rcInset[4];    /**< 文字区4个方向的内边距 */

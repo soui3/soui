@@ -124,8 +124,13 @@ namespace SOUI{
 	class SDpiHandler
 	{
 	protected:
+		virtual bool IsDpiAware() const{
+			return true;
+		}
 		void OnDpiChanged(WORD dpi, const RECT* desRect)
 		{
+			if(!IsDpiAware())
+				return;
 			T *pT = static_cast<T*>(this);
 
 			int nScale = dpi * 100 / 96;
@@ -136,10 +141,10 @@ namespace SOUI{
 		virtual void HandleScaleChange(WORD nScale, const RECT *desRect)
 		{
 			T *pT = static_cast<T*>(this);
-
 			if (nScale != pT->SWindow::GetScale()) //As ShostWnd::GetScale is under protect, here, we using SWindow::GetScale.
 			{
 				pT->SDispatchMessage(UM_SETSCALE, nScale, 0);
+				pT->UpdateAutoSizeCount(true);
 				pT->SetWindowPos(
 					NULL,
 					desRect->left,
@@ -147,7 +152,25 @@ namespace SOUI{
 					desRect->right - desRect->left,
 					desRect->bottom - desRect->top,
 					SWP_NOZORDER | SWP_NOACTIVATE);
+				pT->UpdateAutoSizeCount(false);
 			}
+		}
+
+		void ScaleHost(HWND hWnd)
+		{
+			int nScale = SDpiHelper::getScale(hWnd);
+			if(!IsDpiAware())
+				nScale = 100;
+			nScale = SDpiScale::NormalizeScale(nScale);
+			CRect rc;
+			::GetWindowRect(hWnd,&rc);
+			CSize sz = rc.Size();
+			sz.cx = sz.cx * nScale / 100;
+			sz.cy = sz.cy * nScale / 100;
+			CPoint ntl = rc.CenterPoint();
+			ntl.Offset(-sz.cx / 2, -sz.cy / 2);
+			rc = CRect(ntl, sz);
+			HandleScaleChange(nScale, &rc);
 		}
 	public:
 		BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0)
@@ -157,18 +180,7 @@ namespace SOUI{
 			case 0:
 				if (uMsg == WM_INITDIALOG)
 				{
-					int nScale = SDpiHelper::getScale(hWnd);
-					nScale = SDpiScale::NormalizeScale(nScale);
-					CRect rc;
-					::GetWindowRect(hWnd,&rc);
-					CSize sz = rc.Size();
-					sz.cx = sz.cx * nScale / 100;
-					sz.cy = sz.cy * nScale / 100;
-					CPoint ntl = rc.CenterPoint();
-					ntl.Offset(-sz.cx / 2, -sz.cy / 2);
-					rc = CRect(ntl, sz);
-					HandleScaleChange(nScale, &rc);
-
+					ScaleHost(hWnd);
 					lResult = 0;
 				}
 				if (uMsg == WM_DPICHANGED)

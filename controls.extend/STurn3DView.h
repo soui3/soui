@@ -8,7 +8,8 @@
 #pragma once
 
 #include "image3d/3dTransform.h"
-#include <event/Events.h>
+#include <event/SEvents.h>
+
 namespace SOUI
 {
     class EventTurn3d : public TplEventArgs<EventTurn3d>

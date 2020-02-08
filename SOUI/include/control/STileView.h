@@ -65,6 +65,7 @@ protected:
     virtual void OnColorize(COLORREF cr);
 	virtual void OnScaleChanged(int nScale);
 	virtual HRESULT OnLanguageChanged();
+	virtual void OnRebuildFont();
 protected:
     void DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam);
     void UpdateScrollBar();
@@ -110,6 +111,7 @@ protected:
 		MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST, WM_KEYLAST, OnKeyEvent)
 		MESSAGE_RANGE_HANDLER_EX(WM_IME_STARTCOMPOSITION, WM_IME_KEYLAST, OnKeyEvent)
 		MESSAGE_HANDLER_EX(WM_IME_CHAR, OnKeyEvent)
+		MESSAGE_HANDLER_EX(WM_IME_REQUEST,OnKeyEvent)
     SOUI_MSG_MAP_END()
     
     SOUI_ATTRS_BEGIN()

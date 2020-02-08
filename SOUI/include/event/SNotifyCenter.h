@@ -63,7 +63,7 @@ namespace SOUI
 						, protected INotifyCallback
 	{
 	public:
-		SNotifyCenter(void);
+		SNotifyCenter(int nIntervel=20);
 		~SNotifyCenter(void);
 
         /**
@@ -117,6 +117,8 @@ namespace SOUI
 
 		SCriticalSection	m_cs;
 		SList<EventArgs *> m_ayncEvent;
+		BOOL				m_bRunning;
+		int					m_nInterval;
 #ifdef ENABLE_RUNONUI
 		SList < std::function<void(void)> * > m_asyncFuns;
 	public:

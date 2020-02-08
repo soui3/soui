@@ -894,7 +894,7 @@ void SMaskEdit::SetMaskState()
     SStringT strWindowText = GetWindowText();
 
     CorrectWindowText();
-    GetContainer()->OnShowCaret(FALSE);
+    GetContainer()->GetCaret()->SetVisible(FALSE);
 
     if (strWindowText != m_strWindowText)
     {
@@ -903,8 +903,8 @@ void SMaskEdit::SetMaskState()
         m_bModified = TRUE;
     }
 
-    SetSel(MAKELONG(m_nStartChar, m_nEndChar), FALSE);
-    GetContainer()->OnShowCaret(TRUE);
+    SetSel(m_nStartChar, m_nEndChar, FALSE);
+    GetContainer()->GetCaret()->SetVisible(TRUE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -937,7 +937,7 @@ void SDateEdit::SetDateTime(LPCTSTR strDate)
     SetWindowText(S_CT2W(strDate));
 }
 
-void SDateEdit::SetDateTime( CTime tm )
+void SDateEdit::SetDateTime(STime tm )
 {
     TCHAR szBuf[256];
     struct tm ttm;
@@ -999,7 +999,7 @@ int STimeEdit::OnCreate(LPVOID)
     if (nRet != 0)
         return nRet;
 
-    SetDateTime(CTime::GetCurrentTime());
+    SetDateTime(STime::GetCurrentTime());
 
     return 0;
 }

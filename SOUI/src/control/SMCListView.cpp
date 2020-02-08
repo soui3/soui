@@ -143,8 +143,16 @@ BOOL SMCListView::CreateChildren(pugi::xml_node xmlNode)
     //  listctrl的子控件只能是一个header控件
 	pugi::xml_node xmlTemplate = xmlNode.child(L"template");
 	xmlTemplate.set_userdata(1);
+	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
+	xmlHeader.set_userdata(1);
+	m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
+	SASSERT(m_pHeader);
+	if(!m_pHeader) return FALSE;
+	InsertChild(m_pHeader);
+	m_pHeader->InitFromXml(xmlHeader);
+
 	if (!__super::CreateChildren(xmlNode))
-        return FALSE;
+		return FALSE;
     if(xmlTemplate)
     {
         m_xmlTemplate.append_copy(xmlTemplate);
@@ -161,22 +169,6 @@ BOOL SMCListView::CreateChildren(pugi::xml_node xmlNode)
             pItemLocator->Release();
         }
     }
-
-	m_pHeader = NULL;
-	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
-	if (!xmlHeader)
-	{
-		m_pHeader = FindChildByClass<SHeaderCtrl>(0);
-	}
-	else
-	{
-		m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
-		SASSERT(m_pHeader);
-		InsertChild(m_pHeader);
-		m_pHeader->InitFromXml(xmlHeader);
-	}
-
-    if(!m_pHeader) return FALSE;
 
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemChanging::EventID, Subscriber(&SMCListView::OnHeaderSizeChanging,this));
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemSwap::EventID, Subscriber(&SMCListView::OnHeaderSwap,this));
@@ -561,11 +553,13 @@ void SMCListView::UpdateVisibleItems()
                     pItemInfos[iItem].pItem = NULL;//标记该行已经被重用
                 }
             }
+			BOOL bNewItem = FALSE;
             if(!ii.pItem)
             {//create new visible item
                 SList<SItemPanel *> *lstRecycle = m_itemRecycle.GetAt(ii.nType);
                 if(lstRecycle->IsEmpty())
                 {//创建一个新的列表项
+					bNewItem = TRUE;
                     ii.pItem = SItemPanel::Create(this,pugi::xml_node(),this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&SMCListView::OnItemClick,this));
                 }else
@@ -590,7 +584,12 @@ void SMCListView::UpdateVisibleItems()
             
             //应用可以根据ii.pItem的状态来决定如何初始化列表数据
             m_adapter->getView(iNewLastVisible,ii.pItem,m_xmlTemplate.first_child());
-			ii.pItem->DoColorize(GetColorizeColor());
+			if(bNewItem)
+			{
+				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
+				ii.pItem->SDispatchMessage(UM_SETLANGUAGE,0,0);
+				ii.pItem->DoColorize(GetColorizeColor());
+			}
 
             if(!m_lvItemLocator->IsFixHeight())
             {//计算出列表行高度
@@ -1223,6 +1222,12 @@ void SMCListView::OnShowWindow(BOOL bShow, UINT nStatus)
 SHeaderCtrl * SMCListView::GetHeaderCtrl() const
 {
 	return m_pHeader;
+}
+
+void SMCListView::OnRebuildFont()
+{
+	__super::OnRebuildFont();
+	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 
 }//end of namespace 

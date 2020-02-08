@@ -12,6 +12,7 @@
 #include "helper/SToolTip.h"
 #include "helper/SAppDir.h"
 #include "helper/SwndFinder.h"
+#include "helper/SHostMgr.h"
 
 #include "control/Smessagebox.h"
 #include "updatelayeredwindow/SUpdateLayeredWindow.h"
@@ -225,7 +226,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
     m_strAppDir = appDir.AppDir();
     
     m_pMsgLoop = GetMsgLoopFactory()->CreateMsgLoop();
-
+	PushMsgLoop(m_pMsgLoop);
 	sysObjRegister.RegisterLayouts(this);
 	sysObjRegister.RegisterSkins(this);
 	sysObjRegister.RegisterWindows(this);
@@ -236,6 +237,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 
 SApplication::~SApplication(void)
 {
+	PopMsgLoop();
     GetMsgLoopFactory()->DestoryMsgLoop(m_pMsgLoop);
     
 	SResProviderMgr::RemoveAll();
@@ -256,6 +258,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 	m_pSingletons[STextServiceHelper::GetType()] = new STextServiceHelper();
 	m_pSingletons[SRicheditMenuDef::GetType()] = new SRicheditMenuDef();
 	m_pSingletons[SNativeWndHelper::GetType()] =   new SNativeWndHelper(hInst, pszHostClassName, bImeApp);
+	m_pSingletons[SHostMgr::GetType()] =   new SHostMgr();
 }
 
 #define DELETE_SINGLETON(x) \
@@ -264,6 +267,7 @@ void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BO
 
 void SApplication::_DestroySingletons()
 {
+	DELETE_SINGLETON(SHostMgr);
 	DELETE_SINGLETON(SNativeWndHelper);
 	DELETE_SINGLETON(SRicheditMenuDef);
 	DELETE_SINGLETON(STextServiceHelper);
@@ -352,7 +356,7 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
     pResProvider->GetRawBuffer(pszType,pszXmlName,strXml,dwSize);
 
     pugi::xml_parse_result result= xmlDoc.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
-    SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,result.description(),result.offset);
+	SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,S_CA2W(result.description()),result.offset);
     return result;
 }
 
@@ -498,7 +502,8 @@ HWND SApplication::GetMainWnd()
 
 BOOL SApplication::SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac)
 {
-    if(m_pMsgLoop->IsRunning()) return FALSE;
+	if(m_lstMsgLoop.GetCount()>0)
+		return FALSE;
     m_msgLoopFactory->DestoryMsgLoop(m_pMsgLoop);
     m_msgLoopFactory = pMsgLoopFac;
     m_pMsgLoop = m_msgLoopFactory->CreateMsgLoop();
@@ -595,6 +600,21 @@ void SApplication::SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFacto
 	m_pAttrStroageFactory = pAttrStorageFactory;
 }
 
+void SApplication::PushMsgLoop(SMessageLoop * pMsgLoop)
+{
+	m_lstMsgLoop.AddTail(pMsgLoop);
+}
+
+SMessageLoop * SApplication::PopMsgLoop()
+{
+	return m_lstMsgLoop.RemoveTail();
+}
+
+SMessageLoop * SApplication::GetMsgLoop()
+{
+	SASSERT(!m_lstMsgLoop.IsEmpty());
+	return m_lstMsgLoop.GetTail();
+}
 
 
 }//namespace SOUI

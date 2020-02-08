@@ -7,6 +7,9 @@
 #include "helper/SplitString.h"
 #include "helper/STime.h"
 #include "../updatelayeredwindow/SUpdateLayeredWindow.h"
+#include <helper/SHostMgr.h>
+#include <Imm.h>
+#pragma comment(lib,"imm32.lib")
 
 namespace SOUI
 {
@@ -24,22 +27,32 @@ namespace SOUI
 		{
 		}
 
-		void OnPaint(HDC dc);
+		void OnPaint(HDC dc)
+		{
+			PAINTSTRUCT ps;
+			::BeginPaint(m_hWnd, &ps);
+			::EndPaint(m_hWnd, &ps);
+			m_pOwner->OnPrint(NULL,KConstDummyPaint);
+		}
+
+		void OnDestroy()
+		{
+			m_pOwner->m_dummyWnd = NULL;
+		}
+
+		virtual void OnFinalMessage(HWND hWnd)
+		{
+			delete this;
+		}
 
 		BEGIN_MSG_MAP_EX(SDummyWnd)
 			MSG_WM_PAINT(OnPaint)
-			END_MSG_MAP()
+			MSG_WM_DESTROY(OnDestroy)
+		END_MSG_MAP()
 	private:
 		SHostWnd *m_pOwner;
 	};
 
-void SDummyWnd::OnPaint( HDC dc )
-{
-    PAINTSTRUCT ps;
-    ::BeginPaint(m_hWnd, &ps);
-    ::EndPaint(m_hWnd, &ps);
-    m_pOwner->OnPrint(NULL,KConstDummyPaint);
-}
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,6 +122,7 @@ CSize SHostWndAttr::GetMinSize(int nScale) const
 	return szRet;
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 // SHostWnd
 //////////////////////////////////////////////////////////////////////////
@@ -146,9 +160,9 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
 {
     if (NULL != m_hWnd)
         return m_hWnd;
-	m_nAutoSizing++;
+	UpdateAutoSizeCount(true);
     HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
-	m_nAutoSizing--;
+	UpdateAutoSizeCount(false);
 	if(!hWnd) return NULL;
 
     if(nWidth==0 || nHeight==0) CenterWindow(hWndParent);
@@ -165,9 +179,9 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	if (!m_bResizing)
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
-		m_nAutoSizing++;
+		UpdateAutoSizeCount(true);
 		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
-		m_nAutoSizing--;
+		UpdateAutoSizeCount(false);
 	}
 	return true;
 }
@@ -194,13 +208,17 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     //create new script module
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
+	m_hostAttr.Init();
+	m_hostAttr.InitFromXml(xmlNode);
 
     if(m_privateStylePool->GetCount())
     {
         m_privateStylePool->RemoveAll();
         GETSTYLEPOOLMGR->PopStylePool(m_privateStylePool);
     }
-    m_privateStylePool->Init(xmlNode.child(L"style"));
+	pugi::xml_node xmlStyle = xmlNode.child(L"style");
+	xmlStyle.set_userdata(1);
+    m_privateStylePool->Init(xmlStyle);
     if(m_privateStylePool->GetCount())
     {
         GETSTYLEPOOLMGR->PushStylePool(m_privateStylePool);
@@ -210,7 +228,9 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         m_privateSkinPool->RemoveAll();
         GETSKINPOOLMGR->PopSkinPool(m_privateSkinPool);
     }
-    m_privateSkinPool->LoadSkins(xmlNode.child(L"skin"));//从xmlNode加加载私有skin
+	pugi::xml_node xmlSkin = xmlNode.child(L"skin");
+	xmlSkin.set_userdata(1);
+    m_privateSkinPool->LoadSkins(xmlSkin);//从xmlNode加加载私有skin
     if(m_privateSkinPool->GetCount())
     {
         GETSKINPOOLMGR->PushSkinPool(m_privateSkinPool);
@@ -221,13 +241,16 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		m_privateTemplatePool->RemoveAll();
 		GETTEMPLATEPOOLMR->PopTemplatePool(m_privateTemplatePool);
 	}
-	m_privateTemplatePool->Init(xmlNode.child(L"template"));
+	pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+	xmlTemplate.set_userdata(1);
+	m_privateTemplatePool->Init(xmlTemplate);
 	if(m_privateTemplatePool->GetCount())
 	{
 		GETTEMPLATEPOOLMR->PushTemplatePool(m_privateTemplatePool);
 	}
     //加载脚本数据
     pugi::xml_node xmlScript = xmlNode.child(L"script");
+	xmlScript.set_userdata(1);
     if(m_pScriptModule && xmlScript)
     {
         pugi::xml_attribute attrSrc = xmlScript.attribute(L"src");
@@ -260,9 +283,6 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     DWORD dwStyle =SNativeWnd::GetStyle();
     DWORD dwExStyle  = SNativeWnd::GetExStyle();
     
-    m_hostAttr.Init();
-    m_hostAttr.InitFromXml(xmlNode);
-
     if (m_hostAttr.m_bResizable)
     {
         dwStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
@@ -296,7 +316,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     {
         SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 		m_dummyWnd = new SDummyWnd(this);
-        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,NULL,NULL);
+        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
         m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
         ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
         m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
@@ -318,12 +338,13 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	pugi::xml_attribute attrWid = xmlNode.attribute(L"width");
 	pugi::xml_attribute attrHei = xmlNode.attribute(L"height");
 	pugi::xml_node xmlRoot = xmlNode.child(L"root");
+	xmlRoot.set_userdata(1);
 	if (attrWid && !xmlRoot.attribute(attrWid.name()))
 		xmlRoot.append_copy(attrWid);
 	if (attrHei && !xmlRoot.attribute(attrHei.name()))
 		xmlRoot.append_copy(attrHei);
 
-    SWindow::InitFromXml(xmlNode.child(L"root"));
+    SWindow::InitFromXml(xmlRoot);
     BuildWndTreeZorder();
 
 	int nWidth = m_szAppSetted.cx;
@@ -349,9 +370,9 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
 	if(nWidth != m_szAppSetted.cx || nHeight != m_szAppSetted.cy)
 	{
-		m_nAutoSizing++;
+		UpdateAutoSizeCount(true);
 		SetWindowPos(NULL,0,0,nWidth,nHeight,SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE);
-		m_nAutoSizing--;
+		UpdateAutoSizeCount(false);
 	}
 
     CRect rcClient;
@@ -366,15 +387,20 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     EventInit evt(this);
     FireEvent(evt);
 
-    return TRUE;
-}
-
-void SHostWnd::OnWindowTextChanged(LPCTSTR pszTitle)
-{
-	if (m_dummyWnd)
+	//handle user xml node
+	pugi::xml_node xmlChild = xmlNode.first_child();
+	while(xmlChild)
 	{
-		m_dummyWnd->SetWindowText(pszTitle);
+		if(xmlChild.get_userdata()!=1)
+		{
+			OnUserXmlNode(xmlChild);
+		}else
+		{
+			xmlChild.set_userdata(0);
+		}
+		xmlChild = xmlChild.next_sibling();
 	}
+    return TRUE;
 }
 
 void SHostWnd::_Redraw()
@@ -479,31 +505,34 @@ void SHostWnd::DestroyTooltip(IToolTip * pTooltip) const
 	GETTOOLTIPFACTORY->DestroyToolTip(pTooltip);
 }
 
+BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
+{
+	if(resId.IsEmpty())
+		return FALSE;
+	pugi::xml_document xmlDoc;
+	if(LOADXML(xmlDoc,resId))
+	{
+		return InitFromXml(xmlDoc.child(L"SOUI"));
+	}else
+	{
+		SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
+		return FALSE;
+	}
+}
+
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	m_nAutoSizing++;
+	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
+	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
-    GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);
-    m_pTipCtrl = CreateTooltip();
-    if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
-    
+    GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);    
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
-
-	if(!m_strXmlLayout.IsEmpty())
-	{
-		pugi::xml_document xmlDoc;
-		LOADXML(xmlDoc,m_strXmlLayout);
-		if(xmlDoc)
-		{
-			InitFromXml(xmlDoc.child(L"SOUI"));
-		}else
-		{
-			SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
-		}
-	}
-	m_nAutoSizing--;
+	OnLoadLayoutFromResourceID(m_strXmlLayout);
+	m_pTipCtrl = CreateTooltip();
+	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
+	UpdateAutoSizeCount(false);
     return 0;
 }
 
@@ -520,16 +549,11 @@ void SHostWnd::OnDestroy()
 		DestroyTooltip(m_pTipCtrl);
         m_pTipCtrl = NULL;
     }
-    if(m_dummyWnd)
-    {
-        m_dummyWnd->DestroyWindow();
-		delete m_dummyWnd;
-		m_dummyWnd = NULL;
-    }
 
 	m_memRT = NULL;
 	m_rgnInvalidate = NULL;
-
+	m_nScale = 100;//restore to 100
+	SHostMgr::getSingletonPtr()->RemoveHostMsgHandler(this);
     //exit app. (copy from wtl)
     if(m_hostAttr.m_byWndType == SHostWndAttr::WT_APPMAIN 
     || (m_hostAttr.m_byWndType == SHostWndAttr::WT_UNDEFINE && (SNativeWnd::GetStyle() & (WS_CHILD | WS_POPUP)) == 0 && (SNativeWnd::GetExStyle()&WS_EX_TOOLWINDOW) == 0))
@@ -675,7 +699,7 @@ LRESULT SHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return lRet;
 }
 
-LRESULT SHostWnd::OnHostMsg( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT SHostWnd::OnActivateApp( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
     return DoFrameEvent(uMsg,wParam,lParam);
 }
@@ -1315,8 +1339,19 @@ void SHostWnd::_UpdateNonBkgndBlendSwnd()
 
 void SHostWnd::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 {
-    pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()));
-    pRT->SetTextColor(RGBA(0,0,0,255));
+	int iState = SState2Index::GetDefIndex(GetState(),true);
+	SwndStyle & style = SWindow::GetStyle();
+	IFontPtr pFont = style.GetTextFont(iState);
+	if(pFont) 
+		pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
+	else
+		pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()));
+
+	COLORREF crTxt =style.GetTextColor(iState);
+	if(crTxt != CR_INVALID)
+		painter.oldTextColor = pRT->SetTextColor(crTxt);
+	else
+		pRT->SetTextColor(RGBA(0,0,0,255));
 }
 
 void SHostWnd::AfterPaint(IRenderTarget *pRT, SPainter &painter)
@@ -1534,6 +1569,7 @@ void SHostWnd::OnScaleChanged(int scale)
 {
 	m_nScale = scale;
 	m_layoutDirty = dirty_self;
+	SWindow::OnScaleChanged(scale);
 	SWindow::InvalidateRect(NULL);
 }
 
@@ -1584,6 +1620,49 @@ bool SHostWnd::StopHostAnimation()
 	m_hostAnimation->cancel();
 	UnregisterTimelineHandler(&m_hostAnimationHandler);
 	return true;
+}
+
+void SHostWnd::OnUserXmlNode(pugi::xml_node xmlUser)
+{
+	SLOG_DEBUG("unhandled xml node:"<<xmlUser.name());
+}
+
+void SHostWnd::UpdateAutoSizeCount(bool bInc)
+{
+	if(bInc)
+		m_nAutoSizing++;
+	else
+		m_nAutoSizing--;
+}
+
+void SHostWnd::OnHostMsg(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
+{
+	SDispatchMessage(uMsg,wp,lp);
+	if(bRelayout)
+	{
+		RequestRelayout(m_swnd,TRUE);
+	}
+}
+
+void SHostWnd::EnableIME(BOOL bEnable)
+{
+	if(bEnable)
+	{
+		HIMC hImc = ImmGetContext(m_hWnd);
+		if(!hImc)
+		{
+			hImc = ImmCreateContext();
+			ImmAssociateContext(m_hWnd,hImc);
+		}
+	}else
+	{
+		HIMC hImc = ImmGetContext(m_hWnd);
+		ImmAssociateContext(m_hWnd,NULL);
+		if(hImc)
+		{
+			ImmDestroyContext(hImc);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////

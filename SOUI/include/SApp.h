@@ -240,8 +240,8 @@ public:
 
     IMsgLoopFactory * GetMsgLoopFactory();
     
-    SMessageLoop * GetMsgLoop() { return m_pMsgLoop;}
-    
+    SMessageLoop * GetMsgLoop();
+
     void SetLogManager(ILog4zManager * pLogMgr);
     
     ILog4zManager * GetLogManager();
@@ -305,6 +305,11 @@ public:
 	virtual IAccessible * CreateAccessible(SWindow *pWnd) const;
 
 	void * GetInnerSingleton(int nType);
+
+protected:
+	friend class SMessageLoop;
+	void PushMsgLoop(SMessageLoop * pMsgLoop);
+	SMessageLoop * PopMsgLoop();
 protected:
 	virtual void RegisterSystemObjects(){}
 
@@ -326,7 +331,9 @@ protected:
     SStringT    m_strAppDir;
     HINSTANCE   m_hInst;
     HWND        m_hMainWnd;
-    SMessageLoop    * m_pMsgLoop;
+
+	SMessageLoop *		 m_pMsgLoop;
+	SList<SMessageLoop*> m_lstMsgLoop;
 
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];

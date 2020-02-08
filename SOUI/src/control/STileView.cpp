@@ -323,6 +323,7 @@ void STileView::UpdateVisibleItems()
                     pItemInfos[iItem].pItem = NULL;//标记该行已经被重用
                 }
             }
+			BOOL bNewItem=FALSE;
             if(!ii.pItem)
             {
                 //create new visible item
@@ -330,6 +331,7 @@ void STileView::UpdateVisibleItems()
                 if(lstRecycle->IsEmpty())
                 {
                     //创建一个新的列表项
+					bNewItem = TRUE;
                     ii.pItem = SItemPanel::Create(this, pugi::xml_node(), this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&STileView::OnItemClick,this));
                 }
@@ -347,12 +349,17 @@ void STileView::UpdateVisibleItems()
             //设置状态，同时暂时禁止应用响应statechanged事件。
             ii.pItem->GetEventSet()->setMutedState(true);
             ii.pItem->ModifyItemState(dwState,0);
-            ii.pItem->GetEventSet()->setMutedState(false);
-	    if (dwState & WndState_Hover) 
-		m_pHoverItem = ii.pItem;
+			ii.pItem->GetEventSet()->setMutedState(false);
+			if (dwState & WndState_Hover) 
+				m_pHoverItem = ii.pItem;
 
-            m_adapter->getView(iNewLastVisible, ii.pItem, m_xmlTemplate.first_child());
-			ii.pItem->DoColorize(GetColorizeColor());
+			m_adapter->getView(iNewLastVisible, ii.pItem, m_xmlTemplate.first_child());
+			if(bNewItem)
+			{
+				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
+				ii.pItem->SDispatchMessage(UM_SETLANGUAGE,0,0);
+				ii.pItem->DoColorize(GetColorizeColor());
+			}
 
             ii.pItem->UpdateLayout();
             if(iNewLastVisible == m_iSelItem)
@@ -982,6 +989,12 @@ void STileView::OnShowWindow(BOOL bShow, UINT nStatus)
 		m_iPendingUpdateItem = -2;
 	}
 
+}
+
+void STileView::OnRebuildFont()
+{
+	__super::OnRebuildFont();
+	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 
 }

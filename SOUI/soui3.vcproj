@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="soui3"
-	ProjectGUID="{EC46199C-BB5C-3F86-95A1-452AD3EFC902}"
+	ProjectGUID="{A278536F-80DF-3C47-A1FD-14BAACB6B8C6}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -208,6 +208,8 @@
 			<File
 				RelativePath="src\core\SHostDialog.cpp" />
 			<File
+				RelativePath="src\helper\SHostMgr.cpp" />
+			<File
 				RelativePath="src\control\SHotKeyCtrl.cpp" />
 			<File
 				RelativePath="src\animation\SInterpolatorImpl.cpp" />
@@ -367,6 +369,8 @@
 			<File
 				RelativePath="include\helper\SAppDir.h" />
 			<File
+				RelativePath="include\helper\SAssertFmt.h" />
+			<File
 				RelativePath="include\helper\SAttrCracker.h" />
 			<File
 				RelativePath="include\interface\SAttrStorage-i.h" />
@@ -427,6 +431,8 @@
 			<File
 				RelativePath="include\core\SFocusManager.h" />
 			<File
+				RelativePath="include\res.mgr\SFontInfo.h" />
+			<File
 				RelativePath="include\res.mgr\SFontPool.h" />
 			<File
 				RelativePath="include\helper\SFunctor.hpp" />
@@ -439,7 +445,11 @@
 			<File
 				RelativePath="include\core\SHostDialog.h" />
 			<File
+				RelativePath="include\helper\SHostMgr.h" />
+			<File
 				RelativePath="include\core\SHostMsgDef.h" />
+			<File
+				RelativePath="include\interface\SHostMsgHandler-i.h" />
 			<File
 				RelativePath="include\core\SHostWnd.h" />
 			<File
@@ -665,6 +675,8 @@
 						Outputs="include\souistd.h.cpp" />
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="include\stdint.h" />
 			<File
 				RelativePath="include\interface\stooltip-i.h" />
 			<File
