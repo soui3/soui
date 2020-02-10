@@ -76,7 +76,7 @@ public:
      * @brief    构造函数
      * Describe  使用uires.idx中定义的maindlg对应的xml布局创建UI
      */    
-    CMainDlg() : SHostWnd(UIRES.LAYOUT.maindlg),m_bLayoutInited(FALSE)
+    CMainDlg() : SHostWnd(UIRES.LAYOUT.maindlg),m_bLayoutInited(FALSE),m_hSetSkinWnd(0)
     {
     } 
 

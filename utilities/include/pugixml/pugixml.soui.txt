@@ -1,0 +1,6 @@
+soui版本pugixml对比原版本pugixml的区别：
+1、给xml_node,xml_attribute增加set_userdata, get_userdata方法。
+2、增加预编译xml格式支持。
+3、为子元素，属性查找增加参数：bCaseSensitive，用来实现不区分大小写。
+
+启程软件　2020-2-10

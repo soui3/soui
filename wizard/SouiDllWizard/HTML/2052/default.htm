@@ -508,7 +508,7 @@
             //从文件加载编译选项
 
             var wsh = new ActiveXObject("WScript.Shell");
-            var strConfigPath = wsh.Environment("system").Item("SOUIPATH");
+            var strConfigPath = wsh.Environment("system").Item("SOUI3PATH");
             var strConfigFile = strConfigPath + '\\config\\build.cfg';
             LoadConfig(strConfigFile);
         }
