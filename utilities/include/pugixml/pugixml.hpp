@@ -1043,7 +1043,7 @@ namespace pugi
 		bool isOK() const;
 	};
 
-#define SXML_VER	2
+	#define SXML_VER	2
 	static const unsigned char SXML_BOM[4] = { 's','x','m','l' };
 	struct sxml_info
 	{
@@ -1069,15 +1069,6 @@ namespace pugi
 		void _destroy();
 		void _move(xml_document& rhs) PUGIXML_NOEXCEPT_IF_NOT_COMPACT;
 
-		typedef SOUI::SMap<SOUI::SStringA,int> STRMAP;	//utf8_name ->index
-
-		void _AddStr2Map(STRMAP & strMap, const char_t * str) const;
-		void _build_str_map(xml_node xmlNode,STRMAP &strMap) const;
-		void _write_str(const STRMAP & strMap,const char_t * str,FILE * f) const;
-		void _write_str_map(FILE *f,STRMAP & strMap) const;
-
-		int _index_str_map(STRMAP & strMap) const;
-		void _save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) const;
 	public:
 		// Default constructor, makes empty document
 		xml_document();

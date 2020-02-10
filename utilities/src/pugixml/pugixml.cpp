@@ -38,7 +38,8 @@
 #endif
 
 // For placement new
-#include <new>
+#include <snew.h>
+#include <string/strcpcvt.h>
 
 #ifdef _MSC_VER
 #	pragma warning(push)
@@ -7437,41 +7438,55 @@ namespace pugi
 		buffered_writer.flush();
 	}
 
-	void xml_document::_AddStr2Map(STRMAP & strMap, const char_t * str) const
+	class SaveAsBin{
+	public:
+		typedef SOUI::SMap<SOUI::SStringA,int> STRMAP;	//utf8_name ->index
+
+		static void _AddStr2Map(STRMAP & strMap, const char_t * str) ;
+		static void _build_str_map(xml_node xmlNode,STRMAP &strMap) ;
+		static void _write_str(const STRMAP & strMap,const char_t * str,FILE * f) ;
+		static void _write_str_map(FILE *f,STRMAP & strMap) ;
+
+		static int _index_str_map(STRMAP & strMap);
+		static void _save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) ;
+		static void _save_bin(xml_node root,FILE *f) ;
+	};
+
+	void SaveAsBin::_AddStr2Map(STRMAP & strMap, const char_t * str) 
 	{
 		if(str!=NULL)
 		{
-//#ifdef PUGIXML_WCHAR_MODE
-//			SOUI::SStringA str2 = SOUI::S_CW2A(str,CP_UTF8);
-//#else
-//			SOUI::SStringA str2(str);// = SOUI::S_CA2A(str, CP_ACP, CP_UTF8);
-//#endif
-//			if(!str2.IsEmpty() && strMap.Lookup(str2)==NULL)
-//			{
-//				strMap[str2] = -1;//add to map.
-//			}
+#ifdef PUGIXML_WCHAR_MODE
+			SOUI::SStringA str2 = SOUI::S_CW2A(str,CP_UTF8);
+#else
+			SOUI::SStringA str2(str);
+#endif
+			if(!str2.IsEmpty() && strMap.Lookup(str2)==NULL)
+			{
+				strMap[str2] = -1;//add to map.
+			}
 		}
 	}
 
-	void xml_document::_write_str(const STRMAP & strMap,const char_t * str,FILE * f) const
+	void SaveAsBin::_write_str(const STRMAP & strMap,const char_t * str,FILE * f) 
 	{
-		//size_t sz = strMap.GetCount();
-//		int nIdxSize= index_size((int)strMap.GetCount());
-//		int nIdx = 0;
-//
-//#ifdef PUGIXML_WCHAR_MODE
-//		SOUI::SStringA str2 = SOUI::S_CW2A(str, CP_UTF8);
-//#else
-//		SOUI::SStringA str2(str);// = SOUI::S_CA2A(str, CP_ACP, CP_UTF8);
-//#endif
-//		if(!str2.IsEmpty())
-//		{
-//			nIdx = strMap.Lookup(str2)->m_value;
-//		}
-//		fwrite(&nIdx,1,nIdxSize,f);
+		size_t sz = strMap.GetCount();
+		int nIdxSize= impl::index_size((int)strMap.GetCount());
+		int nIdx = 0;
+
+#ifdef PUGIXML_WCHAR_MODE
+		SOUI::SStringA str2 = SOUI::S_CW2A(str, CP_UTF8);
+#else
+		SOUI::SStringA str2(str);// = SOUI::S_CA2A(str, CP_ACP, CP_UTF8);
+#endif
+		if(!str2.IsEmpty())
+		{
+			nIdx = strMap.Lookup(str2)->m_value;
+		}
+		fwrite(&nIdx,1,nIdxSize,f);
 	}
 
-	void xml_document::_build_str_map(xml_node xmlNode,STRMAP &strMap) const
+	void SaveAsBin::_build_str_map(xml_node xmlNode,STRMAP &strMap) 
 	{
 		if(xmlNode.type()<node_document || xmlNode.type()>node_comment)
 			return;
@@ -7494,31 +7509,31 @@ namespace pugi
 	}
 
 	//build StrMap index and return total buffer length.
-	int xml_document::_index_str_map(STRMAP & strMap) const
+	int SaveAsBin::_index_str_map(STRMAP & strMap) 
 	{
 		int nRet = 0;
 		int idx = 1;//note: start from 1 but not 0. zero is remained for empty string.
-		/*SOUI::SPOSITION pos = strMap.GetStartPosition();
+		SOUI::SPOSITION pos = strMap.GetStartPosition();
 		while(pos)
 		{
 		STRMAP::CPair *p = strMap.GetNext(pos);
 		p->m_value = idx++;
 		nRet += p->m_key.GetLength()+1;
-		}*/
+		}
 		return nRet;
 	}
 
-	void xml_document::_write_str_map(FILE *f,STRMAP & strMap) const
+	void SaveAsBin::_write_str_map(FILE *f,STRMAP & strMap) 
 	{
-		/*SOUI::SPOSITION pos = strMap.GetStartPosition();
+		SOUI::SPOSITION pos = strMap.GetStartPosition();
 		while(pos)
 		{
 			STRMAP::CPair *p = strMap.GetNext(pos);
 			fwrite(p->m_key.c_str(),1,p->m_key.GetLength()+1,f);
-		}*/
+		}
 	}
 
-	void xml_document::_save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) const
+	void SaveAsBin::_save_bin(const STRMAP & strMap,xml_node xmlNode,FILE * f) 
 	{
 		//save node type
 		xml_node_type type = xmlNode.type();
@@ -7556,10 +7571,10 @@ namespace pugi
 		fwrite(&cT,1,1,f);
 	}
 
-	PUGI__FN void xml_document::save_bin(FILE *f) const
+	void SaveAsBin::_save_bin(xml_node root,FILE *f) 
 	{
 		STRMAP strMap;
-		_build_str_map(*this,strMap);
+		_build_str_map(root,strMap);
 		int nSize = _index_str_map(strMap);
 
 		//write header
@@ -7570,7 +7585,12 @@ namespace pugi
 		_write_str_map(f,strMap);
 
 		//write xml structure
-		_save_bin(strMap,*this,f);
+		_save_bin(strMap,root,f);
+	}
+
+	PUGI__FN void xml_document::save_bin(FILE *f) const
+	{
+		SaveAsBin::_save_bin(*this,f);
 	}
 
 #ifndef PUGIXML_NO_STL
