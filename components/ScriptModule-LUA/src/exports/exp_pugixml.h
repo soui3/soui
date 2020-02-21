@@ -46,7 +46,7 @@ BOOL ExpLua_pugixml(lua_State *L)
         lua_tinker::class_def<xml_node>(L,"root",&xml_node::root);
         lua_tinker::class_def<xml_node>(L,"text",&xml_node::text);
         lua_tinker::class_def<xml_node>(L,"child",&xml_node::child);
-        lua_tinker::class_def<xml_node>(L,"attribute",&xml_node::attribute);
+		lua_tinker::class_def<xml_node>(L,"attribute",(xml_attribute (xml_node::*)(const char_t*, xml_attribute&,bool ) const)&xml_node::attribute);
         
         lua_tinker::class_add<xml_document>(L,"xml_document");
         lua_tinker::class_inh<xml_document,xml_node>(L);

@@ -201,7 +201,7 @@ namespace SOUI
         virtual void    UnlockPixelBits(LPVOID pBuf);
         virtual const LPVOID  GetPixelBits() const;
         
-		SkBitmap & GetSkBitmap(){return m_bitmap;}
+		const SkBitmap & GetSkBitmap() const{return m_bitmap;}
 		HBITMAP  GetGdiBitmap(){return m_hBmp;}
 	protected:
 	    HBITMAP CreateGDIBitmap(int nWid,int nHei,void ** ppBits);

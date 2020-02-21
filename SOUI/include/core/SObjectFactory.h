@@ -153,7 +153,7 @@ namespace SOUI
         //************************************
 		bool UnregisterFactory(const SObjectInfo & objInfo);
 
-        virtual IObject *CreateObject(const SObjectInfo & objInfo) const;
+        IObject *CreateObject(const SObjectInfo & objInfo) const;
 
         void SetSwndDefAttr(IObject *pObject) const;
         
@@ -171,6 +171,8 @@ namespace SOUI
 			return UnregisterFactory(SObjectInfo(T::GetClassName(), T::GetClassType()));
 		}
     protected:
+		virtual IObject * OnCreateUnknownObject(const SObjectInfo & objInfo) const;
+
         static void OnFactoryRemoved(const SObjectFactoryPtr & obj);
 
         void AddStandardFactory();

@@ -347,7 +347,7 @@ namespace SOUI
 		SetPaintXferMode(paint,dwRop);
 
         SRenderTarget_Skia *pRtSourSkia=(SRenderTarget_Skia*)pRTSour;
-        SkBitmap    bmpSrc=pRtSourSkia->m_curBmp->GetSkBitmap();
+        const SkBitmap  &  bmpSrc=pRtSourSkia->m_curBmp->GetSkBitmap();
         POINT ptSourViewport;
         pRtSourSkia->GetViewportOrg(&ptSourViewport);
         xSrc += ptSourViewport.x;
@@ -607,7 +607,7 @@ namespace SOUI
     HRESULT SRenderTarget_Skia::DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/ )
     {
         SBitmap_Skia *pBmp = (SBitmap_Skia*)pBitmap;
-        SkBitmap bmp=pBmp->GetSkBitmap();
+        const SkBitmap & bmp=pBmp->GetSkBitmap();
 
         SIZE szBmp = pBmp->Size();
         int nWid= (std::min)(pRcDest->right-pRcDest->left,szBmp.cx);
@@ -649,7 +649,7 @@ namespace SOUI
             return DrawBitmap(pRcDest,pBitmap,pRcSrc->left,pRcSrc->top,byAlpha);
             
         SBitmap_Skia *pBmp = (SBitmap_Skia*)pBitmap;
-        SkBitmap bmp=pBmp->GetSkBitmap();
+        const SkBitmap & bmp=pBmp->GetSkBitmap();
 
         RECT rcSour={0,0,bmp.width(),bmp.height()};
         if(!pRcSrc) pRcSrc = &rcSour;

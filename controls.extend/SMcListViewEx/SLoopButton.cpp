@@ -36,9 +36,9 @@ void SLoopButton::OnPaint(IRenderTarget * pRT)
 
 	if (m_byAlphaAni == 0xFF)
 	{//不在动画过程中
-		m_pBgSkin->Draw(
+		m_pBgSkin->DrawByState(
 			pRT, rcClient,
-			GetSkinState()
+			GetState()
 		);
 	}
 	else
@@ -47,14 +47,14 @@ void SLoopButton::OnPaint(IRenderTarget * pRT)
 		if (GetState()&WndState_Hover)
 		{
 			//get hover
-			m_pBgSkin->Draw(pRT, rcClient, (m_iCurState*m_iSkinStates)+ 0, m_pBgSkin->GetAlpha());
-			m_pBgSkin->Draw(pRT, rcClient, (m_iCurState*m_iSkinStates)+1, byNewAlpha);
+			m_pBgSkin->DrawByIndex(pRT, rcClient, (m_iCurState*m_iSkinStates)+ 0, m_pBgSkin->GetAlpha());
+			m_pBgSkin->DrawByIndex(pRT, rcClient, (m_iCurState*m_iSkinStates)+1, byNewAlpha);
 		}
 		else
 		{
 			//lose hover
-			m_pBgSkin->Draw(pRT, rcClient, (m_iCurState*m_iSkinStates)+0, m_pBgSkin->GetAlpha());
-			m_pBgSkin->Draw(pRT, rcClient, (m_iCurState*m_iSkinStates)+1, m_pBgSkin->GetAlpha() - byNewAlpha);
+			m_pBgSkin->DrawByIndex(pRT, rcClient, (m_iCurState*m_iSkinStates)+0, m_pBgSkin->GetAlpha());
+			m_pBgSkin->DrawByIndex(pRT, rcClient, (m_iCurState*m_iSkinStates)+1, m_pBgSkin->GetAlpha() - byNewAlpha);
 		}
 	}
 	SWindow::OnPaint(pRT);

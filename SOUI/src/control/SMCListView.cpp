@@ -143,8 +143,16 @@ BOOL SMCListView::CreateChildren(pugi::xml_node xmlNode)
     //  listctrl的子控件只能是一个header控件
 	pugi::xml_node xmlTemplate = xmlNode.child(L"template");
 	xmlTemplate.set_userdata(1);
+	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
+	xmlHeader.set_userdata(1);
+	m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
+	SASSERT(m_pHeader);
+	if(!m_pHeader) return FALSE;
+	InsertChild(m_pHeader);
+	m_pHeader->InitFromXml(xmlHeader);
+
 	if (!__super::CreateChildren(xmlNode))
-        return FALSE;
+		return FALSE;
     if(xmlTemplate)
     {
         m_xmlTemplate.append_copy(xmlTemplate);
@@ -161,22 +169,6 @@ BOOL SMCListView::CreateChildren(pugi::xml_node xmlNode)
             pItemLocator->Release();
         }
     }
-
-	m_pHeader = NULL;
-	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
-	if (!xmlHeader)
-	{
-		m_pHeader = FindChildByClass<SHeaderCtrl>(0);
-	}
-	else
-	{
-		m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
-		SASSERT(m_pHeader);
-		InsertChild(m_pHeader);
-		m_pHeader->InitFromXml(xmlHeader);
-	}
-
-    if(!m_pHeader) return FALSE;
 
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemChanging::EventID, Subscriber(&SMCListView::OnHeaderSizeChanging,this));
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemSwap::EventID, Subscriber(&SMCListView::OnHeaderSwap,this));

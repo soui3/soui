@@ -1061,6 +1061,16 @@ lblEnd:
 		return m_pHeader->GetItemCount();
 	}
 
+	BOOL SListCtrlEx::OnItemGetRect(const SItemPanel* pItem, CRect& rcItem) const
+	{
+		return 0;
+	}
+
+	BOOL SListCtrlEx::IsItemRedrawDelay() const
+	{
+		return 0;
+	}
+
     void SListCtrlEx::OnItemRequestRelayout(SItemPanel *pItem)
     {
         CRect rcWnd = pItem->GetWindowRect();

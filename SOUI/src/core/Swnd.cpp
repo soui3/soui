@@ -88,6 +88,7 @@ namespace SOUI
 		m_pLayoutParam->SetMatchParent(Both);
 
 		m_evtSet.addEvent(EVENTID(EventSwndCreate));
+		m_evtSet.addEvent(EVENTID(EventSwndInitFinish));
 		m_evtSet.addEvent(EVENTID(EventSwndDestroy));
 		m_evtSet.addEvent(EVENTID(EventSwndSize));
 		m_evtSet.addEvent(EVENTID(EventSwndMouseHover));
@@ -698,8 +699,7 @@ namespace SOUI
 			{//在窗口布局中支持include标签
 				SStringT strSrc = S_CW2T(xmlChild.attribute(L"src").value());
 				pugi::xml_document xmlDoc;
-				LOADXML(xmlDoc,strSrc);
-				if(xmlDoc)
+				if(LOADXML(xmlDoc,strSrc))
 				{
 					pugi::xml_node xmlInclude = xmlDoc.first_child();
 					if(wcsicmp(xmlInclude.name(),KLabelInclude)==0)
@@ -873,6 +873,8 @@ namespace SOUI
 		//请求根窗口重新布局。由于布局涉及到父子窗口同步进行，同步执行布局操作可能导致布局过程重复执行。
 		RequestRelayout();
 
+		EventSwndInitFinish evt(this);
+		FireEvent(evt);
 		return TRUE;
 	}
 
@@ -886,7 +888,7 @@ namespace SOUI
 	}
 
 	// Hittest children
-	SWND SWindow::SwndFromPoint(CPoint &pt)
+	SWND SWindow::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 	{
 		CPoint pt2(pt);
 		TransformPoint(pt2);
@@ -904,9 +906,9 @@ namespace SOUI
 		SWindow *pChild=GetWindow(GSW_LASTCHILD);
 		while(pChild)
 		{
-			if (pChild->IsVisible(TRUE) && !pChild->IsMsgTransparent())
+			if (pChild->IsVisible(TRUE) && (bIncludeMsgTransparent||!pChild->IsMsgTransparent()))
 			{
-				swndChild = pChild->SwndFromPoint(pt2);
+				swndChild = pChild->SwndFromPoint(pt2,bIncludeMsgTransparent);
 
 				if (swndChild)
 				{

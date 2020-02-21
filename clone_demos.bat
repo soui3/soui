@@ -19,7 +19,7 @@ call :update_repo mclistview_demo
 call :update_repo MultiLangs
 call :update_repo SouiChartDemo
 call :update_repo souispy
-
+call :update_repo SweepingEdge
 
 SET /p selected=1.是否生成soui_demo.sln工程[1=YES;Other=No]:
 if %selected% neq 1 (

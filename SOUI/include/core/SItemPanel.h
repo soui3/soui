@@ -72,7 +72,7 @@ public://SwndContainerImpl
 public://SWindow
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);
 
-    virtual SWND SwndFromPoint(CPoint &pt);
+    virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
 
     virtual void Draw(IRenderTarget *pRT,const CRect & rc);
 
