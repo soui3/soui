@@ -6,7 +6,13 @@
 namespace SOUI
 {
 
-SGifPlayer::SGifPlayer() :m_aniSkin(NULL), m_iCurFrame(0),m_nNextInterval(0)
+SGifPlayer::SGifPlayer() :m_aniSkin(NULL),
+	m_iCurFrame(0),
+	m_nNextInterval(0)
+	, m_bEnableScale(TRUE)
+	, m_nScale(100)
+	, m_bLoop(TRUE)
+	, m_bTile(TRUE)
 {
 
 }
@@ -48,6 +54,13 @@ void SGifPlayer::OnNextFrame()
     {
         int nStates=m_aniSkin->GetStates();
         m_iCurFrame++;
+		if (!m_bLoop && m_iCurFrame >= nStates)
+    	{
+			GetContainer()->UnregisterTimelineHandler(this);
+			EventGifPlayOver evt(this);
+			FireEvent(evt);
+			return;
+    	}
         m_iCurFrame%=nStates;
         Invalidate();
 
@@ -100,12 +113,19 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	if(!pGifSkin) return FALSE;
 	if(0==pGifSkin->LoadFromFile(pszFileName))
 	{
+		GetContainer()->UnregisterTimelineHandler(this);
+		m_aniSkin->Release();
 		pGifSkin->Release();
+		m_aniSkin = NULL;
 		return FALSE;
 	}
-
+	m_iCurFrame = 0;
 	m_aniSkin = pGifSkin;
-
+	TCHAR buff[16] = {0};
+	m_aniSkin->SetAttribute(_T("enableScale"), _itot(m_bEnableScale, buff, 10));
+	m_aniSkin->SetAttribute(_T("scale"), _itot(m_nScale, buff, 10));
+	m_aniSkin->SetAttribute(_T("tile"), _itot(m_bTile, buff, 10));
+	
 	if(GetLayoutParam()->IsWrapContent(Any))
 	{
 		GetParent()->UpdateChildrenPosition();
@@ -116,7 +136,7 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	}
 	return TRUE;
 }
-
+	
 void SGifPlayer::OnDestroy()
 {
     GetContainer()->UnregisterTimelineHandler(this);
