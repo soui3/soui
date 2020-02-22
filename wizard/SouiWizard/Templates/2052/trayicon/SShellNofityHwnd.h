@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "core\SNativeWnd.h"
 #include "helper\SMenu.h"
 
-//Ìí¼ÓÒ»¸öÊÂ¼ş½ÓÊÕ´°¿ÚÓÃÓÚ×¨ÃÅ´¦ÀíÍĞÅÌÍ¼±ê
+//æ·»åŠ ä¸€ä¸ªäº‹ä»¶æ¥æ”¶çª—å£ç”¨äºä¸“é—¨å¤„ç†æ‰˜ç›˜å›¾æ ‡
 #ifndef WM_ICONNOTIFY
 #define WM_ICONNOTIFY (WM_USER + 1111)
 #endif // !WM_ICONNOTIFY
@@ -30,20 +30,20 @@
 namespace SOUI
 {
 	class SShellNotifyIcon;
-	class CShellNotifyHwnd2 :public SNativeWnd
+	class CShellNotifyHwnd :public SNativeWnd
 	{
 	public:
-		CShellNotifyHwnd2(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
-		~CShellNotifyHwnd2(){}
+		CShellNotifyHwnd(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
+		~CShellNotifyHwnd(){}
 	protected:
-		//ÍĞÅÌÍ¨ÖªÏûÏ¢´¦Àíº¯Êı
+		//æ‰˜ç›˜é€šçŸ¥æ¶ˆæ¯å¤„ç†å‡½æ•°
 		LRESULT OnIconNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL/* bHandled*/);
 		LRESULT OnTaskbarCreated(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL);
 		virtual void OnFinalMessage(HWND hWnd);
 		void OnTimer(UINT_PTR nIDEvent);
 
-		BEGIN_MSG_MAP_EX(CShellNotifyHwnd2)
-			//ÍĞÅÌÏûÏ¢´¦Àí
+		BEGIN_MSG_MAP_EX(CShellNotifyHwnd)
+			//æ‰˜ç›˜æ¶ˆæ¯å¤„ç†
 			MESSAGE_HANDLER(MsgTaskbarCreated, OnTaskbarCreated)
 			MSG_WM_TIMER(OnTimer)
 			CHAIN_MSG_MAP_MEMBER_PTR(m_pMainWnd)

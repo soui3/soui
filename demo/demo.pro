@@ -91,7 +91,7 @@ HEADERS += MainDlg.h \
           skin/SetSkinWnd2.h \
           skin/SSkinLoader.h \
           trayicon/SShellNotifyIcon.h \
-          trayicon/SShellNofityHwnd2.h \
+          trayicon/SShellNofityHwnd.h \
           SInterpolatorView.h \
           qrcode/SQrCtrl.h \
           qrcode/QR_Encode.h \
@@ -149,7 +149,7 @@ SOURCES += demo.cpp \
           skin/SetSkinWnd2.cpp \
           skin/SSkinLoader.cpp \
           trayicon/SShellNotifyIcon.cpp \
-          trayicon/SShellNofityHwnd2.cpp \
+          trayicon/SShellNofityHwnd.cpp \
           SInterpolatorView.cpp \
           qrcode/SQrCtrl.cpp \
           qrcode/QR_Encode.cpp \
