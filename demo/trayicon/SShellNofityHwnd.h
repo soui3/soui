@@ -30,11 +30,11 @@
 namespace SOUI
 {
 	class SShellNotifyIcon;
-	class CShellNotifyHwnd2 :public SNativeWnd
+	class CShellNotifyHwnd :public SNativeWnd
 	{
 	public:
-		CShellNotifyHwnd2(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
-		~CShellNotifyHwnd2(){}
+		CShellNotifyHwnd(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
+		~CShellNotifyHwnd(){}
 	protected:
 		//托盘通知消息处理函数
 		LRESULT OnIconNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL/* bHandled*/);
@@ -42,7 +42,7 @@ namespace SOUI
 		virtual void OnFinalMessage(HWND hWnd);
 		void OnTimer(UINT_PTR nIDEvent);
 
-		BEGIN_MSG_MAP_EX(CShellNotifyHwnd2)
+		BEGIN_MSG_MAP_EX(CShellNotifyHwnd)
 			//托盘消息处理
 			MESSAGE_HANDLER(MsgTaskbarCreated, OnTaskbarCreated)
 			MSG_WM_TIMER(OnTimer)

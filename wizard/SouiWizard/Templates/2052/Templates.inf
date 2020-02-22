@@ -34,8 +34,8 @@ res\soui_res.rc2
 [uires]image\traymenu_icons.png
 trayicon\SShellNotifyIcon.h
 trayicon\SShellNotifyIcon.cpp
-trayicon\SShellNofityHwnd2.h
-trayicon\SShellNofityHwnd2.cpp
+trayicon\SShellNofityHwnd.h
+trayicon\SShellNofityHwnd.cpp
 [!endif]
 
 [!if ResLoaderType!=0]

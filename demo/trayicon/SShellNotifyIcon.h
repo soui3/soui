@@ -12,7 +12,7 @@
  */
 #pragma once
 #include <ShellAPI.h>
-#include "SShellNofityHwnd2.h"
+#include "SShellNofityHwnd.h"
 #include "core\SWnd.h"
 
  /**
@@ -31,7 +31,7 @@ namespace SOUI
 	class SShellNotifyIcon :public SWindow
 	{
 		SOUI_CLASS_NAME(SWindow, L"shellnotifyicon")
-		friend class CShellNotifyHwnd2;
+		friend class CShellNotifyHwnd;
 	public:
 		/**
 		 * SShellNotifyIcon::SShellNotifyIcon
@@ -104,7 +104,7 @@ namespace SOUI
 		SStringT m_strMenu;
 		MenuType m_menuType;
 		NOTIFYICONDATA nid;
-		CShellNotifyHwnd2 *m_MsgOnlyWnd;
+		CShellNotifyHwnd *m_MsgOnlyWnd;
 		//  默认图标索引			开始帧位置		动画间隔时间
 		int m_iDefIcon, m_iCurFrame, m_iStartFrame, m_iDuration;
 		bool m_bRunAni;

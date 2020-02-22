@@ -99,7 +99,7 @@ namespace SOUI
 
 	void SShellNotifyIcon::SetDefIconIdx(int iIdx)
 	{
-		if (iIdx >= m_ArrIcon.GetCount())
+		if (iIdx >= (int)m_ArrIcon.GetCount())
 			return;
 		m_iDefIcon = iIdx;
 		if (!m_bRunAni)
@@ -113,7 +113,7 @@ namespace SOUI
 
 	void SShellNotifyIcon::NextFrame()
 	{
-		if (m_iCurFrame >= m_ArrIcon.GetCount())
+		if (m_iCurFrame >= (int)m_ArrIcon.GetCount())
 			m_iCurFrame = m_iStartFrame;
 		nid.hIcon = m_ArrIcon[m_iCurFrame++];
 		Shell_NotifyIcon(NIM_MODIFY, &nid);
@@ -190,11 +190,11 @@ namespace SOUI
 	{
 		SHostWnd *pHostWnd = (SHostWnd*)(GetTopLevelParent()->GetContainer());
 		SASSERT(pHostWnd);
-		m_MsgOnlyWnd = new CShellNotifyHwnd2(pHostWnd, this);
+		m_MsgOnlyWnd = new CShellNotifyHwnd(pHostWnd, this);
 		SASSERT(IsWindow(m_MsgOnlyWnd->m_hWnd));
-		SASSERT(m_iDefIcon < m_ArrIcon.GetCount());
+		SASSERT(m_iDefIcon < (int)m_ArrIcon.GetCount());
 		//SASSERT(m_ArrIcon.GetCount()>0);
-		if (m_iDefIcon >= m_ArrIcon.GetCount())
+		if (m_iDefIcon >= (int)m_ArrIcon.GetCount())
 			m_iDefIcon = 0;
 		Create(m_MsgOnlyWnd->m_hWnd, m_ArrIcon.GetCount() == 0 ? GETRESPROVIDER->LoadIcon(_T("ICON_LOGO"), 16) : m_ArrIcon[m_iDefIcon]);
 		return Show();
