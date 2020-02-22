@@ -25,7 +25,7 @@ SGifPlayer::~SGifPlayer()
 void SGifPlayer::OnPaint( IRenderTarget *pRT )
 {	
 	__super::OnPaint(pRT);
-	if(m_aniSkin)
+	if (m_aniSkin)
 	{		
 		m_aniSkin->DrawByIndex(pRT, GetWindowRect(),m_iCurFrame);
 	}
@@ -114,7 +114,7 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	if(0==pGifSkin->LoadFromFile(pszFileName))
 	{
 		GetContainer()->UnregisterTimelineHandler(this);
-		m_aniSkin->Release();
+		if (m_aniSkin) m_aniSkin->Release();
 		pGifSkin->Release();
 		m_aniSkin = NULL;
 		return FALSE;
