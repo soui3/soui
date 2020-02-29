@@ -1029,7 +1029,7 @@ namespace SOUI
 		RECT rcBuf = *pRect;
 		::InflateRect(&rcBuf,m_curPen->GetWidth()/2,m_curPen->GetWidth()/2);
 		DCBuffer dcBuf(m_hdc,&rcBuf,GetAValue(m_curPen->GetColor()));
-
+        ::SelectObject(dcBuf, (HBRUSH)GetStockObject(NULL_BRUSH));
         ::Ellipse(dcBuf,pRect->left,pRect->top,pRect->right,pRect->bottom);
         return S_OK;
     }
