@@ -174,7 +174,10 @@ void SSkinGif::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYT
 	if (iState < m_nFrames)
 	{
 		CRect rcSrc(CPoint(0, 0), GetSkinSize());
-		pRT->DrawBitmapEx(rcDraw, m_pFrames[iState].pBmp, rcSrc, EM_STRETCH, byAlpha);
+		if (m_bEnableScale)
+			pRT->DrawBitmapEx(rcDraw, m_pFrames[iState].pBmp, rcSrc, m_bTile ? EM_TILE : EM_STRETCH, byAlpha);
+		else
+			pRT->DrawBitmapEx(rcDraw, m_pFrames[iState].pBmp, rcSrc, EM_NULL, byAlpha);
 	}
 }
 
