@@ -108,15 +108,16 @@ BOOL SGifPlayer::PlayAPNGFile( LPCTSTR pszFileName )
 BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 {
 	SStringW key=S_CT2W(pszFileName);
-
+	GetContainer()->UnregisterTimelineHandler(this);
+	if (m_aniSkin) {
+		m_aniSkin->Release();
+		m_aniSkin = NULL;
+	}
 	SSkinAni *pGifSkin = (SSkinAni*)SApplication::getSingleton().CreateSkinByName(bGif?SSkinGif::GetClassName():SSkinAPNG::GetClassName());
 	if(!pGifSkin) return FALSE;
 	if(0==pGifSkin->LoadFromFile(pszFileName))
 	{
-		GetContainer()->UnregisterTimelineHandler(this);
-		if (m_aniSkin) m_aniSkin->Release();
 		pGifSkin->Release();
-		m_aniSkin = NULL;
 		return FALSE;
 	}
 	m_iCurFrame = 0;
