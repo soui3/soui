@@ -13,11 +13,7 @@ purpose:	自定义皮肤对象
 #include <unknown/obj-ref-impl.hpp>
 
 #include "SSkinAni.h"
-
-namespace Gdiplus
-{
-class Bitmap;
-}
+#include <GdiPlus.h>
 
 namespace SOUI
 {
@@ -39,7 +35,7 @@ namespace SOUI
 		~SSkinGif()
 		{
 			if (m_pFrames) delete[]m_pFrames;
-			if (m_pImg) delete m_pImg;
+			if (m_pImg) delete m_pImg;			
 		}
 
 		/**

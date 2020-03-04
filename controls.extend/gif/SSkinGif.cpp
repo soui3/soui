@@ -4,9 +4,7 @@
 #include <interface/SImgDecoder-i.h>
 #include <interface/SRender-i.h>
 
-#include <GdiPlus.h>
 using namespace Gdiplus;
-
 #pragma comment(lib,"gdiplus.lib")
 
 namespace SOUI
