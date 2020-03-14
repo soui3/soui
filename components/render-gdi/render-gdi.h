@@ -390,6 +390,7 @@ namespace SOUI
 		virtual HRESULT PopLayer();
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode);
+		virtual BOOL SetAntiAlias(BOOL bAntiAlias);
 	protected:
         HDC               m_hdc;
         SColor            m_curColor;

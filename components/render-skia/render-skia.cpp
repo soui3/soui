@@ -1429,6 +1429,13 @@ namespace SOUI
 		return bRet;
 	}
 
+	BOOL SRenderTarget_Skia::SetAntiAlias(BOOL bAntilias)
+	{
+		BOOL bRet = m_bAntiAlias;
+		m_bAntiAlias = bAntilias;
+		return bRet;
+	}
+
 
     //////////////////////////////////////////////////////////////////////////
 	// SBitmap_Skia

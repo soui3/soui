@@ -500,6 +500,8 @@ namespace SOUI
 		virtual HRESULT PopLayer() ;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode/* =NULL */);
+
+		virtual BOOL SetAntiAlias(BOOL bAntiAlign);
     public:
         SkCanvas *GetCanvas(){return m_SkCanvas;}
 

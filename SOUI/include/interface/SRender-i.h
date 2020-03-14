@@ -1224,6 +1224,7 @@ namespace SOUI
 		virtual HRESULT PopLayer() = 0;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode=NULL) = 0;
+		virtual BOOL SetAntiAlias(BOOL bAntiAlias) = 0;
 	};
 
 

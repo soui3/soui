@@ -151,6 +151,7 @@ namespace SOUI
             ATTR_SKIN(L"dividerSkin",m_pSkinDivider,TRUE)
             ATTR_LAYOUTSIZE(L"dividerSize",m_nDividerSize,FALSE)
             ATTR_INT(L"wantTab",m_bWantTab,FALSE)
+			ATTR_COLOR(L"colorGrid",m_crGrid,TRUE)
         SOUI_ATTRS_END()
     protected:
         SAutoRefPtr<IMcAdapter>           m_adapter;
@@ -179,6 +180,7 @@ namespace SOUI
         SLayoutSize                     m_nDividerSize;
         BOOL                            m_bWantTab;
         BOOL                            m_bDatasetInvalidated;
+		COLORREF						m_crGrid;
     protected:
 
         /**

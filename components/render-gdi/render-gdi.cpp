@@ -1221,6 +1221,11 @@ namespace SOUI
 		return S_OK;
 	}
 
+	BOOL SRenderTarget_GDI::SetAntiAlias(BOOL bAntiAlias)
+	{
+		return FALSE;
+	}
+
 
     //////////////////////////////////////////////////////////////////////////
     namespace RENDER_GDI

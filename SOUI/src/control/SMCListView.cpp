@@ -51,6 +51,7 @@ namespace SOUI
 		,m_bDatasetInvalidated(TRUE)
 		,m_bPendingUpdate(false)
 		,m_iPendingUpdateItem(-2)
+		,m_crGrid(CR_INVALID)
     {
         m_bFocusable = TRUE;
         m_bClipClient = TRUE;
@@ -468,6 +469,14 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
         
         SPOSITION pos= m_lstItems.GetHeadPosition();
         int i=0;
+		IRenderObj *oldPen=NULL;
+		if(m_crGrid!=CR_INVALID)
+		{
+			SAutoRefPtr<IPen> pen;
+			pRT->CreatePen(PS_SOLID,m_crGrid,1,&pen);
+			pRT->SelectObject(pen,&oldPen);
+		}
+
         for(;pos;i++)
         {
             ItemInfo ii = m_lstItems.GetNext(pos);
@@ -475,6 +484,18 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
             rcInter.IntersectRect(&rcClip,&rcItem);
             if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
                 ii.pItem->Draw(pRT,rcItem);
+			if(m_crGrid!=CR_INVALID)
+			{
+				BOOL bAntiAlias = pRT->SetAntiAlias(FALSE);
+				if(i==0)
+				{
+					POINT pts[2]={{rcItem.left,rcItem.top},{rcItem.right,rcItem.top}};
+					pRT->DrawLines(pts,2);
+				}
+				POINT pts[2]={{rcItem.left,rcItem.bottom-1},{rcItem.right,rcItem.bottom-1}};
+				pRT->DrawLines(pts,2);
+				pRT->SetAntiAlias(bAntiAlias);
+			}
             rcItem.top = rcItem.bottom;
             rcItem.bottom += m_lvItemLocator->GetDividerSize();
 			if (m_pSkinDivider && !rcItem.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
@@ -482,7 +503,29 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
                 m_pSkinDivider->DrawByIndex(pRT,rcItem,0);
             }
         }
+		if(m_crGrid != CR_INVALID)
+		{
+			//draw vertical grid.
+			BOOL bAntiAlias = pRT->SetAntiAlias(FALSE);
 
+			CRect rcTop=_OnItemGetRect(iFirst);
+			CRect rcBottom = _OnItemGetRect(iFirst+m_lstItems.GetCount());
+			POINT pts[2]={{rcTop.left,rcTop.top},{rcTop.left,rcBottom.bottom}};
+			pRT->DrawLines(pts,2);
+			pts[0].x--,pts[1].x--;
+			for(int i=0;i<m_pHeader->GetItemCount();i++)
+			{					
+				if(!m_pHeader->IsItemVisible(i))
+					continue;
+				int wid = m_pHeader->GetItemWidth(i);
+				pts[0].x+=wid;
+				pts[1].x+=wid;
+				pRT->DrawLines(pts,2);
+			}
+			pRT->SetAntiAlias(bAntiAlias);
+
+			pRT->SelectObject(oldPen);
+		}
         pRT->PopClip();
     }
     AfterPaint(pRT,duiDC);
