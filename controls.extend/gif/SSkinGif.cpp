@@ -4,9 +4,7 @@
 #include <interface/SImgDecoder-i.h>
 #include <interface/SRender-i.h>
 
-#include <GdiPlus.h>
 using namespace Gdiplus;
-
 #pragma comment(lib,"gdiplus.lib")
 
 namespace SOUI
@@ -46,16 +44,20 @@ namespace SOUI
 
 int SSkinGif::LoadFromFile( LPCTSTR pszFileName )
 {
-    Bitmap *pImg = Bitmap::FromFile(S_CT2W(pszFileName));
-    if(!pImg) return 0;
-    if(pImg->GetLastStatus() != Gdiplus::Ok)
+    if (m_pImg)
     {
-        delete pImg;
+		delete m_pImg;
+    }
+    m_pImg = Bitmap::FromFile(S_CT2W(pszFileName));
+    if(!m_pImg) return 0;
+    if(m_pImg->GetLastStatus() != Gdiplus::Ok)
+    {
+        delete m_pImg;
+		m_pImg = NULL;
         return 0;
     }
 
-    LoadFromGdipImage(pImg);
-    delete pImg;
+    LoadFromGdipImage(m_pImg);
     return m_nFrames;
 }
 
@@ -68,19 +70,47 @@ int SSkinGif::LoadFromMemory( LPVOID pBuf,size_t dwSize )
 
     IStream* pStm = NULL;
     ::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
-    Gdiplus::Bitmap *pImg = Gdiplus::Bitmap::FromStream(pStm);
-    if(!pImg || pImg->GetLastStatus() != Gdiplus::Ok)
+	if (m_pImg)
+	{
+		delete m_pImg;
+	}
+	m_pImg = Gdiplus::Bitmap::FromStream(pStm);
+	if (!m_pImg) return 0;
+	if (m_pImg->GetLastStatus() != Gdiplus::Ok)
     {
         pStm->Release();
         ::GlobalUnlock(hMem);
+		delete m_pImg;
+		m_pImg = NULL;
         return 0;
     }
 
-    LoadFromGdipImage(pImg);
-    delete pImg;
+    LoadFromGdipImage(m_pImg);
+
     return m_nFrames;
 }
 
+int SSkinGif::LoadFrame(int i, Gdiplus::Bitmap * pImage) const
+{
+    if (m_pFrames && i < m_nFrames)
+    {		
+		pImage->SelectActiveFrame(&FrameDimensionTime, i);
+		Bitmap bmp(pImage->GetWidth(), pImage->GetHeight(), PixelFormat32bppPARGB);
+		Graphics g(&bmp);
+		g.DrawImage(pImage, 0, 0);
+		Gdiplus::Rect rc;
+		rc.Width = pImage->GetWidth();
+		rc.Height = pImage->GetHeight();
+		BitmapData data;
+		bmp.LockBits(&rc, 0, PixelFormat32bppPARGB, &data);
+		m_pCurFrameBmp->Init(data.Width, data.Height, data.Scan0);
+		bmp.UnlockBits(&data);
+
+		return 0;
+    }
+	return 1;
+}
+	
 int SSkinGif::LoadFromGdipImage( Gdiplus::Bitmap * pImage )
 {
 	if (m_nFrames)
@@ -114,22 +144,10 @@ int SSkinGif::LoadFromGdipImage( Gdiplus::Bitmap * pImage )
         }
         free(pPropertyItem);
     }
-    
-    for(int i=0;i<m_nFrames;i++)
-    {
-        GETRENDERFACTORY->CreateBitmap(&m_pFrames[i].pBmp);
-        pImage->SelectActiveFrame(&FrameDimensionTime,i);
-        Bitmap bmp(pImage->GetWidth(),pImage->GetHeight(),PixelFormat32bppPARGB);
-        Graphics g(&bmp);
-        g.DrawImage(pImage,0,0);
-        Gdiplus::Rect rc;
-        rc.Width=pImage->GetWidth();
-        rc.Height=pImage->GetHeight();
-        BitmapData data;
-        bmp.LockBits(&rc,0,PixelFormat32bppPARGB,&data);
-        m_pFrames[i].pBmp->Init(data.Width,data.Height,data.Scan0);
-        bmp.UnlockBits(&data);
-    }
+
+	GETRENDERFACTORY->CreateBitmap((IBitmap**)&m_pCurFrameBmp);
+	LoadFrame(0, pImage);
+
     return m_nFrames;
 }
 
@@ -173,8 +191,12 @@ void SSkinGif::_DrawByIndex2(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYT
 {
 	if (iState < m_nFrames)
 	{
+		LoadFrame(iState, m_pImg);
 		CRect rcSrc(CPoint(0, 0), GetSkinSize());
-		pRT->DrawBitmapEx(rcDraw, m_pFrames[iState].pBmp, rcSrc, EM_STRETCH, byAlpha);
+		if (m_bEnableScale)
+			pRT->DrawBitmapEx(rcDraw, m_pCurFrameBmp, rcSrc, m_bTile ? EM_TILE : EM_STRETCH, byAlpha);
+		else
+			pRT->DrawBitmapEx(rcDraw, m_pCurFrameBmp, rcSrc, EM_NULL, byAlpha);
 	}
 }
 
@@ -183,8 +205,8 @@ SIZE SSkinGif::GetSkinSize() const
 	CSize szRet;
 	if (m_pFrames && m_nFrames>0)
 	{
-		szRet.cx = m_pFrames[0].pBmp->Width();
-		szRet.cy = m_pFrames[0].pBmp->Height();
+		szRet.cx = m_pCurFrameBmp->Width();
+		szRet.cy = m_pCurFrameBmp->Height();
 	}
 	return szRet;
 }
