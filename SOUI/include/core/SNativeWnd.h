@@ -407,7 +407,7 @@ public:
         return ::MoveWindow(m_hWnd, lpRect->left, lpRect->top, lpRect->right - lpRect->left, lpRect->bottom - lpRect->top, bRepaint);
     }
 
-    BOOL ShowWindow(int nCmdShow) 
+    virtual BOOL ShowWindow(int nCmdShow) 
     {
         SASSERT(::IsWindow(m_hWnd));
         return ::ShowWindow(m_hWnd,nCmdShow);

@@ -267,6 +267,8 @@ protected:
 
     HWND    m_hSpyWnd;
 #endif
+public:
+	virtual BOOL ShowWindow(int nCmdShow);
 
 protected:// IContainer
 

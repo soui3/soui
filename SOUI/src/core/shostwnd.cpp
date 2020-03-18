@@ -572,8 +572,11 @@ void SHostWnd::OnSize(UINT nType, CSize size)
 	}
     m_bResizing = TRUE;
     m_memRT->Resize(size);
-	OnRelayout(CRect(0, 0, size.cx, size.cy));
-    _Redraw();
+	if(!IsLayoutDirty())
+	{
+		OnRelayout(CRect(0, 0, size.cx, size.cy));
+		_Redraw();
+	}
     m_bResizing = FALSE;
 }
 
@@ -1365,8 +1368,16 @@ void SHostWnd::UpdateLayout()
 		return;
 	if ((m_szAppSetted.cx <=0 || m_szAppSetted.cy<=0) && GetLayoutParam()->IsWrapContent(Any))
 	{
-		int nWid = m_szAppSetted.cx<=0?SIZE_WRAP_CONTENT:m_szAppSetted.cx;
-		int nHei = m_szAppSetted.cy<=0?SIZE_WRAP_CONTENT:m_szAppSetted.cy;
+		int nWid = m_szAppSetted.cx;
+		if(nWid<=0)
+		{
+			nWid = GetLayoutParam()->IsSpecifiedSize(Horz)?GetLayoutParam()->GetSpecifiedSize(Horz).toPixelSize(m_nScale):SIZE_WRAP_CONTENT;
+		}
+		int nHei = m_szAppSetted.cy;
+		if(nHei<=0)
+		{
+			nHei = GetLayoutParam()->IsSpecifiedSize(Vert)?GetLayoutParam()->GetSpecifiedSize(Vert).toPixelSize(m_nScale):SIZE_WRAP_CONTENT;
+		}
 		CSize szRoot = GetDesiredSize(nWid, nHei);
 		OnRelayout(CRect(CPoint(), szRoot));
 	}
@@ -1664,6 +1675,15 @@ void SHostWnd::EnableIME(BOOL bEnable)
 		}
 	}
 }
+
+BOOL SHostWnd::ShowWindow(int nCmdShow)
+{
+	UpdateAutoSizeCount(true);
+	BOOL bRet = SNativeWnd::ShowWindow(nCmdShow);
+	UpdateAutoSizeCount(false);
+	return bRet;
+}
+
 
 //////////////////////////////////////////////////////////////////
 //  SHostWnd::SHostAnimationHandler
