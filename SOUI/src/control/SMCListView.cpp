@@ -393,7 +393,6 @@ bool SMCListView::OnHeaderSizeChanging(EventArgs *pEvt)
                 pCol->Move(rcSubItem);
             }
         }
-        SASSERT(rcSubItem.right == m_pHeader->GetTotalWidth());
     }
 
     InvalidateRect(GetListRect());    
