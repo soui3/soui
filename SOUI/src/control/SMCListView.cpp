@@ -193,7 +193,8 @@ CRect SMCListView::GetListRect()
 void SMCListView::UpdateScrollBar()
 {
     CSize szView;
-    szView.cx = m_pHeader->GetTotalWidth();
+    szView.cx = m_pHeader->GetTotalWidth(false);
+	int nMinWid = m_pHeader->GetTotalWidth(true);
     szView.cy = m_lvItemLocator->GetTotalHeight();
 
     CRect rcClient;
@@ -213,9 +214,10 @@ void SMCListView::UpdateScrollBar()
         m_siVer.nMax  = szView.cy-1;
         m_siVer.nPage = rcClient.Height();
 
-        if (size.cx-GetSbWidth() < szView.cx)
+		int horzSize = size.cx-GetSbWidth();
+        if (horzSize < nMinWid)
         {
-            //  需要横向滚动条
+            // 小于表头的最小宽度, 需要横向滚动条
             m_wBarVisible |= SSB_HORZ;
             m_siVer.nPage=size.cy-GetSbWidth() > 0 ? size.cy-GetSbWidth() : 0;//注意同时调整纵向滚动条page信息
 
@@ -223,10 +225,17 @@ void SMCListView::UpdateScrollBar()
             m_siHoz.nMax  = szView.cx-1;
             m_siHoz.nPage = (size.cx-GetSbWidth()) > 0 ? (size.cx-GetSbWidth()) : 0;
         }
-        else
+        else 
         {
+			if(horzSize<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+horzSize;
+				m_pHeader->Move(rcHead);
+				szView.cx = horzSize;
+			}
             //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
+            m_siHoz.nPage = szView.cx;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = m_siHoz.nPage-1;
             m_siHoz.nPos  = 0;
@@ -240,9 +249,9 @@ void SMCListView::UpdateScrollBar()
         m_siVer.nMax  = size.cy-1;
         m_siVer.nPos  = 0;
 
-        if (size.cx < szView.cx)
+        if (size.cx < nMinWid)
         {
-            //  需要横向滚动条
+            //小于表头的最小宽度,  需要横向滚动条
             m_wBarVisible |= SSB_HORZ;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = szView.cx-1;
@@ -250,8 +259,15 @@ void SMCListView::UpdateScrollBar()
         }
         else
         {
+			if(size.cx<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+size.cx;
+				m_pHeader->Move(rcHead);
+				szView.cx=size.cx;
+			}
             //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
+            m_siHoz.nPage = szView.cx;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = m_siHoz.nPage-1;
             m_siHoz.nPos  = 0;
@@ -509,7 +525,7 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
 			BOOL bAntiAlias = pRT->SetAntiAlias(FALSE);
 
 			CRect rcTop=_OnItemGetRect(iFirst);
-			CRect rcBottom = _OnItemGetRect(iFirst+m_lstItems.GetCount());
+			CRect rcBottom = _OnItemGetRect(iFirst+m_lstItems.GetCount()-1);
 			POINT pts[2]={{rcTop.left,rcTop.top},{rcTop.left,rcBottom.bottom}};
 			pRT->DrawLines(pts,2);
 			pts[0].x--,pts[1].x--;

@@ -239,92 +239,106 @@ CRect SListCtrl::GetListRect()
 //  更新滚动条
 void SListCtrl::UpdateScrollBar()
 {
-    CSize szView;
-    szView.cx = m_pHeader->GetTotalWidth();
-    szView.cy = GetItemCount()*m_nItemHeight;
+	CSize szView;
+	szView.cx = m_pHeader->GetTotalWidth(false);
+	int nMinWid = m_pHeader->GetTotalWidth(true);
+	szView.cy = GetItemCount()*m_nItemHeight;
 
-    CRect rcClient;
-    SWindow::GetClientRect(&rcClient);//不计算滚动条大小
-    rcClient.top+=m_nHeaderHeight;
+	CRect rcClient;
+	SWindow::GetClientRect(&rcClient);//不计算滚动条大小
+	rcClient.top+=m_nHeaderHeight;
+	if(rcClient.bottom<rcClient.top) 
+		rcClient.bottom=rcClient.top;
+	CSize size = rcClient.Size();
+	//  关闭滚动条
+	m_wBarVisible = SSB_NULL;
 
-    CSize size = rcClient.Size();
-    //  关闭滚动条
-    m_wBarVisible = SSB_NULL;
+	if (size.cy<szView.cy || (size.cy<szView.cy+GetSbWidth() && size.cx<szView.cx))
+	{
+		//  需要纵向滚动条
+		m_wBarVisible |= SSB_VERT;
+		m_siVer.nMin  = 0;
+		m_siVer.nMax  = szView.cy-1;
+		m_siVer.nPage = rcClient.Height();
 
-    if (size.cy<szView.cy || (size.cy<szView.cy+GetSbWidth() && size.cx<szView.cx))
-    {
-        //  需要纵向滚动条
-        m_wBarVisible |= SSB_VERT;
-        m_siVer.nMin  = 0;
-        m_siVer.nMax  = szView.cy-1;
-        m_siVer.nPage = GetCountPerPage(FALSE)*m_nItemHeight;
+		int horzSize = size.cx-GetSbWidth();
+		if (horzSize < nMinWid)
+		{
+			// 小于表头的最小宽度, 需要横向滚动条
+			m_wBarVisible |= SSB_HORZ;
+			m_siVer.nPage=size.cy-GetSbWidth() > 0 ? size.cy-GetSbWidth() : 0;//注意同时调整纵向滚动条page信息
 
-        if (size.cx-GetSbWidth() < szView.cx)
-        {
-            //  需要横向滚动条
-            m_wBarVisible |= SSB_HORZ;
-            m_siVer.nPage=size.cy-GetSbWidth() > 0 ? size.cy-GetSbWidth() : 0;//注意同时调整纵向滚动条page信息
+			m_siHoz.nMin  = 0;
+			m_siHoz.nMax  = szView.cx-1;
+			m_siHoz.nPage = (size.cx-GetSbWidth()) > 0 ? (size.cx-GetSbWidth()) : 0;
+		}
+		else 
+		{
+			if(horzSize<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+horzSize;
+				m_pHeader->Move(rcHead);
+				szView.cx = horzSize;
+			}
+			//  不需要横向滚动条
+			m_siHoz.nPage = szView.cx;
+			m_siHoz.nMin  = 0;
+			m_siHoz.nMax  = m_siHoz.nPage-1;
+			m_siHoz.nPos  = 0;
+		}
+	}
+	else
+	{
+		//  不需要纵向滚动条
+		m_siVer.nPage = size.cy;
+		m_siVer.nMin  = 0;
+		m_siVer.nMax  = size.cy-1;
+		m_siVer.nPos  = 0;
 
-            m_siHoz.nMin  = 0;
-            m_siHoz.nMax  = szView.cx-1;
-            m_siHoz.nPage = size.cx-GetSbWidth() > 0 ? size.cx-GetSbWidth() : 0;
-        }
-        else
-        {
-            //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
-            m_siHoz.nMin  = 0;
-            m_siHoz.nMax  = m_siHoz.nPage-1;
-            m_siHoz.nPos  = 0;
-            m_ptOrigin.x  = 0;
-        }
-    }
-    else
-    {
-        //  不需要纵向滚动条
-        m_siVer.nPage = size.cy;
-        m_siVer.nMin  = 0;
-        m_siVer.nMax  = size.cy-1;
-        m_siVer.nPos  = 0;
-        m_ptOrigin.y  = 0;
+		if (size.cx < nMinWid)
+		{
+			//小于表头的最小宽度,  需要横向滚动条
+			m_wBarVisible |= SSB_HORZ;
+			m_siHoz.nMin  = 0;
+			m_siHoz.nMax  = szView.cx-1;
+			m_siHoz.nPage = size.cx;
+		}
+		else
+		{
+			if(size.cx<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+size.cx;
+				m_pHeader->Move(rcHead);
+				szView.cx=size.cx;
+			}
+			//  不需要横向滚动条
+			m_siHoz.nPage = szView.cx;
+			m_siHoz.nMin  = 0;
+			m_siHoz.nMax  = m_siHoz.nPage-1;
+			m_siHoz.nPos  = 0;
+		}
+	}
 
-        if (size.cx < szView.cx)
-        {
-            //  需要横向滚动条
-            m_wBarVisible |= SSB_HORZ;
-            m_siHoz.nMin  = 0;
-            m_siHoz.nMax  = szView.cx-1;
-            m_siHoz.nPage = size.cx;
-        }
-        else
-        {
-            //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
-            m_siHoz.nMin  = 0;
-            m_siHoz.nMax  = m_siHoz.nPage-1;
-            m_siHoz.nPos  = 0;
-            m_ptOrigin.x  = 0;
-        }
-    }
+	//  根据需要调整原点位置
+	if (HasScrollBar(FALSE) && m_siHoz.nPos+m_siHoz.nPage>szView.cx)
+	{
+		m_siHoz.nPos = szView.cx-m_siHoz.nPage;
+	}
 
-    SetScrollPos(TRUE, m_siVer.nPos, TRUE);
-    SetScrollPos(FALSE, m_siHoz.nPos, TRUE);
+	if (HasScrollBar(TRUE) && m_siVer.nPos +m_siVer.nPage>szView.cy)
+	{
+		m_siVer.nPos = szView.cy-m_siVer.nPage;
+	}
 
-    //  重新计算客户区及非客户区
-    SSendMessage(WM_NCCALCSIZE);
+	SetScrollPos(TRUE, m_siVer.nPos, TRUE);
+	SetScrollPos(FALSE, m_siHoz.nPos, TRUE);
 
-    //  根据需要调整原点位置
-    if (HasScrollBar(FALSE) && m_ptOrigin.x+m_siHoz.nPage>szView.cx)
-    {
-        m_ptOrigin.x = szView.cx-m_siHoz.nPage;
-    }
+	//  重新计算客户区及非客户区
+	SSendMessage(WM_NCCALCSIZE);
 
-    if (HasScrollBar(TRUE) && m_ptOrigin.y+m_siVer.nPage>szView.cy)
-    {
-        m_ptOrigin.y = szView.cy-m_siVer.nPage;
-    }
-
-    Invalidate();
+	Invalidate();
 }
 
 //更新表头位置

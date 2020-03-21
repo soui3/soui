@@ -537,7 +537,7 @@ namespace SOUI
 		ReleaseRenderTarget(pRT);
 	}
 
-	int SHeaderCtrl::GetTotalWidth() const
+	int SHeaderCtrl::GetTotalWidth(bool bMinWid) const
 	{
 		CRect rc = GetClientRect();
 
@@ -550,7 +550,7 @@ namespace SOUI
 			nTotalWidth += m_arrItems[i].cx;
 			fTotalWeight += m_arrItems[i].fWeight;
 		}
-		if(fTotalWeight>0.0f)
+		if(!bMinWid && fTotalWeight>0.0f)
 		{
 			return smax(nTotalWidth,rc.Width());
 		}else
@@ -691,6 +691,16 @@ namespace SOUI
 	{
 		SASSERT(iItem >= 0 && iItem < (int)m_arrItems.GetCount());
 		return m_arrItems[iItem].bVisible;
+	}
+
+	bool SHeaderCtrl::IsAutoResize() const
+	{
+		for(UINT i=0;i<m_arrItems.GetCount();i++)
+		{
+			if(m_arrItems[i].fWeight>0.0f)
+				return true;
+		}
+		return false;
 	}
 
 

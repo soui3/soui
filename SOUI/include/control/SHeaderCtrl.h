@@ -128,7 +128,9 @@ namespace SOUI
        *
        * Describe  获得所有宽度  
        */      
-      int GetTotalWidth() const;
+      int GetTotalWidth(bool bMinWid=false) const;
+
+	  bool IsAutoResize() const;
 
       /**
        * SHeaderCtrl::GetItemWidth
