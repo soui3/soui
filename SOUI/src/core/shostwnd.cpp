@@ -572,7 +572,7 @@ void SHostWnd::OnSize(UINT nType, CSize size)
 	}
     m_bResizing = TRUE;
     m_memRT->Resize(size);
-	if(!IsLayoutDirty())
+	if(!IsLayoutDirty() || m_nAutoSizing==0)
 	{
 		OnRelayout(CRect(0, 0, size.cx, size.cy));
 		_Redraw();

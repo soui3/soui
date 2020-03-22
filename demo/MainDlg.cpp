@@ -478,10 +478,6 @@ void CMainDlg::OnBtnMenu()
 {
     CPoint pt;
     GetCursorPos(&pt);
-    //使用模拟菜单
-//     SMenuEx menu;
-//     menu.LoadMenu(_T("smenuex:menuex_test"));
-//     menu.TrackPopupMenu(0,pt.x,pt.y,m_hWnd);
 
     //使用自绘菜单
     SMenu menu;
