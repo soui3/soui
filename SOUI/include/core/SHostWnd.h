@@ -192,11 +192,17 @@ protected:
 
 	virtual void OnHostAnimationStarted(IAnimation * pAni){}
 	virtual void OnHostAnimationStoped(IAnimation * pAni){}
+
+protected:
+	virtual void OnAnimationInvalidate(bool bErase);
+	virtual void OnAnimationUpdate();
+	virtual void OnAnimationStop();
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
     void _RestoreClickState();
 	void _Invalidate(LPCRECT prc);
+
 protected:
     //////////////////////////////////////////////////////////////////////////
     // Message handler
@@ -336,7 +342,9 @@ public://事件处理接口
     virtual BOOL _HandleEvent(EventArgs *pEvt){return FALSE;}
 
 
+	void OnHostShowWindow(BOOL bShow, UINT nStatus);
     BEGIN_MSG_MAP_EX(SHostWnd)
+		MSG_WM_SHOWWINDOW(OnHostShowWindow)
         MSG_WM_SIZE(OnSize)
         MSG_WM_PRINT(OnPrint)
         MSG_WM_PAINT(OnPaint)

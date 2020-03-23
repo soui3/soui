@@ -88,7 +88,7 @@ protected:
 
 	void OnClose()
 	{
-		AnimateHostWindow(200,AW_CENTER|AW_HIDE);
+		//AnimateHostWindow(200,AW_CENTER|AW_HIDE);
         DestroyWindow();
 	}
 	void OnMaximize()

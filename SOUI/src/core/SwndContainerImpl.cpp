@@ -12,6 +12,11 @@ namespace SOUI
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
 
 
+	SRootWindow::SRootWindow()
+	{
+	}
+
+//////////////////////////////////////////////////////////////////////////
 SwndContainerImpl::SwndContainerImpl()
     :m_hCapture(NULL)
     ,m_hHover(NULL)

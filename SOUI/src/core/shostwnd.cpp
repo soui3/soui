@@ -412,6 +412,8 @@ void SHostWnd::_Redraw()
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
 {
+	SMatrix mtx = _GetMatrixEx();
+	SLOG_INFO("onPrint, matrix is identity? "<<(mtx.isIdentity()?"yes":"no"));
     //刷新前重新布局，会自动检查布局脏标志
 	UpdateLayout();
     
@@ -1471,7 +1473,14 @@ void SHostWnd::RequestRelayout(SWND hSource,BOOL bSourceResizable)
 //////////////////////////////////////////////////////////////////////////
 BOOL SHostWnd::DestroyWindow()
 {
-    return SNativeWnd::DestroyWindow();
+	if(m_aniExit)
+	{
+		StartAnimation(m_aniExit);
+		return TRUE;
+	}else
+	{
+		return SNativeWnd::DestroyWindow();
+	}
 }
 
 UINT_PTR SHostWnd::SetTimer(UINT_PTR nIDEvent,UINT nElapse)
@@ -1682,6 +1691,40 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 	BOOL bRet = SNativeWnd::ShowWindow(nCmdShow);
 	UpdateAutoSizeCount(false);
 	return bRet;
+}
+
+void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
+{
+	if(bShow && m_aniEnter)
+	{
+		SLOG_INFO("OnHostShowWindow, set animation");
+		StartAnimation(m_aniEnter);
+		OnNextFrame();
+	}
+}
+
+void SHostWnd::OnAnimationInvalidate(bool bErase)
+{
+	if(bErase)
+	{
+		CRect rcWnd;
+		SNativeWnd::GetClientRect(&rcWnd);
+		m_memRT->ClearRect(rcWnd,0);
+	}
+	SWindow::OnAnimationInvalidate(bErase);
+}
+
+void SHostWnd::OnAnimationUpdate()
+{
+	UpdateWindow();
+}
+
+void SHostWnd::OnAnimationStop()
+{
+	if(GetAnimation() == m_aniExit)
+	{
+		SNativeWnd::DestroyWindow();
+	}
 }
 
 

@@ -408,4 +408,13 @@ public:                                                          \
     }                                                              \
     else                                                           \
 
+
+#define ATTR_ANIMATION(attribname, varname, allredraw)             \
+	if (0 == strAttribName.CompareNoCase(attribname))              \
+	{                                                              \
+	    varname.Attach(SApplication::getSingleton().LoadAnimation(strValue));\
+		hRet = allredraw ? S_OK : S_FALSE;                         \
+	}                                                              \
+	else                                                           \
+
 #endif//_SATTRCRACK_H

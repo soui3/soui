@@ -3048,9 +3048,13 @@ namespace SOUI
 		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
-	void SWindow::OnAnimationInvalidate()
+	void SWindow::OnAnimationInvalidate(bool bErase)
 	{
 		InvalidateRect(NULL);
+	}
+
+	void SWindow::OnAnimationUpdate()
+	{//do nothing.
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;
@@ -3121,10 +3125,10 @@ namespace SOUI
 		}
 		if (tm > 0)
 		{
-			m_pOwner->OnAnimationInvalidate();
+			m_pOwner->OnAnimationInvalidate(true);
 			pAni->AddRef();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
-			m_pOwner->OnAnimationInvalidate();
+			m_pOwner->OnAnimationInvalidate(false);
 			if (!bMore)
 			{//animation stopped.
 				if(pAni->isFillEnabled() && pAni->getFillAfter())
@@ -3138,6 +3142,7 @@ namespace SOUI
 			}
 			pAni->Release();
 		}
+		m_pOwner->OnAnimationUpdate();
 		m_pOwner->Release();
 	}
 

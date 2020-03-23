@@ -21,8 +21,24 @@
 namespace SOUI
 {
 
+	class SOUI_EXP SRootWindow: public SWindow
+	{
+		SOUI_CLASS_NAME(SRootWindow,L"root")
+
+	public:
+		SRootWindow();
+
+	public:
+		SOUI_ATTRS_BEGIN()
+			ATTR_ANIMATION(L"enterAnimation",m_aniEnter,FALSE)
+			ATTR_ANIMATION(L"exitAnimation",m_aniExit,FALSE)
+		SOUI_ATTRS_END()
+	protected:
+		SAutoRefPtr<IAnimation>		m_aniEnter,m_aniExit;
+	};
+
     class SOUI_EXP SwndContainerImpl : public ISwndContainer
-                                     , public SWindow
+                                     , public SRootWindow
     {
         SOUI_CLASS_NAME(SwndContainerImpl,L"SwndContainerImpl")
     public:

@@ -237,7 +237,7 @@ namespace SOUI
 			void OnAnimationStop();
 			const STransformation & GetTransformation() const;
 			bool getFillAfter() const;
-		protected:
+		public:
 			void OnNextFrame() override;
 		protected:
 			bool OnOwnerResize(EventArgs *e);
@@ -892,7 +892,8 @@ namespace SOUI
 	protected:
 		virtual void OnAnimationStart();
 		virtual void OnAnimationStop();
-		virtual void OnAnimationInvalidate();
+		virtual void OnAnimationInvalidate(bool bErase);
+		virtual void OnAnimationUpdate();
 	public:// Virtual functions
 
 		virtual int GetScale() const;
