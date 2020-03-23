@@ -1122,18 +1122,26 @@ namespace SOUI
 		SMatrix oriMtx;
 		bool bMtx = _ApplyMatrix(pRT, oriMtx);
 
-
+		
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = GetClientRect();
-
-		CRect rcRgn = rcWnd;
-		if(pRgn && !pRgn->IsEmpty())
-		{
-			pRgn->GetRgnBox(&rcRgn);
+		float fMat[9];
+		SMatrix curMtx;
+		pRT->GetTransform(fMat);
+		curMtx.SetData(fMat);
+		BOOL bRgnInClient = FALSE;
+		if(curMtx.isIdentity())
+		{//detect client area only if matrix is identity.
+			CRect rcRgn = rcWnd;
+			if(pRgn && !pRgn->IsEmpty())
+			{
+				pRgn->GetRgnBox(&rcRgn);
+			}
+			CRect rcRgnUnionClient;
+			rcRgnUnionClient.UnionRect(rcClient,rcRgn);
+			bRgnInClient = rcRgnUnionClient == rcClient;
 		}
-		CRect rcRgnUnionClient;
-		rcRgnUnionClient.UnionRect(rcClient,rcRgn);
-		BOOL bRgnInClient = rcRgnUnionClient == rcClient;
+
 
 		IRenderTarget * pRTBackup;//backup current RT
 
@@ -2014,7 +2022,7 @@ namespace SOUI
 
 	BOOL SWindow::IsLayeredWindow() const
 	{
-		return m_bLayeredWindow || GetAlpha()!=0xFF;
+		return m_bLayeredWindow || !GetTransformation().isIdentity();
 	}
 
 	//查询当前窗口内容将被渲染到哪一个渲染层上，没有渲染层时返回NULL
