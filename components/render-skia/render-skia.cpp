@@ -578,7 +578,7 @@ namespace SOUI
     HRESULT SRenderTarget_Skia::DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags )
     {
         HDC hdc=GetDC(0);
-        
+		
         ICONINFO ii={0};
         ::GetIconInfo(hIcon,&ii);
         SASSERT(ii.hbmColor);
@@ -922,6 +922,13 @@ namespace SOUI
         }
 
         ::SetViewportOrgEx(m_hGetDC,(int)m_ptOrg.fX,(int)m_ptOrg.fY,NULL);
+
+		float matrix[9];
+		GetTransform(matrix);
+		XFORM xForm = { matrix[IxForm::kMScaleX],matrix[IxForm::kMSkewY],
+			matrix[IxForm::kMSkewX],matrix[IxForm::kMScaleY],
+			matrix[IxForm::kMTransX],matrix[IxForm::kMTransY] };
+		SetWorldTransform(m_hGetDC,&xForm);
 
         m_uGetDCFlag = uFlag;
         return m_hGetDC;

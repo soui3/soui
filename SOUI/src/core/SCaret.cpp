@@ -12,6 +12,11 @@ namespace SOUI{
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
 	}
 
+	SCaret::~SCaret()
+	{
+		m_pContainer->UnregisterTimelineHandler(this);
+	}
+
 
 	BOOL SCaret::Init(HBITMAP hBmp, int nWid, int nHei)
 	{
@@ -133,5 +138,4 @@ namespace SOUI{
 		if (m_bmpCaret) szCaret = m_bmpCaret->Size();
 		return	CRect(m_ptCaret, szCaret);
 	}
-
 }

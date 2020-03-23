@@ -8,6 +8,7 @@ namespace SOUI{
 		SOUI_CLASS_NAME_EX(SCaret,L"caret", None)
     public:
         SCaret(ISwndContainer *pContainer);
+		~SCaret();
 	public:
 		// 通过 ICaret 继承
 		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) override;

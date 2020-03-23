@@ -413,7 +413,6 @@ void SHostWnd::_Redraw()
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
 {
 	SMatrix mtx = _GetMatrixEx();
-	SLOG_INFO("onPrint, matrix is identity? "<<(mtx.isIdentity()?"yes":"no"));
     //刷新前重新布局，会自动检查布局脏标志
 	UpdateLayout();
     

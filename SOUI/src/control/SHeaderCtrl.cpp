@@ -355,6 +355,10 @@ namespace SOUI
 						if(iItem==m_arrItems.GetCount()-1)//can't adjust last column
 							return;
 						int nDelta = cxNew - m_arrItems[iItem].cx;
+						if(m_arrItems[iItem].cx + nDelta<0)
+							nDelta = -m_arrItems[iItem].cx;
+						if(m_arrItems[iItem+1].cx-nDelta<0)
+							nDelta = m_arrItems[iItem+1].cx;
 						m_arrItems[iItem].cx += nDelta;	//add the delta the the select column.
 						m_arrItems[iItem+1].cx -= nDelta;//sub the delta from the next column.
 					}else

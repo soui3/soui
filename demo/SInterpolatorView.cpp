@@ -54,7 +54,7 @@ namespace SOUI
 
 	void SInterpolatorView::OnDestroy()
 	{
-		GetContainer()->RegisterTimelineHandler(this);
+		GetContainer()->UnregisterTimelineHandler(this);
 		__super::OnDestroy();
 	}
 
