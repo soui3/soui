@@ -152,7 +152,7 @@ namespace SOUI {
 					mCycleFlip = !mCycleFlip;
 				}
 
-				mStartTime = -1;
+				mStartTime = currentTime;
 				bMore = true;
 
 				fireAnimationRepeat();

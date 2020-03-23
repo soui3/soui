@@ -1721,6 +1721,7 @@ void SHostWnd::OnAnimationUpdate()
 
 void SHostWnd::OnAnimationStop()
 {
+	SWindow::OnAnimationStop();
 	if(GetAnimation() == m_aniExit)
 	{
 		SNativeWnd::DestroyWindow();
