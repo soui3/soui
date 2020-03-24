@@ -84,39 +84,6 @@ public:
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
-	/* XML预编译前面加载效率比较
-	for(int i=0;i<100;i++)
-	{
-		int spanText=0,spanBin=0;
-		{
-			pugi::xml_document doc;
-
-			LARGE_INTEGER perf;
-			QueryPerformanceFrequency(&perf);
-			LARGE_INTEGER t1, t2;
-			QueryPerformanceCounter(&t1);
-			doc.load_file(L"d:\\test.xml");
-			QueryPerformanceCounter(&t2);
-			spanText= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
-		}
-
-		{
-			pugi::xml_document doc;
-
-			LARGE_INTEGER perf;
-			QueryPerformanceFrequency(&perf);
-			LARGE_INTEGER t1, t2;
-			QueryPerformanceCounter(&t1);
-			doc.load_file(L"d:\\test.xml.bin");
-			QueryPerformanceCounter(&t2);
-			spanBin= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
-		}
-		SStringA strRes = SStringA().Format("text xml: %d, bin xml:%d",spanText,spanBin);
-		OutputDebugStringA(strRes);
-	}
-	return 0;
-    //*/
-
 	//必须要调用OleInitialize来初始化运行环境
 	HRESULT hRes = OleInitialize(NULL);
 	SASSERT(SUCCEEDED(hRes));
@@ -127,10 +94,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     //使用imgdecoder-png图片解码模块演示apng动画
     SComMgr2 *pComMgr = new SComMgr2(_T("imgdecoder-png"));
     
-
-
     {
-
         int nType=MessageBox(GetActiveWindow(),_T("选择渲染类型：\n[yes]: Skia\n[no]:GDI\n[cancel]:Quit"),_T("select a render"),MB_ICONQUESTION|MB_YESNOCANCEL);
         if(nType == IDCANCEL)
         {
@@ -146,18 +110,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         SAutoRefPtr<ITranslatorMgr> trans;                  //多语言翻译模块，由translator.dll提供
         SAutoRefPtr<IScriptFactory> pScriptLua;              //lua脚本模块，由scriptmodule-lua.dll提供
         SAutoRefPtr<ILog4zManager>  pLogMgr;                //log4z对象
-        
-		//演示异步任务。
-		SAutoRefPtr<ITaskLoop>  pTaskLoop;
-		if (pComMgr->CreateTaskLoop((IObjRef**)&pTaskLoop))
-		{
-			CAsyncTaskObj obj;
-			pTaskLoop->start("test", ITaskLoop::Low);
-			STaskHelper::post(pTaskLoop, &obj, &CAsyncTaskObj::task1, 100,true);
-			STaskHelper::post(pTaskLoop, &obj, &CAsyncTaskObj::task2, 100,"abc", true);
-			pTaskLoop->stop();
-			pTaskLoop = NULL;
-		}
 
 		BOOL bLoaded = FALSE;
 		//从各组件中显式创建上述组件对象

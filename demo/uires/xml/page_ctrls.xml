@@ -14,9 +14,9 @@
 		</itemTemplate>
 		<data>
 			<group text="列表控件" id="1000">
-				<item text="基础列表" icon="1" name="page_listctrl" id="100" />
-				<item text="多列列表" icon="2" name="page_mclistview" id="101" />
-				<item text="固定高度列表" icon="3" name="page_fix_height_listview" id="102" />
+        <item text="多列列表" icon="2" name="page_mclistview" id="100" />
+        <item text="基础列表" icon="1" name="page_listctrl" id="101" />
+        <item text="固定高度列表" icon="3" name="page_fix_height_listview" id="102" />
 				<item text="可变高度列表" icon="4" name="page_flex_height_listview" id="103" />
 				<item text="TileView" icon="5" name="page_tileview" id="104" />
 				<item text="扩展多列列表" icon="6" name="page_mclistview_ex" id="105" />
@@ -45,7 +45,48 @@
 		</data>
 	</grouplist>
 	<tabctrl pos="[0,0,-0,-0" name="tab_ctrls" font="style:StrokeAndFill,blurStyle:solid,blurRadius:3" animateSteps="10" animateType="1" tabHeight="0">
-		<page title="listctrl">
+    <page title="mclistview">
+      <mclistview name="mclv_test" colorBkgnd="@color/white" pos="10,10,-10,-10" headerHeight="30" colorGrid="@color/red">
+        <headerStyle wndclass="header" align="center" name="mclv_test_header" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" itemSwapEnable="1" fixWidth="0" font="underline:0,adding:-3" sortHeader="1" colorBkgnd="#ffffff">
+          <items>
+            <item weight="480">@string/mccol_1</item>
+            <item weight="95">@string/mccol_2</item>
+            <item weight="100">@string/mccol_3</item>
+            <item weight="100">@string/mccol_4</item>
+            <item weight="100">@string/mccol_5</item>
+            <item weight="100">@string/mccol_6</item>
+          </items>
+          <check name="chk_mclv_sel" text="全选" />
+        </headerStyle>
+        <template itemHeight="80" colorHover="#cccccc" colorSelected="#0000ff">
+          <window name="col1" clipClient="1">
+            <img name="img_icon" skin="skin_icon6" pos="10,8,@64,@64" />
+            <text name="txt_name" pos="[5,16" font="bold:1,adding:-1">火狐浏览器</text>
+            <text name="txt_desc" pos="{0,36,-10,-10" font="bold:1,adding:-4" dotted="1">速度最快的浏览器</text>
+            <text name="txt_index" pos="|0,|0" offset="-0.5,-0.5" font="adding:10" colorText="#ff000088">10</text>
+          </window>
+          <window name="col2" clipClient="1">
+            <ratingbar name="rating_score" starSkin="skin_star1" starNum="5" value="3.5" pos="10,16" />
+            <text name="txt_score" pos="10,36" font="adding:-5">8.5分</text>
+            <link pos="[5,36" cursor="hand" colorText="#1e78d5" href="www.163.com" font="adding:-5">投票</link>
+          </window>
+          <window name="col3" clipClient="1">
+            <text name="txt_size" pos="0,26,-0,-26" font="adding:-4" align="center">85.92M</text>
+          </window>
+          <window name="col4" clipClient="1">
+            <text name="txt_installtime" pos="0,26,-0,-26" font="adding:-4" align="center">2015-01-09</text>
+          </window>
+          <window name="col5" clipClient="1">
+            <text name="txt_usetime" pos="0,26,-0,-26" font="adding:-4" align="center">今天</text>
+            <animateimg pos="|0,|0" offset="-0.5,-0.5" skin="skin_busy" name="ani_test" tip="animateimg is used here" msgTransparent="0" />
+          </window>
+          <window name="col6" clipClient="1">
+            <imgbtn animate="1" pos="|-35,|-14" font="adding:-3" align="center" skin="skin_install" name="btn_uninstall">卸载</imgbtn>
+          </window>
+        </template>
+      </mclistview>
+    </page>
+    <page title="listctrl">
 			<listctrl name="lc_test" hotTrack="1" pos="10,0,-10,-10" itemHeight="20" headerHeight="30" cursor="CUR_TST" font="underline:1" itemSkin="skin_tab_left" sbSkin="skin_new_scrollbar">
 				<headerStyle align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
 					<items>
@@ -56,47 +97,6 @@
 					</items>
 				</headerStyle>
 			</listctrl>
-		</page>
-		<page title="mclistview">
-			<mclistview name="mclv_test" colorBkgnd="@color/white" pos="10,10,-10,-10" headerHeight="30" colorGrid="@color/red">
-				<headerStyle wndclass="header" align="center" name="mclv_test_header" sortSkin="skin_lcex_header_arrow" itemSkin="skin_lcex_header" itemSwapEnable="1" fixWidth="0" font="underline:0,adding:-3" sortHeader="1" colorBkgnd="#ffffff">
-					<items>
-						<item weight="480">@string/mccol_1</item>
-						<item weight="95">@string/mccol_2</item>
-						<item weight="100">@string/mccol_3</item>
-						<item weight="100">@string/mccol_4</item>
-						<item weight="100">@string/mccol_5</item>
-						<item weight="100">@string/mccol_6</item>
-					</items>
-					<check name="chk_mclv_sel" text="select all" />
-				</headerStyle>
-				<template itemHeight="80" colorHover="#cccccc" colorSelected="#0000ff">
-					<window name="col1" clipClient="1">
-						<img name="img_icon" skin="skin_icon6" pos="10,8,@64,@64" />
-						<text name="txt_name" pos="[5,16" font="bold:1,adding:-1">火狐浏览器</text>
-						<text name="txt_desc" pos="{0,36,-10,-10" font="bold:1,adding:-4" dotted="1">速度最快的浏览器</text>
-						<text name="txt_index" pos="|0,|0" offset="-0.5,-0.5" font="adding:10" colorText="#ff000088">10</text>
-					</window>
-					<window name="col2" clipClient="1">
-						<ratingbar name="rating_score" starSkin="skin_star1" starNum="5" value="3.5" pos="10,16" />
-						<text name="txt_score" pos="10,36" font="adding:-5">8.5分</text>
-						<link pos="[5,36" cursor="hand" colorText="#1e78d5" href="www.163.com" font="adding:-5">投票</link>
-					</window>
-					<window name="col3" clipClient="1">
-						<text name="txt_size" pos="0,26,-0,-26" font="adding:-4" align="center">85.92M</text>
-					</window>
-					<window name="col4" clipClient="1">
-						<text name="txt_installtime" pos="0,26,-0,-26" font="adding:-4" align="center">2015-01-09</text>
-					</window>
-					<window name="col5" clipClient="1">
-						<text name="txt_usetime" pos="0,26,-0,-26" font="adding:-4" align="center">今天</text>
-						<animateimg pos="|0,|0" offset="-0.5,-0.5" skin="skin_busy" name="ani_test" tip="animateimg is used here" msgTransparent="0" />
-					</window>
-					<window name="col6" clipClient="1">
-						<imgbtn animate="1" pos="|-35,|-14" font="adding:-3" align="center" skin="skin_install" name="btn_uninstall">卸载</imgbtn>
-					</window>
-				</template>
-			</mclistview>
 		</page>
 		<page title="listview(fix)">
 			<listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1" sbFadeFrames="30">
