@@ -1004,6 +1004,8 @@ namespace SOUI
 		GETRENDERFACTORY->CreateRegion(&rgn);
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = SWindow::GetClientRect();
+		if(rcWnd == rcClient)
+			return;
 		rgn->CombineRect(&rcWnd,RGN_COPY);
 		rgn->CombineRect(&rcClient,RGN_DIFF);
 		if(m_clipRgn)
