@@ -23,7 +23,9 @@
     <imglist name="skin_bkimg_16_fit" src="bkimg:skin_pic_16" colorizeEnable="0"/>
     <imglist name="skin_bkimg_17_fit" src="bkimg:skin_pic_17" colorizeEnable="0"/>
   </skin>
-  <root colorBkgnd="#eeeeee" cache="1" width="758" height="500">
+  <root colorBkgnd="#eeeeee" cache="1" width="758" height="500"
+        enterAnimation="anim:scale_in"
+        exitAnimation="anim:scale_out">
     <window id="9527" pos="1,1,-1,-1" skin="demoskinbk"  cache="1">
       <caption pos="0,0,-0,30" show="1" font="adding:0" layout="hbox" padding="5,0,5,0" gravity="center">
         <icon size="-1,-1" src="ICON_LOGO:16"/>

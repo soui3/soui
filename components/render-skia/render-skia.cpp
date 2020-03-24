@@ -208,8 +208,6 @@ namespace SOUI
 		SAutoRefPtr<IPen> pPen;
 		CreatePen(PS_SOLID,SColor(0,0,0).toCOLORREF(),1,&pPen);
 		SelectObject(pPen);
-		memset(m_xForm,0,sizeof(m_xForm));
-		m_xForm[IxForm::kMScaleX]=m_xForm[IxForm::kMScaleY]=1.0f;
 	}
 	
 	SRenderTarget_Skia::~SRenderTarget_Skia()
@@ -923,12 +921,14 @@ namespace SOUI
             DeleteObject(hRgn);
         }
 
-        ::SetViewportOrgEx(m_hGetDC,(int)m_ptOrg.fX,(int)m_ptOrg.fY,NULL);
-		XFORM xForm2 = { m_xForm[IxForm::kMScaleX],m_xForm[IxForm::kMSkewY],
-			m_xForm[IxForm::kMSkewX],m_xForm[IxForm::kMScaleY],
-			m_xForm[IxForm::kMTransX],m_xForm[IxForm::kMTransY] };
+		::SetGraphicsMode(m_hGetDC,GM_ADVANCED);
+		::SetViewportOrgEx(m_hGetDC,m_ptOrg.x(),m_ptOrg.y(),NULL);
 
-		SetWorldTransform(m_hGetDC,&xForm2);
+		SkMatrix mtx=m_SkCanvas->getTotalMatrix();
+		XFORM xForm = { mtx.get(IxForm::kMScaleX),mtx.get(IxForm::kMSkewY),
+			mtx.get(IxForm::kMSkewX),mtx.get(IxForm::kMScaleY),
+			mtx.get(IxForm::kMTransX),mtx.get(IxForm::kMTransY) };
+		::SetWorldTransform(m_hGetDC,&xForm);
 
         m_uGetDCFlag = uFlag;
         return m_hGetDC;
@@ -1250,7 +1250,6 @@ namespace SOUI
     HRESULT SRenderTarget_Skia::SetTransform(const float matrix[9], float oldMatrix[9])
     {
         SASSERT(matrix);
-		memcpy(m_xForm,matrix,sizeof(m_xForm));
         if(oldMatrix) GetTransform(oldMatrix);
         SkMatrix m;
 		m.setAll(matrix[IxForm::kMScaleX], matrix[IxForm::kMSkewX],matrix[IxForm::kMTransX],

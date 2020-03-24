@@ -46,19 +46,20 @@
     ]]>
   </script>
   <root skin="_skin.sys.wnd.bkgnd" cache="1" on_init="on_init" on_exit="on_exit"  
-        enterAnimation="anim:scale_in"
-        exitAnimation="anim:scale_out"
         >
     <window pos="1,1,-1,-1" id="9527" skin="demoskinbk" cache="1" colorBkgnd="#169ada"/>
-    <caption pos="0,0,-0,30" class="cls_txt_red" font="adding:8" focusable="1" drawfocusrect="0">
-      <icon pos="10,8" src="ICON_LOGO:16"/>
-      <text pos="[5,4" name="txt_title"/>
-      <imgbtn id="1" skin="_skin.sys.btn.close"    pos="-45,0" tip="close" animate="0"/>
-      <imgbtn id="2" skin="_skin.sys.btn.maximize"  pos="-83,0" animate="0" />
-      <imgbtn id="3" skin="_skin.sys.btn.restore"  pos="-83,0" show="0" animate="0" />
-      <imgbtn id="5" skin="_skin.sys.btn.minimize" pos="-121,0" animate="0" />
-      <imgbtn name="btn_menu" skin="skin_btn_menu" pos="-151,2" animate="0" />
-      <imgbtn name="btn_skin" skin="skin_btn_skin" pos="-181,2" animate="0"/>
+    <caption pos="0,0,-0,30" class="cls_txt_red" font="adding:2" focusable="1" layout="hbox" gravity="center" padding_left="10">
+      <icon src="ICON_LOGO:16"/>
+      <text name="txt_title" extend_left="5"/>
+      <window size="0,0" weight="1" visible="0"/>
+      <imgbtn name="btn_skin" skin="skin_btn_skin"  animate="1"/>
+      <imgbtn name="btn_menu" skin="skin_btn_menu" animate="1" />
+      <imgbtn id="5" skin="_skin.sys.btn.minimize"  animate="1" />
+      <window size="-1,-1">
+        <imgbtn id="2" skin="_skin.sys.btn.maximize"  pos="0,0" animate="1" />
+        <imgbtn id="3" skin="_skin.sys.btn.restore"  pos="0,0" show="0" animate="1" />
+      </window>
+      <imgbtn id="1" skin="_skin.sys.btn.close"  tip="close" animate="1"/>
     </caption>
     <tabctrl name="tab_main" pos="5,30,-5,-5" interpolator="Decelerate" curSel="0" focusable="0" animateSteps="30" animateType="1" tabHeight="75" tabSkin="skin_tab_main" text-y="50" iconSkin="skin_page_icons" icon-x="10" colorTextHover="#ff0000" fontHover="italic:1">
       <page title="soui ctrl">

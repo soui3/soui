@@ -19,6 +19,7 @@ namespace SOUI
 SCaption::SCaption(void)
 :m_bIsMaxDown(FALSE)
 {
+	m_bDrawFocusRect=FALSE;
 }
 
 SCaption::~SCaption(void)

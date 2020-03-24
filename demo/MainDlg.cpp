@@ -423,9 +423,6 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 	//init soui 3.0 animation.
 	InitSoui3Animation();
 
-	SMatrix mtx;
-	mtx.setScale(0.5,0.5);
-	//SetMatrix(mtx);
     return 0;
 }
 

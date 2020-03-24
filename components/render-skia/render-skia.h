@@ -543,8 +543,6 @@ namespace SOUI
 		bool			m_bAntiAlias;
 		SList<int>		m_lstLayerId;	//list to save layer ids
 		int				m_xferMode;
-
-		float			m_xForm[9];
 	};
 	
 	namespace RENDER_SKIA
