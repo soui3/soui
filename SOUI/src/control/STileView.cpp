@@ -225,7 +225,11 @@ void STileView::OnPaint(IRenderTarget *pRT)
         GetClientRect(&rcClient);
         pRT->PushClipRect(&rcClient, RGN_AND);
         
-        CRect rcClip, rcInter;
+		float fMat[9];
+		pRT->GetTransform(fMat);
+		SMatrix mtx(fMat);
+
+        CRect rcClip;
         pRT->GetClipBox(&rcClip);
 		SAutoRefPtr<IRegion> rgnClip;
 		pRT->GetClipRegion(&rgnClip);
@@ -244,10 +248,8 @@ void STileView::OnPaint(IRenderTarget *pRT)
             if(m_tvItemLocator->IsLastInRow(iFirst + i))
             {
                 nLastBottom = rcItem.bottom + m_tvItemLocator->GetMarginSize();
-            }
-            
-            rcInter.IntersectRect(&rcClip, &rcItem);
-            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+            }            
+			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
             {
                 ii.pItem->Draw(pRT, rcItem);
             }

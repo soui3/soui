@@ -468,7 +468,10 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
     SPainter duiDC;
     BeforePaint(pRT,duiDC);
 
-
+	float fMat[9];
+	pRT->GetTransform(fMat);
+	SMatrix mtx(fMat);
+	
     int iFirst = m_iFirstVisible;
     if(iFirst!=-1)
     {
@@ -492,13 +495,12 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
 			pRT->CreatePen(PS_SOLID,m_crGrid,1,&pen);
 			pRT->SelectObject(pen,&oldPen);
 		}
-
+		
         for(;pos;i++)
         {
             ItemInfo ii = m_lstItems.GetNext(pos);
             CRect rcItem = _OnItemGetRect(iFirst+i);
-            rcInter.IntersectRect(&rcClip,&rcItem);
-            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
                 ii.pItem->Draw(pRT,rcItem);
 			if(m_crGrid!=CR_INVALID)
 			{

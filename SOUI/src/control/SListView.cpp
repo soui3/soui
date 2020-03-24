@@ -223,10 +223,14 @@ namespace SOUI
             GetClientRect(&rcClient);
             pRT->PushClipRect(&rcClient,RGN_AND);
 
-            CRect rcClip,rcInter;
+            CRect rcClip;
 			SAutoRefPtr<IRegion> rgnClip;
 			pRT->GetClipRegion(&rgnClip);
             pRT->GetClipBox(&rcClip);
+
+			float fMat[9];
+			pRT->GetTransform(fMat);
+			SMatrix mtx(fMat);
 
             int nOffset = m_lvItemLocator->Item2Position(iFirst)-m_siVer.nPos;
 
@@ -240,8 +244,7 @@ namespace SOUI
                 ItemInfo ii = m_lstItems.GetNext(pos);
                 rcItem.top=rcItem.bottom;
                 rcItem.bottom = rcItem.top + m_lvItemLocator->GetItemHeight(iFirst+i);
-                rcInter.IntersectRect(&rcClip,&rcItem);
-				if (!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+				if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
 				{
 					ii.pItem->Draw(pRT, rcItem);
 				}

@@ -539,10 +539,10 @@ namespace SOUI
         SRenderTarget_GDI *pRTSrc_GDI=(SRenderTarget_GDI*)pRTSour;
 
         ALPHAINFO ai;
-        if(dwRop!=SRCCOPY)
+//        if(dwRop!=SRCCOPY)
             CGdiAlpha::AlphaBackup(m_hdc,pRcDest,ai);
         ::BitBlt(m_hdc,pRcDest->left,pRcDest->top,pRcDest->right-pRcDest->left,pRcDest->bottom-pRcDest->top,pRTSrc_GDI->m_hdc,xSrc,ySrc,dwRop);
-        if(dwRop!=SRCCOPY)
+//        if(dwRop!=SRCCOPY)
             CGdiAlpha::AlphaRestore(ai);
         return S_OK;
     }

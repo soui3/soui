@@ -208,6 +208,8 @@ namespace SOUI
 		SAutoRefPtr<IPen> pPen;
 		CreatePen(PS_SOLID,SColor(0,0,0).toCOLORREF(),1,&pPen);
 		SelectObject(pPen);
+		memset(m_xForm,0,sizeof(m_xForm));
+		m_xForm[IxForm::kMScaleX]=m_xForm[IxForm::kMScaleY]=1.0f;
 	}
 	
 	SRenderTarget_Skia::~SRenderTarget_Skia()
@@ -922,13 +924,11 @@ namespace SOUI
         }
 
         ::SetViewportOrgEx(m_hGetDC,(int)m_ptOrg.fX,(int)m_ptOrg.fY,NULL);
+		XFORM xForm2 = { m_xForm[IxForm::kMScaleX],m_xForm[IxForm::kMSkewY],
+			m_xForm[IxForm::kMSkewX],m_xForm[IxForm::kMScaleY],
+			m_xForm[IxForm::kMTransX],m_xForm[IxForm::kMTransY] };
 
-		float matrix[9];
-		GetTransform(matrix);
-		XFORM xForm = { matrix[IxForm::kMScaleX],matrix[IxForm::kMSkewY],
-			matrix[IxForm::kMSkewX],matrix[IxForm::kMScaleY],
-			matrix[IxForm::kMTransX],matrix[IxForm::kMTransY] };
-		SetWorldTransform(m_hGetDC,&xForm);
+		SetWorldTransform(m_hGetDC,&xForm2);
 
         m_uGetDCFlag = uFlag;
         return m_hGetDC;
@@ -1245,12 +1245,12 @@ namespace SOUI
         skrc.offset(m_ptOrg);
         m_SkCanvas->drawArc(skrc,startAngle, sweepAngle,true,paint);
         return S_OK;
-
     }
 
     HRESULT SRenderTarget_Skia::SetTransform(const float matrix[9], float oldMatrix[9])
     {
         SASSERT(matrix);
+		memcpy(m_xForm,matrix,sizeof(m_xForm));
         if(oldMatrix) GetTransform(oldMatrix);
         SkMatrix m;
 		m.setAll(matrix[IxForm::kMScaleX], matrix[IxForm::kMSkewX],matrix[IxForm::kMTransX],

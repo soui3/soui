@@ -1274,6 +1274,7 @@ namespace SOUI
 		*/
 		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
 
+		virtual COLORREF GetBkgndColor() const;
     protected://helper functions
 
 		SWindow* _FindChildByID(int nID, int nDeep);

@@ -1126,9 +1126,8 @@ namespace SOUI
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = GetClientRect();
 		float fMat[9];
-		SMatrix curMtx;
 		pRT->GetTransform(fMat);
-		curMtx.SetData(fMat);
+		SMatrix curMtx(fMat);
 		BOOL bRgnInClient = FALSE;
 		if(curMtx.isIdentity())
 		{//detect client area only if matrix is identity.
@@ -1518,7 +1517,7 @@ namespace SOUI
 		CRect rcClient=GetClientRect();
 		if (!m_pBgSkin)
 		{
-			COLORREF crBg = GetStyle().m_crBg;
+			COLORREF crBg = GetBkgndColor();
 
 			if (CR_INVALID != crBg)
 			{
@@ -2022,7 +2021,7 @@ namespace SOUI
 
 	BOOL SWindow::IsLayeredWindow() const
 	{
-		return m_bLayeredWindow || !GetTransformation().isIdentity();
+		return m_bLayeredWindow;
 	}
 
 	//查询当前窗口内容将被渲染到哪一个渲染层上，没有渲染层时返回NULL
@@ -3063,6 +3062,11 @@ namespace SOUI
 
 	void SWindow::OnAnimationUpdate()
 	{//do nothing.
+	}
+
+	COLORREF SWindow::GetBkgndColor() const
+	{
+		return GetStyle().m_crBg;
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;

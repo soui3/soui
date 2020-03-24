@@ -227,23 +227,21 @@ SWND SItemPanel::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 void SItemPanel::Draw(IRenderTarget *pRT,const CRect & rc)
 {
     UpdateLayout();
-
-    m_style.m_crBg=m_crBk;
-    if((m_dwState & WndState_Hover) && m_crHover != CR_INVALID) m_style.m_crBg=m_crHover;
-    if((m_dwState & WndState_Check) && m_crSelBk != CR_INVALID) m_style.m_crBg=m_crSelBk;
+	BuildWndTreeZorder();
 
     SPainter painter;
     BeforePaint(pRT,painter);
 
-    SAutoRefPtr<IRegion> rgn;
-    pRT->GetClipRegion(&rgn);
-    
-    pRT->OffsetViewportOrg(rc.left,rc.top);
-    if(rgn)
-    {
-        rgn->Offset(-rc.TopLeft());
-    }
-    BuildWndTreeZorder();
+	pRT->OffsetViewportOrg(rc.left,rc.top);
+
+	float fMat[9];
+	pRT->GetTransform(fMat);
+	SMatrix mtx(fMat);
+	SAutoRefPtr<IRegion> rgn;
+	if(mtx.isIdentity())
+	{
+		pRT->GetClipRegion(&rgn);
+	}
     RedrawRegion(pRT,rgn);
     pRT->OffsetViewportOrg(-rc.left,-rc.top);
     
@@ -383,4 +381,25 @@ void SItemPanel::EnableIME(BOOL bEnable)
 	m_pFrmHost->GetContainer()->EnableIME(bEnable);
 }
 
+
+COLORREF SItemPanel::GetBkgndColor() const
+{
+	if((m_dwState & WndState_Check) && m_crSelBk != CR_INVALID)
+	{
+		return m_crSelBk;
+	}
+	if((m_dwState & WndState_Hover) && m_crHover != CR_INVALID) 
+	{
+		return m_crHover;
+	}
+	return m_crBk;
+}
+BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem)
+{
+	if(!mtx.isIdentity())//don't clip any item if matrix is not identify.
+		return TRUE;
+	CRect rc;
+	rc.IntersectRect(rcClip,rcItem);
+	return !rc.IsRectEmpty() && (!clipRgn|| clipRgn->RectInRegion(rcItem));
+}
 }//namespace SOUI
