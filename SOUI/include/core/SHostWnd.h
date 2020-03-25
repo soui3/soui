@@ -245,7 +245,7 @@ protected:
     void OnSetFocus(HWND wndOld);
     void OnKillFocus(HWND wndFocus);
         
-    void UpdateHost(HDC dc,const CRect &rc);
+    void UpdateHost(HDC dc,const CRect &rc,BYTE byAlpha=255);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
     void OnCaptureChanged(HWND wnd);

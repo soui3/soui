@@ -16,11 +16,6 @@ namespace SOUI
 	{
 	}
 
-	BOOL SRootWindow::IsLayeredWindow() const
-	{
-		return FALSE;
-	}
-
 //////////////////////////////////////////////////////////////////////////
 SwndContainerImpl::SwndContainerImpl()
     :m_hCapture(NULL)

@@ -779,21 +779,18 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag
     pRT->Release();
 }
 
-void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid)
+void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid, BYTE byAlpha)
 {
+    byAlpha=(BYTE)((int)byAlpha*GetAlpha()/255);
     if(m_hostAttr.m_bTranslucent)
     {
-        UpdateLayerFromRenderTarget(m_memRT,GetAlpha(),&rcInvalid);
+        UpdateLayerFromRenderTarget(m_memRT,byAlpha,&rcInvalid);
     }
     else
     {
         HDC hdc=m_memRT->GetDC(0);
         ::BitBlt(dc,rcInvalid.left,rcInvalid.top,rcInvalid.Width(),rcInvalid.Height(),hdc,rcInvalid.left,rcInvalid.top,SRCCOPY);
         m_memRT->ReleaseDC(hdc);
-		if(GetExStyle()&WS_EX_LAYERED)
-		{
-			::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
-		}
     }
 }
 
@@ -1050,7 +1047,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         RedrawRegion(m_memRT,m_rgnInvalidate);
 
         int nSteps=dwTime/10;
-		BYTE byAlpha =GetAlpha() ;
+		const BYTE byAlpha =GetAlpha() ;
         if(dwFlags & AW_HIDE)
         {
             if(dwFlags& AW_SLIDE)
@@ -1108,7 +1105,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     rcShow.DeflateRect(xStep,yStep);
                     pRT->ClearRect(rcWnd,0);
                     _BitBlt(pRT,m_memRT,rcShow,rcShow.TopLeft());
-                    UpdateLayerFromRenderTarget(pRT,GetAlpha());
+                    UpdateLayerFromRenderTarget(pRT,byAlpha);
                     Sleep(10);
                 }
                 ShowWindow(SW_HIDE);
@@ -1129,7 +1126,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         }else
         {
             pRT->ClearRect(rcWnd,0);
-            UpdateLayerFromRenderTarget(pRT, GetAlpha());
+            UpdateLayerFromRenderTarget(pRT, byAlpha);
             SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE|SWP_SHOWWINDOW|((dwFlags&AW_ACTIVATE)?0:SWP_NOACTIVATE));
             
             if(dwFlags& AW_SLIDE)
@@ -1191,10 +1188,10 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     rcShow.InflateRect(xStep,yStep);
                     pRT->ClearRect(rcWnd,0);
                     _BitBlt(pRT,m_memRT,rcShow,rcShow.TopLeft());
-                    UpdateLayerFromRenderTarget(pRT,GetAlpha());
+                    UpdateLayerFromRenderTarget(pRT,byAlpha);
                     Sleep(10);
                 }
-                UpdateLayerFromRenderTarget(m_memRT,GetAlpha());
+                UpdateLayerFromRenderTarget(m_memRT,byAlpha);
                 return TRUE;
             }else if(dwFlags&AW_BLEND)
             {
@@ -1743,8 +1740,9 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 	{
 		m_pHostWnd->OnHostAnimationStarted(pAni);
 	}
-	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),m_pHostWnd->m_transform);
-	SMatrix mtx = m_pHostWnd->m_transform.getMatrix();
+	STransformation xform;
+	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),xform);
+	SMatrix mtx = xform.getMatrix();
 	mtx.preTranslate(-m_rcInit.left,-m_rcInit.top);
 	mtx.postTranslate(m_rcInit.left,m_rcInit.top);
 	if(mtx.rectStaysRect())
@@ -1754,13 +1752,16 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 		CRect rc2 = rc.toRect();
 		::SetWindowPos(m_pHostWnd->m_hWnd,NULL,rc2.left,rc2.top,rc2.Width(),rc2.Height(),SWP_NOZORDER|SWP_NOACTIVATE);
 	}
-	if(m_pHostWnd->m_hostAttr.m_bTranslucent)
-	{
-		CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
-		m_pHostWnd->UpdateHost(0,rcWnd);
-	}else if(m_pHostWnd->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYERED)
-	{
-		::SetLayeredWindowAttributes(m_pHostWnd->m_hWnd,0,m_pHostWnd->GetAlpha(),LWA_ALPHA);
+	if(xform.hasAlpha())
+	{//change alpha.
+		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
+		{
+			CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
+			m_pHostWnd->UpdateHost(0,rcWnd,xform.getAlpha());
+		}else if(m_pHostWnd->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYERED)
+		{
+			::SetLayeredWindowAttributes(m_pHostWnd->m_hWnd,0,(BYTE)((int)m_pHostWnd->GetAlpha()*xform.getAlpha()/255),LWA_ALPHA);
+		}
 	}
 	if(!bMore)
 	{
