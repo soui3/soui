@@ -28,6 +28,8 @@ namespace SOUI
 	public:
 		SRootWindow();
 
+	protected:
+		virtual BOOL IsLayeredWindow() const;
 	public:
 		SOUI_ATTRS_BEGIN()
 			ATTR_ANIMATION(L"enterAnimation",m_aniEnter,FALSE)

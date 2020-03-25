@@ -2023,7 +2023,7 @@ namespace SOUI
 
 	BOOL SWindow::IsLayeredWindow() const
 	{
-		return m_bLayeredWindow;
+		return m_bLayeredWindow || GetAlpha()!=0xFF;
 	}
 
 	//查询当前窗口内容将被渲染到哪一个渲染层上，没有渲染层时返回NULL

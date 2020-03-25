@@ -63,7 +63,6 @@ namespace SOUI
             ATTR_INT(L"toolWindow",m_bToolWnd,FALSE)
             ATTR_ICON(L"smallIcon",m_hAppIconSmall,FALSE)
             ATTR_ICON(L"bigIcon",m_hAppIconBig,FALSE)
-            ATTR_UINT(L"alpha",m_byAlpha,FALSE)
             ATTR_INT(L"allowSpy",m_bAllowSpy,FALSE)
             ATTR_ENUM_BEGIN(L"wndType",DWORD,FALSE)
                 ATTR_ENUM_VALUE(L"undefine",WT_UNDEFINE)
@@ -77,7 +76,6 @@ namespace SOUI
 		SLayoutSize m_szMin[2];          //窗口最小值
 		SLayoutSize m_rcMaxInset[4];     //窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效
 
-        DWORD m_byAlpha:8;          //透明度
         DWORD m_byWndType:8;         //主窗口标志,有该标志的窗口关闭时自动发送WM_QUIT
         DWORD m_bResizable:1;       //窗口大小可调节
         DWORD m_bAppWnd:1;          //APP窗口，在任务栏上显示按钮
@@ -183,7 +181,6 @@ protected:
 	class SHostAnimationHandler : public ITimelineHandler
 	{
 	public:
-		STransformation			m_hostTransform;
 		SHostWnd *				m_pHostWnd;
 		CRect					m_rcInit;
 	protected:
@@ -248,7 +245,7 @@ protected:
     void OnSetFocus(HWND wndOld);
     void OnKillFocus(HWND wndFocus);
         
-    void UpdateHost(HDC dc,const CRect &rc,BYTE byAlpha=255);
+    void UpdateHost(HDC dc,const CRect &rc);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
     void OnCaptureChanged(HWND wnd);

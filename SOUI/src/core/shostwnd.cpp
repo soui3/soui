@@ -81,7 +81,6 @@ void SHostWndAttr::Init()
 	m_byWndType = WT_UNDEFINE;
 	m_bAllowSpy = TRUE;
 	m_bSendWheel2Hover = FALSE;
-	m_byAlpha = (0xFF);
 	m_dwStyle = (0);
 	m_dwExStyle = (0);
 	if (m_hAppIconSmall) DestroyIcon(m_hAppIconSmall);
@@ -312,19 +311,6 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	SStringT strTitle = m_hostAttr.m_strTitle.GetText(FALSE);
     SNativeWnd::SetWindowText(strTitle);
     
-    if(m_hostAttr.m_bTranslucent)
-    {
-        SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		m_dummyWnd = new SDummyWnd(this);
-        m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
-        m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-        ::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
-        m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
-    }else if(dwExStyle & WS_EX_LAYERED || m_hostAttr.m_byAlpha!=0xFF)
-    {
-        if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
-        ::SetLayeredWindowAttributes(m_hWnd,0,m_hostAttr.m_byAlpha,LWA_ALPHA);
-    }
     if(m_hostAttr.m_hAppIconSmall)
     {
         SendMessage(WM_SETICON,FALSE,(LPARAM)m_hostAttr.m_hAppIconSmall);
@@ -345,6 +331,21 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		xmlRoot.append_copy(attrHei);
 
     SWindow::InitFromXml(xmlRoot);
+
+	if(m_hostAttr.m_bTranslucent)
+	{
+		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		m_dummyWnd = new SDummyWnd(this);
+		m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+		m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+		m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
+	{
+		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
+	}
+
     BuildWndTreeZorder();
 
 	int nWidth = m_szAppSetted.cx;
@@ -479,7 +480,7 @@ void SHostWnd::OnPrint(HDC dc, UINT uFlags)
     m_lstUpdatedRect.RemoveAll();
     m_bRendering = FALSE;
 
-    UpdateHost(dc,rcInvalid, m_hostAnimationHandler.m_hostTransform.getAlpha());
+    UpdateHost(dc,rcInvalid);
 }
 
 void SHostWnd::OnPaint(HDC dc)
@@ -768,7 +769,7 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag
         if(!m_bRendering)
         {
             HDC dc=GetDC();
-            UpdateHost(dc,rc, m_hostAnimationHandler.m_hostTransform.getAlpha());
+            UpdateHost(dc,rc);
             ReleaseDC(dc);
         }else
         {
@@ -778,20 +779,21 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag
     pRT->Release();
 }
 
-void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid, BYTE byAlpha)
+void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid)
 {
     if(m_hostAttr.m_bTranslucent)
     {
-		int nAlpha = m_hostAttr.m_byAlpha;
-		if(byAlpha!=255)
-			nAlpha = nAlpha*byAlpha/255;
-        UpdateLayerFromRenderTarget(m_memRT,(BYTE)nAlpha,&rcInvalid);
+        UpdateLayerFromRenderTarget(m_memRT,GetAlpha(),&rcInvalid);
     }
     else
     {
         HDC hdc=m_memRT->GetDC(0);
         ::BitBlt(dc,rcInvalid.left,rcInvalid.top,rcInvalid.Width(),rcInvalid.Height(),hdc,rcInvalid.left,rcInvalid.top,SRCCOPY);
         m_memRT->ReleaseDC(hdc);
+		if(GetExStyle()&WS_EX_LAYERED)
+		{
+			::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
+		}
     }
 }
 
@@ -1048,7 +1050,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         RedrawRegion(m_memRT,m_rgnInvalidate);
 
         int nSteps=dwTime/10;
-		BYTE byAlpha = (BYTE)((int)(m_hostAttr.m_byAlpha) * m_hostAnimationHandler.m_hostTransform.getAlpha() / 255);
+		BYTE byAlpha =GetAlpha() ;
         if(dwFlags & AW_HIDE)
         {
             if(dwFlags& AW_SLIDE)
@@ -1106,7 +1108,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     rcShow.DeflateRect(xStep,yStep);
                     pRT->ClearRect(rcWnd,0);
                     _BitBlt(pRT,m_memRT,rcShow,rcShow.TopLeft());
-                    UpdateLayerFromRenderTarget(pRT,m_hostAttr.m_byAlpha);
+                    UpdateLayerFromRenderTarget(pRT,GetAlpha());
                     Sleep(10);
                 }
                 ShowWindow(SW_HIDE);
@@ -1127,7 +1129,7 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
         }else
         {
             pRT->ClearRect(rcWnd,0);
-            UpdateLayerFromRenderTarget(pRT, m_hostAttr.m_byAlpha);
+            UpdateLayerFromRenderTarget(pRT, GetAlpha());
             SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE|SWP_SHOWWINDOW|((dwFlags&AW_ACTIVATE)?0:SWP_NOACTIVATE));
             
             if(dwFlags& AW_SLIDE)
@@ -1189,10 +1191,10 @@ BOOL SHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
                     rcShow.InflateRect(xStep,yStep);
                     pRT->ClearRect(rcWnd,0);
                     _BitBlt(pRT,m_memRT,rcShow,rcShow.TopLeft());
-                    UpdateLayerFromRenderTarget(pRT,m_hostAttr.m_byAlpha);
+                    UpdateLayerFromRenderTarget(pRT,GetAlpha());
                     Sleep(10);
                 }
-                UpdateLayerFromRenderTarget(m_memRT,m_hostAttr.m_byAlpha);
+                UpdateLayerFromRenderTarget(m_memRT,GetAlpha());
                 return TRUE;
             }else if(dwFlags&AW_BLEND)
             {
@@ -1741,8 +1743,8 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 	{
 		m_pHostWnd->OnHostAnimationStarted(pAni);
 	}
-	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),m_hostTransform);
-	SMatrix mtx = m_hostTransform.getMatrix();
+	bool bMore = m_pHostWnd->m_hostAnimation->getTransformation(STime::GetCurrentTimeMs(),m_pHostWnd->m_transform);
+	SMatrix mtx = m_pHostWnd->m_transform.getMatrix();
 	mtx.preTranslate(-m_rcInit.left,-m_rcInit.top);
 	mtx.postTranslate(m_rcInit.left,m_rcInit.top);
 	if(mtx.rectStaysRect())
@@ -1752,16 +1754,13 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 		CRect rc2 = rc.toRect();
 		::SetWindowPos(m_pHostWnd->m_hWnd,NULL,rc2.left,rc2.top,rc2.Width(),rc2.Height(),SWP_NOZORDER|SWP_NOACTIVATE);
 	}
-	if(m_hostTransform.hasAlpha())
-	{//change alpha.
-		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
-		{
-			CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
-			m_pHostWnd->UpdateHost(0,rcWnd,m_hostTransform.getAlpha());
-		}else if(m_pHostWnd->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYERED)
-		{
-			::SetLayeredWindowAttributes(m_pHostWnd->m_hWnd,0,(BYTE)((int)(m_pHostWnd->m_hostAttr.m_byAlpha)*m_hostTransform.getAlpha()/255),LWA_ALPHA);
-		}
+	if(m_pHostWnd->m_hostAttr.m_bTranslucent)
+	{
+		CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
+		m_pHostWnd->UpdateHost(0,rcWnd);
+	}else if(m_pHostWnd->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYERED)
+	{
+		::SetLayeredWindowAttributes(m_pHostWnd->m_hWnd,0,m_pHostWnd->GetAlpha(),LWA_ALPHA);
 	}
 	if(!bMore)
 	{

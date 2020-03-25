@@ -1480,8 +1480,8 @@ namespace SOUI
         SWindow *           m_pParent;          /**< 父窗口 */
         SWindow *           m_pFirstChild;      /**< 第一子窗口 */
         SWindow *           m_pLastChild;       /**< 最后窗口 */
-        SWindow *           m_pNextSibling;     /**< 前一兄弟窗口 */
-        SWindow *           m_pPrevSibling;     /**< 后一兄弟窗口 */
+        SWindow *           m_pNextSibling;     /**< 后一兄弟窗口 */
+        SWindow *           m_pPrevSibling;     /**< 前一兄弟窗口 */
         UINT                m_nChildrenCount;   /**< 子窗口数量 */
 
         SWNDMSG *           m_pCurMsg;          /**< 当前正在处理的窗口消息 */
