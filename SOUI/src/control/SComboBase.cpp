@@ -119,7 +119,11 @@ namespace SOUI
     void SComboBase::GetDropBtnRect(LPRECT prc)
     {
         SIZE szBtn=m_pSkinBtn->GetSkinSize();
-        GetClientRect(prc);
+        CRect rcClient = GetClientRect();
+		CRect rcPadding = GetStyle().GetPadding();
+		rcClient.DeflateRect(rcPadding);
+		*prc = rcClient;
+
 		int nHei = prc->bottom - prc->top;
         prc->left= prc->right-nHei*szBtn.cx/szBtn.cy;
 		if (m_bAutoFitDropBtn) {
@@ -532,10 +536,9 @@ namespace SOUI
 		SIZE szBtn = m_pSkinBtn->GetSkinSize();		
 		CRect rcPadding = GetStyle().GetPadding();
 		CRect rcEdit = GetClientRect();
-		int nHei = rcEdit.Height();
-		int nBtnWid = nHei *szBtn.cx/ szBtn.cy;
-		rcPadding.right += nBtnWid;
-		rcEdit.DeflateRect(rcPadding);
+		CRect rcBtn;
+		GetDropBtnRect(&rcBtn);
+		rcEdit.right = rcBtn.left;
 		m_pEdit->Move(rcEdit);
 	}
 	
