@@ -1189,7 +1189,7 @@ void CMainDlg::OnSetHostAnimation()
 	IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:anihost"));
 	if (pAni)
 	{
-		SetHostAnimation(pAni);
+		StartHostAnimation(pAni);
 		pAni->Release();
 	}
 }

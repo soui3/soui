@@ -890,10 +890,10 @@ namespace SOUI
 		BYTE GetAlpha() const;
 
 	protected:
-		virtual void OnAnimationStart();
-		virtual void OnAnimationStop();
-		virtual void OnAnimationInvalidate(bool bErase);
-		virtual void OnAnimationUpdate();
+		virtual void OnAnimationStart(IAnimation *pAni);
+		virtual void OnAnimationStop(IAnimation *pAni);
+		virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
+		virtual void OnAnimationUpdate(IAnimation *pAni);
 	public:// Virtual functions
 
 		virtual int GetScale() const;

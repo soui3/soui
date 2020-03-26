@@ -133,6 +133,13 @@ protected:
 	bool                    m_bResizing;        /**<执行WM_SIZE*/
 
 	SAutoRefPtr<IAnimation> m_hostAnimation;
+	enum	AniState{
+		Ani_none=0,
+		Ani_win=1,
+		Ani_host=2,
+		Ani_both=(Ani_win|Ani_host),
+	};
+	DWORD m_AniState;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
@@ -173,8 +180,7 @@ public:
 		return m_pTipCtrl;
 	}
 
-	void SetHostAnimation(IAnimation *pAni,bool startNow = true);
-	bool StartHostAnimation();
+	bool StartHostAnimation(IAnimation *pAni);
 	bool StopHostAnimation();
 	void UpdateAutoSizeCount(bool bInc);
 protected:
@@ -187,13 +193,13 @@ protected:
 		virtual void OnNextFrame()override;
 	} m_hostAnimationHandler;
 
-	virtual void OnHostAnimationStarted(IAnimation * pAni){}
-	virtual void OnHostAnimationStoped(IAnimation * pAni){}
+	virtual void OnHostAnimationStarted(IAnimation * pAni);
+	virtual void OnHostAnimationStoped(IAnimation * pAni);
 
 protected:
-	virtual void OnAnimationInvalidate(bool bErase);
-	virtual void OnAnimationUpdate();
-	virtual void OnAnimationStop();
+	virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
+	virtual void OnAnimationUpdate(IAnimation *pAni);
+	virtual void OnAnimationStop(IAnimation *pAni);
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();

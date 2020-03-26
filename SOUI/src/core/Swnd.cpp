@@ -2233,7 +2233,7 @@ namespace SOUI
 			if (m_animation->getStartTime() == IAnimation::START_ON_FIRST_FRAME)
 			{
 				m_animation->startNow();
-				OnAnimationStart();
+				OnAnimationStart(m_animation);
 			}
 			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
 		}
@@ -3042,14 +3042,14 @@ namespace SOUI
 		return true;
 	}
 
-	void SWindow::OnAnimationStart()
+	void SWindow::OnAnimationStart(IAnimation *pAni)
 	{
 		m_isAnimating = true;
 		m_animationHandler.OnAnimationStart();
 		UpdateCacheMode();
 	}
 
-	void SWindow::OnAnimationStop()
+	void SWindow::OnAnimationStop(IAnimation *pAni)
 	{
 		m_isAnimating = false;
 		m_animationHandler.OnAnimationStop();
@@ -3057,12 +3057,12 @@ namespace SOUI
 		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
-	void SWindow::OnAnimationInvalidate(bool bErase)
+	void SWindow::OnAnimationInvalidate(IAnimation *pAni,bool bErase)
 	{
 		InvalidateRect(NULL);
 	}
 
-	void SWindow::OnAnimationUpdate()
+	void SWindow::OnAnimationUpdate(IAnimation *pAni)
 	{//do nothing.
 	}
 
@@ -3135,14 +3135,14 @@ namespace SOUI
 		uint64_t tm = pAni->getStartTime();
 		if (tm == -1)
 		{
-			m_pOwner->OnAnimationStart();
+			m_pOwner->OnAnimationStart(pAni);
 		}
 		if (tm > 0)
 		{
-			m_pOwner->OnAnimationInvalidate(true);
+			m_pOwner->OnAnimationInvalidate(pAni,true);
 			pAni->AddRef();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
-			m_pOwner->OnAnimationInvalidate(false);
+			m_pOwner->OnAnimationInvalidate(pAni,false);
 			if (!bMore)
 			{//animation stopped.
 				if(pAni->isFillEnabled() && pAni->getFillAfter())
@@ -3152,11 +3152,11 @@ namespace SOUI
 				{
 					m_bFillAfter = false;
 				}
-				m_pOwner->OnAnimationStop();
+				m_pOwner->OnAnimationStop(pAni);
 			}
 			pAni->Release();
 		}
-		m_pOwner->OnAnimationUpdate();
+		m_pOwner->OnAnimationUpdate(pAni);
 		m_pOwner->Release();
 	}
 
