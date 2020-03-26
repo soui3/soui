@@ -412,7 +412,7 @@ public:                                                          \
 #define ATTR_ANIMATION(attribname, varname, allredraw)             \
 	if (0 == strAttribName.CompareNoCase(attribname))              \
 	{                                                              \
-	    varname.Attach(SApplication::getSingleton().LoadAnimation(strValue));\
+	    varname.Attach(SApplication::getSingleton().LoadAnimation(S_CW2T(strValue)));\
 		hRet = allredraw ? S_OK : S_FALSE;                         \
 	}                                                              \
 	else                                                           \
