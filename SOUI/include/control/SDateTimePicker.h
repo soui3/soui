@@ -35,6 +35,7 @@ public:
 	EnDateType HitTest(CPoint pt);
 	void SetTime(const SYSTEMTIME& sysTime);
 	void GetTime(SYSTEMTIME& sysTime);
+	void Clear();
 	void SetTime(WORD wYear, WORD wMonth, WORD wDay, WORD wHour, WORD wMinute, WORD wSecond);
 	SStringT GetWindowText(BOOL bRawText=FALSE);
 protected:		// 继承 
@@ -63,10 +64,13 @@ protected:
 	void TimeWheel(bool bUp);
 	void CircluNum(bool bUp, WORD& wNum, WORD wMin, WORD wMax);				// 循环 子 
 	
+	LRESULT OnAttrCueText(const SStringW &strValue,BOOL bLoading);
 	SOUI_ATTRS_BEGIN()
-		ATTR_SKIN(L"btnSkin", m_pSkinBtn, FALSE)
-		ATTR_BOOL(L"timeEnable", m_bTimeEnable, FALSE)
-		ATTR_INT(L"dropWidth", m_nDropWidth, FALSE)
+		ATTR_SKIN(L"btnSkin", m_pSkinBtn, TRUE)
+		ATTR_BOOL(L"timeEnable", m_bTimeEnable, TRUE)
+		ATTR_INT(L"dropWidth", m_nDropWidth, TRUE)
+		ATTR_COLOR(L"cueColor",m_crCue,TRUE)
+		ATTR_CUSTOM(L"cueText",OnAttrCueText)
 	SOUI_ATTRS_END()
 
 	SOUI_MSG_MAP_BEGIN()
@@ -93,12 +97,14 @@ protected:
 	int										m_nCharWidth;
 	COLORREF							m_crSelBg;
 	COLORREF							m_crSelText;
-	SYSTEMTIME						m_sysTime;
+	SYSTEMTIME							m_sysTime;
 	SStringT								m_sKey;
 
 	int										m_nDropWidth;
 	bool									m_bTimeEnable;				// 是否 有 时 分 秒
 	SCalendar*						m_pCalendar;
 	WORD								m_wCharNum;
+	STrText								m_strCue;
+	COLORREF							m_crCue;
 };
 }
