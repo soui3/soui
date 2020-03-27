@@ -62,6 +62,7 @@ namespace SOUI
             xmlNode.append_attribute(L"colorBkgnd").set_value(L"#ffffff");
             m_pOwner->OnInplaceActiveWndCreate(this,m_pEdit,xmlNode);
             m_pEdit->SetWindowText(GetString());
+            m_pEdit->SetFocus();
         }else
         {
             if(m_pEdit)
