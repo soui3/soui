@@ -1533,7 +1533,10 @@ LRESULT SHostWnd::OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
-
+	if(lpWndPos->flags&SWP_SHOWWINDOW)
+	{
+		OnHostShowWindow(TRUE,0);
+	}
 }
 
 LRESULT SHostWnd::OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam)
