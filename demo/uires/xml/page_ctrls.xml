@@ -327,7 +327,7 @@
 		</page>
 		<page title="combobox and listbox" layout="hbox" padding="10,10,10,10">
 			<group text="combobox" size="-1,-1" layout="vbox" padding="10,10,10,10">
-				<combobox name="cbx_test" size="250,30" dropDown="1" dropHeight="100" class="cls_edit" dotted="0" animateTime="200" curSel="2">
+				<combobox name="cbx_test" cueText="tip" cueColor="#909399FF" size="250,30" dropDown="1" dropHeight="100" class="cls_edit" dotted="0" animateTime="200" curSel="2">
 					<liststyle class="cls_edit" iconSkin="skin_menuicon" itemSkin="skin_tab_left" itemHeight="30" colorText="#000000" colorSelText="#FFFFFF" colorItemBkgnd="#FFFFFF" colorItemSelBkgnd="#000088" />
 					<editstyle inset="5,0,5,0" colorText="#000000" align="left" colorBkgnd="#FFFFFF" />
 					<items>

@@ -1740,7 +1740,8 @@ UINT SEdit::GetCueTextAlign()
 void SEdit::OnPaint( IRenderTarget * pRT )
 {
     SRichEdit::OnPaint(pRT);
-    if(!m_strCue.GetText(FALSE).IsEmpty() && GetWindowTextLength() == 0 && !IsFocused())
+	SStringT strCue = GetCueText();
+    if(!strCue.IsEmpty() && GetWindowTextLength() == 0 && !IsFocused())
     {
         SPainter painter;
         BeforePaint(pRT,painter);
@@ -1750,7 +1751,7 @@ void SEdit::OnPaint( IRenderTarget * pRT )
         GetClientRect(&rc);
         CRect rcInsetPixel = GetStyle().GetPadding();
         rc.DeflateRect(rcInsetPixel.left, rcInsetPixel.top, rcInsetPixel.right, rcInsetPixel.bottom);
-		pRT->DrawText(m_strCue.GetText(FALSE),m_strCue.GetText(FALSE).GetLength(),&rc,GetCueTextAlign());
+		pRT->DrawText(strCue,strCue.GetLength(),&rc,GetCueTextAlign());
         
         pRT->SetTextColor(crOld);
         AfterPaint(pRT,painter);

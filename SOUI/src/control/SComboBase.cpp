@@ -76,6 +76,8 @@ namespace SOUI
         ,m_pDropDownWnd(NULL)
         ,m_iInitSel(-1)
 		,m_bAutoFitDropBtn(TRUE)
+		,m_crCue(RGBA(0xcc,0xcc,0xcc,0xff))
+		,m_strCue(this)
     {
         m_bFocusable=TRUE;
 		m_style.SetAlign(SwndStyle::Align_Left);
@@ -149,13 +151,25 @@ namespace SOUI
         SPainter painter;
 
         BeforePaint(pRT, painter);
-        if(GetCurSel() != -1 && m_bDropdown)
-        {
-            CRect rcText;
-            GetTextRect(rcText);
-            SStringT strText=GetWindowText();
-            DrawText(pRT,strText, strText.GetLength(), rcText, GetTextAlign());
-        }
+		if(m_bDropdown)
+		{
+			CRect rcText;
+			GetTextRect(rcText);
+			if(GetCurSel() != -1)
+			{
+				SStringT strText=GetWindowText();
+				DrawText(pRT,strText, strText.GetLength(), rcText, GetTextAlign());
+			}else
+			{
+				SStringT strCue = GetCueText();
+				if(!strCue.IsEmpty())
+				{
+					COLORREF crOld = pRT->SetTextColor(m_crCue);
+					DrawText(pRT,strCue,strCue.GetLength(),rcText,GetTextAlign());
+					pRT->SetTextColor(crOld);
+				}
+			}
+		}
         //draw focus rect
         if(IsFocused())
         {
@@ -582,6 +596,11 @@ namespace SOUI
 	{
 		m_bDropdown = bDropdown;
 		m_pEdit->SetVisible(!m_bDropdown, TRUE);
+	}
+
+	SStringT SComboBase::GetCueText(BOOL bRawText) const
+	{
+		return m_strCue.GetText(bRawText);
 	}
 
 }

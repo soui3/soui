@@ -274,11 +274,12 @@ namespace SOUI
 		CRect rcBtn;
 		CRect rcSkin;
 		GetDropBtnRect(&rcBtn, &rcSkin);
-		if(WndState_Hover == m_dwBtnState)
+		if(WndState_Hover == m_dwBtnState && m_pNcSkin)
 		{
 			rcBtn += CRect(1,1,1,1);
 			m_pNcSkin->DrawByIndex(pRT, rcBtn, 1);
 		}
+		SASSERT(m_pSkinBtn);
 		m_pSkinBtn->DrawByState(pRT, rcSkin, m_dwBtnState);
 	}
 

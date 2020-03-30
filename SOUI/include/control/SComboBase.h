@@ -390,13 +390,17 @@ namespace SOUI
 
 		LRESULT OnAttrDropDown(const SStringW & strValue, BOOL bLoading);
 
+		SStringT GetCueText(BOOL bRawText=FALSE) const;
+
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"dropDown", OnAttrDropDown)
-            ATTR_LAYOUTSIZE(L"dropHeight", m_nDropHeight, FALSE)
+            ATTR_LAYOUTSIZE(L"dropHeight", m_nDropHeight, TRUE)
             ATTR_INT(L"curSel", m_iInitSel, FALSE)
-            ATTR_SKIN(L"btnSkin", m_pSkinBtn, FALSE)
+            ATTR_SKIN(L"btnSkin", m_pSkinBtn, TRUE)
             ATTR_INT(L"animateTime", m_nAnimTime, FALSE)
-			ATTR_INT(L"autoFitDropBtn", m_bAutoFitDropBtn, FALSE)
+			ATTR_INT(L"autoFitDropBtn", m_bAutoFitDropBtn, TRUE)
+			ATTR_COLOR(L"cueColor",m_crCue,TRUE)
+			ATTR_I18NSTRT(L"cueText",m_strCue,TRUE)
         SOUI_ATTRS_END()
 
         SOUI_MSG_MAP_BEGIN()
@@ -441,6 +445,8 @@ namespace SOUI
         SDropDownWnd *m_pDropDownWnd;  /**< DropDown指针 */
 		pugi::xml_document	m_xmlDropdownStyle;/**< DropDown的style */
 		BOOL m_bAutoFitDropBtn; /**< 自适应下拉按钮大小*/
+		COLORREF    m_crCue;
+		STrText    m_strCue;
     };
 
 }
