@@ -42,7 +42,7 @@ namespace SOUI
             return TRUE;
         }
         
-        const T  & String2Value(const SStringW &strName) const
+        T  String2Value(const SStringW &strName) const
         {
             NAMEDVALUE target;
             wcscpy_s(target.strName,MAX_NAME,strName);
@@ -52,7 +52,7 @@ namespace SOUI
             return nullValue;
         }
         
-        const T  & GetAt(const int idx) const
+        T  GetAt(const int idx) const
         {
             SASSERT(idx>=0 && idx < (int)m_lstNamedValue.GetCount());
             return m_lstNamedValue[idx].value;
@@ -93,12 +93,12 @@ namespace SOUI
     };
     
 
-    class SIntParser
+    class SOUI_EXP SIntParser
     {
     public:
         static bool ParseValue(const SStringW & strValue,int & value);
         
-        static const int  GetNullValue();
+        static int  GetNullValue();
     };
     
     class SOUI_EXP SNamedID : public SNamedValue<int,SIntParser>
@@ -116,44 +116,44 @@ namespace SOUI
     public:
         static bool ParseValue(const SStringW & strValue, COLORREF & value);
 
-        static const COLORREF  GetNullValue();
+        static COLORREF  GetNullValue();
     };
 
     class SOUI_EXP SNamedColor : public SNamedValue<COLORREF,SColorParser>
     {
     public:
         //自动转换@color/namedcolor
-        const COLORREF & Get(const SStringW & strValue) const;
-        const COLORREF & Get(int idx) const {return GetAt(idx);}
+        COLORREF  Get(const SStringW & strValue) const;
+        COLORREF  Get(int idx) const {return GetAt(idx);}
     }; 
 
-    class SStringParser
+    class SOUI_EXP SStringParser
     {
     public:
         static bool ParseValue(const SStringW & strValue, SStringW & value);
-        static const SStringW GetNullValue();
+        static SStringW GetNullValue();
     };
 
     class SOUI_EXP SNamedString :public SNamedValue<SStringW,SStringParser>
     {
     public:
         //自动转换@string/namedstring
-        const SStringW &  Get(const SStringW & strValue) const;
-        const SStringW &  Get(int idx) const {return GetAt(idx);}
+        SStringW  Get(const SStringW & strValue) const;
+        SStringW  Get(int idx) const {return GetAt(idx);}
     };
 
-	class SDimensionParser
+	class SOUI_EXP SDimensionParser
 	{
 	public:
 		static bool ParseValue(const SStringW & strValue, SLayoutSize & value);
-		static const SLayoutSize  GetNullValue();
+		static SLayoutSize  GetNullValue();
 	};
 
 	class SOUI_EXP SNamedDimension : public SNamedValue<SLayoutSize, SDimensionParser>
 	{
 	public:
 		//自动转换@dim/namedDimension
-		const SLayoutSize &  Get(const SStringW & strValue) const;
-		const SLayoutSize &  Get(int idx) const { return GetAt(idx); }
+		SLayoutSize  Get(const SStringW & strValue) const;
+		SLayoutSize  Get(int idx) const { return GetAt(idx); }
 	};
 } //namespace SOUI

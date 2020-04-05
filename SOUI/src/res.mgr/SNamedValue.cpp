@@ -15,7 +15,7 @@ const wchar_t KPrefixString[] = L"@string/";
 const wchar_t KPrefixColor[] = L"@color/";
 const wchar_t KPrefixDimension[] = L"@dim/";
 
-const int SIntParser::GetNullValue()
+int SIntParser::GetNullValue()
 {
     return 0;
 }
@@ -28,7 +28,7 @@ bool SIntParser::ParseValue(const SStringW & strValue,int & value)
 
 
 //////////////////////////////////////////////////////////////////////////
-const SStringW SStringParser::GetNullValue()
+SStringW SStringParser::GetNullValue()
 {
     return SStringW();
 }
@@ -39,7 +39,7 @@ bool SStringParser::ParseValue(const SStringW & strValue, SStringW & value)
     return true;
 }
 
-const SStringW & SNamedString::Get(const SStringW & strValue) const
+SStringW SNamedString::Get(const SStringW & strValue) const
 {
     if(strValue.IsEmpty()) return strValue;
     if(strValue.Left(ARRAYSIZE(KPrefixString)-1)==KPrefixString)
@@ -54,7 +54,7 @@ const SStringW & SNamedString::Get(const SStringW & strValue) const
 //////////////////////////////////////////////////////////////////////////
 
 
-const COLORREF SColorParser::GetNullValue()
+COLORREF SColorParser::GetNullValue()
 {
     return CR_INVALID;
 }
@@ -101,15 +101,14 @@ bool SColorParser::ParseValue(const SStringW & strValue, COLORREF & value)
     }
 }
 
-const COLORREF & SNamedColor::Get(const SStringW & strValue) const
+COLORREF SNamedColor::Get(const SStringW & strValue) const
 {
     if(strValue.Left(ARRAYSIZE(KPrefixColor)-1)==KPrefixColor)
     {
         return String2Value(strValue.Mid(ARRAYSIZE(KPrefixColor)-1));
     }else
     {
-		static COLORREF crRet;
-		crRet = SColorParser::GetNullValue();
+		COLORREF crRet = SColorParser::GetNullValue();
         SColorParser::ParseValue(strValue, crRet);
         return crRet;
     }
@@ -123,12 +122,12 @@ bool SDimensionParser::ParseValue(const SStringW & strValue, SLayoutSize & value
 	return true;
 }
 
-const SLayoutSize SDimensionParser::GetNullValue()
+SLayoutSize SDimensionParser::GetNullValue()
 {
 	return SLayoutSize();
 }
 
-const SLayoutSize & SNamedDimension::Get(const SStringW & strValue) const
+SLayoutSize SNamedDimension::Get(const SStringW & strValue) const
 {
 	if (strValue.Left(ARRAYSIZE(KPrefixDimension) - 1) == KPrefixDimension)
 	{
@@ -136,8 +135,7 @@ const SLayoutSize & SNamedDimension::Get(const SStringW & strValue) const
 	}
 	else
 	{
-		static SLayoutSize dimRet;
-		dimRet = SDimensionParser::GetNullValue();
+		SLayoutSize dimRet = SDimensionParser::GetNullValue();
 		SDimensionParser::ParseValue(strValue, dimRet);
 		return dimRet;
 	}
