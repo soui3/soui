@@ -80,6 +80,7 @@ namespace SOUI
 		virtual void CheckConnectivity() override;
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp,BOOL &bHandled) override;
 		virtual void EnumClient(FunEnumConnection funEnum, ULONG_PTR data) override;
+		virtual BOOL FindConnection(ULONG_PTR idConn)override;
 	private:
 		LRESULT OnConnect(HWND hClient);
 		LRESULT OnDisconnect(HWND hClient);

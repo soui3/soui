@@ -343,6 +343,12 @@ namespace SOUI
 			}
 		}
 	}
+
+	BOOL SIpcServer::FindConnection(ULONG_PTR idConn)
+	{
+		return m_mapClients.find((HWND)idConn)!=m_mapClients.end();
+	}
+
 	////////////////////////////////////////////////////////////////////////
 	HRESULT SIpcFactory::CreateIpcServer(IIpcServer ** ppServer)
 	{

@@ -138,6 +138,7 @@ namespace SOUI
 		virtual void CheckConnectivity() =0;
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp,BOOL &bHandled) =0;
 		virtual void EnumClient(FunEnumConnection funEnum,ULONG_PTR data) = 0;
+		virtual BOOL FindConnection(ULONG_PTR idConn)=0;
 	};
 
 	struct IIpcFactory : IObjRef
