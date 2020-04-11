@@ -637,6 +637,14 @@ namespace SOUI
         RECT rcSrc = *pRcSrc;
         POINT ptSrcOrg;
         pRTSrc->GetViewportOrg(&ptSrcOrg);
+		SRenderTarget_Skia * pRTSrc_Skia=(SRenderTarget_Skia*)pRTSrc;
+		SkMatrix mtx = pRTSrc_Skia->m_SkCanvas->getTotalMatrix();
+		if(!mtx.isIdentity())
+		{
+			SkRect rc=toSkRect(&rcSrc);
+			mtx.mapRect(&rc);
+			SkRect2RECT(rc,&rcSrc);
+		}
         OffsetRect(&rcSrc,ptSrcOrg.x,ptSrcOrg.y);
         return DrawBitmapEx(pRcDest,pBmp,&rcSrc,EM_STRETCH,byAlpha);
     }
@@ -838,12 +846,14 @@ namespace SOUI
 
     HRESULT SRenderTarget_Skia::OffsetViewportOrg( int xOff, int yOff, LPPOINT lpPoint )
     {
+		SkMatrix mtx=m_SkCanvas->getTotalMatrix();
+		SkPoint ptOff={(SkScalar)xOff,(SkScalar)yOff};
         if(lpPoint)
         {
             lpPoint->x = (LONG)m_ptOrg.fX;
             lpPoint->y = (LONG)m_ptOrg.fY;
         }
-        m_ptOrg.offset((SkScalar)xOff,(SkScalar)yOff);
+        m_ptOrg.offset(ptOff.fX,ptOff.fY);
         return S_OK;
     }
 
@@ -922,7 +932,7 @@ namespace SOUI
         }
 
 		::SetGraphicsMode(m_hGetDC,GM_ADVANCED);
-		::SetViewportOrgEx(m_hGetDC,m_ptOrg.x(),m_ptOrg.y(),NULL);
+		::SetViewportOrgEx(m_hGetDC,(int)m_ptOrg.x(),(int)m_ptOrg.y(),NULL);
 
 		SkMatrix mtx=m_SkCanvas->getTotalMatrix();
 		XFORM xForm = { mtx.get(IxForm::kMScaleX),mtx.get(IxForm::kMSkewY),
@@ -1438,7 +1448,7 @@ namespace SOUI
 	BOOL SRenderTarget_Skia::SetAntiAlias(BOOL bAntilias)
 	{
 		BOOL bRet = m_bAntiAlias;
-		m_bAntiAlias = bAntilias;
+		m_bAntiAlias = !!bAntilias;
 		return bRet;
 	}
 

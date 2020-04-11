@@ -275,6 +275,12 @@ public:
 		pItem->FindChildByName(L"txt_index")->SetWindowText(SStringT().Format(_T("第%d行"), position + 1));
 
 		SButton *pBtnUninstall = pItem->FindChildByName2<SButton>(L"btn_uninstall");
+		CRect rcBtn = pBtnUninstall->GetWindowRect();
+		SMatrix mtx;
+		mtx.setRotate(45);
+		mtx.preTranslate(-rcBtn.Width()/2,-rcBtn.Height()/2);
+		mtx.postTranslate(rcBtn.Width()/2,rcBtn.Height()/2);
+		pBtnUninstall->SetMatrix(mtx);
 		pBtnUninstall->SetUserData(position);
 		pBtnUninstall->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestMcAdapterFix::OnButtonClick, this));
 	}
