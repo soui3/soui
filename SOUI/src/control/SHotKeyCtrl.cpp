@@ -7,8 +7,8 @@ namespace SOUI
 
 SHotKeyCtrl::SHotKeyCtrl(void)
 {
-    m_wInvalidModifier=0;
-    m_wInvalidComb=HKCOMB_NONE;
+    m_wInvalidModifier=Mod_None;
+    m_wInvalidComb=Mod_None;
     m_bInSetting=FALSE;
     m_bFocusable=TRUE;
 	m_evtSet.addEvent(EVENTID(EventSetHotKey));
@@ -96,16 +96,18 @@ void SHotKeyCtrl::UpdateModifier()
     BOOL bShift=GetKeyState(VK_SHIFT)&0x8000;
 
     WORD wCombKey=0;
-    if(!bAlt && !bCtrl && !bShift) wCombKey=HKCOMB_NONE,m_wModifier=0;
-    else if(bAlt && !bCtrl && !bShift) wCombKey=HKCOMB_A,m_wModifier=MOD_ALT;
-    else if(!bAlt && bCtrl && !bShift) wCombKey=HKCOMB_C,m_wModifier=MOD_CONTROL;
-    else if(!bAlt && !bCtrl && bShift) wCombKey=HKCOMB_S,m_wModifier=MOD_SHIFT;
-    else if(bAlt && bCtrl && !bShift) wCombKey=HKCOMB_CA,m_wModifier=MOD_ALT|MOD_CONTROL;
-    else if(bAlt && !bCtrl && bShift) wCombKey=HKCOMB_SA,m_wModifier=MOD_SHIFT|MOD_ALT;
-    else if(!bAlt && bCtrl && bShift) wCombKey=HKCOMB_SC,m_wModifier=MOD_SHIFT|MOD_CONTROL;
-    else wCombKey=HKCOMB_SCA,m_wModifier=MOD_ALT|MOD_SHIFT|MOD_CONTROL;
+    if(!bAlt && !bCtrl && !bShift) wCombKey=Mod_None;
+    else if(bAlt && !bCtrl && !bShift) wCombKey=Mod_Alt;
+    else if(!bAlt && bCtrl && !bShift) wCombKey=Mod_Ctrl;
+    else if(!bAlt && !bCtrl && bShift) wCombKey=Mod_Shift;
+    else if(bAlt && bCtrl && !bShift) wCombKey=Mod_CA;
+    else if(bAlt && !bCtrl && bShift) wCombKey=Mod_SA;
+    else if(!bAlt && bCtrl && bShift) wCombKey=Mod_SC;
+    else wCombKey=Mod_SCA;
     if(wCombKey&m_wInvalidComb)
         m_wModifier=m_wInvalidModifier;
+	else
+		m_wModifier = wCombKey;
 
 	EventSetHotKey ev(this);
 	ev.wModifiers = m_wModifier;
@@ -204,34 +206,7 @@ SStringT SHotKeyCtrl::GetWindowText(BOOL bRawText)
 HRESULT SHotKeyCtrl::OnAttrInvalidComb(const SStringW & value, BOOL bLoading)
 {
 	DWORD dwKey = TranslateAccelKey(S_CW2T(value));
-	WORD  wComb = HIWORD(dwKey);
-	switch(wComb)
-	{
-	case MOD_ALT:
-		m_wInvalidComb = HKCOMB_A;
-		break;
-	case MOD_CONTROL:
-		m_wInvalidComb = HKCOMB_C;
-		break;
-	case MOD_SHIFT:
-		m_wInvalidComb = HKCOMB_S;
-		break;
-	case MOD_CONTROL|MOD_ALT:
-		m_wInvalidComb = HKCOMB_CA;
-		break;
-	case MOD_SHIFT|MOD_ALT:
-		m_wInvalidComb = HKCOMB_SA;
-		break;
-	case MOD_SHIFT|MOD_CONTROL:
-		m_wInvalidComb = HKCOMB_SC;
-		break;
-	case MOD_SHIFT|MOD_CONTROL|MOD_ALT:
-		m_wInvalidComb = HKCOMB_SCA;
-		break;
-	default:
-		m_wInvalidComb = HKCOMB_NONE;
-		break;
-	}
+	m_wInvalidComb = HIWORD(dwKey);
 	return bLoading?S_OK:S_FALSE;
 }
 

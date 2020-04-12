@@ -24,6 +24,12 @@ namespace SOUI
     class SOUI_EXP SAccelerator
     {
     public:
+		enum{
+			Mod_None = 0,
+			Mod_Alt  = 1, 
+			Mod_Ctrl = 2,
+			Mod_Shift= 4,
+		};
 
         /**
          * CAccelerator

@@ -27,6 +27,12 @@ namespace SOUI
       , public SAccelerator
   {
       SOUI_CLASS_NAME(SHotKeyCtrl, L"hotkey")
+	  enum{
+		Mod_SC = Mod_Shift|Mod_Ctrl,
+		Mod_SA = Mod_Shift|Mod_Alt,
+		Mod_CA = Mod_Ctrl|Mod_Alt,
+		Mod_SCA = Mod_Shift|Mod_Ctrl|Mod_Alt,
+	  };
   public:
       /**
        * SHotKeyCtrl::SHotKeyCtrl
