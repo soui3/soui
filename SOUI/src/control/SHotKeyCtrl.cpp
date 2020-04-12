@@ -77,6 +77,7 @@ void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 
 	ReleaseRenderTarget(pRT);
 	
+	GetContainer()->EnableIME(FALSE);
 	GetContainer()->GetCaret()->SetVisible(true);
     
     __super::OnSetFocus(wndOld);
@@ -86,6 +87,7 @@ void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 void SHotKeyCtrl::OnKillFocus(SWND wndFocus)
 {
     GetContainer()->GetCaret()->SetVisible(false);
+	GetContainer()->EnableIME(TRUE);
     __super::OnKillFocus(wndFocus);
 }
 
