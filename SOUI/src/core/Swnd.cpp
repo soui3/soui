@@ -2792,7 +2792,7 @@ namespace SOUI
 	void SWindow::ShowCaret(BOOL bShow)
 	{
 		ICaret * pCaret = GetContainer()->GetCaret();
-		if (pCaret->SetVisible(bShow))
+		if (pCaret->SetVisible(bShow,m_swnd))
 		{
 			CRect rcCaret = pCaret->GetRect();
 			InvalidateRect(rcCaret);

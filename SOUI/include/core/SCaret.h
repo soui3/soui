@@ -14,7 +14,7 @@ namespace SOUI{
 		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) override;
 		virtual void Draw(IRenderTarget * pRT) override;
 		virtual void SetPosition(int x, int y) override;
-		virtual BOOL SetVisible(BOOL bVisible) override;
+		virtual BOOL SetVisible(BOOL bVisible,SWND owner) override;
 		virtual BOOL IsVisible() const  override;
 		virtual RECT GetRect() const override;
 
@@ -31,6 +31,8 @@ namespace SOUI{
 			ATTR_CHAIN_PTR(m_AniInterpolator,0)
 		SOUI_ATTRS_END()
 	protected:
+		void Invalidate();
+	protected:
 		BOOL	m_bVisible;							/**< Is caret visible now */
 		CPoint	m_ptCaret;							/**< caret position */
 		SAutoRefPtr<IBitmap>    m_bmpCaret;         /**< 模拟插入符 */
@@ -44,6 +46,7 @@ namespace SOUI{
 		int		m_nShowFrames;
 		SAutoRefPtr<IInterpolator> m_AniInterpolator;
 		ISwndContainer*			m_pContainer;
+		SWND	m_hOwner;
 	};
 }
 
