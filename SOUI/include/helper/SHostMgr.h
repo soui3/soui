@@ -21,5 +21,6 @@ namespace SOUI
 
 	protected:
 		SMap<IHostMsgHandler*,bool>	m_mapHostMsgHandler;
+		SCriticalSection			m_cs;
 	};
 }
