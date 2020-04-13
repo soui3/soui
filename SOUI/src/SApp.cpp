@@ -226,7 +226,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
     m_strAppDir = appDir.AppDir();
     
     m_pMsgLoop = GetMsgLoopFactory()->CreateMsgLoop();
-	PushMsgLoop(m_pMsgLoop);
+	AddMsgLoop(m_pMsgLoop);
 	sysObjRegister.RegisterLayouts(this);
 	sysObjRegister.RegisterSkins(this);
 	sysObjRegister.RegisterWindows(this);
@@ -237,7 +237,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 
 SApplication::~SApplication(void)
 {
-	PopMsgLoop();
+	RemoveMsgLoop();
     GetMsgLoopFactory()->DestoryMsgLoop(m_pMsgLoop);
     
 	SResProviderMgr::RemoveAll();
@@ -502,7 +502,7 @@ HWND SApplication::GetMainWnd()
 
 BOOL SApplication::SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac)
 {
-	if(m_lstMsgLoop.GetCount()>0)
+	if(m_msgLoopMap.GetCount()>0)
 		return FALSE;
     m_msgLoopFactory->DestoryMsgLoop(m_pMsgLoop);
     m_msgLoopFactory = pMsgLoopFac;
@@ -600,20 +600,31 @@ void SApplication::SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFacto
 	m_pAttrStroageFactory = pAttrStorageFactory;
 }
 
-void SApplication::PushMsgLoop(SMessageLoop * pMsgLoop)
+
+bool SApplication::AddMsgLoop(SMessageLoop* pMsgLoop)
 {
-	m_lstMsgLoop.AddTail(pMsgLoop);
+	SAutoLock autoLock(m_cs);
+	SASSERT(pMsgLoop != NULL);
+	DWORD dwThreadID= ::GetCurrentThreadId();
+	if(m_msgLoopMap.Lookup(dwThreadID) != NULL)
+		return false;// in map yet
+
+	m_msgLoopMap[dwThreadID]= pMsgLoop;
+	return true;
 }
 
-SMessageLoop * SApplication::PopMsgLoop()
+bool SApplication::RemoveMsgLoop()
 {
-	return m_lstMsgLoop.RemoveTail();
+	SAutoLock autoLock(m_cs);
+	return m_msgLoopMap.RemoveKey(::GetCurrentThreadId());
 }
 
-SMessageLoop * SApplication::GetMsgLoop()
+SMessageLoop* SApplication::GetMsgLoop(DWORD dwThreadID /*= ::GetCurrentThreadId()*/) const
 {
-	SASSERT(!m_lstMsgLoop.IsEmpty());
-	return m_lstMsgLoop.GetTail();
+	SAutoLock autoLock(m_cs);
+	const SMap<DWORD,SMessageLoop*>::CPair * p =  m_msgLoopMap.Lookup(dwThreadID);
+	if(!p) return NULL;
+	return p->m_value;
 }
 
 

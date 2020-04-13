@@ -138,6 +138,7 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_nAutoSizing(0)
 , m_bResizing(false)
 , m_AniState(Ani_none)
+, m_dwThreadID(0)
 {
     m_msgMouse.message = 0;
     m_privateStylePool.Attach(new SStylePool);
@@ -534,6 +535,7 @@ BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 
 int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	m_dwThreadID = GetCurrentThreadId();
 	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
 	UpdateAutoSizeCount(true);
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
@@ -1252,7 +1254,7 @@ const SStringW & SHostWnd::GetTranslatorContext() const
 
 SMessageLoop * SHostWnd::GetMsgLoop()
 {
-    return SApplication::getSingletonPtr()->GetMsgLoop();
+    return SApplication::getSingletonPtr()->GetMsgLoop(m_dwThreadID);
 }
 
 #ifndef DISABLE_SWNDSPY

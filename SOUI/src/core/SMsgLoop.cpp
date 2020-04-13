@@ -28,7 +28,6 @@ namespace SOUI
         
         m_bRunning = TRUE;
 		m_bQuit = FALSE;
-		SApplication::getSingleton().PushMsgLoop(this);
         for(;;)
         {
             while(bDoIdle && !::PeekMessage(&m_msg, NULL, 0, 0, PM_NOREMOVE))
@@ -63,7 +62,6 @@ namespace SOUI
 
 	exit_loop:
         m_bRunning = FALSE;
-		SApplication::getSingleton().PopMsgLoop();
         return (int)m_msg.wParam;
     }
 

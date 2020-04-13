@@ -140,6 +140,8 @@ protected:
 		Ani_both=(Ani_win|Ani_host),
 	};
 	DWORD m_AniState;
+
+	DWORD					m_dwThreadID;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
