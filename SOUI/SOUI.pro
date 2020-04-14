@@ -274,6 +274,7 @@ SOURCES += src/SApp.cpp \
            src/helper/STimerEx.cpp \
            src/helper/SToolTip.cpp \
            src/helper/SwndFinder.cpp \
+           src/helper/Slog.cpp \
            src/layout/SGridLayout.cpp \
            src/layout/SLayoutSize.cpp \
            src/layout/SLinearLayout.cpp \
