@@ -77,18 +77,20 @@ namespace SOUI
     do{ \
 		SOUI::ILog4zManager * pLogMgr = GETLOGMGR(); \
 		char *logbuf=(char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE+1); \
-		logbuf[SOUI::LOG4Z_LOG_BUF_SIZE]=0;\
 		if(sizeof(logformat[0]) == sizeof(char))\
-			_snprintf_s(logbuf, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const char*)logformat, ##__VA_ARGS__); \
+		{\
+			int nLen =_snprintf_s(logbuf, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const char*)logformat, ##__VA_ARGS__); \
+			logbuf[nLen]=0;\
+		}\
 		else \
 		{\
 			wchar_t *logbufw = (wchar_t*)malloc((SOUI::LOG4Z_LOG_BUF_SIZE+1)*sizeof(wchar_t)); \
-			int nLen=_snwprintf_s(logbufw, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const wchar_t*)logformat, ##__VA_ARGS__); \
-			logbufw[nLen]=0;\
-			DWORD dwLen = WideCharToMultiByte(CP_ACP, 0, logbufw, nLen, NULL, 0, NULL, NULL);\
-			if (dwLen < SOUI::LOG4Z_LOG_BUF_SIZE)\
+			int nwLen=_snwprintf_s(logbufw, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const wchar_t*)logformat, ##__VA_ARGS__); \
+			int ncLen = WideCharToMultiByte(CP_ACP, 0, logbufw, nwLen, NULL, 0, NULL, NULL);\
+			if (nwLen < SOUI::LOG4Z_LOG_BUF_SIZE)\
 			{\
-				WideCharToMultiByte(CP_ACP, 0, logbufw, nLen, logbuf, dwLen, NULL, NULL);\
+				WideCharToMultiByte(CP_ACP, 0, logbufw, nwLen, logbuf, ncLen, NULL, NULL);\
+				logbuf[nwLen]=0;\
 			}\
 			free(logbufw);\
 		}\
