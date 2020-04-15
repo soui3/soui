@@ -605,7 +605,7 @@ namespace SOUI
 				{
 					return m_arrItems[iItem].cx;
 				}
-				for(int i=0;i<iItem-1;i++)
+				for(int i=0;i<iItem;i++)
 				{
 					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
 					nRemain-=nAppend;
