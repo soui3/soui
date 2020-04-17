@@ -24,6 +24,7 @@ namespace SOUI
 
 	void SDpiAwareFont::UpdateFont(int nScale)
 	{
+		if (m_strDesc.IsEmpty()) return;
 		m_object = OnGetFont(m_strDesc, nScale);
 	}
 
