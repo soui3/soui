@@ -106,7 +106,7 @@ void SHotKeyCtrl::UpdateModifier()
     else if(bAlt && !bCtrl && bShift) wCombKey=Mod_SA;
     else if(!bAlt && bCtrl && bShift) wCombKey=Mod_SC;
     else wCombKey=Mod_SCA;
-    if(wCombKey&m_wInvalidComb)
+    if(wCombKey==m_wInvalidComb)
         m_wModifier=m_wInvalidModifier;
 	else
 		m_wModifier = wCombKey;
