@@ -37,6 +37,9 @@ HEADERS += include/gdialpha.h \
            include/pugixml/pugiconfig.hpp \
            include/pugixml/pugixml.hpp \
            include/string/strcpcvt.h \
+           include/string/sstringa.h \
+           include/string/sstringw.h \
+           include/string/sstringdata.h \
            include/string/tstring.h \
            include/com-loader.hpp \
            include/wtl.mini/msgcrack.h \
@@ -59,6 +62,9 @@ SOURCES += src/gdialpha.cpp \
            src/soui_mem_wrapper.cpp\
            src/pugixml/pugixml.cpp \
            src/string/strcpcvt.cpp \
+           src/string/sstringa.cpp \
+           src/string/sstringw.cpp \
+           src/string/sstringdata.cpp \
            src/string/tstring.cpp \
            src/sobject/sobject.cpp \
            src/helper/SCriticalSection.cpp \
