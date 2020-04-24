@@ -35,7 +35,7 @@ namespace SOUI
             MSG_WM_KILLFOCUS_EX(OnKillFocus)
         SOUI_MSG_MAP_END()
 
-        virtual void OnFinalRelease()
+        virtual void WINAPI OnFinalRelease()
         {
             delete this;
         }

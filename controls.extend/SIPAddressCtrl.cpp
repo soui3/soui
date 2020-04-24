@@ -23,7 +23,7 @@ namespace SOUI
         inline void ClearEdit(){SetField(0);}
     protected:
         //重载OnFinalRelease来保证new和delete在同一个模块。这样就不需要向系统的窗口类厂注册SEditIP类了。
-        virtual void OnFinalRelease()
+        virtual void WINAPI OnFinalRelease()
         {
             delete this;
         }

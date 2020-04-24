@@ -84,7 +84,7 @@ namespace SOUI
 		BOOL OnEraseBkgnd(SOUI::IRenderTarget * pRT) { return TRUE; };
 		void NextFrame();
 		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
-		virtual void OnFinalRelease();
+		virtual void WINAPI OnFinalRelease();
 		void Create(HWND hOwner, HICON hIcon, UINT uFlags = (NIF_ICON | NIF_MESSAGE | NIF_TIP), UINT uCallbackMessage = WM_ICONNOTIFY, UINT uId = ID_TASKBARICON);
 		void IniNotifyIconData(HWND hOwner, HICON hIcon, UINT flags, UINT callbackmsg, UINT ID, LPCTSTR szTip);
 		HRESULT SetMenu(SStringW strValue, BOOL bLoading);

@@ -34,7 +34,7 @@ namespace SOUI
         
     protected:
         virtual void OnAnimatorState(int percent);
-        virtual void OnFinalRelease(){delete this;}
+        virtual void WINAPI OnFinalRelease(){delete this;}
 		void OnMouseMove(UINT nFlags,CPoint pt);
 		void OnLButtonUp(UINT nFlags,CPoint pt);
         void OnLButtonDown(UINT nFlags,CPoint pt);
@@ -120,7 +120,7 @@ namespace SOUI
     class SChromeBtnNew : public SChromeTab
     {
     public:
-        virtual void OnFinalRelease()
+        virtual void WINAPI OnFinalRelease()
         {
             delete this;
         }
