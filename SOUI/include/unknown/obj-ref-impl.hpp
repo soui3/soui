@@ -20,18 +20,11 @@ public:
 	virtual ~TObjRefImpl(){
 	}
 
-	//!添加引用
-	/*!
-	*/
-	virtual long AddRef()
-	{
+	virtual long WINAPI AddRef () override{
 		return InterlockedIncrement(&m_cRef);
 	}
 
-	//!释放引用
-	/*!
-	*/
-	virtual long Release()
+	virtual long WINAPI Release () override
 	{
 		long lRet = InterlockedDecrement(&m_cRef);
 		if(lRet==0)
@@ -41,10 +34,7 @@ public:
 		return lRet;
 	}
 
-	//!释放对象
-	/*!
-	*/
-    virtual void OnFinalRelease()
+	virtual void WINAPI OnFinalRelease () override
     {
         delete this;
     }
@@ -56,7 +46,7 @@ template<class T,class T2>
 class TObjRefImpl2 :  public TObjRefImpl<T>
 {
 public:
-    virtual void OnFinalRelease()
+	virtual void WINAPI OnFinalRelease () override
     {
         delete static_cast<T2*>(this);
     }

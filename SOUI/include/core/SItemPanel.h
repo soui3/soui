@@ -34,7 +34,7 @@ protected:
     SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer *pItemContainer);
     virtual ~SItemPanel() {}
 
-    virtual void OnFinalRelease();
+    virtual void WINAPI OnFinalRelease();
 
 public://SwndContainerImpl
     virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);

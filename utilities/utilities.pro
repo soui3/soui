@@ -38,8 +38,6 @@ HEADERS += include/gdialpha.h \
            include/pugixml/pugixml.hpp \
            include/string/strcpcvt.h \
            include/string/tstring.h \
-           include/unknown/obj-ref-i.h \
-           include/unknown/obj-ref-impl.hpp \
            include/com-loader.hpp \
            include/wtl.mini/msgcrack.h \
            include/wtl.mini/souimisc.h \
@@ -48,12 +46,12 @@ HEADERS += include/gdialpha.h \
            include/sobject/sobject-state-i.h \
            include/sobject/sobject-state-impl.hpp \
            include/helper/SCriticalSection.h \
-		   include/helper/SSemaphore.h \
-		   include/helper/SSharedPtr.hpp \
+           include/helper/SSemaphore.h \
+           include/helper/SSharedPtr.hpp \
            include/helper/SNoCopyable.hpp \
            include/helper/SEmptyable.hpp \
-		   include/helper/SSharedPtr.hpp \
-		   include/helper/SAutoBuf.h \
+           include/helper/SSharedPtr.hpp \
+           include/helper/SAutoBuf.h \
            
 SOURCES += src/gdialpha.cpp \
            src/trace.cpp \
@@ -63,6 +61,6 @@ SOURCES += src/gdialpha.cpp \
            src/string/strcpcvt.cpp \
            src/string/tstring.cpp \
            src/sobject/sobject.cpp \
-		   src/helper/SCriticalSection.cpp \
-		   src/helper/SSemaphore.cpp \
-		   src/helper/SAutoBuf.cpp \
+           src/helper/SCriticalSection.cpp \
+           src/helper/SSemaphore.cpp \
+           src/helper/SAutoBuf.cpp \

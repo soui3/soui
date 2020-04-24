@@ -142,6 +142,9 @@ HEADERS += include/SApp.h \
            include/helper/SwndFinder.h \
            include/helper/SwndMsgCracker.h \
            include/helper/swndspy.h \
+           include/unknown/obj-ref-i.h \
+           include/unknown/obj-ref-impl.hpp \
+           include/interface/sacchelper-i.h \
            include/interface/sacchelper-i.h \
            include/interface/saccproxy-i.h \
            include/interface/SAdapter-i.h \

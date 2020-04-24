@@ -31,7 +31,7 @@ namespace SOUI
 
 		HRESULT OnAttrSrc(const SStringW& strValue, BOOL bLoading);
 
-		virtual void OnFinalRelease() { delete this; }
+		virtual void WINAPI OnFinalRelease() { delete this; }
 		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
 		bool OnCmd(EventArgs* e);
 
