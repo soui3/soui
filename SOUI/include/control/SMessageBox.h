@@ -11,8 +11,8 @@
 * Describe     
 */
 #pragma once
-#include "core/shostdialog.h"
-
+#include <core/shostdialog.h>
+#include <helper/SDpiHelper.hpp>
 namespace SOUI
 {
     //下面是几个在msgbox模板中必须指定的ID。
@@ -28,7 +28,7 @@ namespace SOUI
 	
     pugi::xml_node SOUI_EXP GetMsgTemplate();
 
-    INT_PTR SOUI_EXP SMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType, int nScale=100);
+    INT_PTR SOUI_EXP SMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
 
 
     /** 
@@ -37,7 +37,7 @@ namespace SOUI
     *
     * Describe   msgbox的消息处理对象，如果需要更加个性化的msgbox，可以派生该类。
     */    
-    class SOUI_EXP SMessageBoxImpl:public SHostDialog
+    class SOUI_EXP SMessageBoxImpl:public SHostDialog,SDpiHandler<SMessageBoxImpl>
     {
     public:
         /**
@@ -57,7 +57,7 @@ namespace SOUI
         *
         * Describe  提示框
         */        
-        INT_PTR MessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType, int nScale=100);
+        INT_PTR MessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
     protected:
         /**
          * OnInitDialog
@@ -100,6 +100,7 @@ namespace SOUI
         EVENT_MAP_END()
 
         BEGIN_MSG_MAP_EX(SMessageBoxImpl)
+			CHAIN_MSG_MAP(SDpiHandler<SMessageBoxImpl>)
             MSG_WM_INITDIALOG(OnInitDialog)
             CHAIN_MSG_MAP(SHostDialog)
             REFLECT_NOTIFICATIONS_EX()
