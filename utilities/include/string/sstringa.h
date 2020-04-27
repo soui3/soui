@@ -5,7 +5,8 @@
 
 #include <windows.h>
 #include <utilities-def.h>
-#include "sstringdata.h"
+#include <string/sstringdata.h>
+#include <string/sstring-i.h>
 
 namespace SOUI
 {
@@ -31,7 +32,7 @@ namespace SOUI
 			int nBufferMax);
 	};
 
-    class UTILITIES_API SStringA
+	class UTILITIES_API SStringA: public IStringA
     {
     public:
 		typedef const char * pctstr;
@@ -46,40 +47,36 @@ namespace SOUI
 
         ~SStringA();
 
-        // Attributes & Operations
-        // as an array of characters
-        int GetLength() const;
-        bool IsEmpty() const;
-        void Empty();    // free up the data
+		STDMETHOD_(int, GetLength)(THIS) FCONST ;
+		STDMETHOD_(bool, IsEmpty)(THIS) FCONST ;
+		STDMETHOD_(void, Empty)(THIS) ;
 
-        char GetAt(int nIndex) const;
-        char operator[](int nIndex) const;
-        void SetAt(int nIndex, char ch);
-        operator const char*() const;    // as a C string
+		STDMETHOD_(char, GetAt)(THIS_ int nIndex) FCONST ;
+		STDMETHOD_(void, SetAt)(THIS_ int nIndex, char ch);
+		STDMETHOD_(const char *, c_str)(THIS) FCONST ;
 
-		const char * c_str() const;
+		// string comparison
+		STDMETHOD_(int, Compare)(THIS_ const char* psz) FCONST ;
+		STDMETHOD_(int, CompareNoCase)(THIS_ const char* psz) FCONST ;
 
-        // overloaded assignment
-        SStringA& operator=(const SStringA& stringSrc);
-        SStringA& operator=(const char* psz);
-        const SStringA& operator=(char ch);
+		STDMETHOD_(void, TrimBlank)(THIS) ;
+		STDMETHOD_(int, Insert)(THIS_ int nIndex, char ch) ;
+		STDMETHOD_(int, Insert)(THIS_ int nIndex, const char* psz);
+		STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount=1);
+		STDMETHOD_(int, Replace)(THIS_ char chOld, char chNew);
+		STDMETHOD_(int, Replace)(THIS_ const char* pszOld, const char* pszNew);
+		STDMETHOD_(int, Remove)(THIS_ char chRemove);
 
-        // string concatenation
-        const SStringA& operator+=(const char* psz);
+		STDMETHOD_(int, Find)(THIS_ char ch, int nStart = 0) FCONST ;
+		STDMETHOD_(int, ReverseFind)(THIS_ char ch) FCONST ;
 
-        const SStringA& operator+=(char ch);
-
-        const SStringA& operator+=(const SStringA& src);
-
-        const SStringA& Append(char ch);
-
-        const SStringA& Append(const char * psz);
-
-        const SStringA& Append(const SStringA& src);
-
-        // string comparison
-        int Compare(const char* psz) const;
-        int CompareNoCase(const char* psz) const;
+		// find a sub-string (like strstr)
+		STDMETHOD_(int, Find)(THIS_ const char* pszSub, int nStart=0) FCONST ;
+		// Access to string implementation buffer as "C" character array
+		STDMETHOD_(char*, GetBuffer)(THIS_ int nMinBufLength);
+		STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength=-1);
+		STDMETHOD_(char* ,GetBufferSetLength)(THIS_ int nNewLength);
+		STDMETHOD_(void ,SetLength)(THIS_ int nLength);
 
         // simple sub-string extraction
         SStringA Mid(int nFirst) const;
@@ -99,54 +96,43 @@ namespace SOUI
 
         SStringA & Trim(char ch = VK_SPACE);
 
-
-        static bool IsBlankChar(const char &c);
-
-        void TrimBlank();
-
 		bool StartsWith(const SStringA& prefix, bool IgnoreCase = false) const;
 
 		bool EndsWith(const SStringA& suffix, bool IgnoreCase = false) const;
 
-        // insert character at zero-based index; concatenates if index is past end of string
-        int Insert(int nIndex, char ch);
-        // insert substring at zero-based index; concatenates if index is past end of string
-        int Insert(int nIndex, const char* psz);
-        int Delete(int nIndex, int nCount = 1);
-        int Replace(char chOld, char chNew);
-        int Replace(const char* pszOld, const char* pszNew);
-        int Remove(char chRemove);
 
-        // searching (return starting index, or -1 if not found)
-        // look for a single character match
-        int Find(char ch, int nStart = 0) const;
-        int ReverseFind(char ch) const;
+		BOOL LoadString(UINT nID,HINSTANCE hInst);
 
-        // find a sub-string (like strstr)
-        int Find(const char* pszSub, int nStart = 0) const;
+		BOOL __cdecl Format(HINSTANCE hInst,UINT nFormatID, ...);
 
-        BOOL LoadString(UINT nID,HINSTANCE hInst);
+		void __cdecl AppendFormat(HINSTANCE hInst,UINT nFormatID, ...);
 
-        BOOL __cdecl Format(HINSTANCE hInst,UINT nFormatID, ...);
+		// formatting (using sprintf style formatting)
+		SStringA __cdecl Format(const char* pszFormat, ...);
+		// Append formatted data using format string 'pszFormat'
+		SStringA  __cdecl AppendFormat(const char* pszFormat, ...);
 
-        void __cdecl AppendFormat(HINSTANCE hInst,UINT nFormatID, ...);
+		operator const char*() const;    // as a C string
+		char operator[](int nIndex) const;
+		// overloaded assignment
+		SStringA& operator=(const SStringA& stringSrc);
+		SStringA& operator=(const char* psz);
+		const SStringA& operator=(char ch);
 
-        // formatting (using sprintf style formatting)
-        SStringA __cdecl Format(const char* pszFormat, ...);
-        // Append formatted data using format string 'pszFormat'
-        SStringA  __cdecl AppendFormat(const char* pszFormat, ...);
+		// string concatenation
+		const SStringA& operator+=(const char* psz);
 
-        // Access to string implementation buffer as "C" character array
-        char* GetBuffer(int nMinBufLength);
-        void ReleaseBuffer(int nNewLength = -1);
-        char* GetBufferSetLength(int nNewLength);
-        void SetLength(int nLength);
-        void Preallocate(int nLength);
-        void FreeExtra();
+		const SStringA& operator+=(char ch);
 
-        // Use LockBuffer/UnlockBuffer to turn refcounting off
-        char* LockBuffer();
-        void UnlockBuffer();
+		const SStringA& operator+=(const SStringA& src);
+
+		const SStringA& Append(char ch);
+
+		const SStringA& Append(const char * psz);
+
+		const SStringA& Append(const SStringA& src);
+
+		static bool IsBlankChar(const char &c);
 
         friend inline bool __stdcall operator==(const SStringA& s1, const SStringA& s2)
         {
@@ -260,10 +246,17 @@ namespace SOUI
         }
 
         // Implementation
-    public:
+    protected:
         int GetAllocLength() const;
 
         static int SafeStrlen(const char* psz);
+
+		void Preallocate(int nLength);
+		void FreeExtra();
+
+		// Use LockBuffer/UnlockBuffer to turn refcounting off
+		char* LockBuffer();
+		void UnlockBuffer();
 
     protected:
         // implementation helpers

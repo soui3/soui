@@ -5,7 +5,8 @@
 
 #include <windows.h>
 #include <utilities-def.h>
-#include "sstringdata.h"
+#include <string/sstringdata.h>
+#include <string/sstring-i.h>
 
 namespace SOUI
 {
@@ -30,7 +31,7 @@ namespace SOUI
 			int nBufferMax);
 	};
 
-    class UTILITIES_API SStringW
+	class UTILITIES_API SStringW : public IStringW
     {
     public:
 		typedef const wchar_t * pctstr;
@@ -45,107 +46,93 @@ namespace SOUI
 
         ~SStringW();
 
-        // Attributes & Operations
-        // as an array of characters
-        int GetLength() const;
-        bool IsEmpty() const;
-        void Empty();    // free up the data
+		STDMETHOD_(int, GetLength)(THIS) FCONST ;
+		STDMETHOD_(bool, IsEmpty)(THIS) FCONST ;
+		STDMETHOD_(void, Empty)(THIS) ;
 
-        wchar_t GetAt(int nIndex) const;
-        wchar_t operator[](int nIndex) const;
-        void SetAt(int nIndex, wchar_t ch);
-        operator const wchar_t*() const;    // as a C string
+		STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) FCONST ;
+		STDMETHOD_(void, SetAt)(THIS_ int nIndex, wchar_t ch);
+		STDMETHOD_(const wchar_t *, c_str)(THIS) FCONST ;
 
-		const wchar_t * c_str() const;
+		// string comparison
+		STDMETHOD_(int, Compare)(THIS_ const wchar_t* psz) FCONST ;
+		STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) FCONST ;
 
-        // overloaded assignment
-        SStringW& operator=(const SStringW& stringSrc);
-        SStringW& operator=(const wchar_t* psz);
-        const SStringW& operator=(wchar_t ch);
+		STDMETHOD_(void, TrimBlank)(THIS) ;
+		STDMETHOD_(int, Insert)(THIS_ int nIndex, wchar_t ch) ;
+		STDMETHOD_(int, Insert)(THIS_ int nIndex, const wchar_t* psz);
+		STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount= 1);
+		STDMETHOD_(int, Replace)(THIS_ wchar_t chOld, wchar_t chNew);
+		STDMETHOD_(int, Replace)(THIS_ const wchar_t* pszOld, const wchar_t* pszNew);
+		STDMETHOD_(int, Remove)(THIS_ wchar_t chRemove);
 
-        // string concatenation
-        const SStringW& operator+=(const wchar_t* psz);
+		STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart=0) FCONST ;
+		STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) FCONST ;
 
-        const SStringW& operator+=(wchar_t ch);
-
-        const SStringW& operator+=(const SStringW& src);
-
-        const SStringW& Append(wchar_t ch);
-
-        const SStringW& Append(const wchar_t * psz);
-
-        const SStringW& Append(const SStringW& src);
-
-        // string comparison
-        int Compare(const wchar_t* psz) const;
-        int CompareNoCase(const wchar_t* psz) const;
-
-        // simple sub-string extraction
-        SStringW Mid(int nFirst) const;
-        SStringW Mid(int nFirst, int nCount) const;
-        SStringW Right(int nCount) const;
-        SStringW Left(int nCount) const;
-
-        //    string utilities
-        SStringW& MakeUpper();
-        SStringW& MakeLower();
-
-        // remove continuous occcurrences of characters in passed string, starting from right
-        SStringW & TrimRight(wchar_t chTarget = VK_SPACE);
-
-        // remove continuous occurrences of chTarget starting from left
-        SStringW & TrimLeft(wchar_t chTarget = VK_SPACE);
-
-        SStringW & Trim(wchar_t ch = VK_SPACE);
+		// find a sub-string (like strstr)
+		STDMETHOD_(int, Find)(THIS_ const wchar_t* pszSub, int nStart=0) FCONST ;
+		// Access to string implementation buffer as "C" character array
+		STDMETHOD_(wchar_t*, GetBuffer)(THIS_ int nMinBufLength);
+		STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength=-1);
+		STDMETHOD_(wchar_t* ,GetBufferSetLength)(THIS_ int nNewLength);
+		STDMETHOD_(void ,SetLength)(THIS_ int nLength);
 
 
-        static bool IsBlankChar(const wchar_t &c);
+		// simple sub-string extraction
+		SStringW Mid(int nFirst) const;
+		SStringW Mid(int nFirst, int nCount) const;
+		SStringW Right(int nCount) const;
+		SStringW Left(int nCount) const;
 
-        void TrimBlank();
+		//    string utilities
+		SStringW& MakeUpper();
+		SStringW& MakeLower();
+
+		// remove continuous occcurrences of characters in passed string, starting from right
+		SStringW & TrimRight(wchar_t chTarget = VK_SPACE);
+
+		// remove continuous occurrences of chTarget starting from left
+		SStringW & TrimLeft(wchar_t chTarget = VK_SPACE);
+
+		SStringW & Trim(wchar_t ch = VK_SPACE);
+
+
+		static bool IsBlankChar(const wchar_t &c);
 
 		bool StartsWith(const SStringW& prefix, bool IgnoreCase = false) const;
 
 		bool EndsWith(const SStringW& suffix, bool IgnoreCase = false) const;
 
-        // insert character at zero-based index; concatenates if index is past end of string
-        int Insert(int nIndex, wchar_t ch);
-        // insert substring at zero-based index; concatenates if index is past end of string
-        int Insert(int nIndex, const wchar_t* psz);
-        int Delete(int nIndex, int nCount = 1);
-        int Replace(wchar_t chOld, wchar_t chNew);
-        int Replace(const wchar_t* pszOld, const wchar_t* pszNew);
-        int Remove(wchar_t chRemove);
+		wchar_t operator[](int nIndex) const;
+		operator const wchar_t*() const;    // as a C string
+		// overloaded assignment
+		SStringW& operator=(const SStringW& stringSrc);
+		SStringW& operator=(const wchar_t* psz);
+		const SStringW& operator=(wchar_t ch);
 
-        // searching (return starting index, or -1 if not found)
-        // look for a single character match
-        int Find(wchar_t ch, int nStart = 0) const;
-        int ReverseFind(wchar_t ch) const;
+		// string concatenation
+		const SStringW& operator+=(const wchar_t* psz);
 
-        // find a sub-string (like strstr)
-        int Find(const wchar_t* pszSub, int nStart = 0) const;
+		const SStringW& operator+=(wchar_t ch);
 
-        BOOL LoadString(UINT nID,HINSTANCE hInst);
+		const SStringW& operator+=(const SStringW& src);
 
-        BOOL __cdecl Format(HINSTANCE hInst,UINT nFormatID, ...);
+		const SStringW& Append(wchar_t ch);
 
-        void __cdecl AppendFormat(HINSTANCE hInst,UINT nFormatID, ...);
+		const SStringW& Append(const wchar_t * psz);
 
-        // formatting (using sprintf style formatting)
-        SStringW __cdecl Format(const wchar_t* pszFormat, ...);
-        // Append formatted data using format string 'pszFormat'
-        SStringW  __cdecl AppendFormat(const wchar_t* pszFormat, ...);
+		const SStringW& Append(const SStringW& src);
 
-        // Access to string implementation buffer as "C" character array
-        wchar_t* GetBuffer(int nMinBufLength);
-        void ReleaseBuffer(int nNewLength = -1);
-        wchar_t* GetBufferSetLength(int nNewLength);
-        void SetLength(int nLength);
-        void Preallocate(int nLength);
-        void FreeExtra();
+		BOOL LoadString(UINT nID,HINSTANCE hInst);
 
-        // Use LockBuffer/UnlockBuffer to turn refcounting off
-        wchar_t* LockBuffer();
-        void UnlockBuffer();
+		BOOL __cdecl Format(HINSTANCE hInst,UINT nFormatID, ...);
+
+		void __cdecl AppendFormat(HINSTANCE hInst,UINT nFormatID, ...);
+
+		// formatting (using sprintf style formatting)
+		SStringW __cdecl Format(const wchar_t* pszFormat, ...);
+		// Append formatted data using format string 'pszFormat'
+		SStringW  __cdecl AppendFormat(const wchar_t* pszFormat, ...);
 
         friend inline bool __stdcall operator==(const SStringW& s1, const SStringW& s2)
         {
@@ -259,10 +246,17 @@ namespace SOUI
         }
 
         // Implementation
-    public:
+	protected:
         int GetAllocLength() const;
 
         static int SafeStrlen(const wchar_t* psz);
+
+		void Preallocate(int nLength);
+		void FreeExtra();
+
+		// Use LockBuffer/UnlockBuffer to turn refcounting off
+		wchar_t* LockBuffer();
+		void UnlockBuffer();
 
     protected:
         // implementation helpers

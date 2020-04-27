@@ -36,6 +36,7 @@ HEADERS += include/gdialpha.h \
            include/atl.mini/SComHelper.h \
            include/pugixml/pugiconfig.hpp \
            include/pugixml/pugixml.hpp \
+           include/string/sstring-i.h \
            include/string/strcpcvt.h \
            include/string/sstringa.h \
            include/string/sstringw.h \

@@ -360,6 +360,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\string\sstring-i.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\string\sstringa.h"
 				>
 			</File>

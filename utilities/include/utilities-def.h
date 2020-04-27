@@ -16,6 +16,19 @@
 #define SASSERT(x) assert(x)
 #endif
 
-#ifndef PURE
-#define PURE                    = 0
+#include <ObjBase.h>
+#include <com-def.h>
+
+#ifdef LIB_SOUI_COM
+#define SOUI_COM_API
+#define SOUI_COM_C
+#else
+#define SOUI_COM_API __declspec(dllexport)
+#define SOUI_COM_C  EXTERN_C
+#endif//LIB_SOUI_COM
+
+#ifdef __cplusplus
+#define FCONST const
+#else
+#define FCONST
 #endif
