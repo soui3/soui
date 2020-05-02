@@ -334,6 +334,7 @@ namespace SOUI
 		{
 			if (!::IsWindow(it->first))
 			{
+				m_pCallback->OnDisconnected(it->second);
 				it->second->Release();
 				it = m_mapClients.erase(it);
 			}
