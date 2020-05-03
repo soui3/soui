@@ -421,7 +421,8 @@ void SMCListView::onDataSetChanged()
 	m_pHeader->GetEventSet()->setMutedState(true);
 	for(size_t i=0;i<m_pHeader->GetItemCount();i++)
 	{
- 		m_pHeader->SetItemVisible(i,m_adapter->IsColumnVisible(i));
+		int iCol = m_pHeader->GetOriItemIndex(i);
+ 		m_pHeader->SetItemVisible(i,m_adapter->IsColumnVisible(iCol));
 	}
 	m_pHeader->GetEventSet()->setMutedState(false);
 
