@@ -16,6 +16,8 @@
 #include <unknown/obj-ref-i.h>
 #include <string/sstring-i.h>
 
+SNSBEGIN
+
 #define TR_MAX_NAME_LEN	64
 
 /** 
@@ -169,3 +171,5 @@ DECLARE_INTERFACE_(ITranslatorMgr,IObjRef)
 	*/
 	STDMETHOD_(int,tr)(THIS_ const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nLen) SCONST PURE;
 };
+
+SNSEND

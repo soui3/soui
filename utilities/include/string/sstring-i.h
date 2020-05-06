@@ -1,6 +1,7 @@
 #pragma once
 #include <utilities-def.h>
 
+SNSBEGIN
 
 #undef INTERFACE
 #define INTERFACE IStringA
@@ -76,3 +77,5 @@ DECLARE_INTERFACE(IStringW)
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength) PURE;
 	STDMETHOD_(void ,Copy)(THIS_ const IStringW * src) PURE;
 };
+
+SNSEND

@@ -26,7 +26,9 @@ namespace SOUI
         {
             IResProvider *pResProvider=m_lstResPackage.GetNext(pos);
 #ifdef _DEBUG//检查资源使用情况
-            pResProvider->CheckResUsage(m_mapResUsageCount);
+			SLOG_DEBUG("++++begin of check resource usage");
+			pResProvider->EnumResource(&SResProviderMgr::CheckUsage,(LPARAM)&m_mapResUsageCount);
+			SLOG_DEBUG("----end of check resource usage");
 #endif            
             pResProvider->Release();
         }
@@ -397,4 +399,21 @@ namespace SOUI
 
 		return SUiDef::getSingleton().GetUiDef()->GetNamedDimension().Get(idx);
 	}
+
+#ifdef _DEBUG
+	BOOL SResProviderMgr::CheckUsage(LPCTSTR pszName,LPCTSTR pszType,LPARAM lp)
+	{
+		SMap<SStringT,int> * mapResUsageCount = (SMap<SStringT,int> *)lp;
+		if(IS_INTRESOURCE(pszName))
+			return TRUE;
+		SStringT key = SStringT().Format(_T("%s:%s"),pszType,pszName);
+		key.MakeLower();
+		if(!mapResUsageCount->Lookup(key))
+		{//发现未使用资源
+			SLOGFMTD(_T("resource of [%s] was not used."),(LPCTSTR)key);
+		}
+		return TRUE;
+	}
+#endif
+
 }

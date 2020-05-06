@@ -65,7 +65,9 @@ namespace SOUI
         //使用name:size形式的字符串加载图标，如果没有size,则默认系统图标SIZE
         HICON     LoadIcon2(const SStringW & strIconID);
     protected:
-        
+#ifdef _DEBUG
+		static BOOL CALLBACK CheckUsage(LPCTSTR pszName,LPCTSTR pszType,LPARAM lp);
+#endif
         LPCTSTR SysCursorName2ID(LPCTSTR pszCursorName);
 
         //检查资源类型是否为外部文件

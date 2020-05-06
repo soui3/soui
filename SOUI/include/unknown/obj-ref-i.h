@@ -2,6 +2,8 @@
 
 #include <utilities-def.h>
 
+SNSBEGIN
+
 #undef INTERFACE
 #define INTERFACE IObjRef
 DECLARE_INTERFACE(IObjRef)
@@ -21,3 +23,5 @@ DECLARE_INTERFACE(IObjRef)
 	*/
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 };
+
+SNSEND

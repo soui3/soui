@@ -12,7 +12,7 @@
 #include "ZipArchive.h"
 #include "zipresprovider-param.h"
 
-namespace SOUI{
+SNSBEGIN
 
 class SResProviderZip : public TObjRefImpl<IResProvider>
 {
@@ -20,17 +20,16 @@ public:
 	SResProviderZip();
 	~SResProviderZip(void);
 	
-    virtual BOOL Init(WPARAM wParam,LPARAM lParam);
-
-    virtual BOOL HasResource(LPCTSTR strType,LPCTSTR pszResName);
-    virtual HICON   LoadIcon(LPCTSTR pszResName,int cx,int cy);
-    virtual HBITMAP    LoadBitmap(LPCTSTR pszResName);
-    virtual HCURSOR LoadCursor(LPCTSTR pszResName);
-    virtual IBitmap * LoadImage(LPCTSTR strType,LPCTSTR pszResName);
-    virtual IImgX   * LoadImgX(LPCTSTR strType,LPCTSTR pszResName);
-    virtual size_t GetRawBufferSize(LPCTSTR strType,LPCTSTR pszResName);
-    virtual BOOL GetRawBuffer(LPCTSTR strType,LPCTSTR pszResName,LPVOID pBuf,size_t size);
-
+	STDMETHOD_(BOOL,Init)(THIS_ WPARAM wParam,LPARAM lParam);
+	STDMETHOD_(BOOL,HasResource)(THIS_ LPCTSTR pszType,LPCTSTR pszResName);
+	STDMETHOD_(HICON,LoadIcon)(THIS_ LPCTSTR pszResName,int cx,int cy);
+	STDMETHOD_(HBITMAP,LoadBitmap)(THIS_ LPCTSTR pszResName);
+	STDMETHOD_(HCURSOR,LoadCursor)(THIS_ LPCTSTR pszResName);
+	STDMETHOD_(IBitmap*, LoadImage)(THIS_ LPCTSTR pszType,LPCTSTR pszResName);
+	STDMETHOD_(IImgX*, LoadImgX)(THIS_ LPCTSTR pszType,LPCTSTR pszResName);
+	STDMETHOD_(size_t,GetRawBufferSize)(THIS_ LPCTSTR pszType,LPCTSTR pszResName);
+	STDMETHOD_(BOOL,GetRawBuffer)(THIS_ LPCTSTR pszType,LPCTSTR pszResName,LPVOID pBuf,size_t size);
+	STDMETHOD_(void,EnumResource)(THIS_ EnumResCallback funEnumCB,LPARAM lp);
 protected:
     BOOL _Init(LPCTSTR pszZipFile ,LPCSTR pszPsw);
     BOOL _Init(LPBYTE pBytes, DWORD dwByteCounts, LPCSTR pszPsw);    
@@ -49,4 +48,4 @@ namespace RESPROVIDER_ZIP
     SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef ** ppObj);
 }
 
-}//namespace SOUI
+SNSEND

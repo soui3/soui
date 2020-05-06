@@ -29,6 +29,10 @@
 
 #ifdef __cplusplus
 #define SCONST const
+#define SNSBEGIN	namespace SOUI{
+#define SNSEND		}//end of namespace SOUI
 #else
 #define SCONST
+#define SNSBEGIN
+#define SNSEND
 #endif
