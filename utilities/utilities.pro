@@ -66,7 +66,6 @@ SOURCES += src/gdialpha.cpp \
            src/string/sstringa.cpp \
            src/string/sstringw.cpp \
            src/string/sstringdata.cpp \
-           src/string/tstring.cpp \
            src/sobject/sobject.cpp \
            src/helper/SCriticalSection.cpp \
            src/helper/SSemaphore.cpp \
