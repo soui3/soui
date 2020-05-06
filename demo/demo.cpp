@@ -268,9 +268,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         }
 #if (defined(DLL_CORE) || defined(LIB_ALL)) && !defined(_WIN64)
         //加载LUA脚本模块，注意，脚本模块只有在SOUI内核是以DLL方式编译时才能使用。
-        bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
-        SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));
-        theApp->SetScriptFactory(pScriptLua);
+        //bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
+        //SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));
+        //theApp->SetScriptFactory(pScriptLua);
 #endif//DLL_CORE
 
         
