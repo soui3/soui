@@ -76,6 +76,7 @@ namespace SOUI
 		STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength=-1);
 		STDMETHOD_(wchar_t* ,GetBufferSetLength)(THIS_ int nNewLength);
 		STDMETHOD_(void ,SetLength)(THIS_ int nLength);
+		STDMETHOD_(void ,Copy)(THIS_ const IStringW * src);
 
 
 		// simple sub-string extraction

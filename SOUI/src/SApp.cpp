@@ -47,13 +47,13 @@ public:
     BOOL CreateTranslator(ITranslator **pLang){return FALSE;}
     BOOL InstallTranslator(ITranslator * pLang){return FALSE;}
     BOOL UninstallTranslator(REFGUID id){return FALSE;}
-    int tr(const SStringW & strSrc,const SStringW & strCtx, wchar_t *pszOut,int nBufLen) const 
+    int tr(const IStringW & strSrc,const IStringW & strCtx, wchar_t *pszOut,int nBufLen) const 
     {
 		return 0;
     } 
 
 
-	virtual void SetLanguage(const SStringW & strLang)
+	virtual void SetLanguage(const IStringW & strLang)
 	{
 	}
 

@@ -36,6 +36,7 @@ DECLARE_INTERFACE(IStringA)
 	STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength)PURE;
 	STDMETHOD_(char* ,GetBufferSetLength)(THIS_ int nNewLength)PURE;
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength)PURE;
+	STDMETHOD_(void ,Copy)(THIS_ const IStringA * src) PURE;
 };
 
 
@@ -72,5 +73,6 @@ DECLARE_INTERFACE(IStringW)
 	STDMETHOD_(wchar_t*, GetBuffer)(THIS_ int nMinBufLength)PURE;
 	STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength)PURE;
 	STDMETHOD_(wchar_t* ,GetBufferSetLength)(THIS_ int nNewLength)PURE;
-	STDMETHOD_(void ,SetLength)(THIS_ int nLength)PURE;
+	STDMETHOD_(void ,SetLength)(THIS_ int nLength) PURE;
+	STDMETHOD_(void ,Copy)(THIS_ const IStringW * src) PURE;
 };

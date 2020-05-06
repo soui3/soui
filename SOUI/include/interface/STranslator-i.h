@@ -66,9 +66,9 @@ namespace SOUI
          *
          * Describe  
          */
-        virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
+        virtual int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
 
-		virtual SStringW getFontInfo() const = 0;
+		virtual void getFontInfo(IStringW * strFont) const = 0;
     };
 
 
@@ -87,7 +87,7 @@ namespace SOUI
 		*
 		* Describe 自动清除语言和目标语言不同的模块
 		*/
-		virtual void SetLanguage(const SStringW & strLang) = 0;
+		virtual void SetLanguage(const IStringW & strLang) = 0;
 
 		/**
 		* GetLanguage
@@ -136,7 +136,7 @@ namespace SOUI
          *
          * Describe  调用ITranslator的tr接口执行具体翻译过程
          */
-        virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
+        virtual int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nLen) const =0;
     };
 
 }

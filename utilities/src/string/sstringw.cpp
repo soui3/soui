@@ -1030,6 +1030,11 @@ namespace SOUI
 		return GetData()->nDataLength;
 	}
 
+	void SStringW::Copy(const IStringW *pSrc)
+	{
+		AssignCopy(pSrc->GetLength(),pSrc->c_str());
+	}
+
 	SStringW::~SStringW()
 	{
 		//  free any attached data

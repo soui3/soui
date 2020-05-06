@@ -44,8 +44,8 @@ namespace SOUI
 		virtual bool NameEqual(LPCWSTR pszName);
 
         virtual GUID     guid();
-        virtual int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nBufLen) const ;
-		virtual SStringW getFontInfo() const;
+        virtual int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nBufLen) const ;
+		virtual void getFontInfo(IStringW *strFont) const;
     protected:
         BOOL LoadFromXml(pugi::xml_node xmlLang);
 
@@ -61,7 +61,7 @@ namespace SOUI
         STranslatorMgr(void);
         ~STranslatorMgr(void);
 
-		virtual void SetLanguage(const SStringW & strLang);
+		virtual void SetLanguage(const IStringW & strLang);
 		virtual void GetLanguage(wchar_t szName[TR_MAX_NAME_LEN]) const;
 
         BOOL CreateTranslator(ITranslator ** ppTranslator);
@@ -70,7 +70,7 @@ namespace SOUI
 
 		BOOL UninstallTranslator(REFGUID id);
 
-		int tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pBuf,int nLen)  const ;
+		int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pBuf,int nLen)  const ;
 
 	protected:
 

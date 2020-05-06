@@ -11,10 +11,12 @@ using namespace pugi;
 
 namespace SOUI
 {
-    int StringCmp(const SStringW &str1,const SStringW &str2)
+    int StringCmp(const IStringW *str1,const IStringW *str2)
     {
-        if(str1 == str2) return 0;
-        else return str1<str2?-1:1;
+		int nRet = str1->Compare(str2->c_str());
+		if(nRet<0) return -1;
+		else if(nRet>0) return 1;
+		else return 0;
     }
 
     class SStrMap
@@ -44,14 +46,14 @@ namespace SOUI
     {
         SStrMap **p1=(SStrMap**) e1;
         SStrMap **p2=(SStrMap**) e2;
-        return StringCmp((*p1)->strSource,(*p2)->strSource);
+        return StringCmp(&(*p1)->strSource,&(*p2)->strSource);
     }
 
     int SStrMap::CompareInSearch( const void * e1, const void * e2 )
     {
-        SStringW * pKey=(SStringW *)e1;
+        IStringW * pKey=(IStringW *)e1;
         SStrMap **p2=(SStrMap**) e2;
-        return StringCmp(*pKey,(*p2)->strSource);     
+        return StringCmp(pKey,&(*p2)->strSource);     
     }
 
 
@@ -59,14 +61,14 @@ namespace SOUI
     {
         SStrMapEntry **p1=(SStrMapEntry**) e1;
         SStrMapEntry **p2=(SStrMapEntry**) e2;
-        return StringCmp((*p1)->strCtx,(*p2)->strCtx);
+        return StringCmp(&(*p1)->strCtx,&(*p2)->strCtx);
     }
     
     int SStrMapEntry::CompareInSearch( const void * e1, const void * e2 )
     {
-        SStringW *pKey=(SStringW*) e1;
+        IStringW *pKey=(IStringW*) e1;
         SStrMapEntry **p2=(SStrMapEntry**) e2;
-        return StringCmp(*pKey,(*p2)->strCtx);
+        return StringCmp(pKey,&(*p2)->strCtx);
     }
 
     SStrMapEntry::~SStrMapEntry()
@@ -170,7 +172,7 @@ namespace SOUI
         return TRUE;
     }
 
-    int STranslator::tr( const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut, int nBufLen ) const 
+    int STranslator::tr( const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut, int nBufLen ) const 
     {
         SStrMapEntry** pEntry = (SStrMapEntry**)bsearch(&strCtx,m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::CompareInSearch);
         if(pEntry)
@@ -196,9 +198,9 @@ namespace SOUI
         return FALSE;
     }
 
-	SStringW STranslator::getFontInfo() const
+	void STranslator::getFontInfo(IStringW *strFont) const
 	{
-		return m_strFontInfo;
+		strFont->Copy(&m_strFontInfo);
 	}
 
     //////////////////////////////////////////////////////////////////////////
@@ -260,7 +262,7 @@ namespace SOUI
         delete m_lstLang;
     }
 
-    int STranslatorMgr::tr(const SStringW & strSrc,const SStringW & strCtx,wchar_t *pszOut,int nBufLen)  const 
+    int STranslatorMgr::tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nBufLen)  const 
     {
         if(strSrc.IsEmpty()) return 0;
         SPOSITION pos=m_lstLang->GetHeadPosition();
@@ -280,9 +282,9 @@ namespace SOUI
     }
 
 
-	void STranslatorMgr::SetLanguage(const SStringW & strLang)
+	void STranslatorMgr::SetLanguage(const IStringW & strLang)
 	{
-		if (wcscmp(m_szLangName, strLang)!=0)
+		if (strLang.Compare(m_szLangName)!=0)
 		{
 			SPOSITION pos = m_lstLang->GetHeadPosition();
 			while (pos)
@@ -292,7 +294,7 @@ namespace SOUI
 			}
 			m_lstLang->RemoveAll();
 		}
-		wcscpy_s(m_szLangName,TR_MAX_NAME_LEN, strLang);
+		wcscpy_s(m_szLangName,TR_MAX_NAME_LEN, strLang.c_str());
 	}
 
 	void STranslatorMgr::GetLanguage(wchar_t szName[TR_MAX_NAME_LEN]) const

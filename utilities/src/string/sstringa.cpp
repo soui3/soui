@@ -416,6 +416,11 @@ namespace SOUI
 			m_pszData[nLength] = 0;
 		}
 	}
+	
+	void SStringA::Copy(const IStringA *pSrc)
+	{
+		AssignCopy(pSrc->GetLength(),pSrc->c_str());
+	}
 
 	char* SStringA::GetBufferSetLength(int nNewLength)
 	{
