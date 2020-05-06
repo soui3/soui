@@ -28,7 +28,7 @@
 #endif//LIB_SOUI_COM
 
 #ifdef __cplusplus
-#define FCONST const
+#define SCONST const
 #else
-#define FCONST
+#define SCONST
 #endif

@@ -46,17 +46,17 @@ namespace SOUI
 
         ~SStringW();
 
-		STDMETHOD_(int, GetLength)(THIS) FCONST ;
-		STDMETHOD_(bool, IsEmpty)(THIS) FCONST ;
+		STDMETHOD_(int, GetLength)(THIS) SCONST ;
+		STDMETHOD_(bool, IsEmpty)(THIS) SCONST ;
 		STDMETHOD_(void, Empty)(THIS) ;
 
-		STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) FCONST ;
+		STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) SCONST ;
 		STDMETHOD_(void, SetAt)(THIS_ int nIndex, wchar_t ch);
-		STDMETHOD_(const wchar_t *, c_str)(THIS) FCONST ;
+		STDMETHOD_(const wchar_t *, c_str)(THIS) SCONST ;
 
 		// string comparison
-		STDMETHOD_(int, Compare)(THIS_ const wchar_t* psz) FCONST ;
-		STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) FCONST ;
+		STDMETHOD_(int, Compare)(THIS_ const wchar_t* psz) SCONST ;
+		STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) SCONST ;
 
 		STDMETHOD_(void, TrimBlank)(THIS) ;
 		STDMETHOD_(int, Insert)(THIS_ int nIndex, wchar_t ch) ;
@@ -66,11 +66,11 @@ namespace SOUI
 		STDMETHOD_(int, Replace)(THIS_ const wchar_t* pszOld, const wchar_t* pszNew);
 		STDMETHOD_(int, Remove)(THIS_ wchar_t chRemove);
 
-		STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart=0) FCONST ;
-		STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) FCONST ;
+		STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart=0) SCONST ;
+		STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) SCONST ;
 
 		// find a sub-string (like strstr)
-		STDMETHOD_(int, Find)(THIS_ const wchar_t* pszSub, int nStart=0) FCONST ;
+		STDMETHOD_(int, Find)(THIS_ const wchar_t* pszSub, int nStart=0) SCONST ;
 		// Access to string implementation buffer as "C" character array
 		STDMETHOD_(wchar_t*, GetBuffer)(THIS_ int nMinBufLength);
 		STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength=-1);

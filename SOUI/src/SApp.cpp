@@ -44,24 +44,29 @@ namespace SOUI
 class SNullTranslator : public TObjRefImpl<ITranslatorMgr>
 {
 public:
-    BOOL CreateTranslator(ITranslator **pLang){return FALSE;}
-    BOOL InstallTranslator(ITranslator * pLang){return FALSE;}
-    BOOL UninstallTranslator(REFGUID id){return FALSE;}
-    int tr(const IStringW & strSrc,const IStringW & strCtx, wchar_t *pszOut,int nBufLen) const 
-    {
-		return 0;
-    } 
-
-
-	virtual void SetLanguage(const IStringW & strLang)
+	STDMETHOD_(void ,SetLanguage)(THIS_ const IStringW * strLang)
 	{
 	}
-
-	virtual void GetLanguage(wchar_t szOut[TR_MAX_NAME_LEN]) const
+	STDMETHOD_(void,GetLanguage)(THIS_ wchar_t szOut[TR_MAX_NAME_LEN]) SCONST
 	{
 		szOut[0] = 0;
 	}
-
+	STDMETHOD_(BOOL,CreateTranslator)(THIS_ ITranslator ** ppTranslator)
+	{
+		return FALSE;
+	}
+	STDMETHOD_(BOOL,InstallTranslator)(THIS_ ITranslator * ppTranslator)
+	{
+		return FALSE;
+	}
+	STDMETHOD_(BOOL,UninstallTranslator)(THIS_ REFGUID id)
+	{
+		return FALSE;
+	}
+	STDMETHOD_(int,tr)(THIS_ const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nLen) SCONST
+	{
+		return 0;
+	}
 };
 
 class SDefToolTipFactory : public TObjRefImpl<IToolTipFactory>
@@ -528,11 +533,11 @@ int SApplication::Str2ID(const SStringW & str)
 
 SStringW SApplication::tr(const SStringW & strSrc,const SStringW & strCtx) const
 {
-	int nRet = m_translator->tr(strSrc,strCtx,NULL,0);
+	int nRet = m_translator->tr(&strSrc,&strCtx,NULL,0);
 	if(nRet == 0) return strSrc;
 	SStringW strRet;
 	wchar_t *pBuf = strRet.GetBufferSetLength(nRet-1);
-	m_translator->tr(strSrc,strCtx,pBuf,nRet);
+	m_translator->tr(&strSrc,&strCtx,pBuf,nRet);
 	strRet.ReleaseBuffer();
 	return strRet;
 }

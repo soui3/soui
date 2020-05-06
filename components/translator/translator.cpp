@@ -172,12 +172,12 @@ namespace SOUI
         return TRUE;
     }
 
-    int STranslator::tr( const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut, int nBufLen ) const 
+    int STranslator::tr( const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut, int nBufLen ) const 
     {
-        SStrMapEntry** pEntry = (SStrMapEntry**)bsearch(&strCtx,m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::CompareInSearch);
+        SStrMapEntry** pEntry = (SStrMapEntry**)bsearch(strCtx,m_arrEntry->GetData(),m_arrEntry->GetCount(),sizeof(SStrMapEntry*),SStrMapEntry::CompareInSearch);
         if(pEntry)
         {
-            SStrMap ** pMap=(SStrMap**)bsearch(&strSrc,(*pEntry)->m_arrStrMap.GetData(),(*pEntry)->m_arrStrMap.GetCount(),sizeof(SStrMap*),SStrMap::CompareInSearch);
+            SStrMap ** pMap=(SStrMap**)bsearch(strSrc,(*pEntry)->m_arrStrMap.GetData(),(*pEntry)->m_arrStrMap.GetCount(),sizeof(SStrMap*),SStrMap::CompareInSearch);
             if(pMap)
             {//从指定的上下文中查找翻译
                 SStringW strRet=(*pMap)->strTranslation;
@@ -191,9 +191,10 @@ namespace SOUI
                 return strRet.GetLength()+1;
             }
         }
-		if(!strCtx.IsEmpty())
+		if(!strCtx->IsEmpty())
 		{//从空白上下文中查找
-			return tr(strSrc,SStringW(),pszOut,nBufLen);
+			SStringW empty;
+			return tr(strSrc,&empty,pszOut,nBufLen);
 		}
         return FALSE;
     }
@@ -262,9 +263,9 @@ namespace SOUI
         delete m_lstLang;
     }
 
-    int STranslatorMgr::tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nBufLen)  const 
+    int STranslatorMgr::tr(const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nBufLen)  const 
     {
-        if(strSrc.IsEmpty()) return 0;
+        if(strSrc->IsEmpty()) return 0;
         SPOSITION pos=m_lstLang->GetHeadPosition();
         while(pos)
         {
@@ -282,9 +283,9 @@ namespace SOUI
     }
 
 
-	void STranslatorMgr::SetLanguage(const IStringW & strLang)
+	void STranslatorMgr::SetLanguage(const IStringW * strLang)
 	{
-		if (strLang.Compare(m_szLangName)!=0)
+		if (strLang->Compare(m_szLangName)!=0)
 		{
 			SPOSITION pos = m_lstLang->GetHeadPosition();
 			while (pos)
@@ -294,7 +295,7 @@ namespace SOUI
 			}
 			m_lstLang->RemoveAll();
 		}
-		wcscpy_s(m_szLangName,TR_MAX_NAME_LEN, strLang.c_str());
+		wcscpy_s(m_szLangName,TR_MAX_NAME_LEN, strLang->c_str());
 	}
 
 	void STranslatorMgr::GetLanguage(wchar_t szName[TR_MAX_NAME_LEN]) const

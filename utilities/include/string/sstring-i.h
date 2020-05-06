@@ -6,17 +6,17 @@
 #define INTERFACE IStringA
 DECLARE_INTERFACE(IStringA)
 {
-	STDMETHOD_(int, GetLength)(THIS) FCONST PURE;
-	STDMETHOD_(bool, IsEmpty)(THIS) FCONST PURE;
+	STDMETHOD_(int, GetLength)(THIS) SCONST PURE;
+	STDMETHOD_(bool, IsEmpty)(THIS) SCONST PURE;
 	STDMETHOD_(void, Empty)(THIS) PURE;
 
-	STDMETHOD_(char, GetAt)(THIS_ int nIndex) FCONST PURE;
+	STDMETHOD_(char, GetAt)(THIS_ int nIndex) SCONST PURE;
 	STDMETHOD_(void, SetAt)(THIS_ int nIndex, char ch)PURE;
-	STDMETHOD_(const char *, c_str)(THIS) FCONST PURE;
+	STDMETHOD_(const char *, c_str)(THIS) SCONST PURE;
 
 	// string comparison
-	STDMETHOD_(int, Compare)(THIS_ const char* psz) FCONST PURE;
-	STDMETHOD_(int, CompareNoCase)(THIS_ const char* psz) FCONST PURE;
+	STDMETHOD_(int, Compare)(THIS_ const char* psz) SCONST PURE;
+	STDMETHOD_(int, CompareNoCase)(THIS_ const char* psz) SCONST PURE;
 
 	STDMETHOD_(void, TrimBlank)(THIS) PURE;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, char ch) PURE;
@@ -26,11 +26,11 @@ DECLARE_INTERFACE(IStringA)
 	STDMETHOD_(int, Replace)(THIS_ const char* pszOld, const char* pszNew)PURE;
 	STDMETHOD_(int, Remove)(THIS_ char chRemove)PURE;
 
-	STDMETHOD_(int, Find)(THIS_ char ch, int nStart) FCONST PURE;
-	STDMETHOD_(int, ReverseFind)(THIS_ char ch) FCONST PURE;
+	STDMETHOD_(int, Find)(THIS_ char ch, int nStart) SCONST PURE;
+	STDMETHOD_(int, ReverseFind)(THIS_ char ch) SCONST PURE;
 
 	// find a sub-string (like strstr)
-	STDMETHOD_(int, Find)(THIS_ const char* pszSub, int nStart) FCONST PURE;
+	STDMETHOD_(int, Find)(THIS_ const char* pszSub, int nStart) SCONST PURE;
 	// Access to string implementation buffer as "C" character array
 	STDMETHOD_(char*, GetBuffer)(THIS_ int nMinBufLength)PURE;
 	STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength)PURE;
@@ -44,17 +44,17 @@ DECLARE_INTERFACE(IStringA)
 #define INTERFACE IStringW
 DECLARE_INTERFACE(IStringW)
 {
-	STDMETHOD_(int, GetLength)(THIS) FCONST PURE;
-	STDMETHOD_(bool, IsEmpty)(THIS) FCONST PURE;
+	STDMETHOD_(int, GetLength)(THIS) SCONST PURE;
+	STDMETHOD_(bool, IsEmpty)(THIS) SCONST PURE;
 	STDMETHOD_(void, Empty)(THIS) PURE;
 
-	STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) FCONST PURE;
+	STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) SCONST PURE;
 	STDMETHOD_(void, SetAt)(THIS_ int nIndex, wchar_t ch)PURE;
-	STDMETHOD_(const wchar_t *, c_str)(THIS) FCONST PURE;
+	STDMETHOD_(const wchar_t *, c_str)(THIS) SCONST PURE;
 
 	// string comparison
-	STDMETHOD_(int, Compare)(THIS_ const wchar_t* psz) FCONST PURE;
-	STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) FCONST PURE;
+	STDMETHOD_(int, Compare)(THIS_ const wchar_t* psz) SCONST PURE;
+	STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) SCONST PURE;
 
 	STDMETHOD_(void, TrimBlank)(THIS) PURE;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, wchar_t ch) PURE;
@@ -64,11 +64,11 @@ DECLARE_INTERFACE(IStringW)
 	STDMETHOD_(int, Replace)(THIS_ const wchar_t* pszOld, const wchar_t* pszNew)PURE;
 	STDMETHOD_(int, Remove)(THIS_ wchar_t chRemove)PURE;
 
-	STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart) FCONST PURE;
-	STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) FCONST PURE;
+	STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart) SCONST PURE;
+	STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) SCONST PURE;
 
 	// find a sub-string (like strstr)
-	STDMETHOD_(int, Find)(THIS_ const wchar_t* pszSub, int nStart) FCONST PURE;
+	STDMETHOD_(int, Find)(THIS_ const wchar_t* pszSub, int nStart) SCONST PURE;
 	// Access to string implementation buffer as "C" character array
 	STDMETHOD_(wchar_t*, GetBuffer)(THIS_ int nMinBufLength)PURE;
 	STDMETHOD_(void ,ReleaseBuffer)(THIS_ int nNewLength)PURE;

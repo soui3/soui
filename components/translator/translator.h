@@ -38,14 +38,12 @@ namespace SOUI
         STranslator();
         ~STranslator();
 
-        virtual BOOL Load(LPVOID pData,UINT uType);
-
-        virtual void GetName(wchar_t szName[TR_MAX_NAME_LEN]);
-		virtual bool NameEqual(LPCWSTR pszName);
-
-        virtual GUID     guid();
-        virtual int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pszOut,int nBufLen) const ;
-		virtual void getFontInfo(IStringW *strFont) const;
+		STDMETHOD_(BOOL,Load)(THIS_ LPVOID pData,UINT uType);
+		STDMETHOD_(void, GetName)(THIS_ wchar_t szBuf[TR_MAX_NAME_LEN]);
+		STDMETHOD_( bool, NameEqual)(THIS_ LPCWSTR pszName);
+		STDMETHOD_(GUID,guid)(THIS);
+		STDMETHOD_(int,tr)(THIS_ const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nLen) SCONST;
+		STDMETHOD_(void,getFontInfo)(THIS_ IStringW * strFont) SCONST;
     protected:
         BOOL LoadFromXml(pugi::xml_node xmlLang);
 
@@ -61,16 +59,12 @@ namespace SOUI
         STranslatorMgr(void);
         ~STranslatorMgr(void);
 
-		virtual void SetLanguage(const IStringW & strLang);
-		virtual void GetLanguage(wchar_t szName[TR_MAX_NAME_LEN]) const;
-
-        BOOL CreateTranslator(ITranslator ** ppTranslator);
-
-		BOOL InstallTranslator(ITranslator *pTranslator);
-
-		BOOL UninstallTranslator(REFGUID id);
-
-		int tr(const IStringW & strSrc,const IStringW & strCtx,wchar_t *pBuf,int nLen)  const ;
+		STDMETHOD_(void ,SetLanguage)(THIS_ const IStringW * strLang);
+		STDMETHOD_(void,GetLanguage)(THIS_ wchar_t szOut[TR_MAX_NAME_LEN]) SCONST;
+        STDMETHOD_(BOOL,CreateTranslator)(THIS_ ITranslator ** ppTranslator);
+        STDMETHOD_(BOOL,InstallTranslator)(THIS_ ITranslator * ppTranslator);
+        STDMETHOD_(BOOL,UninstallTranslator)(THIS_ REFGUID id);
+        STDMETHOD_(int,tr)(THIS_ const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nLen) SCONST;
 
 	protected:
 
