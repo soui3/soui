@@ -152,6 +152,17 @@ namespace SOUI
         return m_uImgCount;
     }
 
+	IImgFrame * SImgX_WIC::GetFrame(UINT iFrame)
+	{
+		if(iFrame >= m_uImgCount) return NULL;
+		return m_pImgArray+iFrame;
+	}
+
+	UINT SImgX_WIC::GetFrameCount()
+	{
+		return m_uImgCount;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     SAutoRefPtr<IWICImagingFactory> SImgDecoderFactory_WIC::s_wicImgFactory;
 
@@ -176,7 +187,7 @@ namespace SOUI
     
     HRESULT SImgDecoderFactory_WIC::SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat)
     {
-        return E_FAIL;
+        return E_NOTIMPL;
     }
 
     LPCWSTR SImgDecoderFactory_WIC::GetDescription() const

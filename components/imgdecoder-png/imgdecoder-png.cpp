@@ -121,6 +121,12 @@ namespace SOUI
         return m_pngData?m_pngData->nFrames:0;
     }
 
+	IImgFrame * SImgX_PNG::GetFrame(UINT iFrame)
+	{
+		if(iFrame >= GetFrameCount()) return NULL;
+		return m_pImgArray+iFrame;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     //  SImgDecoderFactory_PNG
 

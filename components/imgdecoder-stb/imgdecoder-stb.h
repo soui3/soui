@@ -8,22 +8,21 @@
 #include <unknown/obj-ref-impl.hpp>
 #include <interface/SImgDecoder-i.h>
 
-namespace SOUI
-{
-    
+SNSBEGIN
+
     class SImgFrame_STB : public IImgFrame
     {
     public:
         SImgFrame_STB(BYTE *data,int w,int h);
         ~SImgFrame_STB();
 
-        virtual BOOL GetSize(UINT *pWid,UINT *pHei);
-        virtual BOOL CopyPixels( 
-            /* [unique][in] */ const RECT *prc,
-            /* [in] */ UINT cbStride,
-            /* [in] */ UINT cbBufferSize,
-            /* [size_is][out] */ BYTE *pbBuffer);
-        virtual int GetDelay(){return 0;}
+		STDMETHOD_(BOOL,GetSize)(THIS_ UINT *pWid,UINT *pHei) OVERRIDE;
+		STDMETHOD_(BOOL,CopyPixels)(THIS_ 
+			/* [unique][in] */ const RECT *prc,
+			/* [in] */ UINT cbStride,
+			/* [in] */ UINT cbBufferSize,
+			/* [size_is][out] */ BYTE *pbBuffer) OVERRIDE;
+		STDMETHOD_(int,GetDelay)(THIS) OVERRIDE {return 0;}
 
     protected:
         unsigned char * m_data;
@@ -34,16 +33,11 @@ namespace SOUI
     {
         friend class SImgDecoderFactory_STB;
     public:
-
-        int LoadFromMemory(void *pBuf,size_t bufLen);
-        int LoadFromFile(LPCWSTR pszFileName);
-        int LoadFromFile(LPCSTR pszFileName);
-
-        IImgFrame * GetFrame(UINT iFrame){
-            if(iFrame >= GetFrameCount()) return NULL;
-            return m_pImg;
-        }
-        virtual UINT GetFrameCount(){return m_pImg?1:0;}
+		STDMETHOD_(int,LoadFromMemory)(THIS_ void *pBuf,size_t bufLen) OVERRIDE;
+		STDMETHOD_(int,LoadFromFile)(THIS_ LPCWSTR pszFileName) OVERRIDE;
+		STDMETHOD_(int,LoadFromFile)(THIS_ LPCSTR pszFileName) OVERRIDE;
+		STDMETHOD_(UINT,GetFrameCount)(THIS) OVERRIDE;
+		STDMETHOD_(IImgFrame *, GetFrame)(THIS_ UINT iFrame) OVERRIDE;
     protected:
         SImgX_STB(BOOL bPremultiple);
         ~SImgX_STB(void);
@@ -62,8 +56,9 @@ namespace SOUI
         SImgDecoderFactory_STB();
         ~SImgDecoderFactory_STB();
         
-        virtual BOOL CreateImgX(IImgX **ppImgDecoder);
-        LPCWSTR GetDescription() const;
+		STDMETHOD_(BOOL,CreateImgX)(THIS_ IImgX **ppImgDecoder) OVERRIDE;
+		STDMETHOD_(HRESULT,SaveImage)(THIS_ IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) OVERRIDE;  
+		STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST OVERRIDE;
     };
     
     //////////////////////////////////////////////////////////////////////////
@@ -71,5 +66,5 @@ namespace SOUI
     {
         SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **pImgDecoderFactory);
     }
-}//end of namespace SOUI
 
+	SNSEND

@@ -202,8 +202,14 @@ namespace SOUI
         return m_nFrameCount;
     }
 
+	IImgFrame * SImgX_GDIP::GetFrame(UINT iFrame)
+	{
+		if(iFrame >= GetFrameCount()) return NULL;
+		return m_pImgArray+iFrame;
+	}
+
     //////////////////////////////////////////////////////////////////////////
-    //  SImgDecoderFactory_PNG
+    //  SImgDecoderFactory_GDIP
 
     SImgDecoderFactory_GDIP::SImgDecoderFactory_GDIP( )
     {

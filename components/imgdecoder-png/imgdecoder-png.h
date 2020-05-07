@@ -12,71 +12,65 @@
 
 struct APNGDATA;
 
-namespace SOUI
+SNSBEGIN
+
+class SImgFrame_PNG : public IImgFrame
 {
-    
-    class SImgFrame_PNG : public IImgFrame
-    {
-    public:
-        SImgFrame_PNG();
-        void Attach(const BYTE * pdata,int nWid,int nHei,int nDelay);
+public:
+	SImgFrame_PNG();
+	void Attach(const BYTE * pdata,int nWid,int nHei,int nDelay);
 
-        virtual BOOL GetSize(UINT *pWid,UINT *pHei);
-        virtual BOOL CopyPixels( 
-            /* [unique][in] */ const RECT *prc,
-            /* [in] */ UINT cbStride,
-            /* [in] */ UINT cbBufferSize,
-            /* [size_is][out] */ BYTE *pbBuffer);
-        virtual int GetDelay(){return m_nFrameDelay;}
-    protected:
-        int     m_nFrameDelay;
-        int     m_nWid, m_nHei;
-        const BYTE   *m_pdata;
-    };
-    
-    class SImgX_PNG : public TObjRefImpl<IImgX>
-    {
-        friend class SImgDecoderFactory_PNG;
-    public:
+	STDMETHOD_(BOOL,GetSize)(THIS_ UINT *pWid,UINT *pHei) OVERRIDE;
+	STDMETHOD_(BOOL,CopyPixels)(THIS_ 
+		/* [unique][in] */ const RECT *prc,
+		/* [in] */ UINT cbStride,
+		/* [in] */ UINT cbBufferSize,
+		/* [size_is][out] */ BYTE *pbBuffer) OVERRIDE;
+	STDMETHOD_(int,GetDelay)(THIS) OVERRIDE {return m_nFrameDelay;}
+protected:
+	int     m_nFrameDelay;
+	int     m_nWid, m_nHei;
+	const BYTE   *m_pdata;
+};
 
-        int LoadFromMemory(void *pBuf,size_t bufLen);
-        int LoadFromFile(LPCWSTR pszFileName);
-        int LoadFromFile(LPCSTR pszFileName);
+class SImgX_PNG : public TObjRefImpl<IImgX>
+{
+	friend class SImgDecoderFactory_PNG;
+public:
+	STDMETHOD_(int,LoadFromMemory)(THIS_ void *pBuf,size_t bufLen) OVERRIDE;
+	STDMETHOD_(int,LoadFromFile)(THIS_ LPCWSTR pszFileName) OVERRIDE;
+	STDMETHOD_(int,LoadFromFile)(THIS_ LPCSTR pszFileName) OVERRIDE;
+	STDMETHOD_(UINT,GetFrameCount)(THIS) OVERRIDE;
+	STDMETHOD_(IImgFrame *, GetFrame)(THIS_ UINT iFrame) OVERRIDE;
+protected:
+	SImgX_PNG(BOOL bPremultiplied);
+	~SImgX_PNG(void);
 
-        IImgFrame * GetFrame(UINT iFrame){
-            if(iFrame >= GetFrameCount()) return NULL;
-            return m_pImgArray+iFrame;
-        }
-        virtual UINT GetFrameCount();
-    protected:
-        SImgX_PNG(BOOL bPremultiplied);
-        ~SImgX_PNG(void);
-        
-        int _DoDecode(APNGDATA *pData);
+	int _DoDecode(APNGDATA *pData);
 
-        BOOL m_bPremultiplied;
-        
-        APNGDATA       *    m_pngData;
-        SImgFrame_PNG  *    m_pImgArray;
-    };
+	BOOL m_bPremultiplied;
 
-    #define DESC_IMGDECODER L"apng"
-    class SImgDecoderFactory_PNG : public TObjRefImpl<IImgDecoderFactory>
-    {
-    friend class SImgX_PNG;
-    public:
-        SImgDecoderFactory_PNG();
-        ~SImgDecoderFactory_PNG();
-        
-        virtual HRESULT SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat);
-        virtual BOOL CreateImgX(IImgX **ppImgDecoder);
-        LPCWSTR GetDescription() const;
-    };
-    
-    //////////////////////////////////////////////////////////////////////////
-    namespace IMGDECODOR_PNG
-    {
-        SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **pImgDecoderFactory);
-    }
-}//end of namespace SOUI
+	APNGDATA       *    m_pngData;
+	SImgFrame_PNG  *    m_pImgArray;
+};
 
+#define DESC_IMGDECODER L"apng"
+class SImgDecoderFactory_PNG : public TObjRefImpl<IImgDecoderFactory>
+{
+	friend class SImgX_PNG;
+public:
+	SImgDecoderFactory_PNG();
+	~SImgDecoderFactory_PNG();
+
+	STDMETHOD_(BOOL,CreateImgX)(THIS_ IImgX **ppImgDecoder) OVERRIDE;
+	STDMETHOD_(HRESULT,SaveImage)(THIS_ IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) OVERRIDE;  
+	STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST OVERRIDE;
+};
+
+//////////////////////////////////////////////////////////////////////////
+namespace IMGDECODOR_PNG
+{
+	SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **pImgDecoderFactory);
+}
+
+SNSEND

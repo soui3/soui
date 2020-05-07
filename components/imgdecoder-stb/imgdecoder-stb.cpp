@@ -115,6 +115,17 @@ namespace SOUI
         }    
     }
 
+	IImgFrame * SImgX_STB::GetFrame(UINT iFrame)
+	{
+		if(iFrame >= GetFrameCount()) return NULL;
+		return m_pImg;
+	}
+
+	UINT SImgX_STB::GetFrameCount()
+	{
+		return m_pImg?1:0;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     //  SImgDecoderFactory_STB
 
@@ -137,6 +148,12 @@ namespace SOUI
     {
         return DESC_IMGDECODER;
     }
+
+	HRESULT SImgDecoderFactory_STB::SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat)
+	{
+		return E_NOTIMPL;
+	}
+
 
     //////////////////////////////////////////////////////////////////////////
     BOOL IMGDECODOR_STB::SCreateInstance( IObjRef **pImgDecoderFactory )

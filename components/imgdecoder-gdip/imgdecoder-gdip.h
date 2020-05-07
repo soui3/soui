@@ -7,80 +7,75 @@
 
 namespace Gdiplus
 {
-    class Bitmap;
+	class Bitmap;
 }
 
-namespace SOUI
+SNSBEGIN
+
+class SImgFrame_GDIP : public IImgFrame
 {
+public:
+	SImgFrame_GDIP();
+	~SImgFrame_GDIP();
 
-    class SImgFrame_GDIP : public IImgFrame
-    {
-    public:
-        SImgFrame_GDIP();
-        ~SImgFrame_GDIP();
-        
-        void Attach(const BYTE * pdata,int nWid,int nHei,int nDelay);
+	void Attach(const BYTE * pdata,int nWid,int nHei,int nDelay);
 
-        virtual BOOL GetSize(UINT *pWid,UINT *pHei);
-        virtual BOOL CopyPixels( 
-             const RECT *prc,
-             UINT cbStride,
-             UINT cbBufferSize,
-             BYTE *pbBuffer);
-        virtual int GetDelay(){return m_nFrameDelay;}
-    protected:
-        int     m_nFrameDelay;
-        int     m_nWid, m_nHei;
-        BYTE   *m_pdata;
-    };
+	STDMETHOD_(BOOL,GetSize)(THIS_ UINT *pWid,UINT *pHei) OVERRIDE;
+	STDMETHOD_(BOOL,CopyPixels)(THIS_ 
+		/* [unique][in] */ const RECT *prc,
+		/* [in] */ UINT cbStride,
+		/* [in] */ UINT cbBufferSize,
+		/* [size_is][out] */ BYTE *pbBuffer) OVERRIDE;
+	STDMETHOD_(int,GetDelay)(THIS) OVERRIDE {return m_nFrameDelay;}
 
-    class SImgX_GDIP : public TObjRefImpl<IImgX>
-    {
-        friend class SImgDecoderFactory_GDIP;
-    public:
+protected:
+	int     m_nFrameDelay;
+	int     m_nWid, m_nHei;
+	BYTE   *m_pdata;
+};
 
-        int LoadFromMemory(void *pBuf,size_t bufLen);
-        int LoadFromFile(LPCWSTR pszFileName);
-        int LoadFromFile(LPCSTR pszFileName);
+class SImgX_GDIP : public TObjRefImpl<IImgX>
+{
+	friend class SImgDecoderFactory_GDIP;
+public:
+	STDMETHOD_(int,LoadFromMemory)(THIS_ void *pBuf,size_t bufLen) OVERRIDE;
+	STDMETHOD_(int,LoadFromFile)(THIS_ LPCWSTR pszFileName) OVERRIDE;
+	STDMETHOD_(int,LoadFromFile)(THIS_ LPCSTR pszFileName) OVERRIDE;
+	STDMETHOD_(UINT,GetFrameCount)(THIS) OVERRIDE;
+	STDMETHOD_(IImgFrame *, GetFrame)(THIS_ UINT iFrame) OVERRIDE;
+protected:
+	SImgX_GDIP(BOOL bPremultiplied);
+	~SImgX_GDIP(void);
 
-        IImgFrame * GetFrame(UINT iFrame){
-            if(iFrame >= GetFrameCount()) return NULL;
-            return m_pImgArray+iFrame;
-        }
-        virtual UINT GetFrameCount();
-    protected:
-        SImgX_GDIP(BOOL bPremultiplied);
-        ~SImgX_GDIP(void);
-        
-        int _InitFromGdipBitmap(Gdiplus::Bitmap * pSrcBmp);
-        
-        BOOL m_bPremultiplied;
-        
-        int                  m_nFrameCount;
-        SImgFrame_GDIP  *    m_pImgArray;
-    };
+	int _InitFromGdipBitmap(Gdiplus::Bitmap * pSrcBmp);
 
-    #define DESC_IMGDECODER L"gdi+"
-    class SImgDecoderFactory_GDIP : public TObjRefImpl<IImgDecoderFactory>
-    {
-        friend class SImgX_GDIP;
-    public:
-        SImgDecoderFactory_GDIP();
-        ~SImgDecoderFactory_GDIP();
+	BOOL m_bPremultiplied;
 
-        virtual BOOL CreateImgX(IImgX **ppImgDecoder);
-        virtual HRESULT SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat);
-        virtual LPCWSTR GetDescription() const;
-    protected:
-    
-        
-        ULONG_PTR _gdiPlusToken;
-    };
+	int                  m_nFrameCount;
+	SImgFrame_GDIP  *    m_pImgArray;
+};
 
-    //////////////////////////////////////////////////////////////////////////
-    namespace IMGDECODOR_GDIP
-    {
-        SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **pImgDecoderFactory);
-    }
-}//end of namespace SOUI
+#define DESC_IMGDECODER L"gdi+"
+class SImgDecoderFactory_GDIP : public TObjRefImpl<IImgDecoderFactory>
+{
+	friend class SImgX_GDIP;
+public:
+	SImgDecoderFactory_GDIP();
+	~SImgDecoderFactory_GDIP();
 
+	STDMETHOD_(BOOL,CreateImgX)(THIS_ IImgX **ppImgDecoder) OVERRIDE;
+	STDMETHOD_(HRESULT,SaveImage)(THIS_ IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) OVERRIDE;  
+	STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST OVERRIDE;
+protected:
+
+
+	ULONG_PTR _gdiPlusToken;
+};
+
+//////////////////////////////////////////////////////////////////////////
+namespace IMGDECODOR_GDIP
+{
+	SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef **pImgDecoderFactory);
+}
+
+SNSEND
