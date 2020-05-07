@@ -5404,6 +5404,16 @@ namespace pugi
 		return _attr?_attr->userdata:0;
 	}
 
+	PUGI__FN void xml_attribute::Assign(const SOUI::IXmlAttr * pAttr)
+	{
+		_attr = (xml_attribute_struct*)pAttr->Data();
+	}
+
+	PUGI__FN LPVOID xml_attribute::Data() const
+	{
+		return _attr;
+	}
+
 	PUGI__FN xml_attribute_struct* xml_attribute::internal_object() const
 	{
 		return _attr;
@@ -5681,6 +5691,16 @@ namespace pugi
 	PUGI__FN const char_t* xml_node::value() const
 	{
 		return (_root && _root->value) ? _root->value + 0 : PUGIXML_TEXT("");
+	}
+
+	PUGI__FN void xml_node::Assign(const SOUI::IXmlNode * pNode)
+	{
+		_root = (xml_node_struct*)pNode->Data();
+	}
+
+	PUGI__FN LPVOID xml_node::Data() const
+	{
+		return _root;
 	}
 
 	PUGI__FN bool xml_node::set_userdata(int data)
