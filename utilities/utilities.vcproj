@@ -360,7 +360,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\string\sstring-i.h"
+				RelativePath=".\include\interface\sstring-i.h"
 				>
 			</File>
 			<File
@@ -377,6 +377,10 @@
 			</File>
 			<File
 				RelativePath="include\string\strcpcvt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\interface\sxml-i.h"
 				>
 			</File>
 			<File

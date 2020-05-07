@@ -14,7 +14,7 @@
 #pragma once
 
 #include <unknown/obj-ref-i.h>
-#include <string/sstring-i.h>
+#include <interface/sstring-i.h>
 
 SNSBEGIN
 

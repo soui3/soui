@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <souicoll.h>
 #include <string/tstring.h>
+#include <interface/sxml-i.h>
 
 // Include exception header for XPath
 #if !defined(PUGIXML_NO_XPATH) && !defined(PUGIXML_NO_EXCEPTIONS)
@@ -374,7 +375,7 @@ namespace pugi
 	#endif
 
 	// A light-weight handle for manipulating attributes in DOM tree
-	class PUGIXML_CLASS xml_attribute
+	class PUGIXML_CLASS xml_attribute : public SOUI::IXmlAttr
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node;
@@ -485,7 +486,7 @@ namespace pugi
 #endif
 
 	// A light-weight handle for manipulating nodes in DOM tree
-	class PUGIXML_CLASS xml_node
+	class PUGIXML_CLASS xml_node : public SOUI::IXmlNode
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node_iterator;
@@ -1054,7 +1055,7 @@ namespace pugi
 	};
 
 	// Document class (DOM tree root)
-	class PUGIXML_CLASS xml_document: public xml_node
+	class PUGIXML_CLASS xml_document: public xml_node, public SOUI::IXmlDoc
 	{
 	private:
 		char_t* _buffer;

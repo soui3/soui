@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <utilities-def.h>
 #include <string/sstringdata.h>
-#include <string/sstring-i.h>
+#include <interface/sstring-i.h>
 
 SNSBEGIN
 

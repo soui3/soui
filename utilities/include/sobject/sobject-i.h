@@ -237,7 +237,7 @@ struct UTILITIES_API IObject
 	}
 };
 
-//#ifdef _cplusplus
+#ifdef __cplusplus
 /**
 * sobj_cast
 * @brief    SOUI Object 的类型安全的类型转换接口
@@ -256,6 +256,6 @@ T * sobj_cast(const IObject *pObj)
 	else
 		return NULL;
 }
-//#endif
+#endif
 
 SNSEND
