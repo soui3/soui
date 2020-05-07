@@ -60,10 +60,6 @@ protected:
     SLayoutSize m_nItemHeight;     //item高
     SLayoutSize m_nTileViewWidth;  //TileView宽度（用于计算m_nCountInRow）
     SLayoutSize m_nItemMargin;     //块间距
-    //int m_nItemWidth;      //item宽
-    //int m_nItemHeight;     //item高
-    //int m_nTileViewWidth;  //TileView宽度（用于计算m_nCountInRow）
-    //int m_nItemMargin;     //块间距
     int m_nCountInRow;     //每行的item个数
     
     SAutoRefPtr<ILvAdapter> m_adapter;

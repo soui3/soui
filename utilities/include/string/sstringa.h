@@ -41,6 +41,7 @@ public:
 	// Constructors
 	SStringA();
 	SStringA(const SStringA& stringSrc);
+	SStringA(const IStringA* stringSrc);
 	SStringA(char ch, int nLength = 1);
 	SStringA(const char* psz, int nLength);
 	SStringA(const char* psz);
@@ -78,6 +79,9 @@ public:
 	STDMETHOD_(char* ,GetBufferSetLength)(THIS_ int nNewLength);
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength);
 	STDMETHOD_(void ,Copy)(THIS_ const IStringA * src);
+	STDMETHOD_(void ,Assign)(THIS_ LPCSTR src) ;
+	STDMETHOD_(void ,Assign2)(THIS_ LPCSTR src,int nLen) ;
+	STDMETHOD_(LPVOID ,GetPrivData)(THIS) SCONST;
 
 	// simple sub-string extraction
 	SStringA Mid(int nFirst) const;
@@ -263,6 +267,7 @@ protected:
 	// implementation helpers
 	TStringData* GetData() const;
 	void Init();
+	void InitFromIString(const IStringA *stringSrc);
 
 	BOOL _Format(const char* pszFormat, va_list args);
 

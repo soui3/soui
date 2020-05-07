@@ -20,7 +20,7 @@
 // Attribute Declaration
 #define SOUI_ATTRS_BEGIN()                                       \
 public:                                                          \
-    virtual HRESULT SetAttribute(                                \
+    virtual HRESULT SetAttribute(                        \
     const SOUI::SStringW & strAttribName,                        \
     const SOUI::SStringW &  strValue,                            \
     BOOL     bLoading=FALSE)                                     \
@@ -35,7 +35,7 @@ public:                                                          \
 						strValue,                               \
 						bLoading                                \
 						);                                      \
-    return AfterAttribute(strAttribName,strValue,bLoading,hRet);\
+    return AfterAttribute(&strAttribName,&strValue,bLoading,hRet);\
     }                                                           \
     
 
@@ -54,7 +54,7 @@ public:                                                          \
         else                                                        \
 
 #define ATTR_CHAIN_PTR(varname,flag)                               \
-	if (FAILED(hRet) && varname!= NULL && SUCCEEDED(hRet = varname->SetAttribute(strAttribName, strValue, bLoading)))   \
+	if (FAILED(hRet) && varname!= NULL && SUCCEEDED(hRet = varname->SetAttributeW(&strAttribName, &strValue, bLoading)))   \
 		{                                                           \
 			hRet |= flag;											\
 		}                                                           \

@@ -15,10 +15,11 @@
 #pragma once
 #include <utilities-def.h>
 
-#include <string/tstring.h>
-#include <pugixml/pugixml.hpp>
-#include <string/strcpcvt.h>
+#include <unknown/obj-ref-i.h>
+#include <interface/sstring-i.h>
 
+#include <pugixml/pugixml.hpp>
+#pragma warning(disable:4275)
 //////////////////////////////////////////////////////////////////////////
 SNSBEGIN
 
@@ -26,42 +27,42 @@ SNSBEGIN
 #define SOUI_CLASS_NAME_EX(theclass, classname,clsType) \
 public:                                                 \
 	static LPCWSTR GetClassName()                       \
-{                                                   \
-	return classname;                               \
-}                                                   \
+	{                                                   \
+		return classname;                               \
+	}                                                   \
 	\
 	static int GetClassType()                           \
-{                                                   \
-	int ret = clsType;                              \
-	if(ret == SOUI::Undef)                                \
-	ret = __super::GetClassType();              \
-	return ret;                                     \
-}                                                   \
+	{                                                   \
+		int ret = clsType;                              \
+		if(ret == SOUI::Undef)                          \
+			ret = __super::GetClassType();              \
+		return ret;                                     \
+	}                                                   \
 	\
 	static LPCWSTR BaseClassName()                      \
-{                                                   \
-	return __super::GetClassName();                 \
-}                                                   \
+	{                                                   \
+		return __super::GetClassName();                 \
+	}                                                   \
 	\
-	virtual LPCWSTR GetObjectClass()  const             \
-{                                                   \
-	return classname;                               \
-}                                                   \
+	virtual LPCWSTR WINAPI GetObjectClass()  const             \
+	{                                                   \
+		return classname;                               \
+	}                                                   \
 	\
-	virtual int GetObjectType()  const                  \
-{                                                   \
-	int ret = clsType;                              \
-	if(ret == SOUI::Undef)                          \
-	ret = __super::GetObjectType();             \
-	return ret;                                     \
-}                                                   \
+	virtual int WINAPI GetObjectType()  const                  \
+	{                                                   \
+		int ret = clsType;                              \
+		if(ret == SOUI::Undef)                          \
+			ret = __super::GetObjectType();             \
+		return ret;                                     \
+	}                                                   \
 	\
-	virtual BOOL IsClass(LPCWSTR lpszName) const        \
-{                                                   \
-	if(wcscmp(GetClassName(), lpszName)  == 0)      \
-	return TRUE;                                \
-	return __super::IsClass(lpszName);              \
-}                                                   \
+	virtual BOOL WINAPI IsClass(LPCWSTR lpszName) const        \
+	{                                                   \
+		if(wcscmp(GetClassName(), lpszName)  == 0)      \
+			return TRUE;                                \
+		return __super::IsClass(lpszName);              \
+	}                                                   \
 
 
 #define SOUI_CLASS_NAME(theclass, classname) \
@@ -73,8 +74,11 @@ public:                                                 \
 * 
 * Describe    提供类RTTI机制，实现从XML节点中给派生类对象设置属性
 */
-struct UTILITIES_API IObject
+#undef INTERFACE
+#define INTERFACE IObject
+DECLARE_INTERFACE_(IObject,IObjRef)
 {
+#ifdef __cplusplus
 	/**
 	* GetClassName
 	* @brief    获得对象类型名称
@@ -90,9 +94,22 @@ struct UTILITIES_API IObject
 	* Describe  静态函数
 	*/
 	static int     GetClassType() { return 0; }
+#endif
 
-	virtual ~IObject(){}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
 
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
 	/**
 	* IsClass
@@ -101,7 +118,7 @@ struct UTILITIES_API IObject
 	* @return   BOOL -- true是测试类型
 	* Describe  
 	*/    
-	virtual BOOL IsClass(LPCWSTR lpszName) const = 0;
+	STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST PURE;
 
 	/**
 	* GetObjectClass
@@ -109,7 +126,7 @@ struct UTILITIES_API IObject
 	* @return   LPCWSTR -- 类型名
 	* Describe  这是一个虚函数，注意与GetClassName的区别。
 	*/    
-	virtual LPCWSTR GetObjectClass() const = 0;
+	STDMETHOD_(LPCWSTR,GetObjectClass)(THIS_) SCONST PURE;
 
 	/**
 	* GetObjectType
@@ -117,32 +134,41 @@ struct UTILITIES_API IObject
 	* @return   int -- 对象类型
 	* Describe  这是一个虚函数，注意与GetClassType的区别。
 	*/    
-	virtual int GetObjectType()  const = 0;
+	STDMETHOD_(int,GetObjectType)(THIS)  SCONST PURE;
 
-
-	virtual HRESULT SetAttribute(const char*  strAttribName, const char*  strValue, BOOL bLoading) = 0;
 
 	/**
-	* SetAttribute
+	* SetAttributeA
 	* @brief    设置一个对象属性
-	* @param    const SStringA & strAttribName --  属性名
-	* @param    const SStringA & strValue --  属性值
+	* @param    const IStringA * strAttribName --  属性名
+	* @param    const IStringA * strValue --  属性值
 	* @param    BOOL bLoading --  对象创建时由系统调用标志
 	* @return   HRESULT -- 处理处理结果
 	* Describe  
 	*/    
-	virtual HRESULT SetAttribute(const SStringA &  strAttribName, const SStringA &  strValue, BOOL bLoading) = 0;
+	STDMETHOD_(HRESULT,SetAttributeA)(THIS_ const IStringA * strAttribName, const IStringA *  strValue, BOOL bLoading) PURE;
 
 	/**
-	* SetAttribute
+	* SetAttributeW
 	* @brief    设置一个对象属性
-	* @param    const SStringA & strAttribName --  属性名
-	* @param    const SStringA & strValue --  属性值
+	* @param    const IStringA *strAttribName --  属性名
+	* @param    const IStringA *strValue --  属性值
 	* @param    BOOL bLoading --  对象创建时由系统调用标志
 	* @return   HRESULT -- 处理处理结果
 	* Describe  
 	*/    
-	virtual HRESULT SetAttribute(const SStringW &  strAttribName, const SStringW &  strValue, BOOL bLoading) = 0;
+	STDMETHOD_(HRESULT,SetAttributeW)(THIS_ const IStringW *  strAttribName, const IStringW *  strValue, BOOL bLoading) PURE;
+
+	/**
+	* SetAttribute
+	* @brief    设置一个对象属性
+	* @param    LPCWSTR pszAttr --  属性名
+	* @param    LPCWSTR pszValue --  属性值
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @return   HRESULT -- 处理处理结果
+	* Describe  
+	*/    
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
 
 	/**
 	* OnAttribute
@@ -153,7 +179,7 @@ struct UTILITIES_API IObject
 	* @param    HRESULT hr --  属性处理结果
 	* Describe  不做处理，直接返回
 	*/    
-	virtual HRESULT AfterAttribute(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading,HRESULT hr) = 0;
+	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
 
 	/**
 	* GetID
@@ -161,7 +187,7 @@ struct UTILITIES_API IObject
 	* @return   int -- 对象ID
 	* Describe  
 	*/    
-	virtual int GetID() const = 0;
+	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
 
 	/**
 	* GetName
@@ -169,7 +195,7 @@ struct UTILITIES_API IObject
 	* @return   LPCWSTR -- 对象Name
 	* Describe  
 	*/    
-	virtual LPCWSTR GetName() const = 0;
+	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
 
 	/**
 	* InitFromXml
@@ -178,7 +204,7 @@ struct UTILITIES_API IObject
 	* @return   BOOL -- 成功返回TRUE
 	* Describe  
 	*/    
-	virtual BOOL InitFromXml( pugi::xml_node xmlNode ) = 0;
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ pugi::xml_node xmlNode ) PURE;
 
 
 	/**
@@ -190,7 +216,7 @@ struct UTILITIES_API IObject
 	* @return   HRESULT -- S_OK:刷新UI， S_FALSE:成功但不刷新UI，其它：失败
 	* Describe  在SetAttribute中没有处理一个属性时转到本方法处理。
 	*/  
-	virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading) = 0;
+	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
 	/**
 	* OnInitFinished
@@ -199,16 +225,17 @@ struct UTILITIES_API IObject
 	* @return   void
 	* Describe  
 	*/    
-	virtual void OnInitFinished(pugi::xml_node xmlNode) = 0;
+	STDMETHOD_(void,OnInitFinished)(THIS_ pugi::xml_node xmlNode) PURE;
 
 	/**
 	* GetAttribute
 	* @brief    通过属性名查询属性值
 	* @param    const SStringW & strAttr --  属性名
-	* @return   SStringW -- 属性值
+	* @param    IStringW * pValue -- 属性值
+	* @return   BOOL, TRUE:获取成功，FALSE:获取失败，属性不存在
 	* Describe  默认返回空
 	*/    
-	virtual SStringW GetAttribute(const SStringW & strAttr) const = 0;
+	STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST PURE;
 
 
 	/**
@@ -218,10 +245,7 @@ struct UTILITIES_API IObject
 	* @return   void
 	* Describe  
 	*/
-	static void MarkAttributeHandled(pugi::xml_attribute xmlAttr, bool bHandled)
-	{
-		xmlAttr.set_userdata(bHandled?1:0);
-	}
+	STDMETHOD_(void,MarkAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr, bool bHandled) PURE;
 
 
 	/**
@@ -231,13 +255,10 @@ struct UTILITIES_API IObject
 	* @return   bool true-已经处理过
 	* Describe  
 	*/
-	static bool IsAttributeHandled(pugi::xml_attribute xmlAttr)
-	{
-		return xmlAttr.get_userdata()!=0;
-	}
+	STDMETHOD_(bool,IsAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr) PURE;
 };
 
-#ifdef __cplusplus
+extern "C++"{
 /**
 * sobj_cast
 * @brief    SOUI Object 的类型安全的类型转换接口
@@ -256,6 +277,7 @@ T * sobj_cast(const IObject *pObj)
 	else
 		return NULL;
 }
-#endif
+
+}
 
 SNSEND

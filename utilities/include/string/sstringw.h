@@ -39,6 +39,7 @@ public:
 	typedef wchar_traits _tchar_traits;
 	// Constructors
 	SStringW();
+	SStringW(const IStringW * stringSrc);
 	SStringW(const SStringW& stringSrc);
 	SStringW(wchar_t ch, int nLength = 1);
 	SStringW(const wchar_t* psz, int nLength);
@@ -77,6 +78,9 @@ public:
 	STDMETHOD_(wchar_t* ,GetBufferSetLength)(THIS_ int nNewLength);
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength);
 	STDMETHOD_(void ,Copy)(THIS_ const IStringW * src);
+	STDMETHOD_(void ,Assign)(THIS_ LPCWSTR src);
+	STDMETHOD_(void ,Assign2)(THIS_ LPCWSTR src,int nLen);
+	STDMETHOD_(LPVOID,GetPrivData)(THIS) SCONST;
 
 
 	// simple sub-string extraction
@@ -263,6 +267,7 @@ protected:
 	// implementation helpers
 	TStringData* GetData() const;
 	void Init();
+	void InitFromIString(const IStringW *src);
 
 	BOOL _Format(const wchar_t* pszFormat, va_list args);
 

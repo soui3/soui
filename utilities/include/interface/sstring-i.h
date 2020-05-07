@@ -38,6 +38,9 @@ DECLARE_INTERFACE(IStringA)
 	STDMETHOD_(char* ,GetBufferSetLength)(THIS_ int nNewLength)PURE;
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength)PURE;
 	STDMETHOD_(void ,Copy)(THIS_ const IStringA * src) PURE;
+	STDMETHOD_(void ,Assign)(THIS_ LPCSTR src) PURE;
+	STDMETHOD_(void ,Assign2)(THIS_ LPCSTR src,int nLen) PURE;
+	STDMETHOD_(LPVOID,GetPrivData)(THIS) SCONST PURE;
 };
 
 
@@ -76,6 +79,9 @@ DECLARE_INTERFACE(IStringW)
 	STDMETHOD_(wchar_t* ,GetBufferSetLength)(THIS_ int nNewLength)PURE;
 	STDMETHOD_(void ,SetLength)(THIS_ int nLength) PURE;
 	STDMETHOD_(void ,Copy)(THIS_ const IStringW * src) PURE;
+	STDMETHOD_(void ,Assign)(THIS_ LPCWSTR src) PURE;
+	STDMETHOD_(void ,Assign2)(THIS_ LPCWSTR src,int nLen) PURE;
+	STDMETHOD_(LPVOID,GetPrivData)(THIS) SCONST PURE;
 };
 
 SNSEND

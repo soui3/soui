@@ -559,12 +559,12 @@ namespace SOUI{
 
 		}
 
-		LPCWSTR GetName() const
+		LPCWSTR WINAPI GetName() const
 		{
 			return mName;
 		}
 
-		int GetID() const
+		int WINAPI GetID() const
 		{
 			return mID;
 		}

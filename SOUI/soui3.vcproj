@@ -982,6 +982,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\sobject-i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\sobject\Sobject.hpp"
+				>
+			</File>
+			<File
 				RelativePath="include\core\SObjectFactory.h"
 				>
 			</File>

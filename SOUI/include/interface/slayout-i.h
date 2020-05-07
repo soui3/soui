@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <sobject/sobject-i.h>
+#include <interface/sobject-i.h>
 
 namespace SOUI{
     class SWindow;
@@ -21,7 +21,7 @@ namespace SOUI{
 		SIZE_SPEC = 0,
 	};
 
-    struct ILayoutParam :IObjRef, IObject
+    struct ILayoutParam : IObject
     {
 		virtual void Clear() = 0;
         virtual bool IsMatchParent(ORIENTATION orientation) const = 0;
@@ -35,7 +35,7 @@ namespace SOUI{
 		virtual ILayoutParam * Clone() const = 0;
     };
 
-    struct SOUI_EXP ILayout : IObject , IObjRef{
+    struct SOUI_EXP ILayout : IObject {
 		virtual bool IsParamAcceptable(ILayoutParam *pLayoutParam) const = 0;
         virtual void LayoutChildren(SWindow * pParent) = 0;
         virtual ILayoutParam * CreateLayoutParam() const = 0;

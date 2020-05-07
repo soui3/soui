@@ -11,7 +11,7 @@ namespace SOUI
 #define CX_ICON    16        //支持的图标的宽度
 #define CY_ICON    16        //支持的图标的高度
 
-class SMenuAttr:public SObject, public TObjRefImpl<IObjRef>
+class SMenuAttr: public TObjRefImpl<SObject>
 {
     friend class SMenu;
 	friend class SMenuODWnd;
@@ -50,7 +50,7 @@ protected:
 
 	SAutoRefPtr<IFont> GetFontPtr();
 protected:
-	virtual void OnInitFinished(pugi::xml_node xmlNode);
+	virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
 
     ISkinObj			*m_pItemSkin;    //菜单项皮肤，包含2种状态：正常状态+选中状态
     ISkinObj			*m_pIconSkin;    //菜单图标

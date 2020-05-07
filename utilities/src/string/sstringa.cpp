@@ -422,6 +422,21 @@ void SStringA::Copy(const IStringA *pSrc)
 	AssignCopy(pSrc->GetLength(),pSrc->c_str());
 }
 
+void SStringA::Assign(LPCSTR src)
+{
+	AssignCopy(strlen(src),src);
+}
+
+void SStringA::Assign2(LPCSTR src,int nLen)
+{
+	AssignCopy(nLen,src);
+}
+
+LPVOID SStringA::GetPrivData() SCONST
+{
+	return GetData();
+}
+
 char* SStringA::GetBufferSetLength(int nNewLength)
 {
 	SASSERT(nNewLength >= 0);
@@ -1117,20 +1132,32 @@ SStringA::SStringA(char ch, int nLength /*= 1*/)
 	}
 }
 
-SStringA::SStringA(const SStringA& stringSrc)
+
+void SStringA::InitFromIString(const IStringA *stringSrc)
 {
-	SASSERT(stringSrc.GetData()->nRefs != 0);
-	if (stringSrc.GetData()->nRefs >= 0)
+	TStringData *pData = (TStringData*)stringSrc->GetPrivData();
+	SASSERT(pData->nRefs != 0);
+	if (pData->nRefs >= 0)
 	{
-		SASSERT(stringSrc.GetData() != TStringData::InitDataNil());
-		m_pszData = stringSrc.m_pszData;
+		SASSERT(pData != TStringData::InitDataNil());
+		m_pszData = (char*)pData->data();
 		GetData()->AddRef();
 	}
 	else
 	{
 		Init();
-		*this = stringSrc.m_pszData;
+		m_pszData = (char*)pData->data();
 	}
+}
+
+SStringA::SStringA(const IStringA * stringSrc)
+{
+	InitFromIString(stringSrc);
+}
+
+SStringA::SStringA(const SStringA& stringSrc)
+{
+	InitFromIString(&stringSrc);
 }
 
 SStringA::SStringA()

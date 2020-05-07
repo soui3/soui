@@ -27,14 +27,4 @@
 #define SOUI_COM_C  EXTERN_C
 #endif//LIB_SOUI_COM
 
-#ifdef __cplusplus
-#define SCONST const
-#define SNSBEGIN	namespace SOUI{
-#define SNSEND		}//end of namespace SOUI
-#define OVERRIDE override
-#else
-#define SCONST
-#define SNSBEGIN
-#define SNSEND
-#define OVERRIDE
-#endif
+#include <sdef.h>

@@ -815,7 +815,7 @@ namespace SOUI
 			pugi::xml_attribute attrLayout=xmlNode.attribute(L"layout");
 			if(attrLayout)
 			{
-				IObject::MarkAttributeHandled(attrLayout,true);
+				MarkAttributeHandled(attrLayout,true);
 				SetAttribute(attrLayout.name(), attrLayout.value(), TRUE);
 			}
 
@@ -823,14 +823,14 @@ namespace SOUI
 			pugi::xml_attribute attrClass=xmlNode.attribute(L"class");
 			if(attrClass)
 			{
-				IObject::MarkAttributeHandled(attrClass,true);
+				MarkAttributeHandled(attrClass,true);
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
 			SObject::InitFromXml(xmlNode);
 
-			IObject::MarkAttributeHandled(attrClass,false);
-			IObject::MarkAttributeHandled(attrLayout,false);
+			MarkAttributeHandled(attrClass,false);
+			MarkAttributeHandled(attrLayout,false);
 
 			SStringW strText = xmlNode.text().get();
 			strText.TrimBlank();
@@ -2511,15 +2511,15 @@ namespace SOUI
 			if(attrLayout)
 			{
 				SetAttribute(attrLayout.name(),attrLayout.value(),bLoading);
-				IObject::MarkAttributeHandled(attrLayout,true);
+				MarkAttributeHandled(attrLayout,true);
 			}
 			for(pugi::xml_attribute attr=xmlStyle.first_attribute();attr;attr =attr.next_attribute())
 			{//解析style中的属性
-				if(wcsicmp(attr.name(),L"class")==0 || IObject::IsAttributeHandled(attr)) 
+				if(wcsicmp(attr.name(),L"class")==0 || IsAttributeHandled(attr)) 
 					continue;//防止class中包含有其它class属性,避免发生死循环
 				SetAttribute(attr.name(),attr.value(),bLoading);
 			}
-			IObject::MarkAttributeHandled(attrLayout,false);
+			MarkAttributeHandled(attrLayout,false);
 		}
 		return S_FALSE;
 	}
@@ -2772,7 +2772,7 @@ namespace SOUI
 		}
 		if(m_attrStorage)
 		{
-			m_attrStorage->OnSetAttribute(strAttribName,strValue,false);
+			m_attrStorage->OnSetAttribute(&strAttribName,&strValue,false);
 		}
 
 		return hr;
@@ -2909,7 +2909,7 @@ namespace SOUI
 	{
 		if(m_attrStorage)
 		{
-			m_attrStorage->OnSetAttribute(strAttribName,strValue,true);
+			m_attrStorage->OnSetAttribute(&strAttribName,&strValue,true);
 		}
 		if((hr&0x0000ffff) == S_OK && !bLoading)
 		{
@@ -2932,14 +2932,14 @@ namespace SOUI
 		return hr;
 	}
 
-	SStringW SWindow::GetAttribute(const SStringW & strAttr) const
+	BOOL SWindow::GetAttribute(const IStringW * strAttr,IStringW * strValue) const
 	{
 		if(m_attrStorage)
 		{
-			return m_attrStorage->OnGetAttribute(strAttr);
+			return m_attrStorage->OnGetAttribute(strAttr,strValue);
 		}else
 		{
-			return SObject::GetAttribute(strAttr);
+			return SObject::GetAttribute(strAttr,strValue);
 		}
 	}
 

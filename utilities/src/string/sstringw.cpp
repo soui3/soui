@@ -1035,6 +1035,23 @@ void SStringW::Copy(const IStringW *pSrc)
 	AssignCopy(pSrc->GetLength(),pSrc->c_str());
 }
 
+void SStringW::Assign(LPCWSTR src)
+{
+	AssignCopy(wcslen(src),src);
+}
+
+void SStringW::Assign2(LPCWSTR src,int nLen)
+{
+	AssignCopy(nLen,src);
+}
+
+LPVOID SStringW::GetPrivData() SCONST
+{
+	return GetData();
+}
+
+
+
 SStringW::~SStringW()
 {
 	//  free any attached data
@@ -1078,20 +1095,32 @@ SStringW::SStringW(wchar_t ch, int nLength /*= 1*/)
 	}
 }
 
-SStringW::SStringW(const SStringW& stringSrc)
+
+void SStringW::InitFromIString(const IStringW *src)
 {
-	SASSERT(stringSrc.GetData()->nRefs != 0);
-	if (stringSrc.GetData()->nRefs >= 0)
+	TStringData *pData = (TStringData*)src->GetPrivData();
+	SASSERT(pData->nRefs != 0);
+	if (pData->nRefs >= 0)
 	{
-		SASSERT(stringSrc.GetData() != TStringData::InitDataNil());
-		m_pszData = stringSrc.m_pszData;
+		SASSERT(pData != TStringData::InitDataNil());
+		m_pszData = (wchar_t*)pData->data();
 		GetData()->AddRef();
 	}
 	else
 	{
 		Init();
-		*this = stringSrc.m_pszData;
+		m_pszData = (wchar_t*)pData->data();
 	}
+}
+
+SStringW::SStringW(const IStringW * stringSrc)
+{
+	InitFromIString(stringSrc);
+}
+
+SStringW::SStringW(const SStringW& stringSrc)
+{
+	InitFromIString(&stringSrc);
 }
 
 SStringW::SStringW()

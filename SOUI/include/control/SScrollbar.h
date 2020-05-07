@@ -121,7 +121,7 @@ protected:
      *
      * Describe  初始化
      */
-    virtual void OnInitFinished(pugi::xml_node xmlNode);
+    virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
 
     /**
      * SScrollBar::NotifySbCode

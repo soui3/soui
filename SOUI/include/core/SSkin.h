@@ -318,7 +318,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 	SOUI_CLASS_NAME(SSkinShape,L"shape")
 	enum Shape {rectangle,oval,ring};
 
-	class SGradient : public SObject , public TObjRefImpl<IObjRef>
+	class SGradient : public TObjRefImpl<SObject>
 	{
 		SOUI_CLASS_NAME(SGradient,L"gradient")
 	public:
@@ -353,7 +353,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		SLayoutSize m_radius;//渐变的半径，只有当渐变类型为radial时才能使用  
 	};
 
-	class SStroke : public SObject, public TObjRefImpl<IObjRef>
+	class SStroke : public TObjRefImpl<SObject>
 	{
 		SOUI_CLASS_NAME(SStroke,L"stroke")
 	public:
@@ -376,7 +376,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		int			m_style; //线型
 	};
 
-	class SCornerSize : public SObject, public TObjRefImpl<IObjRef>
+	class SCornerSize : public TObjRefImpl<SObject>
 	{
 		SOUI_CLASS_NAME(SCornerSize,L"corners")
 
@@ -400,7 +400,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		SLayoutSize m_radiusX,m_radiusY;
 	};
 
-	class SShapeSize : public SObject, public TObjRefImpl<IObjRef>
+	class SShapeSize :  public TObjRefImpl<SObject>
 	{
 		SOUI_CLASS_NAME(SShapeSize,L"size")
 
@@ -414,7 +414,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		SLayoutSize m_width,m_height;
 	};
 
-	class SShapeRing : public SObject, public TObjRefImpl<IObjRef>
+	class SShapeRing : public TObjRefImpl<SObject>
 	{
 		SOUI_CLASS_NAME(SShapeRing, L"ring")
 
@@ -448,7 +448,7 @@ public:
 		ATTR_ENUM_END(m_shape)
 	SOUI_ATTRS_END()
 protected:
-	void OnInitFinished(pugi::xml_node xmlNode);
+	void WINAPI OnInitFinished(pugi::xml_node xmlNode);
 
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 

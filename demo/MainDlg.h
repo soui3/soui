@@ -65,8 +65,8 @@ class CMainDlg : public SHostWnd
 			   , public TAutoEventMapReg<CMainDlg>//通知中心自动注册
 			   , public ISetOrLoadSkinHandler
 ,				public IAnimation::IAnimationListener
-,				public IValueAnimator::IAnimatorListener 
-,				public IValueAnimator::IAnimatorUpdateListener
+,				public IAnimatorListener 
+,				public IAnimatorUpdateListener
 ,				public SDpiHandler<CMainDlg>
 {
 public:
@@ -200,7 +200,7 @@ protected:
 
 	//Event Sender ID
 	enum {SENDER_ID = 30000};
-	virtual int GetID() const {return SENDER_ID;}
+	virtual int WINAPI GetID() const {return SENDER_ID;}
 
 	void OnBtnStartNotifyThread();
 	void OnBtnStopNotifyThread();

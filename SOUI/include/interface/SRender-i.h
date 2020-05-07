@@ -145,7 +145,7 @@ enum OBJTYPE
 * 
 * Describe    所有渲染对象全部使用引用计数管理生命周期
 */
-struct IRenderObj : public IObject, public IObjRef 
+struct IRenderObj : public IObject 
 {
 	/**
 	* ObjectType
@@ -1080,7 +1080,7 @@ struct IPathMeasure : IObjRef
 * 
 * Describe    实现各位渲染接口并创建设备相关资源
 */
-struct IRenderTarget: public IObjRef, public SObject
+struct IRenderTarget: public SObject
 {
 	virtual HRESULT CreateCompatibleRenderTarget(SIZE szTarget,IRenderTarget **ppRenderTarget)=0;
 	virtual HRESULT CreatePen(int iStyle,COLORREF cr,int cWidth,IPen ** ppPen)=0;

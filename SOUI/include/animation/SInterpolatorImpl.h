@@ -230,6 +230,6 @@ namespace SOUI
 		float getInterpolation(float t) const override;
 
 	protected:
-		void OnInitFinished(pugi::xml_node xmlNode) override;
+		void WINAPI OnInitFinished(pugi::xml_node xmlNode) override;
 	};
 }

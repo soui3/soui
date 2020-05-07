@@ -213,10 +213,9 @@ namespace SOUI
     * 
     * Describe   SOUI窗口基类,实现窗口的基本接口
     */
-	class SOUI_EXP SWindow : public SObject
+	class SOUI_EXP SWindow : public TObjRefImpl<SObject>
 		, public SMsgHandleState
 		, public ITrCtxProvider
-        , public TObjRefImpl2<IObjRef,SWindow>
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
         friend class SwndLayoutBuilder;
@@ -326,10 +325,10 @@ namespace SOUI
 
 		virtual SStringT GetToolTipText();
 
-        virtual LPCWSTR GetName() const {return m_strName;}
+        virtual LPCWSTR WINAPI GetName() const {return m_strName;}
         void SetName(LPCWSTR pszName){m_strName=pszName;}
 
-        virtual int GetID() const{return m_nID;}
+        virtual int WINAPI GetID() const{return m_nID;}
         void SetID(int nID){m_nID=nID;}
 
         /**
@@ -942,7 +941,7 @@ namespace SOUI
         virtual void OnStateChanging(DWORD dwOldState,DWORD dwNewState);
         virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
 
-        virtual BOOL InitFromXml(pugi::xml_node xmlNode);
+        virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
         virtual BOOL CreateChildren(pugi::xml_node xmlNode);
         
         /**
@@ -1100,7 +1099,7 @@ namespace SOUI
 		*/
 		virtual const SStringW & GetTrCtx() const;
 
-		virtual SStringW GetAttribute(const SStringW & strAttr) const;
+		virtual BOOL WINAPI GetAttribute(const IStringW * strAttr,IStringW * strValue) const;
     public://caret相关方法
         virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
         virtual void ShowCaret(BOOL bShow);   

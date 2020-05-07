@@ -1,13 +1,13 @@
 ﻿//IObjRef的实现类
 #pragma  once
+#include <sdef.h>
 
 #ifndef SASSERT
 #include <assert.h>
 #define SASSERT(x) assert(x);
 #endif
 
-namespace SOUI
-{
+SNSBEGIN
 
 template<class T>
 class TObjRefImpl :  public T
@@ -210,4 +210,4 @@ protected:
 
 #define CAutoRefPtr SAutoRefPtr	//for compatible
 
-}//end of namespace SOUI
+SNSEND

@@ -222,10 +222,6 @@
 				>
 			</File>
 			<File
-				RelativePath="src\sobject\sobject.cpp"
-				>
-			</File>
-			<File
 				RelativePath="src\soui_mem_wrapper.cpp"
 				>
 			</File>
@@ -312,6 +308,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\sdef.h"
+				>
+			</File>
+			<File
 				RelativePath="include\helper\SEmptyable.hpp"
 				>
 			</File>
@@ -324,19 +324,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\sobject\sobject-i.h"
-				>
-			</File>
-			<File
 				RelativePath="include\sobject\sobject-state-i.h"
 				>
 			</File>
 			<File
 				RelativePath="include\sobject\sobject-state-impl.hpp"
-				>
-			</File>
-			<File
-				RelativePath="include\sobject\sobject.hpp"
 				>
 			</File>
 			<File

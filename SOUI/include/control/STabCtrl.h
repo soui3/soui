@@ -381,7 +381,7 @@ namespace SOUI
         */
         virtual void UpdateChildrenPosition();
 
-        virtual void OnInitFinished(pugi::xml_node xmlNode);
+        virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
         
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);

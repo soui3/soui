@@ -29,9 +29,9 @@ namespace SOUI
         virtual int ChildrenCount() const;
 
         virtual SStringW GetName2() const{return m_strName;}
-        virtual LPCWSTR GetName() const{return m_strName;}
+        virtual LPCWSTR WINAPI GetName() const{return m_strName;}
         virtual void SetName(const SStringW & strName){m_strName=strName;}
-        virtual int GetID()const {return m_nID;}
+        virtual int WINAPI GetID()const {return m_nID;}
         virtual void SetID(int nID) {m_nID = nID;}
         virtual SStringT GetDescription() const {return m_strDescription;}
         virtual void SetDescription(const SStringT & strDescription){m_strDescription =strDescription;}
@@ -56,7 +56,7 @@ namespace SOUI
             ATTR_CUSTOM(L"expanded",OnAttrExpanded)
         SOUI_ATTRS_END()
 
-        virtual BOOL InitFromXml(pugi::xml_node xmlNode);
+        virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
     protected:
         HRESULT OnAttrExpanded(const SStringW &  strValue,BOOL bLoading);
 

@@ -20,8 +20,8 @@
 class evt : public SOUI::EventArgs \
 { \
 public:\
-	virtual int GetID() const { return evt::EventID; }\
-	virtual LPCWSTR GetName() const { return evt::GetClassName(); }\
+	virtual int WINAPI GetID() const { return evt::EventID; }\
+	virtual LPCWSTR WINAPI GetName() const { return evt::GetClassName(); }\
 	SOUI_CLASS_NAME(evt,L#evt_name ) \
 	enum {\
 		EventID = id\
@@ -162,7 +162,7 @@ namespace SOUI
     the event system does not look at this value, code at a higher level can use it to determine
     how far to propagate an event.
     */
-    class SOUI_EXP EventArgs : public TObjRefImpl<IObjRef>, public SObjectImpl<IObject>
+    class SOUI_EXP EventArgs : public TObjRefImpl< SObjectImpl<IObject> >
     {
         SOUI_CLASS_NAME(EventArgs,L"eventargs")
     public:
@@ -209,8 +209,8 @@ namespace SOUI
         {
         }
 
-        virtual int GetID() const {return T::EventID;}
-        virtual LPCWSTR GetName() const {return T::GetClassName();}
+        virtual int WINAPI GetID() const {return T::EventID;}
+        virtual LPCWSTR WINAPI GetName() const {return T::GetClassName();}
     };
 
     class SOUI_EXP EventCmnArgs : public EventArgs
@@ -220,7 +220,7 @@ namespace SOUI
         {
 
         }
-        virtual int GetID() const{return nID;}
+        virtual int WINAPI GetID() const{return nID;}
 
     protected:
         int nID;

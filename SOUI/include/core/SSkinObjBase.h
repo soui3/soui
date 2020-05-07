@@ -61,7 +61,7 @@ namespace SOUI
 
 		virtual ISkinObj * Scale(int nScale);
 
-		virtual LPCWSTR GetName() const;
+		virtual LPCWSTR WINAPI GetName() const;
 
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"alpha",m_byAlpha,TRUE)   //皮肤透明度
@@ -73,7 +73,7 @@ namespace SOUI
         SOUI_ATTRS_END()
 
     protected:
-		virtual void OnInitFinished(pugi::xml_node xmlNode);
+		virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
 
 		virtual void _Scale(ISkinObj *pObj, int nScale);
 

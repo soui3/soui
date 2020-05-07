@@ -26,7 +26,7 @@ namespace SOUI
     * 
     * Describe
     */
-    class SOUI_EXP ISkinObj : public IObjRef, public IObject
+    class SOUI_EXP ISkinObj :  public IObject
     {
     public:
         virtual ~ISkinObj()

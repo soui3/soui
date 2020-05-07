@@ -125,7 +125,7 @@ namespace SOUI
         SkTypeface *GetFont()const {return m_skFont;}
 
 		virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
-		virtual void OnInitFinished(pugi::xml_node xmlNode); 
+		virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode); 
 		SOUI_ATTRS_BEGIN()
 			ATTR_ENUM_BEGIN(L"blurStyle",SkBlurStyle,FALSE)
 				ATTR_ENUM_VALUE(L"normal",kNormal_SkBlurStyle)
@@ -505,11 +505,14 @@ namespace SOUI
     public:
         SkCanvas *GetCanvas(){return m_SkCanvas;}
 
-		virtual SStringW GetAttribute(const SStringW & strAttr) const
+		virtual BOOL WINAPI GetAttribute(const IStringW * strAttr, IStringW *pValue) const
 		{
-			if(strAttr.CompareNoCase(L"antiAlias") == 0)
-				return m_bAntiAlias?L"1":L"0";
-			return __super::GetAttribute(strAttr);
+			if(strAttr->CompareNoCase(L"antiAlias") == 0)
+			{
+				pValue->Assign(m_bAntiAlias?L"1":L"0");
+				return TRUE;
+			}
+			return __super::GetAttribute(strAttr,pValue);
 		}
 
 		SOUI_ATTRS_BEGIN()

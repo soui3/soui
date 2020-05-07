@@ -123,7 +123,7 @@ namespace SOUI
 			return szRet;
 		}
 
-		virtual BOOL InitFromXml(pugi::xml_node xmlNode)
+		virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode)
 		{
 			//找到根节点，获取在根节点上配置的全局菜单对象属性
 			pugi::xml_node xmlRoot = xmlNode.root().first_child();

@@ -19,7 +19,7 @@
 #include <helper/SScriptTimer.h>
 namespace SOUI
 {
-    class SHostWndAttr : public SObject, public ITrCtxProvider
+    class SHostWndAttr : public TObjRefImpl<SObject>, public ITrCtxProvider
     {
         SOUI_CLASS_NAME(SHostWndAttr, L"SHostWndAttr")
         enum {WT_UNDEFINE=0,WT_APPMAIN=1,WT_NORMAL=2};
@@ -159,7 +159,7 @@ public:
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
     HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
-	BOOL InitFromXml(pugi::xml_node xmlNode);
+	BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
     
     BOOL AnimateHostWindow(DWORD dwTime,DWORD dwFlags);
 

@@ -24,10 +24,10 @@
 #include <interface/sinterpolator-i.h>
 #include <unknown/obj-ref-i.h>
 #include <animation/STransformation.h>
-#include <sobject/sobject-i.h>
+#include <interface/sobject-i.h>
 
 namespace SOUI {
-	struct SOUI_EXP IAnimation : IObjRef , IObject {
+	struct SOUI_EXP IAnimation :  IObject {
 		/**
 		* <p>An animation listener receives notifications from an animation.
 		* Notifications indicate animation related events, such as the end or the

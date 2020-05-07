@@ -6,8 +6,7 @@ namespace SOUI
     #define IC_LAST     (IPropertyItem *)1
 
     class SPropertyGrid;
-    struct IPropertyItem : public IObjRef
-                         , public SObject
+    struct IPropertyItem : public SObject
     {
         enum PROPITEMTYPE{
             GPI_PARENT,

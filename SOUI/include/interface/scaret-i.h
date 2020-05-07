@@ -1,11 +1,11 @@
 #pragma once
 #include <unknown/obj-ref-i.h>
-#include <sobject/sobject-i.h>
+#include <interface/sobject-i.h>
 #include <interface/STimelineHandler-i.h>
 
 namespace SOUI
 {
-	struct SOUI_EXP ICaret : public IObjRef, public IObject, public ITimelineHandler
+	struct SOUI_EXP ICaret : public IObject, public ITimelineHandler
 	{
 		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) = 0;
 
