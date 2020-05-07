@@ -188,7 +188,7 @@ namespace SOUI
 
 		pugi::xml_node xmlBtnStyle = m_xmlStyle.child(XmlBtnStyle);
 		if (xmlBtnStyle)
-			pNewMenu->InitFromXml(xmlBtnStyle);
+			pNewMenu->InitFromXml(&xmlBtnStyle);
 
 		if (pszTitle)
 			pNewMenu->SetWindowText(pszTitle);
@@ -226,9 +226,9 @@ namespace SOUI
 
 		pugi::xml_node xmlBtnStyle = m_xmlStyle.child(XmlBtnStyle);
 		if (xmlBtnStyle)
-			pNewMenu->InitFromXml(xmlBtnStyle);
+			pNewMenu->InitFromXml(&xmlBtnStyle);
 
-		pNewMenu->InitFromXml(xmlNode);
+		pNewMenu->InitFromXml(&xmlNode);
 		if (!pNewMenu->IsMenuLoaded())
 		{
 			DestroyChild(pNewMenu);

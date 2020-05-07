@@ -133,7 +133,7 @@ namespace SOUI{
 
 		virtual void copy(const IAnimation* src);
 	protected:
-		BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+		BOOL WINAPI InitFromXml(IXmlNode *pNode);
 
 		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
 		HRESULT OnAttrFillBefore(const SStringW & value, BOOL bLoading);

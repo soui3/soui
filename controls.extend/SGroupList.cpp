@@ -106,7 +106,7 @@ namespace SOUI {
 		SWindow *pGroup = SApplication::getSingletonPtr()->CreateWindowByName(m_groupTemplate.attribute(L"class_name").as_string(L"window"));
 		SASSERT(pGroup);
 		InsertChild(pGroup, pInsertAfter);
-		pGroup->InitFromXml(m_groupTemplate);
+		pGroup->InitFromXml(&m_groupTemplate);
 		pGroup->SetName(name);
 		pGroup->SetID(nID);
 		GroupInfo *pItemInfo = new GroupInfo;
@@ -158,7 +158,7 @@ namespace SOUI {
 		SWindow *pItem = SApplication::getSingletonPtr()->CreateWindowByName(m_itemTemplate.attribute(L"class_name").as_string());
 		SASSERT(pItem);
 		pItemContainer->InsertChild(pItem, pInsertAfter);
-		pItem->InitFromXml(m_itemTemplate);
+		pItem->InitFromXml(&m_itemTemplate);
 		pItem->SetName(name);
 		pItem->SetID(nID);
 

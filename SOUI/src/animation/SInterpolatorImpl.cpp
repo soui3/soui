@@ -255,8 +255,9 @@ namespace SOUI
 		return 0;
 	}
 
-	void SPathInterpolator::OnInitFinished(pugi::xml_node xmlNode)
+	void SPathInterpolator::OnInitFinished(IXmlNode * pNode)
 	{
+		pugi::xml_node xmlNode(pNode);
 		fPoint pts[2];
 		bool hasCtrl1 = false, hasCtrl2 = false;
 		if (xmlNode.attribute(L"controlX1") && xmlNode.attribute(L"controlY1"))

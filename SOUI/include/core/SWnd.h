@@ -941,7 +941,7 @@ namespace SOUI
         virtual void OnStateChanging(DWORD dwOldState,DWORD dwNewState);
         virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
 
-        virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+        virtual BOOL WINAPI InitFromXml(IXmlNode *pNode);
         virtual BOOL CreateChildren(pugi::xml_node xmlNode);
         
         /**

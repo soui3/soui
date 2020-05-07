@@ -505,8 +505,9 @@ SSkinShape::SSkinShape() :m_crSolid(CR_INVALID),m_shape(rectangle)
 
 }
 
-void SSkinShape::OnInitFinished(pugi::xml_node xmlNode)
+void SSkinShape::OnInitFinished(IXmlNode * pNode)
 {
+	pugi::xml_node xmlNode(pNode);
 	pugi::xml_node xmlSolid = xmlNode.child(L"solid");
 	if(xmlSolid)
 	{
@@ -516,31 +517,31 @@ void SSkinShape::OnInitFinished(pugi::xml_node xmlNode)
 	if(xmlGrident)
 	{
 		if (!m_gradient) m_gradient.Attach(new SGradient());
-		m_gradient->InitFromXml(xmlGrident);
+		m_gradient->InitFromXml(&xmlGrident);
 	}
 	pugi::xml_node xmlSize = xmlNode.child(SShapeSize::GetClassName());
 	if(xmlSize)
 	{
 		if (!m_shapeSize) m_shapeSize.Attach(new SShapeSize());
-		m_shapeSize->InitFromXml(xmlSize);
+		m_shapeSize->InitFromXml(&xmlSize);
 	}
 	pugi::xml_node xmlStoke = xmlNode.child(SStroke::GetClassName());
 	if(xmlStoke)
 	{
 		if (!m_stroke) m_stroke.Attach(new SStroke());
-		m_stroke->InitFromXml(xmlStoke);
+		m_stroke->InitFromXml(&xmlStoke);
 	}
 	pugi::xml_node xmlConner = xmlNode.child(SCornerSize::GetClassName());
 	if(xmlConner)
 	{
 		if (!m_cornerSize) m_cornerSize.Attach(new SCornerSize());
-		m_cornerSize->InitFromXml(xmlConner);
+		m_cornerSize->InitFromXml(&xmlConner);
 	}
 	pugi::xml_node xmlRing = xmlNode.child(SShapeRing::GetClassName());
 	if (xmlRing)
 	{
 		if (!m_ringParam) m_ringParam.Attach(new SShapeRing());
-		m_ringParam->InitFromXml(xmlRing);
+		m_ringParam->InitFromXml(&xmlRing);
 	}
 }
 

@@ -725,7 +725,7 @@ namespace SOUI
 						if (pChild)
 						{
 							InsertChild(pChild);
-							pChild->InitFromXml(xmlInclude);
+							pChild->InitFromXml(&xmlInclude);
 						}
 
 						if(xmlInclude.next_sibling())
@@ -775,7 +775,7 @@ namespace SOUI
 							if (pChild)
 							{
 								InsertChild(pChild);
-								pChild->InitFromXml(xmlTemp);
+								pChild->InitFromXml(&xmlTemp);
 							}
 						}
 						strXml.ReleaseBuffer();
@@ -787,7 +787,7 @@ namespace SOUI
 					if (pChild)
 					{
 						InsertChild(pChild);
-						pChild->InitFromXml(xmlChild);
+						pChild->InitFromXml(&xmlChild);
 					}
 				}
 			}
@@ -802,9 +802,10 @@ namespace SOUI
 	}
 
 	// Create SWindow from xml element
-	BOOL SWindow::InitFromXml(pugi::xml_node xmlNode)
+	BOOL SWindow::InitFromXml(IXmlNode *pNode)
 	{
 		ASSERT_UI_THREAD();
+		pugi::xml_node xmlNode(pNode);
 		SASSERT(m_pContainer);
 		if (xmlNode)
 		{
@@ -827,7 +828,7 @@ namespace SOUI
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
-			SObject::InitFromXml(xmlNode);
+			SObject::InitFromXml(&xmlNode);
 
 			MarkAttributeHandled(attrClass,false);
 			MarkAttributeHandled(attrLayout,false);

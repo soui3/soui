@@ -431,6 +431,7 @@ namespace pugi
 
 		// Constructs attribute from internal pointer
 		explicit xml_attribute(xml_attribute_struct* attr);
+		explicit xml_attribute(const SOUI::IXmlAttr * attr);
 
 		// Safe bool conversion operator
 		operator unspecified_bool_type() const;
@@ -630,6 +631,8 @@ namespace pugi
 
 		// Constructs node from internal pointer
 		explicit xml_node(xml_node_struct* p);
+		
+		explicit xml_node(const SOUI::IXmlNode *p);
 
 		// Safe bool conversion operator
 		operator unspecified_bool_type() const;

@@ -149,7 +149,7 @@ protected:
      * Describe  初始化
      */
 
-    virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+    virtual BOOL WINAPI InitFromXml(IXmlNode * pNode);
 
 	virtual BOOL OnRelayout(const CRect &rcWnd);
 

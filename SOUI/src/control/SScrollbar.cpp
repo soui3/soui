@@ -71,9 +71,9 @@ int SScrollBar::GetMin()
 	return m_si.nMin;
 }
 
-void SScrollBar::OnInitFinished(pugi::xml_node xmlNode)
+void SScrollBar::OnInitFinished(IXmlNode * pNode)
 {
-    __super::OnInitFinished(xmlNode);
+    __super::OnInitFinished(pNode);
     SASSERT(m_pSkin);
     if(m_uAllowSize==-1)
     {

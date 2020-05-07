@@ -45,10 +45,9 @@ public:
 	}
 	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
 	{
-		//SAutoLock autolock(updatalock);
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(xmlTemplate);
+			pItem->InitFromXml(&xmlTemplate);
 		}
 		pItem->FindChildByName(_T("songname"))->SetWindowText(m_musicList[position].songname);
 		pItem->FindChildByName(_T("artist"))->SetWindowText(m_musicList[position].artist);

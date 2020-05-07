@@ -448,7 +448,7 @@ public:
 		ATTR_ENUM_END(m_shape)
 	SOUI_ATTRS_END()
 protected:
-	void WINAPI OnInitFinished(pugi::xml_node xmlNode);
+	void WINAPI OnInitFinished(IXmlNode * pNode);
 
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 

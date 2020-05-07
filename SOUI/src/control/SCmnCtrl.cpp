@@ -306,9 +306,9 @@ void SLink::DrawText(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,
 }
 
 
-void SLink::OnInitFinished( pugi::xml_node xmlNode)
+void SLink::OnInitFinished(IXmlNode *pNode)
 {
-    __super::OnInitFinished(xmlNode);
+    __super::OnInitFinished(pNode);
     if(m_strToolTipText.GetText(TRUE).IsEmpty()) m_strToolTipText.SetText(m_strLinkUrl);
 }
 
@@ -443,9 +443,9 @@ bool SButton::OnAcceleratorPressed( const SAccelerator& accelerator )
     return true;
 }
 
-BOOL SButton::InitFromXml(pugi::xml_node xmlNode)
+BOOL SButton::InitFromXml(IXmlNode * pNode)
 {
-	BOOL bRet=SWindow::InitFromXml(xmlNode);
+	BOOL bRet=SWindow::InitFromXml(pNode);
 	SStringT strText = GetWindowText(TRUE);
 	
 	if (!strText.IsEmpty()&&(strText[strText.GetLength()-1]==_T(')')))

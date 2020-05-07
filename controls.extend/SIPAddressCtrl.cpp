@@ -129,7 +129,7 @@ namespace SOUI
         {
             m_editFields[i] = new SEditIP;//直接new出来。
             InsertChild(m_editFields[i]);
-            m_editFields[i]->InitFromXml(xmlDoc.first_child());
+            m_editFields[i]->InitFromXml(&xmlDoc.first_child());
         }
         return 0;
     }

@@ -56,7 +56,7 @@ namespace SOUI
             ATTR_CUSTOM(L"expanded",OnAttrExpanded)
         SOUI_ATTRS_END()
 
-        virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+        virtual BOOL WINAPI InitFromXml(IXmlNode * pNode);
     protected:
         HRESULT OnAttrExpanded(const SStringW &  strValue,BOOL bLoading);
 

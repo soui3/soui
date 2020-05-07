@@ -643,7 +643,7 @@ int STabCtrl::InsertItem( pugi::xml_node xmlNode,int iInsert/*=-1*/,BOOL bLoadin
     if(!pChild) return -1;
     
     InsertChild(pChild);
-    pChild->InitFromXml(xmlNode);
+    pChild->InitFromXml(&xmlNode);
     pChild->GetLayoutParam()->SetMatchParent(Both);
     
     if(iInsert==-1) iInsert = (int)m_lstPages.GetCount();

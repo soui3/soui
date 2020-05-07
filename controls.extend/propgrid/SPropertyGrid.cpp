@@ -321,7 +321,7 @@ namespace SOUI
         SASSERT(xmlCmdBtn);
         m_pCmdBtn = SApplication::getSingleton().CreateWindowByName(SWindow::GetClassName());
         InsertChild(m_pCmdBtn);
-        m_pCmdBtn->InitFromXml(xmlCmdBtn);
+        m_pCmdBtn->InitFromXml(&xmlCmdBtn);
         m_pCmdBtn->SetVisible(FALSE);
         m_pCmdBtn->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SPropertyGrid::OnCmdBtnClicked,this));
         
@@ -332,7 +332,7 @@ namespace SOUI
             while(xmlChild)
             {
                 SPropertyGroup *pGroup = (SPropertyGroup *)SPropertyGroup::CreatePropItem(this);
-                pGroup->InitFromXml(xmlChild);
+                pGroup->InitFromXml(&xmlChild);
                 InsertGroup(pGroup);
                 pGroup->Release();
                 xmlChild = xmlChild.next_sibling(SPropertyGroup::GetClassName());
@@ -505,7 +505,7 @@ namespace SOUI
     {
         SASSERT(m_pInplaceActiveWnd == NULL);
         InsertChild(pWnd);
-        pWnd->InitFromXml(xmlInit);//this line will trigger WM_CREATE proc. 
+        pWnd->InitFromXml(&xmlInit);//this line will trigger WM_CREATE proc. 
 
         CRect rcItem = GetItemRect(pItem);
         CRect rcValue= rcItem;

@@ -15,6 +15,7 @@
 #pragma once
 #include <interface/sobject-i.h>
 #include <string/strcpcvt.h>
+#include <pugixml/pugixml.hpp>
 
 SNSBEGIN
 
@@ -23,6 +24,17 @@ template<class T>
 class SObjectImpl : public T
 {
 public:
+	static void MarkAttributeHandled(pugi::xml_attribute xmlAttr, bool bHandled)
+	{
+		xmlAttr.set_userdata(bHandled?1:0);
+	}
+
+	static bool IsAttributeHandled(pugi::xml_attribute xmlAttr)
+	{
+		return xmlAttr.get_userdata()==1?true:false;
+	}
+
+
 	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) OVERRIDE
 	{
 		UNREFERENCED_PARAMETER(strAttribName);
@@ -31,8 +43,10 @@ public:
 		return E_FAIL;
 	}
 
-	STDMETHOD_(BOOL,InitFromXml)(THIS_ pugi::xml_node xmlNode ) OVERRIDE
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * pXmlNode ) OVERRIDE
 	{
+		pugi::xml_node xmlNode(pXmlNode);
+
 		if (!xmlNode) return FALSE;
 #if defined(_DEBUG) && defined(PUGIXML_WCHAR_MODE)
 		{
@@ -50,7 +64,7 @@ public:
 			SetAttribute(attr.name(), attr.value(), TRUE);
 		}
 		//调用初始化完成接口
-		OnInitFinished(xmlNode);
+		OnInitFinished(&xmlNode);
 		return TRUE;
 	}
 
@@ -127,19 +141,9 @@ public:
 	* @return   void
 	* Describe
 	*/ 
-	STDMETHOD_(void,OnInitFinished)(THIS_ pugi::xml_node xmlNode) OVERRIDE
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode * xmlNode) OVERRIDE
 	{
 		UNREFERENCED_PARAMETER(xmlNode);
-	}
-
-	STDMETHOD_(void,MarkAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr, bool bHandled) OVERRIDE
-	{
-		xmlAttr.set_userdata(bHandled?1:0);
-	}
-
-	STDMETHOD_(bool,IsAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr) OVERRIDE
-	{
-		return xmlAttr.get_userdata()==1?true:false;
 	}
 
 #ifdef    _DEBUG

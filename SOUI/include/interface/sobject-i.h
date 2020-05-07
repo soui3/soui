@@ -17,8 +17,8 @@
 
 #include <unknown/obj-ref-i.h>
 #include <interface/sstring-i.h>
+#include <interface/sxml-i.h>
 
-#include <pugixml/pugixml.hpp>
 #pragma warning(disable:4275)
 //////////////////////////////////////////////////////////////////////////
 SNSBEGIN
@@ -204,7 +204,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* @return   BOOL -- 成功返回TRUE
 	* Describe  
 	*/    
-	STDMETHOD_(BOOL,InitFromXml)(THIS_ pugi::xml_node xmlNode ) PURE;
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) PURE;
 
 
 	/**
@@ -225,7 +225,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* @return   void
 	* Describe  
 	*/    
-	STDMETHOD_(void,OnInitFinished)(THIS_ pugi::xml_node xmlNode) PURE;
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) PURE;
 
 	/**
 	* GetAttribute
@@ -236,26 +236,6 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* Describe  默认返回空
 	*/    
 	STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST PURE;
-
-
-	/**
-	* MarkAttributeHandled
-	* @brief    标志一个属性已经被处理
-	* @param    pugi::xml_node xmlNode --  属性节点
-	* @return   void
-	* Describe  
-	*/
-	STDMETHOD_(void,MarkAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr, bool bHandled) PURE;
-
-
-	/**
-	* IsAttributeHandled
-	* @brief    检测一个属性是否已经被处理
-	* @param    pugi::xml_node xmlNode --  属性节点
-	* @return   bool true-已经处理过
-	* Describe  
-	*/
-	STDMETHOD_(bool,IsAttributeHandled)(THIS_ pugi::xml_attribute xmlAttr) PURE;
 };
 
 extern "C++"{

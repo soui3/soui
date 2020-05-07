@@ -5276,6 +5276,10 @@ namespace pugi
 	{
 	}
 
+	PUGI__FN xml_attribute::xml_attribute(const SOUI::IXmlAttr * attr): _attr((xml_attribute_struct*)attr->Data())
+	{
+	}
+
 	PUGI__FN static void unspecified_bool_xml_attribute(xml_attribute***)
 	{
 	}
@@ -5591,6 +5595,10 @@ namespace pugi
 	}
 
 	PUGI__FN xml_node::xml_node(xml_node_struct* p): _root(p)
+	{
+	}
+
+	PUGI__FN xml_node::xml_node(const SOUI::IXmlNode *p): _root((xml_node_struct*)p->Data())
 	{
 	}
 

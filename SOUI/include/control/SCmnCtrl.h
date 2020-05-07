@@ -90,7 +90,7 @@ protected:
      *
      * Describe  根据xml文件设置相关属性
      */
-    virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
+    virtual void WINAPI OnInitFinished(IXmlNode *pNode);
     /**
      * SLink::SDrawText
      * @brief    绘制文本
@@ -188,7 +188,7 @@ protected:
      * Describe  处理加速键响应消息
      */
     virtual bool OnAcceleratorPressed(const SAccelerator& accelerator);
-    virtual BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+    virtual BOOL WINAPI InitFromXml(IXmlNode * pNode);
 protected:
     
     /**

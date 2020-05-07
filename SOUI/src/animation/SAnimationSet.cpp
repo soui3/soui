@@ -8,16 +8,17 @@ namespace SOUI {
 
 
 
-	BOOL SAnimationSet::InitFromXml(pugi::xml_node xmlNode)
+	BOOL SAnimationSet::InitFromXml(IXmlNode *pNode)
 	{
-		SAnimation::InitFromXml(xmlNode);
+		SAnimation::InitFromXml(pNode);
+		pugi::xml_node xmlNode(pNode);
 		pugi::xml_node xmlChild = xmlNode.first_child();
 		while (xmlChild)
 		{
 			IAnimation * ani = SApplication::getSingletonPtr()->CreateAnimationByName(xmlChild.name());
 			if (ani)
 			{
-				ani->InitFromXml(xmlChild);
+				ani->InitFromXml(&xmlChild);
 				addAnimation(ani);
 				ani->Release();
 			}
