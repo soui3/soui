@@ -112,7 +112,7 @@ public:
 * 
 * Describe    
 */
-class SOUI_EXP SSkinPool :public SCmnMap<SSkinPtr,SkinKey>, public TObjRefImpl2<IObjRef,SSkinPool>
+class SOUI_EXP SSkinPool :public SCmnMap<SSkinPtr,SkinKey>, public TObjRefImpl<IObjRef>
 {
 public:
     SSkinPool();

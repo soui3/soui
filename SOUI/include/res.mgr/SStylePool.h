@@ -31,7 +31,7 @@ namespace SOUI
     * 
     * Describe    
     */
-    class SOUI_EXP SStylePool :public SCmnMap<pugi::xml_node,SStringW> , public TObjRefImpl2<IObjRef,SStylePool>
+    class SOUI_EXP SStylePool :public SCmnMap<pugi::xml_node,SStringW> , public TObjRefImpl<IObjRef>
     {
     public:
         /**
@@ -100,7 +100,7 @@ namespace SOUI
         SList<SStylePool *> m_lstStylePools;
     };
 
-	class SOUI_EXP STemplatePool :public SCmnMap<SStringW, SStringW>, public TObjRefImpl2<IObjRef, STemplatePool>
+	class SOUI_EXP STemplatePool :public SCmnMap<SStringW, SStringW>, public TObjRefImpl<IObjRef>
 	{
 	public:
 		/**

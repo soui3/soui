@@ -42,15 +42,6 @@ protected:
 	volatile LONG m_cRef;
 };
 
-template<class T,class T2>
-class TObjRefImpl2 :  public TObjRefImpl<T>
-{
-public:
-	virtual void WINAPI OnFinalRelease () override
-    {
-        delete static_cast<T2*>(this);
-    }
-};
 
 //SAutoRefPtr provides the basis for all other smart pointers
 template <class T>
