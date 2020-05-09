@@ -162,7 +162,7 @@ namespace SOUI
     the event system does not look at this value, code at a higher level can use it to determine
     how far to propagate an event.
     */
-    class SOUI_EXP EventArgs : public TObjRefImpl< SObjectImpl<IObject> >
+    class SOUI_EXP EventArgs : public TObjRefImpl< SObject >
     {
         SOUI_CLASS_NAME(EventArgs,L"eventargs")
     public:
