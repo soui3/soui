@@ -129,7 +129,7 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	
 	if(GetLayoutParam()->IsWrapContent(Any))
 	{
-		GetParent()->UpdateChildrenPosition();
+		RequestRelayout();
 	}
 	if(IsVisible(TRUE))
 	{
