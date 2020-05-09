@@ -95,7 +95,7 @@ namespace SOUI
         SOUI_MSG_MAP_END()	
 
     protected:
-        SSkinAni *m_aniSkin;
+        SAutoRefPtr<SSkinAni> m_aniSkin;
         int		m_iCurFrame;
         int     m_nNextInterval;
 		int		m_nScale;
