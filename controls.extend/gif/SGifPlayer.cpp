@@ -118,6 +118,8 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	GetContainer()->UnregisterTimelineHandler(this);
 
 	m_aniSkin = pGifSkin;
+	pGifSkin->Release();
+
 	m_iCurFrame = 0;
 	TCHAR buff[16] = {0};
 	m_aniSkin->SetAttribute(_T("enableScale"), _itot(m_bEnableScale, buff, 10));
