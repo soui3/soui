@@ -1,7 +1,6 @@
 ﻿#include "souistd.h"
 #include "control/SListView.h"
 #include "helper/SListViewItemLocator.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -143,7 +142,7 @@ namespace SOUI
             m_siVer.nMin  = 0;
             m_siVer.nMax  = szView.cy-1;
             m_siVer.nPage = size.cy;
-            m_siVer.nPos = (std::min)(m_siVer.nPos,m_siVer.nMax-(int)m_siVer.nPage);
+            m_siVer.nPos = smin(m_siVer.nPos,m_siVer.nMax-(int)m_siVer.nPage);
         }
         else
         {

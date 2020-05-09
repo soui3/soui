@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/SComboBox.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -69,7 +68,7 @@ namespace SOUI
 		{
 			int nItemHeight=m_pListBox->GetItemHeight();
 			CRect rcMargin = m_pListBox->GetStyle().GetMargin();
-			nDropHeight = (std::min)(nDropHeight,(int)(nItemHeight*GetCount()+rcMargin.top + rcMargin.bottom));
+			nDropHeight = smin(nDropHeight,(int)(nItemHeight*GetCount()+rcMargin.top + rcMargin.bottom));
 		}
 		return nDropHeight;    
 	}

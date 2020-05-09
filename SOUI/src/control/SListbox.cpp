@@ -230,10 +230,12 @@ int SListBox::HitTest(CPoint &pt)
 int SListBox::FindString(int iFindAfter,LPCTSTR pszText) const
 {
 	if(iFindAfter<0) iFindAfter=-1;
-	for(int i=iFindAfter+1;i<m_arrItems.GetCount();i++)
+	int iStart = iFindAfter+1;
+	for(int i=0;i<m_arrItems.GetCount();i++)
 	{
-		if(m_arrItems[i]->strText.GetText(TRUE) == pszText)
-			return i;
+		int iTarget = (i+iStart)%m_arrItems.GetCount();
+		if(m_arrItems[iTarget]->strText.GetText(TRUE).StartsWith(pszText))
+			return iTarget;
 	}
 	return -1;
 }

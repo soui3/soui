@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/STreeView.h"
-#include <algorithm>
 
 namespace SOUI 
 {
@@ -137,7 +136,7 @@ namespace SOUI
         if(m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
         {
             int nIndent = m_adapter->GetParentItem(hItem) == ITvAdapter::ITEM_ROOT?0:m_nIndent;
-            nRet = (std::max)(nRet,_GetBranchWidth(hItem)+nIndent);
+            nRet = smax(nRet,_GetBranchWidth(hItem)+nIndent);
         }
         return nRet;
     }
@@ -247,7 +246,7 @@ namespace SOUI
                 nNewBranchWidth = 0;
                 while(hSib!=ITvAdapter::ITEM_NULL)
                 {
-                    nNewBranchWidth = (std::max)(nNewBranchWidth,_GetItemVisibleWidth(hSib));
+                    nNewBranchWidth = smax(nNewBranchWidth,_GetItemVisibleWidth(hSib));
                     hSib = m_adapter->GetNextSiblingItem(hSib);
                 }
                 nNewBranchWidth += nIndent;

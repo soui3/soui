@@ -1110,6 +1110,7 @@ void SRichEdit::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
+	SWNDMSG msg = *GetCurMsg();
     switch(nChar)
     {
         // Ctrl-Return generates Ctrl-J (LF), treat it as an ordinary return
@@ -1127,6 +1128,18 @@ void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
     default:
         if(m_dwStyle&ES_NUMBER && !isdigit(nChar) && nChar!='-' && nChar!='.' && nChar!=',')
             return;
+		if((m_dwStyle&ES_UPPERCASE) && nChar>='a'&&nChar<='z')
+		{
+			nChar-=0x20;
+			msg.wParam=nChar;
+			break;
+		}
+		if((m_dwStyle&ES_LOWERCASE) && nChar>='A'&&nChar<='Z')
+		{
+			nChar+=0x20;
+			msg.wParam=nChar;
+			break;
+		}
 #ifndef _UNICODE
         if(m_byDbcsLeadByte==0)
         {
@@ -1145,7 +1158,7 @@ void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 #endif//_UNICODE
         break;
     }
-    m_pTxtHost->GetTextService()->TxSendMessage(GetCurMsg()->uMsg,GetCurMsg()->wParam,GetCurMsg()->lParam,NULL);
+    m_pTxtHost->GetTextService()->TxSendMessage(msg.uMsg,msg.wParam,msg.lParam,NULL);
 }
 
 LRESULT SRichEdit::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
@@ -1479,7 +1492,7 @@ HRESULT SRichEdit::OnAttrAlign( const SStringW & strValue,BOOL bLoading )
 
 HRESULT SRichEdit::OnAttrNotifyChange(const SStringW & strValue,BOOL bLoading)
 {
-    m_fNotifyChange = strValue!=L"0";
+	m_fNotifyChange = STRINGASBOOL(strValue);
     if(!bLoading)
     {
         LPARAM lEvtMask = SSendMessage(EM_GETEVENTMASK);
@@ -1574,97 +1587,36 @@ BOOL SRichEdit::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
 	return SWindow::CreateCaret(pBmp,nWid,nHeight);
 }
 
-HRESULT SRichEdit::OnAttrHscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~WS_HSCROLL;
-	else
-		m_dwStyle|=WS_HSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
 
-HRESULT SRichEdit::OnAttrVscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~WS_VSCROLL;
-	else
-		m_dwStyle|=WS_VSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrAutoHscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_AUTOHSCROLL;
-	else
-		m_dwStyle|=ES_AUTOHSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrAutoVscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_AUTOVSCROLL;
-	else
-		m_dwStyle|=ES_AUTOVSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrMultiLines(const SStringW & strValue,BOOL bLoading)
+HRESULT SRichEdit::OnAttrReStyle(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
 	DWORD dwBit = 0;
 	if(!bValue)
-		m_dwStyle&=~ES_MULTILINE;
+		m_dwStyle&=~dwStyle;
 	else
-		m_dwStyle|=ES_MULTILINE,dwBit = TXTBIT_MULTILINE;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_MULTILINE,dwBit);
+		m_dwStyle|=dwStyle,dwBit = txtBit;
+	if(!bLoading && txtBit!=0)
+	{
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(txtBit,dwBit);
+	}
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrReadOnly(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	DWORD dwBit = 0;
-	if(!bValue)
-		m_dwStyle&=~ES_READONLY;
-	else
-		m_dwStyle|=ES_READONLY,dwBit = TXTBIT_READONLY;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_READONLY,dwBit);
-	return bLoading?S_FALSE:S_OK;
-
-}
-
-HRESULT SRichEdit::OnAttrWantReturn(const SStringW & strValue,BOOL bLoading)
+HRESULT SRichEdit::OnAttrReStyle2(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
 	if(!bValue)
-		m_dwStyle&=~ES_WANTRETURN;
+		m_dwStyle&=~dwStyle;
 	else
-		m_dwStyle|=ES_WANTRETURN;
+		m_dwStyle|=dwStyle;
+	if(!bLoading && txtBit!=0)
+	{
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(txtBit,txtBit);
+	}
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrPassword(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	DWORD dwBit = 0;
-	if(!bValue)
-		m_dwStyle&=~ES_PASSWORD;
-	else
-		m_dwStyle|=ES_PASSWORD,dwBit = TXTBIT_USEPASSWORD;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_USEPASSWORD,dwBit);
-	return bLoading?S_FALSE:S_OK;
-
-}
 
 HRESULT SRichEdit::OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading)
 {
@@ -1673,15 +1625,6 @@ HRESULT SRichEdit::OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading)
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrNumber(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_NUMBER;
-	else
-		m_dwStyle|=ES_NUMBER;
-	return S_FALSE;
-}
 
 HRESULT SRichEdit::OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading)
 {
@@ -1693,11 +1636,6 @@ HRESULT SRichEdit::OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading)
 	return S_FALSE;
 }
 
-HRESULT SRichEdit::OnAttrAutoSel(const SStringW & strValue,BOOL bLoading)
-{
-	m_fAutoSel = STRINGASBOOL(strValue);
-	return S_FALSE;
-}
 
 LRESULT SRichEdit::OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp)
 {

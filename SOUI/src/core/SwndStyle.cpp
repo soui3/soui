@@ -6,7 +6,6 @@
 #include "core/Swndstyle.h"
 #include "core/Swnd.h"
 #include "helper/SplitString.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -67,7 +66,7 @@ int SwndStyle::GetStates()
         if(m_ftText[i].GetFontPtr()!=NULL) fonts++;
         if(m_crText[i]!=CR_INVALID) colors++;
     }
-    return (std::max)(fonts,colors);
+    return smax(fonts,colors);
 }
 
 COLORREF SwndStyle::GetTextColor( int iState )

@@ -576,7 +576,6 @@ namespace SOUI
 
 		if(eDT_NULL == m_eSelDateType)
 			return ;
-		// 这个 不写了   谁帮我写了吧
 
 		int nNum = nChar - 48;
 		if (m_wCharNum > 0)
@@ -600,8 +599,10 @@ namespace SOUI
 				return;
 			}
 			else if (m_wCharNum > 12)
-				m_wCharNum = nNum;
-			else if (!SCalendarCore::DateCheck(m_sysTime.wYear, m_wCharNum, m_sysTime.wDay))
+			{
+				m_wCharNum = nNum==0?1:nNum;
+			}
+			if (!SCalendarCore::DateCheck(m_sysTime.wYear, m_wCharNum, m_sysTime.wDay))
 				m_sysTime.wDay = SCalendarCore::GetDaysOfMonth(m_sysTime.wYear, m_wCharNum);
 			m_sysTime.wMonth = m_wCharNum;
 			break;
@@ -611,7 +612,9 @@ namespace SOUI
 				return;
 			}
 			if (!SCalendarCore::DateCheck(m_sysTime.wYear, m_sysTime.wMonth, m_wCharNum))
-				m_wCharNum = nNum;
+			{
+				m_wCharNum = nNum==0?1:nNum;
+			}
 			m_sysTime.wDay = m_wCharNum;
 			break;
 		case eDT_Hour :

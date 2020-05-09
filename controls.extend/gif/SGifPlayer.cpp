@@ -6,9 +6,9 @@
 namespace SOUI
 {
 
-SGifPlayer::SGifPlayer() :m_aniSkin(NULL),
-	m_iCurFrame(0),
-	m_nNextInterval(0)
+SGifPlayer::SGifPlayer() 
+	: m_iCurFrame(0)
+	, m_nNextInterval(0)
 	, m_bEnableScale(TRUE)
 	, m_nScale(100)
 	, m_bLoop(TRUE)
@@ -107,12 +107,6 @@ BOOL SGifPlayer::PlayAPNGFile( LPCTSTR pszFileName )
 
 BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 {
-	SStringW key=S_CT2W(pszFileName);
-	GetContainer()->UnregisterTimelineHandler(this);
-	if (m_aniSkin) {
-		m_aniSkin->Release();
-		m_aniSkin = NULL;
-	}
 	SSkinAni *pGifSkin = (SSkinAni*)SApplication::getSingleton().CreateSkinByName(bGif?SSkinGif::GetClassName():SSkinAPNG::GetClassName());
 	if(!pGifSkin) return FALSE;
 	if(0==pGifSkin->LoadFromFile(pszFileName))
@@ -120,8 +114,13 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 		pGifSkin->Release();
 		return FALSE;
 	}
-	m_iCurFrame = 0;
+
+	GetContainer()->UnregisterTimelineHandler(this);
+
 	m_aniSkin = pGifSkin;
+	pGifSkin->Release();
+
+	m_iCurFrame = 0;
 	TCHAR buff[16] = {0};
 	m_aniSkin->SetAttribute(_T("enableScale"), _itot(m_bEnableScale, buff, 10));
 	m_aniSkin->SetAttribute(_T("scale"), _itot(m_nScale, buff, 10));
@@ -129,7 +128,7 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	
 	if(GetLayoutParam()->IsWrapContent(Any))
 	{
-		GetParent()->UpdateChildrenPosition();
+		RequestRelayout();
 	}
 	if(IsVisible(TRUE))
 	{
