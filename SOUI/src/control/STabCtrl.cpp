@@ -1,7 +1,6 @@
 ﻿#include "souistd.h"
 #include "control/Stabctrl.h"
 #include "animation/SInterpolatorImpl.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -879,7 +878,7 @@ SIZE STabCtrl::MeasureTextV(IRenderTarget *pRT, const SStringT & strText)
         LPTSTR p2 = SStringT::_tchar_traits::CharNext(p);
         SIZE szWord;
         pRT->MeasureText(p,(int)(p2-p),&szWord);
-        szRet.cx = (std::max)(szRet.cx,szWord.cx);
+        szRet.cx = smax(szRet.cx,szWord.cx);
         szRet.cy += szWord.cy;
         p = p2;
     }

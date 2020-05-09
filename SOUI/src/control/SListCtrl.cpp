@@ -1,7 +1,6 @@
 ﻿#include "souistd.h"
 
 #include "control/SListCtrl.h"
-#include <algorithm>
 
 #pragma warning(disable : 4267 4018)
 
@@ -510,7 +509,7 @@ int SListCtrl::GetCountPerPage(BOOL bPartial)
     div_t divHeight = div(rcClient.Height(), m_nItemHeight);
 
     // round up to nearest item count
-    return (std::max)((int)(bPartial && divHeight.rem > 0 ? divHeight.quot + 1 : divHeight.quot), 1);
+    return smax((int)(bPartial && divHeight.rem > 0 ? divHeight.quot + 1 : divHeight.quot), 1);
 }
 BOOL SListCtrl::SortItems(
                PFNLVCOMPAREEX pfnCompare,

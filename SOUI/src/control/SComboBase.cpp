@@ -29,7 +29,7 @@ namespace SOUI
     void SComboEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     {
         SWindow *pOwner = GetOwner();
-        if (pOwner && (nChar == VK_DOWN || nChar == VK_ESCAPE))
+        if (pOwner && (nChar == VK_DOWN || nChar==VK_UP || nChar == VK_ESCAPE))
         {
             pOwner->SSendMessage(WM_KEYDOWN, nChar, MAKELONG(nFlags, nRepCnt));
             return;
@@ -443,21 +443,25 @@ namespace SOUI
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
                 m_pEdit->GetEventSet()->setMutedState(true);
-                SetCurSel(-1);
+                SetCurSel(FindString(m_pEdit->GetWindowText()));
                 m_pEdit->GetEventSet()->setMutedState(false);
             }
         }
         return SWindow::FireEvent(evt);
     }
 
-    int SComboBase::FindString( LPCTSTR pszFind,int nAfter/*=0*/ )
+    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ )
     {
-        for(int i=nAfter;i<GetCount();i++)
-        {
-            SStringT strItem = GetLBText(i,TRUE);
-            if(strItem == pszFind) return i;
-        }
-        return -1;
+		if(iFindAfter<0) iFindAfter=-1;
+		int iStart = iFindAfter+1;
+		for(int i=0;i<GetCount();i++)
+		{
+			int iTarget = (i+iStart)%GetCount();
+			SStringT strItem = GetLBText(iTarget,TRUE);
+			if(strItem.StartsWith(pszFind))
+				return iTarget;
+		}
+		return -1;
     }
 
 	CSize SComboBase::GetDesiredSize(int nParentWid, int nParentHei)
@@ -526,7 +530,7 @@ namespace SOUI
     void SComboBase::SetWindowText(LPCTSTR pszText)
     {
         SWindow::SetWindowText(pszText);
-        SetCurSel(-1);
+        SetCurSel(FindString(pszText));
 		m_pEdit->SetWindowText(pszText);
 	}
 
