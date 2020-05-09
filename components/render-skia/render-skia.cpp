@@ -51,10 +51,10 @@ namespace SOUI
 		{ps_dashdotdot,ARRAYSIZE(ps_dashdotdot)},
 	};
 
-	bool String2Bool(const SStringW & value)
+	bool String2Bool(const IStringW * value)
 	{
-		SASSERT(!value.IsEmpty());
-		return !(value == L"false" || value == L"0");
+		SASSERT(!value->IsEmpty());
+		return !(value->CompareNoCase(L"false")==0 || value->CompareNoCase(L"0")==0);
 	}
 
     SkIRect toSkIRect(LPCRECT pRc)
@@ -1796,30 +1796,30 @@ namespace SOUI
 //         STRACE(L"font delete: objects = %d", --s_cFont);
     }
 
-	HRESULT SFont_Skia::DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading)
+	HRESULT SFont_Skia::DefAttributeProc(const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading)
 	{
 		(bLoading);
-		if(strAttribName.CompareNoCase(L"antiAlias")==0)
+		if(strAttribName->CompareNoCase(L"antiAlias")==0)
 		{
 			m_skPaint.setAntiAlias(String2Bool(strValue));
-		}else if(strAttribName.CompareNoCase(L"style")==0)
+		}else if(strAttribName->CompareNoCase(L"style")==0)
 		{
-			if(strValue.CompareNoCase(L"strokeAndFill")==0)
+			if(strValue->CompareNoCase(L"strokeAndFill")==0)
 				m_skPaint.setStyle(SkPaint::kStrokeAndFill_Style);
-			else if(strValue.CompareNoCase(L"fill")!=0)
+			else if(strValue->CompareNoCase(L"fill")!=0)
 				m_skPaint.setStyle(SkPaint::kFill_Style);
-			else if(strValue.CompareNoCase(L"stroke")==0)
+			else if(strValue->CompareNoCase(L"stroke")==0)
 				m_skPaint.setStyle(SkPaint::kStroke_Style);
-		}else if(strAttribName.CompareNoCase(L"lcdText")==0)
+		}else if(strAttribName->CompareNoCase(L"lcdText")==0)
 		{
 			m_skPaint.setLCDRenderText(String2Bool(strValue));
 		}
 		return S_OK;
 	}
 
-	void SFont_Skia::OnInitFinished(pugi::xml_node xmlNode)
+	void SFont_Skia::OnInitFinished(IXmlNode * pNode)
 	{
-		(xmlNode);
+		(pNode);
 		if(m_blurStyle != -1 && m_blurRadius > 0.0f)
 		{
 			m_skPaint.setMaskFilter(SkBlurMaskFilter::Create(m_blurStyle,

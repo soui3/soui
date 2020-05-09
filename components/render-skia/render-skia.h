@@ -124,8 +124,8 @@ namespace SOUI
         const SkPaint  GetPaint() const {return m_skPaint;}
         SkTypeface *GetFont()const {return m_skFont;}
 
-		virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
-		virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode); 
+		virtual HRESULT WINAPI DefAttributeProc(const IStringW * strAttribName,const IStringW *strValue, BOOL bLoading) OVERRIDE;
+		virtual void WINAPI OnInitFinished(IXmlNode * pNode) OVERRIDE; 
 		SOUI_ATTRS_BEGIN()
 			ATTR_ENUM_BEGIN(L"blurStyle",SkBlurStyle,FALSE)
 				ATTR_ENUM_VALUE(L"normal",kNormal_SkBlurStyle)
