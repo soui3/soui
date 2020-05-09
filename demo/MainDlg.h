@@ -64,7 +64,7 @@ class CMainDlg : public SHostWnd
 			   , public CThreadObject	//线程对象
 			   , public TAutoEventMapReg<CMainDlg>//通知中心自动注册
 			   , public ISetOrLoadSkinHandler
-,				public IAnimation::IAnimationListener
+,				public IAnimationListener
 ,				public IAnimatorListener 
 ,				public IAnimatorUpdateListener
 ,				public SDpiHandler<CMainDlg>
@@ -128,9 +128,9 @@ protected:
     void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
         
 protected:
-	virtual void onAnimationStart(IAnimation * animation){}
-	virtual void onAnimationRepeat(IAnimation * animation){}
-	virtual void onAnimationEnd(IAnimation * animation);
+	virtual void WINAPI onAnimationStart(IAnimation * animation){}
+	virtual void WINAPI onAnimationRepeat(IAnimation * animation){}
+	virtual void WINAPI onAnimationEnd(IAnimation * animation);
 
 protected:
 	virtual void onAnimationStart(IValueAnimator * pAnimator){}

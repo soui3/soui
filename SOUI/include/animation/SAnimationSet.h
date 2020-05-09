@@ -43,110 +43,104 @@
 * <code>android:duration="500"</code> in an XML resource for an AnimationSet object.</p>
 */
 
-namespace SOUI{
+SNSBEGIN
 
-	class SOUI_EXP SAnimationSet : public SAnimation {
-		SOUI_CLASS_NAME(SAnimationSet,L"set")
-			enum{
-				PROPERTY_FILL_AFTER_MASK         = 0x1,
-				PROPERTY_FILL_BEFORE_MASK        = 0x2,
-				PROPERTY_DURATION_MASK = 0x04,
-				PROPERTY_SHARE_INTERPOLATOR_MASK = 0x08,
-		};
-
-	private:
-		int mFlags;
-		bool mDirty;
-		bool mHasAlpha;
-
-		SArray<SAutoRefPtr<IAnimation> > mAnimations;
-		bool mChildStarted;
-		long mLastEnd;
-
-		/**
-		* Constructor to use when building an AnimationSet from code
-		* 
-		* @param shareInterpolator Pass true if all of the animations in this set
-		*        should use the interpolator associated with this AnimationSet.
-		*        Pass false if each animation should use its own interpolator.
-		*/
-	public: SAnimationSet(bool shareInterpolator=true);
-
-	private: 
-		void setFlag(int mask, bool value);
-
-	private: 
-		void init();
-
-	public: 
-		void setFillAfter(bool fillAfter);
-
-		void setFillBefore(bool fillBefore);
-
-		/**
-		* @hide
-		*/
-		bool hasAlpha();
-
-		/**
-		* <p>Sets the duration of every child animation.</p>
-		*
-		* @param durationMillis the duration of the animation, in milliseconds, for
-		*        every child in this set
-		*/
-		void setDuration(long durationMillis);
-
-		/**
-		* Add a child animation to this animation set.
-		* The transforms of the child animations are applied in the order
-		* that they were added
-		* @param a Animation to add.
-		*/
-		void addAnimation(IAnimation  *a);
-
-		/**
-		* The duration of an AnimationSet is defined to be the 
-		* duration of the longest child animation.
-		* 
-		* @see android.view.animation.Animation#getDuration()
-		*/
-		long getDuration() const;
-
-
-		/**
-		* The transformation of an animation set is the concatenation of all of its
-		* component animations.
-		* 
-		* @see android.view.animation.Animation#getTransformation
-		*/
-		bool getTransformation(int64_t currentTime, STransformation &t);
-
-		/**
-		* @see android.view.animation.Animation#scaleCurrentDuration(float)
-		*/
-		void scaleCurrentDuration(float scale);
-
-		/**
-		* @see android.view.animation.Animation#initialize(int, int, int, int)
-		*/
-		void initialize(int width, int height, int parentWidth, int parentHeight);
-
-		virtual void copy(const IAnimation* src);
-	protected:
-		BOOL WINAPI InitFromXml(IXmlNode *pNode);
-
-		HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
-		HRESULT OnAttrFillBefore(const SStringW & value, BOOL bLoading);
-		HRESULT OnAttrFillAfter(const SStringW & value, BOOL bLoading);
-		HRESULT OnAttrStartOffset(const SStringW & value, BOOL bLoading);
-
-		SOUI_ATTRS_BEGIN()
-			ATTR_BIT(L"shareInterpolator", mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK, FALSE)
-			ATTR_CUSTOM(L"duration", OnAttrDuration)
-			ATTR_CUSTOM(L"fillBefore", OnAttrFillBefore)
-			ATTR_CUSTOM(L"fillAfter", OnAttrFillAfter)
-			ATTR_CUSTOM(L"startOffset", OnAttrStartOffset)
-		SOUI_ATTRS_END()
+class SOUI_EXP SAnimationSet : public SAnimation {
+	SOUI_CLASS_NAME(SAnimationSet,L"set")
+		enum{
+			PROPERTY_FILL_AFTER_MASK         = 0x1,
+			PROPERTY_FILL_BEFORE_MASK        = 0x2,
+			PROPERTY_DURATION_MASK = 0x04,
+			PROPERTY_SHARE_INTERPOLATOR_MASK = 0x08,
 	};
 
-}
+private:
+	int mFlags;
+	bool mDirty;
+	bool mHasAlpha;
+
+	SArray<SAutoRefPtr<IAnimation> > mAnimations;
+	bool mChildStarted;
+	long mLastEnd;
+
+	/**
+	* Constructor to use when building an AnimationSet from code
+	* 
+	* @param shareInterpolator Pass true if all of the animations in this set
+	*        should use the interpolator associated with this AnimationSet.
+	*        Pass false if each animation should use its own interpolator.
+	*/
+public: 
+	SAnimationSet(bool shareInterpolator=true);
+	/**
+	* Add a child animation to this animation set.
+	* The transforms of the child animations are applied in the order
+	* that they were added
+	* @param a Animation to add.
+	*/
+	void addAnimation(IAnimation  *a);
+
+	bool hasAlpha();
+private: 
+	void setFlag(int mask, bool value);
+	void init();
+public: 
+	STDMETHOD_(void,setFillAfter)(THIS_ bool bFill) OVERRIDE;
+
+	STDMETHOD_(void,setFillBefore)(THIS_ bool bFill) OVERRIDE;
+
+	/**
+	* <p>Sets the duration of every child animation.</p>
+	*
+	* @param durationMillis the duration of the animation, in milliseconds, for
+	*        every child in this set
+	*/
+	STDMETHOD_(void,setDuration)(THIS_ long durationMillis) OVERRIDE;
+
+
+	/**
+	* The duration of an AnimationSet is defined to be the 
+	* duration of the longest child animation.
+	* 
+	* @see android.view.animation.Animation#getDuration()
+	*/
+	STDMETHOD_(long,getDuration)(THIS) SCONST OVERRIDE;
+
+
+	/**
+	* The transformation of an animation set is the concatenation of all of its
+	* component animations.
+	* 
+	* @see android.view.animation.Animation#getTransformation
+	*/
+	STDMETHOD_(bool,getTransformation)(THIS_ int64_t currentTime, STransformation & outTransformation) OVERRIDE;
+
+	/**
+	* @see android.view.animation.Animation#scaleCurrentDuration(float)
+	*/
+	STDMETHOD_(void,scaleCurrentDuration)(THIS_ float scale) OVERRIDE;
+
+	/**
+	* @see android.view.animation.Animation#initialize(int, int, int, int)
+	*/
+	STDMETHOD_(void,initialize)(THIS_ int width, int height, int parentWidth, int parentHeight) OVERRIDE;
+
+	STDMETHOD_(void,copy)(THIS_ const IAnimation *src) OVERRIDE;
+protected:
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode *pNode) OVERRIDE;
+
+	HRESULT OnAttrDuration(const SStringW & value, BOOL bLoading);
+	HRESULT OnAttrFillBefore(const SStringW & value, BOOL bLoading);
+	HRESULT OnAttrFillAfter(const SStringW & value, BOOL bLoading);
+	HRESULT OnAttrStartOffset(const SStringW & value, BOOL bLoading);
+
+	SOUI_ATTRS_BEGIN()
+		ATTR_BIT(L"shareInterpolator", mFlags, PROPERTY_SHARE_INTERPOLATOR_MASK, FALSE)
+		ATTR_CUSTOM(L"duration", OnAttrDuration)
+		ATTR_CUSTOM(L"fillBefore", OnAttrFillBefore)
+		ATTR_CUSTOM(L"fillAfter", OnAttrFillAfter)
+		ATTR_CUSTOM(L"startOffset", OnAttrStartOffset)
+	SOUI_ATTRS_END()
+};
+
+SNSEND

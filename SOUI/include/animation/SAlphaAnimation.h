@@ -50,14 +50,14 @@ protected:
 	/**
      * Changes the alpha property of the supplied {@link STransformation}
      */
-	virtual void applyTransformation(float interpolatedTime, STransformation & t);
+	STDMETHOD_(void,applyTransformation)(THIS_ float interpolatedTime, STransformation & t) OVERRIDE;
 
-	virtual void copy(const IAnimation * src);
+	STDMETHOD_(void,copy)(THIS_ const IAnimation *src) OVERRIDE;
 public:
     /**
      * @hide
      */
-    virtual bool hasAlpha() const override;
+	STDMETHOD_(bool,hasAlpha)(THIS) SCONST OVERRIDE;
 
 };
 

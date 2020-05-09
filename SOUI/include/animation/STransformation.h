@@ -18,8 +18,8 @@
 #include <interface/SRender-i.h>
 #include <matrix/SMatrix.h>
 
-namespace SOUI
-{
+SNSBEGIN
+
 /**
  * Defines the transformation to be applied at
  * one point in time of an Animation.
@@ -124,4 +124,4 @@ public:
 	bool isIdentity() const;
 };
 
-}
+SNSEND

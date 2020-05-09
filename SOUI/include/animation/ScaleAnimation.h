@@ -109,10 +109,10 @@ namespace SOUI {
 		void initializePivotPoint();
 
 	protected:
-		void applyTransformation(float interpolatedTime, STransformation & t);
-		void copy(const IAnimation *src);
+		STDMETHOD_(void,applyTransformation)(THIS_ float interpolatedTime, STransformation & t) OVERRIDE;
+		STDMETHOD_(void,copy)(THIS_ const IAnimation *src) OVERRIDE;
 	public: 
-		void initialize(int width, int height, int parentWidth, int parentHeight);
+		STDMETHOD_(void,initialize)(THIS_ int width, int height, int parentWidth, int parentHeight) OVERRIDE;
 
 		SOUI_ATTRS_BEGIN()
 			ATTR_FLOAT(L"fromXScale",mFromX,FALSE)
