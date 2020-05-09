@@ -54,24 +54,10 @@ namespace SOUI
             ATTR_CUSTOM(L"src",OnAttrSrc)   //XML文件中指定的图片资源名,(type:name)
         SOUI_ATTRS_END()
 
+	public:
+		STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
 	protected:
-		
-        /**
-        * GetStates
-        * @brief    获得GIF帧数
-        * @return   int -- 帧数
-        * Describe  
-        */    
-        virtual int GetStates() const override;
-
-        /**
-        * GetSkinSize
-        * @brief    获得图片大小
-        * @return   SIZE -- 图片大小
-        * Describe  
-        */    
-        virtual SIZE GetSkinSize() const override;
-
         /**
         * GetFrameDelay
         * @brief    获得指定帧的显示时间

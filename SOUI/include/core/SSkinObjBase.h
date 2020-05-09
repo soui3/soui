@@ -4,94 +4,74 @@
 #include <unknown/obj-ref-impl.hpp>
 #include <souicoll.h>
 #include <core/Swnd.h>
-namespace SOUI
+
+SNSBEGIN
+//////////////////////////////////////////////////////////////////////////
+class SOUI_EXP SState2Index{
+public:
+	SState2Index() {};
+	SState2Index(const SState2Index &src);
+
+	int GetIndex(DWORD dwState, bool checkAsPushdown) const;
+
+	BOOL Init(IXmlNode *pNode);
+
+	static int GetDefIndex(DWORD dwState,bool checkAsPushdown=false);
+
+	static DWORD String2State(const SStringW & strState);
+protected:
+	SMap<DWORD,int> m_mapOfStates;
+};
+
+class SOUI_EXP SSkinObjBase : public TObjRefImpl<SObjectImpl<ISkinObj>>
 {
-	//////////////////////////////////////////////////////////////////////////
-	class SOUI_EXP SState2Index{
-	public:
-		SState2Index() {};
-		SState2Index(const SState2Index &src);
+	SOUI_CLASS_NAME_EX(SSkinObjBase, L"skinObjBase", Skin)
+public:
+	SSkinObjBase();
 
-		int GetIndex(DWORD dwState, bool checkAsPushdown) const;
+	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(void,DrawByState)(THIS_ IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) SCONST OVERRIDE;
+	STDMETHOD_(void,DrawByState)(THIS_ IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState) SCONST OVERRIDE;
+	STDMETHOD_(void,DrawByIndex)(THIS_ IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) SCONST OVERRIDE;
+	STDMETHOD_(void,DrawByIndex)(THIS_ IRenderTarget *pRT, LPCRECT rcDraw, int iState) SCONST OVERRIDE;
+	STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(BYTE,GetAlpha)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(void,SetAlpha)(THIS_ BYTE byAlpha) OVERRIDE;
+	STDMETHOD_(int,GetScale)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(ISkinObj *,Scale)(THIS_ int nScale) OVERRIDE;
+	STDMETHOD_(void,OnColorize)(THIS_ COLORREF cr) OVERRIDE;
 
-		BOOL Init(pugi::xml_node xmlNode);
+	int State2Index(DWORD dwState) const;
 
-		static int GetDefIndex(DWORD dwState,bool checkAsPushdown=false);
+public:
+	SOUI_ATTRS_BEGIN()
+		ATTR_INT(L"alpha",m_byAlpha,TRUE)   //皮肤透明度
+		ATTR_BOOL(L"enableColorize",m_bEnableColorize,TRUE)
+		ATTR_BOOL(L"checkAsPushdown",m_checkAsPushdown,TRUE)
+		ATTR_INT(L"scale",m_nScale,FALSE)
+		ATTR_BOOL(L"enableScale",m_bEnableScale,TRUE)
+		ATTR_STRINGW(L"name",m_strName,FALSE)
+	SOUI_ATTRS_END()
 
-		static DWORD String2State(const SStringW & strState);
-	protected:
-		SMap<DWORD,int> m_mapOfStates;
-	};
+protected:
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode * pNode) OVERRIDE;
 
-    class SOUI_EXP SSkinObjBase : public TObjRefImpl<SObjectImpl<ISkinObj>>
-    {
-		SOUI_CLASS_NAME_EX(SSkinObjBase, L"skinObjBase", Skin)
-    public:
-		SSkinObjBase();
+	virtual void _Scale(ISkinObj *pObj, int nScale);
+	virtual void _DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const;
+	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)  const = 0;
 
-        /**
-        * GetAlpha
-        * @brief    获得skin对象包含透明度
-        * @return   BYTE -- 透明度
-        * Describe  [0-255]
-        */    
-        BYTE GetAlpha() const;
+	BYTE		m_byAlpha;
+	COLORREF    m_crColorize;
+	bool        m_bEnableColorize;
+	int			m_nScale;
+	bool		m_bEnableScale;
+	bool		m_checkAsPushdown;
 
-		virtual int State2Index(DWORD dwState) const;
-        /**
-        * SetAlpha
-        * @brief    设定skin对象包含透明度
-        * @param    BYTE byAlpha-- 透明度
-        * @return   void
-        * Describe  
-        */    
-        virtual void SetAlpha(BYTE byAlpha);
+	SStringW	m_strName;
 
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const;
-        virtual void DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState) const;
+	SState2Index	m_state2Index;
 
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const;
-		virtual void DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState) const;
+};
 
-        virtual SIZE GetSkinSize() const;
-
-        virtual int GetStates() const;
-
-		virtual int GetScale() const;
-
-		virtual ISkinObj * Scale(int nScale);
-
-		virtual LPCWSTR WINAPI GetName() const;
-
-        SOUI_ATTRS_BEGIN()
-            ATTR_INT(L"alpha",m_byAlpha,TRUE)   //皮肤透明度
-			ATTR_BOOL(L"enableColorize",m_bEnableColorize,TRUE)
-			ATTR_BOOL(L"checkAsPushdown",m_checkAsPushdown,TRUE)
-			ATTR_INT(L"scale",m_nScale,FALSE)
-			ATTR_BOOL(L"enableScale",m_bEnableScale,TRUE)
-			ATTR_STRINGW(L"name",m_strName,FALSE)
-        SOUI_ATTRS_END()
-
-    protected:
-		virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
-
-		virtual void _Scale(ISkinObj *pObj, int nScale);
-
-		virtual void _DrawByState(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState,BYTE byAlpha) const;
-
-		virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha)  const = 0;
-
-        BYTE		m_byAlpha;
-        COLORREF    m_crColorize;
-        bool        m_bEnableColorize;
-		int			m_nScale;
-		bool		m_bEnableScale;
-		bool		m_checkAsPushdown;
-
-		SStringW	m_strName;
-
-		SState2Index	m_state2Index;
-
-    };
-
-}//namespace SOUI
+SNSEND

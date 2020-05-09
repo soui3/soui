@@ -136,6 +136,39 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	*/    
 	STDMETHOD_(int,GetObjectType)(THIS)  SCONST PURE;
 
+	/**
+	* GetID
+	* @brief    获取对象ID
+	* @return   int -- 对象ID
+	* Describe  
+	*/    
+	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
+
+	/**
+	* GetName
+	* @brief    获取对象Name
+	* @return   LPCWSTR -- 对象Name
+	* Describe  
+	*/    
+	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
+
+	/**
+	* InitFromXml
+	* @brief    从XML结节初始化SObject对象
+	* @param    pugi::xml_node --  XML结节
+	* @return   BOOL -- 成功返回TRUE
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) PURE;
+
+	/**
+	* OnInitFinished
+	* @brief    属性初始化完成处理接口
+	* @param    pugi::xml_node xmlNode --  属性节点
+	* @return   void
+	* Describe  
+	*/    
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) PURE;
 
 	/**
 	* SetAttributeA
@@ -171,6 +204,16 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
 
 	/**
+	* GetAttribute
+	* @brief    通过属性名查询属性值
+	* @param    const SStringW & strAttr --  属性名
+	* @param    IStringW * pValue -- 属性值
+	* @return   BOOL, TRUE:获取成功，FALSE:获取失败，属性不存在
+	* Describe  默认返回空
+	*/    
+	STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST PURE;
+
+	/**
 	* OnAttribute
 	* @brief    属性处理后调用的方法
 	* @param    const SStringW & strAttribName --  属性名
@@ -180,32 +223,6 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* Describe  不做处理，直接返回
 	*/    
 	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
-
-	/**
-	* GetID
-	* @brief    获取对象ID
-	* @return   int -- 对象ID
-	* Describe  
-	*/    
-	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
-
-	/**
-	* GetName
-	* @brief    获取对象Name
-	* @return   LPCWSTR -- 对象Name
-	* Describe  
-	*/    
-	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
-
-	/**
-	* InitFromXml
-	* @brief    从XML结节初始化SObject对象
-	* @param    pugi::xml_node --  XML结节
-	* @return   BOOL -- 成功返回TRUE
-	* Describe  
-	*/    
-	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) PURE;
-
 
 	/**
 	* DefAttributeProc
@@ -218,24 +235,6 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	*/  
 	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
-	/**
-	* OnInitFinished
-	* @brief    属性初始化完成处理接口
-	* @param    pugi::xml_node xmlNode --  属性节点
-	* @return   void
-	* Describe  
-	*/    
-	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) PURE;
-
-	/**
-	* GetAttribute
-	* @brief    通过属性名查询属性值
-	* @param    const SStringW & strAttr --  属性名
-	* @param    IStringW * pValue -- 属性值
-	* @return   BOOL, TRUE:获取成功，FALSE:获取失败，属性不存在
-	* Describe  默认返回空
-	*/    
-	STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST PURE;
 };
 
 extern "C++"{

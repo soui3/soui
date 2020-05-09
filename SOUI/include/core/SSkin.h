@@ -4,71 +4,60 @@
 #include "../layout/SLayoutSize.h"
 #include "../helper/SplitString.h"
 
-namespace SOUI
-{
-
-
+SNSBEGIN
 
 class SOUI_EXP SSkinImgList: public SSkinObjBase
 {
-    SOUI_CLASS_NAME(SSkinImgList, L"imglist")
+	SOUI_CLASS_NAME(SSkinImgList, L"imglist")
 
 public:
-    SSkinImgList();
-    virtual ~SSkinImgList();
+	SSkinImgList();
+	virtual ~SSkinImgList();
 
 
-    virtual SIZE GetSkinSize() const;
-    
-    virtual int GetStates() const;
+	STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(void,OnColorize)(THIS_ COLORREF cr) OVERRIDE;
 
-    virtual void SetStates(int nStates){m_nStates=nStates;}
+	virtual void SetStates(int nStates){m_nStates=nStates;}
 
-    virtual bool SetImage(IBitmap *pImg)
-    {
-        m_pImg=pImg;
-        return true;
-    }
+	virtual bool SetImage(IBitmap *pImg);
 
-    virtual IBitmap * GetImage()  const
-    {
-        return m_pImg;
-    }
+	virtual IBitmap * GetImage()  const;
 
-    virtual void SetTile(BOOL bTile){m_bTile=bTile;}
-    virtual BOOL IsTile()  const {return m_bTile;}
+	virtual void SetTile(BOOL bTile){m_bTile=bTile;}
+	virtual BOOL IsTile()  const {return m_bTile;}
 
-    virtual void SetVertical(BOOL bVertical){m_bVertical=bVertical;}
-    virtual BOOL IsVertical() const {return m_bVertical;}
-    
-    virtual void OnColorize(COLORREF cr);
+	virtual void SetVertical(BOOL bVertical){m_bVertical=bVertical;}
+	virtual BOOL IsVertical() const {return m_bVertical;}
+
 
 protected:
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
-    virtual UINT GetExpandMode() const;
+	virtual UINT GetExpandMode() const;
 
-    SAutoRefPtr<IBitmap> m_pImg;
+	SAutoRefPtr<IBitmap> m_pImg;
 	int  m_nStates;				  // skin 状态值 
-    BOOL m_bTile;
-    BOOL m_bAutoFit;
-    BOOL m_bVertical;
-    SAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
-    FilterLevel m_filterLevel;
+	BOOL m_bTile;
+	BOOL m_bAutoFit;
+	BOOL m_bVertical;
+	SAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
+	FilterLevel m_filterLevel;
 
-    SOUI_ATTRS_BEGIN()
-        ATTR_IMAGEAUTOREF(L"src", m_pImg, FALSE)    //skinObj引用的图片文件定义在uires.idx中的name属性。
-        ATTR_INT(L"tile", m_bTile, FALSE)    //绘制是否平铺,0--位伸（默认），其它--平铺
-        ATTR_INT(L"autoFit", m_bAutoFit, FALSE)//autoFit为0时不自动适应绘图区大小
-        ATTR_INT(L"vertical", m_bVertical, FALSE)//子图是否垂直排列，0--水平排列(默认), 其它--垂直排列
-        ATTR_INT(L"states",m_nStates, FALSE)  //子图数量,默认为1
-        ATTR_ENUM_BEGIN(L"filterLevel",FilterLevel,FALSE)
-            ATTR_ENUM_VALUE(L"none",kNone_FilterLevel)
-            ATTR_ENUM_VALUE(L"low",kLow_FilterLevel)
-            ATTR_ENUM_VALUE(L"medium",kMedium_FilterLevel)
-            ATTR_ENUM_VALUE(L"high",kHigh_FilterLevel)
-        ATTR_ENUM_END(m_filterLevel)
-    SOUI_ATTRS_END()
+	SOUI_ATTRS_BEGIN()
+		ATTR_IMAGEAUTOREF(L"src", m_pImg, FALSE)    //skinObj引用的图片文件定义在uires.idx中的name属性。
+		ATTR_INT(L"tile", m_bTile, FALSE)    //绘制是否平铺,0--位伸（默认），其它--平铺
+		ATTR_INT(L"autoFit", m_bAutoFit, FALSE)//autoFit为0时不自动适应绘图区大小
+		ATTR_INT(L"vertical", m_bVertical, FALSE)//子图是否垂直排列，0--水平排列(默认), 其它--垂直排列
+		ATTR_INT(L"states",m_nStates, FALSE)  //子图数量,默认为1
+		ATTR_ENUM_BEGIN(L"filterLevel",FilterLevel,FALSE)
+		ATTR_ENUM_VALUE(L"none",kNone_FilterLevel)
+		ATTR_ENUM_VALUE(L"low",kLow_FilterLevel)
+		ATTR_ENUM_VALUE(L"medium",kMedium_FilterLevel)
+		ATTR_ENUM_VALUE(L"high",kHigh_FilterLevel)
+		ATTR_ENUM_END(m_filterLevel)
+	SOUI_ATTRS_END()
 };
 
 class SOUI_EXP SSkinImgCenter : public SSkinImgList
@@ -84,33 +73,32 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinImgFrame : public SSkinImgList
 {
-    SOUI_CLASS_NAME(SSkinImgFrame, L"imgframe")
+	SOUI_CLASS_NAME(SSkinImgFrame, L"imgframe")
 
 public:
-    SSkinImgFrame();
+	SSkinImgFrame();
 
+	void SetMargin(const CRect rcMargin){m_rcMargin=rcMargin;}
 
-    void SetMargin(const CRect rcMargin){m_rcMargin=rcMargin;}
-
-    CRect GetMargin(){return m_rcMargin;}
+	CRect GetMargin(){return m_rcMargin;}
 
 protected:
-    virtual UINT GetExpandMode() const;
+	virtual UINT GetExpandMode() const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 
-    CRect m_rcMargin;
+	CRect m_rcMargin;
 
-    SOUI_ATTRS_BEGIN()
-        ATTR_RECT(L"margin" ,m_rcMargin,FALSE)          //九宫格4周
-        ATTR_INT(L"left", m_rcMargin.left, FALSE)        //九宫格左边距
-        ATTR_INT(L"top", m_rcMargin.top, FALSE)          //九宫格上边距
-        ATTR_INT(L"right", m_rcMargin.right, FALSE)      //九宫格右边距
-        ATTR_INT(L"bottom", m_rcMargin.bottom, FALSE)    //九宫格下边距
-        ATTR_INT(L"margin-x", m_rcMargin.left=m_rcMargin.right, FALSE)//九宫格左右边距
-        ATTR_INT(L"margin-y", m_rcMargin.top=m_rcMargin.bottom, FALSE)//九宫格上下边距
+	SOUI_ATTRS_BEGIN()
+		ATTR_RECT(L"margin" ,m_rcMargin,FALSE)          //九宫格4周
+		ATTR_INT(L"left", m_rcMargin.left, FALSE)        //九宫格左边距
+		ATTR_INT(L"top", m_rcMargin.top, FALSE)          //九宫格上边距
+		ATTR_INT(L"right", m_rcMargin.right, FALSE)      //九宫格右边距
+		ATTR_INT(L"bottom", m_rcMargin.bottom, FALSE)    //九宫格下边距
+		ATTR_INT(L"margin-x", m_rcMargin.left=m_rcMargin.right, FALSE)//九宫格左右边距
+		ATTR_INT(L"margin-y", m_rcMargin.top=m_rcMargin.bottom, FALSE)//九宫格上下边距
 		ATTR_MARGIN(L"margin2", m_rcMargin,FALSE)
-    SOUI_ATTRS_END()
+	SOUI_ATTRS_END()
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -122,7 +110,6 @@ public:
 	SOUI_ATTRS_BEGIN()
 		ATTR_CUSTOM(L"src" ,OnAttrSrc)
 	SOUI_ATTRS_END()
-
 protected:
 	HRESULT OnAttrSrc(const SStringW & strValue,BOOL bLoading);
 };
@@ -130,112 +117,108 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinButton : public SSkinObjBase
 {
-    SOUI_CLASS_NAME(SSkinButton, L"button")
+	SOUI_CLASS_NAME(SSkinButton, L"button")
 
-    enum{
-        ST_NORMAL=0,
-        ST_HOVER,
-        ST_PUSHDOWN,
-        ST_DISABLE,
-    };
+		enum{
+			ST_NORMAL=0,
+			ST_HOVER,
+			ST_PUSHDOWN,
+			ST_DISABLE,
+	};
 
-    struct BTNCOLORS{
-        COLORREF m_crBorder[4];
+	struct BTNCOLORS{
+		COLORREF m_crBorder[4];
 
-        COLORREF    m_crUp[4];
-        COLORREF    m_crDown[4];
-    };
+		COLORREF    m_crUp[4];
+		COLORREF    m_crDown[4];
+	};
 public:
-    SSkinButton();
+	SSkinButton();
 
-    virtual int GetStates() const;
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(ISkinObj *,Scale)(THIS_ int nScale) OVERRIDE;
+	STDMETHOD_(void,OnColorize)(THIS_ COLORREF cr) OVERRIDE;
 
-    void SetColors(COLORREF crUp[4],COLORREF crDown[4],COLORREF crBorder[4]);
-
-	virtual ISkinObj * Scale(int nScale);
+	void SetColors(COLORREF crUp[4],COLORREF crDown[4],COLORREF crBorder[4]);
 
 protected:
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
-    virtual void OnColorize(COLORREF cr);
-    BTNCOLORS   m_colors;
-    BTNCOLORS   m_colorsBackup;
+	BTNCOLORS   m_colors;
+	BTNCOLORS   m_colorsBackup;
 
-    int         m_nCornerRadius;
+	int         m_nCornerRadius;
 	float		m_fCornerPercent;				// 圆角 百分比 0.5 半圆
-    
-    SOUI_ATTRS_BEGIN()
-        ATTR_COLOR(L"colorBorder", m_colors.m_crBorder[0], TRUE)               //正常 边框颜色
+
+	SOUI_ATTRS_BEGIN()
+		ATTR_COLOR(L"colorBorder", m_colors.m_crBorder[0], TRUE)               //正常 边框颜色
 		ATTR_COLOR(L"colorBorderHover", m_colors.m_crBorder[1], TRUE)		 //浮动 边框颜色
 		ATTR_COLOR(L"colorBorderPush", m_colors.m_crBorder[2], TRUE)		 //下压 边框颜色
 		ATTR_COLOR(L"colorBorderDisable", m_colors.m_crBorder[3], TRUE)	 //禁用 边框颜色
-        ATTR_COLOR(L"colorUp", m_colors.m_crUp[ST_NORMAL], TRUE)             //正常状态渐变起始颜色
-        ATTR_COLOR(L"colorDown", m_colors.m_crDown[ST_NORMAL], TRUE)         //正常状态渐变终止颜色
-        ATTR_COLOR(L"colorUpHover", m_colors.m_crUp[ST_HOVER], TRUE)         //浮动状态渐变起始颜色
-        ATTR_COLOR(L"colorDownHover", m_colors.m_crDown[ST_HOVER], TRUE)     //浮动状态渐变终止颜色
-        ATTR_COLOR(L"colorUpPush", m_colors.m_crUp[ST_PUSHDOWN], TRUE)       //下压状态渐变起始颜色
-        ATTR_COLOR(L"colorDownPush", m_colors.m_crDown[ST_PUSHDOWN], TRUE)   //下压状态渐变终止颜色
-        ATTR_COLOR(L"colorUpDisable", m_colors.m_crUp[ST_DISABLE], TRUE)     //禁用状态渐变起始颜色
-        ATTR_COLOR(L"colorDownDisable", m_colors.m_crDown[ST_DISABLE], TRUE) //禁用状态渐变终止颜色
-        ATTR_INT(L"cornerRadius",m_nCornerRadius,TRUE)              //圆角大小
+		ATTR_COLOR(L"colorUp", m_colors.m_crUp[ST_NORMAL], TRUE)             //正常状态渐变起始颜色
+		ATTR_COLOR(L"colorDown", m_colors.m_crDown[ST_NORMAL], TRUE)         //正常状态渐变终止颜色
+		ATTR_COLOR(L"colorUpHover", m_colors.m_crUp[ST_HOVER], TRUE)         //浮动状态渐变起始颜色
+		ATTR_COLOR(L"colorDownHover", m_colors.m_crDown[ST_HOVER], TRUE)     //浮动状态渐变终止颜色
+		ATTR_COLOR(L"colorUpPush", m_colors.m_crUp[ST_PUSHDOWN], TRUE)       //下压状态渐变起始颜色
+		ATTR_COLOR(L"colorDownPush", m_colors.m_crDown[ST_PUSHDOWN], TRUE)   //下压状态渐变终止颜色
+		ATTR_COLOR(L"colorUpDisable", m_colors.m_crUp[ST_DISABLE], TRUE)     //禁用状态渐变起始颜色
+		ATTR_COLOR(L"colorDownDisable", m_colors.m_crDown[ST_DISABLE], TRUE) //禁用状态渐变终止颜色
+		ATTR_INT(L"cornerRadius",m_nCornerRadius,TRUE)              //圆角大小
 		ATTR_FLOAT(L"cornerPercent", m_fCornerPercent, TRUE)				// 圆角 百分比 0.5 半圆 会覆盖 cornerRadius 
-    SOUI_ATTRS_END()
-
-
+	SOUI_ATTRS_END()
 };
 
 //////////////////////////////////////////////////////////////////////////
 
 class SOUI_EXP SSkinGradation  : public SSkinObjBase
 {
-    SOUI_CLASS_NAME(SSkinGradation, L"gradation")
+	SOUI_CLASS_NAME(SSkinGradation, L"gradation")
 public:
-    SSkinGradation();
-    
-    void SetColorFrom(COLORREF crFrom)
-    {
-        m_crFrom=crFrom;
-    }
+	SSkinGradation();
 
-    void SetColorTo(COLORREF crTo)
-    {
-        m_crTo=crTo;
-    }
+	void SetColorFrom(COLORREF crFrom)
+	{
+		m_crFrom=crFrom;
+	}
 
-    void SetVertical(BOOL bVertical)
-    {
-        m_bVert=bVertical;
-    }
+	void SetColorTo(COLORREF crTo)
+	{
+		m_crTo=crTo;
+	}
 
+	void SetVertical(BOOL bVertical)
+	{
+		m_bVert=bVertical;
+	}
+
+public:
+	STDMETHOD_(void,OnColorize)(THIS_ COLORREF cr) OVERRIDE;
+	STDMETHOD_(ISkinObj *,Scale)(THIS_ int nScale) OVERRIDE;
 protected:
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const;
-    virtual void OnColorize(COLORREF cr);
-	virtual ISkinObj * Scale(int nScale);
 
-    COLORREF m_crFrom;
-    COLORREF m_crTo;
-    BOOL m_bVert;
+	COLORREF m_crFrom;
+	COLORREF m_crTo;
+	BOOL m_bVert;
 
-    COLORREF    m_crColorize;
-    COLORREF    m_crFromBackup,m_crToBackup;
+	COLORREF    m_crColorize;
+	COLORREF    m_crFromBackup,m_crToBackup;
 
-    SOUI_ATTRS_BEGIN()
-        ATTR_COLOR(L"colorFrom", m_crFrom, TRUE)    //渐变起始颜色
-        ATTR_COLOR(L"colorTo", m_crTo, TRUE)        //渐变终止颜色
-        ATTR_INT(L"vertical", m_bVert, TRUE)        //渐变方向,0--水平(默认), 1--垂直
-    SOUI_ATTRS_END()
-
-
+	SOUI_ATTRS_BEGIN()
+		ATTR_COLOR(L"colorFrom", m_crFrom, TRUE)    //渐变起始颜色
+		ATTR_COLOR(L"colorTo", m_crTo, TRUE)        //渐变终止颜色
+		ATTR_INT(L"vertical", m_bVert, TRUE)        //渐变方向,0--水平(默认), 1--垂直
+	SOUI_ATTRS_END()
 };
 
 
 //////////////////////////////////////////////////////////////////////////
 //
 enum SBSTATE{
-    SBST_NORMAL=0,    //正常状态
-    SBST_HOVER,        //hover状态
-    SBST_PUSHDOWN,    //按下状态
-    SBST_DISABLE,    //禁用状态
-    SBST_INACTIVE,    //失活状态,主要针对两端的箭头
+	SBST_NORMAL=0,    //正常状态
+	SBST_HOVER,        //hover状态
+	SBST_PUSHDOWN,    //按下状态
+	SBST_DISABLE,    //禁用状态
+	SBST_INACTIVE,    //失活状态,主要针对两端的箭头
 };
 
 #define MAKESBSTATE(sbCode,nState1,bVertical) MAKELONG((sbCode),MAKEWORD((nState1),(bVertical)))
@@ -246,67 +229,68 @@ enum SBSTATE{
 
 class SOUI_EXP SSkinScrollbar : public SSkinImgList
 {
-    SOUI_CLASS_NAME(SSkinScrollbar, L"scrollbar")
+	SOUI_CLASS_NAME(SSkinScrollbar, L"scrollbar")
 
 public:
 
-    SSkinScrollbar();
+	SSkinScrollbar();
 
-    //指示滚动条皮肤是否支持显示上下箭头
-    virtual BOOL HasArrow() const {return TRUE;}
-    
-    virtual int GetIdealSize()  const;
+	//指示滚动条皮肤是否支持显示上下箭头
+	virtual BOOL HasArrow() const {return TRUE;}
+
+	virtual int GetIdealSize()  const;
 
 protected:
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const {}
 	virtual void _DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const;
-    //返回源指定部分在原位图上的位置。
-    virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical) const;
+	//返回源指定部分在原位图上的位置。
+	virtual CRect GetPartRect(int nSbCode, int nState,BOOL bVertical) const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
 
-    int         m_nMargin;
-    BOOL        m_bHasGripper;
-    BOOL        m_bHasInactive;//有失活状态的箭头时，滚动条皮肤有必须有5行，否则可以是3行或者4行
+	int         m_nMargin;
+	BOOL        m_bHasGripper;
+	BOOL        m_bHasInactive;//有失活状态的箭头时，滚动条皮肤有必须有5行，否则可以是3行或者4行
 
-    SOUI_ATTRS_BEGIN()
-        ATTR_INT(L"margin",m_nMargin,FALSE)             //边缘不拉伸大小
-        ATTR_INT(L"hasGripper",m_bHasGripper,FALSE)     //滑块上是否有帮手(gripper)
-        ATTR_INT(L"hasInactive",m_bHasInactive,FALSE)   //是否有禁用态
-    SOUI_ATTRS_END()
+	SOUI_ATTRS_BEGIN()
+		ATTR_INT(L"margin",m_nMargin,FALSE)             //边缘不拉伸大小
+		ATTR_INT(L"hasGripper",m_bHasGripper,FALSE)     //滑块上是否有帮手(gripper)
+		ATTR_INT(L"hasInactive",m_bHasInactive,FALSE)   //是否有禁用态
+	SOUI_ATTRS_END()
 };
 
 
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinColorRect : public SSkinObjBase
 {
-    SOUI_CLASS_NAME(SSkinColorRect,L"colorrect")
+	SOUI_CLASS_NAME(SSkinColorRect,L"colorrect")
 public:
-    SSkinColorRect();
-    virtual ~SSkinColorRect();
+	SSkinColorRect();
+	virtual ~SSkinColorRect();
 
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(ISkinObj *,Scale)(THIS_ int nScale) OVERRIDE;
 protected:
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,BYTE byAlpha) const;
-	virtual int GetStates() const;
-	virtual ISkinObj * Scale(int nScale);
 
-    SOUI_ATTRS_BEGIN()
-        ATTR_COLOR(L"normal",m_crStates[0],FALSE)
-        ATTR_COLOR(L"hover",m_crStates[1],FALSE)
-        ATTR_COLOR(L"pushdown",m_crStates[2],FALSE)
-        ATTR_COLOR(L"disable",m_crStates[3],FALSE)
+	SOUI_ATTRS_BEGIN()
+		ATTR_COLOR(L"normal",m_crStates[0],FALSE)
+		ATTR_COLOR(L"hover",m_crStates[1],FALSE)
+		ATTR_COLOR(L"pushdown",m_crStates[2],FALSE)
+		ATTR_COLOR(L"disable",m_crStates[3],FALSE)
 		ATTR_COLOR(L"normalBorder", m_crBorders[0], FALSE)
 		ATTR_COLOR(L"hoverBorder", m_crBorders[1], FALSE)
 		ATTR_COLOR(L"pushdownBorder", m_crBorders[2], FALSE)
 		ATTR_COLOR(L"disableBorder", m_crBorders[3], FALSE)
 		ATTR_INT(L"borderWidth",m_nBorderWidth,FALSE)
-        ATTR_INT(L"cornerRadius",m_nRadius,FALSE)
+		ATTR_INT(L"cornerRadius",m_nRadius,FALSE)
 		ATTR_FLOAT(L"cornerPercent", m_fCornerPercent, FALSE)				// 圆角 百分比 0.5 半圆 会覆盖 cornerRadius 
-    SOUI_ATTRS_END()
+		SOUI_ATTRS_END()
 
 
-    int      m_nRadius;
+protected:
+	int      m_nRadius;
 	float	m_fCornerPercent;				// 圆角 百分比 0.5 半圆
-    COLORREF m_crStates[4];
+	COLORREF m_crStates[4];
 	COLORREF m_crBorders[4];
 	int		m_nBorderWidth;
 };
@@ -316,7 +300,7 @@ protected:
 class SOUI_EXP SSkinShape : public SSkinObjBase
 {
 	SOUI_CLASS_NAME(SSkinShape,L"shape")
-	enum Shape {rectangle,oval,ring};
+		enum Shape {rectangle,oval,ring};
 
 	class SGradient : public TObjRefImpl<SObject>
 	{
@@ -330,9 +314,9 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 		SOUI_ATTRS_BEGIN()
 			ATTR_ENUM_BEGIN(L"type",GradientType,TRUE)
-				ATTR_ENUM_VALUE(L"linear",linear)
-				ATTR_ENUM_VALUE(L"radial",radial)
-				ATTR_ENUM_VALUE(L"sweep",sweep)
+			ATTR_ENUM_VALUE(L"linear",linear)
+			ATTR_ENUM_VALUE(L"radial",radial)
+			ATTR_ENUM_VALUE(L"sweep",sweep)
 			ATTR_ENUM_END(m_Type)
 			ATTR_FLOAT(L"angle",m_angle,TRUE)
 			ATTR_FLOAT(L"centerX",m_centerX,TRUE)
@@ -364,10 +348,10 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 			ATTR_LAYOUTSIZE(L"width",m_width,TRUE)
 			ATTR_COLOR(L"color",m_color,TRUE)
 			ATTR_ENUM_BEGIN(L"style",int,TRUE)
-				ATTR_ENUM_VALUE(L"solid",PS_SOLID)
-				ATTR_ENUM_VALUE(L"dash",PS_DASH)
-				ATTR_ENUM_VALUE(L"dashDot",PS_DASHDOT)
-				ATTR_ENUM_VALUE(L"dashDotDot",PS_DASHDOTDOT)
+			ATTR_ENUM_VALUE(L"solid",PS_SOLID)
+			ATTR_ENUM_VALUE(L"dash",PS_DASH)
+			ATTR_ENUM_VALUE(L"dashDot",PS_DASHDOT)
+			ATTR_ENUM_VALUE(L"dashDotDot",PS_DASHDOTDOT)
 			ATTR_ENUM_END(m_style)
 		SOUI_ATTRS_END()
 	public:
@@ -424,31 +408,28 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 		SOUI_ATTRS_BEGIN()
 			ATTR_FLOAT(L"startAngle", m_startAngle, TRUE)
 			ATTR_FLOAT(L"sweepAngle", m_sweepAngle, TRUE)
-		SOUI_ATTRS_END()
+			SOUI_ATTRS_END()
 
 
-		float m_startAngle;
+			float m_startAngle;
 		float m_sweepAngle;
 	};
 
 public:
 	SSkinShape();
 
-
-	virtual SIZE GetSkinSize() const;
-
-	virtual int GetStates(){return 1;}
-
+	STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
 
 	SOUI_ATTRS_BEGIN()
 		ATTR_ENUM_BEGIN(L"shape",Shape,TRUE)
-			ATTR_ENUM_VALUE(L"rectangle",rectangle)
-			ATTR_ENUM_VALUE(L"oval",oval)
-			ATTR_ENUM_VALUE(L"ring",ring)
+		ATTR_ENUM_VALUE(L"rectangle",rectangle)
+		ATTR_ENUM_VALUE(L"oval",oval)
+		ATTR_ENUM_VALUE(L"ring",ring)
 		ATTR_ENUM_END(m_shape)
 	SOUI_ATTRS_END()
 protected:
-	void WINAPI OnInitFinished(IXmlNode * pNode);
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode * pNode) OVERRIDE;
 
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const;
 
@@ -468,13 +449,11 @@ protected:
 
 class SOUI_EXP SSKinGroup : public SSkinObjBase
 {
-SOUI_CLASS_NAME(SSKinGroup,L"group")
+	SOUI_CLASS_NAME(SSKinGroup,L"group")
 public:
 
-	virtual int GetStates() const;
-	virtual SIZE GetSkinSize() const;
-
-	
+	STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
 
 	SOUI_ATTRS_BEGIN()
 		ATTR_SKIN(L"normal",m_skins[0],FALSE)
@@ -488,4 +467,5 @@ protected:
 	virtual void _Scale(ISkinObj * skinObj, int nScale);
 	SAutoRefPtr<ISkinObj> m_skins[4];
 };
-}//namespace SOUI
+
+SNSEND

@@ -72,8 +72,8 @@ namespace SOUI
         int LoadFromMemory(LPVOID pBits,size_t szData);
 
     public:
-		virtual SIZE GetSkinSize() const override;
-		virtual int GetStates() const  override;
+		STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetStates)(THIS) SCONST OVERRIDE;
 
 	public:
         SOUI_ATTRS_BEGIN()

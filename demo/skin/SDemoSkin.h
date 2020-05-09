@@ -44,13 +44,13 @@ namespace SOUI
 		COLORREF GetThemeColor() const;
 
 		void SetHander(ISetOrLoadSkinHandler*skinhander);
-		virtual SIZE GetSkinSize();
+		virtual SIZE WINAPI GetSkinSize();
 		virtual BOOL IgnoreState();
 		bool SaveSkin();
 		bool LoadSkin(SkinType, SkinLoadInf& saveInf);
-		virtual int GetStates();
+		virtual int WINAPI GetStates();
 		//不支持自动色调 
-		virtual void OnColorize(COLORREF cr)
+		virtual void WINAPI OnColorize(COLORREF cr)
 		{}
 	protected:
 		virtual void _Draw(IRenderTarget *pRT, LPCRECT rcDraw, DWORD dwState, BYTE byAlpha);

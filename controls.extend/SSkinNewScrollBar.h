@@ -30,7 +30,7 @@ public:
         return m_pImgVert->Width()/m_nStates;
     }
 protected:
-	virtual void OnColorize(COLORREF cr){
+	virtual void WINAPI OnColorize(COLORREF cr){
 
 	}
 

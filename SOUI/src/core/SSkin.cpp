@@ -7,9 +7,7 @@
 #include "core/Sskin.h"
 #include "helper/SDIBHelper.h"
 
-namespace SOUI
-{
-
+SNSBEGIN
 
 //////////////////////////////////////////////////////////////////////////
 // SSkinImgList
@@ -119,6 +117,17 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 	{
 		m_pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
+}
+
+bool SSkinImgList::SetImage(IBitmap *pImg)
+{
+	m_pImg=pImg;
+	return true;
+}
+
+IBitmap * SSkinImgList::GetImage() const
+{
+	return m_pImg;
 }
 
 
@@ -664,6 +673,11 @@ void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 
 }
 
+int SSkinShape::GetStates() const
+{
+	return 1;
+}
+
 
 
 void SSkinShape::SGradient::Draw(IRenderTarget *pRT, LPCRECT rcDraw, BYTE byAlpha,int nScale) const
@@ -800,4 +814,4 @@ HRESULT SSkinImgFrame2::OnAttrSrc(const SStringW & strValue,BOOL bLoading)
 	return hRet;
 }
 
-}//namespace SOUI
+SNSEND
