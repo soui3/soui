@@ -1,9 +1,12 @@
 #pragma once
 
-namespace SOUI
+SNSBEGIN
+
+#undef INTERFACE
+#define INTERFACE IHostMsgHandler
+DECLARE_INTERFACE(IHostMsgHandler)
 {
-	struct IHostMsgHandler
-	{
-		virtual void OnHostMsg(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) = 0;
-	};
-}
+	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) PURE;
+};
+
+SNSEND

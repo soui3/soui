@@ -337,7 +337,7 @@ protected:
 	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
 	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
 protected:
-	virtual void OnHostMsg(bool bRelayout,UINT uMsg, WPARAM wParam, LPARAM lParam) override; 
+	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
