@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include <interface/scaret-i.h>
 #include <interface/sinterpolator-i.h>
+#include <interface/STimelineHandler-i.h>
 
 namespace SOUI{
-    class SOUI_EXP SCaret : public TObjRefImpl<SObjectImpl<ICaret>>
+    class SOUI_EXP SCaret : public TObjRefImpl<SObjectImpl<ICaret>>,public ITimelineHandler
     {
 		SOUI_CLASS_NAME_EX(SCaret,L"caret", None)
     public:
@@ -11,13 +12,17 @@ namespace SOUI{
 		~SCaret();
 	public:
 		// 通过 ICaret 继承
-		virtual BOOL Init(HBITMAP hBmp, int nWid, int nHei) override;
-		virtual void Draw(IRenderTarget * pRT) override;
-		virtual void SetPosition(int x, int y) override;
-		virtual BOOL SetVisible(BOOL bVisible,SWND owner) override;
-		virtual BOOL IsVisible() const  override;
-		virtual RECT GetRect() const override;
+		STDMETHOD_(BOOL,Init)(THIS_ HBITMAP hBmp, int nWid, int nHei) OVERRIDE;
 
+		STDMETHOD_(void,SetPosition)(THIS_ int x, int y) OVERRIDE;
+
+		STDMETHOD_(BOOL,SetVisible)(THIS_ BOOL bVisible,SWND owner) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsVisible)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(void,Draw)(THIS_ IRenderTarget *pRT) OVERRIDE;
+
+		STDMETHOD_(RECT,GetRect)(THIS) SCONST OVERRIDE;
 	public:
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
