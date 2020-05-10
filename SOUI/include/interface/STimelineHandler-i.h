@@ -1,24 +1,26 @@
 #pragma once
+#include <utilities-def.h>
 
-namespace SOUI
+SNSBEGIN
+/**
+* @struct     ITimelineHandler
+* @brief      时间轴处理接口
+* 
+* Describe    
+*/
+#undef INTERFACE
+#define INTERFACE ITimelineHandler
+DECLARE_INTERFACE(ITimelineHandler)
 {
+	STDMETHOD_(void,OnNextFrame)(THIS_) PURE;
+};
 
-    /**
-    * @struct     ITimelineHandler
-    * @brief      时间轴处理接口
-    * 
-    * Describe    
-    */
-    struct ITimelineHandler
-    {
-        virtual void OnNextFrame()=0;
-    };
+#undef INTERFACE
+#define INTERFACE ITimelineHandlersMgr
+DECLARE_INTERFACE(ITimelineHandlersMgr)
+{
+	STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) PURE;
 
-
-	struct ITimelineHandlersMgr
-	{
-		virtual BOOL RegisterTimelineHandler(ITimelineHandler *pHandler) = 0;
-
-		virtual BOOL UnregisterTimelineHandler(ITimelineHandler *pHandler) = 0;
-	};
-}
+	STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) PURE;
+};
+SNSEND

@@ -102,7 +102,7 @@ namespace SOUI
         virtual BOOL CreateChildren(pugi::xml_node xmlNode);
         virtual void UpdateChildrenPosition();
         
-        virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
         bool OnBtnNewClick(EventArgs *pEvt);
         bool OnBtnCloseTabClick(EventArgs *pEvt);

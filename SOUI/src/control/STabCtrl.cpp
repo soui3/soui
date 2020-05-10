@@ -208,7 +208,7 @@ namespace SOUI
 		{
 		}
 
-		void OnNextFrame()
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE
 		{
 			if (++m_iStep > m_nSteps)
 			{

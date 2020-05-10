@@ -49,7 +49,7 @@ namespace SOUI
     protected://SWindow的虚函数
         virtual CSize GetDesiredSize(int wid,int hei);
     protected://ITimerLineHander
-        virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
     public://属性处理
         SOUI_ATTRS_BEGIN()		

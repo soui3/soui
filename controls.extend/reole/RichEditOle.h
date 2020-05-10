@@ -259,7 +259,8 @@ public://ISmileyHost
     virtual HRESULT STDMETHODCALLTYPE InvalidateRect(LPCRECT pRect);
 
 public://ITimelineHandler
-    virtual void OnNextFrame(){OnTimer(10);}
+	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE
+	{OnTimer(10);}
 public:
     bool OnHostUpdate(SOUI::EventArgs *pEvt);
     bool OnHostVisibleChanged(SOUI::EventArgs *pEvt);

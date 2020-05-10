@@ -133,10 +133,10 @@ protected:
 	virtual void WINAPI onAnimationEnd(IAnimation * animation);
 
 protected:
-	virtual void onAnimationStart(IValueAnimator * pAnimator){}
-	virtual void onAnimationRepeat(IValueAnimator * pAnimator){}
-	virtual void onAnimationEnd(IValueAnimator * pAnimator);
-	virtual void onAnimationUpdate(IValueAnimator *pAnimator);
+	virtual void WINAPI onAnimationStart(IValueAnimator * pAnimator){}
+	virtual void WINAPI onAnimationRepeat(IValueAnimator * pAnimator){}
+	virtual void WINAPI onAnimationEnd(IValueAnimator * pAnimator);
+	virtual void WINAPI onAnimationUpdate(IValueAnimator *pAnimator);
 
 protected:
     //virtual void OnSetSkin(int iSkin);

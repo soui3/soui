@@ -12,7 +12,7 @@ namespace SOUI
 
 		void EnableAnimate(bool bEnable);
 	protected:
-		virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
 		virtual BOOL OnRelayout(const CRect &rcWnd);
 

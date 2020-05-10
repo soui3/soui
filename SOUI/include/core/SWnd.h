@@ -237,7 +237,7 @@ namespace SOUI
 			const STransformation & GetTransformation() const;
 			bool getFillAfter() const;
 		public:
-			void OnNextFrame() override;
+			STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 		protected:
 			bool OnOwnerResize(EventArgs *e);
 		};

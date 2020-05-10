@@ -11,7 +11,7 @@ namespace SOUI
 		~S3dWindow(void);
 
 	protected:
-		virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
 		void OnShowWindow(BOOL bShow, UINT nStatus);
 		BOOL OnEraseBkgnd(IRenderTarget *pRT){return TRUE;}

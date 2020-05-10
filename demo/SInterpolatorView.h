@@ -20,7 +20,7 @@ namespace SOUI
 			MSG_WM_DESTROY(OnDestroy)
 		SOUI_MSG_MAP_END()
 	protected:
-		virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 		
 		SOUI_ATTRS_BEGIN()
 			ATTR_INT(L"speed",m_nSpeed,FALSE)

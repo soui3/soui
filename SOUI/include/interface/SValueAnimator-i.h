@@ -4,19 +4,25 @@
 
 SNSBEGIN
 
-struct IValueAnimator;
-struct IAnimatorUpdateListener
+interface IValueAnimator;
+
+#undef INTERFACE
+#define INTERFACE IAnimatorUpdateListener
+DECLARE_INTERFACE(IAnimatorUpdateListener)
 {
-	virtual void onAnimationUpdate(IValueAnimator *pAnimator) = 0;
+	STDMETHOD_(void,onAnimationUpdate)(THIS_ IValueAnimator *pAnimator) PURE;
 };
 
-struct IAnimatorListener {
+#undef INTERFACE
+#define INTERFACE IAnimatorListener
+DECLARE_INTERFACE(IAnimatorListener)
+{
 	/**
 	* <p>Notifies the start of the animation.</p>
 	*
 	* @param animation The started animation.
 	*/
-	virtual void onAnimationStart(IValueAnimator * pAnimator) = 0;
+	STDMETHOD_(void,onAnimationStart)(THIS_ IValueAnimator * pAnimator) PURE;
 
 	/**
 	* <p>Notifies the end of the animation. This callback is not invoked
@@ -24,17 +30,159 @@ struct IAnimatorListener {
 	*
 	* @param animation The animation which reached its end.
 	*/
-	virtual void onAnimationEnd(IValueAnimator * pAnimator) = 0;
+	STDMETHOD_(void,onAnimationEnd)(THIS_ IValueAnimator * pAnimator) PURE;
 
 	/**
 	* <p>Notifies the repetition of the animation.</p>
 	*
 	* @param animation The animation which was repeated.
 	*/
-	virtual void onAnimationRepeat(IValueAnimator * pAnimator) = 0;
+	STDMETHOD_(void,onAnimationRepeat)(THIS_ IValueAnimator * pAnimator) PURE;
 };
 
-struct IValueAnimator  : IObject{
+#undef INTERFACE
+#define INTERFACE IValueAnimator
+DECLARE_INTERFACE_(IValueAnimator,IObject)
+{
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* IsClass
+	* @brief    判断this是不是属于指定的类型
+	* @param    LPCWSTR lpszName --  测试类型名
+	* @return   BOOL -- true是测试类型
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST PURE;
+
+	/**
+	* GetObjectClass
+	* @brief    获得类型名
+	* @return   LPCWSTR -- 类型名
+	* Describe  这是一个虚函数，注意与GetClassName的区别。
+	*/    
+	STDMETHOD_(LPCWSTR,GetObjectClass)(THIS_) SCONST PURE;
+
+	/**
+	* GetObjectType
+	* @brief    获得对象类型
+	* @return   int -- 对象类型
+	* Describe  这是一个虚函数，注意与GetClassType的区别。
+	*/    
+	STDMETHOD_(int,GetObjectType)(THIS)  SCONST PURE;
+
+	/**
+	* GetID
+	* @brief    获取对象ID
+	* @return   int -- 对象ID
+	* Describe  
+	*/    
+	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
+
+	/**
+	* GetName
+	* @brief    获取对象Name
+	* @return   LPCWSTR -- 对象Name
+	* Describe  
+	*/    
+	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
+
+	/**
+	* InitFromXml
+	* @brief    从XML结节初始化SObject对象
+	* @param    pugi::xml_node --  XML结节
+	* @return   BOOL -- 成功返回TRUE
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) PURE;
+
+	/**
+	* OnInitFinished
+	* @brief    属性初始化完成处理接口
+	* @param    pugi::xml_node xmlNode --  属性节点
+	* @return   void
+	* Describe  
+	*/    
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) PURE;
+
+	/**
+	* SetAttributeA
+	* @brief    设置一个对象属性
+	* @param    const IStringA * strAttribName --  属性名
+	* @param    const IStringA * strValue --  属性值
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @return   HRESULT -- 处理处理结果
+	* Describe  
+	*/    
+	STDMETHOD_(HRESULT,SetAttributeA)(THIS_ const IStringA * strAttribName, const IStringA *  strValue, BOOL bLoading) PURE;
+
+	/**
+	* SetAttributeW
+	* @brief    设置一个对象属性
+	* @param    const IStringA *strAttribName --  属性名
+	* @param    const IStringA *strValue --  属性值
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @return   HRESULT -- 处理处理结果
+	* Describe  
+	*/    
+	STDMETHOD_(HRESULT,SetAttributeW)(THIS_ const IStringW *  strAttribName, const IStringW *  strValue, BOOL bLoading) PURE;
+
+	/**
+	* SetAttribute
+	* @brief    设置一个对象属性
+	* @param    LPCWSTR pszAttr --  属性名
+	* @param    LPCWSTR pszValue --  属性值
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @return   HRESULT -- 处理处理结果
+	* Describe  
+	*/    
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
+
+	/**
+	* GetAttribute
+	* @brief    通过属性名查询属性值
+	* @param    const SStringW & strAttr --  属性名
+	* @param    IStringW * pValue -- 属性值
+	* @return   BOOL, TRUE:获取成功，FALSE:获取失败，属性不存在
+	* Describe  默认返回空
+	*/    
+	STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST PURE;
+
+	/**
+	* OnAttribute
+	* @brief    属性处理后调用的方法
+	* @param    const SStringW & strAttribName --  属性名
+	* @param    const SStringW & strValue --  属性名
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @param    HRESULT hr --  属性处理结果
+	* Describe  不做处理，直接返回
+	*/    
+	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
+
+	/**
+	* DefAttributeProc
+	* @brief    默认属性处理函数
+	* @param    const SStringW & strAttribName --  属性名
+	* @param	 const SStringW & strValue --属性值
+	* @param    BOOL bLoading -- 从XML初始化标志
+	* @return   HRESULT -- S_OK:刷新UI， S_FALSE:成功但不刷新UI，其它：失败
+	* Describe  在SetAttribute中没有处理一个属性时转到本方法处理。
+	*/  
+	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
+
 	/**
 	* Sets the length of the animation. The default duration is 300 milliseconds.
 	*
@@ -44,16 +192,16 @@ struct IValueAnimator  : IObject{
 	* value makes it easier to compose statements together that construct and then set the
 	* duration, as in <code>IValueAnimator.ofInt(0, 10).setDuration(500).start()</code>.
 	*/
-	virtual void setDuration(long duration) = 0;
+	STDMETHOD_(void,setDuration)(THIS_ long duration) PURE;
 
 	/**
 	* Gets the length of the animation. The default duration is 300 milliseconds.
 	*
 	* @return The length of the animation, in milliseconds.
 	*/
-	virtual long getDuration() const = 0;
+	STDMETHOD_(long,getDuration)(THIS) SCONST PURE;
 
-	virtual long getTotalDuration() const = 0;
+	STDMETHOD_(long,getTotalDuration)(THIS) SCONST PURE;
 
 	/**
 	* Sets the position of the animation to the specified point in time. This time should
@@ -65,7 +213,7 @@ struct IValueAnimator  : IObject{
 	*
 	* @param playTime The time, in milliseconds, to which the animation is advanced or rewound.
 	*/
-	virtual void setCurrentPlayTime(long playTime) = 0;
+	STDMETHOD_(void,setCurrentPlayTime)(THIS_ long playTime) PURE;
 
 	/**
 	* Sets the position of the animation to the specified fraction. This fraction should
@@ -84,7 +232,7 @@ struct IValueAnimator  : IObject{
 	* outside the range of 0 to the maximum fraction for the animator will be clamped to
 	* the correct range.
 	*/
-	virtual void setCurrentFraction(float fraction) = 0;
+	STDMETHOD_(void,setCurrentFraction)(THIS_ float fraction) PURE;
 
 	/**
 	* Gets the current position of the animation in time, which is equal to the current
@@ -95,7 +243,7 @@ struct IValueAnimator  : IObject{
 	*
 	* @return The current position in time of the animation.
 	*/
-	virtual long getCurrentPlayTime() = 0;
+	STDMETHOD_(long,getCurrentPlayTime)(THIS) PURE;
 
 	/**
 	* The amount of time, in milliseconds, to delay starting the animation after
@@ -103,7 +251,7 @@ struct IValueAnimator  : IObject{
 	*
 	* @return the number of milliseconds to delay running the animation
 	*/
-	virtual long getStartDelay() const = 0;
+	STDMETHOD_(long,getStartDelay)(THIS) SCONST PURE;
 
 	/**
 	* The amount of time, in milliseconds, to delay starting the animation after
@@ -112,7 +260,7 @@ struct IValueAnimator  : IObject{
 	*
 	* @param startDelay The amount of the delay, in milliseconds
 	*/
-	virtual void setStartDelay(long startDelay) = 0;
+	STDMETHOD_(void,setStartDelay)(THIS_ long startDelay) PURE;
 
 
 	/**
@@ -123,14 +271,14 @@ struct IValueAnimator  : IObject{
 	*
 	* @param value the number of times the animation should be repeated
 	*/
-	virtual void setRepeatCount(int value) = 0;
+	STDMETHOD_(void,setRepeatCount)(THIS_ int value) PURE;
 	/**
 	* Defines how many times the animation should repeat. The default value
 	* is 0.
 	*
 	* @return the number of times the animation should repeat, or {@link #INFINITE}
 	*/
-	virtual int getRepeatCount() const = 0;
+	STDMETHOD_(int,getRepeatCount)(THIS) SCONST PURE;
 
 	/**
 	* Defines what this animation should do when it reaches the end. This
@@ -139,14 +287,14 @@ struct IValueAnimator  : IObject{
 	*
 	* @param value {@link #RESTART} or {@link #REVERSE}
 	*/
-	virtual void setRepeatMode(IAnimation::RepeatMode value) = 0;
+	STDMETHOD_(void,setRepeatMode)(THIS_ IAnimation::RepeatMode value) PURE;
 
 	/**
 	* Defines what this animation should do when it reaches the end.
 	*
 	* @return either one of {@link #REVERSE} or {@link #RESTART}
 	*/
-	virtual IAnimation::RepeatMode getRepeatMode()  const = 0;
+	STDMETHOD_(IAnimation::RepeatMode,getRepeatMode)(THIS)  SCONST PURE;
 
 	/**
 	* Adds a listener to the set of listeners that are sent update events through the life of
@@ -155,12 +303,12 @@ struct IValueAnimator  : IObject{
 	*
 	* @param listener the listener to be added to the current set of listeners for this animation.
 	*/
-	virtual void addUpdateListener(IAnimatorUpdateListener * listener) = 0;
+	STDMETHOD_(void,addUpdateListener)(THIS_ IAnimatorUpdateListener * listener) PURE;
 
 	/**
 	* Removes all listeners from the set listening to frame updates for this animation.
 	*/
-	virtual void removeAllUpdateListeners() = 0;
+	STDMETHOD_(void,removeAllUpdateListeners)(THIS) PURE;
 
 	/**
 	* Removes a listener from the set listening to frame updates for this animation.
@@ -168,7 +316,7 @@ struct IValueAnimator  : IObject{
 	* @param listener the listener to be removed from the current set of update listeners
 	* for this animation.
 	*/
-	virtual void removeUpdateListener(IAnimatorUpdateListener *listener) = 0;
+	STDMETHOD_(void,removeUpdateListener)(THIS_ IAnimatorUpdateListener *listener) PURE;
 
 
 	/**
@@ -180,24 +328,24 @@ struct IValueAnimator  : IObject{
 	* @param value the interpolator to be used by this animation. A value of <code>null</code>
 	* will result in linear interpolation.
 	*/
-	virtual void setInterpolator(IInterpolator * value) = 0;
+	STDMETHOD_(void,setInterpolator)(THIS_ IInterpolator * value) PURE;
 
 	/**
 	* Returns the timing interpolator that this IValueAnimator uses.
 	*
 	* @return The timing interpolator for this IValueAnimator.
 	*/
-	virtual IInterpolator * getInterpolator() const = 0;
+	STDMETHOD_(IInterpolator *,getInterpolator)(THIS) SCONST PURE;
 
-	virtual void addListener(IAnimatorListener * p) = 0;
+	STDMETHOD_(void,addListener)(THIS_ IAnimatorListener * p) PURE;
 
-	virtual void removeListener(IAnimatorListener * p) = 0;
+	STDMETHOD_(void,removeListener)(THIS_ IAnimatorListener * p) PURE;
 
-	virtual void start(ITimelineHandlersMgr *pContainer) = 0;
+	STDMETHOD_(void,start)(THIS_ ITimelineHandlersMgr *pContainer) PURE;
 
-	virtual bool isRunning() const = 0;
+	STDMETHOD_(bool,isRunning)(THIS) SCONST PURE;
 
-	virtual bool isStarted() const = 0;
+	STDMETHOD_(bool,isStarted)(THIS) SCONST PURE;
 
 	/**
 	* Plays the IValueAnimator in reverse. If the animation is already running,
@@ -206,14 +354,14 @@ struct IValueAnimator  : IObject{
 	* play backwards. This behavior is only set for the current animation; future playing
 	* of the animation will use the default behavior of playing forward.
 	*/
-	virtual void reverse() = 0;
+	STDMETHOD_(void,reverse)(THIS) PURE;
 
 	/**
 	* Applies an adjustment to the animation to compensate for jank between when
 	* the animation first ran and when the frame was drawn.
 	* @hide
 	*/
-	virtual void commitAnimationFrame(long frameTime) = 0;
+	STDMETHOD_(void,commitAnimationFrame)(THIS_ long frameTime) PURE;
 
 	/**
 	* Returns the current animation fraction, which is the elapsed/interpolated fraction used in
@@ -221,12 +369,11 @@ struct IValueAnimator  : IObject{
 	*
 	* @return Elapsed/interpolated fraction of the animation.
 	*/
-	virtual float getAnimatedFraction() const = 0;
+	STDMETHOD_(float,getAnimatedFraction)(THIS) SCONST PURE;
 
-	virtual IValueAnimator * clone() const = 0;
-protected:
-	virtual void onEvaluateValue(float fraction) = 0;
+	STDMETHOD_(IValueAnimator *,clone)(THIS) SCONST PURE;
 
+	STDMETHOD_(void,onEvaluateValue)(THIS_ float fraction) PURE;
 };
 
 

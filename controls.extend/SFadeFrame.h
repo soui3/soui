@@ -15,7 +15,7 @@ namespace SOUI
         void SetChildrenAlpha(BYTE byAlpha);
         
         virtual void OnAnimatorState(int percent);
-        virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
         SOUI_ATTRS_BEGIN()
             ATTR_UINT(L"AniTime",m_nAniTime,FALSE)

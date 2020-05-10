@@ -19,7 +19,7 @@ namespace SOUI{
 		virtual RECT GetRect() const override;
 
 	public:
-		virtual void OnNextFrame() override;
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
 	public:
 		SOUI_ATTRS_BEGIN()

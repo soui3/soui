@@ -216,7 +216,7 @@ protected:
     HRESULT OnAttrAccel(SStringW strAccel,BOOL bLoading);
 
 protected:
-    virtual void OnNextFrame();
+	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     
     /**
      * SLink::StopCurAnimate
@@ -439,7 +439,7 @@ protected:
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
     virtual CSize GetDesiredSize(int wid, int hei);
-    virtual void OnNextFrame();
+	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     virtual void OnColorize(COLORREF cr);
     
     void OnPaint(IRenderTarget *pRT);

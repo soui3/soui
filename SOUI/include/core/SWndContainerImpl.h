@@ -68,9 +68,8 @@ namespace SOUI
 
         virtual IAcceleratorMgr* GetAcceleratorMgr(){return &m_focusMgr;}
 
-        virtual BOOL RegisterTimelineHandler(ITimelineHandler *pHandler);
-
-        virtual BOOL UnregisterTimelineHandler(ITimelineHandler *pHandler);
+        STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
+		STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 
         virtual BOOL RegisterTrackMouseEvent(SWND swnd);
 
@@ -87,7 +86,7 @@ namespace SOUI
 		virtual void OnCavasInvalidate(SWND swnd) {}
 
     public://ITimelineHandler
-        virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     protected:
 
         void OnFrameMouseMove(UINT uFlag,CPoint pt);

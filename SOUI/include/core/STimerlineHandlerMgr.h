@@ -18,7 +18,7 @@ namespace SOUI
 
 		bool IsEmpty() const;
 	public:
-		virtual void OnNextFrame() override;
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
 	protected:
 		typedef SMap<ITimelineHandler *,bool> TLMAP;

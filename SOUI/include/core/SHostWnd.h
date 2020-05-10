@@ -192,7 +192,7 @@ protected:
 		SHostWnd *				m_pHostWnd;
 		CRect					m_rcInit;
 	protected:
-		virtual void OnNextFrame()override;
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 	} m_hostAnimationHandler;
 
 	virtual void OnHostAnimationStarted(IAnimation * pAni);
@@ -309,9 +309,8 @@ protected:// IContainer
 
 	virtual void UpdateTooltip();
 
-    virtual BOOL RegisterTimelineHandler(ITimelineHandler *pHandler);
-
-    virtual BOOL UnregisterTimelineHandler(ITimelineHandler *pHandler);
+	STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
+	STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 
     virtual SMessageLoop * GetMsgLoop();
 

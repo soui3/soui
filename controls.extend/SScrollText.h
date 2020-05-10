@@ -11,7 +11,7 @@ namespace SOUI
         
         void SetWindowText(const SStringT & strText);
     protected:
-        virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     protected:
         void OnPaint(IRenderTarget *pRT);
         void OnSize(UINT nType, CSize size);

@@ -80,7 +80,7 @@ namespace SOUI
 
 		DWORD GetPartState(int iPart) const;
 	protected:
-		virtual void OnNextFrame();
+		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
 	private:
 		enum FADEMODE{
