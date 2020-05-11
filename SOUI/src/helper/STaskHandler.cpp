@@ -67,6 +67,7 @@ namespace SOUI
 			return -1;
 		}
 
+		m_items[m_nextTaskID] = pCloneRunnable;
 		if (waitUntilDone)
 		{
 			SendMessage(UM_RUN_TASK, ++m_nextTaskID, (LPARAM)pCloneRunnable);
@@ -75,7 +76,6 @@ namespace SOUI
 		else
 		{
 			PostMessage(UM_RUN_TASK, ++m_nextTaskID, (LPARAM)pCloneRunnable);
-			m_items[m_nextTaskID] = pCloneRunnable;
 			return m_nextTaskID;
 		}
 	}
