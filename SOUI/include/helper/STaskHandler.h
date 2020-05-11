@@ -72,10 +72,10 @@ private:
 	BEGIN_MSG_MAP_EX(STaskHandler)
 		MESSAGE_HANDLER_EX(UM_RUN_TASK,OnRunTask)
 		CHAIN_MSG_MAP(SNativeWnd)
-		END_MSG_MAP()
+	END_MSG_MAP()
 
-		mutable SCriticalSection m_taskListLock;
-	SMap<long,IRunnable *> m_items;
+	mutable SCriticalSection m_taskListLock;
+	SMap<long,IRunnable* > m_items;
 
 	long m_nextTaskID;
 	DWORD   m_dwThreadID;

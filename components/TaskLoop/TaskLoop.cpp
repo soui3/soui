@@ -55,11 +55,11 @@ namespace SOUI
 		{
 			return -1;
 		}
-		IRunnable *pCloneRunnable = runnable->clone();
+		SAutoRefPtr<IRunnable> pCloneRunnable;
+		pCloneRunnable.Attach(runnable->clone());
 		if (Thread::getCurrentThreadID() == m_thread.getThreadID() && waitUntilDone)
 		{
 			pCloneRunnable->run();
-			delete pCloneRunnable;
 			return -1;
 		}
 

@@ -37,6 +37,14 @@ namespace SOUI
 		SAutoLock autoLock(m_taskListLock);
 		if (IsWindow())
 			DestroyWindow();
+
+		SPOSITION pos = m_items.GetStartPosition();
+		while (pos)
+		{
+			IRunnable * p=m_items.GetNextValue(pos);
+			p->Release();
+		}
+		m_items.RemoveAll();
 	}
 
 	bool STaskHandler::isRunning()
@@ -46,18 +54,19 @@ namespace SOUI
 
 	long STaskHandler::postTask(const IRunnable *runnable, bool waitUntilDone, int priority)
 	{
+		IRunnable * pCloneRunnable = runnable->clone();
+		if (GetCurrentThreadId() == m_dwThreadID && waitUntilDone)
+		{
+			pCloneRunnable->run();
+			pCloneRunnable->Release();
+			return -1;
+		}
+		SAutoLock autoLock(m_taskListLock);
 		if (!isRunning())
 		{
 			return -1;
 		}
-		IRunnable *pCloneRunnable = runnable->clone();
-		if (GetCurrentThreadId() == m_dwThreadID && waitUntilDone)
-		{
-			pCloneRunnable->run();
-			delete pCloneRunnable;
-			return -1;
-		}
-		SAutoLock autoLock(m_taskListLock);
+
 		if (waitUntilDone)
 		{
 			SendMessage(UM_RUN_TASK, ++m_nextTaskID, (LPARAM)pCloneRunnable);
@@ -78,7 +87,7 @@ namespace SOUI
 		{
 			IRunnable *pRunnable = (IRunnable *)lp;
 			pRunnable->run();
-			delete pRunnable;
+			pRunnable->Release();
 			m_items.RemoveKey((long)wp);
 		}
 		return 0;
@@ -107,7 +116,7 @@ namespace SOUI
 			if (p->getObject() == object)
 			{
 				m_items.RemoveAtPos(posPrev);
-				delete p;
+				p->Release();
 			}
 		}
 	}
@@ -125,7 +134,7 @@ namespace SOUI
 			if (key == taskId)
 			{
 				m_items.RemoveAtPos(posPrev);
-				delete p;
+				p->Release();
 				return true;
 			}
 		}

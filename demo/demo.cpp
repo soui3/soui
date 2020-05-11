@@ -94,6 +94,20 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     //使用imgdecoder-png图片解码模块演示apng动画
     SComMgr2 *pComMgr = new SComMgr2(_T("imgdecoder-png"));
     
+	{//test for task loop
+		SAutoRefPtr<ITaskLoop> pTaskLoop;
+		pComMgr->CreateTaskLoop((IObjRef**)&pTaskLoop);
+		pTaskLoop->start("test",ITaskLoop::High);
+
+		CAsyncTaskObj obj;
+		STaskHelper::post(pTaskLoop,&obj,&CAsyncTaskObj::task1,100,false);
+		STaskHelper::post(pTaskLoop,&obj,&CAsyncTaskObj::task2,200,"abc",false);
+
+		while(pTaskLoop->getTaskCount()!=0)
+		{
+			Sleep(10);
+		}
+	}
     {
         int nType=MessageBox(GetActiveWindow(),_T("选择渲染类型：\n[yes]: Skia\n[no]:GDI\n[cancel]:Quit"),_T("select a render"),MB_ICONQUESTION|MB_YESNOCANCEL);
         if(nType == IDCANCEL)

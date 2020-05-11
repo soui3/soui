@@ -5,8 +5,8 @@
 #include <helper/SNoCopyable.hpp>
 #include <helper/SFunctor.hpp>
 #include <helper/SSemaphore.h>
-namespace SOUI
-{
+
+SNSBEGIN
 
 class ThreadPrivate;
 struct IRunnable;
@@ -112,7 +112,7 @@ private:
     SCriticalSection _lock;
     bool _start;
     bool _stopping;
-    IRunnable *_runnable;
+    SAutoRefPtr<IRunnable> _runnable;
     std::string _name;
     long _threadID;
     SSemaphore _startSem;
@@ -120,4 +120,4 @@ private:
     ThreadPriority _priorityLevel;
 };
 
-}
+SNSEND
