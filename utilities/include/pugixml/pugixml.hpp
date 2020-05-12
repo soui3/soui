@@ -409,22 +409,27 @@ namespace pugi
 		STDMETHOD_(bool,set_userdata)(THIS_ int data);
 		STDMETHOD_(int,get_userdata)(THIS) SCONST;
 		// Get next/previous attribute in the attribute list of the parent node
-		STDMETHOD_(bool,Next)(THIS)
+		STDMETHOD_(SOUI::IXmlAttr*,Next)(THIS)
 		{
-			if(Empty())
-				return false;
 			xml_attribute attr = next_attribute();
-			Assign(&attr);
-			return true;
+			return toIXmlAttr(attr);
 		}
 
-		STDMETHOD_(bool, Prev)(THIS)
+		STDMETHOD_(SOUI::IXmlAttr*,Prev)(THIS)
 		{
-			if(Empty())
-				return false;
 			xml_attribute attr = previous_attribute();
-			Assign(&attr);
-			return true;
+			return toIXmlAttr(attr);
+		}
+	private:
+		SOUI::IXmlAttr *toIXmlAttr(xml_attribute attr) const
+		{
+			if(attr)
+			{
+				return new xml_attribute(&attr);
+			}else
+			{
+				return NULL;
+			}
 		}
 	public:
 		// Default constructor. Constructs an empty attribute.
@@ -557,75 +562,86 @@ namespace pugi
 		STDMETHOD_(int,get_userdata)(THIS) SCONST;
 
 		// Get attribute list
-		STDMETHOD_(bool,Attribute)(THIS_ const char_t* name,bool bCaseSensitive,SOUI::IXmlAttr* pAttr) SCONST
+		STDMETHOD_(SOUI::IXmlAttr*,Attribute)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
 		{
 			xml_attribute attr = attribute(name,bCaseSensitive);
-			pAttr->Assign(&attr);
-			return pAttr->Empty();
+			return toIXmlAttr(attr);
 		}
 
-		STDMETHOD_(bool,FirstAttribute)(THIS_ SOUI::IXmlAttr *pAttr) SCONST
+		STDMETHOD_(SOUI::IXmlAttr*,FirstAttribute)(THIS) SCONST
 		{
 			xml_attribute attr = first_attribute();
-			pAttr->Assign(&attr);
-			return pAttr->Empty();
+			return toIXmlAttr(attr);
 		}
 
-		STDMETHOD_(bool,LastAttribute)(THIS_ SOUI::IXmlAttr *pAttr) SCONST
+		STDMETHOD_(SOUI::IXmlAttr *,LastAttribute)(THIS) SCONST
 		{
 			xml_attribute attr = last_attribute();
-			pAttr->Assign(&attr);
-			return pAttr->Empty();
+			return toIXmlAttr(attr);
 		}
 
 		// Get children list
-		STDMETHOD_(bool,Child)(THIS_ const char_t* name,bool bCaseSensitive,SOUI::IXmlNode* pChild) SCONST
+		STDMETHOD_(SOUI::IXmlNode*,Child)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
 		{
 			xml_node node = child(name,bCaseSensitive);
-			pChild->Assign(&node);
-			return pChild->Empty();
+			return toIXmlNode(node);
 		}
 
-		STDMETHOD_(bool, FirstChild)(THIS_ SOUI::IXmlNode* pChild) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, FirstChild)(THIS) SCONST
 		{
 			xml_node node = first_child();
-			pChild->Assign(&node);
-			return pChild->Empty();
+			return toIXmlNode(node);
 		}
 
-		STDMETHOD_(bool, LastChild)(THIS_ SOUI::IXmlNode* pChild) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, LastChild)(THIS) SCONST
 		{
 			xml_node node = last_child();
-			pChild->Assign(&node);
-			return pChild->Empty();
+			return toIXmlNode(node);
 		}
 
 		// Get next/previous sibling in the children list of the parent node
-		STDMETHOD_(bool, NextSibling)(THIS_ SOUI::IXmlNode* pSib) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, NextSibling)(THIS) SCONST
 		{
 			xml_node node = next_sibling();
-			pSib->Assign(&node);
-			return pSib->Empty();
+			return toIXmlNode(node);
 		}
-		STDMETHOD_(bool, PrevSibling)(THIS_ SOUI::IXmlNode* pSib) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, PrevSibling)(THIS) SCONST
 		{
 			xml_node node = previous_sibling();
-			pSib->Assign(&node);
-			return pSib->Empty();
+			return toIXmlNode(node);
 		}
-		STDMETHOD_(bool, NextSibling2)(THIS_ const char_t* name,bool bCaseSensitive, SOUI::IXmlNode* pSib) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, NextSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
 		{
 			xml_node node = next_sibling(name,bCaseSensitive);
-			pSib->Assign(&node);
-			return pSib->Empty();
+			return toIXmlNode(node);
 		}
-		STDMETHOD_(bool, PrevSibling2)(THIS_ const char_t* name,bool bCaseSensitive, SOUI::IXmlNode* pSib) SCONST
+		STDMETHOD_(SOUI::IXmlNode*, PrevSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
 		{
 			xml_node node = previous_sibling(name,bCaseSensitive);
-			pSib->Assign(&node);
-			return pSib->Empty();
+			return toIXmlNode(node);
 		}
 
+	private:
+		SOUI::IXmlNode * toIXmlNode(xml_node node) const
+		{
+			if(node)
+			{
+				return new xml_node(&node);
+			}else
+			{
+				return NULL;
+			}
+		}
+		SOUI::IXmlAttr *toIXmlAttr(xml_attribute attr) const
+		{
+			if(attr)
+			{
+				return new xml_attribute(&attr);
+			}else
+			{
+				return NULL;
+			}
+		}
 	public:
 		// Default constructor. Constructs an empty node.
 		xml_node();
