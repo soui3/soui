@@ -2,8 +2,8 @@
 
 #include "SPropertyItem-i.h"
 #include <sobject/sobject.hpp>
-#include <unknown/obj-ref-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <interface/obj-ref-i.h>
+#include <helper/obj-ref-impl.hpp>
 
 namespace SOUI
 {

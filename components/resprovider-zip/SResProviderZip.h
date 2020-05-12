@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <interface/SResProvider-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
 #include <souicoll.h>

@@ -14,7 +14,7 @@
 
 #include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
-#include <unknown/obj-ref-i.h>
+#include <interface/obj-ref-i.h>
 #include <interface/SRender-i.h>
 
 SNSBEGIN

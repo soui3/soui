@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include <unknown/obj-ref-i.h>
-#include "SAdapter-i.h"
+#include <interface/SAdapter-i.h>
 
 namespace SOUI
 {

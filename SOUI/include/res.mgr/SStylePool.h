@@ -12,9 +12,9 @@
 */
 
 #pragma once
-#include "core/SSingletonMap.h"
-#include <unknown/obj-ref-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <core/SSingletonMap.h>
+#include <interface/obj-ref-i.h>
+#include <helper/obj-ref-impl.hpp>
 
 //获得StylePoolMgr指针
 #define GETSTYLEPOOLMGR SStylePoolMgr::getSingletonPtr()

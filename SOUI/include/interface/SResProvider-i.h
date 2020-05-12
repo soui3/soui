@@ -15,9 +15,9 @@
 #define _SRESPROVIDERBASE_
 #pragma once
 
-#include <unknown/obj-ref-i.h>
+#include <interface/obj-ref-i.h>
+#include <interface/SRender-i.h>
 #include <string/tstring.h>
-#include "SRender-i.h"
 
 SNSBEGIN
 #define UIRES_INDEX    _T("uires.idx")        //文件夹资源的文件映射表索引表文件名

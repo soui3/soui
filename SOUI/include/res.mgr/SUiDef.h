@@ -1,14 +1,14 @@
 ﻿#pragma once
-#include "core/SSingleton2.h"
-#include <unknown/obj-ref-i.h>
-#include <unknown/obj-ref-impl.hpp>
-#include "interface/SResProvider-i.h"
+#include <core/SSingleton2.h>
+#include <interface/obj-ref-i.h>
+//#include <helper/obj-ref-impl.hpp>
+#include <interface/SResProvider-i.h>
 
-#include "res.mgr/SSkinPool.h"
-#include "res.mgr/SStylePool.h"
-#include "res.mgr/SFontPool.h"
-#include "res.mgr/SObjDefAttr.h"
-#include "res.mgr/SNamedValue.h"
+#include <res.mgr/SSkinPool.h>
+#include <res.mgr/SStylePool.h>
+#include <res.mgr/SFontPool.h>
+#include <res.mgr/SObjDefAttr.h>
+#include <res.mgr/SNamedValue.h>
 
 namespace SOUI
 {

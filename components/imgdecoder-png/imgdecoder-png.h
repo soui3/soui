@@ -5,7 +5,7 @@
 // IMGDECODERWIC_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 #include <interface/SImgDecoder-i.h>
 #include <interface/SRender-i.h>

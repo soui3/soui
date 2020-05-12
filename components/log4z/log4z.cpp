@@ -35,7 +35,7 @@
  */
 
 #include "log4z.h"
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>

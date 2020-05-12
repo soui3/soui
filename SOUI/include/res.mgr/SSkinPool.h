@@ -12,9 +12,9 @@
 */
 
 #pragma once
-#include "core/SSingletonMap.h"
-#include "interface/Sskinobj-i.h"
-#include <unknown/obj-ref-impl.hpp>
+#include <core/SSingletonMap.h>
+#include <interface/Sskinobj-i.h>
+#include <helper/obj-ref-impl.hpp>
 
 #define GETSKIN(p1,scale) SOUI::SSkinPoolMgr::getSingleton().GetSkin(p1,scale)
 #define GETBUILTINSKIN(p1) SOUI::SSkinPoolMgr::getSingleton().GetBuiltinSkin(p1,100)

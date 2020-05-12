@@ -3,7 +3,7 @@
 
 #include <helper/SColor.h>
 #include <helper/SAttrCracker.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 #include <core/SkCanvas.h>
 #include <core/SkBitmap.h>
 #include <core/SkTypeface.h>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utilities-def.h>
+#include <interface/obj-ref-i.h>
 
 SNSBEGIN
 
@@ -8,8 +8,23 @@ typedef wchar_t char_t;
 
 #undef INTERFACE
 #define INTERFACE IXmlAttr
-DECLARE_INTERFACE(IXmlAttr)
+DECLARE_INTERFACE_(IXmlAttr,IObjRef)
 {
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
 	STDMETHOD_(void,Assign)(THIS_ const IXmlAttr * pAttr) PURE;
 	STDMETHOD_(LPVOID,Data)(THIS) SCONST PURE;
 
@@ -30,8 +45,23 @@ DECLARE_INTERFACE(IXmlAttr)
 
 #undef INTERFACE
 #define INTERFACE IXmlNode
-DECLARE_INTERFACE(IXmlNode)
+DECLARE_INTERFACE_(IXmlNode,IObjRef)
 {
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
 	STDMETHOD_(void,Assign)(THIS_ const IXmlNode * pNode) PURE;
 	STDMETHOD_(LPVOID,Data)(THIS) SCONST PURE;
 

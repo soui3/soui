@@ -22,7 +22,7 @@
 #pragma once
 
 #include <interface/SAnimation-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 #include <animation/SInterpolatorImpl.h>
 #include <animation/STransformation.h>
 #include <sobject/sobject.hpp>

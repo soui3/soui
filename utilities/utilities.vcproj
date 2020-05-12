@@ -276,11 +276,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\obj-ref-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\unknown\obj-ref-i.h"
 				>
 			</File>
 			<File
 				RelativePath="include\unknown\obj-ref-impl.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\helper\obj-ref-impl.hpp"
 				>
 			</File>
 			<File

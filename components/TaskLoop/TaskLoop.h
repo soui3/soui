@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "thread.h"
 #include <list>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 #include <helper/SFunctor.hpp>
 
 SNSBEGIN

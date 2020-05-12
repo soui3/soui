@@ -10,7 +10,7 @@ purpose:	自定义皮肤对象
 *********************************************************************/
 #pragma once
 #include <interface/SSkinobj-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 #include "SSkinAni.h"
 #include <GdiPlus.h>

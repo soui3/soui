@@ -11,7 +11,7 @@ purpose:	动画PNG（APNG）扩展支持，依赖于当前使用的图片解码器。
 *********************************************************************/
 #pragma once
 #include <interface/SSkinobj-i.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 #include "SSkinAni.h"
 

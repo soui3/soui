@@ -16,7 +16,7 @@
 #include <core/ssingletonmap.h>
 #include <interface/SRender-i.h>
 #include <res.mgr/SFontInfo.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 #define FF_DEFAULTFONT L""
 

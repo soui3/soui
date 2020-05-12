@@ -29,6 +29,7 @@
 #include <souicoll.h>
 #include <string/tstring.h>
 #include <interface/sxml-i.h>
+#include <helper/obj-ref-impl.hpp>
 
 // Include exception header for XPath
 #if !defined(PUGIXML_NO_XPATH) && !defined(PUGIXML_NO_EXCEPTIONS)
@@ -375,7 +376,7 @@ namespace pugi
 	#endif
 
 	// A light-weight handle for manipulating attributes in DOM tree
-	class PUGIXML_CLASS xml_attribute : public SOUI::IXmlAttr
+	class PUGIXML_CLASS xml_attribute : public SOUI::TObjRefImpl<SOUI::IXmlAttr>
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node;
@@ -524,7 +525,7 @@ namespace pugi
 #endif
 
 	// A light-weight handle for manipulating nodes in DOM tree
-	class PUGIXML_CLASS xml_node : public SOUI::IXmlNode
+	class PUGIXML_CLASS xml_node : public SOUI::TObjRefImpl<SOUI::IXmlNode>
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node_iterator;

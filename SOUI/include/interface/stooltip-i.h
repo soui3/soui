@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include <unknown/obj-ref-i.h>
-#include "../core/smsgloop.h"
+#include <interface/obj-ref-i.h>
+#include <core/smsgloop.h>
 
 namespace SOUI
 {

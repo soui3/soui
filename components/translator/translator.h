@@ -6,7 +6,7 @@
 // defined with this macro as being exported.
 
 #include <souicoll.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
 #include <pugixml/pugixml.hpp>

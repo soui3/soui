@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "interface/sinterpolator-i.h"
-#include <unknown/obj-ref-impl.hpp>
+#include <interface/sinterpolator-i.h>
+#include <helper/obj-ref-impl.hpp>
 
 SNSBEGIN
 

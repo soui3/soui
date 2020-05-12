@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <unknown/obj-ref-i.h>
+#include <interface/obj-ref-i.h>
 #include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
 #include "SImgDecoder-i.h"

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "interface/SResProvider-i.h"
+#include <interface/SResProvider-i.h>
 #include <helper/SResID.h>
-#include <unknown/obj-ref-impl.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 SNSBEGIN
 
