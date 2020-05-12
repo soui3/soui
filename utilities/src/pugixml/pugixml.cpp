@@ -5276,7 +5276,7 @@ namespace pugi
 	{
 	}
 
-	PUGI__FN xml_attribute::xml_attribute(const SOUI::IXmlAttr * attr): _attr((xml_attribute_struct*)attr->Data())
+	PUGI__FN xml_attribute::xml_attribute(const SOUI::IXmlAttr * attr): _attr((xml_attribute_struct*)attr->GetPrivPtr())
 	{
 	}
 
@@ -5410,10 +5410,10 @@ namespace pugi
 
 	PUGI__FN void xml_attribute::Assign(const SOUI::IXmlAttr * pAttr)
 	{
-		_attr = (xml_attribute_struct*)pAttr->Data();
+		_attr = (xml_attribute_struct*)pAttr->GetPrivPtr();
 	}
 
-	PUGI__FN LPVOID xml_attribute::Data() const
+	PUGI__FN LPVOID xml_attribute::GetPrivPtr() const
 	{
 		return _attr;
 	}
@@ -5598,7 +5598,7 @@ namespace pugi
 	{
 	}
 
-	PUGI__FN xml_node::xml_node(const SOUI::IXmlNode *p): _root((xml_node_struct*)p->Data())
+	PUGI__FN xml_node::xml_node(const SOUI::IXmlNode *p): _root((xml_node_struct*)p->GetPrivPtr())
 	{
 	}
 
@@ -5703,10 +5703,10 @@ namespace pugi
 
 	PUGI__FN void xml_node::Assign(const SOUI::IXmlNode * pNode)
 	{
-		_root = (xml_node_struct*)pNode->Data();
+		_root = (xml_node_struct*)pNode->GetPrivPtr();
 	}
 
-	PUGI__FN LPVOID xml_node::Data() const
+	PUGI__FN LPVOID xml_node::GetPrivPtr() const
 	{
 		return _root;
 	}

@@ -388,7 +388,7 @@ namespace pugi
 
 	public:
 		STDMETHOD_(void,Assign)(THIS_ const SOUI::IXmlAttr * pAttr);
-		STDMETHOD_(LPVOID,Data)(THIS) SCONST;
+		STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST;
 
 		// Check if attribute is empty
 		STDMETHOD_(bool,Empty)(THIS) SCONST
@@ -543,7 +543,7 @@ namespace pugi
 
 	public:
 		STDMETHOD_(void,Assign)(THIS_ const SOUI::IXmlNode * pNode);
-		STDMETHOD_(LPVOID,Data)(THIS) SCONST;
+		STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST;
 
 		STDMETHOD_(bool,Empty)(THIS) SCONST{
 			return empty();
@@ -1199,7 +1199,7 @@ namespace pugi
 	};
 
 	// Document class (DOM tree root)
-	class PUGIXML_CLASS xml_document: public xml_node, public SOUI::IXmlDoc
+	class PUGIXML_CLASS xml_document: public xml_node
 	{
 	private:
 		char_t* _buffer;
@@ -1277,6 +1277,7 @@ namespace pugi
 		// Get document element
 		xml_node document_element() const;
 	};
+	
 
 #ifndef PUGIXML_NO_XPATH
 	// XPath query return type

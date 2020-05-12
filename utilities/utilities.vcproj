@@ -246,6 +246,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\xml\SXmlDoc.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\trace.cpp"
 				>
 			</File>
@@ -276,19 +280,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\obj-ref-i.h"
-				>
-			</File>
-			<File
 				RelativePath="include\unknown\obj-ref-i.h"
 				>
 			</File>
 			<File
-				RelativePath="include\unknown\obj-ref-impl.hpp"
+				RelativePath=".\include\interface\obj-ref-i.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\helper\obj-ref-impl.hpp"
+				>
+			</File>
+			<File
+				RelativePath="include\unknown\obj-ref-impl.hpp"
 				>
 			</File>
 			<File
@@ -381,6 +385,10 @@
 			</File>
 			<File
 				RelativePath=".\include\interface\sxml-i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\xml\SXmlDoc.h"
 				>
 			</File>
 			<File
