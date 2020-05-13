@@ -213,8 +213,8 @@ namespace SOUI
             m_lstTabOrder.Add(pTab);
             InsertChild(pTab);
             if(xmlTabStyle)
-                pTab->InitFromXml(&xmlTabStyle);
-            pTab->InitFromXml(&xmlChild);
+                pTab->InitFromXml(&SXmlNode(xmlTabStyle));
+            pTab->InitFromXml(&SXmlNode(xmlChild));
             pTab->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnTabClick,this));
         }
         
@@ -223,7 +223,7 @@ namespace SOUI
         {
             m_pBtnNew = new SChromeTab(this);
             InsertChild(m_pBtnNew);
-            m_pBtnNew->InitFromXml(&xmlNewBtn);
+            m_pBtnNew->InitFromXml(&SXmlNode(xmlNewBtn));
             m_pBtnNew->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnBtnNewClick,this));
         }
 
@@ -238,7 +238,7 @@ namespace SOUI
                 
                 SWindow *pBtn = SApplication::getSingleton().CreateWindowByName(SImageButton::GetClassName());
                 m_lstTabOrder[i]->InsertChild(pBtn);
-                pBtn->InitFromXml(&xmlCloseBtn);
+                pBtn->InitFromXml(&SXmlNode(xmlCloseBtn));
                 pBtn->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnBtnCloseTabClick,this));
             }
         }
@@ -371,7 +371,7 @@ namespace SOUI
         InsertChild(pNewTab);
         pugi::xml_node xmlTabStyle = m_xmlStyle.child(KXmlTabStyle);
         if(xmlTabStyle)
-            pNewTab->InitFromXml(&xmlTabStyle);
+            pNewTab->InitFromXml(&SXmlNode(xmlTabStyle));
         if(pszTitle)
         {
             pNewTab->SetWindowText(pszTitle);
@@ -412,7 +412,7 @@ namespace SOUI
         {
             SWindow *pBtn = SApplication::getSingleton().CreateWindowByName(SImageButton::GetClassName());
             pNewTab->InsertChild(pBtn);
-            pBtn->InitFromXml(&xmlCloseBtn);
+            pBtn->InitFromXml(&SXmlNode(xmlCloseBtn));
             pBtn->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnBtnCloseTabClick,this));
         }
         

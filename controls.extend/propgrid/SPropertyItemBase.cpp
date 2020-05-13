@@ -129,7 +129,7 @@ namespace SOUI
     BOOL SPropertyItemBase::InitFromXml(IXmlNode * pNode )
     {
         SObject::InitFromXml(pNode);
-		pugi::xml_node xmlNode(pNode);
+		pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
         pugi::xml_node xmlProp=xmlNode.first_child();
         while(xmlProp)
         {
@@ -139,7 +139,7 @@ namespace SOUI
                 SPropertyItemBase *pItem2 = static_cast<SPropertyItemBase*>(pItem);
                 if(pItem2)
                 {
-                    pItem2->InitFromXml(&xmlProp);
+                    pItem2->InitFromXml(&SXmlNode(xmlProp));
                     InsertChild(pItem2);
                     pItem2->Release();
                 }

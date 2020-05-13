@@ -68,7 +68,7 @@ BOOL SRealWnd::InitFromXml(IXmlNode * pNode)
     BOOL bRet=__super::InitFromXml(pNode);
     if(bRet)
     {
-		pugi::xml_node xmlNode(pNode);
+		pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
         m_realwndParam.m_xmlParams.append_copy(xmlNode.child(L"params"));
         if(m_bInit) InitRealWnd();
     }

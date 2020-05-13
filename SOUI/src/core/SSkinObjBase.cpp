@@ -12,7 +12,7 @@ SState2Index::SState2Index(const SState2Index & src)
 
 BOOL SState2Index::Init(IXmlNode *pNode)
 {
-	pugi::xml_node xmlNode(pNode);
+	pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
 	pugi::xml_node xmlStates = xmlNode.child(L"states");
 	if(!xmlStates) 
 		return FALSE;

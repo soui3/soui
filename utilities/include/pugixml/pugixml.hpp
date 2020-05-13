@@ -28,8 +28,6 @@
 #include <stdio.h>
 #include <souicoll.h>
 #include <string/tstring.h>
-#include <interface/sxml-i.h>
-#include <helper/obj-ref-impl.hpp>
 
 // Include exception header for XPath
 #if !defined(PUGIXML_NO_XPATH) && !defined(PUGIXML_NO_EXCEPTIONS)
@@ -376,7 +374,7 @@ namespace pugi
 	#endif
 
 	// A light-weight handle for manipulating attributes in DOM tree
-	class PUGIXML_CLASS xml_attribute : public SOUI::TObjRefImpl<SOUI::IXmlAttr>
+	class PUGIXML_CLASS xml_attribute
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node;
@@ -387,57 +385,15 @@ namespace pugi
 		typedef void (*unspecified_bool_type)(xml_attribute***);
 
 	public:
-		STDMETHOD_(void,Assign)(THIS_ const SOUI::IXmlAttr * pAttr);
-		STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST;
+		bool set_userdata(int data);
+		int get_userdata() const;
 
-		// Check if attribute is empty
-		STDMETHOD_(bool,Empty)(THIS) SCONST
-		{
-			return empty();
-		}
-
-		// Get attribute name/value, or "" if attribute is empty
-		STDMETHOD_(const char_t*,Name)(THIS) SCONST
-		{
-			return name();
-		}
-		STDMETHOD_(const char_t*,Value)(THIS) SCONST
-		{
-			return value();
-		}
-
-		STDMETHOD_(bool,set_userdata)(THIS_ int data);
-		STDMETHOD_(int,get_userdata)(THIS) SCONST;
-		// Get next/previous attribute in the attribute list of the parent node
-		STDMETHOD_(SOUI::IXmlAttr*,Next)(THIS)
-		{
-			xml_attribute attr = next_attribute();
-			return toIXmlAttr(attr);
-		}
-
-		STDMETHOD_(SOUI::IXmlAttr*,Prev)(THIS)
-		{
-			xml_attribute attr = previous_attribute();
-			return toIXmlAttr(attr);
-		}
-	private:
-		SOUI::IXmlAttr *toIXmlAttr(xml_attribute attr) const
-		{
-			if(attr)
-			{
-				return new xml_attribute(&attr);
-			}else
-			{
-				return NULL;
-			}
-		}
 	public:
 		// Default constructor. Constructs an empty attribute.
 		xml_attribute();
 
 		// Constructs attribute from internal pointer
 		explicit xml_attribute(xml_attribute_struct* attr);
-		explicit xml_attribute(const SOUI::IXmlAttr * attr);
 
 		// Safe bool conversion operator
 		operator unspecified_bool_type() const;
@@ -530,7 +486,7 @@ namespace pugi
 #endif
 
 	// A light-weight handle for manipulating nodes in DOM tree
-	class PUGIXML_CLASS xml_node : public SOUI::TObjRefImpl<SOUI::IXmlNode>
+	class PUGIXML_CLASS xml_node
 	{
 		friend class xml_attribute_iterator;
 		friend class xml_node_iterator;
@@ -542,106 +498,8 @@ namespace pugi
 		typedef void (*unspecified_bool_type)(xml_node***);
 
 	public:
-		STDMETHOD_(void,Assign)(THIS_ const SOUI::IXmlNode * pNode);
-		STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST;
-
-		STDMETHOD_(bool,Empty)(THIS) SCONST{
-			return empty();
-		}
-
-		STDMETHOD_(const char_t*,Name)(THIS) SCONST{
-			return name();
-		}
-
-		STDMETHOD_(const char_t*,Value)(THIS) SCONST
-		{
-			return value();
-		}
-
-		STDMETHOD_(bool,set_userdata)(THIS_ int data);
-		STDMETHOD_(int,get_userdata)(THIS) SCONST;
-
-		// Get attribute list
-		STDMETHOD_(SOUI::IXmlAttr*,Attribute)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
-		{
-			xml_attribute attr = attribute(name,bCaseSensitive);
-			return toIXmlAttr(attr);
-		}
-
-		STDMETHOD_(SOUI::IXmlAttr*,FirstAttribute)(THIS) SCONST
-		{
-			xml_attribute attr = first_attribute();
-			return toIXmlAttr(attr);
-		}
-
-		STDMETHOD_(SOUI::IXmlAttr *,LastAttribute)(THIS) SCONST
-		{
-			xml_attribute attr = last_attribute();
-			return toIXmlAttr(attr);
-		}
-
-		// Get children list
-		STDMETHOD_(SOUI::IXmlNode*,Child)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
-		{
-			xml_node node = child(name,bCaseSensitive);
-			return toIXmlNode(node);
-		}
-
-		STDMETHOD_(SOUI::IXmlNode*, FirstChild)(THIS) SCONST
-		{
-			xml_node node = first_child();
-			return toIXmlNode(node);
-		}
-
-		STDMETHOD_(SOUI::IXmlNode*, LastChild)(THIS) SCONST
-		{
-			xml_node node = last_child();
-			return toIXmlNode(node);
-		}
-
-		// Get next/previous sibling in the children list of the parent node
-		STDMETHOD_(SOUI::IXmlNode*, NextSibling)(THIS) SCONST
-		{
-			xml_node node = next_sibling();
-			return toIXmlNode(node);
-		}
-		STDMETHOD_(SOUI::IXmlNode*, PrevSibling)(THIS) SCONST
-		{
-			xml_node node = previous_sibling();
-			return toIXmlNode(node);
-		}
-		STDMETHOD_(SOUI::IXmlNode*, NextSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
-		{
-			xml_node node = next_sibling(name,bCaseSensitive);
-			return toIXmlNode(node);
-		}
-		STDMETHOD_(SOUI::IXmlNode*, PrevSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST
-		{
-			xml_node node = previous_sibling(name,bCaseSensitive);
-			return toIXmlNode(node);
-		}
-
-	private:
-		SOUI::IXmlNode * toIXmlNode(xml_node node) const
-		{
-			if(node)
-			{
-				return new xml_node(&node);
-			}else
-			{
-				return NULL;
-			}
-		}
-		SOUI::IXmlAttr *toIXmlAttr(xml_attribute attr) const
-		{
-			if(attr)
-			{
-				return new xml_attribute(&attr);
-			}else
-			{
-				return NULL;
-			}
-		}
+		bool set_userdata(int data);
+		int get_userdata() const;
 	public:
 		// Default constructor. Constructs an empty node.
 		xml_node();
@@ -649,8 +507,6 @@ namespace pugi
 		// Constructs node from internal pointer
 		explicit xml_node(xml_node_struct* p);
 		
-		explicit xml_node(const SOUI::IXmlNode *p);
-
 		// Safe bool conversion operator
 		operator unspecified_bool_type() const;
 

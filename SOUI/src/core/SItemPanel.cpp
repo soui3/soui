@@ -27,7 +27,7 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer
     SASSERT(m_pItemContainer);
     if(xmlNode) 
     {
-        InitFromXml(&xmlNode);
+        InitFromXml(&SXmlNode(xmlNode));
         BuildWndTreeZorder();
     }
     m_evtSet.addEvent(EVENTID(EventItemPanelClick));

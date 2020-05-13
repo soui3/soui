@@ -381,7 +381,7 @@ IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
 	IAnimation *pRet = CreateAnimationByName(xml.first_child().name());
 	if (!pRet)
 		return NULL;
-	pRet->InitFromXml(&xml.first_child());
+	pRet->InitFromXml(&SXmlNode(xml.first_child()));
 	return pRet;
 }
 
@@ -393,7 +393,7 @@ IValueAnimator * SApplication::LoadValueAnimator(const SStringT & strResId)
 	IValueAnimator *pRet = CreateValueAnimatorByName(xml.first_child().name());
 	if (!pRet)
 		return NULL;
-	pRet->InitFromXml(&xml.first_child());
+	pRet->InitFromXml(&SXmlNode(xml.first_child()));
 	return pRet;
 }
 

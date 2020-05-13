@@ -31,7 +31,7 @@ namespace SOUI
 		SASSERT(m_pListBox);
 
 		m_pListBox->SetContainer(GetContainer());
-		m_pListBox->InitFromXml(&listStyle);
+		m_pListBox->InitFromXml(&SXmlNode(listStyle));
 		m_pListBox->SetAttribute(L"pos", L"0,0,-0,-0", TRUE);
 		m_pListBox->SetAttribute(L"hotTrack",L"1",TRUE);
 		m_pListBox->SetOwner(this);    //chain notify message to combobox

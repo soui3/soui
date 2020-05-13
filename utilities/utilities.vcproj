@@ -246,7 +246,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\xml\SXmlDoc.cpp"
+				RelativePath=".\xml\SXml.cpp"
 				>
 			</File>
 			<File
@@ -388,7 +388,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\xml\SXmlDoc.h"
+				RelativePath=".\include\xml\SXml.h"
 				>
 			</File>
 			<File

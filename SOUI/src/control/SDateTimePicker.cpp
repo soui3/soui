@@ -50,7 +50,7 @@ namespace SOUI
 
 		pugi::xml_node xmlCal = xmlNode.child(L"calstyle");
 		if(xmlCal)
-			m_pCalendar->InitFromXml(&xmlCal);
+			m_pCalendar->InitFromXml(&SXmlNode(xmlCal));
 
 		m_pCalendar->SetAttribute(L"pos", L"0,0,-0,-0", TRUE);
 		m_pCalendar->SetOwner(this);    //chain notify message to SDateTimePicker

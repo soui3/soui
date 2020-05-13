@@ -219,7 +219,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
 	m_hostAttr.Init();
-	m_hostAttr.InitFromXml(&xmlNode);
+	m_hostAttr.InitFromXml(&SXmlNode(xmlNode));
 
     if(m_privateStylePool->GetCount())
     {
@@ -341,7 +341,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	if (attrHei && !xmlRoot.attribute(attrHei.name()))
 		xmlRoot.append_copy(attrHei);
 
-    SWindow::InitFromXml(&xmlRoot);
+    SWindow::InitFromXml(&SXmlNode(xmlRoot));
 
 	if(m_hostAttr.m_bTranslucent)
 	{

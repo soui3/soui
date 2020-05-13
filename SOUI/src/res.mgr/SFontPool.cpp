@@ -170,7 +170,7 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExPro
     _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), S_CW2T(fontInfo.strFaceName));
 
     IFontPtr ret = _CreateFont(lfNew);
-	if(ret) ret->InitFromXml(&xmlExProp);
+	if(ret) ret->InitFromXml(&SXmlNode(xmlExProp));
 	return ret;
 }
 

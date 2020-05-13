@@ -47,7 +47,7 @@ public:
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&xmlTemplate);
+			pItem->InitFromXml(&SXmlNode(xmlTemplate));
 		}
 		pItem->FindChildByName(_T("songname"))->SetWindowText(m_musicList[position].songname);
 		pItem->FindChildByName(_T("artist"))->SetWindowText(m_musicList[position].artist);

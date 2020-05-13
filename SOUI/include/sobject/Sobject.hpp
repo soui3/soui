@@ -45,7 +45,7 @@ public:
 
 	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * pXmlNode ) OVERRIDE
 	{
-		pugi::xml_node xmlNode(pXmlNode);
+		pugi::xml_node xmlNode((pugi::xml_node_struct *)pXmlNode->GetPrivPtr());
 
 		if (!xmlNode) return FALSE;
 #if defined(_DEBUG) && defined(PUGIXML_WCHAR_MODE)
@@ -64,7 +64,7 @@ public:
 			SetAttribute(attr.name(), attr.value(), TRUE);
 		}
 		//调用初始化完成接口
-		OnInitFinished(&xmlNode);
+		OnInitFinished(pXmlNode);
 		return TRUE;
 	}
 

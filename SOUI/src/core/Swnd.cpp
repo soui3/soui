@@ -725,7 +725,7 @@ namespace SOUI
 						if (pChild)
 						{
 							InsertChild(pChild);
-							pChild->InitFromXml(&xmlInclude);
+							pChild->InitFromXml(&SXmlNode(xmlInclude));
 						}
 
 						if(xmlInclude.next_sibling())
@@ -775,7 +775,7 @@ namespace SOUI
 							if (pChild)
 							{
 								InsertChild(pChild);
-								pChild->InitFromXml(&xmlTemp);
+								pChild->InitFromXml(&SXmlNode(xmlTemp));
 							}
 						}
 						strXml.ReleaseBuffer();
@@ -787,7 +787,7 @@ namespace SOUI
 					if (pChild)
 					{
 						InsertChild(pChild);
-						pChild->InitFromXml(&xmlChild);
+						pChild->InitFromXml(&SXmlNode(xmlChild));
 					}
 				}
 			}
@@ -805,7 +805,7 @@ namespace SOUI
 	BOOL SWindow::InitFromXml(IXmlNode *pNode)
 	{
 		ASSERT_UI_THREAD();
-		pugi::xml_node xmlNode(pNode);
+		pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
 		SASSERT(m_pContainer);
 		if (xmlNode)
 		{
@@ -828,7 +828,7 @@ namespace SOUI
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
-			SObject::InitFromXml(&xmlNode);
+			SObject::InitFromXml(&SXmlNode(xmlNode));
 
 			MarkAttributeHandled(attrClass,false);
 			MarkAttributeHandled(attrLayout,false);

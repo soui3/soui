@@ -5276,10 +5276,6 @@ namespace pugi
 	{
 	}
 
-	PUGI__FN xml_attribute::xml_attribute(const SOUI::IXmlAttr * attr): _attr((xml_attribute_struct*)attr->GetPrivPtr())
-	{
-	}
-
 	PUGI__FN static void unspecified_bool_xml_attribute(xml_attribute***)
 	{
 	}
@@ -5406,16 +5402,6 @@ namespace pugi
 	PUGI__FN int  xml_attribute::get_userdata() const
 	{
 		return _attr?_attr->userdata:0;
-	}
-
-	PUGI__FN void xml_attribute::Assign(const SOUI::IXmlAttr * pAttr)
-	{
-		_attr = (xml_attribute_struct*)pAttr->GetPrivPtr();
-	}
-
-	PUGI__FN LPVOID xml_attribute::GetPrivPtr() const
-	{
-		return _attr;
 	}
 
 	PUGI__FN xml_attribute_struct* xml_attribute::internal_object() const
@@ -5598,10 +5584,6 @@ namespace pugi
 	{
 	}
 
-	PUGI__FN xml_node::xml_node(const SOUI::IXmlNode *p): _root((xml_node_struct*)p->GetPrivPtr())
-	{
-	}
-
 	PUGI__FN static void unspecified_bool_xml_node(xml_node***)
 	{
 	}
@@ -5701,15 +5683,6 @@ namespace pugi
 		return (_root && _root->value) ? _root->value + 0 : PUGIXML_TEXT("");
 	}
 
-	PUGI__FN void xml_node::Assign(const SOUI::IXmlNode * pNode)
-	{
-		_root = (xml_node_struct*)pNode->GetPrivPtr();
-	}
-
-	PUGI__FN LPVOID xml_node::GetPrivPtr() const
-	{
-		return _root;
-	}
 
 	PUGI__FN bool xml_node::set_userdata(int data)
 	{

@@ -30,7 +30,7 @@ SwndContainerImpl::SwndContainerImpl()
 	pugi::xml_node xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
 	if (xmlCaret)
 	{
-		m_caret->InitFromXml(&xmlCaret);
+		m_caret->InitFromXml(&SXmlNode(xmlCaret));
 	}
 }
 

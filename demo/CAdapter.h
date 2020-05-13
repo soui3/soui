@@ -25,7 +25,7 @@ public:
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&xmlTemplate);
+			pItem->InitFromXml(&SXmlNode(xmlTemplate));
 		}
 
 		SButton *pBtn = pItem->FindChildByName2<SButton>(L"btn_test");
@@ -119,7 +119,7 @@ public:
 		if (pItem->GetChildrenCount() == 0)
 		{
 			int nViewType = getItemViewType(position, pItem->GetState());
-			pItem->InitFromXml(&xmlTemplate.child(KNodeName_Item[nViewType]));
+			pItem->InitFromXml(&SXmlNode(xmlTemplate.child(KNodeName_Item[nViewType])));
 		}
 		pItem->GetEventSet()->subscribeEvent(EventSwndStateChanged::EventID, Subscriber(&CTestAdapterFlex::OnItemStateChanged, this));
 
@@ -259,7 +259,7 @@ public:
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&xmlTemplate);
+			pItem->InitFromXml(&SXmlNode(xmlTemplate));
 		}
 
 		SOFTINFO *psi = m_softInfo.GetData() + position%m_softInfo.GetCount();
@@ -403,7 +403,7 @@ public:
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&xmlTemplate);
+			pItem->InitFromXml(&SXmlNode(xmlTemplate));
 		}
 		SImageWnd *pImg = pItem->FindChildByName2<SImageWnd>(L"img_file_icon");
 		pImg->SetSkin(GETSKIN(skins[position % 5], pImg->GetScale()));
@@ -458,7 +458,7 @@ public:
 	virtual void getView(SOUI::HTREEITEM loc, SWindow * pItem, pugi::xml_node xmlTemplate) {
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&xmlTemplate);
+			pItem->InitFromXml(&SXmlNode(xmlTemplate));
 		}
 		ItemInfo & ii = m_tree.GetItemRef((HSTREEITEM)loc);
 		SWindow * pWnd = pItem->FindChildByID(R.id.btn_test);

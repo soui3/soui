@@ -150,7 +150,7 @@ BOOL SMCListView::CreateChildren(pugi::xml_node xmlNode)
 	SASSERT(m_pHeader);
 	if(!m_pHeader) return FALSE;
 	InsertChild(m_pHeader);
-	m_pHeader->InitFromXml(&xmlHeader);
+	m_pHeader->InitFromXml(&SXmlNode(xmlHeader));
 
 	if (!__super::CreateChildren(xmlNode))
 		return FALSE;

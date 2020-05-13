@@ -5,8 +5,6 @@
 
 SNSBEGIN
 
-typedef wchar_t char_t;
-
 #undef INTERFACE
 #define INTERFACE IXmlAttr
 DECLARE_INTERFACE_(IXmlAttr,IObjRef)
@@ -26,15 +24,14 @@ DECLARE_INTERFACE_(IXmlAttr,IObjRef)
 	*/
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
-	STDMETHOD_(void,Assign)(THIS_ const IXmlAttr * pAttr) PURE;
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST PURE;
 
 	// Check if attribute is empty
 	STDMETHOD_(bool,Empty)(THIS) SCONST PURE;
 
 	// Get attribute name/value, or "" if attribute is empty
-	STDMETHOD_(const char_t*,Name)(THIS) SCONST PURE;
-	STDMETHOD_(const char_t*,Value)(THIS) SCONST PURE;
+	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST PURE;
+	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST PURE;
 
 	STDMETHOD_(bool,set_userdata)(THIS_ int data) PURE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST PURE;
@@ -63,33 +60,32 @@ DECLARE_INTERFACE_(IXmlNode,IObjRef)
 	*/
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
-	STDMETHOD_(void,Assign)(THIS_ const IXmlNode * pNode) PURE;
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST PURE;
 
 	STDMETHOD_(bool,Empty)(THIS) SCONST PURE;
 
-	STDMETHOD_(const char_t*,Name)(THIS) SCONST PURE;
+	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST PURE;
 
-	STDMETHOD_(const char_t*,Value)(THIS) SCONST PURE;
+	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST PURE;
 
 	STDMETHOD_(bool,set_userdata)(THIS_ int data) PURE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST PURE;
 
 	// Get attribute list
-	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const char_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
 	STDMETHOD_(IXmlAttr*,FirstAttribute)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlAttr*,LastAttribute)(THIS) SCONST PURE;
 
 	// Get children list
-	STDMETHOD_(IXmlNode*,Child)(THIS_ const char_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*,Child)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
 	STDMETHOD_(IXmlNode*, FirstChild)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlNode*, LastChild)(THIS) SCONST PURE;
 
 	// Get next/previous sibling in the children list of the parent node
 	STDMETHOD_(IXmlNode*, NextSibling)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlNode*, PrevSibling)(THIS) SCONST PURE;
-	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST PURE;
-	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const char_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
 };
 
 typedef enum _XmlStatus
@@ -161,7 +157,7 @@ DECLARE_INTERFACE_(IXmlDoc,IObjRef)
 	STDMETHOD_(void,Copy)(THIS_ const IXmlDoc* proto) PURE;
 
 	// Load document from zero-terminated string. No encoding conversions are applied.
-	STDMETHOD_(XmlStatus,LoadString)(THIS_ const char_t* contents, unsigned int options) PURE;
+	STDMETHOD_(XmlStatus,LoadString)(THIS_ const wchar_t* contents, unsigned int options) PURE;
 
 	// Load document from file
 	STDMETHOD_(XmlStatus,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding) PURE;
@@ -182,8 +178,8 @@ DECLARE_INTERFACE_(IXmlDoc,IObjRef)
 	STDMETHOD_(void,SaveBinary)(THIS_ FILE *f) SCONST PURE;
 
 	// Save XML to file
-	STDMETHOD_(bool,SaveFileA)(THIS_ const char* path, const char_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
-	STDMETHOD_(bool,SaveFileW)(THIS_ const wchar_t* path, const char_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
+	STDMETHOD_(bool,SaveFileA)(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
+	STDMETHOD_(bool,SaveFileW)(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
 
 	// Get document element
 	STDMETHOD_(IXmlNode *,Root)(THIS) SCONST PURE;

@@ -59,7 +59,7 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
         ISkinObj *pSkin=SApplication::getSingleton().CreateSkinByName(strTypeName);
         if(pSkin)
         {
-            pSkin->InitFromXml(&xmlSkin);
+            pSkin->InitFromXml(&SXmlNode(xmlSkin));
 			SkinKey key = {strSkinName,pSkin->GetScale()};
 			SASSERT(!HasKey(key));
             AddKeyObject(key,pSkin);

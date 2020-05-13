@@ -125,15 +125,15 @@ namespace SOUI
 
 		virtual BOOL WINAPI InitFromXml(IXmlNode* pNode)
 		{
-			pugi::xml_node xmlNode(pNode);
+			pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
 			//找到根节点，获取在根节点上配置的全局菜单对象属性
 			pugi::xml_node xmlRoot = xmlNode.root().first_child();
 			if (xmlNode != xmlRoot)
 			{
-				SObject::InitFromXml(&xmlRoot);
+				SObject::InitFromXml(&SXmlNode(xmlRoot));
 			}
 
-			BOOL bRet = __super::InitFromXml(&xmlNode);
+			BOOL bRet = __super::InitFromXml(&SXmlNode(xmlNode));
 
 			SetWindowText(_T(""));//防止子菜单显示父级菜单项的文本。
 			return bRet;
@@ -148,7 +148,7 @@ namespace SOUI
 				if (pMenuItem)
 				{
 					InsertChild(pMenuItem);
-					pMenuItem->InitFromXml(&xmlItem);
+					pMenuItem->InitFromXml(&SXmlNode(xmlItem));
 				}
 				xmlItem = xmlItem.next_sibling();
 			}
@@ -604,7 +604,7 @@ namespace SOUI
 		SMenuExRoot *pMenuRoot = new SMenuExRoot(this);
 		InsertChild(pMenuRoot);
 
-		pMenuRoot->InitFromXml(&xmlNode);
+		pMenuRoot->InitFromXml(&SXmlNode(xmlNode));
 
 		pMenuRoot->GetLayoutParam()->SetWrapContent(Both);
 

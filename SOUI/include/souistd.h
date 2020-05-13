@@ -60,7 +60,7 @@
 #include <atl.mini/scomcli.h>
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
-#include <pugixml/pugixml.hpp>
+#include <xml/sxml.h>
 
 
 

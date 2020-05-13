@@ -291,7 +291,7 @@ BOOL SMenu::LoadMenu( pugi::xml_node xmlMenu )
     if(!m_hMenu) return FALSE;
 
 	SMenuAttr *pMenuAttr = new SMenuAttr;
-    pMenuAttr->InitFromXml(&xmlMenu);
+    pMenuAttr->InitFromXml(&SXmlNode(xmlMenu));
     SASSERT(pMenuAttr->m_pItemSkin);
 	SetMenuContextHelpId(m_hMenu,xmlMenu.attribute(L"contextHelpId").as_uint(0));
 	SetMenuAttr(m_hMenu,pMenuAttr);

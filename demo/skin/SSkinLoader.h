@@ -54,7 +54,7 @@ namespace SOUI
 						ISkinObj *pSkin = m_privateSkinPool->GetSkin(strSkinName,100);
 						if (pSkin)
 						{
-							pSkin->InitFromXml(&xmlSkin);
+							pSkin->InitFromXml(&SXmlNode(xmlSkin));
 						}
 						else
 						{
@@ -108,7 +108,7 @@ namespace SOUI
 						ISkinObj *pSkin = m_privateSkinPool->GetSkin(strSkinName,100);
 						if (pSkin)
 						{
-							pSkin->InitFromXml(&xmlSkin);
+							pSkin->InitFromXml(&SXmlNode(xmlSkin));
 						}
 						else
 						{

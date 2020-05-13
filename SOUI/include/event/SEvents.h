@@ -14,6 +14,7 @@
 #pragma once
 #include <core/sobjType.h>
 #include <sobject/Sobject.hpp>
+#include <helper/obj-ref-impl.hpp>
 
 //定义一组事件定义的宏，简化事件的定义。
 #define SEVENT_BEGIN_EX(evt,id,evt_name, api) \
