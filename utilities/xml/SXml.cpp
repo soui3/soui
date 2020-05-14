@@ -726,7 +726,7 @@ bool SXmlDoc::save_file(const wchar_t* path, const wchar_t* indent /*= L"\t"*/, 
 
 SXmlNode SXmlDoc::root() const
 {
-	return SXmlNode(_doc);
+	return SXmlNode(*(pugi::xml_node*)_doc);
 }
 
 const char * SXmlDoc::GetErrDesc(XmlStatus status)
