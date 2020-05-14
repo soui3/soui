@@ -146,7 +146,7 @@ public:
 	/**
 	* OnInitFinished
 	* @brief    属性初始化完成处理接口
-	* @param    pugi::xml_node xmlNode --  属性节点
+	* @param    IXmlNode * xmlNode --  属性节点
 	* @return   void
 	* Describe
 	*/ 

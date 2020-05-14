@@ -240,6 +240,11 @@ const wchar_t * SXmlNode::Value(THIS) SCONST
 	return _node.value();
 }
 
+const wchar_t * SXmlNode::Text(THIS) SCONST
+{
+	return _node.text().get();
+}
+
 bool SXmlNode::set_userdata(THIS_ int data)
 {
 	return _node.set_userdata(data);

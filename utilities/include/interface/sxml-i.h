@@ -84,6 +84,8 @@ DECLARE_INTERFACE_(IXmlNode,IObjRef)
 
 	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST PURE;
 
+	STDMETHOD_(const wchar_t*,Text)(THIS) SCONST PURE;
+
 	STDMETHOD_(bool,set_userdata)(THIS_ int data) PURE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST PURE;
 

@@ -104,6 +104,8 @@ public:
 
 	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST OVERRIDE;
 
+	STDMETHOD_(const wchar_t*,Text)(THIS) SCONST OVERRIDE;
+
 	STDMETHOD_(bool,set_userdata)(THIS_ int data) OVERRIDE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST OVERRIDE;
 

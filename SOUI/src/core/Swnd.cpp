@@ -805,15 +805,14 @@ namespace SOUI
 	BOOL SWindow::InitFromXml(IXmlNode *pNode)
 	{
 		ASSERT_UI_THREAD();
-		pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
+		SXmlNode xmlNode(pNode);
 		SASSERT(m_pContainer);
 		if (xmlNode)
 		{
-
 			if(m_pLayoutParam) m_pLayoutParam->Clear();
 
 			//优先处理"layout"属性
-			pugi::xml_attribute attrLayout=xmlNode.attribute(L"layout");
+			SXmlAttr attrLayout=xmlNode.attribute(L"layout");
 			if(attrLayout)
 			{
 				MarkAttributeHandled(attrLayout,true);
@@ -821,19 +820,19 @@ namespace SOUI
 			}
 
 			//优先处理"class"属性
-			pugi::xml_attribute attrClass=xmlNode.attribute(L"class");
+			SXmlAttr attrClass=xmlNode.attribute(L"class");
 			if(attrClass)
 			{
 				MarkAttributeHandled(attrClass,true);
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
-			SObject::InitFromXml(&SXmlNode(xmlNode));
+			SObject::InitFromXml(pNode);
 
 			MarkAttributeHandled(attrClass,false);
 			MarkAttributeHandled(attrLayout,false);
 
-			SStringW strText = xmlNode.text().get();
+			SStringW strText = xmlNode.Text();
 			strText.TrimBlank();
 			if (!strText.IsEmpty())
 			{
@@ -869,7 +868,8 @@ namespace SOUI
 		SSendMessage(WM_SHOWWINDOW,IsVisible(TRUE),ParentShow);
 
 		//创建子窗口
-		CreateChildren(xmlNode);
+		pugi::xml_node pugiNode((pugi::xml_node_struct*)xmlNode.GetPrivPtr());
+		CreateChildren(pugiNode);
 
 		//请求根窗口重新布局。由于布局涉及到父子窗口同步进行，同步执行布局操作可能导致布局过程重复执行。
 		RequestRelayout();
