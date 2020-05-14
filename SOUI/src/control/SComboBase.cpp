@@ -96,7 +96,7 @@ namespace SOUI
     BOOL SComboBase::CreateChildren( pugi::xml_node xmlNode )
     {
         SASSERT(m_pSkinBtn);
-		m_xmlDropdownStyle.append_copy(xmlNode.child(KStyle_Dropdown));
+		m_xmlDropdownStyle.root().append_copy(xmlNode.child(KStyle_Dropdown));
         //创建edit对象
 		m_pEdit = new SComboEdit(this);
 		SApplication::getSingleton().SetSwndDefAttr(m_pEdit);
@@ -300,14 +300,14 @@ namespace SOUI
 	static const wchar_t * KAttrTrCtx = L"trCtx";
     void SComboBase::OnCreateDropDown( SDropDownWnd *pDropDown )
     {
-		pugi::xml_node xmlDropdownStyleNode = m_xmlDropdownStyle.child(KStyle_Dropdown);
+		SXmlNode xmlDropdownStyleNode = m_xmlDropdownStyle.root().child(KStyle_Dropdown);
 		if(xmlDropdownStyleNode)
 		{
 			if(!xmlDropdownStyleNode.attribute(KAttrTrCtx))
 			{
 				xmlDropdownStyleNode.append_attribute(KAttrTrCtx).set_value(GetTrCtx());
 			}
-			pDropDown->InitFromXml(xmlDropdownStyleNode);
+			pDropDown->InitFromXml(&xmlDropdownStyleNode);
 		}
 		else
 		{

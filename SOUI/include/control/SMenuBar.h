@@ -23,7 +23,7 @@ namespace SOUI
 		int HitTest(CPoint pt);
 	protected:
 		SMenuBarItem* GetMenuItem(DWORD dwPos);
-		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+		virtual BOOL CreateChildren(SXmlNode xmlNode);
 
 		static LRESULT CALLBACK MenuSwitch(int code, WPARAM wParam, LPARAM lParam);
 

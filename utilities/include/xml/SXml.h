@@ -92,7 +92,7 @@ public:
 	SXmlNode(pugi::xml_node node);
 	SXmlNode(const IXmlNode * src);
 	SXmlNode(const SXmlNode& src);
-	explicit SXmlNode(LPVOID pData);
+	explicit SXmlNode(LPVOID pData=NULL);
 public:
 	STDMETHOD_(IStringW*,ToString)(THIS) SCONST OVERRIDE;
 
@@ -301,6 +301,8 @@ public:
 	bool save_file(const wchar_t* path, const wchar_t* indent = L"\t", unsigned int flags = xml_parse_default, XmlEncoding encoding = enc_auto) const;
 
 	SXmlNode root() const;
+
+	static const char * GetErrDesc(XmlStatus status);
 };
 
 

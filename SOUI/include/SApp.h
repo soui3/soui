@@ -141,13 +141,13 @@ public:
     /**
      * LoadXmlDocment
      * @brief    从资源中加载一个XML Document。
-     * @param [out] pugi::xml_document & xmlDoc --  输出的xml_document对象
+     * @param [out] SXmlDoc & xmlDoc --  输出的xml_document对象
      * @param    const SStringT & strResId --  XML文件在资源中的type:name
      * @return   BOOL true-加载成功, false-加载失败
      *
      * Describe  
      */
-    BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,const SStringT & strResId);
+    BOOL LoadXmlDocment(SXmlDoc & xmlDoc,const SStringT & strResId);
 
 	IAnimation * LoadAnimation(const SStringT &strResId);
 
@@ -315,7 +315,7 @@ protected:
 
     void _CreateSingletons(HINSTANCE hInst, LPCTSTR pszHostClassName, BOOL bImeApp);
     void _DestroySingletons();
-    BOOL _LoadXmlDocment(LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::xml_document & xmlDoc,IResProvider *pResProvider = NULL);
+    BOOL _LoadXmlDocment(LPCTSTR pszXmlName ,LPCTSTR pszType ,SXmlDoc & xmlDoc,IResProvider *pResProvider = NULL);
     
     SAutoRefPtr<IRealWndHandler>    m_pRealWndHandler;
     SAutoRefPtr<IScriptFactory>     m_pScriptFactory;

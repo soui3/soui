@@ -88,10 +88,10 @@ namespace SOUI
         *
         * Describe  加载xml文件 
         */
-        void SetMenuXml(pugi::xml_node xmlMenu)
+        void SetMenuXml(SXmlNode xmlMenu)
         {
-            m_xmlMenu.reset();
-            m_xmlMenu.append_copy(xmlMenu);
+            m_xmlMenu.Reset();
+            m_xmlMenu.root().append_copy(xmlMenu);
         }
 
         /**
@@ -100,12 +100,12 @@ namespace SOUI
         *
         * Describe  获取xml文件 
         */
-        pugi::xml_node GetMenuXml()
+        SXmlNode GetMenuXml()
         {
-            return m_xmlMenu.first_child();
+            return m_xmlMenu.root().first_child();
         }
     protected:
-        pugi::xml_document  m_xmlMenu;  /**< xml文件对象 */
+        SXmlDoc  m_xmlMenu;  /**< xml文件对象 */
     };
 
     /**
@@ -1104,7 +1104,7 @@ namespace SOUI
         */
         void OnEnableDragDrop(BOOL bEnable);
 
-        virtual pugi::xml_node GetMenuTemplate() const
+        virtual SXmlNode GetMenuTemplate() const
         {
             return SRicheditMenuDef::getSingleton().GetMenuXml();
         }

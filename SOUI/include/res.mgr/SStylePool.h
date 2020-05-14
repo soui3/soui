@@ -31,7 +31,7 @@ namespace SOUI
     * 
     * Describe    
     */
-    class SOUI_EXP SStylePool :public SCmnMap<pugi::xml_node,SStringW> , public TObjRefImpl<IObjRef>
+    class SOUI_EXP SStylePool :public SCmnMap<SXmlNode,SStringW> , public TObjRefImpl<IObjRef>
     {
     public:
         /**
@@ -42,19 +42,19 @@ namespace SOUI
          * @return   BOOL -- TRUE: success; FALSE: not exist
          * Describe  
          */    
-        pugi::xml_node GetStyle(LPCWSTR lpszName);
+        SXmlNode GetStyle(LPCWSTR lpszName);
 
         /**
          * Init
          * @brief    Load Style table from xml node
-         * @param    pugi::xml_node xmlNode --  xml node that describe style list
+         * @param    SXmlNode xmlNode --  xml node that describe style list
          * @return   BOOL -- TRUE: loaded; FALSE:failed;
          * Describe  
          */    
-        BOOL Init(pugi::xml_node xmlNode);
+        BOOL Init(SXmlNode xmlNode);
         
     protected:
-        pugi::xml_document  m_xmlDoc;
+        SXmlDoc  m_xmlDoc;
     };
 
     /**
@@ -77,7 +77,7 @@ namespace SOUI
         * @return   BOOL -- TRUE: success; FALSE: not exist
         * Describe  
         */    
-        pugi::xml_node GetStyle(LPCWSTR lpszName);
+        SXmlNode GetStyle(LPCWSTR lpszName);
         
         /**
          * PushStylePool
@@ -106,11 +106,11 @@ namespace SOUI
 		/**
 		* Init
 		* @brief    Load temlpate table from xml node
-		* @param    pugi::xml_node xmlNode --  xml node that describe temlpate list
+		* @param    SXmlNode xmlNode --  xml node that describe temlpate list
 		* @return   BOOL -- TRUE: loaded; FALSE:failed;
 		* Describe
 		*/
-		BOOL Init(pugi::xml_node xmlNode);
+		BOOL Init(SXmlNode xmlNode);
 
 		SStringW GetTemplateString(const SStringW &strName) const;
 	};

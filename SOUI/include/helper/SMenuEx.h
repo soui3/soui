@@ -69,7 +69,7 @@ namespace SOUI
         virtual ~SMenuEx(void);
 
         BOOL LoadMenu(const SStringT &strMenu,HWND hParent=NULL);
-        BOOL LoadMenu(pugi::xml_node xmlNode,HWND hParent=NULL);
+        BOOL LoadMenu(SXmlNode xmlNode,HWND hParent=NULL);
 		UINT TrackPopupMenu(UINT flag,int x,int y,HWND hOwner,int nScale = 100);
 		static void ExitPopupMenu(int nCmdId=0);
 

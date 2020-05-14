@@ -187,9 +187,10 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	return true;
 }
 
-BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
+BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
 {
-    if(!xmlNode)
+	SASSERT(pNode);
+    if(pNode->Empty())
     {
         SASSERT_FMTA(FALSE,"Null XML node");
         return FALSE;
@@ -219,14 +220,16 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
 	m_hostAttr.Init();
-	m_hostAttr.InitFromXml(&SXmlNode(xmlNode));
+	m_hostAttr.InitFromXml(pNode);
 
     if(m_privateStylePool->GetCount())
     {
         m_privateStylePool->RemoveAll();
         GETSTYLEPOOLMGR->PopStylePool(m_privateStylePool);
     }
-	pugi::xml_node xmlStyle = xmlNode.child(L"style");
+	SXmlNode xmlNode(pNode);
+
+	SXmlNode xmlStyle = xmlNode.child(L"style");
 	xmlStyle.set_userdata(1);
     m_privateStylePool->Init(xmlStyle);
     if(m_privateStylePool->GetCount())
@@ -238,7 +241,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
         m_privateSkinPool->RemoveAll();
         GETSKINPOOLMGR->PopSkinPool(m_privateSkinPool);
     }
-	pugi::xml_node xmlSkin = xmlNode.child(L"skin");
+	SXmlNode xmlSkin = xmlNode.child(L"skin");
 	xmlSkin.set_userdata(1);
     m_privateSkinPool->LoadSkins(xmlSkin);//从xmlNode加加载私有skin
     if(m_privateSkinPool->GetCount())
@@ -251,7 +254,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		m_privateTemplatePool->RemoveAll();
 		GETTEMPLATEPOOLMR->PopTemplatePool(m_privateTemplatePool);
 	}
-	pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+	SXmlNode xmlTemplate = xmlNode.child(L"template");
 	xmlTemplate.set_userdata(1);
 	m_privateTemplatePool->Init(xmlTemplate);
 	if(m_privateTemplatePool->GetCount())
@@ -259,11 +262,11 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		GETTEMPLATEPOOLMR->PushTemplatePool(m_privateTemplatePool);
 	}
     //加载脚本数据
-    pugi::xml_node xmlScript = xmlNode.child(L"script");
+    SXmlNode xmlScript = xmlNode.child(L"script");
 	xmlScript.set_userdata(1);
     if(m_pScriptModule && xmlScript)
     {
-        pugi::xml_attribute attrSrc = xmlScript.attribute(L"src");
+        SXmlAttr attrSrc = xmlScript.attribute(L"src");
         if(attrSrc)
         {
             SStringT strSrc = S_CW2T(attrSrc.value());
@@ -332,16 +335,16 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     }
 
 	//compatible with 2.x width and height properties in soui element.
-	pugi::xml_attribute attrWid = xmlNode.attribute(L"width");
-	pugi::xml_attribute attrHei = xmlNode.attribute(L"height");
-	pugi::xml_node xmlRoot = xmlNode.child(L"root");
+	SXmlAttr attrWid = xmlNode.attribute(L"width");
+	SXmlAttr attrHei = xmlNode.attribute(L"height");
+	SXmlNode xmlRoot = xmlNode.child(L"root");
 	xmlRoot.set_userdata(1);
 	if (attrWid && !xmlRoot.attribute(attrWid.name()))
 		xmlRoot.append_copy(attrWid);
 	if (attrHei && !xmlRoot.attribute(attrHei.name()))
 		xmlRoot.append_copy(attrHei);
 
-    SWindow::InitFromXml(&SXmlNode(xmlRoot));
+    SWindow::InitFromXml(&xmlRoot);
 
 	if(m_hostAttr.m_bTranslucent)
 	{
@@ -400,7 +403,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
     FireEvent(evt);
 
 	//handle user xml node
-	pugi::xml_node xmlChild = xmlNode.first_child();
+	SXmlNode xmlChild = xmlNode.first_child();
 	while(xmlChild)
 	{
 		if(xmlChild.get_userdata()!=1)
@@ -522,10 +525,10 @@ BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 {
 	if(resId.IsEmpty())
 		return FALSE;
-	pugi::xml_document xmlDoc;
+	SXmlDoc xmlDoc;
 	if(LOADXML(xmlDoc,resId))
 	{
-		return InitFromXml(xmlDoc.child(L"SOUI"));
+		return InitFromXml(&xmlDoc.root().child(L"SOUI"));
 	}else
 	{
 		SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
@@ -1656,7 +1659,7 @@ bool SHostWnd::StopHostAnimation()
 	return true;
 }
 
-void SHostWnd::OnUserXmlNode(pugi::xml_node xmlUser)
+void SHostWnd::OnUserXmlNode(SXmlNode xmlUser)
 {
 	SLOG_DEBUG("unhandled xml node:"<<xmlUser.name());
 }

@@ -284,14 +284,14 @@ SMenu::~SMenu(void)
 }
 
 
-BOOL SMenu::LoadMenu( pugi::xml_node xmlMenu )
+BOOL SMenu::LoadMenu(SXmlNode xmlMenu )
 {
 	SASSERT(m_hMenu==0);
     m_hMenu=CreatePopupMenu();
     if(!m_hMenu) return FALSE;
 
 	SMenuAttr *pMenuAttr = new SMenuAttr;
-    pMenuAttr->InitFromXml(&SXmlNode(xmlMenu));
+    pMenuAttr->InitFromXml(&xmlMenu);
     SASSERT(pMenuAttr->m_pItemSkin);
 	SetMenuContextHelpId(m_hMenu,xmlMenu.attribute(L"contextHelpId").as_uint(0));
 	SetMenuAttr(m_hMenu,pMenuAttr);
@@ -306,10 +306,10 @@ BOOL SMenu::LoadMenu(const SStringT & resId)
 {
 	SASSERT(!::IsMenu(m_hMenu));
 
-	pugi::xml_document xmlDoc;
+	SXmlDoc xmlDoc;
 	if(!LOADXML(xmlDoc,resId)) return FALSE;
 
-	pugi::xml_node xmlMenu=xmlDoc.child(L"menu");
+	SXmlNode xmlMenu=xmlDoc.root().child(L"menu");
 	if(!xmlMenu)  return FALSE;
 
 	return LoadMenu(xmlMenu);
@@ -393,9 +393,9 @@ UINT SMenu::TrackPopupMenu(
     return uRet;
 }
 
-void SMenu::BuildMenu( HMENU menuPopup,pugi::xml_node xmlNode )
+void SMenu::BuildMenu( HMENU menuPopup,SXmlNode xmlNode )
 {
-    pugi::xml_node xmlItem=xmlNode.first_child();
+    SXmlNode xmlItem=xmlNode.first_child();
 
     while(xmlItem)
     {
@@ -404,7 +404,7 @@ void SMenu::BuildMenu( HMENU menuPopup,pugi::xml_node xmlNode )
             SMenuItemData *pdmmi=new SMenuItemData;
             pdmmi->iIcon=xmlItem.attribute(L"icon").as_int(-1);
 			pdmmi->dwUserData = xmlItem.append_attribute(L"userData").as_uint();
-            SStringW strText = xmlItem.text().get();
+            SStringW strText = xmlItem.Text();
             strText.TrimBlank();
 			if(strText.IsEmpty()) strText = xmlItem.attribute(L"text").as_string();
             strText = TR(GETSTRING(strText),L"");
@@ -415,13 +415,11 @@ void SMenu::BuildMenu( HMENU menuPopup,pugi::xml_node xmlNode )
             BOOL bRadio=xmlItem.attribute(L"radio").as_bool(false);
             BOOL bDisable=xmlItem.attribute(L"disable").as_bool(false);
 
+            SStringW str  = xmlItem.ToString();
 
-            pugi::xml_writer_buff writer;
-            xmlItem.print(writer,L"\t",pugi::format_default,pugi::encoding_utf16);
-            SStringW str(writer.buffer(),writer.size());
-
-            pugi::xml_node xmlChild=xmlItem.first_child();
-            while(xmlChild && xmlChild.type()==pugi::node_pcdata) xmlChild=xmlChild.next_sibling();
+            SXmlNode xmlChild=xmlItem.first_child();
+            while(xmlChild && xmlChild.type()==node_pcdata) 
+				xmlChild=xmlChild.next_sibling();
 
 
             if(!xmlChild && !xmlItem.attribute(L"popup").as_bool(false))

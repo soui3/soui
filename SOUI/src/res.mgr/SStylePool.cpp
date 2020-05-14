@@ -8,20 +8,20 @@ namespace SOUI
     //SStylePool
     
     // Get style object from pool by class name
-    pugi::xml_node SStylePool::GetStyle(LPCWSTR lpszName)
+    SXmlNode SStylePool::GetStyle(LPCWSTR lpszName)
     {
-        if(!HasKey(lpszName)) return pugi::xml_node();
+        if(!HasKey(lpszName)) return SXmlNode();
         return GetKeyObject(lpszName);
     }
 
     // Load style-pool from xml tree
-    BOOL SStylePool::Init(pugi::xml_node xmlStyleRoot)
+    BOOL SStylePool::Init(SXmlNode xmlStyleRoot)
     {
         if(!xmlStyleRoot) return FALSE;
         
-        xmlStyleRoot = m_xmlDoc.append_copy(xmlStyleRoot);
+        xmlStyleRoot = m_xmlDoc.root().append_copy(xmlStyleRoot);
 
-		for (pugi::xml_node xmlChild = xmlStyleRoot.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
+		for (SXmlNode xmlChild = xmlStyleRoot.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 		{
 			SStringW strClsName = xmlChild.name();
 			if (strClsName.CompareNoCase(L"class") == 0)
@@ -39,16 +39,16 @@ namespace SOUI
 
     //////////////////////////////////////////////////////////////////////////
     // SStylePoolMgr
-    pugi::xml_node SStylePoolMgr::GetStyle( LPCWSTR lpszName)
+    SXmlNode SStylePoolMgr::GetStyle( LPCWSTR lpszName)
     {
         SPOSITION pos=m_lstStylePools.GetTailPosition();
         while(pos)
         {
             SStylePool *pStylePool=m_lstStylePools.GetPrev(pos);
-            pugi::xml_node style = pStylePool->GetStyle(lpszName);
+            SXmlNode style = pStylePool->GetStyle(lpszName);
             if(style) return style; 
         }
-        return pugi::xml_node();
+        return SXmlNode();
     }
 
     void SStylePoolMgr::PushStylePool( SStylePool *pStylePool )
@@ -88,15 +88,13 @@ namespace SOUI
     }
 
 	/////////////////////////////////////////////////////////////////////
-	BOOL STemplatePool::Init(pugi::xml_node xmlNode)
+	BOOL STemplatePool::Init(SXmlNode xmlNode)
 	{
 		if (!xmlNode) return FALSE;
-		for (pugi::xml_node xmlChild = xmlNode.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
+		for (SXmlNode xmlChild = xmlNode.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 		{
 			SStringW strTempName = xmlChild.name();
-			pugi::xml_writer_buff writer;
-			xmlChild.first_child().print(writer, L"", pugi::format_default, pugi::encoding_utf16);
-			SStringW strValue = SStringW(writer.buffer(), writer.size());
+			SStringW strValue = xmlChild.ToString();
 			AddKeyObject(strTempName, strValue);
 		}
 		return TRUE;

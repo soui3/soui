@@ -156,7 +156,7 @@ namespace SOUI
     {
         SXmlNode uiRoot=GetMsgTemplate();
         
-        InitFromXml(uiRoot);
+        InitFromXml(&uiRoot);
 		
         UINT uType = s_MsgBoxInfo.uType&0x0F;
 

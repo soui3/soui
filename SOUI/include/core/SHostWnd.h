@@ -159,7 +159,7 @@ public:
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
     HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
-	BOOL WINAPI InitFromXml(pugi::xml_node xmlNode);
+	BOOL WINAPI InitFromXml(IXmlNode * pNode);
     
     BOOL AnimateHostWindow(DWORD dwTime,DWORD dwFlags);
 
@@ -335,7 +335,7 @@ protected:
 
 protected:
 	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
-	virtual void OnUserXmlNode(pugi::xml_node xmlUser);
+	virtual void OnUserXmlNode(SXmlNode xmlUser);
 protected:
 	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:

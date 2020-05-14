@@ -729,4 +729,11 @@ SXmlNode SXmlDoc::root() const
 	return SXmlNode(_doc);
 }
 
+const char * SXmlDoc::GetErrDesc(XmlStatus status)
+{
+	pugi::xml_parse_result res;
+	res.status = (pugi::xml_parse_status)status;
+	return res.description();
+}
+
 SNSEND

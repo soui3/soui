@@ -1025,7 +1025,7 @@ void SRichEdit::OnRButtonDown( UINT nFlags, CPoint point )
     if(FireCtxMenu(point)) return;//用户自己响应右键
     SetFocus();
     //弹出默认编辑窗菜单
-    pugi::xml_node xmlMenu = GetMenuTemplate();
+    SXmlNode xmlMenu = GetMenuTemplate();
     if(xmlMenu)
     {
         SMenu menu;

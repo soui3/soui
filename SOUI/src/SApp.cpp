@@ -337,15 +337,20 @@ void * SApplication::GetInnerSingleton(int nType)
 	return m_pSingletons[nType];
 }
 
-BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::xml_document & xmlDoc,IResProvider *pResProvider/* = NULL*/)
+BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,SXmlDoc & xmlDoc,IResProvider *pResProvider/* = NULL*/)
 {
     if(!pResProvider) 
     {
         if(IsFileType(pszType))
         {
-            pugi::xml_parse_result result= xmlDoc.load_file(pszXmlName,pugi::parse_default,pugi::encoding_auto);
-            SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,result.description(),result.offset);
-            return result;
+            bool bLoad = xmlDoc.load_file(pszXmlName,xml_parse_default,enc_auto);
+			if(!bLoad)
+			{
+				XmlParseResult res;
+				xmlDoc.GetParseResult(&res);
+				SASSERT_FMTW(bLoad,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,SXmlDoc::GetErrDesc(res.status),res.offset);
+			}
+            return bLoad;
         }else
         {
             pResProvider = GetMatchResProvider(pszType,pszXmlName);
@@ -360,13 +365,18 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
     strXml.Allocate(dwSize);
     pResProvider->GetRawBuffer(pszType,pszXmlName,strXml,dwSize);
 
-    pugi::xml_parse_result result= xmlDoc.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
-	SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,S_CA2W(result.description()),result.offset);
-    return result;
+    bool  bLoad = xmlDoc.load_buffer(strXml,strXml.size(),xml_parse_default,enc_auto);
+	if(!bLoad)
+	{
+		XmlParseResult result;
+		xmlDoc.GetParseResult(&result);
+		SASSERT_FMTW(bLoad,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,S_CA2W(SXmlDoc::GetErrDesc(result.status)),result.offset);
+	}
+    return bLoad;
 }
 
 
-BOOL SApplication::LoadXmlDocment(pugi::xml_document & xmlDoc, const SStringT & strResId)
+BOOL SApplication::LoadXmlDocment(SXmlDoc & xmlDoc, const SStringT & strResId)
 {
     SStringTList strLst;
     if(2!=ParseResID(strResId,strLst)) return FALSE;
@@ -375,25 +385,25 @@ BOOL SApplication::LoadXmlDocment(pugi::xml_document & xmlDoc, const SStringT & 
 
 IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
 {
-	pugi::xml_document xml;
+	SXmlDoc xml;
 	if (!LoadXmlDocment(xml, strResId))
 		return NULL;
-	IAnimation *pRet = CreateAnimationByName(xml.first_child().name());
+	IAnimation *pRet = CreateAnimationByName(xml.root().first_child().name());
 	if (!pRet)
 		return NULL;
-	pRet->InitFromXml(&SXmlNode(xml.first_child()));
+	pRet->InitFromXml(&SXmlNode(xml.root().first_child()));
 	return pRet;
 }
 
 IValueAnimator * SApplication::LoadValueAnimator(const SStringT & strResId)
 {
-	pugi::xml_document xml;
+	SXmlDoc xml;
 	if (!LoadXmlDocment(xml, strResId))
 		return NULL;
-	IValueAnimator *pRet = CreateValueAnimatorByName(xml.first_child().name());
+	IValueAnimator *pRet = CreateValueAnimatorByName(xml.root().first_child().name());
 	if (!pRet)
 		return NULL;
-	pRet->InitFromXml(&SXmlNode(xml.first_child()));
+	pRet->InitFromXml(&SXmlNode(xml.root().first_child()));
 	return pRet;
 }
 
@@ -403,11 +413,11 @@ UINT SApplication::LoadSystemNamedResource( IResProvider *pResProvider )
     AddResProvider(pResProvider,NULL);
     //load system skins
     {
-        pugi::xml_document xmlDoc;
+        SXmlDoc xmlDoc;
         if(_LoadXmlDocment(_T("SYS_XML_SKIN"),_T("XML"),xmlDoc,pResProvider))
         {
             SSkinPool * p= SSkinPoolMgr::getSingletonPtr()->GetBuiltinSkinPool();
-            p->LoadSkins(xmlDoc.child(L"skin"));
+            p->LoadSkins(xmlDoc.root().child(L"skin"));
         }else
         {
             uRet |= 0x01;
@@ -415,10 +425,10 @@ UINT SApplication::LoadSystemNamedResource( IResProvider *pResProvider )
     }
     //load edit context menu
     {
-        pugi::xml_document xmlDoc;
+        SXmlDoc xmlDoc;
         if(_LoadXmlDocment(_T("SYS_XML_EDITMENU"),_T("XML"),xmlDoc,pResProvider))
         {
-            SRicheditMenuDef::getSingleton().SetMenuXml(xmlDoc.child(L"editmenu"));
+            SRicheditMenuDef::getSingleton().SetMenuXml(xmlDoc.root().child(L"editmenu"));
         }else
         {
             uRet |= 0x02;
@@ -426,9 +436,9 @@ UINT SApplication::LoadSystemNamedResource( IResProvider *pResProvider )
     }
     //load messagebox template
     {
-        pugi::xml_document xmlDoc;
+        SXmlDoc xmlDoc;
         if(!_LoadXmlDocment(_T("SYS_XML_MSGBOX"),_T("XML"),xmlDoc,pResProvider)
-        || !SetMsgTemplate(xmlDoc.child(L"SOUI")))
+        || !SetMsgTemplate(xmlDoc.root().child(L"SOUI")))
         {
             uRet |= 0x04;
         }

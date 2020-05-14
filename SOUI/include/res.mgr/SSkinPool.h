@@ -135,7 +135,7 @@ public:
      * @return   int -- 成功加载的SkinObj数量
      * Describe  
      */    
-    int LoadSkins(pugi::xml_node xmlNode);
+    int LoadSkins(SXmlNode xmlNode);
 protected:
     static void OnKeyRemoved(const SSkinPtr & obj);
     

@@ -33,7 +33,7 @@ SSkinPool::~SSkinPool()
 #endif
 }
 
-int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
+int SSkinPool::LoadSkins(SXmlNode xmlNode)
 {
     if(!xmlNode) return 0;
     
@@ -43,7 +43,7 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
 	//loadSkins前把this加入到poolmgr,便于在skin中引用其它skin
 	SSkinPoolMgr::getSingleton().PushSkinPool(this);
 
-    pugi::xml_node xmlSkin=xmlNode.first_child();
+    SXmlNode xmlSkin=xmlNode.first_child();
     while(xmlSkin)
     {
         strTypeName = xmlSkin.name();
@@ -59,7 +59,7 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
         ISkinObj *pSkin=SApplication::getSingleton().CreateSkinByName(strTypeName);
         if(pSkin)
         {
-            pSkin->InitFromXml(&SXmlNode(xmlSkin));
+            pSkin->InitFromXml(&xmlSkin);
 			SkinKey key = {strSkinName,pSkin->GetScale()};
 			SASSERT(!HasKey(key));
             AddKeyObject(key,pSkin);

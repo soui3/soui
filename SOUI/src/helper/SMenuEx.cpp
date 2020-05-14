@@ -574,13 +574,13 @@ namespace SOUI
 
 	BOOL SMenuEx::LoadMenu(const SStringT &strMenu,HWND hParent)
 	{
-		pugi::xml_document xmlMenu;
+		SXmlDoc xmlMenu;
 		BOOL bLoad = LOADXML(xmlMenu, strMenu);
 		if (!bLoad) return FALSE;
-		return LoadMenu(xmlMenu.first_child(),hParent);
+		return LoadMenu(xmlMenu.root().first_child(),hParent);
 	}
 
-	BOOL SMenuEx::LoadMenu(pugi::xml_node xmlNode,HWND hParent)
+	BOOL SMenuEx::LoadMenu(SXmlNode xmlNode,HWND hParent)
 	{
 		if (IsWindow()) return FALSE;
 		if (xmlNode.name() != SStringW(SMenuExRoot::GetClassName())
@@ -588,15 +588,15 @@ namespace SOUI
 			return FALSE;
 
 		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
-		pugi::xml_document souiXml;
-		pugi::xml_node root = souiXml.append_child(L"SOUI");
+		SXmlDoc souiXml;
+		SXmlNode root = souiXml.root().append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);
 		if (m_pParent == NULL)
 		{
 			root.append_attribute(L"trCtx").set_value(xmlNode.attribute(L"trCtx").value());
 		}
 		m_hParent = hParent;
-		InitFromXml(root);
+		InitFromXml(&root);
 
 		if (!hWnd) return FALSE;
 
@@ -1159,10 +1159,10 @@ namespace SOUI
 	BOOL SMenuEx::IniNullMenu(SMenuExRoot *ParentRoot)
 	{
 		HWND hWnd = Create(NULL, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
-		pugi::xml_document souiXml;
-		pugi::xml_node root = souiXml.append_child(L"SOUI");
+		SXmlDoc souiXml;
+		SXmlNode root = souiXml.root().append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);		
-		InitFromXml(root);
+		InitFromXml(&root);
 		if (!hWnd) return FALSE;
 		SMenuExRoot *pMenuRoot = new SMenuExRoot(this);		
 		if (ParentRoot)

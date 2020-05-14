@@ -275,21 +275,22 @@ namespace SOUI
 			return NULL;
 		return m_lstMenuItem[dwPos];
 	}
-	BOOL SMenuBar::CreateChildren(pugi::xml_node xmlNode)
+
+	BOOL SMenuBar::CreateChildren(SXmlNode xmlNode)
 	{
-		pugi::xml_node xmlBtnStyle = xmlNode.child(XmlBtnStyle);
+		SXmlNode xmlBtnStyle = xmlNode.child(XmlBtnStyle);
 		if (xmlBtnStyle)
 		{
-			m_xmlStyle.append_copy(xmlBtnStyle);
+			m_xmlStyle.root().append_copy(xmlBtnStyle);
 		}
-		pugi::xml_node xmlTMenus = xmlNode.child(XmlMenus);
+		SXmlNode xmlTMenus = xmlNode.child(XmlMenus);
 		if (xmlTMenus)
 		{
-			for (pugi::xml_node xmlChild = xmlTMenus.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
+			for (SXmlNode xmlChild = xmlTMenus.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 			{
 				if (_wcsicmp(xmlChild.name(), SMenuBarItem::GetClassName()) != 0)
 					continue;
-				Insert(xmlChild);
+				Insert(&xmlChild);
 			}
 		}
 

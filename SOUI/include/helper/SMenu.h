@@ -231,7 +231,7 @@ public:
 
     BOOL LoadMenu(const SStringT & resId);
 
-    BOOL LoadMenu(pugi::xml_node xmlMenu);
+    BOOL LoadMenu(SXmlNode xmlMenu);
 
 	/**
      * SMenu::InsertMenu
@@ -264,7 +264,7 @@ public:
 
 protected:
 	void UpdateScale(int nScale);
-    void BuildMenu(HMENU menuPopup,pugi::xml_node xmlNode);
+    void BuildMenu(HMENU menuPopup,SXmlNode xmlNode);
     void InitMenuItemData(SMenuItemData * itemInfo, const SStringW & strText);
 	void FreeMenuItemData(HMENU hMemu);
 

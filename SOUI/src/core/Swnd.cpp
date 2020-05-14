@@ -688,36 +688,36 @@ namespace SOUI
 	const static wchar_t KTempData[] = L"data";//模板参数
 	const static wchar_t KTempParamFmt[] = L"{{%s}}";//模板数据替换格式
 
-	BOOL SWindow::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SWindow::CreateChildren(SXmlNode xmlNode)
 	{
 		ASSERT_UI_THREAD();
-		for (pugi::xml_node xmlChild=xmlNode.first_child(); xmlChild; xmlChild=xmlChild.next_sibling())
+		for (SXmlNode xmlChild=xmlNode.first_child(); xmlChild; xmlChild=xmlChild.next_sibling())
 		{
-			if(xmlChild.type() != pugi::node_element) continue;
+			if(xmlChild.type() != node_element) continue;
 
 			if(_wcsicmp(xmlChild.name(),KLabelInclude)==0)
 			{//在窗口布局中支持include标签
 				SStringT strSrc = S_CW2T(xmlChild.attribute(L"src").value());
-				pugi::xml_document xmlDoc;
+				SXmlDoc xmlDoc;
 				if(LOADXML(xmlDoc,strSrc))
 				{
-					pugi::xml_node xmlInclude = xmlDoc.first_child();
+					SXmlNode xmlInclude = xmlDoc.root().first_child();
 					if(wcsicmp(xmlInclude.name(),KLabelInclude)==0)
 					{//compatible with 2.9.0.1
 						CreateChildren(xmlInclude);
 					}else
 					{
 						//merger include attribute to xml node.
-						for(pugi::xml_attribute_iterator it = xmlChild.attributes_begin();it != xmlChild.attributes_end();it++)
+						for(SXmlAttr attr = xmlChild.first_attribute();attr;attr = attr.next_attribute())
 						{
-							if(wcsicmp(it->name(),L"src") == 0) 
+							if(wcsicmp(attr.name(),L"src") == 0) 
 								continue;
-							if(xmlInclude.attribute(it->name()))
+							if(xmlInclude.attribute(attr.name()))
 							{
-								xmlInclude.attribute(it->name()).set_value(it->value());
+								xmlInclude.attribute(attr.name()).set_value(attr.value());
 							}else
 							{
-								xmlInclude.append_attribute(it->name()).set_value(it->value());
+								xmlInclude.append_attribute(attr.name()).set_value(attr.value());
 							}
 						}
 						//create child.
@@ -725,7 +725,7 @@ namespace SOUI
 						if (pChild)
 						{
 							InsertChild(pChild);
-							pChild->InitFromXml(&SXmlNode(xmlInclude));
+							pChild->InitFromXml(&xmlInclude);
 						}
 
 						if(xmlInclude.next_sibling())
@@ -748,19 +748,19 @@ namespace SOUI
 					SASSERT(!strXml.IsEmpty());
 					if (!strXml.IsEmpty())
 					{//create children by template.
-						pugi::xml_node xmlData = xmlChild.child(KTempData);
-						for (pugi::xml_attribute param = xmlData.first_attribute(); param; param = param.next_attribute())
+						SXmlNode xmlData = xmlChild.child(KTempData);
+						for (SXmlAttr param = xmlData.first_attribute(); param; param = param.next_attribute())
 						{
 							SStringW strParam = SStringW().Format(KTempParamFmt, param.name());
 							strXml.Replace(strParam, param.value());//replace params to value.
 						}
-						pugi::xml_document xmlDoc;
-						if (xmlDoc.load_buffer_inplace(strXml.GetBuffer(strXml.GetLength()), strXml.GetLength() * sizeof(WCHAR), 116, pugi::encoding_utf16))
+						SXmlDoc xmlDoc;
+						if (xmlDoc.load_buffer_inplace(strXml.GetBuffer(strXml.GetLength()), strXml.GetLength() * sizeof(WCHAR), 116, enc_utf16))
 						{
-							pugi::xml_node xmlTemp = xmlDoc.first_child();
+							SXmlNode xmlTemp = xmlDoc.root().first_child();
 							SASSERT(xmlTemp);
 							//merger properties.
-							for (pugi::xml_attribute attr = xmlChild.first_attribute(); attr; attr = attr.next_attribute())
+							for (SXmlAttr attr = xmlChild.first_attribute(); attr; attr = attr.next_attribute())
 							{
 								if (!xmlTemp.attribute(attr.name()))
 								{
@@ -775,7 +775,7 @@ namespace SOUI
 							if (pChild)
 							{
 								InsertChild(pChild);
-								pChild->InitFromXml(&SXmlNode(xmlTemp));
+								pChild->InitFromXml(&xmlTemp);
 							}
 						}
 						strXml.ReleaseBuffer();
@@ -2504,17 +2504,17 @@ namespace SOUI
 
 	HRESULT SWindow::OnAttrClass( const SStringW& strValue, BOOL bLoading )
 	{
-		pugi::xml_node xmlStyle=GETSTYLE(strValue);
+		SXmlNode xmlStyle=GETSTYLE(strValue);
 		if(xmlStyle)
 		{
 			//优先处理layout属性
-			pugi::xml_attribute attrLayout = xmlStyle.attribute(L"layout");
+			SXmlAttr attrLayout = xmlStyle.attribute(L"layout");
 			if(attrLayout)
 			{
 				SetAttribute(attrLayout.name(),attrLayout.value(),bLoading);
 				MarkAttributeHandled(attrLayout,true);
 			}
-			for(pugi::xml_attribute attr=xmlStyle.first_attribute();attr;attr =attr.next_attribute())
+			for(SXmlAttr attr=xmlStyle.first_attribute();attr;attr =attr.next_attribute())
 			{//解析style中的属性
 				if(wcsicmp(attr.name(),L"class")==0 || IsAttributeHandled(attr)) 
 					continue;//防止class中包含有其它class属性,避免发生死循环
