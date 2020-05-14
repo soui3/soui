@@ -421,15 +421,15 @@ namespace SOUI
 		}
 	}
 
-	BOOL SHeaderCtrl::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SHeaderCtrl::CreateChildren(SXmlNode xmlNode)
 	{
-		pugi::xml_node xmlItems = xmlNode.child(L"items");
+		SXmlNode xmlItems = xmlNode.child(L"items");
 		if(xmlItems)
 			xmlItems.set_userdata(1);
 		__super::CreateChildren(xmlNode);
 
 		if (!xmlItems) return FALSE;
-		pugi::xml_node xmlItem = xmlItems.child(L"item");
+		SXmlNode xmlItem = xmlItems.child(L"item");
 		int iOrder = 0;
 		while (xmlItem)
 		{
@@ -437,7 +437,7 @@ namespace SOUI
 			item.strText.SetCtxProvider(this);
 			item.mask = 0xFFFFFFFF;
 			item.iOrder = iOrder++;
-			SStringW strText = xmlItem.text().get();
+			SStringW strText = xmlItem.Text();
 			strText.TrimBlank();
 			item.strText.SetText(S_CW2T(GETSTRING(strText)));
 			SLayoutSize szItem = GETLAYOUTSIZE(xmlItem.attribute(L"width").as_string(L"50"));

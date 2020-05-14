@@ -89,20 +89,20 @@ void SObjectFactoryMgr::SetSwndDefAttr(IObject * pObject) const
 	if (pObject->GetObjectType() != Window) return;
 
     //检索并设置类的默认属性
-	pugi::xml_node defAttr;
+	SXmlNode defAttr;
 	SObjDefAttr * pDefObjAttr = SUiDef::getSingleton().GetUiDef()->GetObjDefAttr();
 	if (pDefObjAttr) defAttr = pDefObjAttr->GetDefAttribute(pszClassName);
 
     if(defAttr)
     {
         //优先处理"class"属性
-        pugi::xml_attribute attrClass=defAttr.attribute(L"class");
+        SXmlAttr attrClass=defAttr.attribute(L"class");
         if(attrClass)
         {
             attrClass.set_userdata(1);
 			pObject->SetAttribute(attrClass.name(), attrClass.value(), TRUE);
         }
-        for (pugi::xml_attribute attr = defAttr.first_attribute(); attr; attr = attr.next_attribute())
+        for (SXmlAttr attr = defAttr.first_attribute(); attr; attr = attr.next_attribute())
         {
             if(attr.get_userdata()) continue;
 			pObject->SetAttribute(attr.name(), attr.value(), TRUE);

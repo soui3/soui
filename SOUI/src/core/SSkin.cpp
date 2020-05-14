@@ -516,37 +516,37 @@ SSkinShape::SSkinShape() :m_crSolid(CR_INVALID),m_shape(rectangle)
 
 void SSkinShape::OnInitFinished(IXmlNode * pNode)
 {
-	pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
-	pugi::xml_node xmlSolid = xmlNode.child(L"solid");
+	SXmlNode xmlNode(pNode);
+	SXmlNode xmlSolid = xmlNode.child(L"solid");
 	if(xmlSolid)
 	{
 		m_crSolid = GETCOLOR(xmlSolid.attribute(L"color").as_string());
 	}
-	pugi::xml_node xmlGrident = xmlNode.child(SGradient::GetClassName());
+	SXmlNode xmlGrident = xmlNode.child(SGradient::GetClassName());
 	if(xmlGrident)
 	{
 		if (!m_gradient) m_gradient.Attach(new SGradient());
 		m_gradient->InitFromXml(&SXmlNode(xmlGrident));
 	}
-	pugi::xml_node xmlSize = xmlNode.child(SShapeSize::GetClassName());
+	SXmlNode xmlSize = xmlNode.child(SShapeSize::GetClassName());
 	if(xmlSize)
 	{
 		if (!m_shapeSize) m_shapeSize.Attach(new SShapeSize());
 		m_shapeSize->InitFromXml(&SXmlNode(xmlSize));
 	}
-	pugi::xml_node xmlStoke = xmlNode.child(SStroke::GetClassName());
+	SXmlNode xmlStoke = xmlNode.child(SStroke::GetClassName());
 	if(xmlStoke)
 	{
 		if (!m_stroke) m_stroke.Attach(new SStroke());
 		m_stroke->InitFromXml(&SXmlNode(xmlStoke));
 	}
-	pugi::xml_node xmlConner = xmlNode.child(SCornerSize::GetClassName());
+	SXmlNode xmlConner = xmlNode.child(SCornerSize::GetClassName());
 	if(xmlConner)
 	{
 		if (!m_cornerSize) m_cornerSize.Attach(new SCornerSize());
 		m_cornerSize->InitFromXml(&SXmlNode(xmlConner));
 	}
-	pugi::xml_node xmlRing = xmlNode.child(SShapeRing::GetClassName());
+	SXmlNode xmlRing = xmlNode.child(SShapeRing::GetClassName());
 	if (xmlRing)
 	{
 		if (!m_ringParam) m_ringParam.Attach(new SShapeRing());

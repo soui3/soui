@@ -251,12 +251,12 @@ namespace SOUI
         /**
         * SComboBoxBase::CreateListBox
         * @brief    创建下拉列表
-        * @param    pugi::xml_node xmlNode  -- xml对象
+        * @param    SXmlNode xmlNode  -- xml对象
         * @return   BOOL  TRUE -- 成功  FALSE -- 失败
         *
         * Describe  创建下拉列表
         */    
-        virtual BOOL CreateListBox(pugi::xml_node xmlNode)=0;
+        virtual BOOL CreateListBox(SXmlNode xmlNode)=0;
 
         /**
         * SComboBoxBase::GetListBoxHeight
@@ -278,12 +278,12 @@ namespace SOUI
         /**
         * SComboBoxBase::LoadChildren
         * @brief    加载子项
-        * @param    pugi::xml_node xmlNode  -- xml文件
+        * @param    SXmlNode xmlNode  -- xml文件
         * @return   返回BOOL  TRUE -- 成功 FALSE -- 失败
         *
         * Describe  加载子项
         */
-        virtual BOOL CreateChildren(pugi::xml_node xmlNode);    
+        virtual BOOL CreateChildren(SXmlNode xmlNode);    
         /**
         * SComboBoxBase::GetTextRect
         * @brief    获取文本位置

@@ -103,7 +103,7 @@ DECLARE_INTERFACE_(IValueAnimator,IObject)
 	/**
 	* InitFromXml
 	* @brief    从XML结节初始化SObject对象
-	* @param    pugi::xml_node --  XML结节
+	* @param    SXmlNode --  XML结节
 	* @return   BOOL -- 成功返回TRUE
 	* Describe  
 	*/    
@@ -112,7 +112,7 @@ DECLARE_INTERFACE_(IValueAnimator,IObject)
 	/**
 	* OnInitFinished
 	* @brief    属性初始化完成处理接口
-	* @param    pugi::xml_node xmlNode --  属性节点
+	* @param    SXmlNode xmlNode --  属性节点
 	* @return   void
 	* Describe  
 	*/    

@@ -5,13 +5,13 @@
 namespace SOUI
 {
 
-BOOL SObjDefAttr::Init( pugi::xml_node xmlNode )
+BOOL SObjDefAttr::Init( SXmlNode xmlNode )
 {
     if(!xmlNode) return FALSE;
 
-    m_xmlRoot.append_copy(xmlNode);
+    m_xmlRoot.root().append_copy(xmlNode);
 
-    pugi::xml_node xmlObjAttr=m_xmlRoot.child(L"objattr").first_child();
+    SXmlNode xmlObjAttr=m_xmlRoot.root().child(L"objattr").first_child();
     while(xmlObjAttr)
     {
         AddKeyObject(xmlObjAttr.name(),xmlObjAttr);
@@ -21,22 +21,22 @@ BOOL SObjDefAttr::Init( pugi::xml_node xmlNode )
     SPOSITION pos=m_mapNamedObj->GetStartPosition();
     while(pos)
     {
-        SMap<SStringW,pugi::xml_node>::CPair *p=m_mapNamedObj->GetNext(pos);
+        SMap<SStringW,SXmlNode>::CPair *p=m_mapNamedObj->GetNext(pos);
         BuildClassAttribute(p->m_value,p->m_key);
     }
 
     return TRUE;
 }
 
-void SObjDefAttr::BuildClassAttribute( pugi::xml_node & xmlNode, LPCWSTR pszClassName)
+void SObjDefAttr::BuildClassAttribute( SXmlNode & xmlNode, LPCWSTR pszClassName)
 {
     SObjectInfo baseClassInfo =SApplication::getSingleton().BaseObjectInfoFromObjectInfo(SObjectInfo(pszClassName,Window));
     if(!baseClassInfo.IsValid()) return;
 
     if(HasKey(baseClassInfo.mName))
     {
-        pugi::xml_node xmlNodeAttrs = GetKeyObject(baseClassInfo.mName);
-        pugi::xml_attribute attr=xmlNodeAttrs.first_attribute();
+        SXmlNode xmlNodeAttrs = GetKeyObject(baseClassInfo.mName);
+        SXmlAttr attr=xmlNodeAttrs.first_attribute();
         while(attr)
         {
             if(!xmlNode.attribute(attr.name()))
@@ -47,13 +47,13 @@ void SObjDefAttr::BuildClassAttribute( pugi::xml_node & xmlNode, LPCWSTR pszClas
     BuildClassAttribute(xmlNode, baseClassInfo.mName);
 }
 
-pugi::xml_node SObjDefAttr::GetDefAttribute(LPCWSTR pszClassName )
+SXmlNode SObjDefAttr::GetDefAttribute(LPCWSTR pszClassName )
 {
     SASSERT(pszClassName);
 	if (!HasKey(pszClassName))
 	{
 		SObjectInfo baseClassInfo = SApplication::getSingleton().BaseObjectInfoFromObjectInfo(SObjectInfo(pszClassName, Window));
-		if (!baseClassInfo.IsValid()) return pugi::xml_node();
+		if (!baseClassInfo.IsValid()) return SXmlNode();
 
 		return GetDefAttribute(baseClassInfo.mName);
 	}

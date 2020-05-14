@@ -365,17 +365,18 @@ BOOL SResProviderFiles::Init( WPARAM wParam,LPARAM lParam )
 	strPathIndex+=_T("\\");
 	strPathIndex+=UIRES_INDEX;
 
-	pugi::xml_document xmlDoc;
+	SXmlDoc xmlDoc;
 	SStringT strFileName;
-	if(!xmlDoc.load_file(strPathIndex,pugi::parse_default,pugi::encoding_auto)) return FALSE;
+	if(!xmlDoc.load_file(strPathIndex,xml_parse_default,enc_auto)) 
+		return FALSE;
 
-	pugi::xml_node xmlResource=xmlDoc.child(L"resource");
+	SXmlNode xmlResource=xmlDoc.root().child(L"resource");
 	if(!xmlResource) return FALSE;
-	pugi::xml_node xmlType=xmlResource.first_child();
+	SXmlNode xmlType=xmlResource.first_child();
 	while(xmlType)
 	{
 		SStringT strType=S_CW2T(xmlType.name());
-		pugi::xml_node xmlFile=xmlType.child(L"file");
+		SXmlNode xmlFile=xmlType.child(L"file");
 		while(xmlFile)
 		{
 			SResID id(strType,S_CW2T(xmlFile.attribute(L"name").value()));

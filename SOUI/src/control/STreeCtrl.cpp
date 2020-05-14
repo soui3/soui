@@ -379,27 +379,27 @@ void STreeCtrl::PageDown()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL STreeCtrl::CreateChildren(pugi::xml_node xmlNode)
+BOOL STreeCtrl::CreateChildren(SXmlNode xmlNode)
 {
     if(!xmlNode) return FALSE;
 
     RemoveAllItems();
     ItemLayout();
 
-    pugi::xml_node xmlItem=xmlNode.child(L"item");
+    SXmlNode xmlItem=xmlNode.child(L"item");
 
     if(xmlItem) LoadBranch(STVI_ROOT,xmlItem);
 
     return TRUE;
 }
 
-void STreeCtrl::LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlItem)
+void STreeCtrl::LoadBranch(HSTREEITEM hParent,SXmlNode xmlItem)
 {
     while(xmlItem)
     {
         HSTREEITEM hItem=InsertItem(xmlItem,hParent);
 
-        pugi::xml_node xmlChild=xmlItem.child(L"item");
+        SXmlNode xmlChild=xmlItem.child(L"item");
         if(xmlChild) 
         {
             LoadBranch(hItem,xmlChild);
@@ -409,9 +409,9 @@ void STreeCtrl::LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlItem)
     }
 }
 
-void STreeCtrl::LoadItemAttribute(pugi::xml_node xmlItem, LPTVITEM pItem)
+void STreeCtrl::LoadItemAttribute(SXmlNode xmlItem, LPTVITEM pItem)
 {
-    for (pugi::xml_attribute attr=xmlItem.first_attribute(); attr; attr=attr.next_attribute())
+    for (SXmlAttr attr=xmlItem.first_attribute(); attr; attr=attr.next_attribute())
     {
         if ( !_wcsicmp(attr.name(), L"text"))
             pItem->strText = S_CW2T(attr.value()); 
@@ -474,7 +474,7 @@ HSTREEITEM STreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM
     return hRet;
 }
 
-HSTREEITEM STreeCtrl::InsertItem(pugi::xml_node xmlItem,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
+HSTREEITEM STreeCtrl::InsertItem(SXmlNode xmlItem,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
 {
     LPTVITEM pItemObj = new TVITEM();
 

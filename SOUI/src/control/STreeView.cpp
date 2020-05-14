@@ -449,7 +449,7 @@ namespace SOUI
 		
 		if(m_tvItemLocator)
 		{
-            m_adapter->InitByTemplate(m_xmlTemplate.first_child());
+            m_adapter->InitByTemplate(m_xmlTemplate.root().first_child());
 
 		    m_tvItemLocator->SetAdapter(adapter);
 		    
@@ -464,11 +464,11 @@ namespace SOUI
 	}
 	
 	
-	BOOL STreeView::CreateChildren(pugi::xml_node xmlNode) {
-		pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+	BOOL STreeView::CreateChildren(SXmlNode xmlNode) {
+		SXmlNode xmlTemplate = xmlNode.child(L"template");
 		if (xmlTemplate)
 		{
-			m_xmlTemplate.append_copy(xmlTemplate);
+			m_xmlTemplate.root().append_copy(xmlTemplate);
 		}
 		return TRUE;
 	}
@@ -842,7 +842,7 @@ namespace SOUI
                 if(lstRecycle->IsEmpty())
                 {//创建一个新的列表项
 					bNewItem = TRUE;
-                    ii.pItem = SItemPanel::Create(this,pugi::xml_node(),this);
+                    ii.pItem = SItemPanel::Create(this,SXmlNode(),this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&STreeView::OnItemClick,this));
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelDbclick::EventID,Subscriber(&STreeView::OnItemDblClick,this));
                 }else
@@ -864,7 +864,7 @@ namespace SOUI
             else
                 ii.pItem->ModifyItemState(0,WndState_Hover);
                 
-            m_adapter->getView(hItem,ii.pItem,m_xmlTemplate.first_child());
+            m_adapter->getView(hItem,ii.pItem,m_xmlTemplate.root().first_child());
 			if(bNewItem)
 			{
 				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
@@ -982,7 +982,7 @@ namespace SOUI
 				SItemPanel *pItem = GetItemPanel(hParent);
                 if (pItem)
                 {
-                    m_adapter->getView(hParent, pItem, m_xmlTemplate.first_child());
+                    m_adapter->getView(hParent, pItem, m_xmlTemplate.root().first_child());
                     pItem->InvalidateRect(NULL);
                 }
 				hParent = m_adapter->GetParentItem(hParent);
@@ -993,7 +993,7 @@ namespace SOUI
 			SItemPanel *pItem = GetItemPanel(hBranch);
             if (pItem)
             {
-                m_adapter->getView(hBranch, pItem, m_xmlTemplate.first_child());
+                m_adapter->getView(hBranch, pItem, m_xmlTemplate.root().first_child());
                 pItem->InvalidateRect(NULL);
             }
 		}
@@ -1016,7 +1016,7 @@ namespace SOUI
 				}
 				if (bInvalid)
 				{
-                    m_adapter->getView(hBranch, ii.pItem, m_xmlTemplate.first_child());
+                    m_adapter->getView(hBranch, ii.pItem, m_xmlTemplate.root().first_child());
 					ii.pItem->InvalidateRect(NULL);
 				}
 			}

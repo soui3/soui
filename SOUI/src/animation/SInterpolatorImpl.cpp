@@ -257,7 +257,7 @@ float SPathInterpolator::getInterpolation(float t) const{
 
 void SPathInterpolator::OnInitFinished(IXmlNode * pNode)
 {
-	pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
+	SXmlNode xmlNode(pNode);
 	fPoint pts[2];
 	bool hasCtrl1 = false, hasCtrl2 = false;
 	if (xmlNode.attribute(L"controlX1") && xmlNode.attribute(L"controlY1"))

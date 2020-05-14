@@ -113,7 +113,7 @@ namespace SOUI
             m_lvItemLocator->SetAdapter(adapter);
         if(m_adapter) 
         {
-            m_adapter->InitByTemplate(m_xmlTemplate.first_child());
+            m_adapter->InitByTemplate(m_xmlTemplate.root().first_child());
             m_adapter->registerDataSetObserver(m_observer);
             for(int i=0;i<m_adapter->getViewTypeCount();i++)
             {
@@ -329,7 +329,7 @@ namespace SOUI
                     if(lstRecycle->IsEmpty())
                     {//创建一个新的列表项
 						bNewItem = TRUE;
-                        ii.pItem = SItemPanel::Create(this,pugi::xml_node(),this);
+                        ii.pItem = SItemPanel::Create(this,SXmlNode(),this);
                         ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&SListView::OnItemClick,this));
                     }else
                     {
@@ -353,7 +353,7 @@ namespace SOUI
                 if(dwState & WndState_Hover)
                     m_pHoverItem = ii.pItem;
 
-                m_adapter->getView(iNewLastVisible,ii.pItem,m_xmlTemplate.first_child());
+                m_adapter->getView(iNewLastVisible,ii.pItem,m_xmlTemplate.root().first_child());
 				if(bNewItem)
 				{
 					ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
@@ -413,7 +413,7 @@ namespace SOUI
 		SASSERT(m_lvItemLocator->IsFixHeight());
 		SItemPanel * pItem = GetItemPanel(iItem);
 		SASSERT(pItem);
-		m_adapter->getView(iItem,pItem,m_xmlTemplate.first_child());
+		m_adapter->getView(iItem,pItem,m_xmlTemplate.root().first_child());
 	}
 
 
@@ -751,12 +751,12 @@ namespace SOUI
     }
 
 
-    BOOL SListView::CreateChildren(pugi::xml_node xmlNode)
+    BOOL SListView::CreateChildren(SXmlNode xmlNode)
     {
-        pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+        SXmlNode xmlTemplate = xmlNode.child(L"template");
         if(xmlTemplate)
         {
-            m_xmlTemplate.append_copy(xmlTemplate);
+            m_xmlTemplate.root().append_copy(xmlTemplate);
 			SLayoutSize nItemHei = GETLAYOUTSIZE(xmlTemplate.attribute(L"itemHeight").value());
             if(nItemHei.fSize>0.0f)
             {//指定了itemHeight属性时创建一个固定行高的定位器

@@ -240,14 +240,14 @@ int SListBox::FindString(int iFindAfter,LPCTSTR pszText) const
 	return -1;
 }
 
-BOOL SListBox::CreateChildren(pugi::xml_node xmlNode)
+BOOL SListBox::CreateChildren(SXmlNode xmlNode)
 {
     if(!xmlNode) return TRUE;
 
-    pugi::xml_node xmlItems=xmlNode.child(L"items");
+    SXmlNode xmlItems=xmlNode.child(L"items");
     if(xmlItems)
     {
-        pugi::xml_node xmlItem= xmlItems.child(L"item");
+        SXmlNode xmlItem= xmlItems.child(L"item");
         while(xmlItem)
         {
             LPLBITEM pItemObj = new LBITEM(this);
@@ -263,7 +263,7 @@ BOOL SListBox::CreateChildren(pugi::xml_node xmlNode)
     return TRUE;
 }
 
-void SListBox::LoadItemAttribute(pugi::xml_node xmlNode, LPLBITEM pItem)
+void SListBox::LoadItemAttribute(SXmlNode xmlNode, LPLBITEM pItem)
 {
     pItem->nImage=xmlNode.attribute(L"icon").as_int(pItem->nImage);
     pItem->lParam=xmlNode.attribute(L"data").as_uint((UINT)pItem->lParam);

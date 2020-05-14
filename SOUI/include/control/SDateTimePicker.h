@@ -43,7 +43,7 @@ protected:		// 继承
 	virtual void OnCreateDropDown(SDropDownWnd* pDropDown);
 	virtual void OnDestroyDropDown(SDropDownWnd* pDropDown);
 protected:
-	virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+	virtual BOOL CreateChildren(SXmlNode xmlNode);
 	bool OnDateChanged(EventCalendarExChanged* pEvt);
 	bool OnDateCmd(EventCmd* pEvt);
 	void GetDropBtnRect(LPRECT pBtnRc, LPRECT pSkinRc = NULL);

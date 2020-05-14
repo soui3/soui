@@ -41,14 +41,14 @@ namespace SOUI
 		}
 	}
 
-	BOOL SDateTimePicker::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SDateTimePicker::CreateChildren(SXmlNode xmlNode)
 	{
 		m_pCalendar = (SCalendar*)SApplication::getSingleton().CreateWindowByName(SCalendar::GetClassName());
 		if (NULL == m_pCalendar)
 			return FALSE;
 		m_pCalendar->SetContainer(GetContainer());
 
-		pugi::xml_node xmlCal = xmlNode.child(L"calstyle");
+		SXmlNode xmlCal = xmlNode.child(L"calstyle");
 		if(xmlCal)
 			m_pCalendar->InitFromXml(&SXmlNode(xmlCal));
 

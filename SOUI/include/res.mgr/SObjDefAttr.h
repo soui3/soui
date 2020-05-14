@@ -6,7 +6,7 @@
 namespace SOUI
 {
 
-class SOUI_EXP SObjDefAttr :public SCmnMap<pugi::xml_node,SStringW>, public TObjRefImpl<IObjRef>
+class SOUI_EXP SObjDefAttr :public SCmnMap<SXmlNode,SStringW>, public TObjRefImpl<IObjRef>
 {
 public:
     SObjDefAttr()
@@ -16,15 +16,15 @@ public:
     {
     }
 
-    BOOL Init(pugi::xml_node xmlNode);
+    BOOL Init(SXmlNode xmlNode);
     
     bool IsEmpty(){return !!m_xmlRoot.root();}
     
-    pugi::xml_node GetDefAttribute(LPCWSTR pszClassName);
+    SXmlNode GetDefAttribute(LPCWSTR pszClassName);
 protected:
-    void BuildClassAttribute(pugi::xml_node & xmlNode, LPCWSTR pszClassName);
+    void BuildClassAttribute(SXmlNode & xmlNode, LPCWSTR pszClassName);
 
-    pugi::xml_document m_xmlRoot;
+    SXmlDoc m_xmlRoot;
 };
 
 }//namespace SOUI

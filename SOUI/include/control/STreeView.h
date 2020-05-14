@@ -174,7 +174,7 @@ namespace SOUI
 
 		virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 		virtual int  GetScrollLineSize(BOOL bVertical);
-		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+		virtual BOOL CreateChildren(SXmlNode xmlNode);
 	
 		virtual void OnItemSetCapture(SItemPanel *pItem,BOOL bCapture); //设置or释放鼠标捕获
 		virtual BOOL OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const;    //获得表项的显示位置
@@ -206,7 +206,7 @@ namespace SOUI
 		typedef SMap<HTREEITEM,ItemInfo> VISIBLEITEMSMAP;
 		VISIBLEITEMSMAP * m_pVisibleMap;
 		
-		pugi::xml_document m_xmlTemplate;
+		SXmlDoc m_xmlTemplate;
 
 		SItemPanel * m_itemCapture;
 		SItemPanel * m_pHoverItem;

@@ -104,7 +104,7 @@ namespace SOUI
          * @return   IFontPtr -- font对象
          * Describe  
          */    
-		IFontPtr GetFont(FONTSTYLE style,const SStringW& strFaceName = SStringW(),pugi::xml_node xmlExProp = pugi::xml_node());
+		IFontPtr GetFont(FONTSTYLE style,const SStringW& strFaceName = SStringW(),SXmlNode xmlExProp = SXmlNode());
 
 		void SetDefFontInfo(const FontInfo & fontInfo);
 
@@ -117,7 +117,7 @@ namespace SOUI
 
 		IFontPtr _CreateFont(const LOGFONT &lf);
         
-		IFontPtr _CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExProp);
+		IFontPtr _CreateFont(const FontInfo &fontInfo,SXmlNode xmlExProp);
 
         SAutoRefPtr<IRenderFactory> m_RenderFactory;
 		FontInfo					m_defFontInfo;

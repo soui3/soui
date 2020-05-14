@@ -203,12 +203,12 @@ namespace SOUI
         /**
         * STabCtrl::CreateChildren
         * @brief    创建tab页面
-        * @param    pugi::xml_node xmlNode  -- xml文件
+        * @param    SXmlNode xmlNode  -- xml文件
         * @return   返回BOOL
         *
         * Describe  创建tab页面
         */
-        BOOL CreateChildren(pugi::xml_node xmlNode);
+        BOOL CreateChildren(SXmlNode xmlNode);
 
         /**
         * STabCtrl::InsertItem
@@ -381,7 +381,7 @@ namespace SOUI
         */
         virtual void UpdateChildrenPosition();
 
-        virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
+        virtual void WINAPI OnInitFinished(SXmlNode xmlNode);
         
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);

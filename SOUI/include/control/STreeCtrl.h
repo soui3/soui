@@ -119,12 +119,12 @@ public:
 
 protected:
 
-    virtual BOOL CreateChildren(pugi::xml_node xmlNode);
-    virtual void LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlNode);
-    virtual void LoadItemAttribute(pugi::xml_node xmlNode, LPTVITEM pItem);
+    virtual BOOL CreateChildren(SXmlNode xmlNode);
+    virtual void LoadBranch(HSTREEITEM hParent,SXmlNode xmlNode);
+    virtual void LoadItemAttribute(SXmlNode xmlNode, LPTVITEM pItem);
     
     HSTREEITEM InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM hInsertAfter,BOOL bEnsureVisible);
-    HSTREEITEM InsertItem(pugi::xml_node xmlNode,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
+    HSTREEITEM InsertItem(SXmlNode xmlNode,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
     
     BOOL IsAncestor(HSTREEITEM hItem1,HSTREEITEM hItem2);
 	BOOL VerifyItem(HSTREEITEM hItem) const;

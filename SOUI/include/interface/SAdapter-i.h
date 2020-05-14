@@ -66,7 +66,7 @@ namespace SOUI
         *        {@link #getItemViewType(int,DWORD)}).
         * @param xmlTemplate the xml template provided by its owner
         */
-        virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate) PURE;
+        virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate) PURE;
 
 
         /**
@@ -122,7 +122,7 @@ namespace SOUI
         /**
         * init adapter from the specified template xml data
         */
-        virtual void InitByTemplate(pugi::xml_node xmlTemplate) PURE;
+        virtual void InitByTemplate(SXmlNode xmlTemplate) PURE;
         
     };
  
@@ -249,7 +249,7 @@ namespace SOUI
         *        {@link #getItemViewType(int,DWORD)}).
         * @param xmlTemplate the xml template provided by its owner
         */
-        virtual void getView( HTREEITEM hItem, SWindow * pContainer, pugi::xml_node xmlTemplate) PURE;
+        virtual void getView( HTREEITEM hItem, SWindow * pContainer, SXmlNode xmlTemplate) PURE;
         
         virtual int getViewType(HTREEITEM hItem) const PURE;
         
@@ -263,6 +263,6 @@ namespace SOUI
         /**
         * init adapter from the specified template xml data
         */
-        virtual void InitByTemplate(pugi::xml_node xmlTemplate) PURE;
+        virtual void InitByTemplate(SXmlNode xmlTemplate) PURE;
     };
 }

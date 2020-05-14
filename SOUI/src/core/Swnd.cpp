@@ -868,8 +868,7 @@ namespace SOUI
 		SSendMessage(WM_SHOWWINDOW,IsVisible(TRUE),ParentShow);
 
 		//创建子窗口
-		pugi::xml_node pugiNode((pugi::xml_node_struct*)xmlNode.GetPrivPtr());
-		CreateChildren(pugiNode);
+		CreateChildren(xmlNode);
 
 		//请求根窗口重新布局。由于布局涉及到父子窗口同步进行，同步执行布局操作可能导致布局过程重复执行。
 		RequestRelayout();
@@ -881,9 +880,9 @@ namespace SOUI
 
 	SWindow * SWindow::CreateChildren(LPCWSTR pszXml)
 	{
-		pugi::xml_document xmlDoc;
-		if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),pugi::parse_default,pugi::encoding_utf16)) return NULL;
-		BOOL bLoaded=CreateChildren(xmlDoc);
+		SXmlDoc xmlDoc;
+		if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),xml_parse_default,enc_utf16)) return NULL;
+		BOOL bLoaded=CreateChildren(xmlDoc.root());
 		if(!bLoaded) return NULL;
 		else return m_pLastChild;
 	}

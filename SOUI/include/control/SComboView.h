@@ -69,7 +69,7 @@ namespace SOUI
         *
         * Describe  创建下拉列表
         */
-        virtual BOOL CreateListBox(pugi::xml_node xmlNode);
+        virtual BOOL CreateListBox(SXmlNode xmlNode);
 
         /**
         * SComboView::GetListBoxHeight

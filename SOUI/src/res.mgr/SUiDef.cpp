@@ -16,12 +16,12 @@ namespace SOUI{
 	const static WCHAR KDefFontFace[]   = L"宋体";
 
 
-	static pugi::xml_node GetSourceXmlNode(pugi::xml_node nodeRoot,pugi::xml_document &docInit,IResProvider *pResProvider, const wchar_t * pszName)
+	static SXmlNode GetSourceXmlNode(SXmlNode nodeRoot,SXmlDoc &docInit,IResProvider *pResProvider, const wchar_t * pszName)
 	{
-		pugi::xml_node     nodeData = nodeRoot.child(pszName,false);
+		SXmlNode     nodeData = nodeRoot.child(pszName,false);
 		if(nodeData)
 		{
-			pugi::xml_attribute attrSrc = nodeData.attribute(L"src",false);
+			SXmlAttr attrSrc = nodeData.attribute(L"src",false);
 			if(attrSrc)
 			{//优先从src属性里获取数据
 				SStringT strSrc = S_CW2T(attrSrc.value());
@@ -30,11 +30,10 @@ namespace SOUI{
 				{
 					SAutoBuf strXml;
 					size_t dwSize = pResProvider->GetRawBufferSize(strList[0],strList[1]);
-
 					strXml.Allocate(dwSize);
 					pResProvider->GetRawBuffer(strList[0],strList[1],strXml,dwSize);
-					pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
-					if(result) nodeData = docInit.child(pszName);
+					if(docInit.load_buffer(strXml,strXml.size(),xml_parse_default,enc_auto))
+						nodeData = docInit.root().child(pszName);
 				}
 			}
 		}
@@ -55,7 +54,7 @@ namespace SOUI{
 		virtual SNamedDimension & GetNamedDimension() override;
 		virtual SObjDefAttr * GetObjDefAttr() override;
 		virtual FontInfo & GetDefFontInfo()  override;
-		virtual pugi::xml_node  GetCaretInfo()  override;
+		virtual SXmlNode  GetCaretInfo()  override;
 		virtual void SetSkinPool(SSkinPool * pSkinPool)  override;
 		virtual void SetStylePool(SStylePool * pStylePool) override;
 		virtual void SetObjDefAttr(SObjDefAttr * pObjDefAttr) override;
@@ -73,7 +72,7 @@ namespace SOUI{
 		SNamedDimension namedDim;
 
 		FontInfo	  defFontInfo;
-		pugi::xml_document xmlCaret;
+		SXmlDoc xmlCaret;
 	};
 
 
@@ -92,27 +91,27 @@ namespace SOUI{
 			SLOGFMTD(_T("warning!!!! uidef was not found in the specified resprovider"));
 		}else
 		{
-			pugi::xml_document docInit;
+			SXmlDoc docInit;
 			SAutoBuf strXml;
 			strXml.Allocate(dwSize);
 
 			pResProvider->GetRawBuffer(strUiDef[0],strUiDef[1],strXml,dwSize);
 
-			pugi::xml_parse_result result= docInit.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
+			bool bLoad= docInit.load_buffer(strXml,strXml.size(),xml_parse_default,enc_auto);
 
-			if(!result)
+			if(!bLoad)
 			{//load xml failed
 				SLOGFMTD(_T("warning!!! load uidef as xml document failed"));
 			}else
 			{//init named objects
-				pugi::xml_node root = docInit.child(KNodeUidef,false);
+				SXmlNode root = docInit.root().child(KNodeUidef,false);
 				if(!root)
 				{
 					SLOGFMTD(_T("warning!!! \"uidef\" element is not the root element of uidef xml"));
 				}else
 				{
 					//parse default font
-					pugi::xml_node xmlFont;
+					SXmlNode xmlFont;
 					xmlFont=root.child(L"font",false);
 
 					FONTSTYLE fontStyle(0);
@@ -141,7 +140,7 @@ namespace SOUI{
 					}
 
 					//parse default Unit
-					pugi::xml_node xmlUnit;
+					SXmlNode xmlUnit;
 					xmlUnit = root.child(L"unit");
 					if (xmlUnit)
 					{
@@ -151,15 +150,15 @@ namespace SOUI{
 							SLayoutSize::setDefUnit(unit);
 					}
 
-					xmlCaret.reset();
-					pugi::xml_node xmlCaretNode = root.child(L"caret");
+					xmlCaret.Reset();
+					SXmlNode xmlCaretNode = root.child(L"caret");
 					if(xmlCaretNode)
-						xmlCaret.append_copy(xmlCaretNode);
+						xmlCaret.root().append_copy(xmlCaretNode);
 
 					//load named string
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeString);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeString);
 						if(nodeData)
 						{
 							namedString.Init(nodeData);
@@ -168,8 +167,8 @@ namespace SOUI{
 
 					//load named color
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeColor);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeColor);
 						if(nodeData)
 						{
 							namedColor.Init(nodeData);
@@ -178,8 +177,8 @@ namespace SOUI{
 
 					//load named dimension
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root, docData, pResProvider, KNodeDim);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root, docData, pResProvider, KNodeDim);
 						if (nodeData)
 						{
 							namedDim.Init(nodeData);
@@ -187,8 +186,8 @@ namespace SOUI{
 					}
 					//load named skin
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeSkin);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeSkin);
 						if(nodeData)
 						{
 							pSkinPool.Attach(new SSkinPool);
@@ -197,8 +196,8 @@ namespace SOUI{
 					}
 					//load named style
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeStyle);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeStyle);
 						if(nodeData)
 						{
 							pStylePool.Attach(new SStylePool);
@@ -207,8 +206,8 @@ namespace SOUI{
 					}
 					//load named template
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root, docData, pResProvider, KNodeTemplate);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root, docData, pResProvider, KNodeTemplate);
 						if (nodeData)
 						{
 							templatePool.Attach(new STemplatePool);
@@ -217,8 +216,8 @@ namespace SOUI{
 					}
 					//load SWindow default attribute
 					{
-						pugi::xml_document docData;
-						pugi::xml_node     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeObjAttr);
+						SXmlDoc docData;
+						SXmlNode     nodeData = GetSourceXmlNode(root,docData,pResProvider,KNodeObjAttr);
 						if(nodeData)
 						{
 							objDefAttr.Attach(new SObjDefAttr);
@@ -240,9 +239,9 @@ namespace SOUI{
 	SObjDefAttr * SUiDefInfo::GetObjDefAttr()  { return objDefAttr; }
 	FontInfo & SUiDefInfo::GetDefFontInfo()   { return defFontInfo; }
 
-	pugi::xml_node  SUiDefInfo::GetCaretInfo()
+	SXmlNode  SUiDefInfo::GetCaretInfo()
 	{
-		return xmlCaret.child(L"caret");
+		return xmlCaret.root().child(L"caret");
 	}
 
 	void SUiDefInfo::SetSkinPool(SSkinPool * pSkinPool)

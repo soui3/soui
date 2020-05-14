@@ -599,9 +599,9 @@ BOOL STabCtrl::SetItemTitle( int nIndex, LPCTSTR lpszTitle )
     return FALSE;
 }
 
-BOOL STabCtrl::CreateChildren( pugi::xml_node xmlNode )
+BOOL STabCtrl::CreateChildren( SXmlNode xmlNode )
 {
-    for ( pugi::xml_node xmlChild = xmlNode.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
+    for ( SXmlNode xmlChild = xmlNode.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
     {
         InsertItem(xmlChild,-1,TRUE);
     }
@@ -821,7 +821,7 @@ int STabCtrl::HitTest( CPoint pt )
     return -1;
 }
 
-void STabCtrl::OnInitFinished( pugi::xml_node xmlNode )
+void STabCtrl::OnInitFinished( SXmlNode xmlNode )
 {
     if(m_pSkinTab)
     {

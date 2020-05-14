@@ -21,11 +21,11 @@ namespace SOUI
 		}
 	}
 
-	BOOL SComboBox::CreateListBox( pugi::xml_node xmlNode )
+	BOOL SComboBox::CreateListBox( SXmlNode xmlNode )
 	{
 		SASSERT(xmlNode);
 		//创建列表控件
-		pugi::xml_node listStyle = xmlNode.child(L"listStyle");
+		SXmlNode listStyle = xmlNode.child(L"listStyle");
 		SStringW strListClass = listStyle.attribute(L"wndclass").as_string(SListBox::GetClassName());
 		m_pListBox=sobj_cast<SListBox>(SApplication::getSingleton().CreateWindowByName(strListClass));
 		SASSERT(m_pListBox);
@@ -39,10 +39,10 @@ namespace SOUI
         m_pListBox->SSendMessage(UM_SETSCALE, GetScale());
 
 		//初始化列表数据
-		pugi::xml_node xmlNode_Items=xmlNode.child(L"items");
+		SXmlNode xmlNode_Items=xmlNode.child(L"items");
 		if(xmlNode_Items)
 		{
-			pugi::xml_node xmlNode_Item=xmlNode_Items.child(L"item");
+			SXmlNode xmlNode_Item=xmlNode_Items.child(L"item");
 			while(xmlNode_Item)
 			{
 

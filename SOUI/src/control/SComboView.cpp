@@ -17,11 +17,11 @@ namespace SOUI
         }
     }
 
-    BOOL SComboView::CreateListBox(pugi::xml_node xmlNode)
+    BOOL SComboView::CreateListBox(SXmlNode xmlNode)
     {
         SASSERT(xmlNode);
         //创建列表控件
-		pugi::xml_node listStyle = xmlNode.child(L"listStyle");
+		SXmlNode listStyle = xmlNode.child(L"listStyle");
 		SStringW strListClass = listStyle.attribute(L"wndclass").as_string(SListView::GetClassName());
 		m_pListBox=sobj_cast<SListView>(SApplication::getSingleton().CreateWindowByName(strListClass));
 		SASSERT(m_pListBox);

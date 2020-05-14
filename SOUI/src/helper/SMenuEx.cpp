@@ -125,30 +125,30 @@ namespace SOUI
 
 		virtual BOOL WINAPI InitFromXml(IXmlNode* pNode)
 		{
-			pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
+			SXmlNode xmlNode(pNode);
 			//找到根节点，获取在根节点上配置的全局菜单对象属性
-			pugi::xml_node xmlRoot = xmlNode.root().first_child();
+			SXmlNode xmlRoot = xmlNode.root().first_child();
 			if (xmlNode != xmlRoot)
 			{
-				SObject::InitFromXml(&SXmlNode(xmlRoot));
+				SObject::InitFromXml(&xmlRoot);
 			}
 
-			BOOL bRet = __super::InitFromXml(&SXmlNode(xmlNode));
+			BOOL bRet = __super::InitFromXml(&xmlNode);
 
 			SetWindowText(_T(""));//防止子菜单显示父级菜单项的文本。
 			return bRet;
 		}
 
-		virtual BOOL CreateChildren(pugi::xml_node xmlNode)
+		virtual BOOL CreateChildren(SXmlNode xmlNode)
 		{
-			pugi::xml_node xmlItem = xmlNode.first_child();
+			SXmlNode xmlItem = xmlNode.first_child();
 			while (xmlItem)
 			{
 				SWindow *pMenuItem = CreateMenuItem(xmlItem.name());
 				if (pMenuItem)
 				{
 					InsertChild(pMenuItem);
-					pMenuItem->InitFromXml(&SXmlNode(xmlItem));
+					pMenuItem->InitFromXml(&xmlItem);
 				}
 				xmlItem = xmlItem.next_sibling();
 			}
@@ -353,10 +353,10 @@ namespace SOUI
 		return szRet;
 	}
 
-	BOOL SMenuExItem::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SMenuExItem::CreateChildren(SXmlNode xmlNode)
 	{
 		__super::CreateChildren(xmlNode);
-		pugi::xml_node xmlChild = xmlNode.child(SMenuExItem::GetClassName());
+		SXmlNode xmlChild = xmlNode.child(SMenuExItem::GetClassName());
 		if (xmlChild)
 		{//有子菜单
 			m_pSubMenu = new SMenuEx(this);

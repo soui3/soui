@@ -185,12 +185,12 @@ protected:
     /**
      * SSplitWnd::CreateChildren
      * @brief    创建panel
-     * @param    pugi::xml_node xmlNode -- xml文件
+     * @param    SXmlNode xmlNode -- xml文件
      * @return   返回BOOL
      *
      * Describe  创建panel 
      */
-    virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+    virtual BOOL CreateChildren(SXmlNode xmlNode);
     
     /**
      * SSplitWnd::OnSetCursor

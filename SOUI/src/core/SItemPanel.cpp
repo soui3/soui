@@ -14,7 +14,7 @@ namespace SOUI
 {
 
 
-SItemPanel::SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer *pItemContainer)
+SItemPanel::SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer)
     :m_pFrmHost(pFrameHost)
     ,m_pItemContainer(pItemContainer)
     ,m_dwData(0)
@@ -350,7 +350,7 @@ void SItemPanel::RequestRelayout(SWND hSource ,BOOL bSourceResizable)
     m_pItemContainer->OnItemRequestRelayout(this);
 }
 
-SItemPanel * SItemPanel::Create(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer *pItemContainer)
+SItemPanel * SItemPanel::Create(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer)
 {
     SItemPanel * pItem =  new SItemPanel(pFrameHost,xmlNode,pItemContainer);
 	SApplication::getSingletonPtr()->SetSwndDefAttr(pItem);

@@ -93,7 +93,7 @@ namespace SOUI
     }
 
 
-    BOOL SComboBase::CreateChildren( pugi::xml_node xmlNode )
+    BOOL SComboBase::CreateChildren( SXmlNode xmlNode )
     {
         SASSERT(m_pSkinBtn);
 		m_xmlDropdownStyle.root().append_copy(xmlNode.child(KStyle_Dropdown));
@@ -102,7 +102,7 @@ namespace SOUI
 		SApplication::getSingleton().SetSwndDefAttr(m_pEdit);
 
 		InsertChild(m_pEdit);
-		pugi::xml_node xmlEditStyle = xmlNode.child(KStyle_Edit);
+		SXmlNode xmlEditStyle = xmlNode.child(KStyle_Edit);
 		m_pEdit->GetEventSet()->setMutedState(true);
 		if (xmlEditStyle)
 			m_pEdit->InitFromXml(&SXmlNode(xmlEditStyle));

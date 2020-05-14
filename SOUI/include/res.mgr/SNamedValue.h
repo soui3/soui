@@ -23,13 +23,13 @@ namespace SOUI
     public:
         typedef TNAMEDVALUE<T> NAMEDVALUE;
 
-        virtual BOOL Init(pugi::xml_node xmlNode)
+        virtual BOOL Init(SXmlNode xmlNode)
         {
             if(!xmlNode) return FALSE;
 
-            for (pugi::xml_node xmlStr=xmlNode.first_child(); xmlStr; xmlStr=xmlStr.next_sibling())
+            for (SXmlNode xmlStr=xmlNode.first_child(); xmlStr; xmlStr=xmlStr.next_sibling())
             {
-				if(xmlStr.type() != pugi::node_element)
+				if(xmlStr.type() != node_element)
 					continue;
                 NAMEDVALUE namedValue;
                 wcscpy_s(namedValue.strName,MAX_NAME,xmlStr.name());

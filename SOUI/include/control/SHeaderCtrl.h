@@ -187,11 +187,11 @@ namespace SOUI
       /**
        * SHeaderCtrl::CreateChildren
        * @brief    创建新项
-       * @param    pugi::xml_node xmlNode  -- xml配置文件
+       * @param    SXmlNode xmlNode  -- xml配置文件
        *
        * Describe  创建新项  
        */              
-      virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+      virtual BOOL CreateChildren(SXmlNode xmlNode);
 
       /**
        * SHeaderCtrl::OnSetCursor

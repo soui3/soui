@@ -53,10 +53,10 @@ namespace SOUI
         return TRUE;
     }
 
-    BOOL SSplitWnd::CreateChildren( pugi::xml_node xmlNode )
+    BOOL SSplitWnd::CreateChildren( SXmlNode xmlNode )
     {
         if(!xmlNode) return FALSE;
-        pugi::xml_node xmlPane=xmlNode.child(SSplitPane::GetClassName());
+        SXmlNode xmlPane=xmlNode.child(SSplitPane::GetClassName());
         while(xmlPane)
         {
             SSplitPane *pPane = new SSplitPane();

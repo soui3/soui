@@ -50,7 +50,7 @@ protected:
 
 	SAutoRefPtr<IFont> GetFontPtr();
 protected:
-	virtual void WINAPI OnInitFinished(pugi::xml_node xmlNode);
+	virtual void WINAPI OnInitFinished(SXmlNode xmlNode);
 
     ISkinObj			*m_pItemSkin;    //菜单项皮肤，包含2种状态：正常状态+选中状态
     ISkinObj			*m_pIconSkin;    //菜单图标

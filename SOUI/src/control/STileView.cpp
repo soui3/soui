@@ -114,7 +114,7 @@ BOOL STileView::SetAdapter(ILvAdapter *adapter)
     }
     if(m_adapter)
     {
-        m_adapter->InitByTemplate(m_xmlTemplate.first_child());
+        m_adapter->InitByTemplate(m_xmlTemplate.root().first_child());
         m_adapter->registerDataSetObserver(m_observer);
         for(int i = 0; i < m_adapter->getViewTypeCount(); i++)
         {
@@ -189,7 +189,7 @@ void STileView::UpdateVisibleItem(int iItem)
 {
 	SItemPanel * pItem = GetItemPanel(iItem);
 	SASSERT(pItem);
-	m_adapter->getView(iItem, pItem, m_xmlTemplate.first_child());
+	m_adapter->getView(iItem, pItem, m_xmlTemplate.root().first_child());
 }
 
 void STileView::onItemDataChanged(int iItem)
@@ -333,7 +333,7 @@ void STileView::UpdateVisibleItems()
                 {
                     //创建一个新的列表项
 					bNewItem = TRUE;
-                    ii.pItem = SItemPanel::Create(this, pugi::xml_node(), this);
+                    ii.pItem = SItemPanel::Create(this, SXmlNode(), this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&STileView::OnItemClick,this));
                 }
                 else
@@ -354,7 +354,7 @@ void STileView::UpdateVisibleItems()
 			if (dwState & WndState_Hover) 
 				m_pHoverItem = ii.pItem;
 
-			m_adapter->getView(iNewLastVisible, ii.pItem, m_xmlTemplate.first_child());
+			m_adapter->getView(iNewLastVisible, ii.pItem, m_xmlTemplate.root().first_child());
 			if(bNewItem)
 			{
 				ii.pItem->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
@@ -742,18 +742,14 @@ SItemPanel *STileView::GetItemPanel(int iItem)
 }
 
 
-BOOL STileView::CreateChildren(pugi::xml_node xmlNode)
+BOOL STileView::CreateChildren(SXmlNode xmlNode)
 {
-    pugi::xml_node xmlTemplate = xmlNode.child(L"template");
+    SXmlNode xmlTemplate = xmlNode.child(L"template");
     if(xmlTemplate)
     {
-        m_xmlTemplate.append_copy(xmlTemplate);
-        //int nItemHei = xmlTemplate.attribute(L"itemHeight").as_int(-1);
-        //int nItemWid = xmlTemplate.attribute(L"itemWidth").as_int(-1);
-        //if(nItemHei > 0 && nItemWid > 0)
+        m_xmlTemplate.root().append_copy(xmlTemplate);
         {
             //创建一个定位器
-            //STileViewItemLocator *pItemLocator = new  STileViewItemLocator(nItemHei, nItemWid, m_nMarginSize);
             STileViewItemLocator *pItemLocator = new STileViewItemLocator(
                 xmlTemplate.attribute(L"itemHeight").as_string(L"10dp"),
                 xmlTemplate.attribute(L"itemWidth").as_string(L"10dp"),

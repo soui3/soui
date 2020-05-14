@@ -117,7 +117,7 @@ protected:
     /**
      * SScrollBar::OnInitFinished
      * @brief    初始化
-     * @param    pugi::xml_node xmlNode  -- 初始化
+     * @param    SXmlNode xmlNode  -- 初始化
      *
      * Describe  初始化
      */

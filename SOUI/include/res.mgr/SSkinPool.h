@@ -131,7 +131,7 @@ public:
     /**
      * LoadSkins
      * @brief    从XML中加载Skin列表
-     * @param    pugi::xml_node xmlNode --  描述SkinObj的XML表     
+     * @param    SXmlNode xmlNode --  描述SkinObj的XML表     
      * @return   int -- 成功加载的SkinObj数量
      * Describe  
      */    

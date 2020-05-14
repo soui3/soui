@@ -72,7 +72,7 @@ int SMenuAttr::GetMaxWidth()
 	return -1;
 }
 
-void SMenuAttr::OnInitFinished( pugi::xml_node xmlNode )
+void SMenuAttr::OnInitFinished( SXmlNode xmlNode )
 {
     SASSERT(m_pItemSkin);
 	if (!m_nItemHei.isValid())

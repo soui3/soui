@@ -26,16 +26,14 @@ void SFontPool::OnKeyRemoved(const IFontPtr & obj)
 	obj->Release();
 }
 
-IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,pugi::xml_node xmlExProp)
+IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,SXmlNode xmlExProp)
 {
 	IFontPtr hftRet=0;
 
 	SStringW strFace = fontFaceName;
 	if(strFace.IsEmpty()) strFace = GetDefFontInfo().strFaceName;
 	
-	pugi::xml_writer_buff writer;
-	xmlExProp.print(writer,L"\t",pugi::format_default,pugi::encoding_utf16);
-	SStringW strXmlProp= SStringW(writer.buffer(),writer.size());
+	SStringW strXmlProp= xmlExProp.ToString();
 
 	FontInfo info = {style.dwStyle,strFace,strXmlProp};
 
@@ -81,8 +79,8 @@ IFontPtr SFontPool::GetFont( const SStringW & strFont ,int scale)
 	short cAdding = 0;
 	short cSize = 0;
 
-	pugi::xml_document docExProp;
-	pugi::xml_node nodePropEx = docExProp.append_child();
+	SXmlDoc docExProp;
+	SXmlNode nodePropEx = docExProp.root().append_child();
     for(int i=(int)fontProp.GetCount()-1;i>=0;i--)
     {
         SStringWList strPair;
@@ -151,7 +149,7 @@ IFontPtr SFontPool::_CreateFont(const LOGFONT &lf)
     return pFont;
 }
 
-IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,pugi::xml_node xmlExProp)
+IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,SXmlNode xmlExProp)
 {
 	LOGFONT lfNew={0};
         

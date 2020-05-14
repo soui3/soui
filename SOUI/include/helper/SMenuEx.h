@@ -26,7 +26,7 @@ namespace SOUI
 
         void OnSubMenuHided(BOOL bUncheckItem);
     protected:
-        virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+        virtual BOOL CreateChildren(SXmlNode xmlNode);
 
         virtual CSize GetDesiredSize(int wid, int hei);
 

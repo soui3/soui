@@ -249,21 +249,21 @@ protected:
     /**
      * SListBox::CreateChildren
      * @brief    创建新项
-     * @param    pugi::xml_node xmlNode -- xml文件
+     * @param    SXmlNode xmlNode -- xml文件
      *
      * Describe  通过解析xml文件创建
      */
-    virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+    virtual BOOL CreateChildren(SXmlNode xmlNode);
 
     /**
      * SListBox::LoadItemAttribute
      * @brief    加载属性
-     * @param    pugi::xml_node xmlNode -- xml文件
+     * @param    SXmlNode xmlNode -- xml文件
      * @param    LPLBITEM pItem  -- 新项
      *
      * Describe
      */
-    void LoadItemAttribute(pugi::xml_node xmlNode, LPLBITEM pItem);
+    void LoadItemAttribute(SXmlNode xmlNode, LPLBITEM pItem);
 
     /**
      * SListBox::InsertItem

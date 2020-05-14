@@ -24,16 +24,6 @@ template<class T>
 class SObjectImpl : public T
 {
 public:
-	static void MarkAttributeHandled(pugi::xml_attribute xmlAttr, bool bHandled)
-	{
-		xmlAttr.set_userdata(bHandled?1:0);
-	}
-
-	static bool IsAttributeHandled(pugi::xml_attribute xmlAttr)
-	{
-		return xmlAttr.get_userdata()==1?true:false;
-	}
-
 	static void MarkAttributeHandled(SXmlAttr xmlAttr, bool bHandled)
 	{
 		xmlAttr.set_userdata(bHandled?1:0);

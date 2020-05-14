@@ -57,7 +57,7 @@ protected:
 protected:
     virtual BOOL OnScroll(BOOL bVertical, UINT uCode, int nPos);
     virtual int  GetScrollLineSize(BOOL bVertical);
-    virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+    virtual BOOL CreateChildren(SXmlNode xmlNode);
     
     virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
     virtual UINT OnGetDlgCode();
@@ -141,7 +141,7 @@ protected:
     
     SArray<SList<SItemPanel *> *>    m_itemRecycle; //item回收站,每一种样式在回收站中保持一个列表，以便重复利用
     
-    pugi::xml_document              m_xmlTemplate;
+    SXmlDoc              m_xmlTemplate;
     SLayoutSize                     m_nMarginSize;
     // int                             m_nMarginSize;
     BOOL                            m_bWantTab;

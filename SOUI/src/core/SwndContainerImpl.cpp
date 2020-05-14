@@ -27,7 +27,7 @@ SwndContainerImpl::SwndContainerImpl()
 {
     SWindow::SetContainer(this);
 	m_caret.Attach(new SCaret(this));
-	pugi::xml_node xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
+	SXmlNode xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
 	if (xmlCaret)
 	{
 		m_caret->InitFromXml(&SXmlNode(xmlCaret));

@@ -26,12 +26,12 @@ class SOUI_EXP SItemPanel : public SwndContainerImpl
 {
 	SOUI_CLASS_NAME(SItemPanel,L"itemPanel")
 public:
-    static SItemPanel * Create(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer *pItemContainer);
+    static SItemPanel * Create(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer);
     
     SWindow * GetHostWindow() { return m_pFrmHost;}
 
 protected:
-    SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer *pItemContainer);
+    SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer);
     virtual ~SItemPanel() {}
 
     virtual void WINAPI OnFinalRelease();

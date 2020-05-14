@@ -147,7 +147,7 @@ namespace SOUI
             return SStringT();
         }
         
-        virtual void InitByTemplate(pugi::xml_node xmlTemplate)
+        virtual void InitByTemplate(SXmlNode xmlTemplate)
         {
 			(xmlTemplate);
         }
@@ -295,7 +295,7 @@ namespace SOUI
             m_obzMgr.unregisterObserver(observer);
         }
 
-        virtual void InitByTemplate(pugi::xml_node xmlTemplate)
+        virtual void InitByTemplate(SXmlNode xmlTemplate)
         {
 			(xmlTemplate);
         }

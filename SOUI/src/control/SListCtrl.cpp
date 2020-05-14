@@ -54,9 +54,9 @@ int SListCtrl::InsertColumn(int nIndex, LPCTSTR pszText, int nWidth, LPARAM lPar
     return nRet;
 }
 
-BOOL SListCtrl::CreateChildren(pugi::xml_node xmlNode)
+BOOL SListCtrl::CreateChildren(SXmlNode xmlNode)
 {
-	pugi::xml_node xmlHeader = xmlNode.child(L"headerStyle");
+	SXmlNode xmlHeader = xmlNode.child(L"headerStyle");
 	m_pHeader = sobj_cast<SHeaderCtrl>(SApplication::getSingletonPtr()->CreateWindowByName(xmlHeader.attribute(L"wndclass").as_string(SHeaderCtrl::GetClassName())));
 	SASSERT(m_pHeader);
 	if(!m_pHeader) return FALSE;
