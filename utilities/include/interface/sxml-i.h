@@ -213,6 +213,20 @@ typedef enum _XmlParseOpt
 	xml_parse_full = xml_parse_default | xml_parse_pi | xml_parse_comments | xml_parse_declaration | xml_parse_doctype,
 }XmlParseOpt;
 
+// Parsing result
+typedef struct _XmlParseResult
+{
+	// Parsing status (see xml_parse_status)
+	XmlStatus status;
+
+	// Last parsed offset (in char_t units from start of input data)
+	ptrdiff_t offset;
+
+	// Source document encoding
+	XmlEncoding encoding;
+
+}XmlParseResult;
+
 #undef INTERFACE
 #define INTERFACE IXmlDoc
 DECLARE_INTERFACE_(IXmlDoc,IObjRef)
@@ -241,22 +255,24 @@ DECLARE_INTERFACE_(IXmlDoc,IObjRef)
 	STDMETHOD_(void,Copy)(THIS_ const IXmlDoc* proto) PURE;
 
 	// Load document from zero-terminated string. No encoding conversions are applied.
-	STDMETHOD_(XmlStatus,LoadString)(THIS_ const wchar_t* contents, unsigned int options) PURE;
+	STDMETHOD_(bool,LoadString)(THIS_ const wchar_t* contents, unsigned int options) PURE;
 
 	// Load document from file
-	STDMETHOD_(XmlStatus,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding) PURE;
-	STDMETHOD_(XmlStatus,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(bool,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding) PURE;
+	STDMETHOD_(bool,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
-	STDMETHOD_(XmlStatus,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(bool,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should ensure that buffer data will persist throughout the document's lifetime, and free the buffer memory manually once document is destroyed.
-	STDMETHOD_(XmlStatus,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(bool,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should allocate the buffer with pugixml allocation function; document will free the buffer when it is no longer needed (you can't use it anymore).
-	STDMETHOD_(XmlStatus,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding ) PURE;
+	STDMETHOD_(bool,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding ) PURE;
+
+	STDMETHOD_(void,GetParseResult)(THIS_ XmlParseResult *pResult) SCONST PURE;
 
 	// Save XML document to writer (semantics is slightly different from xml_node::print, see documentation for details).
 	STDMETHOD_(void,SaveBinary)(THIS_ FILE *f) SCONST PURE;

@@ -224,14 +224,14 @@ namespace SOUI
         /**
         * STabCtrl::InsertItem
         * @brief    插入tab页面
-        * @param    pugi::xml_node xmlNode  -- xml文件
+        * @param    SXmlNode xmlNode  -- xml文件
         * @param    int iInsert  -- 位置
         * @param    BOOL bLoading -- 是否加载
         * @return   返回int
         *
         * Describe  插入tab页面
         */
-        virtual int InsertItem(pugi::xml_node xmlNode,int iInsert=-1,BOOL bLoading=FALSE);
+        virtual int InsertItem(SXmlNode xmlNode,int iInsert=-1,BOOL bLoading=FALSE);
 
         /**
         * STabCtrl::GetItemCount
@@ -356,7 +356,7 @@ namespace SOUI
         */
         virtual void DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD dwState);
 
-        virtual STabPage * CreatePageFromXml(pugi::xml_node xmlPage);
+        virtual STabPage * CreatePageFromXml(SXmlNode xmlPage);
         
         /**
         * STabCtrl::OnGetDlgCode

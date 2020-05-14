@@ -16,7 +16,7 @@ namespace SOUI
 		~SMenuBar();
 
 		BOOL Insert(LPCTSTR pszTitle, LPCTSTR pszResName, int iPos = -1);
-		BOOL Insert(pugi::xml_node xmlNode, int iPos = -1);
+		BOOL Insert(IXmlNode *pNode, int iPos = -1);
 
 		SMenu* GetMenu(DWORD dwPos);
 
@@ -29,7 +29,7 @@ namespace SOUI
 
 		SArray<SMenuBarItem*> m_lstMenuItem;
 		HWND m_hWnd;
-		pugi::xml_document  m_xmlStyle;
+		SXmlDoc  m_xmlStyle;
 		BOOL m_bIsShow;
 		SMenuBarItem* m_pNowMenu;
 		int m_iNowMenu;

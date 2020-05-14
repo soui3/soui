@@ -586,87 +586,147 @@ bool SXmlNode::remove_children()
 	return _node.remove_children();
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 
 SXmlDoc::SXmlDoc()
 {
-	doc = new pugi::xml_document;
+	_doc = new pugi::xml_document;
 }
 
 SXmlDoc::~SXmlDoc()
 {
-	delete doc;
+	delete _doc;
 }
 
 IXmlNode * SXmlDoc::Root(THIS) SCONST
 {
-	return SXmlNode::toIXmlNode(*doc);
+	return SXmlNode::toIXmlNode(*_doc);
 }
 
 bool SXmlDoc::SaveFileW(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
 {
-	return doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
+	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
 }
 
 bool SXmlDoc::SaveFileA(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
 {
-	return doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
+	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
 }
 
 void SXmlDoc::SaveBinary(THIS_ FILE *f) SCONST
 {
-	doc->save_bin(f);
+	_doc->save_bin(f);
 }
 
-XmlStatus SXmlDoc::LoadBufferInplaceOwn(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+bool SXmlDoc::LoadBufferInplaceOwn(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
-	pugi::xml_parse_result res = doc->load_buffer_inplace_own(contents,size,options,(pugi::xml_encoding)encoding);
-	return (XmlStatus)res.status;
+	_result = _doc->load_buffer_inplace_own(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
 }
 
-XmlStatus SXmlDoc::LoadBufferInplace(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+bool SXmlDoc::LoadBufferInplace(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
-	pugi::xml_parse_result res = doc->load_buffer_inplace(contents,size,options,(pugi::xml_encoding)encoding);
-	return (XmlStatus)res.status;
+	_result = _doc->load_buffer_inplace(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
 }
 
-XmlStatus SXmlDoc::LoadBuffer(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+bool SXmlDoc::LoadBuffer(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
-	pugi::xml_parse_result res = doc->load_buffer(contents,size,options,(pugi::xml_encoding)encoding);
-	return (XmlStatus)res.status;
+	_result = _doc->load_buffer(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
 }
 
-XmlStatus SXmlDoc::LoadFileW(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)
+bool SXmlDoc::LoadFileW(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)
 {
-	pugi::xml_parse_result res = doc->load_file(path,options,(pugi::xml_encoding)encoding);
-	return (XmlStatus)res.status;
+	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
+	return _result;
 }
 
-XmlStatus SXmlDoc::LoadFileA(THIS_ const char* path, unsigned int options, XmlEncoding encoding)
+bool SXmlDoc::LoadFileA(THIS_ const char* path, unsigned int options, XmlEncoding encoding)
 {
-	pugi::xml_parse_result res = doc->load_file(path,options,(pugi::xml_encoding)encoding);
-	return (XmlStatus)res.status;
+	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
+	return _result;
 }
 
-XmlStatus SXmlDoc::LoadString(THIS_ const wchar_t* contents, unsigned int options)
+bool SXmlDoc::LoadString(THIS_ const wchar_t* contents, unsigned int options)
 {
-	pugi::xml_parse_result res = doc->load_string(contents,options);
-	return (XmlStatus)res.status;
+	_result = _doc->load_string(contents,options);
+	return _result;
+}
+
+void SXmlDoc::GetParseResult(THIS_ XmlParseResult *pResult) SCONST
+{
+	SASSERT(pResult);
+	pResult->status = (XmlStatus)_result.status;
+	pResult->offset = _result.offset;
+	pResult->encoding = (XmlEncoding)_result.encoding;
 }
 
 void SXmlDoc::Copy(THIS_ const IXmlDoc* proto)
 {
-	doc->reset(*(pugi::xml_document*)proto->GetPrivPtr());
+	_doc->reset(*(pugi::xml_document*)proto->GetPrivPtr());
 }
 
 void SXmlDoc::Reset(THIS)
 {
-	doc->reset();
+	_doc->reset();
 }
 
 LPVOID SXmlDoc::GetPrivPtr(THIS) SCONST
 {
-	return doc;
+	return _doc;
+}
+
+bool SXmlDoc::load_string(const wchar_t* contents, unsigned int options /*= xml_parse_default*/)
+{
+	_result = _doc->load_string(contents,options);
+	return _result;
+}
+
+bool SXmlDoc::load_file(const char* path, unsigned int options /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/)
+{
+	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
+	return _result;
+}
+
+bool SXmlDoc::load_file(const wchar_t* path, unsigned int options /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/)
+{
+	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
+	return _result;
+}
+
+bool SXmlDoc::load_buffer(const void* contents, size_t size, unsigned int options /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/)
+{
+	_result = _doc->load_buffer(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
+}
+
+bool SXmlDoc::load_buffer_inplace(void* contents, size_t size, unsigned int options /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/)
+{
+	_result = _doc->load_buffer_inplace(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
+}
+
+bool SXmlDoc::load_buffer_inplace_own(void* contents, size_t size, unsigned int options /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/)
+{
+	_result = _doc->load_buffer_inplace_own(contents,size,options,(pugi::xml_encoding)encoding);
+	return _result;
+}
+
+bool SXmlDoc::save_file(const char* path, const wchar_t* indent /*= L"\t"*/, unsigned int flags /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/) const
+{
+	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
+}
+
+bool SXmlDoc::save_file(const wchar_t* path, const wchar_t* indent /*= L"\t"*/, unsigned int flags /*= xml_parse_default*/, XmlEncoding encoding /*= enc_auto*/) const
+{
+	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
+}
+
+SXmlNode SXmlDoc::root() const
+{
+	return SXmlNode(_doc);
 }
 
 SNSEND

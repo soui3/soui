@@ -232,8 +232,10 @@ public:
 
 class UTILITIES_API SXmlDoc : public TObjRefImpl<IXmlDoc>
 {
+private:
+	pugi::xml_document *_doc;
+	mutable pugi::xml_parse_result _result;
 public:
-	pugi::xml_document *doc;
 	SXmlDoc();
 	~SXmlDoc();
 public:
@@ -245,23 +247,25 @@ public:
 	STDMETHOD_(void,Copy)(THIS_ const IXmlDoc* proto) OVERRIDE;
 
 	// Load document from zero-terminated string. No encoding conversions are applied.
-	STDMETHOD_(XmlStatus,LoadString)(THIS_ const wchar_t* contents, unsigned int options)OVERRIDE;
+	STDMETHOD_(bool,LoadString)(THIS_ const wchar_t* contents, unsigned int options)OVERRIDE;
 
 	// Load document from file
-	STDMETHOD_(XmlStatus,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(bool,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding)OVERRIDE;
 
-	STDMETHOD_(XmlStatus,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(bool,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
-	STDMETHOD_(XmlStatus,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(bool,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should ensure that buffer data will persist throughout the document's lifetime, and free the buffer memory manually once document is destroyed.
-	STDMETHOD_(XmlStatus,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(bool,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should allocate the buffer with pugixml allocation function; document will free the buffer when it is no longer needed (you can't use it anymore).
-	STDMETHOD_(XmlStatus,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding )OVERRIDE;
+	STDMETHOD_(bool,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding )OVERRIDE;
+
+	STDMETHOD_(void,GetParseResult)(THIS_ XmlParseResult *pResult) SCONST OVERRIDE;
 
 	// Save XML document to writer (semantics is slightly different from xml_node::print, see documentation for details).
 	STDMETHOD_(void,SaveBinary)(THIS_ FILE *f) SCONST OVERRIDE;
@@ -272,6 +276,31 @@ public:
 
 	// Get document element
 	STDMETHOD_(IXmlNode *,Root)(THIS) SCONST OVERRIDE;
+
+public:
+	// Load document from zero-terminated string. No encoding conversions are applied.
+	bool load_string(const wchar_t* contents, unsigned int options = xml_parse_default);
+
+	// Load document from file
+	bool load_file(const char* path, unsigned int options = xml_parse_default, XmlEncoding encoding = enc_auto);
+	bool load_file(const wchar_t* path, unsigned int options = xml_parse_default, XmlEncoding encoding = enc_auto);
+
+	// Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
+	bool load_buffer(const void* contents, size_t size, unsigned int options = xml_parse_default, XmlEncoding encoding = enc_auto);
+
+	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
+	// You should ensure that buffer data will persist throughout the document's lifetime, and free the buffer memory manually once document is destroyed.
+	bool load_buffer_inplace(void* contents, size_t size, unsigned int options = xml_parse_default, XmlEncoding encoding = enc_auto);
+
+	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
+	// You should allocate the buffer with pugixml allocation function; document will free the buffer when it is no longer needed (you can't use it anymore).
+	bool load_buffer_inplace_own(void* contents, size_t size, unsigned int options = xml_parse_default, XmlEncoding encoding = enc_auto);
+
+	// Save XML to file
+	bool save_file(const char* path, const wchar_t* indent = L"\t", unsigned int flags = xml_parse_default, XmlEncoding encoding = enc_auto) const;
+	bool save_file(const wchar_t* path, const wchar_t* indent = L"\t", unsigned int flags = xml_parse_default, XmlEncoding encoding = enc_auto) const;
+
+	SXmlNode root() const;
 };
 
 

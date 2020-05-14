@@ -623,7 +623,7 @@ BOOL STabCtrl::CreateChildren( pugi::xml_node xmlNode )
 }
 
 
-STabPage * STabCtrl::CreatePageFromXml(pugi::xml_node xmlPage)
+STabPage * STabCtrl::CreatePageFromXml(SXmlNode xmlPage)
 {
     if (wcscmp(xmlPage.name(),STabPage::GetClassName()) != 0) return NULL;
     return (STabPage *)SApplication::getSingleton().CreateWindowByName(STabPage::GetClassName());
@@ -631,18 +631,18 @@ STabPage * STabCtrl::CreatePageFromXml(pugi::xml_node xmlPage)
 
 int STabCtrl::InsertItem( LPCWSTR lpContent ,int iInsert/*=-1*/)
 {
-    pugi::xml_document xmlDoc;
-    if(!xmlDoc.load_buffer(lpContent,wcslen(lpContent)*sizeof(wchar_t),pugi::parse_default,pugi::encoding_utf16)) return -1;
-    return InsertItem(xmlDoc.first_child(),iInsert);
+    SXmlDoc xmlDoc;
+    if(!xmlDoc.load_buffer(lpContent,wcslen(lpContent)*sizeof(wchar_t),xml_parse_default,enc_utf16)) return -1;
+    return InsertItem(xmlDoc.root().first_child(),iInsert);
 }
 
-int STabCtrl::InsertItem( pugi::xml_node xmlNode,int iInsert/*=-1*/,BOOL bLoading/*=FALSE*/ )
+int STabCtrl::InsertItem(SXmlNode xmlNode,int iInsert/*=-1*/,BOOL bLoading/*=FALSE*/ )
 {
     STabPage *pChild = CreatePageFromXml(xmlNode);
     if(!pChild) return -1;
     
     InsertChild(pChild);
-    pChild->InitFromXml(&SXmlNode(xmlNode));
+    pChild->InitFromXml(&xmlNode);
     pChild->GetLayoutParam()->SetMatchParent(Both);
     
     if(iInsert==-1) iInsert = (int)m_lstPages.GetCount();

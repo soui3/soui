@@ -6,23 +6,23 @@
 namespace SOUI
 {
 
-    static pugi::xml_document s_xmlMsgTemplate;
+    static SXmlDoc s_xmlMsgTemplate;
     	
 	
-    BOOL SetMsgTemplate(pugi::xml_node uiRoot)
+    BOOL SetMsgTemplate(SXmlNode uiRoot)
     {
         if(wcscmp(uiRoot.name(),L"SOUI")!=0 ) return FALSE;
         if(!uiRoot.attribute(L"minSize").value()[0]) return FALSE;
 
-        s_xmlMsgTemplate.reset();
-        s_xmlMsgTemplate.append_copy(uiRoot);
+        s_xmlMsgTemplate.Reset();
+        s_xmlMsgTemplate.root().append_copy(uiRoot);
         return TRUE;
     }
 	
 
-    pugi::xml_node GetMsgTemplate()
+    SXmlNode GetMsgTemplate()
     {
-        return s_xmlMsgTemplate.child(L"SOUI");
+        return s_xmlMsgTemplate.root().child(L"SOUI");
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ namespace SOUI
     
     BOOL SMessageBoxImpl::OnInitDialog( HWND wnd, LPARAM lInitParam )
     {
-        pugi::xml_node uiRoot=GetMsgTemplate();
+        SXmlNode uiRoot=GetMsgTemplate();
         
         InitFromXml(uiRoot);
 		
@@ -166,7 +166,7 @@ namespace SOUI
         SWindow *pBtnPanel=pBtnSwitch->GetItem(g_msgBtnText[uType].nBtns-1);
         SASSERT(pBtnPanel);
         
-        pugi::xml_node nodeBtnTxt = GetMsgTemplate().child(L"buttonText");
+        SXmlNode nodeBtnTxt = GetMsgTemplate().child(L"buttonText");
         for(int i=0; i<g_msgBtnText[uType].nBtns; i++)
         {
             SWindow *pBtn=pBtnPanel->FindChildByName(g_wcsNameOfBtns[i]);
@@ -178,10 +178,10 @@ namespace SOUI
             {
                 SStringW strBtnText = g_msgBtnText[uType].btnInfo[i].szText;
                 //先从模板中的buttonText节点里查按钮的文字
-                pugi::xml_node nodeTxt = nodeBtnTxt.child(strBtnText);
+                SXmlNode nodeTxt = nodeBtnTxt.child(strBtnText);
                 if(nodeTxt) 
                 {
-                    strBtnText=nodeTxt.text().get();
+                    strBtnText=nodeTxt.Text();
                     strBtnText.TrimBlank();
                     strBtnText = GETSTRING(strBtnText);
                 }

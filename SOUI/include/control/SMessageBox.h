@@ -24,9 +24,9 @@ namespace SOUI
     #define NAME_MSGBOX_BTN2            L"button2nd"    //第2个按钮ID
     #define NAME_MSGBOX_BTN3            L"button3rd"    //第3个按钮ID
     
-    BOOL SOUI_EXP SetMsgTemplate(pugi::xml_node xmlNode);
+    BOOL SOUI_EXP SetMsgTemplate(SXmlNode xmlNode);
 	
-    pugi::xml_node SOUI_EXP GetMsgTemplate();
+    SXmlNode SOUI_EXP GetMsgTemplate();
 
     INT_PTR SOUI_EXP SMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
 

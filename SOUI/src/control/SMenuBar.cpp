@@ -186,9 +186,9 @@ namespace SOUI
 		SASSERT(pNewMenu);
 		InsertChild(pNewMenu);
 
-		pugi::xml_node xmlBtnStyle = m_xmlStyle.child(XmlBtnStyle);
+		SXmlNode xmlBtnStyle = m_xmlStyle.root().child(XmlBtnStyle);
 		if (xmlBtnStyle)
-			pNewMenu->InitFromXml(&SXmlNode(xmlBtnStyle));
+			pNewMenu->InitFromXml(&xmlBtnStyle);
 
 		if (pszTitle)
 			pNewMenu->SetWindowText(pszTitle);
@@ -218,23 +218,24 @@ namespace SOUI
 		return TRUE;
 	}
 
-	BOOL SMenuBar::Insert(pugi::xml_node xmlNode, int iPos)
+	BOOL SMenuBar::Insert(IXmlNode * pNode, int iPos)
 	{
 		SMenuBarItem* pNewMenu = new SMenuBarItem(this);
 		SASSERT(pNewMenu);
 		InsertChild(pNewMenu);
 
-		pugi::xml_node xmlBtnStyle = m_xmlStyle.child(XmlBtnStyle);
+		SXmlNode xmlBtnStyle = m_xmlStyle.root().child(XmlBtnStyle);
 		if (xmlBtnStyle)
-			pNewMenu->InitFromXml(&SXmlNode(xmlBtnStyle));
+			pNewMenu->InitFromXml(&xmlBtnStyle);
 
-		pNewMenu->InitFromXml(&SXmlNode(xmlNode));
+		pNewMenu->InitFromXml(pNode);
 		if (!pNewMenu->IsMenuLoaded())
 		{
 			DestroyChild(pNewMenu);
 			return FALSE;
 		}
-
+		
+		SXmlNode xmlNode(pNode);
 		SStringW strText = xmlNode.first_child().value();
 		int nPos = strText.ReverseFind(L'&');
 		if (nPos > -1)
@@ -250,6 +251,7 @@ namespace SOUI
 		}
 		return TRUE;
 	}
+
 	SMenu* SMenuBar::GetMenu(DWORD dwPos)
 	{
 		if (dwPos >= m_lstMenuItem.GetCount())

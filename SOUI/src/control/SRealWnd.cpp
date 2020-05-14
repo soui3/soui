@@ -65,11 +65,11 @@ void SRealWnd::OnDestroy()
 
 BOOL SRealWnd::InitFromXml(IXmlNode * pNode)
 {
-    BOOL bRet=__super::InitFromXml(pNode);
+    BOOL bRet=SWindow::InitFromXml(pNode);
     if(bRet)
     {
-		pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
-        m_realwndParam.m_xmlParams.append_copy(xmlNode.child(L"params"));
+		SXmlNode xmlNode(pNode);
+        m_realwndParam.m_xmlParams.root().append_copy(xmlNode.child(L"params"));
         if(m_bInit) InitRealWnd();
     }
     return bRet;

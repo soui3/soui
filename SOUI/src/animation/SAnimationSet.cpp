@@ -9,14 +9,14 @@ SNSBEGIN
 BOOL SAnimationSet::InitFromXml(IXmlNode *pNode)
 {
 	SAnimation::InitFromXml(pNode);
-	pugi::xml_node xmlNode((pugi::xml_node_struct*)pNode->GetPrivPtr());
-	pugi::xml_node xmlChild = xmlNode.first_child();
+	SXmlNode xmlNode(pNode);
+	SXmlNode xmlChild = xmlNode.first_child();
 	while (xmlChild)
 	{
 		IAnimation * ani = SApplication::getSingletonPtr()->CreateAnimationByName(xmlChild.name());
 		if (ani)
 		{
-			ani->InitFromXml(&SXmlNode(xmlChild));
+			ani->InitFromXml(&xmlChild);
 			addAnimation(ani);
 			ani->Release();
 		}

@@ -49,9 +49,9 @@ public:
 
     SStringT m_strClassName;  /**< 类名 */
     SStringT m_strWindowName; /**< 窗口名 */
-    DWORD     m_dwStyle;   /**< 窗口样式 */
-    DWORD     m_dwExStyle; /**< 窗口扩展样式 */
-    pugi::xml_document m_xmlParams;  /**< 文档 */
+    DWORD   m_dwStyle;   /**< 窗口样式 */
+    DWORD   m_dwExStyle; /**< 窗口扩展样式 */
+    SXmlDoc	m_xmlParams;  /**< 文档 */
 };
 
 /** 
