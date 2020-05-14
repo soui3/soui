@@ -89,6 +89,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	SASSERT(SUCCEEDED(hRes));
 	//LoadLibrary(L"E:\\soui.taobao\\richedit\\Debug\\riched20.dll");
 
+	SXmlAttr attr(NULL);
+	if(attr)
+	{
+	}
     int nRet = 0; 
 
     //使用imgdecoder-png图片解码模块演示apng动画

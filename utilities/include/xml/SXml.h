@@ -17,6 +17,7 @@ private:
 	static IXmlAttr *toIXmlAttr(pugi::xml_attribute attr);
 public:
 	SXmlAttr(pugi::xml_attribute attr);
+	SXmlAttr(const SXmlAttr& src);
 	explicit SXmlAttr(LPVOID pData);
 public:
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST OVERRIDE;
@@ -34,6 +35,48 @@ public:
 	// Get next/previous attribute in the attribute list of the parent node
 	STDMETHOD_(IXmlAttr*,Next)(THIS) OVERRIDE;
 	STDMETHOD_(IXmlAttr*,Prev)(THIS) OVERRIDE;
+
+public:
+	operator bool() const;
+
+	// Check if attribute is empty
+	bool empty() const;
+
+	// Get attribute name/value, or "" if attribute is empty
+	const wchar_t* name() const;
+	const wchar_t* value() const;
+
+	// Get attribute value, or the default value if attribute is empty
+	const wchar_t* as_string(const wchar_t* def = L"") const;
+
+	// Get attribute value as a number, or the default value if conversion did not succeed or attribute is empty
+	int as_int(int def = 0) const;
+	unsigned int as_uint(unsigned int def = 0) const;
+	double as_double(double def = 0) const;
+	float as_float(float def = 0) const;
+
+	// Get attribute value as bool (returns true if first character is in '1tTyY' set), or the default value if attribute is empty
+	bool as_bool(bool def = false) const;
+
+	// Set attribute name/value (returns false if attribute is empty or there is not enough memory)
+	bool set_name(const wchar_t* rhs);
+	bool set_value(const wchar_t* rhs);
+
+	// Set attribute value with type conversion (numbers are converted to strings, boolean is converted to "true"/"false")
+	bool set_value(int rhs);
+	bool set_value(unsigned int rhs);
+	bool set_value(long rhs);
+	bool set_value(unsigned long rhs);
+	bool set_value(double rhs);
+	bool set_value(double rhs, int precision);
+	bool set_value(float rhs);
+	bool set_value(float rhs, int precision);
+	bool set_value(bool rhs);
+
+public:
+	// Get next/previous attribute in the attribute list of the parent node
+	SXmlAttr next_attribute() const;
+	SXmlAttr previous_attribute() const;
 };
 
 class UTILITIES_API SXmlNode : public TObjRefImpl<IXmlNode>
@@ -46,6 +89,7 @@ private:
 	static IXmlNode * toIXmlNode(pugi::xml_node node);
 public:
 	SXmlNode(pugi::xml_node node);
+	SXmlNode(const SXmlNode& src);
 	explicit SXmlNode(LPVOID pData);
 public:
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST OVERRIDE;
@@ -75,6 +119,108 @@ public:
 	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
 	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
 
+public:
+	operator bool() const;
+
+	// Check if node is empty.
+	bool empty() const;
+
+	// Get node type
+	XmlNodeType type() const;
+
+	// Get node name, or "" if node is empty or it has no name
+	const wchar_t* name() const;
+
+	// Get node value, or "" if node is empty or it has no value
+	// Note: For <node>text</node> node.value() does not return "text"! Use child_value() or text() methods to access text inside nodes.
+	const wchar_t* value() const;
+
+	// Get attribute list
+	SXmlAttr first_attribute() const;
+	SXmlAttr last_attribute() const;
+
+	// Get children list
+	SXmlNode first_child() const;
+	SXmlNode last_child() const;
+
+	// Get next/previous sibling in the children list of the parent node
+	SXmlNode next_sibling() const;
+	SXmlNode previous_sibling() const;
+
+	// Get parent node
+	SXmlNode parent() const;
+
+	// Get root of DOM tree this node belongs to
+	SXmlNode root() const;
+
+	// Get child, attribute or next/previous sibling with the specified name
+	SXmlNode child(const wchar_t* name,bool bCaseSensitive=false) const;
+	SXmlAttr attribute(const wchar_t* name,bool bCaseSensitive=false) const;
+	SXmlNode next_sibling(const wchar_t* name,bool bCaseSensitive=false) const;
+	SXmlNode previous_sibling(const wchar_t* name,bool bCaseSensitive=false) const;
+
+	// Get attribute, starting the search from a hint (and updating hint so that searching for a sequence of attributes is fast)
+	SXmlAttr attribute(const wchar_t* name, SXmlAttr& hint,bool bCaseSensitive=false) const;
+
+	// Get child value of current node; that is, value of the first child node of type PCDATA/CDATA
+	const wchar_t* child_value() const;
+
+	// Get child value of child with specified name. Equivalent to child(name).child_value().
+	const wchar_t* child_value(const wchar_t* name,bool bCaseSensitive=false) const;
+
+	// Set node name/value (returns false if node is empty, there is not enough memory, or node can not have name/value)
+	bool set_name(const wchar_t* rhs);
+	bool set_value(const wchar_t* rhs);
+
+	// Add attribute with specified name. Returns added attribute, or empty attribute on errors.
+	SXmlAttr append_attribute(const wchar_t* name);
+	SXmlAttr prepend_attribute(const wchar_t* name);
+	SXmlAttr insert_attribute_after(const wchar_t* name, const SXmlAttr& attr);
+	SXmlAttr insert_attribute_before(const wchar_t* name, const SXmlAttr& attr);
+
+	// Add a copy of the specified attribute. Returns added attribute, or empty attribute on errors.
+	SXmlAttr append_copy(const SXmlAttr& proto);
+	SXmlAttr prepend_copy(const SXmlAttr& proto);
+	SXmlAttr insert_copy_after(const SXmlAttr& proto, const SXmlAttr& attr);
+	SXmlAttr insert_copy_before(const SXmlAttr& proto, const SXmlAttr& attr);
+
+	// Add child node with specified type. Returns added node, or empty node on errors.
+	SXmlNode append_child(XmlNodeType type = node_element);
+	SXmlNode prepend_child(XmlNodeType type = node_element);
+	SXmlNode insert_child_after(XmlNodeType type, const SXmlNode& node);
+	SXmlNode insert_child_before(XmlNodeType type, const SXmlNode& node);
+
+	// Add child element with specified name. Returns added node, or empty node on errors.
+	SXmlNode append_child(const wchar_t* name);
+	SXmlNode prepend_child(const wchar_t* name);
+	SXmlNode insert_child_after(const wchar_t* name, const SXmlNode& node);
+	SXmlNode insert_child_before(const wchar_t* name, const SXmlNode& node);
+
+	// Add a copy of the specified node as a child. Returns added node, or empty node on errors.
+	SXmlNode append_copy(const SXmlNode& proto);
+	SXmlNode prepend_copy(const SXmlNode& proto);
+	SXmlNode insert_copy_after(const SXmlNode& proto, const SXmlNode& node);
+	SXmlNode insert_copy_before(const SXmlNode& proto, const SXmlNode& node);
+
+	// Move the specified node to become a child of this node. Returns moved node, or empty node on errors.
+	SXmlNode append_move(const SXmlNode& moved);
+	SXmlNode prepend_move(const SXmlNode& moved);
+	SXmlNode insert_move_after(const SXmlNode& moved, const SXmlNode& node);
+	SXmlNode insert_move_before(const SXmlNode& moved, const SXmlNode& node);
+
+	// Remove specified attribute
+	bool remove_attribute(const SXmlAttr& a);
+	bool remove_attribute(const wchar_t* name);
+
+	// Remove all attributes
+	bool remove_attributes();
+
+	// Remove specified child
+	bool remove_child(const SXmlNode& n);
+	bool remove_child(const wchar_t* name);
+
+	// Remove all children
+	bool remove_children();
 };
 
 

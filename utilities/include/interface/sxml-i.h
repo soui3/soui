@@ -41,6 +41,19 @@ DECLARE_INTERFACE_(IXmlAttr,IObjRef)
 	STDMETHOD_(IXmlAttr*,Prev)(THIS) PURE;
 };
 
+typedef enum _XmlNodeType
+{
+	node_null,			// Empty (null) node handle
+	node_document,		// A document tree's absolute root
+	node_element,		// Element tag, i.e. '<node/>'
+	node_pcdata,		// Plain character data, i.e. 'text'
+	node_cdata,			// Character data, i.e. '<![CDATA[text]]>'
+	node_comment,		// Comment tag, i.e. '<!-- text -->'
+	node_pi,			// Processing instruction, i.e. '<?name?>'
+	node_declaration,	// Document declaration, i.e. '<?xml version="1.0"?>'
+	node_doctype		// Document type declaration, i.e. '<!DOCTYPE doc>'
+}XmlNodeType;
+
 #undef INTERFACE
 #define INTERFACE IXmlNode
 DECLARE_INTERFACE_(IXmlNode,IObjRef)
@@ -128,6 +141,72 @@ typedef enum _XmlEncoding
 	enc_latin1,
 	enc_bin,		// bin xml
 }XmlEncoding;
+
+
+typedef enum _XmlParseOpt
+{
+	// Minimal parsing mode (equivalent to turning all other flags off).
+	// Only elements and PCDATA sections are added to the DOM tree, no text conversions are performed.
+	xml_parse_minimal = 0x0000,
+
+	// This flag determines if processing instructions (node_pi) are added to the DOM tree. This flag is off by default.
+	xml_parse_pi = 0x0001,
+
+	// This flag determines if comments (node_comment) are added to the DOM tree. This flag is off by default.
+	xml_parse_comments = 0x0002,
+
+	// This flag determines if CDATA sections (node_cdata) are added to the DOM tree. This flag is on by default.
+	xml_parse_cdata = 0x0004,
+
+	// This flag determines if plain character data (node_pcdata) that consist only of whitespace are added to the DOM tree.
+	// This flag is off by default; turning it on usually results in slower parsing and more memory consumption.
+	xml_parse_ws_pcdata = 0x0008,
+
+	// This flag determines if character and entity references are expanded during parsing. This flag is on by default.
+	xml_parse_escapes = 0x0010,
+
+	// This flag determines if EOL characters are normalized (converted to #xA) during parsing. This flag is on by default.
+	xml_parse_eol = 0x0020,
+
+	// This flag determines if attribute values are normalized using CDATA normalization rules during parsing. This flag is on by default.
+	xml_parse_wconv_attribute = 0x0040,
+
+	// This flag determines if attribute values are normalized using NMTOKENS normalization rules during parsing. This flag is off by default.
+	xml_parse_wnorm_attribute = 0x0080,
+
+	// This flag determines if document declaration (node_declaration) is added to the DOM tree. This flag is off by default.
+	xml_parse_declaration = 0x0100,
+
+	// This flag determines if document type declaration (node_doctype) is added to the DOM tree. This flag is off by default.
+	xml_parse_doctype = 0x0200,
+
+	// This flag determines if plain character data (node_pcdata) that is the only child of the parent node and that consists only
+	// of whitespace is added to the DOM tree.
+	// This flag is off by default; turning it on may result in slower parsing and more memory consumption.
+	xml_parse_ws_pcdata_single = 0x0400,
+
+	// This flag determines if leading and trailing whitespace is to be removed from plain character data. This flag is off by default.
+	xml_parse_trim_pcdata = 0x0800,
+
+	// This flag determines if plain character data that does not have a parent node is added to the DOM tree, and if an empty document
+	// is a valid document. This flag is off by default.
+	xml_parse_fragment = 0x1000,
+
+	// This flag determines if plain character data is be stored in the parent element's value. This significantly changes the structure of
+	// the document; this flag is only recommended for parsing documents with many PCDATA nodes in memory-constrained environments.
+	// This flag is off by default.
+	xml_parse_embed_pcdata = 0x2000,
+
+	// The default parsing mode.
+	// Elements, PCDATA and CDATA sections are added to the DOM tree, character/reference entities are expanded,
+	// End-of-Line characters are normalized, attribute values are normalized using CDATA normalization rules.
+	xml_parse_default = xml_parse_cdata | xml_parse_escapes | xml_parse_wconv_attribute | xml_parse_eol,
+
+	// The full parsing mode.
+	// Nodes of all types are added to the DOM tree, character/reference entities are expanded,
+	// End-of-Line characters are normalized, attribute values are normalized using CDATA normalization rules.
+	xml_parse_full = xml_parse_default | xml_parse_pi | xml_parse_comments | xml_parse_declaration | xml_parse_doctype,
+}XmlParseOpt;
 
 #undef INTERFACE
 #define INTERFACE IXmlDoc

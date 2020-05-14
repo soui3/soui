@@ -13,6 +13,11 @@ SXmlAttr::SXmlAttr(pugi::xml_attribute attr):_attr(attr)
 
 }
 
+SXmlAttr::SXmlAttr(const SXmlAttr& src):_attr(src._attr)
+{
+
+}
+
 IXmlAttr * SXmlAttr::toIXmlAttr(pugi::xml_attribute attr)
 {
 	if(attr)
@@ -66,6 +71,121 @@ IXmlAttr * SXmlAttr::Prev(THIS)
 	return toIXmlAttr(attr);
 }
 
+SXmlAttr::operator bool() const
+{
+	return !_attr.empty();
+}
+
+bool SXmlAttr::empty() const
+{
+	return _attr.empty();
+}
+
+const wchar_t* SXmlAttr::name() const
+{
+	return _attr.name();
+}
+
+const wchar_t* SXmlAttr::value() const
+{
+	return _attr.value();
+}
+
+const wchar_t* SXmlAttr::as_string(const wchar_t* def /*= L""*/) const
+{
+	return _attr.as_string(def);
+}
+
+int SXmlAttr::as_int(int def /*= 0*/) const
+{
+	return _attr.as_int(def);
+}
+
+unsigned int SXmlAttr::as_uint(unsigned int def /*= 0*/) const
+{
+	return _attr.as_uint(def);
+}
+
+double SXmlAttr::as_double(double def /*= 0*/) const
+{
+	return _attr.as_double(def);
+}
+
+float SXmlAttr::as_float(float def /*= 0*/) const
+{
+	return _attr.as_float(def);
+}
+
+bool SXmlAttr::as_bool(bool def /*= false*/) const
+{
+	return _attr.as_bool(def);
+}
+
+bool SXmlAttr::set_name(const wchar_t* rhs)
+{
+	return _attr.set_name(rhs);
+}
+
+bool SXmlAttr::set_value(const wchar_t* rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(int rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(unsigned int rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(long rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(unsigned long rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(double rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(double rhs, int precision)
+{
+	return _attr.set_value(rhs,precision);
+}
+
+bool SXmlAttr::set_value(float rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+bool SXmlAttr::set_value(float rhs, int precision)
+{
+	return _attr.set_value(rhs,precision);
+}
+
+bool SXmlAttr::set_value(bool rhs)
+{
+	return _attr.set_value(rhs);
+}
+
+SXmlAttr SXmlAttr::next_attribute() const
+{
+	return _attr.next_attribute();
+}
+
+SXmlAttr SXmlAttr::previous_attribute() const
+{
+	return _attr.previous_attribute();
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 SXmlNode::SXmlNode(LPVOID pData):_node((pugi::xml_node_struct*)pData)
@@ -76,6 +196,11 @@ SXmlNode::SXmlNode(LPVOID pData):_node((pugi::xml_node_struct*)pData)
 SXmlNode::SXmlNode(pugi::xml_node node):_node(node)
 {
 
+}
+
+SXmlNode::SXmlNode(const SXmlNode& src):_node(src._node)
+{
+	
 }
 
 
@@ -180,6 +305,266 @@ IXmlNode * SXmlNode::toIXmlNode(pugi::xml_node node)
 	}
 }
 
+SXmlNode::operator bool() const
+{
+	return !_node.empty();
+}
+
+bool SXmlNode::empty() const
+{
+	return _node.empty();
+}
+
+XmlNodeType SXmlNode::type() const
+{
+	return (XmlNodeType)_node.type();
+}
+
+const wchar_t* SXmlNode::name() const
+{
+	return _node.name();
+}
+
+const wchar_t* SXmlNode::value() const
+{
+	return _node.value();
+}
+
+SXmlAttr SXmlNode::first_attribute() const
+{
+	return _node.first_attribute();
+}
+
+SXmlAttr SXmlNode::last_attribute() const
+{
+	return _node.last_attribute();
+}
+
+SXmlNode SXmlNode::first_child() const
+{
+	return _node.first_child();
+}
+
+SXmlNode SXmlNode::last_child() const
+{
+	return _node.last_child();
+}
+
+SXmlNode SXmlNode::next_sibling() const
+{
+	return _node.next_sibling();
+}
+
+SXmlNode SXmlNode::next_sibling(const wchar_t* name,bool bCaseSensitive/*=false*/) const
+{
+	return _node.next_sibling(name,bCaseSensitive);
+}
+
+SXmlNode SXmlNode::previous_sibling() const
+{
+	return _node.previous_sibling();
+}
+
+SXmlNode SXmlNode::previous_sibling(const wchar_t* name,bool bCaseSensitive/*=false*/) const
+{
+	return _node.previous_sibling(name,bCaseSensitive);
+}
+
+SXmlNode SXmlNode::parent() const
+{
+	return _node.parent();
+}
+
+SXmlNode SXmlNode::root() const
+{
+	return _node.root();
+}
+
+SXmlNode SXmlNode::child(const wchar_t* name,bool bCaseSensitive/*=false*/) const
+{
+	return _node.child(name,bCaseSensitive);
+}
+
+SXmlAttr SXmlNode::attribute(const wchar_t* name,bool bCaseSensitive/*=false*/) const
+{
+	return _node.attribute(name,bCaseSensitive);
+}
+
+SXmlAttr SXmlNode::attribute(const wchar_t* name, SXmlAttr& hint,bool bCaseSensitive/*=false*/) const
+{
+	return _node.attribute(name,hint._attr,bCaseSensitive);
+}
+
+const wchar_t* SXmlNode::child_value() const
+{
+	return _node.child_value();
+}
+
+const wchar_t* SXmlNode::child_value(const wchar_t* name,bool bCaseSensitive/*=false*/) const
+{
+	return _node.child_value(name,bCaseSensitive);
+}
+
+bool SXmlNode::set_name(const wchar_t* rhs)
+{
+	return _node.set_name(rhs);
+}
+
+bool SXmlNode::set_value(const wchar_t* rhs)
+{
+	return _node.set_value(rhs);
+}
+
+SXmlAttr SXmlNode::append_attribute(const wchar_t* name)
+{
+	return _node.append_attribute(name);
+}
+
+SXmlAttr SXmlNode::prepend_attribute(const wchar_t* name)
+{
+	return _node.prepend_attribute(name);
+}
+
+SXmlAttr SXmlNode::insert_attribute_after(const wchar_t* name, const SXmlAttr& attr)
+{
+	return _node.insert_attribute_after(name,attr._attr);
+}
+
+SXmlAttr SXmlNode::insert_attribute_before(const wchar_t* name, const SXmlAttr& attr)
+{
+	return _node.insert_attribute_before(name,attr._attr);
+}
+
+SXmlAttr SXmlNode::append_copy(const SXmlAttr& proto)
+{
+	return _node.append_copy(proto._attr);
+}
+
+SXmlNode SXmlNode::append_copy(const SXmlNode& proto)
+{
+	return _node.append_copy(proto._node);
+}
+
+SXmlAttr SXmlNode::prepend_copy(const SXmlAttr& proto)
+{
+	return _node.prepend_copy(proto._attr);
+}
+
+SXmlNode SXmlNode::prepend_copy(const SXmlNode& proto)
+{
+	return _node.prepend_copy(proto._node);
+}
+
+SXmlAttr SXmlNode::insert_copy_after(const SXmlAttr& proto, const SXmlAttr& attr)
+{
+	return _node.insert_copy_after(proto._attr,attr._attr);
+}
+
+SXmlNode SXmlNode::insert_copy_after(const SXmlNode& proto, const SXmlNode& node)
+{
+	return _node.insert_copy_after(proto._node,node._node);
+}
+
+SXmlAttr SXmlNode::insert_copy_before(const SXmlAttr& proto, const SXmlAttr& attr)
+{
+	return _node.insert_copy_before(proto._attr,attr._attr);
+}
+
+SXmlNode SXmlNode::insert_copy_before(const SXmlNode& proto, const SXmlNode& node)
+{
+	return _node.insert_move_before(proto._node,node._node);
+}
+
+SXmlNode SXmlNode::append_child(XmlNodeType type /*= node_element*/)
+{
+	return _node.append_child((pugi::xml_node_type)type);
+}
+
+SXmlNode SXmlNode::append_child(const wchar_t* name)
+{
+	return _node.append_child(name);
+}
+
+SXmlNode SXmlNode::prepend_child(XmlNodeType type /*= node_element*/)
+{
+	return _node.prepend_child((pugi::xml_node_type)type);
+}
+
+SXmlNode SXmlNode::prepend_child(const wchar_t* name)
+{
+	return _node.prepend_child(name);
+}
+
+SXmlNode SXmlNode::insert_child_after(XmlNodeType type, const SXmlNode& node)
+{
+	return _node.insert_child_after((pugi::xml_node_type)type,node._node);
+}
+
+SXmlNode SXmlNode::insert_child_after(const wchar_t* name, const SXmlNode& node)
+{
+	return _node.insert_child_after(name,node._node);
+}
+
+SXmlNode SXmlNode::insert_child_before(XmlNodeType type, const SXmlNode& node)
+{
+	return _node.insert_child_before((pugi::xml_node_type)type,node._node);
+}
+
+SXmlNode SXmlNode::insert_child_before(const wchar_t* name, const SXmlNode& node)
+{
+	return _node.insert_child_before(name,node._node);
+}
+
+SXmlNode SXmlNode::append_move(const SXmlNode& moved)
+{
+	return _node.append_move(moved._node);
+}
+
+SXmlNode SXmlNode::prepend_move(const SXmlNode& moved)
+{
+	return _node.prepend_move(moved._node);
+}
+
+SXmlNode SXmlNode::insert_move_after(const SXmlNode& moved, const SXmlNode& node)
+{
+	return _node.insert_move_after(moved._node,node._node);
+}
+
+SXmlNode SXmlNode::insert_move_before(const SXmlNode& moved, const SXmlNode& node)
+{
+	return _node.insert_move_before(moved._node,node._node);
+}
+
+bool SXmlNode::remove_attribute(const SXmlAttr& a)
+{
+	return _node.remove_attribute(a._attr);
+}
+
+bool SXmlNode::remove_attribute(const wchar_t* name)
+{
+	return _node.remove_attribute(name);
+}
+
+bool SXmlNode::remove_attributes()
+{
+	return _node.remove_attributes();
+}
+
+bool SXmlNode::remove_child(const SXmlNode& n)
+{
+	return _node.remove_child(n._node);
+}
+
+bool SXmlNode::remove_child(const wchar_t* name)
+{
+	return _node.remove_child(name);
+}
+
+bool SXmlNode::remove_children()
+{
+	return _node.remove_children();
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 SXmlDoc::SXmlDoc()
@@ -263,8 +648,5 @@ LPVOID SXmlDoc::GetPrivPtr(THIS) SCONST
 {
 	return doc;
 }
-
-
-
 
 SNSEND
