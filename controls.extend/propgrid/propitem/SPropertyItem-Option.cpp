@@ -59,9 +59,9 @@ namespace SOUI
             wchar_t szXml[]=L"<combobox dropDown=\"1\" colorBkgnd=\"#ffffff\" drawFocusRect=\"0\">\
                 <liststyle colorBorder=\"#000000\" margin-x=\"1\" margin-y=\"1\" colorText=\"#000000\" colorSelText=\"#FFFFFF\" colorItemBkgnd=\"#FFFFFF\" colorItemSelBkgnd=\"#000088\"/>\
                 </combobox>";
-            pugi::xml_document xmlDoc;
+            SXmlDoc xmlDoc;
             xmlDoc.load_buffer(szXml,sizeof(szXml));
-            pugi::xml_node xmlNode=xmlDoc.first_child();
+            SXmlNode xmlNode=xmlDoc.root().first_child();
             xmlNode.append_attribute(L"dropHeght").set_value(m_nDropHeight);
             xmlNode.append_attribute(L"dropDown").set_value(1);
             m_pOwner->OnInplaceActiveWndCreate(this,m_pCombobox,xmlNode);

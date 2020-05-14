@@ -98,22 +98,22 @@ void CMainDlg::InitListCtrl()
 
 void SaveSkinInf2File(SkinType skinType, SkinSaveInf &skinSaveInf)
 {
-	pugi::xml_document docSave;
-	pugi::xml_node rootNode = docSave.append_child(L"DEMO_SKIN_CONFIG");
-	pugi::xml_node childSkinType = rootNode.append_child(L"skinInf");
-	childSkinType.append_attribute(L"type") = skinType;
+	SXmlDoc docSave;
+	SXmlNode rootNode = docSave.root().append_child(L"DEMO_SKIN_CONFIG");
+	SXmlNode childSkinType = rootNode.append_child(L"skinInf");
+	childSkinType.append_attribute(L"type").set_value(skinType);
 	SStringT strSkinConfigPath = SApplication::getSingleton().GetAppDir() + _T("\\themes\\skin_config.xml");
 	switch (skinType)
 	{
 	case color://纯色只有SkinSaveInf的color有效
-		childSkinType.append_attribute(L"color") = (int)skinSaveInf.color;
+		childSkinType.append_attribute(L"color").set_value((int)skinSaveInf.color);
 		break;				
 	case sys://此处为系统皮肤，只需要给文件路径和margin
 		{
-			childSkinType.append_attribute(L"skin_path") = skinSaveInf.filepath;
+			childSkinType.append_attribute(L"skin_path").set_value(skinSaveInf.filepath.c_str());
 			SStringW margin;
 			margin.Format(L"%d,%d,%d,%d", skinSaveInf.margin.left, skinSaveInf.margin.top, skinSaveInf.margin.right, skinSaveInf.margin.bottom);
-			childSkinType.append_attribute(L"skin_margin") = margin;
+			childSkinType.append_attribute(L"skin_margin").set_value(margin);
 		}
 		break;
 	case builtin:
@@ -134,11 +134,11 @@ void LoadSkinFormXml(SDemoSkin *skin, SkinType *skinType, SkinLoadInf *skininf)
 {
 	SStringT strSkinConfigPath = SApplication::getSingleton().GetAppDir() + _T("\\themes\\skin_config.xml");
 
-	pugi::xml_document docLoad;
-	pugi::xml_parse_result result = docLoad.load_file(strSkinConfigPath);
-	if (result)
+	SXmlDoc docLoad;
+	bool bLoad = docLoad.load_file(strSkinConfigPath);
+	if (bLoad)
 	{
-		pugi::xml_node skinInf = docLoad.child(L"DEMO_SKIN_CONFIG").child(L"skinInf");
+		SXmlNode skinInf = docLoad.root().child(L"DEMO_SKIN_CONFIG").child(L"skinInf");
 		*skinType = (SkinType)skinInf.attribute(L"type").as_int();
 		switch (*skinType)
 		{

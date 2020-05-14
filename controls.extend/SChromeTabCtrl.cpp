@@ -193,17 +193,17 @@ namespace SOUI
         return 1;
     }
 
-    BOOL SChromeTabCtrl::CreateChildren( pugi::xml_node xmlNode )
+    BOOL SChromeTabCtrl::CreateChildren( SXmlNode xmlNode )
     {
-        pugi::xml_node xmlTabStyle = xmlNode.child(KXmlTabStyle);
+        SXmlNode xmlTabStyle = xmlNode.child(KXmlTabStyle);
         if(xmlTabStyle)
         {
-            m_xmlStyle.append_copy(xmlTabStyle);
+            m_xmlStyle.root().append_copy(xmlTabStyle);
         }
 
-        pugi::xml_node xmlTabs = xmlNode.child(L"tabs");//所有tab都必须在tabs标签内
+        SXmlNode xmlTabs = xmlNode.child(L"tabs");//所有tab都必须在tabs标签内
 
-        for (pugi::xml_node xmlChild=xmlTabs.first_child(); xmlChild; xmlChild=xmlChild.next_sibling())
+        for (SXmlNode xmlChild=xmlTabs.first_child(); xmlChild; xmlChild=xmlChild.next_sibling())
         {
             if(wcscmp(xmlChild.name() , SChromeTab::GetClassName())!=0) 
                 continue;
@@ -218,7 +218,7 @@ namespace SOUI
             pTab->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnTabClick,this));
         }
         
-        pugi::xml_node xmlNewBtn = xmlNode.child(KXmlNewBtnStyle);
+        SXmlNode xmlNewBtn = xmlNode.child(KXmlNewBtnStyle);
         if(xmlNewBtn)
         {
             m_pBtnNew = new SChromeTab(this);
@@ -227,10 +227,10 @@ namespace SOUI
             m_pBtnNew->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SChromeTabCtrl::OnBtnNewClick,this));
         }
 
-        pugi::xml_node xmlCloseBtn =xmlNode.child(KXmlCloseBtnStyle);
+        SXmlNode xmlCloseBtn =xmlNode.child(KXmlCloseBtnStyle);
         if(xmlCloseBtn)
         {
-            m_xmlStyle.append_copy(xmlCloseBtn);
+            m_xmlStyle.root().append_copy(xmlCloseBtn);
 
             for(UINT i = 0;i<m_lstTabOrder.GetCount();i++)
             {//自动插入一个closeBtn
@@ -369,7 +369,7 @@ namespace SOUI
         SASSERT(pNewTab);
         
         InsertChild(pNewTab);
-        pugi::xml_node xmlTabStyle = m_xmlStyle.child(KXmlTabStyle);
+        SXmlNode xmlTabStyle = m_xmlStyle.root().child(KXmlTabStyle);
         if(xmlTabStyle)
             pNewTab->InitFromXml(&SXmlNode(xmlTabStyle));
         if(pszTitle)
@@ -407,7 +407,7 @@ namespace SOUI
             rcLeft.right=rcLeft.left;
         }
 
-        pugi::xml_node xmlCloseBtn = m_xmlStyle.child(KXmlCloseBtnStyle);
+        SXmlNode xmlCloseBtn = m_xmlStyle.root().child(KXmlCloseBtnStyle);
         if(xmlCloseBtn && pNewTab->m_bAllowClose)
         {
             SWindow *pBtn = SApplication::getSingleton().CreateWindowByName(SImageButton::GetClassName());

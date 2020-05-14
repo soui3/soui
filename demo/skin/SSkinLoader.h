@@ -33,12 +33,12 @@ namespace SOUI
 			{
 				SASSERT(0);
 			}
-			pugi::xml_document xmlDoc;
+			SXmlDoc xmlDoc;
 			if (LOADXML(xmlDoc, strXmlSkin))
 			{
 				if (m_privateSkinPool->GetCount() > 0)
 				{
-					pugi::xml_node xmlSkin = xmlDoc.child(L"skin").first_child();
+					SXmlNode xmlSkin = xmlDoc.root().child(L"skin").first_child();
 					SStringW strSkinName, strTypeName;
 					while (xmlSkin)
 					{
@@ -65,7 +65,7 @@ namespace SOUI
 					}
 				}
 				else
-					m_privateSkinPool->LoadSkins(xmlDoc.child(L"skin"));
+					m_privateSkinPool->LoadSkins(xmlDoc.root().child(L"skin"));
 			}
 		}
 		void LoadSkin(SStringT respath,const TCHAR *strXmlSkin = _T("LoadSkinXml"))
@@ -87,12 +87,12 @@ namespace SOUI
 			{
 				SASSERT(0);
 			}
-			pugi::xml_document xmlDoc;
+			SXmlDoc xmlDoc;
 			if (LOADXML(xmlDoc,strXmlSkin))
 			{
 				if (m_privateSkinPool->GetCount() > 0)
 				{
-					pugi::xml_node xmlSkin = xmlDoc.child(L"skin").first_child();
+					SXmlNode xmlSkin = xmlDoc.root().child(L"skin").first_child();
 					SStringW strSkinName, strTypeName;
 					while (xmlSkin)
 					{
@@ -119,7 +119,7 @@ namespace SOUI
 					}
 				}
 				else 
-					m_privateSkinPool->LoadSkins(xmlDoc.child(L"skin"));
+					m_privateSkinPool->LoadSkins(xmlDoc.root().child(L"skin"));
 			}
 		}
 	};

@@ -315,9 +315,9 @@ namespace SOUI
         }
     }
 
-    BOOL SPropertyGrid::CreateChildren( pugi::xml_node xmlNode )
+    BOOL SPropertyGrid::CreateChildren( SXmlNode xmlNode )
     {
-        pugi::xml_node xmlCmdBtn = xmlNode.child(L"cmdbtnstyle");
+        SXmlNode xmlCmdBtn = xmlNode.child(L"cmdbtnstyle");
         SASSERT(xmlCmdBtn);
         m_pCmdBtn = SApplication::getSingleton().CreateWindowByName(SWindow::GetClassName());
         InsertChild(m_pCmdBtn);
@@ -325,10 +325,10 @@ namespace SOUI
         m_pCmdBtn->SetVisible(FALSE);
         m_pCmdBtn->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SPropertyGrid::OnCmdBtnClicked,this));
         
-        pugi::xml_node xmlGroups = xmlNode.child(L"groups");
+        SXmlNode xmlGroups = xmlNode.child(L"groups");
         if(xmlGroups)
         {
-            pugi::xml_node xmlChild = xmlGroups.child(SPropertyGroup::GetClassName());
+            SXmlNode xmlChild = xmlGroups.child(SPropertyGroup::GetClassName());
             while(xmlChild)
             {
                 SPropertyGroup *pGroup = (SPropertyGroup *)SPropertyGroup::CreatePropItem(this);
@@ -501,7 +501,7 @@ namespace SOUI
         return bRet;
     }
 
-    void SPropertyGrid::OnInplaceActiveWndCreate( IPropertyItem *pItem,SWindow *pWnd ,pugi::xml_node xmlInit)
+    void SPropertyGrid::OnInplaceActiveWndCreate( IPropertyItem *pItem,SWindow *pWnd ,SXmlNode xmlInit)
     {
         SASSERT(m_pInplaceActiveWnd == NULL);
         InsertChild(pWnd);

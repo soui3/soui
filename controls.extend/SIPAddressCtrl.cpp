@@ -123,13 +123,13 @@ namespace SOUI
     LRESULT SIPAddressCtrl::OnCreate( LPVOID )
     {
         wchar_t szEditAttr[] = L"<ipedit margin=\"0\" number=\"1\" transparent=\"1\" align=\"center\" maxBuf=\"3\" mouseRelay=\"1\"/>";
-        pugi::xml_document xmlDoc;
+        SXmlDoc xmlDoc;
         xmlDoc.load_buffer(szEditAttr,sizeof(szEditAttr));
         for(int i=0;i<4;i++)
         {
             m_editFields[i] = new SEditIP;//直接new出来。
             InsertChild(m_editFields[i]);
-            m_editFields[i]->InitFromXml(&SXmlNode(xmlDoc.first_child()));
+            m_editFields[i]->InitFromXml(&xmlDoc.root().first_child());
         }
         return 0;
     }

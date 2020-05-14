@@ -50,7 +50,7 @@ namespace SOUI{
 		bool OnGroupClick(EventArgs *e);
 		bool OnItemClick(EventArgs *e);
 
-		virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+		virtual BOOL CreateChildren(SXmlNode xmlNode);
 
 	protected:
 		void OnDestroy();
@@ -59,9 +59,9 @@ namespace SOUI{
 		SOUI_MSG_MAP_END()
 
 	protected:
-		pugi::xml_document m_xmlDoc;
-		pugi::xml_node     m_groupTemplate;
-		pugi::xml_node	   m_itemTemplate;
+		SXmlDoc m_xmlDoc;
+		SXmlNode     m_groupTemplate;
+		SXmlNode	   m_itemTemplate;
 
 		SWindow *		   m_pSelectedItem;
 	};

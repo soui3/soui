@@ -18,24 +18,24 @@ namespace SOUI {
 	}
 
 
-	BOOL SGroupList::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SGroupList::CreateChildren(SXmlNode xmlNode)
 	{
-		pugi::xml_node groupTemplate = xmlNode.child(L"groupTemplate");
-		pugi::xml_node itemTemplate = xmlNode.child(L"itemTemplate");
+		SXmlNode groupTemplate = xmlNode.child(L"groupTemplate");
+		SXmlNode itemTemplate = xmlNode.child(L"itemTemplate");
 		SASSERT(groupTemplate && itemTemplate);
 		m_groupTemplate = m_xmlDoc.root().append_copy(groupTemplate);
 		m_itemTemplate = m_xmlDoc.root().append_copy(itemTemplate);
 
-		pugi::xml_node xmlData = xmlNode.child(L"data");
+		SXmlNode xmlData = xmlNode.child(L"data");
 		if (xmlData)
 		{
-			pugi::xml_node xmlGroup = xmlData.child(L"group");
+			SXmlNode xmlGroup = xmlData.child(L"group");
 			while (xmlGroup)
 			{
 				SStringT strText = S_CW2T(xmlGroup.attribute(L"text").as_string());
 				SStringW strName = xmlGroup.attribute(L"name").as_string();
 				SWindow *pGroup = InsertGroup(-1, strName, strText, xmlGroup.attribute(L"icon").as_int(), xmlGroup.attribute(L"id").as_int());
-				pugi::xml_node xmlItem = xmlGroup.child(L"item");
+				SXmlNode xmlItem = xmlGroup.child(L"item");
 				while (xmlItem)
 				{
 					SStringT strText = S_CW2T(xmlItem.attribute(L"text").as_string());

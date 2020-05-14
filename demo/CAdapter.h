@@ -21,11 +21,11 @@ public:
 		return 50000;
 	}
 
-	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate)
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&SXmlNode(xmlTemplate));
+			pItem->InitFromXml(&xmlTemplate);
 		}
 
 		SButton *pBtn = pItem->FindChildByName2<SButton>(L"btn_test");
@@ -83,7 +83,7 @@ public:
 
 	}
 
-	virtual void InitByTemplate(pugi::xml_node xmlTemplate)
+	virtual void InitByTemplate(SXmlNode xmlTemplate)
 	{
 		m_nItemHeight[0] = xmlTemplate.attribute(KAttrName_Height[0]).as_int(50);
 		m_nItemHeight[1] = xmlTemplate.attribute(KAttrName_Height[1]).as_int(60);
@@ -114,12 +114,12 @@ public:
 		return CSize(0, m_nItemHeight[viewType]);//cx在listview，mclistview中没有使用，不需要计算
 	}
 
-	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate)
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
 			int nViewType = getItemViewType(position, pItem->GetState());
-			pItem->InitFromXml(&SXmlNode(xmlTemplate.child(KNodeName_Item[nViewType])));
+			pItem->InitFromXml(&xmlTemplate.child(KNodeName_Item[nViewType]));
 		}
 		pItem->GetEventSet()->subscribeEvent(EventSwndStateChanged::EventID, Subscriber(&CTestAdapterFlex::OnItemStateChanged, this));
 
@@ -255,11 +255,11 @@ public:
 		return SStringT().Format(_T("%d.%02dM"), num1, num2);
 	}
 
-	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate)
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&SXmlNode(xmlTemplate));
+			pItem->InitFromXml(&xmlTemplate);
 		}
 
 		SOFTINFO *psi = m_softInfo.GetData() + position%m_softInfo.GetCount();
@@ -399,11 +399,11 @@ public:
 		return 50000;
 	}
 
-	virtual void getView(int position, SWindow *pItem, pugi::xml_node xmlTemplate)
+	virtual void getView(int position, SWindow *pItem, SXmlNode xmlTemplate)
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&SXmlNode(xmlTemplate));
+			pItem->InitFromXml(&xmlTemplate);
 		}
 		SImageWnd *pImg = pItem->FindChildByName2<SImageWnd>(L"img_file_icon");
 		pImg->SetSkin(GETSKIN(skins[position % 5], pImg->GetScale()));
@@ -455,10 +455,10 @@ public:
 
 	~CTreeViewAdapter() {}
 
-	virtual void getView(SOUI::HTREEITEM loc, SWindow * pItem, pugi::xml_node xmlTemplate) {
+	virtual void getView(SOUI::HTREEITEM loc, SWindow * pItem, SXmlNode xmlTemplate) {
 		if (pItem->GetChildrenCount() == 0)
 		{
-			pItem->InitFromXml(&SXmlNode(xmlTemplate));
+			pItem->InitFromXml(&xmlTemplate);
 		}
 		ItemInfo & ii = m_tree.GetItemRef((HSTREEITEM)loc);
 		SWindow * pWnd = pItem->FindChildByID(R.id.btn_test);

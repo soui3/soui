@@ -121,12 +121,12 @@ namespace SOUI
 
 	HRESULT SShellNotifyIcon::SetMenu(SStringW strValue, BOOL bLoading)
 	{
-		pugi::xml_document xmlDoc;
+		SXmlDoc xmlDoc;
 		if (SApplication::getSingleton().LoadXmlDocment(xmlDoc, S_CW2T(strValue)))
 		{
-			if (wcscmp(xmlDoc.first_child().name(), L"menu") == 0)
+			if (wcscmp(xmlDoc.root().first_child().name(), L"menu") == 0)
 				m_menuType = MenuType::menu;
-			else if ((wcscmp(xmlDoc.first_child().name(),L"menuRoot") == 0) || (wcscmp(xmlDoc.first_child().name(), L"menuItem") == 0))
+			else if ((wcscmp(xmlDoc.root().first_child().name(),L"menuRoot") == 0) || (wcscmp(xmlDoc.root().first_child().name(), L"menuItem") == 0))
 				m_menuType = MenuType::menuex;
 			else m_menuType = MenuType::unknow;
 
@@ -186,7 +186,7 @@ namespace SOUI
 		return S_FALSE;
 	}
 
-	BOOL SShellNotifyIcon::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SShellNotifyIcon::CreateChildren(SXmlNode xmlNode)
 	{
 		SHostWnd *pHostWnd = (SHostWnd*)(GetTopLevelParent()->GetContainer());
 		SASSERT(pHostWnd);

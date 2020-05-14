@@ -70,12 +70,12 @@ public:
      * SListCtrlEx::InsertItem
      * @brief    插入新项
      * @param    int iItem -- 索引
-     * @param    pugi::xml_node xmlNode -- xml文件
+     * @param    SXmlNode xmlNode -- xml文件
      * @param    DWORD dwData  --  附加数据
      *
      * Describe  在某项之后插入
      */
-    int InsertItem(int iItem,pugi::xml_node xmlNode,LPARAM dwData=0);
+    int InsertItem(int iItem,SXmlNode xmlNode,LPARAM dwData=0);
 
     /**
      * SListCtrlEx::InsertItem
@@ -288,11 +288,11 @@ protected:
     /**
      * SListCtrlEx::CreateChildren
      * @brief    创建新项
-     * @param    pugi::xml_node xmlNode -- xml文件
+     * @param    SXmlNode xmlNode -- xml文件
      *
      * Describe  通过解析xml文件创建
      */
-    virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+    virtual BOOL CreateChildren(SXmlNode xmlNode);
 
     /**
      * SListCtrlEx::OnUpdateToolTip
@@ -457,7 +457,7 @@ protected:
     int        m_iScrollSpeed; /**< 滚动速度      */
 	BOOL    m_bHotTrack;    /**<  */
 
-    pugi::xml_document m_xmlTempl;     /**< 列表模板XML */
+    SXmlDoc m_xmlTempl;     /**< 列表模板XML */
     SItemPanel   *m_pCapturedFrame;    /**< 当前调用了setcapture的列表项 */
     ISkinObj     *m_pItemSkin;         /**< 列表项的背景skin */
 	SStringW m_strSelectRangeSkin;         /**< 选择框skin */

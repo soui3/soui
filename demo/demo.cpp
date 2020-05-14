@@ -265,12 +265,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         if(trans)
         {//加载语言翻译包
             theApp->SetTranslator(trans);
-            pugi::xml_document xmlLang;
+            SXmlDoc xmlLang;
 			if(theApp->LoadXmlDocment(xmlLang,_T("translator:lang_cn")))
             {
                 SAutoRefPtr<ITranslator> langCN;
                 trans->CreateTranslator(&langCN);
-                langCN->Load(&xmlLang.child(L"language"),1);//1=LD_XML
+                langCN->Load(&xmlLang.root().child(L"language"),1);//1=LD_XML
                 trans->InstallTranslator(langCN);
 				SStringW strFont;
 				langCN->getFontInfo(&strFont);

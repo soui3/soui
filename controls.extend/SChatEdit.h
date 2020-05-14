@@ -31,7 +31,7 @@ namespace SOUI
         //************************************
         BOOL AppendFormatText(const SStringW & strMsg,BOOL bNewLine=TRUE,BOOL bCanUndo=TRUE);
 
-        BOOL AppendFormatText(const pugi::xml_node xmlMsg,BOOL bNewLine=TRUE,BOOL bCanUndo=TRUE);
+        BOOL AppendFormatText(const SXmlNode xmlMsg,BOOL bNewLine=TRUE,BOOL bCanUndo=TRUE);
 
         BOOL ReplaceSelectionByFormatText(const SStringW & strMsg,BOOL bCanUndo=TRUE);
 
@@ -47,7 +47,7 @@ namespace SOUI
         SOUI_MSG_MAP_END()
         
     protected:
-        int _InsertFormatText(int iCaret,CHARFORMATW cf,pugi::xml_node xmlText,BOOL bCanUndo);
+        int _InsertFormatText(int iCaret,CHARFORMATW cf,SXmlNode xmlText,BOOL bCanUndo);
     };
 
 }

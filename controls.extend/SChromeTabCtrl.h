@@ -99,7 +99,7 @@ namespace SOUI
     protected:
         int ChangeTabPos(SChromeTab* pCurMove,CPoint ptCur);
 
-        virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+        virtual BOOL CreateChildren(SXmlNode xmlNode);
         virtual void UpdateChildrenPosition();
         
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
@@ -134,7 +134,7 @@ namespace SOUI
         SChromeTab *        m_pBtnNew;
         SChromeTab *        m_pSelTab;
         
-        pugi::xml_document  m_xmlStyle;
+        SXmlDoc  m_xmlStyle;
     };
 
 }

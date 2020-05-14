@@ -9,7 +9,7 @@
 #include <helper/obj-ref-impl.hpp>
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
-#include <pugixml/pugixml.hpp>
+#include <xml/sxml.h>
 #include <interface/STranslator-i.h>
 
 SNSBEGIN
@@ -45,7 +45,7 @@ public:
 	STDMETHOD_(int,tr)(THIS_ const IStringW * strSrc,const IStringW * strCtx,wchar_t *pszOut,int nLen) SCONST;
 	STDMETHOD_(void,getFontInfo)(THIS_ IStringW * strFont) SCONST;
 protected:
-	BOOL LoadFromXml(pugi::xml_node xmlLang);
+	BOOL LoadFromXml(SXmlNode xmlLang);
 
 	wchar_t	 m_szLangName[TR_MAX_NAME_LEN];
 	GUID     m_guid;

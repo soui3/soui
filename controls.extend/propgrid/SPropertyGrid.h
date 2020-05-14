@@ -116,7 +116,7 @@ namespace SOUI
         ITEMPART HitTest(int iItem, const CPoint &pt);
         void SortItems(SList<IPropertyItem*> & lstItems);
 
-        virtual BOOL CreateChildren(pugi::xml_node xmlNode);
+        virtual BOOL CreateChildren(SXmlNode xmlNode);
         
         virtual void DrawItem(IRenderTarget *pRT, CRect &rc, int iItem);
         virtual UINT OnGetDlgCode(){return SC_WANTALLKEYS;}
@@ -136,7 +136,7 @@ namespace SOUI
             MSG_WM_SIZE(OnSize)
         SOUI_MSG_MAP_END()
     public:
-        void OnInplaceActiveWndCreate(IPropertyItem *pItem,SWindow *pWnd,pugi::xml_node xmlInit);
+        void OnInplaceActiveWndCreate(IPropertyItem *pItem,SWindow *pWnd,SXmlNode xmlInit);
         void OnInplaceActiveWndDestroy(IPropertyItem *pItem,SWindow *pWnd);
         void OnItemValueChanged(IPropertyItem *pItem);
     protected:

@@ -34,17 +34,17 @@ namespace SOUI{
         SStringW strBuf= L"<msg>"+strMsg+L"</msg>";
         LPWSTR pszBuf = strBuf.GetBuffer(strBuf.GetLength());
         {
-            pugi::xml_document doc;
-            if(doc.load_buffer_inplace(pszBuf,strBuf.GetLength()*2,pugi::parse_default,pugi::encoding_utf16))
+            SXmlDoc doc;
+            if(doc.load_buffer_inplace(pszBuf,strBuf.GetLength()*2,xml_parse_default,enc_utf16))
             {
-                bRet = AppendFormatText(doc.child(L"msg"),bNewLine,bCanUndo);        
+                bRet = AppendFormatText(doc.root().child(L"msg"),bNewLine,bCanUndo);        
             }
         }
         strBuf.ReleaseBuffer();
         return bRet;
     }
 
-    BOOL SChatEdit::AppendFormatText(const pugi::xml_node xmlMsg,BOOL bNewLine,BOOL bCanUndo)
+    BOOL SChatEdit::AppendFormatText(const SXmlNode xmlMsg,BOOL bNewLine,BOOL bCanUndo)
     {
         TCHAR szRet[]={0x0a,0};
         int nLen = (int)SSendMessage(WM_GETTEXTLENGTH);
@@ -74,8 +74,8 @@ namespace SOUI{
         SStringW strBuf= L"<msg>"+strMsg+L"</msg>";
         LPWSTR pszBuf = strBuf.GetBuffer(strBuf.GetLength());
         {
-            pugi::xml_document doc;
-            if(doc.load_buffer_inplace(pszBuf,strBuf.GetLength()*2,pugi::parse_default,pugi::encoding_utf16))
+            SXmlDoc doc;
+            if(doc.load_buffer_inplace(pszBuf,strBuf.GetLength()*2,xml_parse_default,enc_utf16))
             {
                 SSendMessage(EM_REPLACESEL,bCanUndo,(LPARAM)L"");
 
@@ -87,7 +87,7 @@ namespace SOUI{
                 cf.dwMask = CFM_ALL;
                 SSendMessage(EM_GETCHARFORMAT,SCF_SELECTION,(LPARAM)&cf);        
                 cf.dwEffects &= ~CFE_AUTOCOLOR;
-                _InsertFormatText(iCaret,cf,doc.child(L"msg"),bCanUndo);
+                _InsertFormatText(iCaret,cf,doc.root().child(L"msg"),bCanUndo);
                 
                 bRet = TRUE;
             }
@@ -97,7 +97,7 @@ namespace SOUI{
         return TRUE;
     }
 
-    int SChatEdit::_InsertFormatText(int iCaret,CHARFORMATW cf,pugi::xml_node xmlText,BOOL bCanUndo)
+    int SChatEdit::_InsertFormatText(int iCaret,CHARFORMATW cf,SXmlNode xmlText,BOOL bCanUndo)
     {
         SStringW strText = xmlText.value();
         if(xmlText.name() == KLabelSmiley)
@@ -196,7 +196,7 @@ namespace SOUI{
         iCaret = iEnd;
         SSendMessage(EM_SETSEL,iCaret,iCaret);
         
-        pugi::xml_node xmlChild = xmlText.first_child();
+        SXmlNode xmlChild = xmlText.first_child();
         while(xmlChild)
         {
             int nSubLen = _InsertFormatText(iCaret,cfNew,xmlChild,bCanUndo);

@@ -7,8 +7,6 @@
 #include <ObjBase.h>
 #include <tchar.h>
 
-using namespace pugi;
-
 SNSBEGIN
 
 int StringCmp(const IStringW *str1,const IStringW *str2)
@@ -114,12 +112,12 @@ BOOL STranslator::Load( LPVOID pData,UINT uType )
 	switch(uType)
 	{
 	case LD_XML:
-		return LoadFromXml((*(pugi::xml_node*)pData));
+		return LoadFromXml((*(SXmlNode*)pData));
 	}
 	return FALSE;
 }
 
-BOOL STranslator::LoadFromXml( pugi::xml_node xmlLang )
+BOOL STranslator::LoadFromXml( SXmlNode xmlLang )
 {
 	wcscpy_s(m_szLangName,TR_MAX_NAME_LEN,xmlLang.attribute(L"name").value());
 
@@ -129,7 +127,7 @@ BOOL STranslator::LoadFromXml( pugi::xml_node xmlLang )
 	IIDFromString(szIID,&m_guid);
 
 	int ctxCount=0;
-	xml_node nodeCtx=xmlLang.child(L"context");
+	SXmlNode nodeCtx=xmlLang.child(L"context");
 	while(nodeCtx)
 	{
 		ctxCount++;
@@ -141,7 +139,7 @@ BOOL STranslator::LoadFromXml( pugi::xml_node xmlLang )
 	{
 		SASSERT(nodeCtx);
 		int strCount=0;
-		xml_node nodeStr=nodeCtx.child(L"message");
+		SXmlNode nodeStr=nodeCtx.child(L"message");
 		while(nodeStr)
 		{
 			strCount++;
@@ -156,8 +154,8 @@ BOOL STranslator::LoadFromXml( pugi::xml_node xmlLang )
 		{
 			SASSERT(nodeStr);
 			SStrMap * strMap= new SStrMap;
-			strMap->strSource=nodeStr.child(L"source").text().get();
-			strMap->strTranslation=nodeStr.child(L"translation").text().get();
+			strMap->strSource=nodeStr.child(L"source").Text();
+			strMap->strTranslation=nodeStr.child(L"translation").Text();
 			strMapEntry->m_arrStrMap.SetAt(j,strMap);
 			nodeStr=nodeStr.next_sibling(L"message");
 		}

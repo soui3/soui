@@ -43,7 +43,7 @@ public:
 		m_musicList.Add(item);
 		notifyDataSetChanged();
 	}
-	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate)
 	{
 		if (pItem->GetChildrenCount() == 0)
 		{
@@ -191,7 +191,7 @@ public:
 		return m_colNames[iCol];
 	}
 
-	void IniColNames(pugi::xml_node xmlTemplate)
+	void IniColNames(SXmlNode xmlTemplate)
 	{
 		for (xmlTemplate = xmlTemplate.first_child(); xmlTemplate; xmlTemplate = xmlTemplate.next_sibling())
 		{
@@ -204,7 +204,7 @@ public:
 		return false;
 	}
 
-	virtual void InitByTemplate(pugi::xml_node xmlTemplate)
+	virtual void InitByTemplate(SXmlNode xmlTemplate)
 	{
 		IniColNames(xmlTemplate);
 	}

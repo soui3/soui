@@ -183,15 +183,16 @@ BOOL SResProvider7Zip::_LoadSkin()
 	BOOL bIdx=m_zipFile.GetFile(m_childDir + UIRES_INDEX,zf);
 	if(!bIdx) return FALSE;
 
-	pugi::xml_document xmlDoc;
+	SXmlDoc xmlDoc;
 	SStringA strFileName;
-	if(!xmlDoc.load_buffer_inplace(zf.GetData(),zf.GetSize(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
-	pugi::xml_node xmlElem=xmlDoc.child(L"resource");
+	if(!xmlDoc.load_buffer_inplace(zf.GetData(),zf.GetSize(),xml_parse_default,enc_utf8))
+		return FALSE;
+	SXmlNode xmlElem=xmlDoc.root().child(L"resource");
 	if(!xmlElem) return FALSE;
-	pugi::xml_node resType=xmlElem.first_child();
+	SXmlNode resType=xmlElem.first_child();
 	while(resType)
 	{
-		pugi::xml_node resFile=resType.first_child();
+		SXmlNode resFile=resType.first_child();
 		while(resFile)
 		{
 			SResID id(S_CW2T(resType.name()),S_CW2T(resFile.attribute(L"name").value()));

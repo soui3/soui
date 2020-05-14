@@ -27,11 +27,11 @@ void CSetSkinWnd::LoadSkinConfigFormXml()
 	{
 		SStringT strSkinConfigPath = SApplication::getSingleton().GetAppDir() + _T("\\themes\\themes_config.xml");
 
-		pugi::xml_document docLoad;
-		pugi::xml_parse_result result = docLoad.load_file(strSkinConfigPath);
-		if (result)
+		SXmlDoc docLoad;
+		bool bLoad = docLoad.load_file(strSkinConfigPath);
+		if (bLoad)
 		{
-			pugi::xml_node skinInf = docLoad.child(L"DEMO_SKIN_CONFIG").child(L"skinInf");
+			SXmlNode skinInf = docLoad.root().child(L"DEMO_SKIN_CONFIG").child(L"skinInf");
 			while (skinInf)
 			{
 				SKIN_CONFIG_INF inf;

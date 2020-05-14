@@ -57,8 +57,8 @@ namespace SOUI
         {
             SASSERT(!m_pEdit);
             m_pEdit = new TplPropEmbedWnd<SPropEdit>(this);
-            pugi::xml_document xmlDoc;
-            pugi::xml_node xmlNode=xmlDoc.append_child(L"root");
+            SXmlDoc xmlDoc;
+            SXmlNode xmlNode=xmlDoc.root().append_child(L"root");
             xmlNode.append_attribute(L"colorBkgnd").set_value(L"#ffffff");
             m_pOwner->OnInplaceActiveWndCreate(this,m_pEdit,xmlNode);
             m_pEdit->SetWindowText(GetString());

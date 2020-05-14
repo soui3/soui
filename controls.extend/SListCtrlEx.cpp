@@ -90,7 +90,7 @@ namespace SOUI
 		SetViewSize(szView);
 	}
 
-	int SListCtrlEx::InsertItem(int iItem,pugi::xml_node xmlNode,LPARAM dwData/*=0*/)
+	int SListCtrlEx::InsertItem(int iItem,SXmlNode xmlNode,LPARAM dwData/*=0*/)
 	{
 		SItemPanel *pItemObj=SItemPanel::Create(this,xmlNode,this);
 
@@ -123,12 +123,13 @@ namespace SOUI
 	{
 		if(pszXml)
 		{
-			pugi::xml_document xmlDoc;
-			if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),pugi::parse_default,pugi::encoding_utf16)) return -1;
-			return InsertItem(iItem,xmlDoc.first_child(),dwData);
+			SXmlDoc xmlDoc;
+			if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),xml_parse_default,enc_utf16))
+				return -1;
+			return InsertItem(iItem,xmlDoc.root().first_child(),dwData);
 		}else
 		{
-			pugi::xml_node xmlNode = m_xmlTempl.child(L"template");
+			SXmlNode xmlNode = m_xmlTempl.root().child(L"template");
 			if(!xmlNode) return -1;
 			return InsertItem(iItem,xmlNode,dwData);
 		}
@@ -198,13 +199,13 @@ namespace SOUI
 	BOOL SListCtrlEx::SetItemCount(int nItems,LPCTSTR pszXmlTemplate)
 	{
 		if(m_arrItems.GetCount()!=0) return FALSE;
-		pugi::xml_document xmlDoc;
-		pugi::xml_node xmlTemplate = m_xmlTempl.child(L"template");
+		SXmlDoc xmlDoc;
+		SXmlNode xmlTemplate = m_xmlTempl.root().child(L"template");
 		if(pszXmlTemplate)
 		{
 			SStringA strUtf8=S_CT2A(pszXmlTemplate,CP_UTF8);
-			if(!xmlDoc.load_buffer((LPCSTR)strUtf8,strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
-			xmlTemplate = xmlDoc.first_child();
+			if(!xmlDoc.load_buffer((LPCSTR)strUtf8,strUtf8.GetLength(),xml_parse_default,enc_utf8)) return FALSE;
+			xmlTemplate = xmlDoc.root().first_child();
 		}
 		if(!xmlTemplate) 
 			return FALSE;
@@ -382,7 +383,7 @@ namespace SOUI
 		m_arrItems[iItem]->Draw(pRT,rcItem);
 	}
 
-	BOOL SListCtrlEx::CreateChildren(pugi::xml_node xmlNode)
+	BOOL SListCtrlEx::CreateChildren(SXmlNode xmlNode)
 	{
 		if (!__super::CreateChildren(xmlNode))
 			return FALSE;
@@ -419,14 +420,14 @@ namespace SOUI
 		} 
 		m_pWndRectangle->SetAttribute(L"msgTransparent",L"1",TRUE);
 
-		pugi::xml_node xmlTempl=xmlNode.child(L"template");
-		pugi::xml_node xmlItems=xmlNode.child(L"items");
+		SXmlNode xmlTempl=xmlNode.child(L"template");
+		SXmlNode xmlItems=xmlNode.child(L"items");
 
-		if(xmlTempl) m_xmlTempl.append_copy(xmlTempl);
+		if(xmlTempl) m_xmlTempl.root().append_copy(xmlTempl);
 
 		if(xmlItems)
 		{
-			pugi::xml_node xmlItem=xmlItems.child(L"item");
+			SXmlNode xmlItem=xmlItems.child(L"item");
 			while(xmlItem)
 			{
 				int dwData=xmlItem.attribute(L"itemdata").as_int(0);
