@@ -1,6 +1,7 @@
 #pragma once
 
 #include <interface/obj-ref-i.h>
+#include <interface/sstring-i.h>
 #include <stdio.h>
 
 SNSBEGIN
@@ -72,6 +73,8 @@ DECLARE_INTERFACE_(IXmlNode,IObjRef)
 	/*!
 	*/
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	STDMETHOD_(IStringW*,ToString)(THIS) SCONST PURE;
 
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST PURE;
 

@@ -17,6 +17,7 @@ private:
 	static IXmlAttr *toIXmlAttr(pugi::xml_attribute attr);
 public:
 	SXmlAttr(pugi::xml_attribute attr);
+	SXmlAttr(const IXmlAttr * src);
 	SXmlAttr(const SXmlAttr& src);
 	explicit SXmlAttr(LPVOID pData);
 public:
@@ -89,9 +90,12 @@ private:
 	static IXmlNode * toIXmlNode(pugi::xml_node node);
 public:
 	SXmlNode(pugi::xml_node node);
+	SXmlNode(const IXmlNode * src);
 	SXmlNode(const SXmlNode& src);
 	explicit SXmlNode(LPVOID pData);
 public:
+	STDMETHOD_(IStringW*,ToString)(THIS) SCONST OVERRIDE;
+
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(bool,Empty)(THIS) SCONST OVERRIDE;

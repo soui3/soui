@@ -7,6 +7,7 @@
 #include <utilities-def.h>
 #include <interface/sstring-i.h>
 #include <string/sstringdata.h>
+#include <helper/obj-ref-impl.hpp>
 
 SNSBEGIN
 
@@ -32,7 +33,7 @@ struct UTILITIES_API char_traits
 		int nBufferMax);
 };
 
-class UTILITIES_API SStringA: public IStringA
+class UTILITIES_API SStringA: public TObjRefImpl<IStringA>
 {
 public:
 	typedef const char * pctstr;
@@ -259,10 +260,6 @@ protected:
 	void Preallocate(int nLength);
 	void FreeExtra();
 
-	// Use LockBuffer/UnlockBuffer to turn refcounting off
-	char* LockBuffer();
-	void UnlockBuffer();
-
 protected:
 	// implementation helpers
 	TStringData* GetData() const;
@@ -294,12 +291,12 @@ protected:
 	bool AllocBuffer(int nLength);
 
 	bool ReallocBuffer(int nNewLength);
-	void Release();
+	void _ReleaseData();
 
 	// always allocate one extra character for '\0' termination
 	// assumes [optimistically] that data length will equal allocation length
 	static TStringData* AllocData(int nLength, TStringData* pOldData = NULL);
-	static void ReleaseData(TStringData* pData);
+	static void _ReleaseData(TStringData* pData);
 
 protected:
 	char* m_pszData;   // pointer to ref counted string data

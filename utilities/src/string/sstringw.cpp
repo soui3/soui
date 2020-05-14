@@ -120,7 +120,7 @@ TStringData* SStringW::AllocData(int nLength, TStringData* pOldData /*= NULL*/)
 	return pData;
 }
 
-void SStringW::Release()
+void SStringW::_ReleaseData()
 {
 	TStringData* pData = GetData();
 	if (pData != TStringData::InitDataNil())
@@ -178,7 +178,7 @@ bool SStringW::AllocBeforeWrite(int nLen)
 	TStringData* pData = GetData();
 	if (pData->IsShared() || nLen > pData->nAllocLength)
 	{
-		Release();
+		_ReleaseData();
 		bRet = AllocBuffer(nLen);
 	}
 	SASSERT(GetData()->nRefs <= 1);
@@ -190,7 +190,7 @@ void SStringW::CopyBeforeWrite()
 	TStringData* pData = GetData();
 	if (pData->IsShared())
 	{
-		Release();
+		_ReleaseData();
 		if (AllocBuffer(pData->nDataLength))
 			memcpy(m_pszData, pData->data(), (pData->nDataLength + 1) * sizeof(wchar_t));
 	}
@@ -333,19 +333,6 @@ int SStringW::GetAllocLength() const
 	return GetData()->nAllocLength;
 }
 
-void SStringW::UnlockBuffer()
-{
-	if (GetData() != TStringData::InitDataNil())
-		GetData()->Unlock();
-}
-
-wchar_t* SStringW::LockBuffer()
-{
-	wchar_t* psz = GetBuffer(0);
-	if (psz != NULL)
-		GetData()->Lock();
-	return psz;
-}
 
 void SStringW::FreeExtra()
 {
@@ -959,7 +946,7 @@ SStringW& SStringW::operator=(const SStringW& stringSrc)
 		else
 		{
 			// can just copy references around
-			Release();
+			_ReleaseData();
 			SASSERT(stringSrc.GetData() != TStringData::InitDataNil());
 			m_pszData = stringSrc.m_pszData;
 			GetData()->AddRef();
@@ -1009,7 +996,7 @@ void SStringW::Empty() // free up the data
 		return;
 
 	if (pData->nRefs >= 0)
-		Release();
+		_ReleaseData();
 	else
 	{
 		wchar_t sz[1] = { 0 };

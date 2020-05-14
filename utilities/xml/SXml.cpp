@@ -1,10 +1,14 @@
 #include <xml/SXml.h>
 #include <pugixml/pugixml.hpp>
-
+#include <string/sstringw.h>
 SNSBEGIN
 
 
 SXmlAttr::SXmlAttr(LPVOID pData):_attr((pugi::xml_attribute_struct*)pData)
+{
+}
+
+SXmlAttr::SXmlAttr(const IXmlAttr * src):_attr((pugi::xml_attribute_struct*)src->GetPrivPtr())
 {
 }
 
@@ -193,6 +197,11 @@ SXmlNode::SXmlNode(LPVOID pData):_node((pugi::xml_node_struct*)pData)
 
 }
 
+SXmlNode::SXmlNode(const IXmlNode * src):_node((pugi::xml_node_struct*)src->GetPrivPtr())
+{
+
+}
+
 SXmlNode::SXmlNode(pugi::xml_node node):_node(node)
 {
 
@@ -203,6 +212,13 @@ SXmlNode::SXmlNode(const SXmlNode& src):_node(src._node)
 	
 }
 
+
+IStringW* SXmlNode::ToString(THIS) SCONST
+{
+	pugi::xml_writer_buff writer;
+	_node.print(writer, L"\t", pugi::format_default, pugi::encoding_utf16);
+	return new SStringW(writer.buffer(), writer.size());
+}
 
 LPVOID SXmlNode::GetPrivPtr(THIS) SCONST
 {
@@ -579,8 +595,7 @@ SXmlDoc::~SXmlDoc()
 
 IXmlNode * SXmlDoc::Root(THIS) SCONST
 {
-	pugi::xml_node root = doc->document_element();
-	return SXmlNode::toIXmlNode(root);
+	return SXmlNode::toIXmlNode(*doc);
 }
 
 bool SXmlDoc::SaveFileW(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST

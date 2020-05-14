@@ -123,7 +123,7 @@ size_t char_traits::StrLen(const char* psz)
 //////////////////////////////////////////////////////////////////////////
 
 
-void SStringA::ReleaseData(TStringData* pData)
+void SStringA::_ReleaseData(TStringData* pData)
 {
 	if (pData != TStringData::InitDataNil())
 	{
@@ -159,7 +159,7 @@ TStringData* SStringA::AllocData(int nLength, TStringData* pOldData /*= NULL*/)
 	return pData;
 }
 
-void SStringA::Release()
+void SStringA::_ReleaseData()
 {
 	TStringData* pData = GetData();
 	if (pData != TStringData::InitDataNil())
@@ -194,7 +194,7 @@ bool SStringA::ReallocBuffer(int nNewLength)
 	{
 		int nLength = smin_tsr(pOldData->nDataLength, nNewLength) + 1;
 		memcpy(m_pszData, psz, nLength * sizeof(char));
-		ReleaseData(pOldData);
+		_ReleaseData(pOldData);
 		return true;
 	}
 	return false;
@@ -217,7 +217,7 @@ bool SStringA::AllocBeforeWrite(int nLen)
 	TStringData* pData = GetData();
 	if (pData->IsShared() || nLen > pData->nAllocLength)
 	{
-		Release();
+		_ReleaseData();
 		bRet = AllocBuffer(nLen);
 	}
 	SASSERT(GetData()->nRefs <= 1);
@@ -229,7 +229,7 @@ void SStringA::CopyBeforeWrite()
 	TStringData* pData = GetData();
 	if (pData->IsShared())
 	{
-		Release();
+		_ReleaseData();
 		if (AllocBuffer(pData->nDataLength))
 			memcpy(m_pszData, pData->data(), (pData->nDataLength + 1) * sizeof(char));
 	}
@@ -372,19 +372,6 @@ int SStringA::GetAllocLength() const
 	return GetData()->nAllocLength;
 }
 
-void SStringA::UnlockBuffer()
-{
-	if (GetData() != TStringData::InitDataNil())
-		GetData()->Unlock();
-}
-
-char* SStringA::LockBuffer()
-{
-	char* psz = GetBuffer(0);
-	if (psz != NULL)
-		GetData()->Lock();
-	return psz;
-}
 
 void SStringA::FreeExtra()
 {
@@ -1018,7 +1005,7 @@ SStringA& SStringA::operator=(const SStringA& stringSrc)
 		else
 		{
 			// can just copy references around
-			Release();
+			_ReleaseData();
 			SASSERT(stringSrc.GetData() != TStringData::InitDataNil());
 			m_pszData = stringSrc.m_pszData;
 			GetData()->AddRef();
@@ -1068,7 +1055,7 @@ void SStringA::Empty() // free up the data
 		return;
 
 	if (pData->nRefs >= 0)
-		Release();
+		_ReleaseData();
 	else
 	{
 		char sz[1] = { 0 };

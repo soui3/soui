@@ -15,7 +15,7 @@
 #pragma once
 #include <interface/sobject-i.h>
 #include <string/strcpcvt.h>
-#include <pugixml/pugixml.hpp>
+#include <xml/SXml.h>
 
 SNSBEGIN
 
@@ -34,6 +34,15 @@ public:
 		return xmlAttr.get_userdata()==1?true:false;
 	}
 
+	static void MarkAttributeHandled(SXmlAttr xmlAttr, bool bHandled)
+	{
+		xmlAttr.set_userdata(bHandled?1:0);
+	}
+
+	static bool IsAttributeHandled(SXmlAttr xmlAttr)
+	{
+		return xmlAttr.get_userdata()==1?true:false;
+	}
 
 	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) OVERRIDE
 	{
@@ -45,20 +54,20 @@ public:
 
 	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * pXmlNode ) OVERRIDE
 	{
-		pugi::xml_node xmlNode((pugi::xml_node_struct *)pXmlNode->GetPrivPtr());
+		SXmlNode xmlNode(pXmlNode);
 
 		if (!xmlNode) return FALSE;
 #if defined(_DEBUG) && defined(PUGIXML_WCHAR_MODE)
 		{
-			pugi::xml_writer_buff writer;
-			xmlNode.print(writer, L"\t", pugi::format_default, pugi::encoding_utf16);
-			m_strXml = SStringW(writer.buffer(), writer.size());
+			IStringW *pStr = pXmlNode->ToString();
+			m_strXml=SStringW(pStr);
+			pStr->Release();
 		}
 #endif
 
 		//设置当前对象的属性
 
-		for (pugi::xml_attribute attr = xmlNode.first_attribute(); attr; attr = attr.next_attribute())
+		for (SXmlAttr attr = xmlNode.first_attribute(); attr; attr = attr.next_attribute())
 		{
 			if (IsAttributeHandled(attr)) continue;   //忽略已经被预处理的属性
 			SetAttribute(attr.name(), attr.value(), TRUE);
