@@ -30,7 +30,7 @@ SwndContainerImpl::SwndContainerImpl()
 	SXmlNode xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
 	if (xmlCaret)
 	{
-		m_caret->InitFromXml(&SXmlNode(xmlCaret));
+		m_caret->InitFromXml(&xmlCaret);
 	}
 }
 

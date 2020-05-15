@@ -105,7 +105,7 @@ namespace SOUI
 		SXmlNode xmlEditStyle = xmlNode.child(KStyle_Edit);
 		m_pEdit->GetEventSet()->setMutedState(true);
 		if (xmlEditStyle)
-			m_pEdit->InitFromXml(&SXmlNode(xmlEditStyle));
+			m_pEdit->InitFromXml(&xmlEditStyle);
 		else
 			m_pEdit->SSendMessage(WM_CREATE);
 		m_pEdit->GetEventSet()->setMutedState(false);

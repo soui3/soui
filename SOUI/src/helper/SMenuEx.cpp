@@ -604,7 +604,7 @@ namespace SOUI
 		SMenuExRoot *pMenuRoot = new SMenuExRoot(this);
 		InsertChild(pMenuRoot);
 
-		pMenuRoot->InitFromXml(&SXmlNode(xmlNode));
+		pMenuRoot->InitFromXml(&xmlNode);
 
 		pMenuRoot->GetLayoutParam()->SetWrapContent(Both);
 

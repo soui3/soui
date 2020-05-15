@@ -526,31 +526,31 @@ void SSkinShape::OnInitFinished(IXmlNode * pNode)
 	if(xmlGrident)
 	{
 		if (!m_gradient) m_gradient.Attach(new SGradient());
-		m_gradient->InitFromXml(&SXmlNode(xmlGrident));
+		m_gradient->InitFromXml(&xmlGrident);
 	}
 	SXmlNode xmlSize = xmlNode.child(SShapeSize::GetClassName());
 	if(xmlSize)
 	{
 		if (!m_shapeSize) m_shapeSize.Attach(new SShapeSize());
-		m_shapeSize->InitFromXml(&SXmlNode(xmlSize));
+		m_shapeSize->InitFromXml(&xmlSize);
 	}
 	SXmlNode xmlStoke = xmlNode.child(SStroke::GetClassName());
 	if(xmlStoke)
 	{
 		if (!m_stroke) m_stroke.Attach(new SStroke());
-		m_stroke->InitFromXml(&SXmlNode(xmlStoke));
+		m_stroke->InitFromXml(&xmlStoke);
 	}
 	SXmlNode xmlConner = xmlNode.child(SCornerSize::GetClassName());
 	if(xmlConner)
 	{
 		if (!m_cornerSize) m_cornerSize.Attach(new SCornerSize());
-		m_cornerSize->InitFromXml(&SXmlNode(xmlConner));
+		m_cornerSize->InitFromXml(&xmlConner);
 	}
 	SXmlNode xmlRing = xmlNode.child(SShapeRing::GetClassName());
 	if (xmlRing)
 	{
 		if (!m_ringParam) m_ringParam.Attach(new SShapeRing());
-		m_ringParam->InitFromXml(&SXmlNode(xmlRing));
+		m_ringParam->InitFromXml(&xmlRing);
 	}
 }
 

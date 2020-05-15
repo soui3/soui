@@ -61,7 +61,7 @@ namespace SOUI
         {
             SSplitPane *pPane = new SSplitPane();
             InsertChild(pPane);
-            if(pPane->InitFromXml(&SXmlNode(xmlPane)))
+            if(pPane->InitFromXml(&xmlPane))
             {
                 InsertItem(pPane);
             }

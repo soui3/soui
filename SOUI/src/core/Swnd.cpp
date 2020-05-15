@@ -787,7 +787,7 @@ namespace SOUI
 					if (pChild)
 					{
 						InsertChild(pChild);
-						pChild->InitFromXml(&SXmlNode(xmlChild));
+						pChild->InitFromXml(&xmlChild);
 					}
 				}
 			}

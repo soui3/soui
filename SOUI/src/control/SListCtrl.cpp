@@ -61,7 +61,7 @@ BOOL SListCtrl::CreateChildren(SXmlNode xmlNode)
 	SASSERT(m_pHeader);
 	if(!m_pHeader) return FALSE;
 	InsertChild(m_pHeader);
-	m_pHeader->InitFromXml(&SXmlNode(xmlHeader));
+	m_pHeader->InitFromXml(&xmlHeader);
 	xmlHeader.set_userdata(1);
 
 	if (!__super::CreateChildren(xmlNode))
