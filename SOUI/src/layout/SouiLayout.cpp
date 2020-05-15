@@ -19,7 +19,7 @@ namespace SOUI{
 		Clear();
 	}
 
-    bool SouiLayoutParam::IsMatchParent(ORIENTATION orientation) const
+    BOOL SouiLayoutParam::IsMatchParent(ORIENTATION orientation) const
     {
         switch(orientation)
         {
@@ -35,7 +35,7 @@ namespace SOUI{
         }
     }
 
-    bool SouiLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
+    BOOL SouiLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
     {
         switch(orientation)
         {
@@ -51,7 +51,7 @@ namespace SOUI{
         }
     }
 
-    bool SouiLayoutParam::IsWrapContent(ORIENTATION orientation) const
+    BOOL SouiLayoutParam::IsWrapContent(ORIENTATION orientation) const
     {
         switch(orientation)
         {
@@ -386,7 +386,7 @@ namespace SOUI{
 	{
 	}
 
-    bool SouiLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
+    BOOL SouiLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
     {
         return !!pLayoutParam->IsClass(SouiLayoutParam::GetClassName());
     }
@@ -532,7 +532,7 @@ namespace SOUI{
 
     }
 
-    CSize SouiLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
+    SIZE SouiLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
     {
         SList<WndPos>       lstWndPos;
 

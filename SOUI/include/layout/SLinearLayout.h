@@ -15,24 +15,17 @@ namespace SOUI
     public:
 		SLinearLayoutParam();
 
-        virtual bool IsMatchParent(ORIENTATION orientation) const;
-		virtual bool IsWrapContent(ORIENTATION orientation) const;
+		STDMETHOD_(void,Clear)(THIS) OVERRIDE;
+		STDMETHOD_(BOOL, IsMatchParent)(THIS_ ORIENTATION orientation) SCONST OVERRIDE;
+		STDMETHOD_(BOOL, IsWrapContent)(THIS_ ORIENTATION orientation) SCONST OVERRIDE;
+		STDMETHOD_(BOOL, IsSpecifiedSize)(THIS_ ORIENTATION orientation) SCONST OVERRIDE;
+		STDMETHOD_(SLayoutSize, GetSpecifiedSize)(THIS_ ORIENTATION orientation) SCONST OVERRIDE;
+		STDMETHOD_(void,SetMatchParent)(THIS_ ORIENTATION orientation) OVERRIDE;
+		STDMETHOD_(void,SetWrapContent)(THIS_ ORIENTATION orientation) OVERRIDE;
+		STDMETHOD_(void,SetSpecifiedSize)(THIS_ ORIENTATION orientation, const SLayoutSize& layoutSize) OVERRIDE;
+		STDMETHOD_(void*, GetRawData)(THIS) OVERRIDE;
+		STDMETHOD_(ILayoutParam *, Clone)(THIS) SCONST OVERRIDE;
 
-        virtual bool IsSpecifiedSize(ORIENTATION orientation) const;
-
-        virtual SLayoutSize GetSpecifiedSize(ORIENTATION orientation) const;
-
-		virtual void Clear();
-
-		virtual void SetMatchParent(ORIENTATION orientation);
-
-		virtual void SetWrapContent(ORIENTATION orientation);
-
-		virtual void SetSpecifiedSize(ORIENTATION orientation, const SLayoutSize& layoutSize);
-
-		virtual void * GetRawData();
-
-		virtual ILayoutParam * Clone() const;
 	public:
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"width",OnAttrWidth)
@@ -69,10 +62,10 @@ namespace SOUI
         SLinearLayout(void);
         ~SLinearLayout(void);
 
-        virtual void LayoutChildren(SWindow * pParent);
-        virtual ILayoutParam * CreateLayoutParam() const;
-		virtual CSize MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const;
-		virtual bool IsParamAcceptable(ILayoutParam *pLayoutParam) const;
+		STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ ILayoutParam *pLayoutParam) SCONST OVERRIDE;
+		STDMETHOD_(void,LayoutChildren)(THIS_ SWindow * pParent) OVERRIDE;
+		STDMETHOD_(ILayoutParam *, CreateLayoutParam)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const SWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
 
         
         SOUI_ATTRS_BEGIN()

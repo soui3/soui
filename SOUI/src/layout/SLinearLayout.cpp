@@ -10,7 +10,7 @@ namespace SOUI
 		Clear();
 	}
 
-    bool SLinearLayoutParam::IsMatchParent(ORIENTATION orientation) const
+    BOOL SLinearLayoutParam::IsMatchParent(ORIENTATION orientation) const
     {
         switch(orientation)
         {
@@ -26,7 +26,7 @@ namespace SOUI
         }
     }
 
-	bool SLinearLayoutParam::IsWrapContent(ORIENTATION orientation) const
+	BOOL SLinearLayoutParam::IsWrapContent(ORIENTATION orientation) const
 	{
         switch(orientation)
         {
@@ -42,7 +42,7 @@ namespace SOUI
         }
 	}
 
-    bool SLinearLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
+    BOOL SLinearLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
     {
         switch(orientation)
         {
@@ -397,7 +397,7 @@ namespace SOUI
     }
 
 	//nWidth,nHeight == -1:wrap_content
-	CSize SLinearLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
+	SIZE SLinearLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
 	{
 		SIZE *pSize = new SIZE [pParent->GetChildrenCount()];
 		memset(pSize,0,sizeof(SIZE)*pParent->GetChildrenCount());
@@ -551,9 +551,9 @@ namespace SOUI
 		return szRet;
 	}
 
-	bool SLinearLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
+	BOOL SLinearLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
 	{
-		return !!pLayoutParam->IsClass(SLinearLayoutParam::GetClassName());
+		return pLayoutParam->IsClass(SLinearLayoutParam::GetClassName());
 	}
 
 	ILayoutParam * SLinearLayout::CreateLayoutParam() const

@@ -128,7 +128,7 @@ namespace SOUI
 
 	}
 
-	bool SGridLayoutParam::IsMatchParent(ORIENTATION orientation) const
+	BOOL SGridLayoutParam::IsMatchParent(ORIENTATION orientation) const
 	{
 		switch(orientation)
 		{
@@ -144,7 +144,7 @@ namespace SOUI
 		}
 	}
 
-	bool SGridLayoutParam::IsWrapContent(ORIENTATION orientation) const
+	BOOL SGridLayoutParam::IsWrapContent(ORIENTATION orientation) const
 	{
 		switch(orientation)
 		{
@@ -160,7 +160,7 @@ namespace SOUI
 		}
 	}
 
-	bool SGridLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
+	BOOL SGridLayoutParam::IsSpecifiedSize(ORIENTATION orientation) const
 	{
 		switch(orientation)
 		{
@@ -214,9 +214,9 @@ namespace SOUI
 	{
 	}
 
-	bool SGridLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
+	BOOL SGridLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
 	{
-		return !!pLayoutParam->IsClass(SGridLayoutParam::GetClassName());
+		return pLayoutParam->IsClass(SGridLayoutParam::GetClassName());
 	}
 
 
@@ -229,7 +229,7 @@ namespace SOUI
 	/*
 	* MeasureChildren 计算gridlayout的子窗口大小
 	*/
-	CSize SGridLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
+	SIZE SGridLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
 	{
 		SUNUSED(nWidth);
 		SUNUSED(nHeight);
