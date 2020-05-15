@@ -768,7 +768,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
     }
     
     //恢复字体，颜色
-    if(font) pRT->SelectObject(oldFont);
+    if(font) pRT->SelectObject(oldFont,NULL);
     if(crTxt!=CR_INVALID) pRT->SetTextColor(crOld);
 }
 

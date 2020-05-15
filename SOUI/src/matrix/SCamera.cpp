@@ -378,15 +378,15 @@ void SkCamera3D::doUpdate() const {
         float y = fObserver.fY;
         float z = fObserver.fZ;
 
-        orien->set(SMatrix::kMScaleX, x * axis.fX - z * cross.fX);
-        orien->set(SMatrix::kMSkewX,  x * axis.fY - z * cross.fY);
-        orien->set(SMatrix::kMTransX, x * axis.fZ - z * cross.fZ);
-        orien->set(SMatrix::kMSkewY,  y * axis.fX - z * zenith.fX);
-        orien->set(SMatrix::kMScaleY, y * axis.fY - z * zenith.fY);
-        orien->set(SMatrix::kMTransY, y * axis.fZ - z * zenith.fZ);
-        orien->set(SMatrix::kMPersp0, axis.fX);
-        orien->set(SMatrix::kMPersp1, axis.fY);
-        orien->set(SMatrix::kMPersp2, axis.fZ);
+        orien->set(kMScaleX, x * axis.fX - z * cross.fX);
+        orien->set(kMSkewX,  x * axis.fY - z * cross.fY);
+        orien->set(kMTransX, x * axis.fZ - z * cross.fZ);
+        orien->set(kMSkewY,  y * axis.fX - z * zenith.fX);
+        orien->set(kMScaleY, y * axis.fY - z * zenith.fY);
+        orien->set(kMTransY, y * axis.fZ - z * zenith.fZ);
+        orien->set(kMPersp0, axis.fX);
+        orien->set(kMPersp1, axis.fY);
+        orien->set(kMPersp2, axis.fZ);
     }
 }
 
@@ -409,19 +409,19 @@ void SkCamera3D::patchToMatrix(const SkPatch3D& quilt, SMatrix* matrix) const {
                         *SkTCast<const SkUnit3D*>(fOrientation.GetData() + 6));
 
     patchPtr = (const float*)&quilt;
-    matrix->set(SMatrix::kMScaleX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMSkewY,  SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
-    matrix->set(SMatrix::kMPersp0, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
+    matrix->set(kMScaleX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(kMSkewY,  SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(kMPersp0, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
 
     patchPtr += 3;
-    matrix->set(SMatrix::kMSkewX,  SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMScaleY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
-    matrix->set(SMatrix::kMPersp1, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
+    matrix->set(kMSkewX,  SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(kMScaleY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(kMPersp1, SFloatDotDiv(3, patchPtr, 1, mapPtr+6, 1, dot));
 
     patchPtr = (const float*)(const void*)&diff;
-    matrix->set(SMatrix::kMTransX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
-    matrix->set(SMatrix::kMTransY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
-    matrix->set(SMatrix::kMPersp2, SK_Scalar1);
+    matrix->set(kMTransX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));
+    matrix->set(kMTransY, SFloatDotDiv(3, patchPtr, 1, mapPtr+3, 1, dot));
+    matrix->set(kMPersp2, SK_Scalar1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

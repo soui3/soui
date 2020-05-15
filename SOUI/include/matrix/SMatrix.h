@@ -32,17 +32,11 @@ public:
 	SMatrix(const float data[9]);
 
 public:
-
-	virtual float GetValue(Index idx) const;
-
-	virtual const float * GetData() const;
-
-	virtual float * GetData();
-
-	virtual void SetValue(Index idx,float v);
-
-	virtual void SetData(const float fMat[9]);
-
+	STDMETHOD_(float,GetValue)(THIS_ xFormIndex idx) SCONST OVERRIDE;
+	STDMETHOD_(void,SetValue)(THIS_ xFormIndex index, float v) OVERRIDE;
+	STDMETHOD_(float *,GetData)(THIS) OVERRIDE;
+	STDMETHOD_(const float *,GetConstData)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(void,SetData)(THIS_ const float fMat[9]) OVERRIDE;
 public:
 	SMatrix &operator*=(const SMatrix &src);
 	SMatrix operator*(const SMatrix &src) const;
@@ -94,7 +88,7 @@ public:
     /** Returns a bitfield describing the transformations the matrix may
         perform. The bitfield is computed conservatively, so it may include
         false positives. For example, when kPerspective_Mask is true, all
-        other bits may be set to true even in the case of a pure perspective
+        other bits may be set to true even in the case of a OVERRIDE perspective
         transform.
    */
     TypeMask getType() const {

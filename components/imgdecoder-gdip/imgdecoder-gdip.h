@@ -64,7 +64,7 @@ public:
 	~SImgDecoderFactory_GDIP();
 
 	STDMETHOD_(BOOL,CreateImgX)(THIS_ IImgX **ppImgDecoder) OVERRIDE;
-	STDMETHOD_(HRESULT,SaveImage)(THIS_ IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) OVERRIDE;  
+	STDMETHOD_(HRESULT,SaveImage)(THIS_ const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST OVERRIDE;  
 	STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST OVERRIDE;
 protected:
 

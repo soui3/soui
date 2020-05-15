@@ -1,10 +1,10 @@
 ﻿#pragma once
 
+//#include <core/sobjType.h>
 #include <interface/obj-ref-i.h>
-#include <core/sobjType.h>
-#include <sobject/Sobject.hpp>
-#include "SImgDecoder-i.h"
-#include "SPathEffect-i.h"
+#include <interface/sobject-i.h>
+#include <interface/SImgDecoder-i.h>
+#include <interface/SPathEffect-i.h>
 
 SNSBEGIN
 
@@ -99,11 +99,28 @@ struct fRect {
 * 
 * Describe
 */
-struct IRenderFactory : public IObjRef
+#undef INTERFACE
+#define INTERFACE IRenderFactory
+DECLARE_INTERFACE_(IRenderFactory,IObjRef)
 {
-	virtual IImgDecoderFactory * GetImgDecoderFactory()=0;
-	virtual void SetImgDecoderFactory(IImgDecoderFactory *pImgDecoderFac)=0;
-	virtual BOOL CreateRenderTarget(IRenderTarget ** ppRenderTarget,int nWid,int nHei)=0;
+		//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	STDMETHOD_(IImgDecoderFactory *,GetImgDecoderFactory)(THIS) PURE;
+	STDMETHOD_(void,SetImgDecoderFactory)(THIS_ IImgDecoderFactory *pImgDecoderFac) PURE;
+	STDMETHOD_(BOOL,CreateRenderTarget)(THIS_ IRenderTarget ** ppRenderTarget,int nWid,int nHei) PURE;
 
 	/**
 	* CreateFont
@@ -115,20 +132,20 @@ struct IRenderFactory : public IObjRef
 	*
 	* Describe  
 	*/
-	virtual BOOL CreateFont(IFont ** ppFont, const LOGFONT &lf)=0;
+	STDMETHOD_(BOOL,CreateFont)(THIS_ IFont ** ppFont, const LOGFONT *lf) PURE;
 
-	virtual BOOL CreateBitmap(IBitmap ** ppBitmap)=0;
+	STDMETHOD_(BOOL,CreateBitmap)(THIS_ IBitmap ** ppBitmap) PURE;
 
-	virtual BOOL CreateRegion(IRegion **ppRgn)=0;
+	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) PURE;
 
-	virtual BOOL CreatePath(IPath ** ppPath)=0;
+	STDMETHOD_(BOOL,CreatePath)(THIS_ IPath ** ppPath) PURE;
 
-	virtual BOOL CreatePathEffect(REFGUID guidEffect,IPathEffect ** ppPathEffect) = 0;
+	STDMETHOD_(BOOL,CreatePathEffect)(THIS_ REFGUID guidEffect,IPathEffect ** ppPathEffect) PURE;
 
-	virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure) = 0;
+	STDMETHOD_(BOOL,CreatePathMeasure)(THIS_ IPathMeasure ** ppPathMeasure) PURE;
 };
 
-enum OBJTYPE
+typedef enum _OBJTYPE
 {
 	OT_NULL=0,
 	OT_PEN,
@@ -137,7 +154,7 @@ enum OBJTYPE
 	OT_FONT,
 	OT_RGN,
 	OT_PATH,
-};
+}OBJTYPE;
 
 /**
 * @struct     IRenderObj
@@ -145,15 +162,24 @@ enum OBJTYPE
 * 
 * Describe    所有渲染对象全部使用引用计数管理生命周期
 */
-struct IRenderObj : public IObject 
+#undef INTERFACE
+#define INTERFACE IRenderObj
+DECLARE_INTERFACE_(IRenderObj,IObjRef)
 {
-	/**
-	* ObjectType
-	* @brief    查询对象类型
-	* @return   const UINT 
-	* Describe  
-	*/    
-	virtual const OBJTYPE ObjectType() const = 0;
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
 	/**
 	* GetRenderFactory
@@ -161,8 +187,19 @@ struct IRenderObj : public IObject
 	* @return   IRenderFactory * -- 类厂 
 	* Describe  
 	*/    
-	virtual IRenderFactory * GetRenderFactory() const = 0;
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
 
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 };
 
 
@@ -172,12 +209,45 @@ struct IRenderObj : public IObject
 * 
 * Describe    
 */
-struct IBrush : public IRenderObj
+#undef INTERFACE
+#define INTERFACE IBrush
+DECLARE_INTERFACE_(IBrush,IRenderObj)
 {
-	virtual const OBJTYPE ObjectType() const
-	{
-		return OT_BRUSH;
-	}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
+
 };
 
 /**
@@ -186,12 +256,57 @@ struct IBrush : public IRenderObj
 * 
 * Describe    
 */
-struct  IPen: public IRenderObj
+#undef INTERFACE
+#define INTERFACE IPen
+DECLARE_INTERFACE_(IPen,IRenderObj)
 {
-	virtual const OBJTYPE ObjectType() const
-	{
-		return OT_PEN;
-	}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
+
+	STDMETHOD_(int,GetWidth)(THIS) SCONST PURE;
+
+	STDMETHOD_(void,SetWidth)(THIS_ int nWid) PURE;
+
+	STDMETHOD_(int,GetStyle)(THIS) SCONST PURE;
+
+	STDMETHOD_(void,SetStyle)(THIS_ int nStyle) PURE;
+
+	STDMETHOD_(COLORREF,GetColor)(THIS) SCONST PURE;
+
+	STDMETHOD_(void,SetColor)(THIS_ COLORREF cr) PURE;
+
 };
 
 /**
@@ -200,13 +315,44 @@ struct  IPen: public IRenderObj
 * 
 * Describe    
 */
-struct  IBitmap: public IRenderObj
+#undef INTERFACE
+#define INTERFACE IBitmap
+DECLARE_INTERFACE_(IBitmap,IRenderObj)
 {
-	virtual const OBJTYPE ObjectType() const
-	{
-		return OT_BITMAP;
-	}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
 
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* Init
@@ -217,16 +363,16 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT -- 成功返回S_OK,失败返回错误代码
 	* Describe  
 	*/    
-	virtual HRESULT Init(int nWid,int nHei,const LPVOID pBits=NULL)=0;
+	STDMETHOD_(HRESULT,Init)(THIS_ int nWid,int nHei,const LPVOID pBits) PURE;
 
 	/**
-	* Init
+	* Init2
 	* @brief    从IImgFrame初始化位图
 	* @param    IImgFrame * pImgFrame --  IImgFrame指针
 	* @return   HRESULT -- 成功返回S_OK,失败返回错误代码
 	* Describe  
 	*/    
-	virtual HRESULT Init(IImgFrame *pImgFrame) =0;
+	STDMETHOD_(HRESULT,Init2)(THIS_ IImgFrame *pImgFrame) PURE;
 
 	/**
 	* LoadFromFile
@@ -235,7 +381,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT -- 成功返回S_OK,失败返回错误代码
 	* Describe  
 	*/    
-	virtual HRESULT LoadFromFile(LPCTSTR pszFileName)=0;
+	STDMETHOD_(HRESULT,LoadFromFile)(THIS_ LPCTSTR pszFileName) PURE;
 
 	/**
 	* LoadFromMemory
@@ -245,7 +391,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT -- 成功返回S_OK,失败返回错误代码
 	* Describe  
 	*/    
-	virtual HRESULT LoadFromMemory(LPBYTE pBuf,size_t szLen)=0;
+	STDMETHOD_(HRESULT,LoadFromMemory)(THIS_ LPBYTE pBuf,size_t szLen) PURE;
 
 	/**
 	* Width
@@ -253,7 +399,7 @@ struct  IBitmap: public IRenderObj
 	* @return   UINT -- 图片宽度
 	* Describe  
 	*/    
-	virtual UINT    Width() const =0;
+	STDMETHOD_(UINT,Width)(THIS) SCONST PURE;
 
 	/**
 	* Height
@@ -261,7 +407,7 @@ struct  IBitmap: public IRenderObj
 	* @return   UINT -- 图片高度
 	* Describe  
 	*/    
-	virtual UINT    Height() const =0;
+	STDMETHOD_(UINT,Height)(THIS) SCONST PURE;
 
 	/**
 	* Size
@@ -269,7 +415,7 @@ struct  IBitmap: public IRenderObj
 	* @return   SIZE -- 图片高度及宽度
 	* Describe  
 	*/    
-	virtual SIZE    Size() const =0;
+	STDMETHOD_(SIZE,Size)(THIS) SCONST PURE;
 
 	/**
 	* LockPixelBits
@@ -277,7 +423,7 @@ struct  IBitmap: public IRenderObj
 	* @return   LPVOID -- 位图数据地址
 	* Describe  
 	*/    
-	virtual LPVOID  LockPixelBits() =0;
+	STDMETHOD_(LPVOID,LockPixelBits)(THIS) PURE;
 
 	/**
 	* UnlockPixelBits
@@ -286,7 +432,7 @@ struct  IBitmap: public IRenderObj
 	* @return   void
 	* Describe  与LockPixelBits配对使用
 	*/    
-	virtual void    UnlockPixelBits(LPVOID pBuf) =0;
+	STDMETHOD_(void,UnlockPixelBits)(THIS_ LPVOID pBuf) PURE;
 
 	/**
 	* GetPixelBits
@@ -294,7 +440,7 @@ struct  IBitmap: public IRenderObj
 	* @return   LPVOID -- 位图数据地址
 	* Describe  
 	*/    
-	virtual const LPVOID GetPixelBits() const = 0;
+	STDMETHOD_(const LPVOID,GetPixelBits)(THIS) SCONST PURE;
 
 
 	/**
@@ -304,7 +450,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT
 	* Describe  成功后，调用者执行IBitmap::Release
 	*/    
-	inline virtual HRESULT Clone(IBitmap **ppClone) const;
+	STDMETHOD_(HRESULT,Clone)(THIS_ IBitmap **ppClone) SCONST PURE;
 
 	/**
 	* Scale
@@ -315,7 +461,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT
 	* Describe  成功后，调用者执行IBitmap::Release
 	*/
-	inline virtual HRESULT Scale(IBitmap **pOutput,int nScale,FilterLevel filterLevel);
+	STDMETHOD_(HRESULT,Scale)(THIS_ IBitmap **pOutput,int nScale,FilterLevel filterLevel) SCONST PURE;
 
 	/**
 	* Scale
@@ -327,7 +473,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT
 	* Describe  成功后，调用者执行IBitmap::Release
 	*/
-	inline virtual HRESULT Scale(IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel);
+	STDMETHOD_(HRESULT,Scale2)(THIS_ IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel) SCONST PURE;
 
 	/**
 	* 将位图保存到文件
@@ -337,7 +483,7 @@ struct  IBitmap: public IRenderObj
 	* @return   HRESULT -- S_OK: succeed
 	* Describe  
 	*/    
-	inline virtual HRESULT Save(LPCWSTR pszFileName,const LPVOID pFormat);
+	STDMETHOD_(HRESULT,Save)(THIS_ LPCWSTR pszFileName,const LPVOID pFormat) SCONST PURE;
 };
 
 /**
@@ -346,12 +492,44 @@ struct  IBitmap: public IRenderObj
 * 
 * Describe    
 */
-struct  IFont : public IRenderObj
+#undef INTERFACE
+#define INTERFACE IFont
+DECLARE_INTERFACE_(IFont,IRenderObj)
 {
-	virtual const OBJTYPE ObjectType() const
-	{
-		return OT_FONT;
-	}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* LogFont
@@ -359,7 +537,7 @@ struct  IFont : public IRenderObj
 	* @return   const LOGFONT * -- 包含字体信息的LOGFONT*
 	* Describe  
 	*/    
-	virtual const LOGFONT * LogFont() const =0;
+	STDMETHOD_(const LOGFONT *,LogFont)(THIS) SCONST PURE;
 
 	/**
 	* FamilyName
@@ -367,7 +545,7 @@ struct  IFont : public IRenderObj
 	* @return   LPCTSTR -- 字体名
 	* Describe  
 	*/    
-	virtual LPCTSTR FamilyName()=0;
+	STDMETHOD_(LPCTSTR,FamilyName)(THIS) SCONST PURE;
 
 	/**
 	* TextSize
@@ -375,7 +553,7 @@ struct  IFont : public IRenderObj
 	* @return   int -- 字体大小
 	* Describe  
 	*/    
-	virtual int TextSize()=0;
+	STDMETHOD_(int,TextSize)(THIS) SCONST PURE;
 
 	/**
 	* IsBold
@@ -383,7 +561,7 @@ struct  IFont : public IRenderObj
 	* @return   BOOL -- true为粗体，false正常
 	* Describe  
 	*/    
-	virtual BOOL IsBold()=0;
+	STDMETHOD_(BOOL,IsBold)(THIS) SCONST PURE;
 
 	/**
 	* IsUnderline
@@ -391,7 +569,7 @@ struct  IFont : public IRenderObj
 	* @return   BOOL -- true有下划线，false正常
 	* Describe  
 	*/    
-	virtual BOOL IsUnderline()=0;
+	STDMETHOD_(BOOL,IsUnderline)(THIS) SCONST PURE;
 
 	/**
 	* IsItalic
@@ -399,7 +577,7 @@ struct  IFont : public IRenderObj
 	* @return   BOOL -- true为斜体，false正常
 	* Describe  
 	*/    
-	virtual BOOL IsItalic()=0;
+	STDMETHOD_(BOOL,IsItalic)(THIS) SCONST PURE;
 
 	/**
 	* StrikeOut
@@ -407,9 +585,9 @@ struct  IFont : public IRenderObj
 	* @return   BOOL -- true有删除线
 	* Describe  
 	*/    
-	virtual BOOL IsStrikeOut() =0;
+	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST PURE;
 
-	virtual BOOL UpdateFont(const LOGFONT *pLogFont) = 0;
+	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) PURE;
 };
 
 /**
@@ -418,12 +596,44 @@ struct  IFont : public IRenderObj
 * 
 * Describe    
 */
-struct  IRegion : public IRenderObj
+#undef INTERFACE
+#define INTERFACE IRegion
+DECLARE_INTERFACE_(IRegion,IRenderObj)
 {
-	virtual const OBJTYPE ObjectType() const
-	{
-		return OT_RGN;
-	}
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* CombineRect
@@ -433,7 +643,7 @@ struct  IRegion : public IRenderObj
 	* @return   void
 	* Describe  组合模式同Win32 API CombineRect
 	*/    
-	virtual void CombineRect(LPCRECT lprect,int nCombineMode )=0;
+	STDMETHOD_(void,CombineRect)(THIS_ LPCRECT lprect,int nCombineMode) PURE;
 
 	/**
 	* CombineRect
@@ -443,13 +653,13 @@ struct  IRegion : public IRenderObj
 	* @return   void
 	* Describe  组合模式同Win32 API CombineRgn
 	*/    
-	virtual void CombineRgn(const IRegion * pRgnSrc,int nCombineMode )=0;
+	STDMETHOD_(void,CombineRgn)(THIS_ const IRegion * pRgnSrc,int nCombineMode ) PURE;
 
-	virtual void CombineRoundRect(LPCRECT lprect, POINT ptConner, int nCombineMode) = 0;
+	STDMETHOD_(void,CombineRoundRect)(THIS_ LPCRECT lprect, POINT ptConner, int nCombineMode) PURE;
 
-	virtual void CombineEllipse(LPCRECT lprect , int nCombineMode) = 0;
+	STDMETHOD_(void,CombineEllipse)(THIS_ LPCRECT lprect , int nCombineMode) PURE;
 
-	virtual void CombinePolygon(const POINT *pts, int count, int nPolygonMode, int nCombineMode) = 0;
+	STDMETHOD_(void,CombinePolygon)(THIS_ const POINT *pts, int count, int nPolygonMode, int nCombineMode) PURE;
 	/**
 	* PtInRegion
 	* @brief    检测一个点是否在region范围内
@@ -457,7 +667,7 @@ struct  IRegion : public IRenderObj
 	* @return   BOOL -- true在region内
 	* Describe  
 	*/    
-	virtual BOOL PtInRegion(POINT pt) const=0;
+	STDMETHOD_(BOOL,PtInRegion)(THIS_ POINT pt) SCONST PURE;
 
 	/**
 	* RectInRegion
@@ -466,7 +676,7 @@ struct  IRegion : public IRenderObj
 	* @return   BOOL -- true在region内
 	* Describe  
 	*/    
-	virtual BOOL RectInRegion(LPCRECT lprect) const=0;
+	STDMETHOD_(BOOL,RectInRegion)(THIS_ LPCRECT lprect) SCONST PURE;
 
 	/**
 	* GetRgnBox
@@ -475,7 +685,7 @@ struct  IRegion : public IRenderObj
 	* @return   void  
 	* Describe  
 	*/    
-	virtual void GetRgnBox(LPRECT lprect) const=0;
+	STDMETHOD_(void,GetRgnBox)(THIS_ LPRECT lprect) SCONST PURE;
 
 	/**
 	* IsEmpty
@@ -483,7 +693,7 @@ struct  IRegion : public IRenderObj
 	* @return   BOOL -- true为空
 	* Describe  
 	*/    
-	virtual BOOL IsEmpty() const=0;
+	STDMETHOD_(BOOL,IsEmpty)(THIS) SCONST PURE;
 
 	/**
 	* Offset
@@ -492,7 +702,7 @@ struct  IRegion : public IRenderObj
 	* @return   void 
 	* Describe  
 	*/    
-	virtual void Offset(POINT pt)=0;
+	STDMETHOD_(void,Offset)(THIS_ POINT pt) PURE;
 
 	/**
 	* Clear
@@ -500,7 +710,7 @@ struct  IRegion : public IRenderObj
 	* @return   void
 	* Describe  
 	*/    
-	virtual void Clear()=0;
+	STDMETHOD_(void,Clear)(THIS) PURE;
 
 	/**
 	* IsEqual
@@ -508,93 +718,154 @@ struct  IRegion : public IRenderObj
 	* @return   bool, true-this and testRgn are equal
 	* Describe  
 	*/    
-	virtual BOOL IsEqual(const IRegion * testRgn) const = 0;
+	STDMETHOD_(BOOL,IsEqual)(THIS_ const IRegion * testRgn) SCONST PURE;
 };
 
-struct IxForm
+typedef enum _xFormIndex{
+	kMScaleX = 0,
+	kMSkewX,
+	kMTransX,
+	kMSkewY,
+	kMScaleY,
+	kMTransY,
+	kMPersp0,
+	kMPersp1,
+	kMPersp2
+}xFormIndex;
+
+#undef INTERFACE
+#define INTERFACE IxForm
+DECLARE_INTERFACE(IxForm)
 {
-	enum Index{
-		kMScaleX = 0,
-		kMSkewX,
-		kMTransX,
-		kMSkewY,
-		kMScaleY,
-		kMTransY,
-		kMPersp0,
-		kMPersp1,
-		kMPersp2
-	};
-
-	virtual float GetValue(Index idx) const = 0;
-	virtual void SetValue(Index index, float v) = 0;
-
-	virtual const float * GetData() const = 0;
-	virtual float * GetData() = 0;
-
-	virtual void SetData(const float fMat[9]) = 0;
+	STDMETHOD_(float,GetValue)(THIS_ xFormIndex idx) SCONST PURE;
+	STDMETHOD_(void,SetValue)(THIS_ xFormIndex index, float v) PURE;
+	STDMETHOD_(float *,GetData)(THIS) PURE;
+	STDMETHOD_(const float *,GetConstData)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetData)(THIS_ const float fMat[9]) PURE;
 };
 
 
-struct IPathInfo : IObjRef
+#undef INTERFACE
+#define INTERFACE IPathInfo
+DECLARE_INTERFACE_(IPathInfo,IObjRef)
 {
-	virtual int pointNumber() const = 0;
-	virtual const float * data() const =0;
+	STDMETHOD_(int,pointNumber)(THIS) SCONST PURE;
+	STDMETHOD_(const float *,data)(THIS) SCONST PURE;
 };
 
-struct IPath : IRenderObj
+
+typedef enum _FillType {
+	/** Specifies that "inside" is computed by a non-zero sum of signed
+	edge crossings
+	*/
+	kWinding_FillType,
+	/** Specifies that "inside" is computed by an odd number of edge
+	crossings
+	*/
+	kEvenOdd_FillType,
+	/** Same as Winding, but draws outside of the path, rather than inside
+	*/
+	kInverseWinding_FillType,
+	/** Same as EvenOdd, but draws outside of the path, rather than inside
+	*/
+	kInverseEvenOdd_FillType
+}FillType;
+
+typedef enum _Convexity {
+	kUnknown_Convexity,
+	kConvex_Convexity,
+	kConcave_Convexity
+}Convexity;
+
+typedef enum _Direction {
+	/** Direction either has not been or could not be computed */
+	kUnknown_Direction,
+	/** clockwise direction for adding closed contours */
+	kCW_Direction,
+	/** counter-clockwise direction for adding closed contours */
+	kCCW_Direction,
+}Direction;
+
+typedef enum _AddPathMode {
+	/** Source path contours are added as new contours.
+	*/
+	kAppend_AddPathMode,
+	/** Path is added by extending the last contour of the destination path
+	with the first contour of the source path. If the last contour of
+	the destination path is closed, then it will not be extended.
+	Instead, the start of source path will be extended by a straight
+	line to the end point of the destination path.
+	*/
+	kExtend_AddPathMode
+}AddPathMode;
+
+#undef INTERFACE
+#define INTERFACE IPath
+DECLARE_INTERFACE_(IPath,IRenderObj)
 {
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
 
-	enum FillType {
-		/** Specifies that "inside" is computed by a non-zero sum of signed
-		edge crossings
-		*/
-		kWinding_FillType,
-		/** Specifies that "inside" is computed by an odd number of edge
-		crossings
-		*/
-		kEvenOdd_FillType,
-		/** Same as Winding, but draws outside of the path, rather than inside
-		*/
-		kInverseWinding_FillType,
-		/** Same as EvenOdd, but draws outside of the path, rather than inside
-		*/
-		kInverseEvenOdd_FillType
-	};
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
 
-	enum Convexity {
-		kUnknown_Convexity,
-		kConvex_Convexity,
-		kConcave_Convexity
-	};
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
+	/**
+	* GetRenderFactory
+	* @brief    获得创建该渲染对象的类厂
+	* @return   IRenderFactory * -- 类厂 
+	* Describe  
+	*/    
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
+
+	/**
+	* ObjectType
+	* @brief    查询对象类型
+	* @return   const UINT 
+	* Describe  
+	*/    
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/** Return the path's fill type. This is used to define how "inside" is
 	computed. The default value is kWinding_FillType.
 
 	@return the path's fill type
 	*/
-	virtual FillType getFillType() const PURE;
+	STDMETHOD_(FillType,getFillType)(THIS) SCONST PURE;
 
 	/** Set the path's fill type. This is used to define how "inside" is
 	computed. The default value is kWinding_FillType.
 
 	@param ft The new fill type for this path
 	*/
-	virtual void setFillType(FillType ft) PURE;
+	STDMETHOD_(void,setFillType)(THIS_ FillType ft) PURE;
 
 	/** Returns true if the filltype is one of the Inverse variants */
-	virtual bool isInverseFillType() const PURE;
+	STDMETHOD_(BOOL,isInverseFillType)(THIS) SCONST PURE;
 
 	/**
 	*  Toggle between inverse and normal filltypes. This reverse the return
 	*  value of isInverseFillType()
 	*/
-	virtual void toggleInverseFillType() PURE;
+	STDMETHOD_(void,toggleInverseFillType)(THIS) PURE;
 
 	/**
 	*  Return the path's convexity, as stored in the path. If it is currently unknown,
 	*  then this function will attempt to compute the convexity (and cache the result).
 	*/
-	virtual Convexity getConvexity() const PURE;
+	STDMETHOD_(Convexity,getConvexity)(THIS) SCONST PURE;
 
 
 	/**
@@ -606,13 +877,13 @@ struct IPath : IRenderObj
 	*  changed (e.g. lineTo(), addRect(), etc.) then the cached value will be
 	*  reset to kUnknown_Convexity.
 	*/
-	virtual void setConvexity(Convexity c) PURE;
+	STDMETHOD_(void,setConvexity)(THIS_ Convexity c) PURE;
 
 	/**
 	*  Returns true if the path is flagged as being convex. This is not a
 	*  confirmed by any analysis, it is just the value set earlier.
 	*/
-	virtual bool isConvex() const PURE;
+	STDMETHOD_(BOOL,isConvex)(THIS) SCONST PURE;
 
 	/** Returns true if the path is an oval.
 	*
@@ -624,32 +895,32 @@ struct IPath : IRenderObj
 	*              optimization for performance and so some paths that are in
 	*              fact ovals can report false.
 	*/
-	virtual bool isOval(RECT* rect) const PURE;
+	STDMETHOD_(BOOL,isOval)(THIS_ RECT* rect) SCONST PURE;
 
 	/** Clear any lines and curves from the path, making it empty. This frees up
 	internal storage associated with those segments.
 	On Android, does not change fSourcePath.
 	*/
-	virtual void reset() PURE;
+	STDMETHOD_(void,reset)(THIS) PURE;
 
 	/** Similar to reset(), in that all lines and curves are removed from the
 	path. However, any internal storage for those lines/curves is retained,
 	making reuse of the path potentially faster.
 	On Android, does not change fSourcePath.
 	*/
-	virtual void rewind() PURE;
+	STDMETHOD_(void,rewind)(THIS) PURE;
 
 	/** Returns true if the path is empty (contains no lines or curves)
 
 	@return true if the path is empty (contains no lines or curves)
 	*/
-	virtual bool isEmpty() const PURE;
+	STDMETHOD_(BOOL,isEmpty)(THIS) SCONST PURE;
 
 	/**
 	*  Returns true if all of the points in this path are finite, meaning there
 	*  are no infinities and no NaNs.
 	*/
-	virtual bool isFinite() const PURE;
+	STDMETHOD_(BOOL,isFinite)(THIS) SCONST PURE;
 
 	/**
 	*  Returns true if the path specifies a single line (i.e. it contains just
@@ -657,7 +928,7 @@ struct IPath : IRenderObj
 	*  points in line[] to the end-points of the line. If the path is not a
 	*  line, returns false and ignores line[].
 	*/
-	virtual bool isLine(POINT line[2]) const PURE;
+	STDMETHOD_(BOOL,isLine)(THIS_ POINT line[2]) SCONST PURE;
 
 	/** Returns true if the path specifies a rectangle. If so, and if rect is
 	not null, set rect to the bounds of the path. If the path does not
@@ -667,17 +938,17 @@ struct IPath : IRenderObj
 	a rectangle
 	@return true if the path specifies a rectangle
 	*/
-	virtual bool isRect(RECT* rect) const PURE;
+	STDMETHOD_(BOOL,isRect)(THIS_ RECT* rect) SCONST PURE;
 
 	/** Return the number of points in the path
 	*/
-	virtual int countPoints() const PURE;
+	STDMETHOD_(int,countPoints)(THIS_ ) SCONST PURE;
 
 	/** Return the point at the specified index. If the index is out of range
 	(i.e. is not 0 <= index < countPoints()) then the returned coordinates
 	will be (0,0)
 	*/
-	virtual fPoint getPoint(int index) const PURE;
+	STDMETHOD_(fPoint,getPoint)(THIS_ int index) SCONST PURE;
 
 	/** Returns the number of points in the path. Up to max points are copied.
 
@@ -685,11 +956,11 @@ struct IPath : IRenderObj
 	@param max The maximum number of points to copy into points
 	@return the actual number of points in the path
 	*/
-	virtual int getPoints(fPoint points[], int max) const PURE;
+	STDMETHOD_(int,getPoints)(THIS_ fPoint points[], int max) SCONST PURE;
 
 	/** Return the number of verbs in the path
 	*/
-	virtual int countVerbs() const PURE;
+	STDMETHOD_(int,countVerbs)(THIS) SCONST PURE;
 
 	/** Returns the number of verbs in the path. Up to max verbs are copied. The
 	verbs are copied as one byte per verb.
@@ -698,14 +969,14 @@ struct IPath : IRenderObj
 	@param max The maximum number of verbs to copy into verbs
 	@return the actual number of verbs in the path
 	*/
-	virtual int getVerbs(BYTE verbs[], int max) const PURE;
+	STDMETHOD_(int,getVerbs)(THIS_ BYTE verbs[], int max) SCONST PURE;
 
 	/** Returns the bounds of the path's points. If the path contains 0 or 1
 	points, the bounds is set to (0,0,0,0), and isEmpty() will return true.
 	Note: this bounds may be larger than the actual shape, since curves
 	do not extend as far as their control points.
 	*/
-	virtual RECT getBounds() const PURE;
+	STDMETHOD_(RECT,getBounds)(THIS) SCONST PURE;
 
 
 
@@ -716,7 +987,7 @@ struct IPath : IRenderObj
 	@param x    The x-coordinate of the start of a new contour
 	@param y    The y-coordinate of the start of a new contour
 	*/
-	virtual void moveTo(float x, float y) PURE;
+	STDMETHOD_(void,moveTo)(THIS_ float x, float y) PURE;
 
 
 	/** Set the beginning of the next contour relative to the last point on the
@@ -728,7 +999,7 @@ struct IPath : IRenderObj
 	@param dy   The amount to add to the y-coordinate of the end of the
 	previous contour, to specify the start of a new contour
 	*/
-	virtual void rMoveTo(float dx, float dy) PURE;
+	STDMETHOD_(void,rMoveTo)(THIS_ float dx, float dy) PURE;
 
 	/** Add a line from the last point to the specified point (x,y). If no
 	moveTo() call has been made for this contour, the first point is
@@ -737,7 +1008,7 @@ struct IPath : IRenderObj
 	@param x    The x-coordinate of the end of a line
 	@param y    The y-coordinate of the end of a line
 	*/
-	virtual void lineTo(float x, float y) PURE;
+	STDMETHOD_(void,lineTo)(THIS_ float x, float y) PURE;
 
 
 	/** Same as lineTo, but the coordinates are considered relative to the last
@@ -749,7 +1020,7 @@ struct IPath : IRenderObj
 	@param dy   The amount to add to the y-coordinate of the previous point
 	on this contour, to specify a line
 	*/
-	virtual void rLineTo(float dx, float dy) PURE;
+	STDMETHOD_(void,rLineTo)(THIS_ float dx, float dy) PURE;
 
 	/** Add a quadratic bezier from the last point, approaching control point
 	(x1,y1), and ending at (x2,y2). If no moveTo() call has been made for
@@ -760,7 +1031,7 @@ struct IPath : IRenderObj
 	@param x2   The x-coordinate of the end point on a quadratic curve
 	@param y2   The y-coordinate of the end point on a quadratic curve
 	*/
-	virtual void quadTo(float x1, float y1, float x2, float y2)PURE;
+	STDMETHOD_(void,quadTo)(THIS_ float x1, float y1, float x2, float y2) PURE;
 
 
 	/** Same as quadTo, but the coordinates are considered relative to the last
@@ -776,11 +1047,11 @@ struct IPath : IRenderObj
 	@param dy2   The amount to add to the y-coordinate of the last point on
 	this contour, to specify the end point of a quadratic curve
 	*/
-	virtual void rQuadTo(float dx1, float dy1, float dx2, float dy2)PURE;
+	STDMETHOD_(void,rQuadTo)(THIS_ float dx1, float dy1, float dx2, float dy2) PURE;
 
-	virtual void conicTo(float x1, float y1, float x2, float y2,
+	STDMETHOD_(void,conicTo)(THIS_ float x1, float y1, float x2, float y2,
 		float w) PURE;
-	virtual void rConicTo(float dx1, float dy1, float dx2, float dy2,
+	STDMETHOD_(void,rConicTo)(THIS_ float dx1, float dy1, float dx2, float dy2,
 		float w) PURE;
 
 	/** Add a cubic bezier from the last point, approaching control points
@@ -794,8 +1065,8 @@ struct IPath : IRenderObj
 	@param x3   The x-coordinate of the end point on a cubic curve
 	@param y3   The y-coordinate of the end point on a cubic curve
 	*/
-	virtual void cubicTo(float x1, float y1, float x2, float y2,
-		float x3, float y3)PURE;
+	STDMETHOD_(void,cubicTo)(THIS_ float x1, float y1, float x2, float y2,
+		float x3, float y3) PURE;
 
 
 	/** Same as cubicTo, but the coordinates are considered relative to the
@@ -815,8 +1086,8 @@ struct IPath : IRenderObj
 	@param dy3   The amount to add to the y-coordinate of the last point on
 	this contour, to specify the end point of a cubic curve
 	*/
-	virtual void rCubicTo(float x1, float y1, float x2, float y2,
-		float x3, float y3)PURE;
+	STDMETHOD_(void,rCubicTo)(THIS_ float x1, float y1, float x2, float y2,
+		float x3, float y3) PURE;
 
 	/** Append the specified arc to the path as a new contour. If the start of
 	the path is different from the path's current last point, then an
@@ -830,29 +1101,20 @@ struct IPath : IRenderObj
 	treated mod 360.
 	@param forceMoveTo If true, always begin a new contour with the arc
 	*/
-	virtual void arcTo(const RECT& oval, float startAngle, float sweepAngle,
-		bool forceMoveTo)PURE;
+	STDMETHOD_(void,arcTo)(THIS_ const RECT& oval, float startAngle, float sweepAngle,
+		bool forceMoveTo) PURE;
 
 	/** Append a line and arc to the current path. This is the same as the
 	PostScript call "arct".
 	*/
-	virtual void arcTo(float x1, float y1, float x2, float y2,
-		float radius)PURE;
+	STDMETHOD_(void,arcTo)(THIS_ float x1, float y1, float x2, float y2,
+		float radius) PURE;
 
 
 	/** Close the current contour. If the current point is not equal to the
 	first point of the contour, a line segment is automatically added.
 	*/
-	virtual void close()PURE;
-
-	enum Direction {
-		/** Direction either has not been or could not be computed */
-		kUnknown_Direction,
-		/** clockwise direction for adding closed contours */
-		kCW_Direction,
-		/** counter-clockwise direction for adding closed contours */
-		kCCW_Direction,
-	};
+	STDMETHOD_(void,close)(THIS) PURE;
 
 
 	/** Returns true if the path specifies a rectangle. If so, and if isClosed is
@@ -864,7 +1126,7 @@ struct IPath : IRenderObj
 	@param direction If not null, set to the rectangle's direction
 	@return true if the path specifies a rectangle
 	*/
-	virtual bool isRect(bool* isClosed, Direction* direction) const PURE;
+	STDMETHOD_(BOOL,isRect)(THIS_ bool* isClosed, Direction* direction) SCONST PURE;
 
 	/**
 	*  Add a closed rectangle contour to the path
@@ -872,7 +1134,7 @@ struct IPath : IRenderObj
 	*  @param dir  The direction to wind the rectangle's contour. Cannot be
 	*              kUnknown_Direction.
 	*/
-	virtual void addRect(const RECT& rect, Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addRect)(THIS_ const RECT& rect, Direction dir /*= kCW_Direction*/) PURE;
 
 	/**
 	*  Add a closed rectangle contour to the path
@@ -888,8 +1150,8 @@ struct IPath : IRenderObj
 	*  @param dir  The direction to wind the rectangle's contour. Cannot be
 	*              kUnknown_Direction.
 	*/
-	virtual void addRect(float left, float top, float right, float bottom,
-		Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addRect)(THIS_ float left, float top, float right, float bottom,
+		Direction dir/* = kCW_Direction*/) PURE;
 
 	/**
 	*  Add a closed oval contour to the path
@@ -898,7 +1160,7 @@ struct IPath : IRenderObj
 	*  @param dir  The direction to wind the oval's contour. Cannot be
 	*              kUnknown_Direction.
 	*/
-	virtual void addOval(const RECT& oval, Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addOval)(THIS_ const RECT * oval, Direction dir/*= kCW_Direction*/) PURE;
 
 	/**
 	*  Add a closed circle contour to the path
@@ -912,8 +1174,8 @@ struct IPath : IRenderObj
 	*  @param dir  The direction to wind the circle's contour. Cannot be
 	*              kUnknown_Direction.
 	*/
-	virtual void addCircle(float x, float y, float radius,
-		Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addCircle)(THIS_ float x, float y, float radius,
+		Direction dir /*= kCW_Direction*/) PURE;
 
 	/** Add the specified arc to the path as a new contour.
 
@@ -921,7 +1183,7 @@ struct IPath : IRenderObj
 	@param startAngle Starting angle (in degrees) where the arc begins
 	@param sweepAngle Sweep angle (in degrees) measured clockwise
 	*/
-	virtual void addArc(const RECT& oval, float startAngle, float sweepAngle)PURE;
+	STDMETHOD_(void,addArc)(THIS_ const RECT* oval, float startAngle, float sweepAngle) PURE;
 
 	/**
 	*  Add a closed round-rectangle contour to the path
@@ -931,8 +1193,8 @@ struct IPath : IRenderObj
 	*  @param dir  The direction to wind the rectangle's contour. Cannot be
 	*              kUnknown_Direction.
 	*/
-	virtual void addRoundRect(const RECT& rect, float rx, float ry,
-		Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addRoundRect)(THIS_ const RECT* rect, float rx, float ry,
+		Direction dir/* = kCW_Direction*/) PURE;
 
 	/**
 	*  Add a closed round-rectangle contour to the path. Each corner receives
@@ -946,8 +1208,8 @@ struct IPath : IRenderObj
 	*       SkRRect radii (i.e., either radii at a corner being 0 implies a
 	*       sqaure corner and oversized radii are proportionally scaled down).
 	*/
-	virtual void addRoundRect(const RECT& rect, const float radii[],
-		Direction dir = kCW_Direction)PURE;
+	STDMETHOD_(void,addRoundRect)(THIS_ const RECT* rect, const float radii[],
+		Direction dir/* = kCW_Direction*/) PURE;
 
 
 	/**
@@ -961,34 +1223,22 @@ struct IPath : IRenderObj
 	*          this->close();
 	*      }
 	*/
-	virtual void addPoly(const POINT pts[], int count, bool close) PURE;
+	STDMETHOD_(void,addPoly)(THIS_ const POINT pts[], int count, bool close) PURE;
 
-	enum AddPathMode {
-		/** Source path contours are added as new contours.
-		*/
-		kAppend_AddPathMode,
-		/** Path is added by extending the last contour of the destination path
-		with the first contour of the source path. If the last contour of
-		the destination path is closed, then it will not be extended.
-		Instead, the start of source path will be extended by a straight
-		line to the end point of the destination path.
-		*/
-		kExtend_AddPathMode
-	};
 
 	/** Add a copy of src to the path, offset by (dx,dy)
 	@param src  The path to add as a new contour
 	@param dx   The amount to translate the path in X as it is added
 	@param dx   The amount to translate the path in Y as it is added
 	*/
-	virtual void addPath(const IPath * src, float dx, float dy,
-		AddPathMode mode = kAppend_AddPathMode) PURE;
+	STDMETHOD_(void,addPath)(THIS_ const IPath * src, float dx, float dy,
+		AddPathMode mode /*= kAppend_AddPathMode*/) PURE;
 
 
 	/**
 	*  Same as addPath(), but reverses the src input
 	*/
-	virtual void reverseAddPath(const IPath* src) PURE;
+	STDMETHOD_(void,reverseAddPath)(THIS_ const IPath* src) PURE;
 
 
 	/** Offset the path by (dx,dy), returning true on success
@@ -996,13 +1246,13 @@ struct IPath : IRenderObj
 	@param dx   The amount in the X direction to offset the entire path
 	@param dy   The amount in the Y direction to offset the entire path
 	*/
-	virtual void offset(float dx, float dy) PURE;
+	STDMETHOD_(void,offset)(THIS_ float dx, float dy) PURE;
 
 	/** Transform the points in this path by matrix
 
 	@param matrix The matrix to apply to the path
 	*/
-	virtual void transform(const IxForm * matrix) PURE;
+	STDMETHOD_(void,transform)(THIS_ const IxForm * matrix) PURE;
 
 	/** Return the last point on the path. If no points have been added, (0,0)
 	is returned. If there are no points, this returns false, otherwise it
@@ -1010,7 +1260,7 @@ struct IPath : IRenderObj
 
 	@param lastPt   The last point on the path is returned here
 	*/
-	virtual bool getLastPt(POINT* lastPt) const PURE;
+	STDMETHOD_(BOOL,getLastPt)(THIS_ POINT* lastPt) SCONST PURE;
 
 	/** Set the last point on the path. If no points have been added,
 	moveTo(x,y) is automatically called.
@@ -1018,9 +1268,9 @@ struct IPath : IRenderObj
 	@param x    The new x-coordinate for the last point
 	@param y    The new y-coordinate for the last point
 	*/
-	virtual void setLastPt(float x, float y) PURE;
+	STDMETHOD_(void,setLastPt)(THIS_ float x, float y) PURE;
 
-	virtual void addString(LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont) PURE;
+	STDMETHOD_(void,addString)(THIS_ LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont) PURE;
 
 	// Returns a float[] with each point along the path represented by 3 floats
 	// * fractional length along the path that the point resides
@@ -1029,21 +1279,38 @@ struct IPath : IRenderObj
 	// Note that more than one point may have the same length along the path in
 	// the case of a move.
 	// NULL can be returned if the Path is empty.
-	virtual IPathInfo* approximate(float acceptableError) PURE;
+	STDMETHOD_(IPathInfo*, approximate)(THIS_ float acceptableError) PURE;
 };
 
-struct IPathMeasure : IObjRef
+#undef INTERFACE
+#define INTERFACE IPathMeasure
+DECLARE_INTERFACE_(IPathMeasure,IObjRef)
 {
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
 	/**
 	* Assign a new path, or null to have none.
 	*/
-	virtual void setPath(IPath * path, bool forceClosed) =0;
+	STDMETHOD_(void,setPath)(THIS_ IPath * path, bool forceClosed) PURE;
 
 	/**
 	* Return the total length of the current contour, or 0 if no path is
 	* associated with this measure object.
 	*/
-	virtual float getLength()  = 0;
+	STDMETHOD_(float,getLength)(THIS)  PURE;
 
 	/**
 	* Pins distance to 0 <= distance <= getLength(), and then computes the
@@ -1056,7 +1323,7 @@ struct IPathMeasure : IObjRef
 	* @param tan If not null, returns the sampled tangent (x==[0], y==[1])
 	* @return false if there was no path associated with this measure object
 	*/
-	virtual bool getPosTan(float distance, float pos[], float tan[])  = 0;
+	STDMETHOD_(BOOL,getPosTan)(THIS_ float distance, float pos[], float tan[])  PURE;
 
 	/**
 	* Given a start and stop distance, return in dst the intervening
@@ -1070,7 +1337,7 @@ struct IPathMeasure : IObjRef
 	* Canvas. A simple workaround is to add a single operation to this path,
 	* such as <code>dst.rLineTo(0, 0)</code>.</p>
 	*/
-	virtual bool getSegment(float startD, float stopD, IPath * dst, bool startWithMoveTo)  = 0;
+	STDMETHOD_(BOOL,getSegment)(THIS_ float startD, float stopD, IPath * dst, bool startWithMoveTo)  PURE;
 };
 
 
@@ -1080,72 +1347,89 @@ struct IPathMeasure : IObjRef
 * 
 * Describe    实现各位渲染接口并创建设备相关资源
 */
-struct IRenderTarget: public SObject
+#undef INTERFACE
+#define INTERFACE IRenderTarget
+DECLARE_INTERFACE_(IRenderTarget,IObjRef)
 {
-	virtual HRESULT CreateCompatibleRenderTarget(SIZE szTarget,IRenderTarget **ppRenderTarget)=0;
-	virtual HRESULT CreatePen(int iStyle,COLORREF cr,int cWidth,IPen ** ppPen)=0;
-	virtual HRESULT CreateSolidColorBrush(COLORREF cr,IBrush ** ppBrush)=0;
-	virtual HRESULT CreateBitmapBrush( IBitmap *pBmp,IBrush ** ppBrush )=0;
-	virtual HRESULT CreateRegion( IRegion ** ppRegion )=0;
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
 
-	virtual HRESULT Resize(SIZE sz)=0;
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
 
-	virtual HRESULT OffsetViewportOrg(int xOff, int yOff, LPPOINT lpPoint=NULL)=0;
-	virtual HRESULT GetViewportOrg(LPPOINT lpPoint) =0;
-	virtual HRESULT SetViewportOrg(POINT pt) =0;
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
-	virtual HRESULT PushClipRect(LPCRECT pRect,UINT mode=RGN_AND)=0;
-	virtual HRESULT PushClipRegion(IRegion *pRegion,UINT mode=RGN_AND)=0;
-	virtual HRESULT PopClip()=0;
+	STDMETHOD_(HRESULT,CreateCompatibleRenderTarget)(THIS_ SIZE szTarget,IRenderTarget **ppRenderTarget) PURE;
+	STDMETHOD_(HRESULT,CreatePen)(THIS_ int iStyle,COLORREF cr,int cWidth,IPen ** ppPen) PURE;
+	STDMETHOD_(HRESULT,CreateSolidColorBrush)(THIS_ COLORREF cr,IBrush ** ppBrush) PURE;
+	STDMETHOD_(HRESULT,CreateBitmapBrush)(THIS_ IBitmap *pBmp,IBrush ** ppBrush ) PURE;
+	STDMETHOD_(HRESULT,CreateRegion)(THIS_ IRegion ** ppRegion ) PURE;
 
-	virtual HRESULT ExcludeClipRect(LPCRECT pRc)=0;
-	virtual HRESULT IntersectClipRect(LPCRECT pRc)=0;
+	STDMETHOD_(HRESULT,Resize)(THIS_ SIZE sz) PURE;
 
-	virtual HRESULT SaveClip(int *pnState)=0;
-	virtual HRESULT RestoreClip(int nState=-1)=0;
+	STDMETHOD_(HRESULT,OffsetViewportOrg)(THIS_ int xOff, int yOff, LPPOINT lpPoint/*=NULL*/) PURE;
+	STDMETHOD_(HRESULT,GetViewportOrg)(THIS_ LPPOINT lpPoint) PURE;
+	STDMETHOD_(HRESULT,SetViewportOrg)(THIS_ POINT pt) PURE;
 
-	virtual HRESULT GetClipRegion(IRegion **ppRegion)=0;
-	virtual HRESULT GetClipBox(LPRECT prc)=0;
+	STDMETHOD_(HRESULT,PushClipRect)(THIS_ LPCRECT pRect,UINT mode/*=RGN_AND*/) PURE;
+	STDMETHOD_(HRESULT,PushClipRegion)(THIS_ IRegion *pRegion,UINT mode/*=RGN_AND*/) PURE;
+	STDMETHOD_(HRESULT,PopClip)(THIS) PURE;
 
-	virtual HRESULT DrawText(LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat)=0;
-	virtual HRESULT MeasureText(LPCTSTR pszText,int cchLen, SIZE *psz) =0;
-	virtual HRESULT TextOut(int x,int y, LPCTSTR lpszString,int nCount) =0;
+	STDMETHOD_(HRESULT,ExcludeClipRect)(THIS_ LPCRECT pRc) PURE;
+	STDMETHOD_(HRESULT,IntersectClipRect)(THIS_ LPCRECT pRc) PURE;
 
-	virtual HRESULT DrawRectangle(LPCRECT pRect)=0;
-	virtual HRESULT FillRectangle(LPCRECT pRect)=0;
-	virtual HRESULT FillSolidRect(LPCRECT pRect,COLORREF cr)=0;
-	virtual HRESULT DrawRoundRect(LPCRECT pRect,POINT pt)=0;
-	virtual HRESULT FillRoundRect(LPCRECT pRect,POINT pt)=0;
-	virtual HRESULT FillSolidRoundRect(LPCRECT pRect,POINT pt,COLORREF cr)=0;
-	virtual HRESULT ClearRect(LPCRECT pRect,COLORREF cr)=0;
-	virtual HRESULT InvertRect(LPCRECT pRect) = 0;
-	virtual HRESULT DrawEllipse(LPCRECT pRect)=0;
-	virtual HRESULT FillEllipse(LPCRECT pRect)=0;
-	virtual HRESULT FillSolidEllipse(LPCRECT pRect,COLORREF cr)=0;
+	STDMETHOD_(HRESULT,SaveClip)(THIS_ int *pnState) PURE;
+	STDMETHOD_(HRESULT,RestoreClip)(THIS_ int nState/*=-1*/) PURE;
 
-	virtual HRESULT DrawArc(LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter) =0;
-	virtual HRESULT FillArc(LPCRECT pRect,float startAngle,float sweepAngle) =0;
+	STDMETHOD_(HRESULT,GetClipRegion)(THIS_ IRegion **ppRegion) PURE;
+	STDMETHOD_(HRESULT,GetClipBox)(THIS_ LPRECT prc) PURE;
 
-	virtual HRESULT DrawLines(LPPOINT pPt,size_t nCount) =0;
-	virtual HRESULT GradientFill(LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha=0xFF)=0;
-	virtual HRESULT GradientFillEx( LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha=0xFF )=0;
-	virtual HRESULT GradientFill2(LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha=0xff) = 0;
-	virtual HRESULT DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags)=0;
-	virtual HRESULT DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha=0xFF)=0;
-	virtual HRESULT DrawBitmapEx(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha=0xFF)=0;
-	virtual HRESULT DrawBitmap9Patch(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha=0xFF) =0;
-	virtual HRESULT BitBlt(LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop=kSrcCopy)=0;
-	virtual HRESULT AlphaBlend(LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha) =0;
-	virtual IRenderObj * GetCurrentObject(OBJTYPE uType) =0;
+	STDMETHOD_(HRESULT,DrawText)(THIS_ LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat) PURE;
+	STDMETHOD_(HRESULT,MeasureText)(THIS_ LPCTSTR pszText,int cchLen, SIZE *psz) PURE;
+	STDMETHOD_(HRESULT,TextOut)(THIS_ int x,int y, LPCTSTR lpszString,int nCount) PURE;
+
+	STDMETHOD_(HRESULT,DrawRectangle)(THIS_ LPCRECT pRect) PURE;
+	STDMETHOD_(HRESULT,FillRectangle)(THIS_ LPCRECT pRect) PURE;
+	STDMETHOD_(HRESULT,FillSolidRect)(THIS_ LPCRECT pRect,COLORREF cr) PURE;
+	STDMETHOD_(HRESULT,DrawRoundRect)(THIS_ LPCRECT pRect,POINT pt) PURE;
+	STDMETHOD_(HRESULT,FillRoundRect)(THIS_ LPCRECT pRect,POINT pt) PURE;
+	STDMETHOD_(HRESULT,FillSolidRoundRect)(THIS_ LPCRECT pRect,POINT pt,COLORREF cr) PURE;
+	STDMETHOD_(HRESULT,ClearRect)(THIS_ LPCRECT pRect,COLORREF cr) PURE;
+	STDMETHOD_(HRESULT,InvertRect)(THIS_ LPCRECT pRect) PURE;
+	STDMETHOD_(HRESULT,DrawEllipse)(THIS_ LPCRECT pRect) PURE;
+	STDMETHOD_(HRESULT,FillEllipse)(THIS_ LPCRECT pRect) PURE;
+	STDMETHOD_(HRESULT,FillSolidEllipse)(THIS_ LPCRECT pRect,COLORREF cr) PURE;
+
+	STDMETHOD_(HRESULT,DrawArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter) PURE;
+	STDMETHOD_(HRESULT,FillArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle) PURE;
+
+	STDMETHOD_(HRESULT,DrawLines)(THIS_ LPPOINT pPt,size_t nCount) PURE;
+	STDMETHOD_(HRESULT,GradientFill)(THIS_ LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha/*=0xFF*/) PURE;
+	STDMETHOD_(HRESULT,GradientFillEx)(THIS_ LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha/*=0xFF*/ ) PURE;
+	STDMETHOD_(HRESULT,GradientFill2)(THIS_ LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha/*=0xFF*/) PURE;
+	STDMETHOD_(HRESULT,DrawIconEx)(THIS_ int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags) PURE;
+	STDMETHOD_(HRESULT,DrawBitmap)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/) PURE;
+	STDMETHOD_(HRESULT,DrawBitmapEx)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha/*=0xFF*/) PURE;
+	STDMETHOD_(HRESULT,DrawBitmap9Patch)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha/*=0xFF*/) PURE;
+	STDMETHOD_(HRESULT,BitBlt)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop/*=kSrcCopy*/) PURE;
+	STDMETHOD_(HRESULT,AlphaBlend)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha) PURE;
+	STDMETHOD_(IRenderObj *,GetCurrentObject)(THIS_ OBJTYPE uType) PURE;
 	//将指定的RenderObj恢复为默认状态
-	virtual HRESULT SelectDefaultObject(OBJTYPE objType, IRenderObj ** pOldObj = NULL) =0;
-	virtual HRESULT SelectObject(IRenderObj *pObj,IRenderObj ** pOldObj = NULL) =0;
-	virtual COLORREF GetTextColor() =0;
-	virtual COLORREF SetTextColor(COLORREF color)=0;
+	STDMETHOD_(HRESULT,SelectDefaultObject)(THIS_ OBJTYPE objType, IRenderObj ** pOldObj/* = NULL*/) PURE;
+	STDMETHOD_(HRESULT,SelectObject)(THIS_ IRenderObj *pObj,IRenderObj ** pOldObj/* = NULL*/) PURE;
+	STDMETHOD_(COLORREF,GetTextColor)(THIS) PURE;
+	STDMETHOD_(COLORREF,SetTextColor)(THIS_ COLORREF color) PURE;
 
 	//两个兼容GDI操作的接口
-	virtual HDC GetDC(UINT uFlag=0)=0;
-	virtual void ReleaseDC(HDC hdc) =0;
+	STDMETHOD_(HDC,GetDC)(THIS_ UINT uFlag) PURE;
+	STDMETHOD_(void,ReleaseDC)(THIS_ HDC hdc) PURE;
 
 	/**
 	* SetTransform
@@ -1156,7 +1440,7 @@ struct IRenderTarget: public SObject
 	*
 	* Describe  
 	*/
-	virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]=NULL) = 0;
+	STDMETHOD_(HRESULT,SetTransform)(THIS_ const float matrix[9], float oldMatrix[9]/*=NULL*/) PURE;
 
 	/**
 	* SetTransform
@@ -1166,7 +1450,7 @@ struct IRenderTarget: public SObject
 	*
 	* Describe  
 	*/        
-	virtual HRESULT GetTransform(float matrix[9]) const = 0;
+	STDMETHOD_(HRESULT,GetTransform)(THIS_ float matrix[9]) SCONST PURE;
 
 
 	/**
@@ -1178,7 +1462,7 @@ struct IRenderTarget: public SObject
 	*
 	* Describe  和::GetPixel一致
 	*/
-	virtual COLORREF GetPixel(int x, int y) = 0;
+	STDMETHOD_(COLORREF,GetPixel)(THIS_ int x, int y) PURE;
 
 	/**
 	* SetPixel
@@ -1190,7 +1474,7 @@ struct IRenderTarget: public SObject
 	*
 	* Describe  和::SetPixel一致
 	*/
-	virtual COLORREF SetPixel(int x, int y, COLORREF cr) = 0;
+	STDMETHOD_(COLORREF,SetPixel)(THIS_ int x, int y, COLORREF cr) PURE;
 
 	/**
 	*  Modify the current clip with the specified path.
@@ -1198,17 +1482,17 @@ struct IRenderTarget: public SObject
 	*  @param mode The region op to apply to the current clip
 	*  @param doAntiAlias true if the clip should be anti aliased
 	*/
-	virtual HRESULT PushClipPath(const IPath * path, UINT mode, bool doAntiAlias = false) = 0;
+	STDMETHOD_(HRESULT,PushClipPath)(THIS_ const IPath * path, UINT mode, bool doAntiAlias = false) PURE;
 
 	/** Draw the specified path frame using current selected pen
 	@param path     The path to be drawn
 	*/
-	virtual HRESULT DrawPath(const IPath * path,IPathEffect * pathEffect=NULL) = 0;
+	STDMETHOD_(HRESULT,DrawPath)(THIS_ const IPath * path,IPathEffect * pathEffect=NULL) PURE;
 
 	/** Fill the specified path frame using current selected brush
 	@param path     The path to be drawn
 	*/
-	virtual HRESULT FillPath(const IPath * path) = 0;
+	STDMETHOD_(HRESULT,FillPath)(THIS_ const IPath * path) PURE;
 
 	/** This behaves the same as save(), but in addition it allocates an
 	offscreen bitmap. All drawing calls are directed there, and only when
@@ -1221,15 +1505,16 @@ struct IRenderTarget: public SObject
 	@param byAlpha  This is applied to the offscreen when restore() is called.
 	@return The value to pass to restoreToCount() to balance this save() 
 	*/
-	virtual HRESULT PushLayer(const RECT * pRect,BYTE byAlpha=0xff) = 0;
+	STDMETHOD_(HRESULT,PushLayer)(THIS_ const RECT * pRect,BYTE byAlpha/*=0xFF*/) PURE;
 
-	virtual HRESULT PopLayer() = 0;
+	STDMETHOD_(HRESULT,PopLayer)(THIS) PURE;
 
-	virtual HRESULT SetXfermode(int mode,int *pOldMode=NULL) = 0;
-	virtual BOOL SetAntiAlias(BOOL bAntiAlias) = 0;
+	STDMETHOD_(HRESULT,SetXfermode)(THIS_ int mode,int *pOldMode/*=NULL*/) PURE;
+	STDMETHOD_(BOOL,SetAntiAlias)(THIS_ BOOL bAntiAlias) PURE;
+	STDMETHOD_(BOOL,GetAntiAlias)(THIS) SCONST PURE;
 };
 
-
+/*
 inline HRESULT IBitmap::Clone(IBitmap **ppClone) const 
 {
 	HRESULT hr = E_UNEXPECTED;
@@ -1287,5 +1572,5 @@ inline HRESULT IBitmap::Save(LPCWSTR pszFileName,const LPVOID pFormat)
 {
 	return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(this,pszFileName,pFormat);
 }
-
+*/
 SNSEND

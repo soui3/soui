@@ -294,7 +294,7 @@ namespace SOUI
         pRT->DrawLines(pts,2);
         CPoint pts2[2]={CPoint(rcNameBack.right,rcNameBack.top),rcNameBack.BottomRight()};
         pRT->DrawLines(pts2,2);
-        pRT->SelectObject(oldPen);
+        pRT->SelectObject(oldPen,NULL);
 
     }
 

@@ -46,12 +46,12 @@ void SQrCtrl::MakeCacheApha( ISkinObj *pSkin, IBitmap *_pBitCache, IBitmap *_pBi
 	}
 	else
 	{
-		bmp->Init(m_QrRect.Width(),	m_QrRect.Height());
+		bmp->Init(m_QrRect.Width(),	m_QrRect.Height(),NULL);
 		pRTDst->SelectObject(bmp, NULL);
 		CRect rcSrc(CPoint(0, 0), _pBitMask->Size());
 		rc = CRect(CPoint(0, 0), bmp->Size());
-		pRTDst->DrawBitmapEx(rc, _pBitMask, rcSrc, MAKELONG(EM_STRETCH, m_fl));
-		pRTDst->SelectObject(pOldBmp);
+		pRTDst->DrawBitmapEx(rc, _pBitMask, rcSrc, MAKELONG(EM_STRETCH, m_fl),0xff);
+		pRTDst->SelectObject(pOldBmp,NULL);
 	}
 
 
@@ -101,7 +101,7 @@ void SQrCtrl::CreateQrImg( SStringT strContent )
 			int qrSize = qrEncode.m_nSymbleSize + (QR_MARGIN * 2);
 			SAutoRefPtr<IBitmap> bmp;
 			GETRENDERFACTORY->CreateBitmap(&bmp);
-			bmp->Init(qrSize, qrSize);
+			bmp->Init(qrSize, qrSize,NULL);
 			LPDWORD pBits = (LPDWORD)bmp->LockPixelBits();
 			memset(pBits, 0xFF, qrSize*qrSize * 4);
 			int nLineWid = qrSize;
@@ -129,11 +129,11 @@ void SQrCtrl::CreateQrImg( SStringT strContent )
 			SIZE skinSize = m_pSkin->GetSkinSize();
 			CRect rcWind = GetWindowRect();
 
-			bmp->Init(rcWind.Width(), rcWind.Height());
+			bmp->Init(rcWind.Width(), rcWind.Height(),NULL);
 
 			SAutoRefPtr<IBitmap> qrbmp;
 			GETRENDERFACTORY->CreateBitmap(&qrbmp);
-			qrbmp->Init(qrSize, qrSize);
+			qrbmp->Init(qrSize, qrSize,NULL);
 			LPDWORD pBits = (LPDWORD)qrbmp->LockPixelBits();
 			memset(pBits, 0x00, qrSize*qrSize * 4);
 			int nLineWid = qrSize;

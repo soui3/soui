@@ -46,7 +46,7 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
         pRT->SetTransform(matrix.GetData(), NULL);
         pRT->DrawBitmapEx(rcDraw, pointer_second, &rcSrc, EM_STRETCH, 255);
     }
-	pRT->SetTransform(SMatrix().GetData());
+	pRT->SetTransform(SMatrix().GetData(),NULL);
 }
 
 SMatrix SClock::InitMatrix(double angle, CPoint &center)

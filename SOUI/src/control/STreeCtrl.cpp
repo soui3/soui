@@ -827,7 +827,7 @@ void STreeCtrl::DrawItem(IRenderTarget *pRT, const CRect & rc, HSTREEITEM hItem)
     CRect rcItemBg;
     LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
 
-    pRT->OffsetViewportOrg(rc.left + pItem->nLevel * m_nIndent,rc.top);
+    pRT->OffsetViewportOrg(rc.left + pItem->nLevel * m_nIndent,rc.top,NULL);
 
     rcItemBg.SetRect( m_nItemOffset + m_nItemMargin, 0, pItem->nContentWidth, m_nItemHei);
     if(rcItemBg.right > rc.Width() - pItem->nLevel * m_nIndent)
@@ -889,7 +889,7 @@ void STreeCtrl::DrawItem(IRenderTarget *pRT, const CRect & rc, HSTREEITEM hItem)
     if (bTextColorChanged)
         pRT->SetTextColor(crOldText);
 
-    pRT->OffsetViewportOrg(-rc.left  - pItem->nLevel * m_nIndent,-rc.top);
+    pRT->OffsetViewportOrg(-rc.left  - pItem->nLevel * m_nIndent,-rc.top,NULL);
 }
 
 void STreeCtrl::DrawLines(IRenderTarget * pRT, const CRect & rc, HSTREEITEM hItem)

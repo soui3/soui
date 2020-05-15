@@ -2,417 +2,426 @@
 
 #include <helper/SColor.h>
 #include <helper/obj-ref-impl.hpp>
-
+#include <sobject/Sobject.hpp>
 #include <string/tstring.h>
 #include <string/strcpcvt.h>
 #include <interface/SRender-i.h>
 #include <souicoll.h>
 
-namespace SOUI
+SNSBEGIN
+
+//////////////////////////////////////////////////////////////////////////
+// SRenderFactory_GDI
+class SRenderFactory_GDI : public TObjRefImpl<IRenderFactory>
 {
+public:
+	SRenderFactory_GDI()
+	{
+	}
 
+	~SRenderFactory_GDI()
+	{
+	}
 
-    //////////////////////////////////////////////////////////////////////////
-    // SRenderFactory_GDI
-    class SRenderFactory_GDI : public TObjRefImpl<IRenderFactory>
-    {
-    public:
-        SRenderFactory_GDI()
-        {
-        }
-
-        ~SRenderFactory_GDI()
-        {
-        }
-        
-        virtual IImgDecoderFactory * GetImgDecoderFactory(){return m_imgDecoderFactory;}
-        virtual void SetImgDecoderFactory(IImgDecoderFactory *pImgDecoderFac){ m_imgDecoderFactory=pImgDecoderFac;}
-        virtual BOOL CreateRenderTarget(IRenderTarget ** ppRenderTarget,int nWid,int nHei);
-        virtual BOOL CreateFont(IFont ** ppFont , const LOGFONT &lf);
-        virtual BOOL CreateBitmap(IBitmap ** ppBitmap);
-        virtual BOOL CreateRegion(IRegion **ppRgn);
-
-		virtual BOOL CreatePath(IPath ** ppPath);
-
-		virtual BOOL CreatePathEffect(REFGUID guidEffect,IPathEffect ** ppPathEffect);
-		
-		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure);
-    protected:
-        SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
-    };
-
-
-    //////////////////////////////////////////////////////////////////////////
-    // TGdiRenderObjImpl
-    template<class T>
-    class TGdiRenderObjImpl : public TObjRefImpl< SObjectImpl<T> >
-    {
-    public:
-        TGdiRenderObjImpl(IRenderFactory * pRenderFac):m_pRenderFactory(pRenderFac)
-        {
-
-        }
-        
-        virtual ~TGdiRenderObjImpl(){}
-
-        virtual IRenderFactory * GetRenderFactory() const
-        {
-            return m_pRenderFactory;
-        }
-
-    protected:
-        IRenderFactory *m_pRenderFactory;
-
-    };
-
-
-    //////////////////////////////////////////////////////////////////////////
-    // SPen_GDI
-    class SPen_GDI : public TGdiRenderObjImpl<IPen>
-    {
-		SOUI_CLASS_NAME(SPen_GDI,L"pen")
-	public:
-        SPen_GDI(IRenderFactory * pRenderFac,int iStyle=PS_SOLID,COLORREF cr=0,int cWidth=1)
-            :TGdiRenderObjImpl<IPen>(pRenderFac)
-            ,m_nWidth(cWidth),m_style(iStyle),m_cr(cr)
-            ,m_hPen(NULL)
-        {
-			if (iStyle & PS_GEOMETRIC)
-			{
-				LOGBRUSH lb;
-				lb.lbStyle = BS_SOLID;
-				lb.lbColor = m_cr & 0x00ffffff;
-				lb.lbHatch = 0;
-				m_hPen = ::ExtCreatePen(m_style | PS_GEOMETRIC, m_nWidth, &lb, 0, NULL);
-			}
-			else
-			{
-				m_hPen = ::CreatePen(m_style , m_nWidth, m_cr & 0x00ffffff);
-			}
-        }
-
-        ~SPen_GDI()
-        {
-            DeleteObject(m_hPen);
-        }
-
-        int GetWidth(){return m_nWidth;}
-
-        int GetStyle(){return m_style;}
-
-        void SetWidth(int nWid) {m_nWidth=nWid;}
-
-        COLORREF GetColor(){return m_cr;}
-
-        void SetColor(COLORREF cr){m_cr = cr;}
-        
-        HPEN GetPen(){return m_hPen;}
-    protected:
-
-        int		m_style;
-        int		m_nWidth;
-        COLORREF	m_cr;
-        
-        HPEN    m_hPen;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // SFont_GDI
-    class SFont_GDI: public TGdiRenderObjImpl<IFont>
-    {
-		SOUI_CLASS_NAME(SFont_GDI,L"font")
-    public:
-        SFont_GDI(IRenderFactory * pRenderFac,const LOGFONT * plf)
-            :TGdiRenderObjImpl<IFont>(pRenderFac),m_hFont(NULL)
-        {
-            memcpy(&m_lf,plf,sizeof(LOGFONT));
-            m_hFont=CreateFontIndirect(&m_lf);
-        }
-        ~SFont_GDI()
-        {
-            DeleteObject(m_hFont);
-        }
-
-        virtual const LOGFONT * LogFont() const {return &m_lf;}
-
-        virtual LPCTSTR FamilyName()
-        {
-            return m_lf.lfFaceName;
-        }
-        virtual int TextSize(){return m_lf.lfHeight;}
-        virtual BOOL IsBold(){ return m_lf.lfWeight == FW_BOLD;}
-        virtual BOOL IsUnderline(){return m_lf.lfUnderline;}
-        virtual BOOL IsItalic(){return m_lf.lfItalic;}
-        virtual BOOL IsStrikeOut(){return m_lf.lfStrikeOut;}
-
-		virtual BOOL UpdateFont(const LOGFONT *pLogFont)
-		{
-			if(!m_hFont) return FALSE;
-			DeleteObject(m_hFont);
-			memcpy(&m_lf,pLogFont,sizeof(LOGFONT));
-			m_hFont = CreateFontIndirect(&m_lf);
-			return TRUE;
-		}
-
-        HFONT GetFont(){return m_hFont;}
-    protected:
-        LOGFONT     m_lf;
-        HFONT       m_hFont;
-    };
-
-    class SBrush_GDI : public TGdiRenderObjImpl<IBrush>
-    {
-		SOUI_CLASS_NAME(SBrush_GDI,L"brush")
-    public:
-        static SBrush_GDI * CreateSolidBrush(IRenderFactory * pRenderFac,COLORREF cr){
-            return new SBrush_GDI(pRenderFac,cr);
-        }
-
-        static SBrush_GDI * CreateBitmapBrush(IRenderFactory * pRenderFac,HBITMAP hBmp)
-        {
-            return new SBrush_GDI(pRenderFac,hBmp);
-        }
-
-
-        BOOL IsBitmap(){return m_fBmp;}
-        
-        HBRUSH GetBrush(){return m_hBrush;}
-
-        COLORREF GetColor() const {return m_cr;}
-    protected:
-        SBrush_GDI(IRenderFactory * pRenderFac,COLORREF cr)
-            :TGdiRenderObjImpl<IBrush>(pRenderFac),m_fBmp(FALSE),m_cr(cr)
-        {
-            m_hBrush = ::CreateSolidBrush(m_cr&0x00ffffff);
-        }
-        SBrush_GDI(IRenderFactory * pRenderFac,HBITMAP hBmp)
-            :TGdiRenderObjImpl<IBrush>(pRenderFac),m_fBmp(TRUE)
-        {
-            m_hBrush = ::CreatePatternBrush(hBmp);
-        }
-        ~SBrush_GDI()
-        {
-            DeleteObject(m_hBrush);
-        }
-
-
-        HBRUSH   m_hBrush;
-        BOOL	 m_fBmp;
-        COLORREF    m_cr;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // SBitmap_GDI
-    class SBitmap_GDI : public TGdiRenderObjImpl<IBitmap>
-    {
-		SOUI_CLASS_NAME(SBitmap_GDI,L"bitmap")
-    public:
-        SBitmap_GDI(IRenderFactory *pRenderFac)
-            :TGdiRenderObjImpl<IBitmap>(pRenderFac),m_hBmp(0)
-        {
-            m_sz.cx=m_sz.cy=0;
-        }
-        virtual ~SBitmap_GDI()
-        {
-            if(m_hBmp) DeleteObject(m_hBmp);
-        }
-        virtual HRESULT Init(int nWid,int nHei,const LPVOID pBits=NULL);
-        virtual HRESULT Init(IImgFrame *pFrame);
-		virtual HRESULT LoadFromFile(LPCTSTR pszFileName);
-        virtual HRESULT LoadFromMemory(LPBYTE pBuf,size_t szLen);
-
-        virtual UINT Width() const;
-        virtual UINT Height() const;
-        virtual SIZE Size() const;
-        virtual LPVOID  LockPixelBits();
-        virtual void    UnlockPixelBits(LPVOID pBuf);
-        virtual const LPVOID GetPixelBits() const;
-        
-        HBITMAP  GetBitmap(){return m_hBmp;}
-
-        static HBITMAP CreateGDIBitmap(int nWid,int nHei,void ** ppBits);
-    protected:
-
-        HRESULT ImgFromDecoder(IImgX *imgDecoder);
-        SIZE        m_sz;
-        HBITMAP     m_hBmp;     //标准的32位位图，和m_bitmap共享内存
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    //	SRegion_GDI
-    class SRegion_GDI: public TGdiRenderObjImpl<IRegion>
-    {
-		SOUI_CLASS_NAME(SRegion_GDI,L"region")
-		friend class SRenderTarget_GDI;
-    public:
-        SRegion_GDI(IRenderFactory *pRenderFac);
-        ~SRegion_GDI(){
-            DeleteObject(m_hRgn);
-        }
-
-        virtual void CombineRect(LPCRECT lprect,int nCombineMode);
-		virtual void CombineRoundRect(LPCRECT lprect, POINT ptRadius, int nCombineMode);
-		virtual void CombineEllipse(LPCRECT lprect , int nCombineMode);
-		virtual void CombinePolygon(const POINT * pts, int count, int nPolygonMode, int nCombineMode);
-		virtual void CombineRgn(const IRegion * pRgnSrc,int nCombineMode );
-
-        virtual BOOL PtInRegion(POINT pt) const;
-        virtual BOOL RectInRegion(LPCRECT lprect) const;
-        virtual void GetRgnBox(LPRECT lprect) const;
-        virtual BOOL IsEmpty() const;
-        virtual void Offset(POINT pt);
-        virtual void Clear();
-
-		virtual BOOL IsEqual(const IRegion * testRgn) const;
-    protected:
-        HRGN GetRegion() const;
-        void _CombineRgn(HRGN hRgn,int nCombineMode);
-
-
-
-        HRGN    m_hRgn;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    //	SRenderTarget_GDI
-    //////////////////////////////////////////////////////////////////////////
-    class SRenderTarget_GDI: public TObjRefImpl<IRenderTarget>
-    {
-    public:
-        SRenderTarget_GDI(IRenderFactory* pRenderFactory,int nWid,int nHei);
-        ~SRenderTarget_GDI();
-
-        //只支持创建位图表面
-        virtual HRESULT CreateCompatibleRenderTarget(SIZE szTarget,IRenderTarget **ppRenderTarget);
-
-        virtual HRESULT CreatePen(int iStyle,COLORREF cr,int cWidth,IPen ** ppPen);
-        virtual HRESULT CreateSolidColorBrush(COLORREF cr,IBrush ** ppBrush);
-        virtual HRESULT CreateBitmapBrush( IBitmap *pBmp,IBrush ** ppBrush );
-
-        virtual HRESULT Resize(SIZE sz);
-
-        virtual HRESULT OffsetViewportOrg(int xOff, int yOff, LPPOINT lpPoint=NULL);
-        virtual HRESULT GetViewportOrg(LPPOINT lpPoint);
-        virtual HRESULT SetViewportOrg(POINT pt);
-
-        virtual HRESULT PushClipRect(LPCRECT pRect,UINT mode=RGN_AND);
-        virtual HRESULT PushClipRegion(IRegion *pRegion,UINT mode=RGN_AND);
-        virtual HRESULT PopClip();
-
-        virtual HRESULT ExcludeClipRect(LPCRECT pRc);
-        virtual HRESULT IntersectClipRect(LPCRECT pRc);
-
-        virtual HRESULT SaveClip(int *pnState);
-        virtual HRESULT RestoreClip(int nState=-1);
-
-        virtual HRESULT GetClipRegion(IRegion **ppRegion);
-        virtual HRESULT GetClipBox(LPRECT prc);
-
-        virtual HRESULT BitBlt(LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop=SRCCOPY);
-        virtual HRESULT AlphaBlend(LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha);
-
-        virtual HRESULT DrawText( LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat);
-        virtual HRESULT MeasureText(LPCTSTR pszText,int cchLen, SIZE *psz );
-
-        virtual HRESULT DrawRectangle(LPCRECT pRect);
-        virtual HRESULT FillRectangle(LPCRECT pRect);
-        virtual HRESULT FillSolidRect(LPCRECT pRect,COLORREF cr);
-        virtual HRESULT ClearRect(LPCRECT pRect,COLORREF cr);
-        virtual HRESULT InvertRect(LPCRECT pRect);
-
-        virtual HRESULT DrawEllipse(LPCRECT pRect);
-        virtual HRESULT FillEllipse(LPCRECT pRect);
-        virtual HRESULT FillSolidEllipse(LPCRECT pRect,COLORREF cr);
-
-        virtual HRESULT DrawArc(LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter);
-        virtual HRESULT FillArc(LPCRECT pRect,float startAngle,float sweepAngle);
-
-        virtual HRESULT DrawRoundRect(LPCRECT pRect,POINT pt);
-        virtual HRESULT FillRoundRect(LPCRECT pRect,POINT pt);
-        virtual HRESULT FillSolidRoundRect(LPCRECT pRect,POINT pt,COLORREF cr);
-
-        virtual HRESULT DrawLines(LPPOINT pPt,size_t nCount);
-        virtual HRESULT GradientFill(LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha=0xFF);
-        virtual HRESULT GradientFillEx( LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha=0xFF );
-
-        virtual HRESULT TextOut(
-            int x,
-            int y,
-            LPCTSTR lpszString,
-            int nCount);
-
-        virtual HRESULT DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags);
-        virtual HRESULT DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha=0xFF);
-        virtual HRESULT DrawBitmapEx(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha=0xFF);
-        virtual HRESULT DrawBitmap9Patch(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha=0xFF);
-
-        virtual IRenderObj * GetCurrentObject(OBJTYPE uType);
-        virtual HRESULT SelectDefaultObject(OBJTYPE objType, IRenderObj ** ppOldObj = NULL);
-        virtual HRESULT SelectObject(IRenderObj *pObj,IRenderObj ** ppOldObj = NULL);
-
-
-        virtual COLORREF GetTextColor()
-        {
-            return m_curColor.toCOLORREF();
-        }
-
-        virtual COLORREF SetTextColor(COLORREF color)
-        {
-            COLORREF crOld=m_curColor.toCOLORREF();
-            m_curColor.setRGB(color);
-            ::SetTextColor(m_hdc,color&0x00ffffff);
-            return crOld;
-        }
-
-        virtual HDC GetDC(UINT uFlag=0);
-        virtual void ReleaseDC(HDC hdc);
-
-        virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]);
-
-        virtual HRESULT GetTransform(float matrix[9]) const;
-
-		virtual COLORREF GetPixel( int x, int y );
-
-		virtual COLORREF SetPixel( int x, int y, COLORREF cr );
-
-		virtual HRESULT GradientFill2(LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha=0xff);
-
-		virtual HRESULT CreateRegion( IRegion ** ppRegion );
-
-		virtual HRESULT PushClipPath(const IPath * path, UINT mode, bool doAntiAlias = false);
-
-		virtual HRESULT DrawPath(const IPath * path,IPathEffect * pathEffect=NULL);
-
-		virtual HRESULT FillPath(const IPath * path);
-
-		virtual HRESULT PushLayer(const RECT * pRect,BYTE byAlpha);
-
-		virtual HRESULT PopLayer();
-
-		virtual HRESULT SetXfermode(int mode,int *pOldMode);
-		virtual BOOL SetAntiAlias(BOOL bAntiAlias);
-	protected:
-        HDC               m_hdc;
-        SColor            m_curColor;
-        SAutoRefPtr<SBitmap_GDI> m_curBmp;
-        SAutoRefPtr<SPen_GDI> m_curPen;
-        SAutoRefPtr<SBrush_GDI> m_curBrush;
-        SAutoRefPtr<SFont_GDI> m_curFont;
-        POINT               m_ptOrg;
-        
-        //注意保存4个默认的GDI对象
-        SAutoRefPtr<IBitmap> m_defBmp;
-        SAutoRefPtr<IPen> m_defPen;
-        SAutoRefPtr<IBrush> m_defBrush;
-        SAutoRefPtr<IFont> m_defFont;
-		SAutoRefPtr<IRenderFactory> m_pRenderFactory;
-        UINT m_uGetDCFlag;
-    };
-    
-    namespace RENDER_GDI
-    {
-        SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef ** ppRenderFactory);
-    }
+	STDMETHOD_(IImgDecoderFactory *,GetImgDecoderFactory)(THIS) OVERRIDE;
+	STDMETHOD_(void,SetImgDecoderFactory)(THIS_ IImgDecoderFactory *pImgDecoderFac) OVERRIDE;
+	STDMETHOD_(BOOL,CreateRenderTarget)(THIS_ IRenderTarget ** ppRenderTarget,int nWid,int nHei) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateFont)(THIS_ IFont ** ppFont, const LOGFONT *lf) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateBitmap)(THIS_ IBitmap ** ppBitmap) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePath)(THIS_ IPath ** ppPath) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePathEffect)(THIS_ REFGUID guidEffect,IPathEffect ** ppPathEffect) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePathMeasure)(THIS_ IPathMeasure ** ppPathMeasure) OVERRIDE;
+protected:
+	SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+// TGdiRenderObjImpl
+template<class T, OBJTYPE ot>
+class TGdiRenderObjImpl : public TObjRefImpl<T>
+{
+public:
+	TGdiRenderObjImpl(IRenderFactory * pRenderFac):m_pRenderFactory(pRenderFac)
+	{
+
+	}
+
+	virtual ~TGdiRenderObjImpl(){}
+
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST OVERRIDE
+	{
+		return m_pRenderFactory;
+	}
+
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST OVERRIDE
+	{
+		return ot;
+	}
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE
+	{
+		return E_NOTIMPL;
+	}
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE
+	{
+	}
+
+protected:
+	IRenderFactory *m_pRenderFactory;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+// SPen_GDI
+class SPen_GDI : public TGdiRenderObjImpl<IPen,OT_PEN>
+{
+public:
+	SPen_GDI(IRenderFactory * pRenderFac,int iStyle=PS_SOLID,COLORREF cr=0,int cWidth=1);
+
+	~SPen_GDI();
+
+	STDMETHOD_(int,GetWidth)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(void,SetWidth)(THIS_ int nWid) OVERRIDE;
+
+	STDMETHOD_(int,GetStyle)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(void,SetStyle)(THIS_ int nStyle) OVERRIDE;
+
+	STDMETHOD_(COLORREF,GetColor)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(void,SetColor)(THIS_ COLORREF cr) OVERRIDE;
+
+	HPEN GetPen();
+protected:
+	void UpdatePen();
+
+	int		m_style;
+	int		m_nWidth;
+	COLORREF	m_cr;
+
+	HPEN    m_hPen;
+};
+
+//////////////////////////////////////////////////////////////////////////
+// SFont_GDI
+class SFont_GDI: public TGdiRenderObjImpl<IFont,OT_FONT>
+{
+public:
+	SFont_GDI(IRenderFactory * pRenderFac,const LOGFONT * plf);
+	~SFont_GDI();
+
+		/**
+	* LogFont
+	* @brief    获得字体的LOGFONT
+	* @return   const LOGFONT * -- 包含字体信息的LOGFONT*
+	* Describe  
+	*/    
+	STDMETHOD_(const LOGFONT *,LogFont)(THIS) SCONST OVERRIDE;
+
+	/**
+	* FamilyName
+	* @brief    获取字体名
+	* @return   LPCTSTR -- 字体名
+	* Describe  
+	*/    
+	STDMETHOD_(LPCTSTR,FamilyName)(THIS) SCONST OVERRIDE;
+
+	/**
+	* TextSize
+	* @brief    获取字体大小
+	* @return   int -- 字体大小
+	* Describe  
+	*/    
+	STDMETHOD_(int,TextSize)(THIS) SCONST OVERRIDE;
+
+	/**
+	* IsBold
+	* @brief    查询是否为粗体
+	* @return   BOOL -- true为粗体，false正常
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,IsBold)(THIS) SCONST OVERRIDE;
+
+	/**
+	* IsUnderline
+	* @brief    查询字体下划线状态
+	* @return   BOOL -- true有下划线，false正常
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,IsUnderline)(THIS) SCONST OVERRIDE;
+
+	/**
+	* IsItalic
+	* @brief    查询字体的斜体状态
+	* @return   BOOL -- true为斜体，false正常
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,IsItalic)(THIS) SCONST OVERRIDE;
+
+	/**
+	* StrikeOut
+	* @brief    查询字体的删除线状态
+	* @return   BOOL -- true有删除线
+	* Describe  
+	*/    
+	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) OVERRIDE;
+
+	HFONT GetFont(){return m_hFont;}
+protected:
+	LOGFONT     m_lf;
+	HFONT       m_hFont;
+};
+
+class SBrush_GDI : public TGdiRenderObjImpl<IBrush,OT_BRUSH>
+{
+public:
+	static SBrush_GDI * CreateSolidBrush(IRenderFactory * pRenderFac,COLORREF cr){
+		return new SBrush_GDI(pRenderFac,cr);
+	}
+
+	static SBrush_GDI * CreateBitmapBrush(IRenderFactory * pRenderFac,HBITMAP hBmp)
+	{
+		return new SBrush_GDI(pRenderFac,hBmp);
+	}
+
+
+	BOOL IsBitmap(){return m_fBmp;}
+
+	HBRUSH GetBrush(){return m_hBrush;}
+
+	COLORREF GetColor() const {return m_cr;}
+protected:
+	SBrush_GDI(IRenderFactory * pRenderFac,COLORREF cr)
+		:TGdiRenderObjImpl<IBrush,OT_BRUSH>(pRenderFac),m_fBmp(FALSE),m_cr(cr)
+	{
+		m_hBrush = ::CreateSolidBrush(m_cr&0x00ffffff);
+	}
+	SBrush_GDI(IRenderFactory * pRenderFac,HBITMAP hBmp)
+		:TGdiRenderObjImpl<IBrush,OT_BRUSH>(pRenderFac),m_fBmp(TRUE)
+	{
+		m_hBrush = ::CreatePatternBrush(hBmp);
+	}
+	~SBrush_GDI()
+	{
+		DeleteObject(m_hBrush);
+	}
+
+
+	HBRUSH   m_hBrush;
+	BOOL	 m_fBmp;
+	COLORREF    m_cr;
+};
+
+//////////////////////////////////////////////////////////////////////////
+// SBitmap_GDI
+class SBitmap_GDI : public TGdiRenderObjImpl<IBitmap,OT_BITMAP>
+{
+public:
+	SBitmap_GDI(IRenderFactory *pRenderFac)
+		:TGdiRenderObjImpl<IBitmap,OT_BITMAP>(pRenderFac),m_hBmp(0)
+	{
+		m_sz.cx=m_sz.cy=0;
+	}
+	virtual ~SBitmap_GDI()
+	{
+		if(m_hBmp) DeleteObject(m_hBmp);
+	}
+
+	STDMETHOD_(HRESULT,Init)(THIS_ int nWid,int nHei,const LPVOID pBits) OVERRIDE;
+
+	STDMETHOD_(HRESULT,Init2)(THIS_ IImgFrame *pImgFrame) OVERRIDE;
+
+	STDMETHOD_(HRESULT,LoadFromFile)(THIS_ LPCTSTR pszFileName) OVERRIDE;
+
+	STDMETHOD_(HRESULT,LoadFromMemory)(THIS_ LPBYTE pBuf,size_t szLen) OVERRIDE;
+
+	STDMETHOD_(UINT,Width)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(UINT,Height)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(SIZE,Size)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(LPVOID,LockPixelBits)(THIS) OVERRIDE;
+
+	STDMETHOD_(void,UnlockPixelBits)(THIS_ LPVOID pBuf) OVERRIDE;
+
+	STDMETHOD_(const LPVOID,GetPixelBits)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(HRESULT,Clone)(THIS_ IBitmap **ppClone) SCONST OVERRIDE;
+
+	STDMETHOD_(HRESULT,Scale)(THIS_ IBitmap **pOutput,int nScale,FilterLevel filterLevel) SCONST OVERRIDE;
+
+	STDMETHOD_(HRESULT,Scale2)(THIS_ IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel) SCONST OVERRIDE;
+
+	STDMETHOD_(HRESULT,Save)(THIS_ LPCWSTR pszFileName,const LPVOID pFormat) SCONST OVERRIDE;
+
+public:
+	HBITMAP  GetBitmap(){return m_hBmp;}
+
+	static HBITMAP CreateGDIBitmap(int nWid,int nHei,void ** ppBits);
+protected:
+
+	HRESULT ImgFromDecoder(IImgX *imgDecoder);
+	SIZE        m_sz;
+	HBITMAP     m_hBmp;     //标准的32位位图，和m_bitmap共享内存
+};
+
+//////////////////////////////////////////////////////////////////////////
+//	SRegion_GDI
+class SRegion_GDI: public TGdiRenderObjImpl<IRegion,OT_RGN>
+{
+	friend class SRenderTarget_GDI;
+public:
+	SRegion_GDI(IRenderFactory *pRenderFac);
+	~SRegion_GDI();
+
+	STDMETHOD_(void,CombineRect)(THIS_ LPCRECT lprect,int nCombineMode) OVERRIDE;
+
+	STDMETHOD_(void,CombineRgn)(THIS_ const IRegion * pRgnSrc,int nCombineMode ) OVERRIDE;
+
+	STDMETHOD_(void,CombineRoundRect)(THIS_ LPCRECT lprect, POINT ptConner, int nCombineMode) OVERRIDE;
+
+	STDMETHOD_(void,CombineEllipse)(THIS_ LPCRECT lprect , int nCombineMode) OVERRIDE;
+
+	STDMETHOD_(void,CombinePolygon)(THIS_ const POINT *pts, int count, int nPolygonMode, int nCombineMode) OVERRIDE;
+
+	STDMETHOD_(BOOL,PtInRegion)(THIS_ POINT pt) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,RectInRegion)(THIS_ LPCRECT lprect) SCONST OVERRIDE;
+
+	STDMETHOD_(void,GetRgnBox)(THIS_ LPRECT lprect) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,IsEmpty)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(void,Offset)(THIS_ POINT pt) OVERRIDE;
+
+	STDMETHOD_(void,Clear)(THIS) OVERRIDE;
+
+	STDMETHOD_(BOOL,IsEqual)(THIS_ const IRegion * testRgn) SCONST OVERRIDE;
+protected:
+	HRGN GetRegion() const;
+	void _CombineRgn(HRGN hRgn,int nCombineMode);
+
+	HRGN    m_hRgn;
+};
+
+//////////////////////////////////////////////////////////////////////////
+//	SRenderTarget_GDI
+//////////////////////////////////////////////////////////////////////////
+class SRenderTarget_GDI: public TObjRefImpl<IRenderTarget>
+{
+public:
+	SRenderTarget_GDI(IRenderFactory* pRenderFactory,int nWid,int nHei);
+	~SRenderTarget_GDI();
+
+	STDMETHOD_(HRESULT,CreateCompatibleRenderTarget)(THIS_ SIZE szTarget,IRenderTarget **ppRenderTarget) OVERRIDE;
+	STDMETHOD_(HRESULT,CreatePen)(THIS_ int iStyle,COLORREF cr,int cWidth,IPen ** ppPen) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateSolidColorBrush)(THIS_ COLORREF cr,IBrush ** ppBrush) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateBitmapBrush)(THIS_ IBitmap *pBmp,IBrush ** ppBrush ) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateRegion)(THIS_ IRegion ** ppRegion ) OVERRIDE;
+
+	STDMETHOD_(HRESULT,Resize)(THIS_ SIZE sz) OVERRIDE;
+
+	STDMETHOD_(HRESULT,OffsetViewportOrg)(THIS_ int xOff, int yOff, LPPOINT lpPoint/*=NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GetViewportOrg)(THIS_ LPPOINT lpPoint) OVERRIDE;
+	STDMETHOD_(HRESULT,SetViewportOrg)(THIS_ POINT pt) OVERRIDE;
+
+	STDMETHOD_(HRESULT,PushClipRect)(THIS_ LPCRECT pRect,UINT mode/*=RGN_AND*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PushClipRegion)(THIS_ IRegion *pRegion,UINT mode/*=RGN_AND*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PopClip)(THIS) OVERRIDE;
+
+	STDMETHOD_(HRESULT,ExcludeClipRect)(THIS_ LPCRECT pRc) OVERRIDE;
+	STDMETHOD_(HRESULT,IntersectClipRect)(THIS_ LPCRECT pRc) OVERRIDE;
+
+	STDMETHOD_(HRESULT,SaveClip)(THIS_ int *pnState) OVERRIDE;
+	STDMETHOD_(HRESULT,RestoreClip)(THIS_ int nState/*=-1*/) OVERRIDE;
+
+	STDMETHOD_(HRESULT,GetClipRegion)(THIS_ IRegion **ppRegion) OVERRIDE;
+	STDMETHOD_(HRESULT,GetClipBox)(THIS_ LPRECT prc) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawText)(THIS_ LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat) OVERRIDE;
+	STDMETHOD_(HRESULT,MeasureText)(THIS_ LPCTSTR pszText,int cchLen, SIZE *psz) OVERRIDE;
+	STDMETHOD_(HRESULT,TextOut)(THIS_ int x,int y, LPCTSTR lpszString,int nCount) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawRectangle)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillRectangle)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidRect)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawRoundRect)(THIS_ LPCRECT pRect,POINT pt) OVERRIDE;
+	STDMETHOD_(HRESULT,FillRoundRect)(THIS_ LPCRECT pRect,POINT pt) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidRoundRect)(THIS_ LPCRECT pRect,POINT pt,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,ClearRect)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,InvertRect)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawEllipse)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillEllipse)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidEllipse)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter) OVERRIDE;
+	STDMETHOD_(HRESULT,FillArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawLines)(THIS_ LPPOINT pPt,size_t nCount) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFill)(THIS_ LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFillEx)(THIS_ LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha/*=0xFF*/ ) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFill2)(THIS_ LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawIconEx)(THIS_ int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmap)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmapEx)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmap9Patch)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,BitBlt)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop/*=kSrcCopy*/) OVERRIDE;
+	STDMETHOD_(HRESULT,AlphaBlend)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha) OVERRIDE;
+	STDMETHOD_(IRenderObj *,GetCurrentObject)(THIS_ OBJTYPE uType) OVERRIDE;
+	STDMETHOD_(HRESULT,SelectDefaultObject)(THIS_ OBJTYPE objType, IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,SelectObject)(THIS_ IRenderObj *pObj,IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
+	STDMETHOD_(COLORREF,GetTextColor)(THIS) OVERRIDE;
+	STDMETHOD_(COLORREF,SetTextColor)(THIS_ COLORREF color) OVERRIDE;
+	STDMETHOD_(HDC,GetDC)(THIS_ UINT uFlag) OVERRIDE;
+	STDMETHOD_(void,ReleaseDC)(THIS_ HDC hdc) OVERRIDE;
+	STDMETHOD_(HRESULT,SetTransform)(THIS_ const float matrix[9], float oldMatrix[9]/*=NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GetTransform)(THIS_ float matrix[9]) SCONST OVERRIDE;
+	STDMETHOD_(COLORREF,GetPixel)(THIS_ int x, int y) OVERRIDE;
+	STDMETHOD_(COLORREF,SetPixel)(THIS_ int x, int y, COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,PushClipPath)(THIS_ const IPath * path, UINT mode, bool doAntiAlias = false) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawPath)(THIS_ const IPath * path,IPathEffect * pathEffect=NULL) OVERRIDE;
+	STDMETHOD_(HRESULT,FillPath)(THIS_ const IPath * path) OVERRIDE;
+	STDMETHOD_(HRESULT,PushLayer)(THIS_ const RECT * pRect,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PopLayer)(THIS) OVERRIDE;
+	STDMETHOD_(HRESULT,SetXfermode)(THIS_ int mode,int *pOldMode=NULL) OVERRIDE;
+	STDMETHOD_(BOOL,SetAntiAlias)(THIS_ BOOL bAntiAlias) OVERRIDE;
+	STDMETHOD_(BOOL,GetAntiAlias)(THIS) SCONST OVERRIDE;
+protected:
+	HDC               m_hdc;
+	SColor            m_curColor;
+	SAutoRefPtr<SBitmap_GDI> m_curBmp;
+	SAutoRefPtr<SPen_GDI> m_curPen;
+	SAutoRefPtr<SBrush_GDI> m_curBrush;
+	SAutoRefPtr<SFont_GDI> m_curFont;
+	POINT               m_ptOrg;
+
+	//注意保存4个默认的GDI对象
+	SAutoRefPtr<IBitmap> m_defBmp;
+	SAutoRefPtr<IPen> m_defPen;
+	SAutoRefPtr<IBrush> m_defBrush;
+	SAutoRefPtr<IFont> m_defFont;
+	SAutoRefPtr<IRenderFactory> m_pRenderFactory;
+	UINT m_uGetDCFlag;
+};
+
+namespace RENDER_GDI
+{
+	SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef ** ppRenderFactory);
 }
 
+SNSEND
 

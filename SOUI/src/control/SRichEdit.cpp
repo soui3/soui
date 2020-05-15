@@ -676,7 +676,7 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
 {
     CRect rcClient;
     GetClientRect(&rcClient);
-    pRT->PushClipRect(&rcClient);
+    pRT->PushClipRect(&rcClient,RGN_AND);
     HDC hdc=pRT->GetDC(0);
 	int nOldMode = ::SetGraphicsMode(hdc, GM_COMPATIBLE);	//richedit需要将GraphicMode强制设置为GM_COMPATIBLE
 

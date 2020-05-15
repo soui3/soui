@@ -21,7 +21,7 @@ namespace SOUI
             pRT->DrawText(m_strText.GetText(),m_strText.GetText().GetLength(),&rcClient,DT_SINGLELINE|DT_CENTER|DT_VCENTER);
         }else
         {
-            pRT->PushClipRect(&rcClient);
+            pRT->PushClipRect(&rcClient,RGN_AND);
                         
             CRect rcText = rcClient;
             rcText.left -= m_nOffset;

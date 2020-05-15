@@ -529,7 +529,7 @@ void SListCtrl::OnPaint(IRenderTarget * pRT)
     BeforePaint(pRT, painter);
     CRect rcList = GetListRect();
     int nTopItem = GetTopIndex();
-    pRT->PushClipRect(&rcList);
+    pRT->PushClipRect(&rcList,RGN_AND);
     CRect rcItem(rcList);
 
     rcItem.bottom = rcItem.top;

@@ -133,8 +133,8 @@ IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 	IRenderTarget *pRT =NULL;
 	GETRENDERFACTORY->CreateRenderTarget(&pRT,rc.Width(),rc.Height());
 	SASSERT(pRT);
-	pRT->OffsetViewportOrg(-rc.left,-rc.top);
-	pRT->PushClipRect(rc);
+	pRT->OffsetViewportOrg(-rc.left,-rc.top,NULL);
+	pRT->PushClipRect(rc,RGN_AND);
 	return pRT;
 }
 
@@ -240,11 +240,11 @@ void SItemPanel::Draw(IRenderTarget *pRT,const CRect & rc)
 	{
 		SPainter painter;
 		BeforePaint(pRT,painter);
-		pRT->OffsetViewportOrg(rc.left,rc.top);
+		pRT->OffsetViewportOrg(rc.left,rc.top,NULL);
 		SAutoRefPtr<IRegion> rgn;
 		pRT->GetClipRegion(&rgn);
 		RedrawRegion(pRT,rgn);
-		pRT->OffsetViewportOrg(-rc.left,-rc.top);
+		pRT->OffsetViewportOrg(-rc.left,-rc.top,NULL);
 		AfterPaint(pRT,painter);
 	}else
 	{//draw to cache

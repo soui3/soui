@@ -21,9 +21,9 @@ namespace SOUI
         return TRUE;
     }
 
-    BOOL SRenderFactory_GDI::CreateFont( IFont ** ppFont , const LOGFONT &lf)
+    BOOL SRenderFactory_GDI::CreateFont( IFont ** ppFont , const LOGFONT *lf)
     {
-        *ppFont = new SFont_GDI(this,&lf);
+        *ppFont = new SFont_GDI(this,lf);
         return TRUE;
     }
 
@@ -53,6 +53,152 @@ namespace SOUI
 	{
 		return FALSE;
 	}
+
+	void SRenderFactory_GDI::SetImgDecoderFactory(IImgDecoderFactory *pImgDecoderFac)
+	{
+		m_imgDecoderFactory=pImgDecoderFac;
+	}
+
+	IImgDecoderFactory * SRenderFactory_GDI::GetImgDecoderFactory()
+	{
+		return m_imgDecoderFactory;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	HPEN SPen_GDI::GetPen()
+	{
+		return m_hPen;
+	}
+
+	STDMETHODIMP_(void) SPen_GDI::SetColor(THIS_ COLORREF cr)
+	{
+		m_cr = cr;
+		UpdatePen();
+	}
+
+	STDMETHODIMP_(COLORREF) SPen_GDI::GetColor(THIS) SCONST
+	{
+		return m_cr;
+	}
+
+	STDMETHODIMP_(void) SPen_GDI::SetStyle(THIS_ int nStyle)
+	{
+		m_style = nStyle;
+		UpdatePen();
+	}
+
+	STDMETHODIMP_(int) SPen_GDI::GetStyle(THIS) SCONST
+	{
+		return m_style;
+	}
+
+	STDMETHODIMP_(void) SPen_GDI::SetWidth(THIS_ int nWid)
+	{
+		m_nWidth=nWid;
+		UpdatePen();
+	}
+
+	STDMETHODIMP_(int) SPen_GDI::GetWidth(THIS) SCONST
+	{
+		return m_nWidth;
+	}
+
+
+	SPen_GDI::SPen_GDI(IRenderFactory * pRenderFac,int iStyle/*=PS_SOLID*/,COLORREF cr/*=0*/,int cWidth/*=1*/) :TGdiRenderObjImpl<IPen,OT_PEN>(pRenderFac)
+		,m_nWidth(cWidth),m_style(iStyle),m_cr(cr)
+		,m_hPen(NULL)
+	{
+		UpdatePen();
+	}
+
+	SPen_GDI::~SPen_GDI()
+	{
+		DeleteObject(m_hPen);
+	}
+
+	void SPen_GDI::UpdatePen()
+	{
+		if(m_hPen)
+		{
+			DeleteObject(m_hPen);
+			m_hPen=NULL;
+		}
+
+		if (m_style & PS_GEOMETRIC)
+		{
+			LOGBRUSH lb;
+			lb.lbStyle = BS_SOLID;
+			lb.lbColor = m_cr & 0x00ffffff;
+			lb.lbHatch = 0;
+			m_hPen = ::ExtCreatePen(m_style | PS_GEOMETRIC, m_nWidth, &lb, 0, NULL);
+		}
+		else
+		{
+			m_hPen = ::CreatePen(m_style , m_nWidth, m_cr & 0x00ffffff);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	const LOGFONT * SFont_GDI::LogFont()  SCONST
+	{
+		return &m_lf;
+	}
+
+	LPCTSTR SFont_GDI::FamilyName() SCONST
+	{
+		return m_lf.lfFaceName;
+	}
+
+	int SFont_GDI::TextSize() SCONST
+	{
+		return m_lf.lfHeight;
+	}
+
+	BOOL SFont_GDI::IsBold() SCONST
+	{
+		return m_lf.lfWeight == FW_BOLD;
+	}
+
+	BOOL SFont_GDI::IsItalic() SCONST
+	{
+		return m_lf.lfItalic;
+	}
+
+	BOOL SFont_GDI::IsUnderline() SCONST
+	{
+		return m_lf.lfUnderline;
+	}
+
+	BOOL SFont_GDI::IsStrikeOut() SCONST
+	{
+		return m_lf.lfStrikeOut;
+	}
+
+	BOOL SFont_GDI::UpdateFont(const LOGFONT *pLogFont)
+	{
+		if(!m_hFont) return FALSE;
+		DeleteObject(m_hFont);
+		memcpy(&m_lf,pLogFont,sizeof(LOGFONT));
+		m_hFont = CreateFontIndirect(&m_lf);
+		return TRUE;
+	}
+
+	SFont_GDI::SFont_GDI(IRenderFactory * pRenderFac,const LOGFONT * plf) 
+		:TGdiRenderObjImpl<IFont,OT_FONT>(pRenderFac)
+		,m_hFont(NULL)
+	{
+		memcpy(&m_lf,plf,sizeof(LOGFONT));
+		m_hFont=CreateFontIndirect(&m_lf);
+	}
+
+	SFont_GDI::~SFont_GDI()
+	{
+		if(m_hFont) 
+			DeleteObject(m_hFont);
+	}
+
 
     
     //////////////////////////////////////////////////////////////////////////
@@ -95,7 +241,7 @@ namespace SOUI
         return m_hBmp?S_OK:E_OUTOFMEMORY;
     }
 
-    HRESULT SBitmap_GDI::Init(IImgFrame *pFrame )
+    HRESULT SBitmap_GDI::Init2(IImgFrame *pFrame )
     {
         UINT nWid,nHei;
         pFrame->GetSize(&nWid,&nHei);
@@ -181,13 +327,77 @@ namespace SOUI
         return bm.bmBits;
     }
 
+	HRESULT SBitmap_GDI::Clone(IBitmap **ppClone) const 
+	{
+		HRESULT hr = E_UNEXPECTED;
+		BOOL bOK = GetRenderFactory()->CreateBitmap(ppClone);
+		if(bOK)
+		{
+			hr=(*ppClone)->Init(Width(),Height(),GetPixelBits());
+			if(S_OK != hr)
+			{
+				(*ppClone)->Release();
+				(*ppClone) = NULL;
+			}
+		}
+		return hr;
+	}
+
+	HRESULT SBitmap_GDI::Scale(IBitmap **ppOutput,int nScale,FilterLevel filterLevel) SCONST
+	{
+		int wid = MulDiv(Width(),nScale,100);
+		int hei = MulDiv(Height(),nScale,100);
+		return Scale2(ppOutput,wid,hei,filterLevel);
+	}
+
+	HRESULT SBitmap_GDI::Scale2(IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel) SCONST
+	{
+		if(nWid == Width() && nHei == Height())
+		{
+			return Clone(pOutput);
+		}
+		HRESULT hr = E_UNEXPECTED;
+		BOOL bOK = GetRenderFactory()->CreateBitmap(pOutput);
+		if(bOK)
+		{
+			IRenderTarget *pRT=NULL;
+			if(GetRenderFactory()->CreateRenderTarget(&pRT,nWid,nHei))
+			{
+				RECT rcSrc = {0,0,(long)Width(),(long)Height()};
+				RECT rcDst ={0,0,nWid,nHei};
+				hr = pRT->DrawBitmapEx(&rcDst,this,&rcSrc,MAKELONG(EM_STRETCH,filterLevel),255);
+				if(hr == S_OK)
+				{
+					*pOutput = (IBitmap*)pRT->GetCurrentObject(OT_BITMAP);
+					(*pOutput)->AddRef();
+				}
+				pRT->Release();
+			}else
+			{
+				hr = E_OUTOFMEMORY;
+			}
+		}
+		return hr;
+	}
+
+	HRESULT SBitmap_GDI::Save(LPCWSTR pszFileName,const LPVOID pFormat) SCONST
+	{
+		return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(this,pszFileName,pFormat);
+	}
+
     //////////////////////////////////////////////////////////////////////////
     //	SRegion_GDI
     SRegion_GDI::SRegion_GDI( IRenderFactory *pRenderFac )
-        :TGdiRenderObjImpl<IRegion>(pRenderFac)
+        :TGdiRenderObjImpl<IRegion,OT_RGN>(pRenderFac)
     {
         m_hRgn = ::CreateRectRgn(0,0,0,0);
     }
+
+	SRegion_GDI::~SRegion_GDI()
+	{
+		DeleteObject(m_hRgn);
+	}
+
 
     /*
     int CombineRgn(  HRGN hrgnDest,      // handle to destination region
@@ -396,20 +606,20 @@ namespace SOUI
         ::SetBkMode(m_hdc,TRANSPARENT);
         ::SetGraphicsMode(m_hdc,GM_ADVANCED);
         CreatePen(PS_SOLID,SColor(0,0,0).toCOLORREF(),1,&m_defPen);
-        SelectObject(m_defPen);
+        SelectObject(m_defPen,NULL);
 
         CreateSolidColorBrush(SColor(0,0,0).toCOLORREF(),&m_defBrush);
-        SelectObject(m_defBrush);
+        SelectObject(m_defBrush,NULL);
 
         LOGFONT lf={0};
         lf.lfHeight=20;
         _tcscpy(lf.lfFaceName,_T("宋体"));
-        pRenderFactory->CreateFont(&m_defFont,lf);
-        SelectObject(m_defFont);
+        pRenderFactory->CreateFont(&m_defFont,&lf);
+        SelectObject(m_defFont,NULL);
 
         pRenderFactory->CreateBitmap(&m_defBmp);
-        m_defBmp->Init(nWid,nHei);
-        SelectObject(m_defBmp);
+        m_defBmp->Init(nWid,nHei,NULL);
+        SelectObject(m_defBmp,NULL);
     }
 
     SRenderTarget_GDI::~SRenderTarget_GDI()
@@ -447,7 +657,7 @@ namespace SOUI
     {
         HBITMAP hBmp=CreateCompatibleBitmap(m_hdc,0,0);
         ::SelectObject(m_hdc,hBmp);
-        m_curBmp->Init(sz.cx,sz.cy);
+        m_curBmp->Init(sz.cx,sz.cy,NULL);
         ::SelectObject(m_hdc,m_curBmp->GetBitmap());
         ::DeleteObject(hBmp);
         return S_OK;
@@ -705,7 +915,7 @@ namespace SOUI
         return bRet?S_OK:S_FALSE;
     }
 
-    HRESULT SRenderTarget_GDI::DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/ )
+    HRESULT SRenderTarget_GDI::DrawBitmap(LPCRECT pRcDest,const IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/ )
     {
         SBitmap_GDI *pBmp = (SBitmap_GDI*)pBitmap;
         HBITMAP bmp=pBmp->GetBitmap();
@@ -734,7 +944,7 @@ namespace SOUI
         return bOK?S_OK:E_FAIL;
     }
 
-    HRESULT SRenderTarget_GDI::DrawBitmapEx( LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha/*=0xFF*/ )
+    HRESULT SRenderTarget_GDI::DrawBitmapEx( LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha/*=0xFF*/ )
     {
         UINT expandModeLow = LOWORD(expendMode);
         
@@ -774,7 +984,7 @@ namespace SOUI
     }
 
 
-    HRESULT SRenderTarget_GDI::DrawBitmap9Patch( LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha/*=0xFF*/ )
+    HRESULT SRenderTarget_GDI::DrawBitmap9Patch( LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha/*=0xFF*/ )
     {
         int xDest[4] = {pRcDest->left,pRcDest->left+pRcSourMargin->left,pRcDest->right-pRcSourMargin->right,pRcDest->right};
         int xSrc[4] = {pRcSrc->left,pRcSrc->left+pRcSourMargin->left,pRcSrc->right-pRcSourMargin->right,pRcSrc->right};
@@ -1103,9 +1313,9 @@ namespace SOUI
 
     HRESULT SRenderTarget_GDI::SetTransform(const float matrix[9], float oldMatrix[9])
     {
-		XFORM xForm = { matrix[IxForm::kMScaleX],matrix[IxForm::kMSkewY],
-			matrix[IxForm::kMSkewX],matrix[IxForm::kMScaleY],
-			matrix[IxForm::kMTransX],matrix[IxForm::kMTransY] };
+		XFORM xForm = { matrix[kMScaleX],matrix[kMSkewY],
+			matrix[kMSkewX],matrix[kMScaleY],
+			matrix[kMTransX],matrix[kMTransY] };
         if(oldMatrix)
         {
 			GetTransform(oldMatrix);
@@ -1120,16 +1330,16 @@ namespace SOUI
 		if(!::GetWorldTransform(m_hdc,&xForm))
 			return E_FAIL;
 
-		matrix[IxForm::kMScaleX]=xForm.eM11; 
-		matrix[IxForm::kMSkewX]=xForm.eM21;
-		matrix[IxForm::kMTransX]=xForm.eDx;
-		matrix[IxForm::kMSkewY]=xForm.eM12;		
-		matrix[IxForm::kMScaleY]=xForm.eM22;
-		matrix[IxForm::kMTransY] = xForm.eDy;
+		matrix[kMScaleX]=xForm.eM11; 
+		matrix[kMSkewX]=xForm.eM21;
+		matrix[kMTransX]=xForm.eDx;
+		matrix[kMSkewY]=xForm.eM12;		
+		matrix[kMScaleY]=xForm.eM22;
+		matrix[kMTransY] = xForm.eDy;
 
-		matrix[IxForm::kMPersp0] = 0.0f;
-		matrix[IxForm::kMPersp1] = 0.0f;
-		matrix[IxForm::kMPersp2] = 1.0f;
+		matrix[kMPersp0] = 0.0f;
+		matrix[kMPersp1] = 0.0f;
+		matrix[kMPersp2] = 1.0f;
 		return S_OK;
 	}
 
@@ -1224,6 +1434,24 @@ namespace SOUI
 	BOOL SRenderTarget_GDI::SetAntiAlias(BOOL bAntiAlias)
 	{
 		return FALSE;
+	}
+
+	BOOL SRenderTarget_GDI::GetAntiAlias() SCONST
+	{
+		return FALSE;
+	}
+
+	COLORREF SRenderTarget_GDI::GetTextColor()
+	{
+		return m_curColor.toCOLORREF();
+	}
+
+	COLORREF SRenderTarget_GDI::SetTextColor(COLORREF color)
+	{
+		COLORREF crOld=m_curColor.toCOLORREF();
+		m_curColor.setRGB(color);
+		::SetTextColor(m_hdc,color&0x00ffffff);
+		return crOld;
 	}
 
 

@@ -250,7 +250,7 @@ namespace SOUI
         return( CLSID_NULL );
     }
 
-    HRESULT SImgDecoderFactory_GDIP::SaveImage(IBitmap *pImg, LPCWSTR pszFileName,const LPVOID pFormat)
+    HRESULT SImgDecoderFactory_GDIP::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName,const LPVOID pFormat) SCONST
     {
         const GUID * pFmtID = (const GUID*)pFormat;
         
@@ -285,9 +285,8 @@ namespace SOUI
             return( E_FAIL );
         }
         
-        LPVOID pBits = pImg->LockPixelBits();
+        LPVOID pBits = pImg->GetPixelBits();
         Bitmap bmp(pImg->Width(),pImg->Height(),pImg->Width()*4,PixelFormat32bppPARGB,(BYTE*)pBits);
-        pImg->UnlockPixelBits(pBits);
         Image *gdipImg = &bmp;
         return Ok == gdipImg->Save(pszFileName,&clsidEncoder)?S_OK:E_FAIL;
     }

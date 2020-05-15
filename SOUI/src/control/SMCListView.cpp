@@ -543,7 +543,7 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
 			}
 			pRT->SetAntiAlias(bAntiAlias);
 
-			pRT->SelectObject(oldPen);
+			pRT->SelectObject(oldPen,NULL);
 		}
         pRT->PopClip();
     }

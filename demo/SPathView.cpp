@@ -93,7 +93,7 @@ namespace SOUI
 
 			m_path->offset(-rc.left,-rc.top);
 
-			pRT->SelectObject(oldPen);
+			pRT->SelectObject(oldPen,NULL);
 		}
 
 		for(int i=0;i<count;i++)

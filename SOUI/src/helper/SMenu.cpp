@@ -181,7 +181,7 @@ void SMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
         SAutoRefPtr<IFont> oldFont;
         pRT->SelectObject(m_attr->GetFontPtr(),(IRenderObj**)&oldFont);
         pRT->DrawText(pdmmi->strText,pdmmi->strText.GetLength(),&rcTxt,DT_SINGLELINE|DT_VCENTER|DT_LEFT|DT_END_ELLIPSIS);
-        pRT->SelectObject(oldFont);
+        pRT->SelectObject(oldFont,NULL);
 
         pRT->SetTextColor(crOld);
 
@@ -226,7 +226,7 @@ void SMenuODWnd::MeasureItem( LPMEASUREITEMSTRUCT lpMeasureItemStruct )
 		int itemMaxWidth = m_attr->GetMaxWidth();
         if(itemMaxWidth !=-1 && (int)lpMeasureItemStruct->itemWidth> itemMaxWidth)
             lpMeasureItemStruct->itemWidth= itemMaxWidth;
-        pRT->SelectObject(oldFont);
+        pRT->SelectObject(oldFont,NULL);
     }
     else
     {

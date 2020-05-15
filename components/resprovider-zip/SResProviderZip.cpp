@@ -2,7 +2,7 @@
 #pragma warning(disable:4251)
 
 #include "SResProviderZip.h"
-#include <pugixml/pugixml.hpp>
+#include <xml/SXml.h>
 
 extern HICON CURSORICON_LoadFromBuf(const BYTE * bits,DWORD filesize,INT width, INT height,BOOL fCursor, UINT loadflags);
 extern HICON CURSORICON_LoadFromFile( LPCWSTR filename,

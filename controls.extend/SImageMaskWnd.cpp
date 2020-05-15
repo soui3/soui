@@ -17,7 +17,7 @@ namespace SOUI
         {
             CRect rcClient = GetClientRect();
             CRect rcCache(CPoint(0,0),m_bmpCache->Size());
-            pRT->DrawBitmapEx(&rcClient,m_bmpCache,&rcCache,EM_STRETCH);
+            pRT->DrawBitmapEx(&rcClient,m_bmpCache,&rcCache,EM_STRETCH,0xff);
         }
     }
 
@@ -53,7 +53,7 @@ namespace SOUI
         
         m_bmpCache = NULL;
         GETRENDERFACTORY->CreateBitmap(&m_bmpCache);
-        m_bmpCache->Init(m_bmpMask->Width(),m_bmpMask->Height());
+        m_bmpCache->Init(m_bmpMask->Width(),m_bmpMask->Height(),NULL);
         
         if(!m_strSkin.IsEmpty())
         {
@@ -77,7 +77,7 @@ namespace SOUI
 		pRTDst->SelectObject(m_bmpCache,&pOldBmp);
 		CRect rc(CPoint(0,0),m_bmpCache->Size());
 		pSkin->DrawByIndex(pRTDst,&rc,0);
-		pRTDst->SelectObject(pOldBmp);
+		pRTDst->SelectObject(pOldBmp,NULL);
 	}
 
 
@@ -90,8 +90,8 @@ namespace SOUI
 		pRTDst->SelectObject(m_bmpCache,&pOldBmp);
 		CRect rc(CPoint(0,0),m_bmpCache->Size());
 		CRect rcSrc(CPoint(0,0),pBitmap->Size());
-		pRTDst->DrawBitmapEx(rc,pBitmap,rcSrc,MAKELONG(EM_STRETCH, fl));
-		pRTDst->SelectObject(pOldBmp);
+		pRTDst->DrawBitmapEx(rc,pBitmap,rcSrc,MAKELONG(EM_STRETCH, fl),0xff);
+		pRTDst->SelectObject(pOldBmp,NULL);
 	}
 
 

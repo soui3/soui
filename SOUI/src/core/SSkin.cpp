@@ -111,11 +111,11 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 
 	if(m_imgBackup)
 	{
-		m_imgBackup->Scale(&pRet->m_imgBackup, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
+		m_imgBackup->Scale2(&pRet->m_imgBackup, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
 	if(m_pImg)
 	{
-		m_pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
+		m_pImg->Scale2(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
 }
 
@@ -230,7 +230,7 @@ void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,B
 			GETRENDERFACTORY->CreateRegion(&rgnClip);
 			CPoint ptCorner(nCorner*2,nCorner*2);
 			rgnClip->CombineRoundRect(&rcDraw,ptCorner,RGN_COPY);
-			pRT->PushClipRegion(rgnClip);
+			pRT->PushClipRegion(rgnClip,RGN_AND);
 		}
 		CRect rcDraw = *prcDraw;
 		rcDraw.DeflateRect(1, 1);
@@ -258,7 +258,7 @@ void SSkinButton::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iState,B
     pRT->CreatePen(PS_SOLID, m_colors.m_crBorder[iState] ,1, &pPen);
     pRT->SelectObject(pPen, (IRenderObj**)&pOldPen);
     pRT->DrawRoundRect(prcDraw, CPoint(nCorner, nCorner));
-    pRT->SelectObject(pOldPen);   
+    pRT->SelectObject(pOldPen,NULL);   
 }
 
 int SSkinButton::GetStates() const
@@ -486,7 +486,7 @@ void SSkinColorRect::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int iStat
 			pRT->DrawRoundRect(prcDraw, CPoint(nCorner, nCorner));
 		else
 			pRT->DrawRectangle(prcDraw);
-		pRT->SelectObject(oldPen);
+		pRT->SelectObject(oldPen,NULL);
 	}
 }
 
@@ -607,7 +607,7 @@ void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 		case ring:
 			break;
 		}
-		pRT->SelectObject(oldBrush);
+		pRT->SelectObject(oldBrush,NULL);
 	}
 
 	if(m_gradient!=NULL)
@@ -631,7 +631,7 @@ void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 			break;
 		}
 		if(!region->IsEmpty())
-			pRT->PushClipRegion(region);
+			pRT->PushClipRegion(region,RGN_AND);
 
 		
 		m_gradient->Draw(pRT,&rcGradient,byAlpha,GetScale());
@@ -668,7 +668,7 @@ void SSkinShape::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYT
 			}
 			break;
 		}
-		pRT->SelectObject(oldPen);
+		pRT->SelectObject(oldPen,NULL);
 	}
 
 }
@@ -783,7 +783,7 @@ HRESULT SSkinImgFrame2::OnAttrSrc(const SStringW & strValue,BOOL bLoading)
 	{
 		return E_OUTOFMEMORY;
 	}
-	hRet = pImgCenter->Init(nWid-2,nHei-2);
+	hRet = pImgCenter->Init(nWid-2,nHei-2,NULL);
 	if(hRet!=S_OK)
 	{
 		return hRet;

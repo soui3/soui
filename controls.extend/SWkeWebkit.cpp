@@ -69,7 +69,7 @@ namespace SOUI
         GetClientRect(&rcClient);
         CRect rcInvalid;
         rcInvalid.IntersectRect(&rcClip,&rcClient);
-        HDC hdc=pRT->GetDC();
+        HDC hdc=pRT->GetDC(0);
         if(GetAlpha()!=0xff)
         {
             BLENDFUNCTION bf={AC_SRC_OVER,GetAlpha(),AC_SRC_ALPHA };

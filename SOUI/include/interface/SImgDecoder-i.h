@@ -174,7 +174,7 @@ DECLARE_INTERFACE_(IImgDecoderFactory,IObjRef)
 	* @return   HRESULT 
 	* Describe  
 	*/    
-	STDMETHOD_(HRESULT,SaveImage)(THIS_ IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) PURE;
+	STDMETHOD_(HRESULT,SaveImage)(THIS_ const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST PURE;
 
 	/**
 	* GetImgDecoderDesc

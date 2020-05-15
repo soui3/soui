@@ -958,7 +958,7 @@ namespace SOUI
 					SSendMessage(WM_ERASEBKGND, (WPARAM)pRTCache);
 					SSendMessage(WM_PAINT, (WPARAM)pRTCache);
 
-					pRTCache->SelectObject(oldFont);
+					pRTCache->SelectObject(oldFont,NULL);
 					pRTCache->SetTextColor(crOld);
 
 					MarkCacheDirty(false);
@@ -1151,11 +1151,11 @@ namespace SOUI
 			pRTBackup = pRT;
 			
 			GETRENDERFACTORY->CreateRenderTarget(&pRT, rcWnd.Width(), rcWnd.Height());
-			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top);
+			pRT->OffsetViewportOrg(-rcWnd.left, -rcWnd.top,NULL);
 			//绘制到窗口的缓存上,需要继承原RT的绘图属性
-			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_FONT));
-			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_PEN));
-			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_BRUSH));
+			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_FONT),NULL);
+			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_PEN),NULL);
+			pRT->SelectObject(pRTBackup->GetCurrentObject(OT_BRUSH),NULL);
 			pRT->SetTextColor(pRTBackup->GetTextColor());
 			pRT->ClearRect(&rcWnd,0);
 		}
@@ -1179,7 +1179,7 @@ namespace SOUI
 
 		if(IsClipClient())
 		{
-			pRT->PushClipRect(rcClient);
+			pRT->PushClipRect(rcClient,RGN_AND);
 		}
 		if(m_uZorder >= iZorderBegin
 			&& m_uZorder < iZorderEnd 
@@ -1199,7 +1199,7 @@ namespace SOUI
 		GetTextRect(rcText);
 		if(rcText != rcClient && IsClipClient())
 		{
-			pRT->PushClipRect(rcText);
+			pRT->PushClipRect(rcText,RGN_AND);
 		}
 		
 		_PaintChildren(pRT,pRgn,iZorderBegin,iZorderEnd);
@@ -1225,7 +1225,7 @@ namespace SOUI
 			pRT = pRTBackup;
 			p->Release();
 		}
-		if(bMtx) pRT->SetTransform(oriMtx.GetData());
+		if(bMtx) pRT->SetTransform(oriMtx.GetData(),NULL);
 	}
 
 	void SWindow::TransformPoint(CPoint & pt) const
@@ -1557,7 +1557,7 @@ namespace SOUI
 
 	void SWindow::AfterPaint(IRenderTarget *pRT, SPainter &painter)
 	{
-		if(painter.oldFont) pRT->SelectObject(painter.oldFont);
+		if(painter.oldFont) pRT->SelectObject(painter.oldFont,NULL);
 		if(painter.oldTextColor!=CR_INVALID) pRT->SetTextColor(painter.oldTextColor);
 	}
 
@@ -1732,7 +1732,7 @@ namespace SOUI
 		pRT->CreatePen(PS_DOT,RGBA(88,88,88,0xFF),1,&pPen);
 		pRT->SelectObject(pPen,(IRenderObj**)&oldPen);
 		pRT->DrawRectangle(&rcFocus);    
-		pRT->SelectObject(oldPen);
+		pRT->SelectObject(oldPen,NULL);
 	}
 
 	UINT SWindow::OnGetDlgCode()
@@ -2080,7 +2080,7 @@ namespace SOUI
 		IRenderTarget *pRT = NULL;
 		m_pGetRTData = new GETRTDATA;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, rcRT.Width(), rcRT.Height());
-		pRT->OffsetViewportOrg(-rcRT.left, -rcRT.top);
+		pRT->OffsetViewportOrg(-rcRT.left, -rcRT.top,NULL);
 		BeforePaintEx(pRT);
 		pRT->PushClipRegion(pRgn, RGN_COPY);
 		pRT->ClearRect(&rcRT,0);
@@ -2173,7 +2173,7 @@ namespace SOUI
 		mtx.preTranslate(-rcWnd.left, -rcWnd.top);
 		mtx.postTranslate(rcWnd.left, rcWnd.top);
 		mtx.preConcat(oriMtx);
-		pRT->SetTransform(mtx.GetData());
+		pRT->SetTransform(mtx.GetData(),NULL);
 		return true;
 	}
 
@@ -2405,7 +2405,7 @@ namespace SOUI
 		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
 		pRgn->CombineRect(&rcDraw,RGN_COPY);
-		pRT->PushClipRect(&rcDraw);
+		pRT->PushClipRect(&rcDraw,RGN_AND);
 
 		GetContainer()->BuildWndTreeZorder();
 		GetTopLevelParent()->_PaintRegion(pRT,pRgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
@@ -2420,7 +2420,7 @@ namespace SOUI
 		SAutoRefPtr<IRegion> pRgn;
 		GETRENDERFACTORY->CreateRegion(&pRgn);
 		pRgn->CombineRect(&rcDraw, RGN_COPY);
-		pRT->PushClipRect(&rcDraw);
+		pRT->PushClipRect(&rcDraw,RGN_AND);
 
 		GetContainer()->BuildWndTreeZorder();
 		GetParent()->_PaintRegion(pRT, pRgn, (UINT)m_uZorder + 1, (UINT)ZORDER_MAX);

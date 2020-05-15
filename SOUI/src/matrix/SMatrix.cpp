@@ -90,10 +90,10 @@ uint8_t SMatrix::computeTypeMask() const {
         mask |= kTranslate_Mask;
     }
 
-    int m00 = SFloatAs2sCompliment(fMat[SMatrix::kMScaleX]);
-    int m01 = SFloatAs2sCompliment(fMat[SMatrix::kMSkewX]);
-    int m10 = SFloatAs2sCompliment(fMat[SMatrix::kMSkewY]);
-    int m11 = SFloatAs2sCompliment(fMat[SMatrix::kMScaleY]);
+    int m00 = SFloatAs2sCompliment(fMat[kMScaleX]);
+    int m01 = SFloatAs2sCompliment(fMat[kMSkewX]);
+    int m10 = SFloatAs2sCompliment(fMat[kMSkewY]);
+    int m11 = SFloatAs2sCompliment(fMat[kMScaleY]);
 
     if (m01 | m10) {
         // The skew components may be scale-inducing, unless we are dealing
@@ -629,7 +629,7 @@ static inline float rowcol3(const float row[], const float col[]) {
 }
 
 static void normalize_perspective(float mat[9]) {
-    if (SFloatAbs(mat[SMatrix::kMPersp2]) > 1) {
+    if (SFloatAbs(mat[kMPersp2]) > 1) {
         for (int i = 0; i < 9; i++)
             mat[i] = SFloatHalf(mat[i]);
     }
@@ -745,20 +745,20 @@ static double sk_inv_determinant(const float mat[9], int isPerspective) {
     double det;
 
     if (isPerspective) {
-        det = mat[SMatrix::kMScaleX] *
-              dcross(mat[SMatrix::kMScaleY], mat[SMatrix::kMPersp2],
-                     mat[SMatrix::kMTransY], mat[SMatrix::kMPersp1])
+        det = mat[kMScaleX] *
+              dcross(mat[kMScaleY], mat[kMPersp2],
+                     mat[kMTransY], mat[kMPersp1])
               +
-              mat[SMatrix::kMSkewX]  *
-              dcross(mat[SMatrix::kMTransY], mat[SMatrix::kMPersp0],
-                     mat[SMatrix::kMSkewY],  mat[SMatrix::kMPersp2])
+              mat[kMSkewX]  *
+              dcross(mat[kMTransY], mat[kMPersp0],
+                     mat[kMSkewY],  mat[kMPersp2])
               +
-              mat[SMatrix::kMTransX] *
-              dcross(mat[SMatrix::kMSkewY],  mat[SMatrix::kMPersp1],
-                     mat[SMatrix::kMScaleY], mat[SMatrix::kMPersp0]);
+              mat[kMTransX] *
+              dcross(mat[kMSkewY],  mat[kMPersp1],
+                     mat[kMScaleY], mat[kMPersp0]);
     } else {
-        det = dcross(mat[SMatrix::kMScaleX], mat[SMatrix::kMScaleY],
-                     mat[SMatrix::kMSkewX], mat[SMatrix::kMSkewY]);
+        det = dcross(mat[kMScaleX], mat[kMScaleY],
+                     mat[kMSkewX], mat[kMSkewY]);
     }
 
     // Since the determinant is on the order of the cube of the matrix members,
@@ -1431,14 +1431,14 @@ template <MinMaxOrBoth MIN_MAX_OR_BOTH> bool get_scale_factor(SMatrix::TypeMask 
     }
     if (!(typeMask & SMatrix::kAffine_Mask)) {
         if (kMin_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
-             results[0] = SkMinScalar(SFloatAbs(m[SMatrix::kMScaleX]),
-                                      SFloatAbs(m[SMatrix::kMScaleY]));
+             results[0] = SkMinScalar(SFloatAbs(m[kMScaleX]),
+                                      SFloatAbs(m[kMScaleY]));
         } else if (kMax_MinMaxOrBoth == MIN_MAX_OR_BOTH) {
-             results[0] = SkMaxScalar(SFloatAbs(m[SMatrix::kMScaleX]),
-                                      SFloatAbs(m[SMatrix::kMScaleY]));
+             results[0] = SkMaxScalar(SFloatAbs(m[kMScaleX]),
+                                      SFloatAbs(m[kMScaleY]));
         } else {
-            results[0] = SFloatAbs(m[SMatrix::kMScaleX]);
-            results[1] = SFloatAbs(m[SMatrix::kMScaleY]);
+            results[0] = SFloatAbs(m[kMScaleX]);
+            results[1] = SFloatAbs(m[kMScaleY]);
              if (results[0] > results[1]) {
                  STSwap(results[0], results[1]);
              }
@@ -1448,12 +1448,12 @@ template <MinMaxOrBoth MIN_MAX_OR_BOTH> bool get_scale_factor(SMatrix::TypeMask 
     // ignore the translation part of the matrix, just look at 2x2 portion.
     // compute singular values, take largest or smallest abs value.
     // [a b; b c] = A^T*A
-    float a = sdot(m[SMatrix::kMScaleX], m[SMatrix::kMScaleX],
-                      m[SMatrix::kMSkewY],  m[SMatrix::kMSkewY]);
-    float b = sdot(m[SMatrix::kMScaleX], m[SMatrix::kMSkewX],
-                      m[SMatrix::kMScaleY], m[SMatrix::kMSkewY]);
-    float c = sdot(m[SMatrix::kMSkewX],  m[SMatrix::kMSkewX],
-                      m[SMatrix::kMScaleY], m[SMatrix::kMScaleY]);
+    float a = sdot(m[kMScaleX], m[kMScaleX],
+                      m[kMSkewY],  m[kMSkewY]);
+    float b = sdot(m[kMScaleX], m[kMSkewX],
+                      m[kMScaleY], m[kMSkewY]);
+    float c = sdot(m[kMSkewX],  m[kMSkewX],
+                      m[kMScaleY], m[kMScaleY]);
     // eigenvalues of A^T*A are the squared singular values of A.
     // characteristic equation is det((A^T*A) - l*I) = 0
     // l^2 - (a + c)l + (ac-b^2)
@@ -1547,12 +1547,12 @@ const SMatrix& SMatrix::InvalidMatrix() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-float SMatrix::GetValue(Index idx) const
+float SMatrix::GetValue(xFormIndex idx) const
 {
 	return fMat[idx];
 }
 
-const float * SMatrix::GetData() const
+const float * SMatrix::GetConstData() const
 {
 	return fMat;
 }
@@ -1563,7 +1563,7 @@ float * SMatrix::GetData()
 }
 
 
-void SMatrix::SetValue(Index idx, float v)
+void SMatrix::SetValue(xFormIndex idx, float v)
 {
 	set(idx, v);
 }

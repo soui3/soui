@@ -185,7 +185,7 @@ namespace SOUI
         return TRUE;
     }
     
-    HRESULT SImgDecoderFactory_WIC::SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat)
+    HRESULT SImgDecoderFactory_WIC::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
     {
         return E_NOTIMPL;
     }

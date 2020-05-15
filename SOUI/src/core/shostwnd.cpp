@@ -764,7 +764,7 @@ IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 	if (gdcFlags == GRT_NODRAW)
 	{
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
-		pRT->OffsetViewportOrg(-rc.left, -rc.top);
+		pRT->OffsetViewportOrg(-rc.left, -rc.top,NULL);
 		pRT->ClearRect(rc, 0);
 	}
 	else
@@ -1364,7 +1364,7 @@ void SHostWnd::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 	if(pFont) 
 		pRT->SelectObject(pFont,(IRenderObj**)&painter.oldFont);
 	else
-		pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()));
+		pRT->SelectObject(SFontPool::getSingleton().GetFont(FF_DEFAULTFONT,GetScale()),NULL);
 
 	COLORREF crTxt =style.GetTextColor(iState);
 	if(crTxt != CR_INVALID)
@@ -1375,7 +1375,7 @@ void SHostWnd::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 
 void SHostWnd::AfterPaint(IRenderTarget *pRT, SPainter &painter)
 {
-    pRT->SelectDefaultObject(OT_FONT);
+    pRT->SelectDefaultObject(OT_FONT,NULL);
 }
 
 void SHostWnd::UpdateLayout()

@@ -610,11 +610,11 @@ void SImageWnd::OnPaint(IRenderTarget *pRT)
     {
         CRect rcImg(CPoint(0,0),m_pImg->Size());
 		if (m_iTile == 0)
-			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_STRETCH, m_fl));
+			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_STRETCH, m_fl),0xff);
 		else if (m_iTile == 1)
-			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_NULL, m_fl));
+			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_NULL, m_fl),0xff);
 		else if (m_iTile == 2)
-			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_TILE, m_fl));
+			pRT->DrawBitmapEx(rcWnd, m_pImg, &rcImg, MAKELONG(EM_TILE, m_fl),0xff);
 	}
 	else if (m_pSkin)
 	{
@@ -953,7 +953,7 @@ void SLine::OnPaint(IRenderTarget *pRT)
     pRT->CreatePen(m_nLineStyle,m_crLine,m_nLineSize,&curPen);
     pRT->SelectObject(curPen,(IRenderObj**)&oldPen);
     pRT->DrawLines(pts,2);
-    pRT->SelectObject(oldPen);
+    pRT->SelectObject(oldPen,NULL);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1448,11 +1448,11 @@ void SGroup::OnPaint(IRenderTarget *pRT)
 		int nRound = m_nRound.toPixelSize(GetScale());
         pRT->DrawRoundRect(&rcGroupBox,CPoint(nRound, nRound));
               
-        pRT->SelectObject(pen2);
+        pRT->SelectObject(pen2,NULL);
         rcGroupBox.InflateRect(1,1,1,-1);
         pRT->DrawRoundRect(&rcGroupBox,CPoint(nRound, nRound));
 
-        pRT->SelectObject(oldPen);
+        pRT->SelectObject(oldPen,NULL);
     }
 
     if(!m_strText.GetText(FALSE).IsEmpty())

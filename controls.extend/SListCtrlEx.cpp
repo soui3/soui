@@ -292,7 +292,7 @@ namespace SOUI
 		m_pHeader->GetClientRect(&rcHead);
 		rcList.right = rcList.left + rcHead.Width();
 		int nTopItem = GetTopIndex();
-		pRT->PushClipRect(&rcList);
+		pRT->PushClipRect(&rcList,RGN_AND);
 		CRect rcItem(rcList);
 
 		rcItem.bottom = rcItem.top;

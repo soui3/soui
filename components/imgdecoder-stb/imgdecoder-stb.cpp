@@ -149,7 +149,7 @@ namespace SOUI
         return DESC_IMGDECODER;
     }
 
-	HRESULT SImgDecoderFactory_STB::SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat)
+	HRESULT SImgDecoderFactory_STB::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
 	{
 		return E_NOTIMPL;
 	}

@@ -144,7 +144,7 @@ IFontPtr SFontPool::_CreateFont(const LOGFONT &lf)
     SASSERT(m_RenderFactory);
     
     IFontPtr pFont=NULL;
-    m_RenderFactory->CreateFont(&pFont,lf);
+    m_RenderFactory->CreateFont(&pFont,&lf);
 
     return pFont;
 }
@@ -168,7 +168,11 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,SXmlNode xmlExProp)
     _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), S_CW2T(fontInfo.strFaceName));
 
     IFontPtr ret = _CreateFont(lfNew);
-	if(ret) ret->InitFromXml(&SXmlNode(xmlExProp));
+	for(SXmlAttr attr=xmlExProp.first_attribute();attr;attr=attr.next_attribute())
+	{
+		ret->SetAttribute(attr.name(),attr.value(),FALSE);
+	}
+	ret->SetAttrFinish();
 	return ret;
 }
 

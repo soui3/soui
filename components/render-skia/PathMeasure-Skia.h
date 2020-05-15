@@ -4,25 +4,24 @@
 #include <helper/obj-ref-impl.hpp>
 #include <core/SkPathMeasure.h>
 
-namespace SOUI
+SNSBEGIN
+
+class SPathMeasure_Skia : public TObjRefImpl<IPathMeasure>
 {
-	class SPathMeasure_Skia : public TObjRefImpl<IPathMeasure>
-	{
-	public:
-		SPathMeasure_Skia(void);
-		~SPathMeasure_Skia(void);
+public:
+	SPathMeasure_Skia(void);
+	~SPathMeasure_Skia(void);
 
-		virtual void setPath(IPath * path, bool forceClosed);
+	STDMETHOD_(void,setPath)(THIS_ IPath * path, bool forceClosed) OVERRIDE;
 
-		virtual float getLength();
+	STDMETHOD_(float,getLength)(THIS)  OVERRIDE;
 
-		virtual bool getPosTan(float distance, float pos[], float tan[]);
+	STDMETHOD_(BOOL,getPosTan)(THIS_ float distance, float pos[], float tan[])  OVERRIDE;
 
-		virtual bool getSegment(float startD, float stopD, IPath * dst, bool startWithMoveTo);
+	STDMETHOD_(BOOL,getSegment)(THIS_ float startD, float stopD, IPath * dst, bool startWithMoveTo)  OVERRIDE;
 
-	private:
-		SkPathMeasure	m_pathMeasure;
-	};
+private:
+	SkPathMeasure	m_pathMeasure;
+};
 
-
-}
+SNSEND

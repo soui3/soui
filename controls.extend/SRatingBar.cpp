@@ -17,12 +17,12 @@ namespace SOUI
         int nWid = (int)(rcClient.Width()*m_fValue/m_nStars);
         CRect rcFore = rcClient;
         rcFore.right = rcFore.left + nWid;
-        pRT->PushClipRect(rcFore);
+        pRT->PushClipRect(rcFore,RGN_AND);
         DrawStars(pRT,rcClient,TRUE);
         pRT->PopClip();
         CRect rcBack = rcClient;
         rcBack.left = rcFore.right;
-        pRT->PushClipRect(rcBack);
+        pRT->PushClipRect(rcBack,RGN_AND);
         DrawStars(pRT,rcClient,FALSE);
         pRT->PopClip();
     }

@@ -147,11 +147,11 @@ namespace SOUI
     }
     
   
-    HRESULT SImgDecoderFactory_PNG::SaveImage(IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat)
+    HRESULT SImgDecoderFactory_PNG::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
     {
         if(!pImg) return E_INVALIDARG;
         
-        BYTE *pData = (BYTE*)pImg->LockPixelBits();
+        BYTE *pData = (BYTE*)pImg->GetPixelBits();
         
         FILE *fp;  
         png_structp png_ptr;  
@@ -254,7 +254,6 @@ namespace SOUI
         /* 关闭文件 */  
         fclose(fp);  
 
-        pImg->UnlockPixelBits(pData);
         return S_OK;
     }
     

@@ -15,7 +15,7 @@ namespace SOUI
         rcColor.DeflateRect(2,2);
         
         //画一个代表透明的网格背景
-        pRT->PushClipRect(&rcColor);
+        pRT->PushClipRect(&rcColor,RGN_AND);
         bool bDrawY=true;
         for(int y=rcColor.top;y<rcColor.bottom;y+=KTransGridSize)
         {

@@ -11,546 +11,526 @@
 #include <string/strcpcvt.h>
 #include <interface/SRender-i.h>
 #include <souicoll.h>
-#include <Shlwapi.h>
 
-namespace SOUI
+SNSBEGIN
+
+//////////////////////////////////////////////////////////////////////////
+// SRenderFactory_Skia
+class SRenderFactory_Skia : public TObjRefImpl<IRenderFactory>
 {
-	//////////////////////////////////////////////////////////////////////////
-	// SRenderFactory_Skia
-	class SRenderFactory_Skia : public TObjRefImpl<IRenderFactory>
+public:
+	SRenderFactory_Skia();
+
+	~SRenderFactory_Skia();
+
+	STDMETHOD_(IImgDecoderFactory *,GetImgDecoderFactory)(THIS) OVERRIDE;
+	STDMETHOD_(void,SetImgDecoderFactory)(THIS_ IImgDecoderFactory *pImgDecoderFac) OVERRIDE;
+	STDMETHOD_(BOOL,CreateRenderTarget)(THIS_ IRenderTarget ** ppRenderTarget,int nWid,int nHei) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateFont)(THIS_ IFont ** ppFont, const LOGFONT *lf) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateBitmap)(THIS_ IBitmap ** ppBitmap) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePath)(THIS_ IPath ** ppPath) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePathEffect)(THIS_ REFGUID guidEffect,IPathEffect ** ppPathEffect) OVERRIDE;
+
+	STDMETHOD_(BOOL,CreatePathMeasure)(THIS_ IPathMeasure ** ppPathMeasure) OVERRIDE;
+protected:
+	SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+// TSkiaRenderObjImpl
+template<class T, OBJTYPE ot>
+class TSkiaRenderObjImpl : public TObjRefImpl<T>
+{
+public:
+	TSkiaRenderObjImpl(IRenderFactory * pRenderFac):m_pRenderFactory(pRenderFac)
 	{
-	public:
-		SRenderFactory_Skia();
-        
-		~SRenderFactory_Skia();
-        
-		virtual BOOL CreateRenderTarget(IRenderTarget ** ppRenderTarget,int nWid,int nHei);
-        virtual BOOL CreateFont(IFont ** ppFont , const LOGFONT &lf);
-        virtual BOOL CreateBitmap(IBitmap ** ppBitmap);
-        virtual BOOL CreateRegion(IRegion **ppRgn);
-		virtual BOOL CreatePath(IPath ** ppPath);
-        
-        virtual void SetImgDecoderFactory(IImgDecoderFactory *pImgDecoderFac){m_imgDecoderFactory=pImgDecoderFac;}
-        
-        virtual IImgDecoderFactory * GetImgDecoderFactory(){return m_imgDecoderFactory;}
 
-		virtual BOOL CreatePathEffect(REFGUID guidEffect,IPathEffect ** ppPathEffect);
+	}
 
-		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure);
+	virtual ~TSkiaRenderObjImpl(){}
 
-
-	protected:
-        SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
-	};
-
-    
-	//////////////////////////////////////////////////////////////////////////
-	// TSkiaRenderObjImpl
-	template<class T>
-	class TSkiaRenderObjImpl : public TObjRefImpl<SObjectImpl<T>>
+	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST OVERRIDE
 	{
-	public:
-		TSkiaRenderObjImpl(IRenderFactory * pRenderFac):m_pRenderFactory(pRenderFac)
-		{
+		return m_pRenderFactory;
+	}
 
-		}
-
-        virtual ~TSkiaRenderObjImpl(){}
-
-		virtual IRenderFactory * GetRenderFactory() const
-		{
-			return m_pRenderFactory;
-		}
-
-
-	protected:
-		IRenderFactory *m_pRenderFactory;
-	};
-
-
-	//////////////////////////////////////////////////////////////////////////
-	// SPen_Skia
-	class SPen_Skia : public TSkiaRenderObjImpl<IPen>
+	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST OVERRIDE
 	{
-		SOUI_CLASS_NAME(SPen_Skia,L"pen")
-	public:
-		SPen_Skia(IRenderFactory * pRenderFac,int iStyle=PS_SOLID,COLORREF cr=0xFF000000,int cWidth=1)
-			:TSkiaRenderObjImpl<IPen>(pRenderFac)
-			,m_nWidth(cWidth),m_style(iStyle),m_cr(cr)
-		{
-		}
+		return ot;
+	}
 
-		int GetWidth(){return m_nWidth;}
-
-		int GetStyle(){return m_style;}
-
-		void SetWidth(int nWid) {m_nWidth=nWid;}
-
-		void SetStyle(int nStyle){m_style = nStyle;}
-
-		COLORREF GetColor(){return m_cr;}
-
-		void SetColor(COLORREF cr){m_cr = cr;}
-	protected:
-	
-		int		m_style;
-		int		m_nWidth;
-		COLORREF	m_cr;
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-	// SFont_Skia
-	class SFont_Skia: public TSkiaRenderObjImpl<IFont>
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE
 	{
-		SOUI_CLASS_NAME(SFont_Skia,L"font")
-	public:
-		SFont_Skia(IRenderFactory * pRenderFac,const LOGFONT * plf);
+		return E_NOTIMPL;
+	}
 
-        virtual ~SFont_Skia();
-
-        virtual const LOGFONT * LogFont() const {return &m_lf;}
-
-        virtual LPCTSTR FamilyName()
-        {
-            return m_lf.lfFaceName;
-        }
-        virtual int TextSize(){return m_lf.lfHeight;}
-        virtual BOOL IsBold(){ return m_lf.lfWeight == FW_BOLD;}
-        virtual BOOL IsUnderline(){return m_lf.lfUnderline;}
-        virtual BOOL IsItalic(){return m_lf.lfItalic;}
-        virtual BOOL IsStrikeOut(){return m_lf.lfStrikeOut;}
-		virtual BOOL UpdateFont(const LOGFONT *pLogFont);
-
-        const SkPaint  GetPaint() const {return m_skPaint;}
-        SkTypeface *GetFont()const {return m_skFont;}
-
-		virtual HRESULT WINAPI DefAttributeProc(const IStringW * strAttribName,const IStringW *strValue, BOOL bLoading) OVERRIDE;
-		virtual void WINAPI OnInitFinished(IXmlNode * pNode) OVERRIDE; 
-		SOUI_ATTRS_BEGIN()
-			ATTR_ENUM_BEGIN(L"blurStyle",SkBlurStyle,FALSE)
-				ATTR_ENUM_VALUE(L"normal",kNormal_SkBlurStyle)
-				ATTR_ENUM_VALUE(L"solid",kSolid_SkBlurStyle)
-				ATTR_ENUM_VALUE(L"outer",kOuter_SkBlurStyle)
-				ATTR_ENUM_VALUE(L"inner",kInner_SkBlurStyle)
-			ATTR_ENUM_END(m_blurStyle)
-			ATTR_FLOAT(L"blurRadius",m_blurRadius,FALSE)
-		SOUI_ATTRS_END()
-	protected:
-        SkTypeface *m_skFont;   //定义字体
-        SkPaint     m_skPaint;  //定义文字绘制属性
-        LOGFONT     m_lf;
-		SkBlurStyle m_blurStyle;
-		SkScalar	m_blurRadius;
-	};
-
-	class SBrush_Skia : public TSkiaRenderObjImpl<IBrush>
+	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE
 	{
-		SOUI_CLASS_NAME(SBrush_Skia,L"brush")
+	}
 
-	public:
-		static SBrush_Skia * CreateSolidBrush(IRenderFactory * pRenderFac,COLORREF cr){
-			return new SBrush_Skia(pRenderFac,cr);
-		}
+protected:
+	IRenderFactory *m_pRenderFactory;
 
-		static SBrush_Skia * CreateBitmapBrush(IRenderFactory * pRenderFac,SkBitmap bmp)
-		{
-			return new SBrush_Skia(pRenderFac,bmp);
-		}
+};
 
-		SkBitmap GetBitmap(){return m_bmp;}
 
-		COLORREF GetColor() {return m_cr;}
+//////////////////////////////////////////////////////////////////////////
+// SPen_Skia
+class SPen_Skia : public TSkiaRenderObjImpl<IPen,OT_PEN>
+{
+public:
+	SPen_Skia(IRenderFactory * pRenderFac,int iStyle=PS_SOLID,COLORREF cr=0xFF000000,int cWidth=1);
 
-		BOOL IsBitmap(){return m_fBmp;}
-	protected:
-		SBrush_Skia(IRenderFactory * pRenderFac,COLORREF cr)
-			:TSkiaRenderObjImpl<IBrush>(pRenderFac),m_cr(cr),m_fBmp(FALSE)
-		{
+	STDMETHOD_(int,GetWidth)(THIS) SCONST OVERRIDE;
 
-		}
-		SBrush_Skia(IRenderFactory * pRenderFac,SkBitmap bmp)
-			:TSkiaRenderObjImpl<IBrush>(pRenderFac),m_bmp(bmp),m_fBmp(TRUE)
-		{
+	STDMETHOD_(void,SetWidth)(THIS_ int nWid) OVERRIDE;
 
-		}
+	STDMETHOD_(int,GetStyle)(THIS) SCONST OVERRIDE;
 
-		COLORREF m_cr;		//颜色画刷
-		SkBitmap m_bmp;		//位图画刷
-		BOOL	 m_fBmp;
-	};
+	STDMETHOD_(void,SetStyle)(THIS_ int style) OVERRIDE;
 
-	//////////////////////////////////////////////////////////////////////////
-	// SBitmap_Skia
-	class SBitmap_Skia : public TSkiaRenderObjImpl<IBitmap>
+	STDMETHOD_(COLORREF,GetColor)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(void,SetColor)(THIS_ COLORREF cr) OVERRIDE;
+
+protected:
+
+	int		m_style;
+	int		m_nWidth;
+	COLORREF	m_cr;
+};
+
+//////////////////////////////////////////////////////////////////////////
+// SFont_Skia
+class SFont_Skia: public TSkiaRenderObjImpl<IFont,OT_FONT>
+{
+public:
+	SFont_Skia(IRenderFactory * pRenderFac,const LOGFONT * plf);
+
+	virtual ~SFont_Skia();
+
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE;
+
+	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE;
+
+	STDMETHOD_(const LOGFONT *,LogFont)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(LPCTSTR,FamilyName)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(int,TextSize)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,IsBold)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,IsUnderline)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,IsItalic)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST OVERRIDE;
+
+	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) OVERRIDE;
+public:
+	const SkPaint  GetPaint() const;
+	SkTypeface *GetFont()const;
+
+protected:
+	SkTypeface *m_skFont;   //定义字体
+	SkPaint     m_skPaint;  //定义文字绘制属性
+	LOGFONT     m_lf;
+	SkBlurStyle m_blurStyle;
+	SkScalar	m_blurRadius;
+};
+
+class SBrush_Skia : public TSkiaRenderObjImpl<IBrush,OT_BRUSH>
+{
+public:
+	static SBrush_Skia * CreateSolidBrush(IRenderFactory * pRenderFac,COLORREF cr){
+		return new SBrush_Skia(pRenderFac,cr);
+	}
+
+	static SBrush_Skia * CreateBitmapBrush(IRenderFactory * pRenderFac,SkBitmap bmp)
 	{
-		SOUI_CLASS_NAME(SBitmap_Skia,L"bitmap")
+		return new SBrush_Skia(pRenderFac,bmp);
+	}
 
-	public:
-		SBitmap_Skia(IRenderFactory *pRenderFac);
-        ~SBitmap_Skia();
+	SkBitmap GetBitmap(){return m_bmp;}
 
-		virtual HRESULT Init(int nWid,int nHei,const LPVOID pBits=NULL);
-        virtual HRESULT Init(IImgFrame *pFrame);
-		virtual HRESULT LoadFromFile(LPCTSTR pszFileName);
-		virtual HRESULT LoadFromMemory(LPBYTE pBuf,size_t szLen);
+	COLORREF GetColor() {return m_cr;}
 
-        virtual UINT Width() const;
-        virtual UINT Height() const;
-        virtual SIZE Size() const;
-        virtual LPVOID  LockPixelBits();
-        virtual void    UnlockPixelBits(LPVOID pBuf);
-        virtual const LPVOID  GetPixelBits() const;
-        
-		const SkBitmap & GetSkBitmap() const{return m_bitmap;}
-		HBITMAP  GetGdiBitmap(){return m_hBmp;}
-	protected:
-	    HBITMAP CreateGDIBitmap(int nWid,int nHei,void ** ppBits);
-	    
-        HRESULT ImgFromDecoder(IImgX *imgDecoder);
-
-		SkBitmap    m_bitmap;   //skia 管理的BITMAP
-		HBITMAP     m_hBmp;     //标准的32位位图，和m_bitmap共享内存
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-	//	SRegion_Skia
-	class SRegion_Skia: public TSkiaRenderObjImpl<IRegion>
+	BOOL IsBitmap(){return m_fBmp;}
+protected:
+	SBrush_Skia(IRenderFactory * pRenderFac,COLORREF cr)
+		:TSkiaRenderObjImpl<IBrush,OT_BRUSH>(pRenderFac),m_cr(cr),m_fBmp(FALSE)
 	{
-		SOUI_CLASS_NAME(SRegion_Skia,L"region")
 
-		friend class SRenderTarget_Skia;
-	public:
-		SRegion_Skia(IRenderFactory *pRenderFac);
-        virtual ~SRegion_Skia();
-
-		virtual void CombineRect(LPCRECT lprect,int nCombineMode);
-		virtual void CombineRoundRect(LPCRECT lprect, POINT ptRadius, int nCombineMode);
-		virtual void CombineEllipse(LPCRECT lprect , int nCombineMode);
-		virtual void CombinePolygon(const POINT *pts, int count, int nPolygonMode, int nCombineMode);
-        virtual void CombineRgn(const IRegion * pRgnSrc,int nCombineMode );
-		virtual BOOL PtInRegion(POINT pt) const;
-		virtual BOOL RectInRegion(LPCRECT lprect) const;
-		virtual void GetRgnBox(LPRECT lprect) const;
-		virtual BOOL IsEmpty() const;
-        virtual void Offset(POINT pt);
-        virtual void Clear();
-        virtual BOOL IsEqual(const IRegion *testRgn) const;
-	protected:
-        SkRegion GetRegion() const;
-        
-        void SetRegion(const SkRegion & rgn);
-        
-        static SkRegion::Op RGNMODE2SkRgnOP(UINT mode);
-
-
-	protected:
-        SkRegion    m_rgn;
-	};
-
-
-	//////////////////////////////////////////////////////////////////////////
-	//	SPath_Skia
-
-	class SPathInfo_Skia : public TObjRefImpl<IPathInfo>
+	}
+	SBrush_Skia(IRenderFactory * pRenderFac,SkBitmap bmp)
+		:TSkiaRenderObjImpl<IBrush,OT_BRUSH>(pRenderFac),m_bmp(bmp),m_fBmp(TRUE)
 	{
-	public:
-		SPathInfo_Skia(int points);
-		~SPathInfo_Skia();
-	public:
-		virtual int pointNumber() const;
 
-		virtual const float * data() const;
+	}
 
-	public:
-		float * buffer();
-	private:
-		int mPoints;
-		float * mData;
-	};
+	COLORREF m_cr;		//颜色画刷
+	SkBitmap m_bmp;		//位图画刷
+	BOOL	 m_fBmp;
+};
 
-	class SPath_Skia: public TSkiaRenderObjImpl<IPath>
-	{
-		SOUI_CLASS_NAME(SPath_Skia,L"path")
+//////////////////////////////////////////////////////////////////////////
+// SBitmap_Skia
+class SBitmap_Skia : public TSkiaRenderObjImpl<IBitmap,OT_BITMAP>
+{
+public:
+	SBitmap_Skia(IRenderFactory *pRenderFac);
+	~SBitmap_Skia();
 
-		friend class SRenderTarget_Skia;
-		friend class SPathMeasure_Skia;
-	public:
-		SPath_Skia(IRenderFactory *pRenderFac);
-		virtual ~SPath_Skia();
+	STDMETHOD_(HRESULT,Init)(THIS_ int nWid,int nHei,const LPVOID pBits) OVERRIDE;
 
-		virtual const OBJTYPE ObjectType() const;
+	STDMETHOD_(HRESULT,Init2)(THIS_ IImgFrame *pImgFrame) OVERRIDE;
 
-		virtual FillType getFillType() const;
+	STDMETHOD_(HRESULT,LoadFromFile)(THIS_ LPCTSTR pszFileName) OVERRIDE;
 
-		virtual void setFillType(FillType ft);
+	STDMETHOD_(HRESULT,LoadFromMemory)(THIS_ LPBYTE pBuf,size_t szLen) OVERRIDE;
 
-		virtual bool isInverseFillType() const;
+	STDMETHOD_(UINT,Width)(THIS) SCONST OVERRIDE;
 
-		virtual void toggleInverseFillType();
+	STDMETHOD_(UINT,Height)(THIS) SCONST OVERRIDE;
 
-		virtual Convexity getConvexity() const;
+	STDMETHOD_(SIZE,Size)(THIS) SCONST OVERRIDE;
 
-		virtual void setConvexity(Convexity c);
+	STDMETHOD_(LPVOID,LockPixelBits)(THIS) OVERRIDE;
 
-		virtual bool isConvex() const;
+	STDMETHOD_(void,UnlockPixelBits)(THIS_ LPVOID pBuf) OVERRIDE;
 
-		virtual bool isOval(RECT* rect) const;
+	STDMETHOD_(const LPVOID,GetPixelBits)(THIS) SCONST OVERRIDE;
 
-		virtual void reset();
+	STDMETHOD_(HRESULT,Clone)(THIS_ IBitmap **ppClone) SCONST OVERRIDE;
 
-		virtual void rewind();
+	STDMETHOD_(HRESULT,Scale)(THIS_ IBitmap **pOutput,int nScale,FilterLevel filterLevel) SCONST OVERRIDE;
 
-		virtual bool isEmpty() const;
+	STDMETHOD_(HRESULT,Scale2)(THIS_ IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel) SCONST OVERRIDE;
 
-		virtual bool isFinite() const;
+	STDMETHOD_(HRESULT,Save)(THIS_ LPCWSTR pszFileName,const LPVOID pFormat) SCONST OVERRIDE;
 
-		virtual bool isLine(POINT line[2]) const;
+public:
+	const SkBitmap & GetSkBitmap() const{return m_bitmap;}
+	HBITMAP  GetGdiBitmap(){return m_hBmp;}
+protected:
+	HBITMAP CreateGDIBitmap(int nWid,int nHei,void ** ppBits);
 
-		virtual bool isRect(RECT* rect) const;
+	HRESULT ImgFromDecoder(IImgX *imgDecoder);
 
-		virtual bool isRect(bool* isClosed, Direction* direction) const;
+	SkBitmap    m_bitmap;   //skia 管理的BITMAP
+	HBITMAP     m_hBmp;     //标准的32位位图，和m_bitmap共享内存
+};
 
-		virtual int countPoints() const;
+//////////////////////////////////////////////////////////////////////////
+//	SRegion_Skia
+class SRegion_Skia: public TSkiaRenderObjImpl<IRegion,OT_RGN>
+{
+	friend class SRenderTarget_Skia;
+public:
+	SRegion_Skia(IRenderFactory *pRenderFac);
+	virtual ~SRegion_Skia();
 
-		virtual fPoint getPoint(int index) const;
+	STDMETHOD_(void,CombineRect)(THIS_ LPCRECT lprect,int nCombineMode) OVERRIDE;
 
-		virtual int getPoints(fPoint points[], int max) const;
+	STDMETHOD_(void,CombineRgn)(THIS_ const IRegion * pRgnSrc,int nCombineMode ) OVERRIDE;
 
-		virtual int countVerbs() const;
+	STDMETHOD_(void,CombineRoundRect)(THIS_ LPCRECT lprect, POINT ptConner, int nCombineMode) OVERRIDE;
 
-		virtual int getVerbs(BYTE verbs[], int max) const;
+	STDMETHOD_(void,CombineEllipse)(THIS_ LPCRECT lprect , int nCombineMode) OVERRIDE;
 
-		virtual RECT getBounds() const;
+	STDMETHOD_(void,CombinePolygon)(THIS_ const POINT *pts, int count, int nPolygonMode, int nCombineMode) OVERRIDE;
 
-		virtual void moveTo(float x, float y);
+	STDMETHOD_(BOOL,PtInRegion)(THIS_ POINT pt) SCONST OVERRIDE;
 
-		virtual void rMoveTo(float dx, float dy);
+	STDMETHOD_(BOOL,RectInRegion)(THIS_ LPCRECT lprect) SCONST OVERRIDE;
 
-		virtual void lineTo(float x, float y);
+	STDMETHOD_(void,GetRgnBox)(THIS_ LPRECT lprect) SCONST OVERRIDE;
 
-		virtual void rLineTo(float dx, float dy);
+	STDMETHOD_(BOOL,IsEmpty)(THIS) SCONST OVERRIDE;
 
-		virtual void quadTo(float x1, float y1, float x2, float y2);
+	STDMETHOD_(void,Offset)(THIS_ POINT pt) OVERRIDE;
 
-		virtual void rQuadTo(float dx1, float dy1, float dx2, float dy2);
+	STDMETHOD_(void,Clear)(THIS) OVERRIDE;
 
-		virtual void conicTo(float x1, float y1, float x2, float y2, float w);
+	STDMETHOD_(BOOL,IsEqual)(THIS_ const IRegion * testRgn) SCONST OVERRIDE;
+protected:
+	SkRegion GetRegion() const;
 
-		virtual void rConicTo(float dx1, float dy1, float dx2, float dy2, float w);
+	void SetRegion(const SkRegion & rgn);
 
-		virtual void cubicTo(float x1, float y1, float x2, float y2, float x3, float y3);
+	static SkRegion::Op RGNMODE2SkRgnOP(UINT mode);
 
-		virtual void rCubicTo(float dx1, float dy1, float dx2, float dy2, float dx3, float dy3);
 
-		virtual void arcTo(const RECT& oval, float startAngle, float sweepAngle, bool forceMoveTo);
+protected:
+	SkRegion    m_rgn;
+};
 
-		virtual void arcTo(float x1, float y1, float x2, float y2, float radius);
 
-		virtual void close();
+//////////////////////////////////////////////////////////////////////////
+//	SPath_Skia
 
-		virtual void addRect(const RECT& rect, Direction dir = kCW_Direction);
+class SPathInfo_Skia : public TObjRefImpl<IPathInfo>
+{
+public:
+	SPathInfo_Skia(int points);
+	~SPathInfo_Skia();
+public:
+	STDMETHOD_(int,pointNumber)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(const float *,data)(THIS) SCONST OVERRIDE;
+public:
+	float * buffer();
+private:
+	int mPoints;
+	float * mData;
+};
 
-		virtual void addRect(float left, float top, float right, float bottom, Direction dir = kCW_Direction);
+class SPath_Skia: public TSkiaRenderObjImpl<IPath,OT_PATH>
+{
+	friend class SRenderTarget_Skia;
+	friend class SPathMeasure_Skia;
+public:
+	SPath_Skia(IRenderFactory *pRenderFac);
+	virtual ~SPath_Skia();
 
-		virtual void addOval(const RECT& oval, Direction dir = kCW_Direction);
+	STDMETHOD_(FillType,getFillType)(THIS) SCONST OVERRIDE;
 
-		virtual void addCircle(float x, float y, float radius, Direction dir = kCW_Direction);
+	STDMETHOD_(void,setFillType)(THIS_ FillType ft) OVERRIDE;
 
-		virtual void addArc(const RECT& oval, float startAngle, float sweepAngle);
+	STDMETHOD_(BOOL,isInverseFillType)(THIS) SCONST OVERRIDE;
 
-		virtual void addRoundRect(const RECT& rect, float rx, float ry, Direction dir = kCW_Direction);
+	STDMETHOD_(void,toggleInverseFillType)(THIS) OVERRIDE;
 
-		virtual void addRoundRect(const RECT& rect, const float radii[], Direction dir = kCW_Direction);
+	STDMETHOD_(Convexity,getConvexity)(THIS) SCONST OVERRIDE;
 
-		virtual void addPoly(const POINT pts[], int count, bool close);
+	STDMETHOD_(void,setConvexity)(THIS_ Convexity c) OVERRIDE;
 
-		virtual void addPath(const IPath * src, float dx, float dy, AddPathMode mode = kAppend_AddPathMode);
+	STDMETHOD_(BOOL,isConvex)(THIS) SCONST OVERRIDE;
 
-		virtual void reverseAddPath(const IPath* src);
+	STDMETHOD_(BOOL,isOval)(THIS_ RECT* rect) SCONST OVERRIDE;
 
-		virtual void offset(float dx, float dy);
+	STDMETHOD_(void,reset)(THIS) OVERRIDE;
 
-		virtual void transform(const IxForm * matrix);
+	STDMETHOD_(void,rewind)(THIS) OVERRIDE;
 
-		virtual bool getLastPt(POINT* lastPt) const;
+	STDMETHOD_(BOOL,isEmpty)(THIS) SCONST OVERRIDE;
 
-		virtual void setLastPt(float x, float y);
+	STDMETHOD_(BOOL,isFinite)(THIS) SCONST OVERRIDE;
 
-		virtual void addString(LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont);
+	STDMETHOD_(BOOL,isLine)(THIS_ POINT line[2]) SCONST OVERRIDE;
 
-		virtual IPathInfo* approximate(float acceptableError);
+	STDMETHOD_(BOOL,isRect)(THIS_ RECT* rect) SCONST OVERRIDE;
 
-	protected:
-		SkPath      m_skPath;
-	};
+	STDMETHOD_(int,countPoints)(THIS_ ) SCONST OVERRIDE;
 
-	//////////////////////////////////////////////////////////////////////////
-	//	SRenderTarget_Skia
-	//////////////////////////////////////////////////////////////////////////
-	class SRenderTarget_Skia: public TObjRefImpl<IRenderTarget>
-	{
-	public:
-		SRenderTarget_Skia(IRenderFactory* pRenderFactory,int nWid,int nHei);
-		~SRenderTarget_Skia();
+	STDMETHOD_(fPoint,getPoint)(THIS_ int index) SCONST OVERRIDE;
 
-		//只支持创建位图表面
-		virtual HRESULT CreateCompatibleRenderTarget(SIZE szTarget,IRenderTarget **ppRenderTarget);
+	STDMETHOD_(int,getPoints)(THIS_ fPoint points[], int max) SCONST OVERRIDE;
 
-		virtual HRESULT CreatePen(int iStyle,COLORREF cr,int cWidth,IPen ** ppPen);
-		virtual HRESULT CreateSolidColorBrush(COLORREF cr,IBrush ** ppBrush);
-		virtual HRESULT CreateBitmapBrush( IBitmap *pBmp,IBrush ** ppBrush );
-		virtual HRESULT CreateRegion(IRegion ** ppRegion);
+	STDMETHOD_(int,countVerbs)(THIS) SCONST OVERRIDE;
 
-		virtual HRESULT Resize(SIZE sz);
+	STDMETHOD_(int,getVerbs)(THIS_ BYTE verbs[], int max) SCONST OVERRIDE;
 
-        virtual HRESULT OffsetViewportOrg(int xOff, int yOff, LPPOINT lpPoint=NULL);
-        virtual HRESULT GetViewportOrg(LPPOINT lpPoint);
-        virtual HRESULT SetViewportOrg( POINT pt );
+	STDMETHOD_(RECT,getBounds)(THIS) SCONST OVERRIDE;
 
-		virtual HRESULT PushClipRect(LPCRECT pRect,UINT mode=RGN_AND);
-        virtual HRESULT PushClipRegion(IRegion *pRegion,UINT mode=RGN_AND);
-		virtual HRESULT PopClip();
+	STDMETHOD_(void,moveTo)(THIS_ float x, float y) OVERRIDE;
 
-        virtual HRESULT ExcludeClipRect(LPCRECT pRc);
-        virtual HRESULT IntersectClipRect(LPCRECT pRc);
+	STDMETHOD_(void,rMoveTo)(THIS_ float dx, float dy) OVERRIDE;
 
-        virtual HRESULT SaveClip(int *pnState);
-        virtual HRESULT RestoreClip(int nState=-1);
+	STDMETHOD_(void,lineTo)(THIS_ float x, float y) OVERRIDE;
 
-        virtual HRESULT GetClipRegion(IRegion **ppRegion);
-        virtual HRESULT GetClipBox(LPRECT prc);
-        
-		virtual HRESULT BitBlt(LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop=SRCCOPY);
-        virtual HRESULT AlphaBlend(LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha);
+	STDMETHOD_(void,rLineTo)(THIS_ float dx, float dy) OVERRIDE;
 
-		virtual HRESULT DrawText( LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat);
-		virtual HRESULT MeasureText(LPCTSTR pszText,int cchLen, SIZE *psz );
+	STDMETHOD_(void,quadTo)(THIS_ float x1, float y1, float x2, float y2) OVERRIDE;
 
-		virtual HRESULT DrawRectangle(LPCRECT pRect);
-		virtual HRESULT FillRectangle(LPCRECT pRect);
-        virtual HRESULT FillSolidRect(LPCRECT pRect,COLORREF cr);
-        virtual HRESULT ClearRect(LPCRECT pRect,COLORREF cr);
-        virtual HRESULT InvertRect(LPCRECT pRect);
+	STDMETHOD_(void,rQuadTo)(THIS_ float dx1, float dy1, float dx2, float dy2) OVERRIDE;
 
-        virtual HRESULT DrawEllipse(LPCRECT pRect);
-        virtual HRESULT FillEllipse(LPCRECT pRect);
-        virtual HRESULT FillSolidEllipse(LPCRECT pRect,COLORREF cr);
+	STDMETHOD_(void,conicTo)(THIS_ float x1, float y1, float x2, float y2,
+		float w) OVERRIDE;
 
-        virtual HRESULT DrawArc(LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter);
-        virtual HRESULT FillArc(LPCRECT pRect,float startAngle,float sweepAngle);
+	STDMETHOD_(void,rConicTo)(THIS_ float dx1, float dy1, float dx2, float dy2,
+		float w) OVERRIDE;
 
-        virtual HRESULT DrawRoundRect(LPCRECT pRect,POINT pt);
-        virtual HRESULT FillRoundRect(LPCRECT pRect,POINT pt);
-        virtual HRESULT FillSolidRoundRect(LPCRECT pRect,POINT pt,COLORREF cr);
+	STDMETHOD_(void,cubicTo)(THIS_ float x1, float y1, float x2, float y2,
+		float x3, float y3) OVERRIDE;
 
-        virtual HRESULT DrawLines(LPPOINT pPt,size_t nCount);
-        virtual HRESULT GradientFill(LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha=0xFF);
-        virtual HRESULT GradientFillEx( LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha=0xFF );
+	STDMETHOD_(void,rCubicTo)(THIS_ float x1, float y1, float x2, float y2,
+		float x3, float y3) OVERRIDE;
 
-		virtual HRESULT TextOut(
-			int x,
-			int y,
-			LPCTSTR lpszString,
-			int nCount);
+	STDMETHOD_(void,arcTo)(THIS_ const RECT& oval, float startAngle, float sweepAngle,
+		bool forceMoveTo) OVERRIDE;
 
-        virtual HRESULT DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags);
-        virtual HRESULT DrawBitmap(LPCRECT pRcDest,IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha=0xFF);
-        virtual HRESULT DrawBitmapEx(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha=0xFF);
-        virtual HRESULT DrawBitmap9Patch(LPCRECT pRcDest,IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha=0xFF);
+	STDMETHOD_(void,arcTo)(THIS_ float x1, float y1, float x2, float y2,
+		float radius) OVERRIDE;
 
-		virtual IRenderObj * GetCurrentObject(OBJTYPE uType);
-        virtual HRESULT SelectDefaultObject(OBJTYPE uType,IRenderObj ** ppOldObj = NULL);
-        virtual HRESULT SelectObject(IRenderObj *pObj,IRenderObj ** ppOldObj = NULL);
+	STDMETHOD_(void,close)(THIS) OVERRIDE;
 
+	STDMETHOD_(BOOL,isRect)(THIS_ bool* isClosed, Direction* direction) SCONST OVERRIDE;
 
-		virtual COLORREF GetTextColor()
-		{
-			return m_curColor.toCOLORREF();
-		}
-		
-		virtual COLORREF SetTextColor(COLORREF color)
-		{
-			COLORREF crOld=m_curColor.toCOLORREF();
- 			m_curColor.setRGB(color);
-			return crOld;
-		}
-		
-        virtual HDC GetDC(UINT uFlag=0);
+	STDMETHOD_(void,addRect)(THIS_ const RECT& rect, Direction dir /*= kCW_Direction*/) OVERRIDE;
 
-		virtual void ReleaseDC(HDC hdc);
-        
-        virtual HRESULT SetTransform(const float matrix[9], float oldMatrix[9]);
+	STDMETHOD_(void,addRect)(THIS_ float left, float top, float right, float bottom,
+		Direction dir/* = kCW_Direction*/) OVERRIDE;
 
-        virtual HRESULT GetTransform(float matrix[9]) const;
+	STDMETHOD_(void,addOval)(THIS_ const RECT * oval, Direction dir/*= kCW_Direction*/) OVERRIDE;
 
-		virtual COLORREF GetPixel( int x, int y );
+	STDMETHOD_(void,addCircle)(THIS_ float x, float y, float radius,
+		Direction dir /*= kCW_Direction*/) OVERRIDE;
 
-		virtual COLORREF SetPixel( int x, int y, COLORREF cr );
+	STDMETHOD_(void,addArc)(THIS_ const RECT* oval, float startAngle, float sweepAngle) OVERRIDE;
 
-		virtual HRESULT GradientFill2(LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha=0xff);
+	STDMETHOD_(void,addRoundRect)(THIS_ const RECT* rect, float rx, float ry,
+		Direction dir/* = kCW_Direction*/) OVERRIDE;
 
-		virtual HRESULT PushClipPath(const IPath * path, UINT mode, bool doAntiAlias = false);
+	STDMETHOD_(void,addRoundRect)(THIS_ const RECT* rect, const float radii[],
+		Direction dir/* = kCW_Direction*/) OVERRIDE;
 
-		virtual HRESULT DrawPath(const IPath * path, IPathEffect * pathEffect=NULL);
+	STDMETHOD_(void,addPoly)(THIS_ const POINT pts[], int count, bool close) OVERRIDE;
 
-		virtual HRESULT FillPath(const IPath * path);
+	STDMETHOD_(void,addPath)(THIS_ const IPath * src, float dx, float dy,
+		AddPathMode mode /*= kAppend_AddPathMode*/) OVERRIDE;
 
-		virtual HRESULT PushLayer(const RECT * pRect,BYTE byAlpha) ;
+	STDMETHOD_(void,reverseAddPath)(THIS_ const IPath* src) OVERRIDE;
 
-		virtual HRESULT PopLayer() ;
+	STDMETHOD_(void,offset)(THIS_ float dx, float dy) OVERRIDE;
 
-		virtual HRESULT SetXfermode(int mode,int *pOldMode/* =NULL */);
+	STDMETHOD_(void,transform)(THIS_ const IxForm * matrix) OVERRIDE;
 
-		virtual BOOL SetAntiAlias(BOOL bAntiAlign);
-    public:
-        SkCanvas *GetCanvas(){return m_SkCanvas;}
+	STDMETHOD_(BOOL,getLastPt)(THIS_ POINT* lastPt) SCONST OVERRIDE;
 
-		virtual BOOL WINAPI GetAttribute(const IStringW * strAttr, IStringW *pValue) const
-		{
-			if(strAttr->CompareNoCase(L"antiAlias") == 0)
-			{
-				pValue->Assign(m_bAntiAlias?L"1":L"0");
-				return TRUE;
-			}
-			return __super::GetAttribute(strAttr,pValue);
-		}
+	STDMETHOD_(void,setLastPt)(THIS_ float x, float y) OVERRIDE;
 
-		SOUI_ATTRS_BEGIN()
-			ATTR_BOOL(L"antiAlias",m_bAntiAlias,FALSE)
-		SOUI_ATTRS_END()
-	
-	protected:
-		bool SetPaintXferMode(SkPaint & paint,int nRopMode);
+	STDMETHOD_(void,addString)(THIS_ LPCTSTR pszText,int nLen, float x,float y, const IFont *pFont) OVERRIDE;
 
-    protected:
-		SkCanvas *m_SkCanvas;
-        SColor            m_curColor;
-		SAutoRefPtr<SBitmap_Skia> m_curBmp;
-		SAutoRefPtr<SPen_Skia> m_curPen;
-		SAutoRefPtr<SBrush_Skia> m_curBrush;
-        SAutoRefPtr<SFont_Skia> m_curFont;
-    
-        SkPoint         m_ptOrg;
-        
-        //注意保存4个默认的RenderObject对象
-        SAutoRefPtr<IBitmap> m_defBmp;
-        SAutoRefPtr<IPen> m_defPen;
-        SAutoRefPtr<IBrush> m_defBrush;
-        SAutoRefPtr<IFont> m_defFont;
+	STDMETHOD_(IPathInfo*, approximate)(THIS_ float acceptableError) OVERRIDE;
 
-		SAutoRefPtr<IRenderFactory> m_pRenderFactory;
+protected:
+	SkPath      m_skPath;
+};
 
-        HDC m_hGetDC;
-        UINT m_uGetDCFlag;
-		
-		bool			m_bAntiAlias;
-		SList<int>		m_lstLayerId;	//list to save layer ids
-		int				m_xferMode;
-	};
-	
-	namespace RENDER_SKIA
-    {
-        SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef ** ppRenderFactory);
-    }
+//////////////////////////////////////////////////////////////////////////
+//	SRenderTarget_Skia
+//////////////////////////////////////////////////////////////////////////
+class SRenderTarget_Skia: public TObjRefImpl<IRenderTarget>
+{
+public:
+	SRenderTarget_Skia(IRenderFactory* pRenderFactory,int nWid,int nHei);
+	~SRenderTarget_Skia();
+
+	STDMETHOD_(HRESULT,CreateCompatibleRenderTarget)(THIS_ SIZE szTarget,IRenderTarget **ppRenderTarget) OVERRIDE;
+	STDMETHOD_(HRESULT,CreatePen)(THIS_ int iStyle,COLORREF cr,int cWidth,IPen ** ppPen) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateSolidColorBrush)(THIS_ COLORREF cr,IBrush ** ppBrush) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateBitmapBrush)(THIS_ IBitmap *pBmp,IBrush ** ppBrush ) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateRegion)(THIS_ IRegion ** ppRegion ) OVERRIDE;
+
+	STDMETHOD_(HRESULT,Resize)(THIS_ SIZE sz) OVERRIDE;
+
+	STDMETHOD_(HRESULT,OffsetViewportOrg)(THIS_ int xOff, int yOff, LPPOINT lpPoint/*=NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GetViewportOrg)(THIS_ LPPOINT lpPoint) OVERRIDE;
+	STDMETHOD_(HRESULT,SetViewportOrg)(THIS_ POINT pt) OVERRIDE;
+
+	STDMETHOD_(HRESULT,PushClipRect)(THIS_ LPCRECT pRect,UINT mode/*=RGN_AND*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PushClipRegion)(THIS_ IRegion *pRegion,UINT mode/*=RGN_AND*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PopClip)(THIS) OVERRIDE;
+
+	STDMETHOD_(HRESULT,ExcludeClipRect)(THIS_ LPCRECT pRc) OVERRIDE;
+	STDMETHOD_(HRESULT,IntersectClipRect)(THIS_ LPCRECT pRc) OVERRIDE;
+
+	STDMETHOD_(HRESULT,SaveClip)(THIS_ int *pnState) OVERRIDE;
+	STDMETHOD_(HRESULT,RestoreClip)(THIS_ int nState/*=-1*/) OVERRIDE;
+
+	STDMETHOD_(HRESULT,GetClipRegion)(THIS_ IRegion **ppRegion) OVERRIDE;
+	STDMETHOD_(HRESULT,GetClipBox)(THIS_ LPRECT prc) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawText)(THIS_ LPCTSTR pszText,int cchLen,LPRECT pRc,UINT uFormat) OVERRIDE;
+	STDMETHOD_(HRESULT,MeasureText)(THIS_ LPCTSTR pszText,int cchLen, SIZE *psz) OVERRIDE;
+	STDMETHOD_(HRESULT,TextOut)(THIS_ int x,int y, LPCTSTR lpszString,int nCount) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawRectangle)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillRectangle)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidRect)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawRoundRect)(THIS_ LPCRECT pRect,POINT pt) OVERRIDE;
+	STDMETHOD_(HRESULT,FillRoundRect)(THIS_ LPCRECT pRect,POINT pt) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidRoundRect)(THIS_ LPCRECT pRect,POINT pt,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,ClearRect)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,InvertRect)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawEllipse)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillEllipse)(THIS_ LPCRECT pRect) OVERRIDE;
+	STDMETHOD_(HRESULT,FillSolidEllipse)(THIS_ LPCRECT pRect,COLORREF cr) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle,bool useCenter) OVERRIDE;
+	STDMETHOD_(HRESULT,FillArc)(THIS_ LPCRECT pRect,float startAngle,float sweepAngle) OVERRIDE;
+
+	STDMETHOD_(HRESULT,DrawLines)(THIS_ LPPOINT pPt,size_t nCount) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFill)(THIS_ LPCRECT pRect,BOOL bVert,COLORREF crBegin,COLORREF crEnd,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFillEx)(THIS_ LPCRECT pRect,const POINT* pts,COLORREF *colors,float *pos,int nCount,BYTE byAlpha/*=0xFF*/ ) OVERRIDE;
+	STDMETHOD_(HRESULT,GradientFill2)(THIS_ LPCRECT pRect,GradientType type,COLORREF crStart,COLORREF crCenter,COLORREF crEnd,float fLinearAngle,float fCenterX,float fCenterY,int nRadius,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawIconEx)(THIS_ int xLeft, int yTop, HICON hIcon, int cxWidth,int cyWidth,UINT diFlags) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmap)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmapEx)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,UINT expendMode, BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawBitmap9Patch)(THIS_ LPCRECT pRcDest,const IBitmap *pBitmap,LPCRECT pRcSrc,LPCRECT pRcSourMargin,UINT expendMode,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,BitBlt)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSour,int xSrc,int ySrc,DWORD dwRop/*=kSrcCopy*/) OVERRIDE;
+	STDMETHOD_(HRESULT,AlphaBlend)(THIS_ LPCRECT pRcDest,IRenderTarget *pRTSrc,LPCRECT pRcSrc,BYTE byAlpha) OVERRIDE;
+	STDMETHOD_(IRenderObj *,GetCurrentObject)(THIS_ OBJTYPE uType) OVERRIDE;
+	STDMETHOD_(HRESULT,SelectDefaultObject)(THIS_ OBJTYPE objType, IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,SelectObject)(THIS_ IRenderObj *pObj,IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
+	STDMETHOD_(COLORREF,GetTextColor)(THIS) OVERRIDE;
+	STDMETHOD_(COLORREF,SetTextColor)(THIS_ COLORREF color) OVERRIDE;
+	STDMETHOD_(HDC,GetDC)(THIS_ UINT uFlag) OVERRIDE;
+	STDMETHOD_(void,ReleaseDC)(THIS_ HDC hdc) OVERRIDE;
+	STDMETHOD_(HRESULT,SetTransform)(THIS_ const float matrix[9], float oldMatrix[9]/*=NULL*/) OVERRIDE;
+	STDMETHOD_(HRESULT,GetTransform)(THIS_ float matrix[9]) SCONST OVERRIDE;
+	STDMETHOD_(COLORREF,GetPixel)(THIS_ int x, int y) OVERRIDE;
+	STDMETHOD_(COLORREF,SetPixel)(THIS_ int x, int y, COLORREF cr) OVERRIDE;
+	STDMETHOD_(HRESULT,PushClipPath)(THIS_ const IPath * path, UINT mode, bool doAntiAlias = false) OVERRIDE;
+	STDMETHOD_(HRESULT,DrawPath)(THIS_ const IPath * path,IPathEffect * pathEffect=NULL) OVERRIDE;
+	STDMETHOD_(HRESULT,FillPath)(THIS_ const IPath * path) OVERRIDE;
+	STDMETHOD_(HRESULT,PushLayer)(THIS_ const RECT * pRect,BYTE byAlpha/*=0xFF*/) OVERRIDE;
+	STDMETHOD_(HRESULT,PopLayer)(THIS) OVERRIDE;
+	STDMETHOD_(HRESULT,SetXfermode)(THIS_ int mode,int *pOldMode=NULL) OVERRIDE;
+	STDMETHOD_(BOOL,SetAntiAlias)(THIS_ BOOL bAntiAlias) OVERRIDE;
+	STDMETHOD_(BOOL,GetAntiAlias)(THIS) SCONST OVERRIDE;
+public:
+	SkCanvas *GetCanvas(){return m_SkCanvas;}
+
+protected:
+	bool SetPaintXferMode(SkPaint & paint,int nRopMode);
+
+protected:
+	SkCanvas *m_SkCanvas;
+	SColor            m_curColor;
+	SAutoRefPtr<SBitmap_Skia> m_curBmp;
+	SAutoRefPtr<SPen_Skia> m_curPen;
+	SAutoRefPtr<SBrush_Skia> m_curBrush;
+	SAutoRefPtr<SFont_Skia> m_curFont;
+
+	SkPoint         m_ptOrg;
+
+	//注意保存4个默认的RenderObject对象
+	SAutoRefPtr<IBitmap> m_defBmp;
+	SAutoRefPtr<IPen> m_defPen;
+	SAutoRefPtr<IBrush> m_defBrush;
+	SAutoRefPtr<IFont> m_defFont;
+
+	SAutoRefPtr<IRenderFactory> m_pRenderFactory;
+
+	HDC m_hGetDC;
+	UINT m_uGetDCFlag;
+
+	bool			m_bAntiAlias;
+	SList<int>		m_lstLayerId;	//list to save layer ids
+	int				m_xferMode;
+};
+
+namespace RENDER_SKIA
+{
+	SOUI_COM_C BOOL SOUI_COM_API SCreateInstance(IObjRef ** ppRenderFactory);
 }
-
+SNSEND
