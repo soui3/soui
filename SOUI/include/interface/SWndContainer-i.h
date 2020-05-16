@@ -84,7 +84,7 @@ struct ISwndContainer : public ITimelineHandlersMgr
 
 	virtual BOOL UnregisterTrackMouseEvent(SWND swnd)=0;
 
-	virtual SMessageLoop * GetMsgLoop() =0;
+	virtual IMessageLoop * GetMsgLoop() =0;
 
 	//标记窗口树的zorder失效
 	virtual void MarkWndTreeZorderDirty() = 0;

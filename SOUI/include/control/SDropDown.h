@@ -112,7 +112,7 @@ namespace SOUI
         //返回下拉列表的状态值，由派生类提供。
         virtual int GetValue() const {return 0;}
     protected:
-        virtual SMessageLoop * GetMsgLoop();
+        virtual IMessageLoop * GetMsgLoop();
         /**
          * OnReleaseSwndCapture
          * @brief    阻止窗口的ReleaseCapture
@@ -130,7 +130,7 @@ namespace SOUI
          *
          * Describe  
          */
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
+        virtual BOOL WINAPI PreTranslateMessage(MSG* pMsg);
 
         /**
          * SDropDownWnd::OnLButtonDown

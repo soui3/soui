@@ -21,7 +21,7 @@ namespace SOUI
 
         /*virtual*/ void ClearTip();
 
-        /*virtual*/ BOOL PreTranslateMessage(MSG* pMsg);
+        /*virtual*/ BOOL WINAPI PreTranslateMessage(MSG* pMsg);
     protected:
         virtual void OnFinalMessage(HWND hWnd);
 

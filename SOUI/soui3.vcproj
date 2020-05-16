@@ -966,6 +966,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\smsgloop-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\core\SMsgLoop.h"
 				>
 			</File>
@@ -1270,11 +1274,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File

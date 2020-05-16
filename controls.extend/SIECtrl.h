@@ -101,7 +101,7 @@ namespace SOUI
 		BOOL Navigate(const SStringW & strUrl);
     protected:
         virtual void OnAxActivate(IUnknown *pUnknwn);
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
+        virtual BOOL WINAPI PreTranslateMessage(MSG* pMsg);
 
         int OnCreate(LPVOID);
         void OnDestroy();

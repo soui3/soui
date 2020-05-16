@@ -1,81 +1,52 @@
 ﻿#pragma once
+#include <interface/smsgloop-i.h>
+#include <souicoll.h>
 
-#ifndef WM_SYSTIMER
-#define WM_SYSTIMER 0x0118   //(caret blink)
-#endif//WM_SYSTIMER
+SNSBEGIN
 
-namespace SOUI
+class SOUI_EXP SMessageLoop : public IMessageLoop
 {
-    template<class T>
-    BOOL RemoveElementFromArray(SArray<T> &arr, T ele)
-    {
-        for(size_t i=0;i<arr.GetCount();i++)
-        {
-            if(arr[i] == ele)
-            {
-                arr.RemoveAt(i);
-                return TRUE;
-            }
-        }
-        return FALSE;
-    }
-    
-    struct IMessageFilter
-    {
-        virtual BOOL PreTranslateMessage(MSG* pMsg) = 0;
-    };
+public:
+	SMessageLoop():m_bRunning(FALSE)
+	{
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // CIdleHandler - Interface for idle processing
+	}
+	virtual ~SMessageLoop(){}
 
-    struct IIdleHandler
-    {
-        virtual BOOL OnIdle() = 0;
-    };
+public:
+	// Message filter operations
+	STDMETHOD_(BOOL,AddMessageFilter)(THIS_ IMessageFilter* pMessageFilter) OVERRIDE;
 
-    class SOUI_EXP SMessageLoop
-    {
-    public:
-        SMessageLoop():m_bRunning(FALSE)
-        {
-        
-        }
-        virtual ~SMessageLoop(){}
-        
-        SArray<IMessageFilter*> m_aMsgFilter;
-        SArray<IIdleHandler*> m_aIdleHandler;
-        MSG m_msg;
-                
-        // Message filter operations
-        BOOL AddMessageFilter(IMessageFilter* pMessageFilter);
+	STDMETHOD_(BOOL,RemoveMessageFilter)(THIS_ IMessageFilter* pMessageFilter) OVERRIDE;
 
-        BOOL RemoveMessageFilter(IMessageFilter* pMessageFilter);
+	// Idle handler operations
+	STDMETHOD_(BOOL,AddIdleHandler)(THIS_ IIdleHandler* pIdleHandler) OVERRIDE;
 
-        // Idle handler operations
-        BOOL AddIdleHandler(IIdleHandler* pIdleHandler);
+	STDMETHOD_(BOOL,RemoveIdleHandler)(THIS_ IIdleHandler* pIdleHandler) OVERRIDE;
 
-        BOOL RemoveIdleHandler(IIdleHandler* pIdleHandler);
+	// Override to change message filtering
+	STDMETHOD_(BOOL,PreTranslateMessage)(THIS_ MSG* pMsg) OVERRIDE;
 
-        static BOOL IsIdleMessage(MSG* pMsg);
+	// override to change idle processing
+	STDMETHOD_(BOOL,OnIdle)(THIS_ int /*nIdleCount*/) OVERRIDE;
 
-        // Overrideables
-        // Override to change message filtering
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
+	STDMETHOD_(int,Run)(THIS) OVERRIDE;
 
-        // override to change idle processing
-        virtual BOOL OnIdle(int /*nIdleCount*/);
-        
-        virtual int Run();
-        
-        virtual BOOL IsRunning() const{return m_bRunning;}
-        
-        virtual void OnMsg(LPMSG pMsg);
-        
-		virtual void Quit();
-    protected:
-        BOOL m_bRunning;
-		BOOL m_bQuit;
-    };
+	STDMETHOD_(BOOL,IsRunning)(THIS) const OVERRIDE;
+
+	STDMETHOD_(void,OnMsg)(THIS_ LPMSG pMsg) OVERRIDE;
+
+	STDMETHOD_(void,Quit)(THIS) OVERRIDE;
+public:
+	static BOOL IsIdleMessage( MSG* pMsg );
+protected:
+	BOOL m_bRunning;
+	BOOL m_bQuit;
+
+	SArray<IMessageFilter*> m_aMsgFilter;
+	SArray<IIdleHandler*> m_aIdleHandler;
+	MSG m_msg;
+};
 
 
-}//end of namespace SOUI
+SNSEND

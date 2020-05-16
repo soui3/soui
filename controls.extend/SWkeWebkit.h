@@ -40,7 +40,7 @@ namespace SOUI
         wkeWebView	GetWebView(){return m_pWebView;}
     protected:
         virtual void onBufUpdated (const HDC hdc,int x, int y, int cx, int cy);
-        virtual BOOL OnIdle();
+        virtual BOOL WINAPI OnIdle();
     protected:
         int OnCreate(void *);
         void OnDestroy();

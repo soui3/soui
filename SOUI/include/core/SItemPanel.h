@@ -62,7 +62,7 @@ public://SwndContainerImpl
 
 	virtual void UpdateTooltip();
 
-    virtual SMessageLoop *GetMsgLoop();
+    virtual IMessageLoop *GetMsgLoop();
     
     virtual IScriptModule * GetScriptModule();
 

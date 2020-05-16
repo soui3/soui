@@ -616,7 +616,7 @@ void SApplication::SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFacto
 }
 
 
-bool SApplication::AddMsgLoop(SMessageLoop* pMsgLoop)
+bool SApplication::AddMsgLoop(IMessageLoop* pMsgLoop)
 {
 	SAutoLock autoLock(m_cs);
 	SASSERT(pMsgLoop != NULL);
@@ -634,10 +634,10 @@ bool SApplication::RemoveMsgLoop()
 	return m_msgLoopMap.RemoveKey(::GetCurrentThreadId());
 }
 
-SMessageLoop* SApplication::GetMsgLoop(DWORD dwThreadID /*= ::GetCurrentThreadId()*/) const
+IMessageLoop* SApplication::GetMsgLoop(DWORD dwThreadID /*= ::GetCurrentThreadId()*/) const
 {
 	SAutoLock autoLock(m_cs);
-	const SMap<DWORD,SMessageLoop*>::CPair * p =  m_msgLoopMap.Lookup(dwThreadID);
+	const SMap<DWORD,IMessageLoop*>::CPair * p =  m_msgLoopMap.Lookup(dwThreadID);
 	if(!p) return NULL;
 	return p->m_value;
 }

@@ -305,11 +305,11 @@ public:
 
 public:
 	// Message loop map methods
-	bool AddMsgLoop(SMessageLoop* pMsgLoop);
+	bool AddMsgLoop(IMessageLoop* pMsgLoop);
 
 	bool RemoveMsgLoop();
 
-	SMessageLoop* GetMsgLoop(DWORD dwThreadID = ::GetCurrentThreadId()) const;
+	IMessageLoop* GetMsgLoop(DWORD dwThreadID = ::GetCurrentThreadId()) const;
 protected:
 	virtual void RegisterSystemObjects(){}
 
@@ -333,7 +333,7 @@ protected:
     HWND        m_hMainWnd;
 
 	mutable SCriticalSection	m_cs;
-	SMap<DWORD,SMessageLoop * > m_msgLoopMap;
+	SMap<DWORD,IMessageLoop * > m_msgLoopMap;
 	SMessageLoop *		 m_pMsgLoop;
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];

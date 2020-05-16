@@ -1,9 +1,22 @@
 ﻿#include "souistd.h"
 #include "core/SMsgLoop.h"
 
+#ifndef WM_SYSTIMER
+#define WM_SYSTIMER 0x0118   //(caret blink)
+#endif//WM_SYSTIMER
+
 namespace SOUI
 {
 
+	template<class T>
+	BOOL RemoveElementFromArray(SArray<T> &arr, T ele)
+	{
+		int idx=arr.Find(ele);
+		if(idx == -1)
+			return FALSE;
+		arr.RemoveAt(idx);
+		return TRUE;
+	}
 
     void SMessageLoop::OnMsg(LPMSG pMsg)
     {
@@ -124,6 +137,11 @@ namespace SOUI
         m_aMsgFilter.Add(pMessageFilter);
 		return TRUE;
     }
+
+	BOOL SMessageLoop::IsRunning(THIS) SCONST
+	{
+		return m_bRunning;
+	}
 
 
 }//end of namespace SOUI

@@ -328,7 +328,7 @@ BOOL SItemPanel::OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
     return bRet;
 }
 
-SMessageLoop * SItemPanel::GetMsgLoop()
+IMessageLoop * SItemPanel::GetMsgLoop()
 {
     return m_pFrmHost->GetContainer()->GetMsgLoop();
 }

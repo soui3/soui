@@ -1255,7 +1255,7 @@ const SStringW & SHostWnd::GetTranslatorContext() const
     return m_hostAttr.m_strTrCtx;
 }
 
-SMessageLoop * SHostWnd::GetMsgLoop()
+IMessageLoop * SHostWnd::GetMsgLoop()
 {
     return SApplication::getSingletonPtr()->GetMsgLoop(m_dwThreadID);
 }

@@ -312,7 +312,7 @@ protected:// IContainer
 	STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 	STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 
-    virtual SMessageLoop * GetMsgLoop();
+    virtual IMessageLoop * GetMsgLoop();
 
     virtual IScriptModule * GetScriptModule();
 

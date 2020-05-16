@@ -83,7 +83,7 @@ namespace SOUI
     public:
         SDropDownWnd_ComboBox(ISDropDownOwner* pOwner):SDropDownWnd(pOwner){}
 
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
+        virtual BOOL WINAPI PreTranslateMessage(MSG* pMsg);
     };
 
 
