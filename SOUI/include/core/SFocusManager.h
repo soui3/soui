@@ -12,8 +12,8 @@
 */
 
 #pragma once
-#include "core/SWnd.h"
-#include "SAccelerator.h"
+#include <core/SWnd.h>
+#include <interface/SAccelerator-i.h>
 
 namespace SOUI
 {

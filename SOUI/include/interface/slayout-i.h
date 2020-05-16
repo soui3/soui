@@ -66,21 +66,12 @@ DECLARE_INTERFACE_(ILayoutParam,IObject)
 	*/    
 	STDMETHOD_(int,GetObjectType)(THIS)  SCONST PURE;
 
-	/**
-	* GetID
-	* @brief    获取对象ID
-	* @return   int -- 对象ID
-	* Describe  
-	*/    
 	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetID)(THIS_ int nID) PURE;
 
-	/**
-	* GetName
-	* @brief    获取对象Name
-	* @return   LPCWSTR -- 对象Name
-	* Describe  
-	*/    
 	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) PURE;
+
 
 	/**
 	* InitFromXml
@@ -221,21 +212,12 @@ DECLARE_INTERFACE_(ILayout,IObject)
 	*/    
 	STDMETHOD_(int,GetObjectType)(THIS)  SCONST PURE;
 
-	/**
-	* GetID
-	* @brief    获取对象ID
-	* @return   int -- 对象ID
-	* Describe  
-	*/    
 	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetID)(THIS_ int nID) PURE;
 
-	/**
-	* GetName
-	* @brief    获取对象Name
-	* @return   LPCWSTR -- 对象Name
-	* Describe  
-	*/    
 	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) PURE;
+
 
 	/**
 	* InitFromXml

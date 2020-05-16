@@ -1,6 +1,7 @@
 ﻿#include "souistd.h"
 #include "core/SFocusManager.h"
 #include "core/SWindowMgr.h"
+#include "core/SAccelerator.h"
 
 # pragma warning(disable:4800)
 
@@ -318,7 +319,7 @@ namespace SOUI
             SWindow *pFocus=SWindowMgr::GetWindow(focused_view_);
             if(pFocus)
             {
-                pFocus=pFocus->GetTopLevelParent();
+                pFocus=pFocus->GetRoot();
                 if(pFocus!=m_pOwner)
                 {
                     focused_view_ = 0;

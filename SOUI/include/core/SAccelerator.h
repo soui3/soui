@@ -54,6 +54,12 @@ namespace SOUI
          */    
         ~SAccelerator(void);
 
+		STDMETHOD_(WORD,GetModifier)(THIS) SCONST OVERRIDE;
+
+
+		STDMETHOD_(WORD,GetKey)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(DWORD,GetAcc)(THIS) SCONST OVERRIDE;
 
         /**
          * FormatHotkey
@@ -63,12 +69,6 @@ namespace SOUI
          */    
         SStringT FormatHotkey();
 
-		STDMETHOD_(WORD,GetModifier)(THIS) SCONST OVERRIDE;
-
-    
-		STDMETHOD_(WORD,GetKey)(THIS) SCONST OVERRIDE;
-
-		STDMETHOD_(DWORD,GetAcc)(THIS) SCONST OVERRIDE;
 
 		static WORD VkFromString(LPCTSTR pszKey);
 		/**

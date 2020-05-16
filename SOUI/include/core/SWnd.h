@@ -28,6 +28,7 @@
 #include <core/SSkin.h>
 #include <OCIdl.h>
 #include <animation/SAnimation.h>
+#include <interface/SWindow-i.h>
 
 #define SC_WANTARROWS     0x0001      /* Control wants arrow keys         */
 #define SC_WANTTAB        0x0002      /* Control wants tab keys           */
@@ -471,21 +472,14 @@ namespace SOUI
         SWindow *GetParent() const;
 
         /**
-         * GetTopLevelParent
+         * GetRoot
          * @brief    获得顶层窗口
          * @return   SWindow * 顶层窗口指针
          *
          * Describe  
          */
-        SWindow * GetTopLevelParent() const;
+        SWindow * GetRoot() const;
         
-        /**
-         * GetRoot
-         * @brief    Get root window
-         * @return   SWindow * -- root window
-         * Describe  
-         */    
-        SWindow * GetRoot() const {return GetTopLevelParent();}
         
         /**
          * IsDesendant
@@ -782,7 +776,7 @@ namespace SOUI
         *
         * Describe 
         */
-        BOOL GetWindowRgn(IRegion *pRgn);
+        IRegion* GetWindowRgn() const;
         
 		/**
         * SetClipPath
@@ -793,7 +787,7 @@ namespace SOUI
         *
         * Describe 
         */
-		void SetClipPath(IPath *pPath,BOOL bRedraw=TRUE);
+		void SetWindowPath(IPath *pPath,BOOL bRedraw=TRUE);
 
 		
         /**

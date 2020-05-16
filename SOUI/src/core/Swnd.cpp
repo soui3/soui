@@ -377,7 +377,7 @@ namespace SOUI
 	}
 
 
-	SWindow * SWindow::GetTopLevelParent() const
+	SWindow * SWindow::GetRoot() const
 	{
 		SWindow *pParent=(SWindow*)this;
 		while(pParent->GetParent()) pParent=pParent->GetParent();
@@ -2408,7 +2408,7 @@ namespace SOUI
 		pRT->PushClipRect(&rcDraw,RGN_AND);
 
 		GetContainer()->BuildWndTreeZorder();
-		GetTopLevelParent()->_PaintRegion(pRT,pRgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
+		GetRoot()->_PaintRegion(pRT,pRgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
 
 		pRT->PopClip();
 	}
@@ -2846,19 +2846,16 @@ namespace SOUI
 	}
 
 
-	void SWindow::SetClipPath(IPath *pPath,BOOL bRedraw/*=TRUE*/)
+	void SWindow::SetWindowPath(IPath *pPath,BOOL bRedraw/*=TRUE*/)
 	{
 		m_clipPath = pPath;
 		if(bRedraw) InvalidateRect(NULL);
 	}
 
 
-	BOOL SWindow::GetWindowRgn(IRegion *pRgn)
+	IRegion * SWindow::GetWindowRgn() const
 	{
-		SASSERT(pRgn);
-		if(!m_clipRgn) return FALSE;
-		pRgn->CombineRgn(m_clipRgn,RGN_COPY);
-		return TRUE;
+		return m_clipRgn;
 	}
 
 	void SWindow::DoColorize(COLORREF cr)
