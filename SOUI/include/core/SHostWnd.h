@@ -316,7 +316,7 @@ protected:// IContainer
 
     virtual IScriptModule * GetScriptModule();
 
-	virtual int GetScale() const;
+	virtual int WINAPI GetScale() const;
 
 	virtual void OnCavasInvalidate(SWND swnd);
 
@@ -325,7 +325,7 @@ protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
     virtual BOOL IsLayeredWindow() const{return FALSE;}
-	virtual void UpdateLayout();
+	virtual void WINAPI UpdateLayout();
 	virtual HRESULT OnLanguageChanged(); 
 	virtual void OnScaleChanged(int scale);
 

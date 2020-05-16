@@ -13,10 +13,10 @@ namespace SOUI
 		void EnableAnimate(bool bEnable);
 	protected:
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
+		STDMETHOD_(ILayoutParam *,GetLayoutParam)(THIS) SCONST OVERRIDE;
 
 		virtual BOOL OnRelayout(const CRect &rcWnd);
 
-		virtual ILayoutParam * GetLayoutParam() const;
 		int GetHeight() const;
 	protected:
 		void OnShowWindow(BOOL bShow, UINT nStatus);

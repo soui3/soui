@@ -303,7 +303,7 @@ protected:
      *
      * Describe  获取窗口消息码
      */
-    UINT OnGetDlgCode();
+	virtual UINT WINAPI OnGetDlgCode () const;
 
 protected:
     /**

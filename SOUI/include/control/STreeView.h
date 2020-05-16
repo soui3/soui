@@ -164,7 +164,7 @@ namespace SOUI
             ATTR_INT(L"wantTab", m_bWantTab,FALSE)
         SOUI_ATTRS_END()
 	protected:
-        virtual UINT OnGetDlgCode();
+		virtual UINT WINAPI OnGetDlgCode () const;
         virtual BOOL OnSetCursor(const CPoint &pt);
         virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
         virtual void OnColorize(COLORREF cr);

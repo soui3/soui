@@ -116,7 +116,7 @@ namespace SOUI
     protected:
         virtual BOOL _HandleEvent(EventArgs *pEvt);
 		virtual const SStringW & GetTranslatorContext()const;
-		virtual int GetScale() const;
+		virtual int WINAPI GetScale() const;
 
 		SWindow * FindItem(UINT uPos, UINT uFlag);
 

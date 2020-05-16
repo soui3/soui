@@ -662,7 +662,7 @@ namespace SOUI
         *
         * Describe   设置窗口标题
         */
-        void SetWindowText(LPCTSTR lpszText);
+        void WINAPI SetWindowText(LPCTSTR lpszText);
         /**
         * SRichEdit::SetSel
         * @brief     设置选中
@@ -882,7 +882,7 @@ namespace SOUI
         *
         * Describe  获取窗口消息码
         */
-		virtual UINT OnGetDlgCode();
+		virtual UINT WINAPI OnGetDlgCode () const;
         
         /**
         * SRichEdit::OnScroll

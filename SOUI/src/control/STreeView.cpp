@@ -431,7 +431,7 @@ namespace SOUI
                 while(pos)
                 {
                     SItemPanel * pItemPanel = lstItemPanels->GetNext(pos);
-                    pItemPanel->DestroyWindow();
+                    pItemPanel->Destroy();
                 }
                 delete lstItemPanels;
             }
@@ -442,7 +442,7 @@ namespace SOUI
             while(pos)
             {
                 ItemInfo ii = m_pVisibleMap->GetNext(pos)->m_value;
-                ii.pItem->DestroyWindow();
+                ii.pItem->Destroy();
             }
             m_pVisibleMap->RemoveAll();
 		}
@@ -1212,7 +1212,7 @@ namespace SOUI
         return true;
     }
 
-    UINT STreeView::OnGetDlgCode()
+    UINT STreeView::OnGetDlgCode() const
     {
         if(m_bWantTab) return SC_WANTALLKEYS;
         else return SC_WANTARROWS|SC_WANTSYSKEY;

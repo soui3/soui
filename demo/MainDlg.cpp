@@ -842,7 +842,7 @@ void CMainDlg::OnBtnCreateChildren()
     while(pChild)
     {
         SWindow *pNext = pChild->GetWindow(GSW_NEXTSIBLING);
-        pChild->DestroyWindow();
+        pChild->Destroy();
         pChild = pNext;
     }
     //using SWindow::CreateChildren to Create Children described in the input xml string.
@@ -859,7 +859,7 @@ void CMainDlg::OnInitListBox()
 		{
 			int iItem = pLb->AddString(SStringT().Format(_T("new item：%d"),nCount+i));
 			pLb->EnsureVisible(iItem);
-			pLb->UpdateWindow();
+			pLb->Update();
 			Sleep(10);
 		}
 	}
@@ -1142,7 +1142,7 @@ void CMainDlg::onAnimationEnd(IAnimation * animation)
 	if(wcsicmp(animation->GetName(),L"ani_test") == 0)
 	{
 		SWindow *pWnd = (SWindow*)animation->getUserData();
-		pWnd->DestroyWindow();
+		pWnd->Destroy();
 	}
 }
 

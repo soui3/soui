@@ -365,7 +365,7 @@ namespace SOUI
         *
         * Describe  获取窗口消息码
         */
-        virtual UINT OnGetDlgCode()
+		virtual UINT WINAPI OnGetDlgCode () const
         {
             return SC_WANTARROWS;
         }

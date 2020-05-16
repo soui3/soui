@@ -174,7 +174,7 @@ protected:
      *
      * Describe  返回宏定义SC_WANTCHARS代表需要WM_CHAR消息
      */
-    virtual UINT OnGetDlgCode()
+	virtual UINT WINAPI OnGetDlgCode () const
     {
         return SC_WANTCHARS;
     }
@@ -707,7 +707,7 @@ protected:
      *
      * Describe  返回对应消息码
      */
-    virtual UINT OnGetDlgCode()
+    virtual UINT WINAPI OnGetDlgCode () const
     {
         return SC_WANTCHARS;
     }
@@ -867,7 +867,7 @@ protected:
      *
      * Describe  获取消息编码
      */
-    virtual UINT OnGetDlgCode()
+	virtual UINT WINAPI OnGetDlgCode () const
     {
         return 0;
     }

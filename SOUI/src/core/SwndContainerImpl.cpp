@@ -131,12 +131,12 @@ SWND SwndContainerImpl::OnGetSwndCapture()
     return m_hCapture;
 }
 
-SWND SwndContainerImpl::GetFocus()
+SWND SwndContainerImpl::GetFocus() const
 {
     return m_focusMgr.GetFocusedHwnd();
 }
 
-SWND SwndContainerImpl::GetHover()
+SWND SwndContainerImpl::GetHover() const
 {
     return m_hHover;
 }

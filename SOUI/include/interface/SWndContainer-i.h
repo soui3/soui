@@ -67,9 +67,9 @@ struct ISwndContainer : public ITimelineHandlersMgr
 
 	virtual void OnSetSwndFocus(SWND swnd)=0;
 
-	virtual SWND GetHover()=0;
+	virtual SWND GetHover() const=0;
 
-	virtual SWND GetFocus()=0;
+	virtual SWND GetFocus() const=0;
 
 	virtual BOOL UpdateWindow()=0;
 
@@ -94,7 +94,7 @@ struct ISwndContainer : public ITimelineHandlersMgr
 
 	virtual IScriptModule * GetScriptModule() = 0;
 
-	virtual int GetScale() const = 0;
+	virtual int WINAPI GetScale() const = 0;
 
 	virtual ICaret* GetCaret() = 0;
 

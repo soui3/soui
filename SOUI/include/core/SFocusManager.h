@@ -73,7 +73,7 @@ namespace SOUI
         // Convenience method; returns true if a view is not NULL and is focusable
         // (checking IsAccessibilityFocusableInRootView() if accessibility_mode_ is
         // true).
-        bool IsFocusable(SWindow* view);
+        bool IsFocusable(const SWindow* view) const;
 
         // Returns the next focusable view or view containing a FocusTraversable
         // (NULL if none was found), starting at the starting_view.
@@ -141,7 +141,7 @@ namespace SOUI
 		// the native focus (so we still get keyboard events).
 		void ClearFocus();
 
-		SWND GetFocusedHwnd();
+		SWND GetFocusedHwnd() const;
 
         // Stores and restores the focused view. Used when the window becomes
         // active/inactive.

@@ -536,7 +536,7 @@ void SListBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         pOwner->SSendMessage(WM_CHAR, nChar, MAKELONG(nFlags, nRepCnt));
 }
 
-UINT SListBox::OnGetDlgCode()
+UINT SListBox::OnGetDlgCode() const
 {
     return SC_WANTARROWS|SC_WANTCHARS;
 }

@@ -25,9 +25,9 @@ namespace SOUI
         LRESULT OnKeyEvent(UINT uMsg,WPARAM wp,LPARAM lp);
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
-        virtual UINT OnGetDlgCode(){return SC_WANTALLKEYS;}
+        virtual UINT WINAPI OnGetDlgCode() const OVERRIDE{return SC_WANTALLKEYS;}
 
-        virtual BOOL IsFocusable(){return TRUE;}
+        virtual BOOL WINAPI IsFocusable() const OVERRIDE {return TRUE;}
 
         HRESULT OnAttrClsid(const SStringW & strValue,BOOL bLoading);
         SOUI_MSG_MAP_BEGIN()

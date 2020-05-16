@@ -160,7 +160,7 @@ namespace SOUI
         *
         * Describe  
         */
-        virtual void SetWindowText(LPCTSTR pszText);
+        virtual void WINAPI SetWindowText(LPCTSTR pszText);
 
 
         /**
@@ -373,7 +373,7 @@ namespace SOUI
         * 
         * Describe  获取消息码
         */  
-        UINT OnGetDlgCode();
+		virtual UINT WINAPI OnGetDlgCode () const;
 
         /**
         * SComboBoxBase::IsTabStop
@@ -381,7 +381,7 @@ namespace SOUI
         * 
         * Describe  是否禁止TAB键
         */  
-        BOOL IsFocusable();
+        BOOL WINAPI IsFocusable() const;
 
         void OnSetFocus(SWND wndOld);
 		void UpdateChildrenPosition();

@@ -437,7 +437,7 @@ namespace SOUI
     {
         for(UINT i=0; i< m_lstTabOrder.GetCount();i++)
         {
-            m_lstTabOrder[i]->Update();
+			m_lstTabOrder[i]->Update();
         }
         if(m_pBtnNew) m_pBtnNew->Update();
     }

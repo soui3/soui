@@ -64,6 +64,7 @@ namespace SOUI
 		, m_bCacheDirty(TRUE)
 		, m_layoutDirty(dirty_self)
 		, m_bLayeredWindow(FALSE)
+		, m_bMsgHandled(FALSE)
 		, m_uData(0)
 		, m_pOwner(NULL)
 		, m_pCurMsg(NULL)
@@ -127,6 +128,21 @@ namespace SOUI
 	}
 
 
+	BOOL SWindow::IsMsgHandled() const
+	{
+		return m_bMsgHandled;
+	}
+
+	void SWindow::SetMsgHandled(BOOL bHandled)
+	{
+		m_bMsgHandled = bHandled?1:0;
+	}
+
+	IObject* SWindow::GetIObject()
+	{
+		return this;
+	}
+
 	// Get align
 	UINT SWindow::GetTextAlign() const
 	{
@@ -156,7 +172,7 @@ namespace SOUI
 	CRect SWindow::GetClientRect() const
 	{
 		CRect rc;
-		SWindow::GetClientRect(&rc);
+		GetClientRect(&rc);
 		return rc;
 	}
 
@@ -330,7 +346,7 @@ namespace SOUI
 		return dwOldState;
 	}
 
-	ULONG_PTR SWindow::GetUserData()
+	ULONG_PTR SWindow::GetUserData() const
 	{
 		return m_uData;
 	}
@@ -398,7 +414,7 @@ namespace SOUI
 	}
 
 
-	BOOL SWindow::DestroyWindow()
+	BOOL SWindow::Destroy()
 	{
 		ASSERT_UI_THREAD();
 		if(!GetParent()) 
@@ -592,7 +608,7 @@ namespace SOUI
 		return m_pOwner;
 	}
 
-	BOOL SWindow::IsMsgTransparent()
+	BOOL SWindow::IsMsgTransparent() const
 	{
 		return m_bMsgTransparent;
 	}
@@ -1282,7 +1298,7 @@ namespace SOUI
 	}
 
 
-	void SWindow::UpdateWindow()
+	void SWindow::Update()
 	{
 		GetContainer()->UpdateWindow();
 	}
@@ -1360,7 +1376,7 @@ namespace SOUI
 		SASSERT(m_nUpdateLockCnt >= 0);
 	}
 
-	BOOL SWindow::IsUpdateLocked()
+	BOOL SWindow::IsUpdateLocked() const
 	{
 		return m_nUpdateLockCnt>0;
 	}
@@ -1735,12 +1751,12 @@ namespace SOUI
 		pRT->SelectObject(oldPen,NULL);
 	}
 
-	UINT SWindow::OnGetDlgCode()
+	UINT SWindow::OnGetDlgCode() const
 	{
 		return 0;
 	}
 
-	BOOL SWindow::IsFocusable()
+	BOOL SWindow::IsFocusable() const
 	{
 		return m_bFocusable;
 	}
@@ -2326,7 +2342,7 @@ namespace SOUI
 		}
 	}
 
-	BOOL SWindow::IsFocused()
+	BOOL SWindow::IsFocused() const
 	{
 		return GetContainer()->GetFocus() == m_swnd;
 	}
@@ -2820,7 +2836,7 @@ namespace SOUI
 		}
 	}
 
-	BOOL SWindow::IsContainPoint(const POINT &pt,BOOL bClientOnly) const
+	BOOL SWindow::IsContainPoint(POINT pt,BOOL bClientOnly) const
 	{
 		BOOL bRet = FALSE;
 		CRect rc = bClientOnly ? GetClientRect() : GetWindowRect();
@@ -3030,13 +3046,13 @@ namespace SOUI
 #endif
 	}
 
-	bool SWindow::SetLayoutParam(ILayoutParam * pLayoutParam)
+	BOOL SWindow::SetLayoutParam(ILayoutParam * pLayoutParam)
 	{
 		SWindow *pParent = GetParent();
 		if (!pParent->GetLayout()->IsParamAcceptable(pLayoutParam))
-			return false;
+			return FALSE;
 		m_pLayoutParam = pLayoutParam;
-		return true;
+		return TRUE;
 	}
 
 	void SWindow::OnAnimationStart(IAnimation *pAni)
@@ -3066,6 +3082,26 @@ namespace SOUI
 	COLORREF SWindow::GetBkgndColor() const
 	{
 		return GetStyle().m_crBg;
+	}
+
+	BOOL SWindow::IsFloat() const
+	{
+		return m_bFloat;
+	}
+
+	BOOL SWindow::IsDisplay() const
+	{
+		return m_bDisplay;
+	}
+
+	BOOL SWindow::IsSiblingsAutoGroupped() const
+	{
+		return FALSE;
+	}
+
+	BOOL SWindow::IsClipClient() const
+	{
+		return m_bClipClient;
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;

@@ -188,7 +188,7 @@ namespace SOUI
 
 	BOOL SShellNotifyIcon::CreateChildren(SXmlNode xmlNode)
 	{
-		SHostWnd *pHostWnd = (SHostWnd*)(GetTopLevelParent()->GetContainer());
+		SHostWnd *pHostWnd = (SHostWnd*)(GetRoot()->GetContainer());
 		SASSERT(pHostWnd);
 		m_MsgOnlyWnd = new CShellNotifyHwnd2(pHostWnd, this);
 		SASSERT(IsWindow(m_MsgOnlyWnd->m_hWnd));

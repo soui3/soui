@@ -52,7 +52,7 @@ namespace SOUI
         virtual BOOL CreateChildren(SXmlNode xmlNode);
 
         virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
-        virtual UINT OnGetDlgCode();
+		virtual UINT WINAPI OnGetDlgCode () const;
         virtual BOOL OnSetCursor(const CPoint &pt);
 
 		virtual void OnColorize(COLORREF cr);

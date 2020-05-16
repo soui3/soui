@@ -178,7 +178,7 @@ namespace SOUI
         return true;
     }
 
-    bool FocusSearch::IsFocusable( SWindow* view )
+    bool FocusSearch::IsFocusable(const SWindow* view ) const
     {
         if(!view) return false;
         return view->IsFocusable() && view->IsVisible(TRUE) && !view->IsDisabled(TRUE);
@@ -336,7 +336,8 @@ namespace SOUI
         SetFocusedHwnd(0);
     }
 
-	SWND SFocusManager::GetFocusedHwnd() { return focused_view_; }
+	SWND SFocusManager::GetFocusedHwnd() const 
+	{ return focused_view_; }
 
     void SFocusManager::StoreFocusedView()
     {

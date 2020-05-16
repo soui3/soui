@@ -9,7 +9,7 @@ public:
 	SQrCtrl();
 	~SQrCtrl();
 
-	virtual void SetWindowText(LPCTSTR lpszText)override;
+	virtual void WINAPI SetWindowText(LPCTSTR lpszText)override;
 	virtual BOOL OnRelayout(const CRect &rcWnd)override;
 protected:
 	void CreateQrImg(SStringT strContent);

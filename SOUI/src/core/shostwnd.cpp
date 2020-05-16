@@ -1736,7 +1736,7 @@ void SHostWnd::OnAnimationInvalidate(IAnimation *pAni,bool bErase)
 
 void SHostWnd::OnAnimationUpdate(IAnimation *pAni)
 {
-	UpdateWindow();
+	Update();
 }
 
 void SHostWnd::OnAnimationStop(IAnimation *pAni)

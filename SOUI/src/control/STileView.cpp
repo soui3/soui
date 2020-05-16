@@ -90,7 +90,7 @@ BOOL STileView::SetAdapter(ILvAdapter *adapter)
             while(pos)
             {
                 SItemPanel *pItemPanel = lstItemPanels->GetNext(pos);
-                pItemPanel->DestroyWindow();
+                pItemPanel->Destroy();
             }
             delete lstItemPanels;
         }
@@ -101,7 +101,7 @@ BOOL STileView::SetAdapter(ILvAdapter *adapter)
         while(pos)
         {
             ItemInfo ii = m_lstItems.GetNext(pos);
-            ii.pItem->DestroyWindow();
+            ii.pItem->Destroy();
         }
         m_lstItems.RemoveAll();
     }
@@ -848,7 +848,7 @@ void STileView::SetSel(int iItem, BOOL bNotify)
 
 }
 
-UINT STileView::OnGetDlgCode()
+UINT STileView::OnGetDlgCode() const
 {
     if(m_bWantTab)
     {

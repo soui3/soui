@@ -292,7 +292,7 @@ namespace SOUI
         nOffset = ResetPanesPostion(lstPane1,lstPriority1,lstPaneSize1,nOffset);
         ResetPanesPostion(lstPane2,lstPriority2,lstPaneSize2,nOffset);
         Invalidate();
-		UpdateWindow();
+		Update();
     }
 
     int SSplitWnd::PaneIndex( const SStringW & strName ) const

@@ -63,9 +63,9 @@ namespace SOUI
         virtual void FrameToHost(RECT & rc) const{}
         virtual SWND OnGetSwndCapture();
 
-        virtual SWND GetFocus();
+        virtual SWND GetFocus() const;
 
-        virtual SWND GetHover();
+        virtual SWND GetHover() const;
 
         virtual IAcceleratorMgr* GetAcceleratorMgr(){return &m_focusMgr;}
 

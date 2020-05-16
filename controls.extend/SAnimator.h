@@ -39,7 +39,7 @@ namespace SOUI
 
         BOOL IsBusy(){return m_uDuration != 0;}
 
-        BOOL Update()
+        BOOL UpdateAnimator()
         {
             if(m_uDuration == 0) return FALSE;
 

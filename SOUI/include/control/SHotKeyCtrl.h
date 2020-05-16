@@ -89,7 +89,7 @@ namespace SOUI
        *
        * Describe  消息响应函数  
        */  
-      virtual UINT OnGetDlgCode()
+	  virtual UINT WINAPI OnGetDlgCode () const
       {
           return (SC_WANTALLKEYS|SC_WANTSYSKEY) & (~SC_WANTTAB);
       }

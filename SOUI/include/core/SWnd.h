@@ -76,7 +76,7 @@ namespace SOUI
 		GRT_OFFSCREEN,
 	};
 
-	class SOUI_EXP SStateHelper {
+	class SStateHelper {
 	public:
 		static void MarkState(DWORD &dwState, WndState state)
 		{
@@ -126,28 +126,6 @@ namespace SOUI
         SAutoRefPtr<IFont> oldFont;
         COLORREF           oldTextColor;
     };
-
-    class SOUI_EXP SMsgHandleState
-    {
-    public:
-        SMsgHandleState():m_bMsgHandled(FALSE)
-        {
-
-        }
-
-        BOOL IsMsgHandled() const
-        {
-            return m_bMsgHandled;
-        }
-
-        void SetMsgHandled(BOOL bHandled)
-        {
-            m_bMsgHandled = bHandled;
-        }
-
-        BOOL m_bMsgHandled;
-    };
-
 
     //////////////////////////////////////////////////////////////////////////
     // SWindow
@@ -215,7 +193,7 @@ namespace SOUI
     * Describe   SOUI窗口基类,实现窗口的基本接口
     */
 	class SOUI_EXP SWindow : public TObjRefImpl<SObject>
-		, public SMsgHandleState
+		, public IWindow
 		, public ITrCtxProvider
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
@@ -249,36 +227,132 @@ namespace SOUI
         virtual ~SWindow();
 
 	public:
+		BOOL IsMsgHandled() const;
+
+		void SetMsgHandled(BOOL bHandled);
+	public:
+		STDMETHOD_(LPCWSTR,GetName)() SCONST OVERRIDE{return m_strName;}
+		STDMETHOD_(void,SetName)(LPCWSTR pszName)OVERRIDE{m_strName=pszName;}
+
+		STDMETHOD_(int,GetID)() SCONST OVERRIDE{return m_nID;}
+		STDMETHOD_(void,SetID)(int nID) OVERRIDE{m_nID=nID;}
+
+		STDMETHOD_(IObject*,GetIObject)(THIS) OVERRIDE;
+
+		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
+
+		STDMETHOD_(SWND,GetSwnd)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(ILayout *,GetLayout)(THIS) OVERRIDE
+		{
+			return m_pLayout;
+		}
+
+		STDMETHOD_(ILayoutParam *, GetLayoutParam)(THIS) SCONST OVERRIDE
+		{
+			return m_pLayoutParam;
+		}
+
+		STDMETHOD_(BOOL,SetLayoutParam)(THIS_ ILayoutParam * pLayoutParam) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsFloat)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(BOOL,IsDisplay)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(void,SetWindowText)(THIS_ LPCTSTR lpszText) OVERRIDE;
+
+		STDMETHOD_(void,SetToolTipText)(THIS_ LPCTSTR pszText) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsChecked)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(void,SetCheck)(THIS_ BOOL bCheck) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsDisabled)(THIS_ BOOL bCheckParent=FALSE) SCONST OVERRIDE;
+		STDMETHOD_(void,EnableWindow)(THIS_ BOOL bEnable,BOOL bUpdate=FALSE) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsVisible)(THIS_ BOOL bCheckParent=FALSE) SCONST OVERRIDE;
+		STDMETHOD_(void,SetVisible)(THIS_ BOOL bVisible,BOOL bUpdate=FALSE) OVERRIDE;
+
+		STDMETHOD_(BOOL,IsMsgTransparent)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(ULONG_PTR,GetUserData)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(ULONG_PTR,SetUserData)(THIS_ ULONG_PTR uData) OVERRIDE;
+		STDMETHOD_(void,GetWindowRect)(THIS_ LPRECT prect) SCONST OVERRIDE;
+		STDMETHOD_(void,GetClientRect)(THIS_ LPRECT prect) SCONST OVERRIDE;
+		STDMETHOD_(BOOL,IsContainPoint)(THIS_ POINT pt,BOOL bClientOnly) SCONST OVERRIDE;
+		STDMETHOD_(void,DoColorize)(THIS_ COLORREF cr) OVERRIDE;
+		STDMETHOD_(COLORREF,GetColorizeColor)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(BOOL,Destroy)(THIS) OVERRIDE;
+		STDMETHOD_(void,BringWindowToTop)(THIS) OVERRIDE;
+		//STDMETHOD_(IWindow*,GetParent_C)(THIS) SCONST OVERRIDE;
+		//STDMETHOD_(IWindow*,FindChildByID_C)(THIS_ int nID, int nDeep) SCONST OVERRIDE;
+		//STDMETHOD_(IWindow*,FindChildByName_C)(THIS_ LPCWSTR strName, int nDeep) SCONST OVERRIDE;
+		//STDMETHOD_(IWindow*,CreateChildren_C)(THIS_ LPCWSTR strXml) OVERRIDE;
+		STDMETHOD_(UINT,GetChildrenCount)(THIS) SCONST OVERRIDE;
+		//STDMETHOD_(BOOL,DestroyChild)(THIS_ SWND hChild) OVERRIDE;
+		STDMETHOD_(LRESULT,SSendMessage)(THIS_ UINT uMsg, WPARAM wParam=0, LPARAM lParam=0,BOOL *pbMsgHandled=NULL) OVERRIDE;
+		STDMETHOD_(void,SDispatchMessage)(THIS_ UINT uMsg, WPARAM wParam=0, LPARAM lParam=0) OVERRIDE;
+
+		STDMETHOD_(void,SetFocus)(THIS) OVERRIDE;
+		STDMETHOD_(void,KillFocus)(THIS) OVERRIDE;
+		STDMETHOD_(BOOL,IsFocused)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(void,Invalidate)(THIS) OVERRIDE;
+		STDMETHOD_(void,InvalidateRect)(THIS_ LPCRECT lprect) OVERRIDE;
+
+		STDMETHOD_(void,LockUpdate)(THIS) OVERRIDE;
+		STDMETHOD_(void,UnlockUpdate)(THIS) OVERRIDE;
+		STDMETHOD_(BOOL,IsUpdateLocked)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(void,Update)(THIS) OVERRIDE;
+		STDMETHOD_(void,Move)(THIS_ LPCRECT prect) OVERRIDE;
+		STDMETHOD_(void,SetWindowRgn)(THIS_ IRegion *pRgn,BOOL bRedraw=TRUE) OVERRIDE;
+		STDMETHOD_(IRegion*,GetWindowRgn)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(void,SetWindowPath)(THIS_ IPath *pPath,BOOL bRedraw=TRUE) OVERRIDE;
+
+		STDMETHOD_(BOOL,SetTimer)(THIS_ char id,UINT uElapse) OVERRIDE;
+		STDMETHOD_(void,KillTimer)(THIS_ char id) OVERRIDE;
+
+		STDMETHOD_(SWND,GetCapture)(THIS) OVERRIDE;
+		STDMETHOD_(SWND,SetCapture)(THIS) OVERRIDE;
+		STDMETHOD_(BOOL,ReleaseCapture)(THIS) OVERRIDE;
+
+		STDMETHOD_(void,SetAnimation)(THIS_ IAnimation * animation) OVERRIDE;
+
+		STDMETHOD_(IAnimation *,GetAnimation)(THIS) OVERRIDE;
+
+		STDMETHOD_(void,StartAnimation)(THIS_ IAnimation * animation) OVERRIDE;
+
+		STDMETHOD_(void,ClearAnimation)(THIS) OVERRIDE;
+
+		STDMETHOD_(void,SetAlpha)(THIS_ BYTE byAlpha) OVERRIDE;
+
+		STDMETHOD_(BYTE,GetAlpha)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(int,GetScale)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(BOOL,IsSiblingsAutoGroupped)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(void,RequestRelayout)(THIS) OVERRIDE;
+		STDMETHOD_(void,UpdateLayout)(THIS) OVERRIDE;
+
+		STDMETHOD_(UINT,OnGetDlgCode)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(BOOL,IsFocusable)(THIS) SCONST OVERRIDE;
+
+		STDMETHOD_(BOOL,IsClipClient)(THIS) SCONST OVERRIDE;
+
+	public:
 		
 		IAccessible * GetAccessible();
 		IAccProxy * GetAccProxy();
 		void accNotifyEvent(DWORD dwEvt);
 	public:
 
-		ILayout * GetLayout() const{
-			return m_pLayout;
-		}
-
 		template<class T>
-		T * GetLayoutParamT() const
+		T * GetLayoutParamT()
 		{
 			return sobj_cast<T>(GetLayoutParam());
 		}
 
-		virtual ILayoutParam * GetLayoutParam() const
-		{
-			return m_pLayoutParam;
-		}
-
-		bool SetLayoutParam(ILayoutParam * pLayoutParam);
-
-		bool IsFloat() const{
-			return !!m_bFloat;
-		}
-
-		bool IsDisplay() const{
-			return m_bDisplay!=0;
-		}
 
 		/**
         * GetNextLayoutChild
@@ -291,14 +365,7 @@ namespace SOUI
 		SWindow * GetNextLayoutChild(SWindow *pCurChild) const;
 
     public://SWindow状态相关方法
-        /**
-        * GetSwnd
-        * @brief    获得窗口句柄
-        * @return   SWND 
-        *
-        * Describe  
-        */
-        SWND GetSwnd() const;
+
         SWindow *GetWindow(int uCode) const;    
 
 		SWindow * GetChild(int iChild);
@@ -312,25 +379,7 @@ namespace SOUI
         */
         virtual SStringT GetWindowText(BOOL bRawText=FALSE);
 
-        /**
-        * SetWindowText
-        * @brief    设置窗口文本
-        * @param    LPCTSTR lpszText --  窗口文本
-        * @return   void 
-        *
-        * Describe  
-        */
-        virtual void SetWindowText(LPCTSTR lpszText);
-
-		virtual void SetToolTipText(LPCTSTR pszText);
-
 		virtual SStringT GetToolTipText();
-
-        virtual LPCWSTR WINAPI GetName() const {return m_strName;}
-        void WINAPI SetName(LPCWSTR pszName){m_strName=pszName;}
-
-        virtual int WINAPI GetID() const{return m_nID;}
-        void WINAPI SetID(int nID){m_nID=nID;}
 
         /**
          * GetEventSet
@@ -351,41 +400,14 @@ namespace SOUI
         const SwndStyle& GetStyle() const;
 		SwndStyle& GetStyle();
 
-        BOOL IsChecked() const;
-        void SetCheck(BOOL bCheck);
-
-        BOOL IsDisabled(BOOL bCheckParent = FALSE) const;
-        void EnableWindow( BOOL bEnable,BOOL bUpdate=FALSE);
-
-        BOOL IsVisible(BOOL bCheckParent = FALSE) const;
-        void SetVisible(BOOL bVisible,BOOL bUpdate=FALSE);
-
         void SetOwner(SWindow *pOwner);
         SWindow *GetOwner();
 
         DWORD GetState(void) const;
         DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
-        ISwndContainer *GetContainer();
 		const ISwndContainer* GetContainer() const;
         void SetContainer(ISwndContainer *pContainer);
 
-        /**
-        * GetUserData
-        * @brief    读userdata
-        * @return   ULONG_PTR 
-        *
-        * Describe  
-        */
-        ULONG_PTR GetUserData();
-        /**
-        * SetUserData
-        * @brief    设置userdata
-        * @param    ULONG_PTR uData --  原来的userdata
-        * @return   ULONG_PTR 
-        *
-        * Describe  
-        */
-        ULONG_PTR SetUserData(ULONG_PTR uData);
 
         /**
         * GetTextAlign
@@ -396,59 +418,9 @@ namespace SOUI
         */
         UINT GetTextAlign() const;    
 
-        /**
-        * GetWindowRect
-        * @brief    获得窗口在宿主中的位置
-        * @param    [out] LPRECT prect --  窗口矩形
-        * @return   void 
-        *
-        * Describe  
-        */    
-        void GetWindowRect(LPRECT prect) const;
-
 		CRect GetWindowRect() const;
                 
-        /**
-        * GetClientRect
-        * @brief    获得窗口的客户区
-        * @param    [out] LPRECT pRect --  窗口矩形
-        * @return   void 
-        *
-        * Describe  
-        */
-        virtual void GetClientRect(LPRECT pRect) const;
-        
-        virtual CRect GetClientRect() const;
-        
-        /**
-        * ContainPoint
-        * @brief    判断一个点是不是在窗口区域内
-        * @param    const POINT &pt --  测试点
-        * @param    BOOL bClientOnly --  只判断客户区标志
-        * @return   BOOL -- TRUE:窗口包含目标点 
-        *
-        * Describe  
-        */
-        virtual BOOL IsContainPoint(const POINT &pt,BOOL bClientOnly) const;
-        
-        /**
-        * DoColorize
-        * @brief    调节窗口色调
-        * @param    COLORREF cr --  目标颜色
-        * @return   void
-        *
-        * Describe  
-        */
-        void DoColorize(COLORREF cr);
-
-		/**
-         * GetColorizeColor
-         * @brief    获得当前调色状态
-         * @return   COLORREF 调色值
-         * Describe  
-         */
-		COLORREF GetColorizeColor() const;
-
+        CRect GetClientRect() const;
     protected:
 
         /**
@@ -490,22 +462,6 @@ namespace SOUI
          */    
         BOOL IsDescendant(const SWindow *pWnd) const;
 
-        /**
-         * DestroyWindow
-         * @brief    销毁窗口
-         * @return   BOOL -- TRUE: 成功
-         * Describe  
-         */    
-        BOOL DestroyWindow();
-        
-        /**
-         * BringWindowToTop
-         * @brief    将当前窗口的Z-order提到同级子窗口最前
-         * @return   void 
-         *
-         * Describe  
-         */
-        void BringWindowToTop();
 
 		/**
          * AdjustZOrder
@@ -626,15 +582,6 @@ namespace SOUI
         * Describe  
         */
         SWindow *CreateChildren(LPCWSTR pszXml);
-        
-         /**
-         * GetChildrenCount
-         * @brief    获得子窗口数量
-         * @return   UINT 子窗口数量 
-         *
-         * Describe  
-         */
-        UINT GetChildrenCount() const;
 
         /**
          * InsertChild
@@ -668,30 +615,6 @@ namespace SOUI
         BOOL DestroyChild(SWindow *pChild);
         
     public://窗口消息相关方法
-        /**
-        * SSendMessage
-        * @brief    向SWND发送条窗口消息
-        * @param    UINT Msg --  消息类型
-        * @param    WPARAM wParam --  参数1
-        * @param    LPARAM lParam --  参数2
-        * @param [out] BOOL * pbMsgHandled -- 消息处理标志 
-        * @return   LRESULT 消息处理状态，依赖于消息类型
-        *
-        * Describe  
-        */
-        LRESULT SSendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0,BOOL *pbMsgHandled=NULL);
-
-        /**
-        * SSendMessage
-        * @brief    向所有子窗口发送消息
-        * @param    uMsg --  消息类型
-		* @param	wParam -- wParam
-		* @param	lParam -- lParam
-        * @return   void
-        *
-        * Describe  遍历所有子窗口发送消息
-        */
-        void SDispatchMessage(UINT uMsg,WPARAM wParam=0,LPARAM lParam=0);
 
         /**
         * GetCurMsg
@@ -705,16 +628,7 @@ namespace SOUI
             return m_pCurMsg;
         }
         
-        BOOL IsMsgTransparent();
-
     public://操控SWindow的方法
-
-        void SetFocus();
-        void KillFocus();
-        BOOL IsFocused();
-        
-        void Invalidate();
-        void InvalidateRect(LPCRECT lprect);
         
         /**
         * InvalidateRect
@@ -726,21 +640,6 @@ namespace SOUI
         * Describe 
         */
         void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
-        
-        void LockUpdate();
-        void UnlockUpdate();
-        BOOL IsUpdateLocked();
-        void UpdateWindow();
-
-        /**
-        * Move
-        * @brief    将窗口移动到指定位置
-        * @param    LPCRECT prect --  新的窗口坐标矩形，为NULL则恢复窗口坐标自动计算
-        * @return   void 
-        *
-        * Describe 
-        */
-        void Move(LPCRECT prect);
 
         /**
         * Move
@@ -755,61 +654,7 @@ namespace SOUI
         * @see     Move(LPRECT prect)
         */
         void Move(int x,int y, int cx=-1,int cy=-1);
-
-
-        /**
-        * SetWindowRgn
-        * @brief    设置窗口区域
-        * @param    IRegion *pRgn --  有效区域,区域左上角坐标为(0,0)
-        * @param    BOOL bRedraw -- 重绘标志
-        * @return   void 
-        *
-        * Describe 
-        */
-        void SetWindowRgn(IRegion *pRgn,BOOL bRedraw=TRUE);
-        
-        /**
-        * GetWindowRgn
-        * @brief    获取窗口区域
-        * @param    IRegion *pRgn --  有效区域,区域左上角坐标为(0,0)
-        * @return   BOOL -- TRUE:有区域
-        *
-        * Describe 
-        */
-        IRegion* GetWindowRgn() const;
-        
-		/**
-        * SetClipPath
-        * @brief    设置窗口Path
-        * @param    IPath *pPath --  有效区域,区域左上角坐标为(0,0)
-        * @param    BOOL bRedraw -- 重绘标志
-        * @return   void 
-        *
-        * Describe 
-        */
-		void SetWindowPath(IPath *pPath,BOOL bRedraw=TRUE);
-
 		
-        /**
-        * SetTimer
-        * @brief    利用窗口定时器来设置一个ID为0-127的SWND定时器
-        * @param    char id --  定时器ID
-        * @param    UINT uElapse --  延时(MS)
-        * @return   BOOL 
-        *
-        * Describe  参考::SetTimer
-        */
-        BOOL SetTimer(char id,UINT uElapse);
-
-        /**
-        * KillTimer
-        * @brief    删除一个SWND定时器
-        * @param    char id --  定时器ID
-        * @return   void 
-        *
-        * Describe  
-        */
-        void KillTimer(char id);
 
         /**
         * SetTimer2
@@ -833,54 +678,12 @@ namespace SOUI
         */
         void KillTimer2(UINT_PTR id);
         
-        SWND GetCapture();
-        SWND SetCapture();
-        BOOL ReleaseCapture();
-
 	public:
 
-		/**
-		* Sets the next animation to play for this view.
-		* If you want the animation to play immediately, use
-		* {@link #startAnimation(android.view.animation.Animation)} instead.
-		* This method provides allows fine-grained
-		* control over the start time and invalidation, but you
-		* must make sure that 1) the animation has a start time set, and
-		* 2) the view's parent (which controls animations on its children)
-		* will be invalidated when the animation is supposed to
-		* start.
-		*
-		* @param animation The next animation, or null.
-		*/
-		void SetAnimation(IAnimation * animation);
-
-		/**
-		* Get the animation currently associated with this view.
-		*
-		* @return The animation that is currently playing or
-		*         scheduled to play for this view.
-		*/
-		IAnimation * GetAnimation();
-
-		/**
-		* Start the specified animation now.
-		*
-		* @param animation the animation to start now
-		*/
-		void StartAnimation(IAnimation * animation);
-
-		/**
-		* Cancels any animations for this view.
-		*/
-		void ClearAnimation();
 
 		STransformation GetTransformation() const;
 
 		void SetMatrix(const SMatrix & mtx);
-
-		void SetAlpha(BYTE byAlpha);
-
-		BYTE GetAlpha() const;
 
 	protected:
 		virtual void OnAnimationStart(IAnimation *pAni);
@@ -889,16 +692,6 @@ namespace SOUI
 		virtual void OnAnimationUpdate(IAnimation *pAni);
 	public:// Virtual functions
 
-		virtual int GetScale() const;
-
-        /**
-        * IsSiblingsAutoGroupped
-        * @brief    同类窗口自动成组标志
-        * @return   BOOL 
-        *
-        * Describe  主要是给RadioButton用的
-        */
-        virtual BOOL IsSiblingsAutoGroupped(){return FALSE;}
 
         /**
         * GetSelectedSiblingInGroup
@@ -946,11 +739,8 @@ namespace SOUI
         *
         * Describe  
         */
-		void RequestRelayout();
         virtual void RequestRelayout(SWND hSource,BOOL bSourceResizable);
-        
-        virtual void UpdateLayout();
-        
+                
 		virtual void OnContentChanged();
 
         virtual SStringW tr(const SStringW &strSrc);
@@ -959,16 +749,7 @@ namespace SOUI
 
         virtual BOOL FireEvent(EventArgs &evt);
 
-        virtual UINT OnGetDlgCode();
-
-        virtual BOOL IsFocusable();
-
         virtual BOOL OnNcHitTest(CPoint pt);
-
-        virtual BOOL IsClipClient()
-        {
-            return m_bClipClient;
-        }
 
         /**
         * UpdateChildrenPosition
@@ -1499,6 +1280,8 @@ namespace SOUI
         DWORD               m_bCacheDraw:1;     /**< 支持窗口内容的Cache标志 */
         DWORD               m_bCacheDirty:1;    /**< 缓存窗口脏标志 */
         DWORD               m_bLayeredWindow:1; /**< 指示是否是一个分层窗口 */
+		DWORD				m_bMsgHandled:1;
+
 
 		LayoutDirtyType     m_layoutDirty;      /**< 布局脏标志 参见LayoutDirtyType */
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */

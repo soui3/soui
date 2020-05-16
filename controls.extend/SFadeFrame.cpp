@@ -61,7 +61,7 @@ namespace SOUI{
 
     void SFadeFrame::OnNextFrame()
     {
-        SAnimator::Update();
+        SAnimator::UpdateAnimator();
     }
 
     void SFadeFrame::SetChildrenAlpha(BYTE byAlpha)

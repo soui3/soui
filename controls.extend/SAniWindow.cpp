@@ -21,7 +21,7 @@ namespace SOUI
 		m_iAniStep++;
 		m_layoutParamTmp->SetSpecifiedSize(Vert, SLayoutSize((float)GetHeight(), SLayoutSize::px));
 		RequestRelayout();
-		UpdateWindow();
+		Update();
 		if(m_iAniStep == m_nSteps)
 		{
 			if(m_aniMode == AM_HIDE)

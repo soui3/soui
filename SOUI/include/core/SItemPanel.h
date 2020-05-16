@@ -66,7 +66,7 @@ public://SwndContainerImpl
     
     virtual IScriptModule * GetScriptModule();
 
-	virtual int GetScale() const;
+	virtual int WINAPI GetScale() const;
 
 	virtual void EnableIME(BOOL bEnable);
 public://SWindow

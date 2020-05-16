@@ -52,7 +52,7 @@ namespace SOUI
 
         BOOL HasScrollBar(BOOL bVertical) const;
 
-        virtual void GetClientRect(LPRECT pRect) const;
+        virtual void WINAPI GetClientRect(LPRECT pRect) const;
         virtual CRect GetClientRect() const;
 	protected:
 		// 通过 IScrollBarHost 继承

@@ -278,12 +278,12 @@ namespace SOUI
         }
     }
 
-    UINT SComboBase::OnGetDlgCode()
+    UINT SComboBase::OnGetDlgCode() const
     {        
         return SC_WANTARROWS;
     }
 
-    BOOL SComboBase::IsFocusable()
+    BOOL SComboBase::IsFocusable() const
     {
         if (m_bDropdown && m_bFocusable)
             return TRUE;

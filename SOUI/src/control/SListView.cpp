@@ -92,7 +92,7 @@ namespace SOUI
                 while(pos)
                 {
                     SItemPanel * pItemPanel = lstItemPanels->GetNext(pos);
-                    pItemPanel->DestroyWindow();
+                    pItemPanel->Destroy();
                 }
                 delete lstItemPanels;
             }
@@ -103,7 +103,7 @@ namespace SOUI
             while(pos)
             {
                 ItemInfo ii = m_lstItems.GetNext(pos);
-                ii.pItem->DestroyWindow();
+                ii.pItem->Destroy();
             }
             m_lstItems.RemoveAll();
         }
@@ -847,7 +847,7 @@ namespace SOUI
 
     }
 
-    UINT SListView::OnGetDlgCode()
+    UINT SListView::OnGetDlgCode() const
     {
         if(m_bWantTab) return SC_WANTALLKEYS;
         else return SC_WANTARROWS|SC_WANTSYSKEY;
