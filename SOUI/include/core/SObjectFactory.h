@@ -41,14 +41,6 @@ namespace SOUI
 			uRet = (uRet << 5) + mType;
 			return uRet;
 		}
-		
-		int Compare(const SObjectInfo & src) const
-		{
-			if (mType == src.mType)
-				return mName.Compare(src.mName);
-			else
-				return mType - src.mType;
-		}
 
 		SStringW mName;
 		int      mType;
@@ -73,11 +65,6 @@ namespace SOUI
 		static bool CompareElements(INARGTYPE obj1, INARGTYPE obj2)
 		{
 			return obj1 == obj2;
-		}
-
-		static int CompareElementsOrdered(INARGTYPE obj1, INARGTYPE obj2)
-		{
-			return obj1.Compare(obj2);
 		}
 	};
 

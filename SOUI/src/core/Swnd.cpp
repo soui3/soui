@@ -172,7 +172,7 @@ namespace SOUI
 	CRect SWindow::GetClientRect() const
 	{
 		CRect rc;
-		GetClientRect(&rc);
+		SWindow::GetClientRect(&rc);
 		return rc;
 	}
 

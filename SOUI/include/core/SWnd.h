@@ -420,7 +420,7 @@ namespace SOUI
 
 		CRect GetWindowRect() const;
                 
-        CRect GetClientRect() const;
+        virtual CRect GetClientRect() const;
     protected:
 
         /**
