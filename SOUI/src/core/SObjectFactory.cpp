@@ -29,12 +29,6 @@ bool SObjectFactoryMgr::RegisterFactory(SObjectFactory & objFactory, bool bRepla
 	return true;
 }
 
-void SObjectFactoryMgr::AddStandardFactory()
-{
-
-}
-
-
 void SObjectFactoryMgr::OnFactoryRemoved( const SObjectFactoryPtr & obj )
 {
     delete obj;

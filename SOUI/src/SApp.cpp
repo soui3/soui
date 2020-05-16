@@ -458,7 +458,7 @@ int SApplication::Run( HWND hMainWnd )
 	return nRet;
 }
 
-HINSTANCE SApplication::GetInstance()
+HMODULE SApplication::GetModule() const
 {
 	return m_hInst;
 }

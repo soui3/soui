@@ -1090,6 +1090,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\SResProviderMgr-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\res.mgr\SResProviderMgr.h"
 				>
 			</File>
@@ -1274,11 +1278,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File

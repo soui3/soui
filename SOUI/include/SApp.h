@@ -108,13 +108,13 @@ public:
 
 
     /**
-     * GetInstance
+     * GetModule
      * @brief    获得应用程序句柄
-     * @return   HINSTANCE 
+     * @return   HMODULE 
      *
      * Describe  
      */
-    HINSTANCE GetInstance();
+    HMODULE GetModule() const;
 
     
     /**
@@ -329,7 +329,7 @@ protected:
     SNamedID                        m_namedID;
     
     SStringT    m_strAppDir;
-    HINSTANCE   m_hInst;
+    HMODULE		m_hInst;
     HWND        m_hMainWnd;
 
 	mutable SCriticalSection	m_cs;
