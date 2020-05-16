@@ -30,9 +30,9 @@ namespace SOUI
 
         virtual SStringW GetName2() const{return m_strName;}
         virtual LPCWSTR WINAPI GetName() const{return m_strName;}
-        virtual void SetName(const SStringW & strName){m_strName=strName;}
+        virtual void WINAPI SetName(LPCWSTR strName){m_strName=strName;}
         virtual int WINAPI GetID()const {return m_nID;}
-        virtual void SetID(int nID) {m_nID = nID;}
+        virtual void WINAPI SetID(int nID) {m_nID = nID;}
         virtual SStringT GetDescription() const {return m_strDescription;}
         virtual void SetDescription(const SStringT & strDescription){m_strDescription =strDescription;}
         virtual SStringT GetString() const {return _T("");}

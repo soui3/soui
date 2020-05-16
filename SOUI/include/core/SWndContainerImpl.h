@@ -39,6 +39,7 @@ namespace SOUI
 
     class SOUI_EXP SwndContainerImpl : public ISwndContainer
                                      , public SRootWindow
+									 , public ITimelineHandler
     {
         SOUI_CLASS_NAME(SwndContainerImpl,L"SwndContainerImpl")
     public:

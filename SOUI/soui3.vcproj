@@ -1250,6 +1250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\SWindow-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\core\SWindowMgr.h"
 				>
 			</File>
@@ -1259,6 +1263,10 @@
 			</File>
 			<File
 				RelativePath="include\core\SWndAccessible.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File

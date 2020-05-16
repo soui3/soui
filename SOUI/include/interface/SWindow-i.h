@@ -1,13 +1,16 @@
 #pragma once
-#include <interface/sobject-i.h>
 
+#pragma once
+#include <interface/sobject-i.h>
+#include <interface/sstring-i.h>
+#include <interface/>
 SNSBEGIN
 
 #undef INTERFACE
-#define INTERFACE ICaret
-DECLARE_INTERFACE_(ICaret,IObject)
+#define INTERFACE IWindow
+DECLARE_INTERFACE_(IWindow,IObject)
 {
-		//!添加引用
+	//!添加引用
 	/*!
 	*/
 	STDMETHOD_(long,AddRef) (THIS) PURE;
@@ -146,17 +149,44 @@ DECLARE_INTERFACE_(ICaret,IObject)
 	*/  
 	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
-	STDMETHOD_(BOOL,Init)(THIS_ HBITMAP hBmp, int nWid, int nHei) PURE;
 
-	STDMETHOD_(void,SetPosition)(THIS_ int x, int y) PURE;
+	STDMETHOD_(BOOL,IsMsgHandled)(THIS) SCONST PURE;
 
-	STDMETHOD_(BOOL,SetVisible)(THIS_ BOOL bVisible,SWND owner) PURE;
+	STDMETHOD_(void,SetMsgHandled)(THIS_ BOOL bHandled) PURE;
 
-	STDMETHOD_(BOOL,IsVisible)(THIS) SCONST PURE;
+	STDMETHOD_(const IStringW *,GetTrCtx)(THIS) SCONST PURE;
 
-	STDMETHOD_(void,Draw)(THIS_ IRenderTarget *pRT) PURE;
+	STDMETHOD_(SWND,GetSwnd)(THIS) SCONST PURE;
 
-	STDMETHOD_(RECT,GetRect)(THIS) SCONST PURE;
+	STDMETHOD_(ILayout *,GetLayout)(THIS) SCONST PURE;
+
+	STDMETHOD_(ILayoutParam *, GetLayoutParam)(THIS) SCONST PURE;
+
+	STDMETHOD_(void,SetLayoutParam)(THIS_ ILayoutParam * pLayoutParam) PURE;
+
+	STDMETHOD_(BOOL,IsFloat)(THIS) SCONST PURE;
+
+	STDMETHOD_(BOOL,IsDisplay)(THIS) SCONST PURE;
+
+	STDMETHOD_(IStringT*,GetWindowTextI)(THIS_ BOOL bRawText) PURE;
+
+	STDMETHOD_(void,SetWindowText)(THIS_ LPCTSTR lpszText) PURE;
+
+	STDMETHOD_(IStringT*, GetToolTipTextI)(THIS) PURE;
+
+	STDMETHOD_(void,SetToolTipText)(THIS_ LPCTSTR pszText) PURE;
+
+	STDMETHOD_(BOOL,IsChecked)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetCheck)(THIS_ BOOL bCheck) PURE;
+
+	STDMETHOD_(BOOL,IsDisabled)(THIS_,BOOL bCheckParent) SCONST PURE;
+	STDMETHOD_(void,EnableWindow)(THIS_,BOOL bEnable,BOOL bUpdate) PURE;
+
+	STDMETHOD_(BOOL,IsVisible)(THIS_,BOOL bCheckParent) SCONST PURE;
+	STDMETHOD_(void,SetVisible)(THIS_,BOOL bVisible,BOOL bUpdate) PURE;
+
+	STDMETHOD_(ISwndContainer*,GetContainer)(THIS) PURE;
+
 };
 
 SNSEND

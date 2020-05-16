@@ -71,10 +71,18 @@ public:
 	{
 		return NULL;
 	}
+	STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) OVERRIDE
+	{
+	}
 
+	
 	STDMETHOD_(int,GetID)(THIS) SCONST OVERRIDE
 	{
 		return 0;
+	}
+
+	STDMETHOD_(void,SetID)(THIS_ int nID) OVERRIDE
+	{
 	}
 
 	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) OVERRIDE

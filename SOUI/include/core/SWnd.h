@@ -12,20 +12,20 @@
 */
 
 #pragma once
-#include "SWindowMgr.h"
-#include "SwndContainer-i.h"
-#include "interface/slayout-i.h"
+#include <core/SWindowMgr.h>
+#include <interface/SwndContainer-i.h>
+#include <interface/slayout-i.h>
 #include <interface/saccproxy-i.h>
-#include "helper/STimerEx.h"
-#include "helper/SwndMsgCracker.h"
-#include "layout/SLayoutSize.h"
-#include "event/SEventSubscriber.h"
-#include "event/SEvents.h"
-#include "event/SEventSet.h"
-#include "res.mgr/SStylePool.h"
-#include "res.mgr/SSkinPool.h"
-#include "SwndStyle.h"
-#include "SSkin.h"
+#include <helper/STimerEx.h>
+#include <helper/SwndMsgCracker.h>
+#include <layout/SLayoutSize.h>
+#include <event/SEventSubscriber.h>
+#include <event/SEvents.h>
+#include <event/SEventSet.h>
+#include <res.mgr/SStylePool.h>
+#include <res.mgr/SSkinPool.h>
+#include <core/SwndStyle.h>
+#include <core/SSkin.h>
 #include <OCIdl.h>
 #include <animation/SAnimation.h>
 
@@ -281,7 +281,7 @@ namespace SOUI
 
 		/**
         * GetNextLayoutChild
-        * @brief    枚举布局脏子窗口
+        * @brief    获取下一个参与布局的窗口
 		* @param	SWindow *pCurChild -- 当前子窗口指针
         * @return   SWindow * -- 下一个布局子窗口 
         *
@@ -326,10 +326,10 @@ namespace SOUI
 		virtual SStringT GetToolTipText();
 
         virtual LPCWSTR WINAPI GetName() const {return m_strName;}
-        void SetName(LPCWSTR pszName){m_strName=pszName;}
+        void WINAPI SetName(LPCWSTR pszName){m_strName=pszName;}
 
         virtual int WINAPI GetID() const{return m_nID;}
-        void SetID(int nID){m_nID=nID;}
+        void WINAPI SetID(int nID){m_nID=nID;}
 
         /**
          * GetEventSet

@@ -143,6 +143,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* Describe  
 	*/    
 	STDMETHOD_(int,GetID)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetID)(THIS_ int nID) PURE;
 
 	/**
 	* GetName
@@ -151,6 +152,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* Describe  
 	*/    
 	STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) PURE;
 
 	/**
 	* InitFromXml

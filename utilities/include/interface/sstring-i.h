@@ -114,4 +114,10 @@ DECLARE_INTERFACE_(IStringW,IObjRef)
 	STDMETHOD_(LPVOID,GetPrivData)(THIS) SCONST PURE;
 };
 
+#ifdef _UNICODE
+#define IStringT IStringW
+#else
+#define IStringT IStringA
+#endif
+
 SNSEND
