@@ -159,11 +159,11 @@ namespace SOUI
         // - the enter key
         // - any F key (F1, F2, F3 ...)
         // - any browser specific keys (as available on special keyboards)
-        void RegisterAccelerator(const SAccelerator& accelerator,
+        void RegisterAccelerator(const IAccelerator* pAcc,
             IAcceleratorTarget* target);
 
         // Unregister the specified keyboard accelerator for the specified target.
-        void UnregisterAccelerator(const SAccelerator& accelerator,
+        void UnregisterAccelerator(const IAccelerator* pAcc,
             IAcceleratorTarget* target);
 
         // Unregister all keyboard accelerator for the specified target.
@@ -175,7 +175,7 @@ namespace SOUI
         // this method immediately returns. If not, we do the same thing on the next
         // target, and so on.
         // Returns true if an accelerator was activated.
-        bool ProcessAccelerator(const SAccelerator& accelerator);
+        bool ProcessAccelerator(const IAccelerator *pAcc);
     private:
         // Returns the next focusable view.
         SWindow * GetNextFocusableView(SWindow* pWndStarting, bool bReverse, bool bLoop);
@@ -194,7 +194,7 @@ namespace SOUI
         SWindow *m_pOwner;
 
         typedef SList<IAcceleratorTarget*> AcceleratorTargetList;
-        typedef SMap<SAccelerator, AcceleratorTargetList> AcceleratorMap;
+        typedef SMap<DWORD, AcceleratorTargetList> AcceleratorMap;
         AcceleratorMap accelerators_;
 
     };

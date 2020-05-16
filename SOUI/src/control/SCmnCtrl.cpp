@@ -432,7 +432,7 @@ void SButton::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
     }
 }
 
-bool SButton::OnAcceleratorPressed( const SAccelerator& accelerator )
+bool SButton::OnAcceleratorPressed( const IAccelerator* accelerator )
 {
     if(IsDisabled(TRUE)) 
 		return false;
@@ -458,7 +458,7 @@ BOOL SButton::InitFromXml(IXmlNode * pNode)
 			if (m_accel)
 			{
 				SAccelerator acc(m_accel);
-				GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(acc, this);
+				GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(&acc, this);
 			}
 		}
 	}
@@ -470,7 +470,7 @@ void SButton::OnDestroy()
     if(m_accel)
     {
         SAccelerator acc(m_accel);
-        GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(acc,this);
+        GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(&acc,this);
     }
     StopCurAnimate();
     __super::OnDestroy();
@@ -482,13 +482,13 @@ HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
 	if(m_accel)
 	{
 		SAccelerator acc(m_accel);
-		GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(acc,this);
+		GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(&acc,this);
 	}
     m_accel=SAccelerator::TranslateAccelKey(strAccelT);
     if(m_accel)
     {
 		SAccelerator acc(m_accel);
-		GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(acc,this);
+		GetContainer()->GetAcceleratorMgr()->RegisterAccelerator(&acc,this);
     }
     return S_FALSE;
 }

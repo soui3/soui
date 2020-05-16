@@ -242,7 +242,7 @@ namespace SOUI
         }
         // Process keyboard accelerators.
         SAccelerator accelerator(vKey,GetKeyState(VK_CONTROL)&0x8000,GetKeyState(VK_MENU)&0x8000,GetKeyState(VK_SHIFT)&0x8000);
-        if(ProcessAccelerator(accelerator))
+        if(ProcessAccelerator(&accelerator))
         {
             // If a shortcut was activated for this keydown message, do not propagate
             // the event further.
@@ -364,16 +364,19 @@ namespace SOUI
         focused_backup_ = 0;
     }
 
-    void SFocusManager::RegisterAccelerator( const SAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::RegisterAccelerator(const IAccelerator* pAcc, IAcceleratorTarget* target )
     {
-        AcceleratorTargetList& targets = accelerators_[accelerator];
+		DWORD dwAcc=pAcc->GetAcc();
+        AcceleratorTargetList& targets = accelerators_[dwAcc];
         targets.AddHead(target);
     }
 
-    void SFocusManager::UnregisterAccelerator( const SAccelerator& accelerator, IAcceleratorTarget* target )
+    void SFocusManager::UnregisterAccelerator(const IAccelerator* pAcc, IAcceleratorTarget* target )
     {
-        if(!accelerators_.Lookup(accelerator)) return;
-        AcceleratorTargetList* targets=&accelerators_[accelerator];
+		DWORD dwAcc=pAcc->GetAcc();
+        if(!accelerators_.Lookup(dwAcc))
+			return;
+        AcceleratorTargetList* targets=&accelerators_[dwAcc];
         SPOSITION pos = targets->Find(target);
         if(pos) targets->RemoveAt(pos);
     }
@@ -390,20 +393,21 @@ namespace SOUI
         }
     }
 
-    bool SFocusManager::ProcessAccelerator( const SAccelerator& accelerator )
+    bool SFocusManager::ProcessAccelerator(const IAccelerator *pAcc)
     {
-        if(!accelerators_.Lookup(accelerator)) return false;
+		DWORD dwAcc = pAcc->GetAcc();
+        if(!accelerators_.Lookup(dwAcc)) return false;
 
         // We have to copy the target list here, because an AcceleratorPressed
         // event handler may modify the list.
-        AcceleratorTargetList targets = accelerators_[accelerator];
+        AcceleratorTargetList targets = accelerators_[dwAcc];
         
         SPOSITION pos=targets.GetHeadPosition();
 
         while(pos)
         {
             IAcceleratorTarget *pTarget=targets.GetNext(pos);
-            if(pTarget->OnAcceleratorPressed(accelerator))
+            if(pTarget->OnAcceleratorPressed(pAcc))
             {
                 return true;
             }

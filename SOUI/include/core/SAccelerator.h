@@ -15,21 +15,44 @@
 
 namespace SOUI
 {
+	enum{
+		Mod_None = 0,
+		Mod_Alt  = 1, 
+		Mod_Ctrl = 2,
+		Mod_Shift= 4,
+	};
+
+	struct IAccelerator
+	{
+		        
+        /**
+         * GetModifier
+         * @brief    获得加速键的修饰位
+         * @return   WORD -- 加速键的修饰键
+         * Describe  
+         */    
+		virtual WORD GetModifier() const PURE;
+
+        /**
+         * GetKey
+         * @brief    获得加速键的主键
+         * @return   WORD -- 加速键的主键
+         * Describe  
+         */    
+        virtual WORD GetKey() const PURE;
+
+		virtual DWORD GetAcc() const PURE;
+	};
+
     /**
     * @class      CAccelerator
     * @brief      加速键映射
     * 
     * Describe
     */
-    class SOUI_EXP SAccelerator
+	class SOUI_EXP SAccelerator : public IAccelerator
     {
     public:
-		enum{
-			Mod_None = 0,
-			Mod_Alt  = 1, 
-			Mod_Ctrl = 2,
-			Mod_Shift= 4,
-		};
 
         /**
          * CAccelerator
@@ -82,6 +105,11 @@ namespace SOUI
          */    
         WORD GetKey() const {return m_wVK;}
 
+		virtual DWORD GetAcc() const
+		{
+			return MAKELONG(m_wVK,m_wModifier);
+		}
+
 		static WORD VkFromString(LPCTSTR pszKey);
 		/**
 		* GetKeyName
@@ -106,25 +134,6 @@ namespace SOUI
         WORD    m_wVK;
     };
 
-    template<>
-    class  CElementTraits< SAccelerator > : public CElementTraitsBase< SAccelerator >
-    {
-    public:
-        static ULONG Hash(INARGTYPE element ) throw()
-        {
-            return MAKELONG(element.GetModifier(),element.GetKey());
-        }
-
-        static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
-        {
-            return Hash(element1)==Hash(element2);
-        }
-
-        static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
-        {
-            return Hash(element1)-Hash(element2);
-        }
-    };
 
     /**
     * @struct     IAcceleratorTarget
@@ -141,7 +150,7 @@ namespace SOUI
          * @return   bool -- 加速键被处理返回true
          * Describe  
          */    
-        virtual bool OnAcceleratorPressed(const SAccelerator& accelerator) = 0;
+        virtual bool OnAcceleratorPressed(const IAccelerator* acc) = 0;
     };
 
     /**
@@ -161,11 +170,11 @@ namespace SOUI
         // - the enter key
         // - any F key (F1, F2, F3 ...)
         // - any browser specific keys (as available on special keyboards)
-        virtual void RegisterAccelerator(const SAccelerator& accelerator,
+        virtual void RegisterAccelerator(const IAccelerator* pAcc,
             IAcceleratorTarget* target)=NULL;
 
         // Unregister the specified keyboard accelerator for the specified target.
-        virtual void UnregisterAccelerator(const SAccelerator& accelerator,
+        virtual void UnregisterAccelerator(const IAccelerator* pAcc,
             IAcceleratorTarget* target)=NULL;
 
         // Unregister all keyboard accelerator for the specified target.

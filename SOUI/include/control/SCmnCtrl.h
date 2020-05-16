@@ -187,7 +187,7 @@ protected:
      *
      * Describe  处理加速键响应消息
      */
-    virtual bool OnAcceleratorPressed(const SAccelerator& accelerator);
+    virtual bool OnAcceleratorPressed(const IAccelerator* accelerator);
     virtual BOOL WINAPI InitFromXml(IXmlNode * pNode);
 protected:
     
