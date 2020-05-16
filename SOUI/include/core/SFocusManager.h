@@ -148,6 +148,7 @@ namespace SOUI
         void StoreFocusedView();
         void RestoreFocusedView();
 
+	protected:
         // IAcceleratorMgr
 
         // Register a keyboard accelerator for the specified target. If multiple
@@ -159,16 +160,17 @@ namespace SOUI
         // - the enter key
         // - any F key (F1, F2, F3 ...)
         // - any browser specific keys (as available on special keyboards)
-        void RegisterAccelerator(const IAccelerator* pAcc,
-            IAcceleratorTarget* target);
+		STDMETHOD_(void,RegisterAccelerator)(THIS_ const IAccelerator* pAcc,
+			IAcceleratorTarget* target) OVERRIDE;
 
-        // Unregister the specified keyboard accelerator for the specified target.
-        void UnregisterAccelerator(const IAccelerator* pAcc,
-            IAcceleratorTarget* target);
+		// Unregister the specified keyboard accelerator for the specified target.
+		STDMETHOD_(void,UnregisterAccelerator)(THIS_ const IAccelerator* pAcc,
+			IAcceleratorTarget* target) OVERRIDE;
 
-        // Unregister all keyboard accelerator for the specified target.
-        void UnregisterAccelerators(IAcceleratorTarget* target);
+		// Unregister all keyboard accelerator for the specified target.
+		STDMETHOD_(void,UnregisterAccelerators)(THIS_ IAcceleratorTarget* target) OVERRIDE;
 
+	private:
         // Activate the target associated with the specified accelerator.
         // First, AcceleratorPressed handler of the most recently registered target
         // is called, and if that handler processes the event (i.e. returns true),
@@ -176,7 +178,7 @@ namespace SOUI
         // target, and so on.
         // Returns true if an accelerator was activated.
         bool ProcessAccelerator(const IAccelerator *pAcc);
-    private:
+
         // Returns the next focusable view.
         SWindow * GetNextFocusableView(SWindow* pWndStarting, bool bReverse, bool bLoop);
 

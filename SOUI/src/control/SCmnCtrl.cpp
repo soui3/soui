@@ -432,14 +432,14 @@ void SButton::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
     }
 }
 
-bool SButton::OnAcceleratorPressed( const IAccelerator* accelerator )
+BOOL SButton::OnAcceleratorPressed( const IAccelerator* accelerator )
 {
     if(IsDisabled(TRUE)) 
-		return false;
+		return FALSE;
 	if(m_bDisableAccelIfInvisible && !IsVisible(TRUE))
-		return false;
+		return FALSE;
     FireCommand();
-    return true;
+    return TRUE;
 }
 
 BOOL SButton::InitFromXml(IXmlNode * pNode)

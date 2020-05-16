@@ -13,36 +13,10 @@
 
 #pragma once
 
+#include <interface/SAccelerator-i.h>
+
 namespace SOUI
 {
-	enum{
-		Mod_None = 0,
-		Mod_Alt  = 1, 
-		Mod_Ctrl = 2,
-		Mod_Shift= 4,
-	};
-
-	struct IAccelerator
-	{
-		        
-        /**
-         * GetModifier
-         * @brief    获得加速键的修饰位
-         * @return   WORD -- 加速键的修饰键
-         * Describe  
-         */    
-		virtual WORD GetModifier() const PURE;
-
-        /**
-         * GetKey
-         * @brief    获得加速键的主键
-         * @return   WORD -- 加速键的主键
-         * Describe  
-         */    
-        virtual WORD GetKey() const PURE;
-
-		virtual DWORD GetAcc() const PURE;
-	};
 
     /**
     * @class      CAccelerator
@@ -89,26 +63,12 @@ namespace SOUI
          */    
         SStringT FormatHotkey();
 
-        /**
-         * GetModifier
-         * @brief    获得加速键的修饰位
-         * @return   WORD -- 加速键的修饰键
-         * Describe  
-         */    
-        WORD GetModifier() const {return m_wModifier;}
+		STDMETHOD_(WORD,GetModifier)(THIS) SCONST OVERRIDE;
 
-        /**
-         * GetKey
-         * @brief    获得加速键的主键
-         * @return   WORD -- 加速键的主键
-         * Describe  
-         */    
-        WORD GetKey() const {return m_wVK;}
+    
+		STDMETHOD_(WORD,GetKey)(THIS) SCONST OVERRIDE;
 
-		virtual DWORD GetAcc() const
-		{
-			return MAKELONG(m_wVK,m_wModifier);
-		}
+		STDMETHOD_(DWORD,GetAcc)(THIS) SCONST OVERRIDE;
 
 		static WORD VkFromString(LPCTSTR pszKey);
 		/**
@@ -135,49 +95,5 @@ namespace SOUI
     };
 
 
-    /**
-    * @struct     IAcceleratorTarget
-    * @brief      加速键按下的处理接口
-    * 
-    * Describe 想要注册键盘加速键的类需要实现本接口
-    */
-    struct IAcceleratorTarget
-    {
-        /**
-         * OnAcceleratorPressed
-         * @brief    
-         * @param    const CAccelerator & accelerator --  按下的加速键
-         * @return   bool -- 加速键被处理返回true
-         * Describe  
-         */    
-        virtual bool OnAcceleratorPressed(const IAccelerator* acc) = 0;
-    };
 
-    /**
-    * @struct     IAcceleratorMgr
-    * @brief      加速键管理接口
-    * 
-    * Describe
-    */
-    struct IAcceleratorMgr
-    {
-        // Register a keyboard accelerator for the specified target. If multiple
-        // targets are registered for an accelerator, a target registered later has
-        // higher priority.
-        // Note that we are currently limited to accelerators that are either:
-        // - a key combination including Ctrl or Alt
-        // - the escape key
-        // - the enter key
-        // - any F key (F1, F2, F3 ...)
-        // - any browser specific keys (as available on special keyboards)
-        virtual void RegisterAccelerator(const IAccelerator* pAcc,
-            IAcceleratorTarget* target)=NULL;
-
-        // Unregister the specified keyboard accelerator for the specified target.
-        virtual void UnregisterAccelerator(const IAccelerator* pAcc,
-            IAcceleratorTarget* target)=NULL;
-
-        // Unregister all keyboard accelerator for the specified target.
-        virtual void UnregisterAccelerators(IAcceleratorTarget* target)=NULL;
-    };
 }//end of namespace SOUI

@@ -622,6 +622,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\SAccelerator-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\core\SAccelerator.h"
 				>
 			</File>

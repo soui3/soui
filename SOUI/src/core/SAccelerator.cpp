@@ -244,4 +244,19 @@ namespace SOUI
         return MAKELONG(wKey,wModifier);
     }
 
+	WORD SAccelerator::GetModifier() const
+	{
+		return m_wModifier;
+	}
+
+	WORD SAccelerator::GetKey() const
+	{
+		return m_wVK;
+	}
+
+	DWORD SAccelerator::GetAcc() const
+	{
+		return MAKELONG(m_wVK,m_wModifier);
+	}
+
 }//end of namespace SOUI
