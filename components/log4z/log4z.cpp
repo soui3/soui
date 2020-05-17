@@ -111,7 +111,7 @@ static const char *const LOG_STRING[]=
 };
 
 #if defined (WIN32) || defined(_WIN64)
-const static WORD LOG_COLOR[ILog4zManager::LOG_LEVEL_FATAL + 1] = {
+const static WORD LOG_COLOR[LOG_LEVEL_FATAL + 1] = {
     0,
     0,
     FOREGROUND_BLUE | FOREGROUND_GREEN,
@@ -360,20 +360,21 @@ struct LoggerInfo
     }
 };
 
-class COutoutFileBuilder : public ILog4zManager::IOutputFileBuilder
+class COutoutFileBuilder : public IOutputFileBuilder
 {
 public:
-    virtual bool monthDir() const
+
+	STDMETHOD_(BOOL,monthDir)(THIS) SCONST OVERRIDE
     {
         return false;
     }
 
-    virtual bool dayLog() const
+	STDMETHOD_(BOOL,dayLog)(THIS) SCONST OVERRIDE
     {
         return false;
     }
 
-    virtual bool buildOutputFile(char *pszFileName,int nLen,tm time,const char * pszLogName,unsigned long pid,int curFileIndex) const
+	STDMETHOD_(BOOL,buildOutputFile)(THIS_ char *pszFileName,int nLen,tm time,const char * pszLogName,unsigned long pid,int curFileIndex) SCONST OVERRIDE
     {
         sprintf_s(pszFileName,nLen,"%s-%d.log",pszLogName,curFileIndex);
         return true;
@@ -390,41 +391,57 @@ public:
     LogerManager();
     virtual ~LogerManager();
     
-    bool configFromStringImpl(std::string content, bool isUpdate);
-    //! 读取配置文件并覆写
-    virtual bool config(const char* configPath);
-    virtual bool configFromString(const char* configContent);
+    BOOL configFromStringImpl(std::string content, bool isUpdate);
+public:
+	//! Config or overwrite configure
+	//! Needs to be called before ILog4zManager::Start,, OR Do not call.
+	STDMETHOD_(BOOL,config)(THIS_ const char * configPath) OVERRIDE;
+	STDMETHOD_(BOOL,configFromString)(THIS_ const char * configContent) OVERRIDE;
 
-    //! 覆写式创建
-    virtual LoggerId createLogger(const char* key);
-    virtual bool start();
-    virtual bool stop();
-    virtual bool prePushLog(LoggerId id, int level);
-    virtual bool prePushLog(const char * name, int level);
+	//! Create or overwrite logger.
+	//! Needs to be called before ILog4zManager::Start, OR Do not call.
+	STDMETHOD_(LoggerId,createLogger)(THIS_ const char* key) OVERRIDE;
 
-    virtual bool pushLog(LoggerId id, int level,const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr);
-    virtual bool pushLog(const char * name, int level, const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr);
-    //! 查找ID
-    virtual LoggerId findLogger(const char*  key);
+	//! Start Log Thread. This method can only be called once by one process.
+	STDMETHOD_(BOOL,start)(THIS) OVERRIDE;
 
-    virtual bool enableLogger(LoggerId id, bool enable);
-    virtual bool setLoggerName(LoggerId id, const char * name);
-    virtual bool setLoggerPath(LoggerId id, const char * path);
-    virtual bool setLoggerLevel(LoggerId id, int nLevel);
-    virtual bool setLoggerFileLine(LoggerId id, bool enable);
-    virtual bool setLoggerDisplay(LoggerId id, bool enable);
-    virtual bool setLoggerOutFile(LoggerId id, bool enable);
-    virtual bool setLoggerLimitsize(LoggerId id, unsigned int limitsize);
-    virtual void setOutputFileBuilder(IOutputFileBuilder *pOutputFileBuilder);
+	//! Default the method will be calling at process exit auto.
+	//! Default no need to call and no recommended.
+	STDMETHOD_(BOOL,stop)(THIS) OVERRIDE;
 
-    virtual bool setAutoUpdate(int interval);
-    virtual bool updateConfig();
-    virtual bool isLoggerEnable(LoggerId id);
-    virtual unsigned long long getStatusTotalWriteCount(){return _ullStatusTotalWriteFileCount;}
-    virtual unsigned long long getStatusTotalWriteBytes(){return _ullStatusTotalWriteFileBytes;}
-    virtual unsigned long long getStatusWaitingCount(){return _ullStatusTotalPushLog - _ullStatusTotalPopLog;}
-    virtual unsigned int getStatusActiveLoggers();
-	virtual void setOutputListener(IOutputListener *pListener);
+	//! Find logger. thread safe.
+	STDMETHOD_(LoggerId,findLogger)(THIS_ const char* key) OVERRIDE;
+
+	//pre-check the log filter. if filter out return false. 
+	STDMETHOD_(BOOL,prePushLog)(THIS_ LoggerId id, int level) OVERRIDE;
+	STDMETHOD_(BOOL,prePushLog)(THIS_ const char * name, int level) OVERRIDE;
+
+	//! Push log, thread safe.
+	STDMETHOD_(BOOL,pushLog)(THIS_ LoggerId id, int level, const char * filter, const char * log, const char * file , int line , const char * func , const void *pRetAddr) OVERRIDE;
+
+	STDMETHOD_(BOOL,pushLog)(THIS_ const char * name, int level, const char * filter, const char * log, const char * file , int line , const char * func , const void *pRetAddr) OVERRIDE;
+
+	//! set logger's attribute, thread safe.
+	STDMETHOD_(BOOL,enableLogger)(THIS_ LoggerId id, bool enable) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerName)(THIS_ LoggerId id, const char * name) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerPath)(THIS_ LoggerId id, const char * path) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerLevel)(THIS_ LoggerId id, int nLevel) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerFileLine)(THIS_ LoggerId id, bool enable) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerDisplay)(THIS_ LoggerId id, bool enable) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerOutFile)(THIS_ LoggerId id, bool enable) OVERRIDE;
+	STDMETHOD_(BOOL,setLoggerLimitsize)(THIS_ LoggerId id, unsigned int limitsize) OVERRIDE;
+
+	//设置LOG输出到文件的规则
+	STDMETHOD_(void,setOutputFileBuilder)(THIS_ IOutputFileBuilder *pOutputFileBuilder) OVERRIDE;
+
+	//! Update logger's attribute from config file, thread safe.
+	STDMETHOD_(BOOL,setAutoUpdate)(THIS_ int interval/*per second, 0 is disable auto update*/) OVERRIDE;
+	STDMETHOD_(BOOL,updateConfig)(THIS) OVERRIDE;
+
+	//! Log4z status statistics, thread safe.
+	STDMETHOD_(BOOL,isLoggerEnable)(THIS_ LoggerId id) OVERRIDE;
+	STDMETHOD_(unsigned int,getStatusActiveLoggers)(THIS) OVERRIDE;
+	STDMETHOD_(void,setOutputListener)(THIS_ IOutputListener *pListener) OVERRIDE;
 
 protected:
     void showColorText(const char *text, int level = LOG_LEVEL_DEBUG);
@@ -693,31 +710,31 @@ static bool parseConfigLine(const std::string& line, int curLineNum, std::string
     {
         if (kv.second == "trace" || kv.second == "all")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_TRACE;
+            iter->second._level = LOG_LEVEL_TRACE;
         }
         else if (kv.second == "debug")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_DEBUG;
+            iter->second._level = LOG_LEVEL_DEBUG;
         }
         else if (kv.second == "info")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_INFO;
+            iter->second._level = LOG_LEVEL_INFO;
         }
         else if (kv.second == "warn" || kv.second == "warning")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_WARN;
+            iter->second._level = LOG_LEVEL_WARN;
         }
         else if (kv.second == "error")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_ERROR;
+            iter->second._level = LOG_LEVEL_ERROR;
         }
         else if (kv.second == "alarm")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_ALARM;
+            iter->second._level = LOG_LEVEL_ALARM;
         }
         else if (kv.second == "fatal")
         {
-            iter->second._level = ILog4zManager::LOG_LEVEL_FATAL;
+            iter->second._level = LOG_LEVEL_FATAL;
         }
     }
     //! display
@@ -1223,7 +1240,7 @@ void LogerManager::showColorText(const char *text, int level)
     return;
 }
 
-bool LogerManager::configFromStringImpl(std::string content, bool isUpdate)
+BOOL LogerManager::configFromStringImpl(std::string content, bool isUpdate)
 {
     unsigned int sum = 0;
     for (std::string::iterator iter = content.begin(); iter != content.end(); ++iter)
@@ -1232,7 +1249,7 @@ bool LogerManager::configFromStringImpl(std::string content, bool isUpdate)
     }
     if (sum == _checksum)
     {
-        return true;
+        return TRUE;
     }
     _checksum = sum;
     
@@ -1243,7 +1260,7 @@ bool LogerManager::configFromStringImpl(std::string content, bool isUpdate)
         std::cout << " !!! !!! !!! !!!" << std::endl;
         std::cout << " !!! !!! log4z load config file error" << std::endl;
         std::cout << " !!! !!! !!! !!!" << std::endl;
-        return false;
+        return FALSE;
     }
     for (std::map<std::string, LoggerInfo>::iterator iter = loggerMap.begin(); iter != loggerMap.end(); ++iter)
     {
@@ -1273,18 +1290,18 @@ bool LogerManager::configFromStringImpl(std::string content, bool isUpdate)
         setLoggerOutFile(id, iter->second._outfile);
         setLoggerLimitsize(id, iter->second._limitsize);
     }
-    return true;
+    return TRUE;
 }
 
 //! read configure and create with overwriting
-bool LogerManager::config(const char* configPath)
+BOOL LogerManager::config(const char* configPath)
 {
     if (!_configFile.empty())
     {
         std::cout << " !!! !!! !!! !!!" << std::endl;
         std::cout << " !!! !!! log4z configure error: too many calls to Config. the old config file=" << _configFile << ", the new config file=" << configPath << " !!! !!! " << std::endl;
         std::cout << " !!! !!! !!! !!!" << std::endl;
-        return false;
+        return FALSE;
     }
     _configFile = configPath;
 
@@ -1301,7 +1318,7 @@ bool LogerManager::config(const char* configPath)
 }
 
 //! read configure and create with overwriting
-bool LogerManager::configFromString(const char* configContent)
+BOOL LogerManager::configFromString(const char* configContent)
 {
     return configFromStringImpl(configContent, false);
 }
@@ -1345,33 +1362,33 @@ LoggerId LogerManager::createLogger(const char* key)
 }
 
 
-bool LogerManager::start()
+BOOL LogerManager::start()
 {
     if (_runing)
     {
-        return false;
+        return FALSE;
     }
     return ThreadHelper::start();
 }
-bool LogerManager::stop()
+BOOL LogerManager::stop()
 {
     if (_runing == true)
     {
-        _runing = false;
+        _runing = FALSE;
         wait();
-        return true;
+        return TRUE;
     }
-    return false;
+    return FALSE;
 }
 
-bool LogerManager::prePushLog(const char * name, int level)
+BOOL LogerManager::prePushLog(const char * name, int level)
 {
     LoggerId id = getLoggerId(name);
     if(id == LOG4Z_INVALID_LOGGER_ID) return false;
     return prePushLog(id,level);
 }
 
-bool LogerManager::prePushLog(LoggerId id, int level)
+BOOL LogerManager::prePushLog(LoggerId id, int level)
 {
     if (id < 0 || id > _lastId || !_runing || !_loggers[id]._enable)
     {
@@ -1384,14 +1401,14 @@ bool LogerManager::prePushLog(LoggerId id, int level)
     return true;
 }
 
-bool LogerManager::pushLog(const char * name, int level, const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr)
+BOOL LogerManager::pushLog(const char * name, int level, const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr)
 {
     LoggerId id = getLoggerId(name);
     if(id == LOG4Z_INVALID_LOGGER_ID) return false;
     return pushLog(id,level,filter,log,file,line,func,pRetAddr);
 }
 
-bool LogerManager::pushLog(LoggerId id, int level, const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr)
+BOOL LogerManager::pushLog(LoggerId id, int level, const char * filter, const char * log, const char * file, int line, const char *func, const void * pRetAddr)
 {
     // discard log
     if (id < 0 || id > _lastId || !_runing || !_loggers[id]._enable)
@@ -1469,25 +1486,25 @@ LoggerId LogerManager::findLogger(const char * key)
     return LOG4Z_INVALID_LOGGER_ID;
 }
 
-bool LogerManager::enableLogger(LoggerId id, bool enable)
+BOOL LogerManager::enableLogger(LoggerId id, bool enable)
 {
     if (id <0 || id > _lastId) return false;
     _loggers[id]._enable = enable;
     return true;
 }
-bool LogerManager::setLoggerLevel(LoggerId id, int level)
+BOOL LogerManager::setLoggerLevel(LoggerId id, int level)
 {
     if (id <0 || id > _lastId || level < LOG_LEVEL_TRACE || level >LOG_LEVEL_FATAL) return false;
     _loggers[id]._level = level;
     return true;
 }
-bool LogerManager::setLoggerDisplay(LoggerId id, bool enable)
+BOOL LogerManager::setLoggerDisplay(LoggerId id, bool enable)
 {
     if (id <0 || id > _lastId) return false;
     _loggers[id]._display = enable;
     return true;
 }
-bool LogerManager::setLoggerOutFile(LoggerId id, bool enable)
+BOOL LogerManager::setLoggerOutFile(LoggerId id, bool enable)
 {
     if (id <0 || id > _lastId) return false;
     _loggers[id]._outfile = enable;
@@ -1500,21 +1517,21 @@ void LogerManager::setOutputFileBuilder(IOutputFileBuilder *pOutputFileBuilder)
     m_pOutputFileBuilder = pOutputFileBuilder;
 }
 
-bool LogerManager::setLoggerLimitsize(LoggerId id, unsigned int limitsize)
+BOOL LogerManager::setLoggerLimitsize(LoggerId id, unsigned int limitsize)
 {
     if (id <0 || id > _lastId) return false;
     if (limitsize == 0 ) {limitsize = (unsigned int)-1;}
     _loggers[id]._limitsize = limitsize;
     return true;
 }
-bool LogerManager::setLoggerFileLine(LoggerId id, bool enable)
+BOOL LogerManager::setLoggerFileLine(LoggerId id, bool enable)
 {
     if (id <0 || id > _lastId) return false;
     _loggers[id]._fileLine = enable;
     return true;
 }
 
-bool LogerManager::setLoggerName(LoggerId id, const char * name)
+BOOL LogerManager::setLoggerName(LoggerId id, const char * name)
 {
     if (id <0 || id > _lastId) return false;
     //the name by main logger is the process name and it's can't change. 
@@ -1532,7 +1549,7 @@ bool LogerManager::setLoggerName(LoggerId id, const char * name)
     return true;
 }
 
-bool LogerManager::setLoggerPath(LoggerId id, const char * path)
+BOOL LogerManager::setLoggerPath(LoggerId id, const char * path)
 {
     if (id <0 || id > _lastId) return false;
     std::string copyPath;
@@ -1560,12 +1577,12 @@ bool LogerManager::setLoggerPath(LoggerId id, const char * path)
     }
     return true;
 }
-bool LogerManager::setAutoUpdate(int interval)
+BOOL LogerManager::setAutoUpdate(int interval)
 {
     _hotUpdateInterval = interval;
     return true;
 }
-bool LogerManager::updateConfig()
+BOOL LogerManager::updateConfig()
 {
     if (_configFile.empty())
     {
@@ -1584,7 +1601,7 @@ bool LogerManager::updateConfig()
     return configFromStringImpl(f.readContent().c_str(), true);
 }
 
-bool LogerManager::isLoggerEnable(LoggerId id)
+BOOL LogerManager::isLoggerEnable(LoggerId id)
 {
     if (id <0 || id > _lastId) return false;
     return _loggers[id]._enable;

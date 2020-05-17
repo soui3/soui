@@ -48,4 +48,13 @@ DECLARE_INTERFACE(IMessageLoop)
 	STDMETHOD_(void,Quit)(THIS) PURE;
 };
 
+
+#undef INTERFACE
+#define INTERFACE IMsgLoopFactory
+DECLARE_INTERFACE_(IMsgLoopFactory,IObjRef)
+{
+	STDMETHOD_(IMessageLoop *,CreateMsgLoop)(THIS) PURE;
+	STDMETHOD_(void,DestroyMsgLoop)(THIS_ IMessageLoop *pMsgLoop) PURE;
+};
+
 SNSEND

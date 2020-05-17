@@ -13,7 +13,7 @@ namespace SOUI
 
     SHostDialog::~SHostDialog(void)
     {
-        SApplication::getSingleton().GetMsgLoopFactory()->DestoryMsgLoop(m_MsgLoop);
+		SApplication::getSingleton().GetMsgLoopFactory()->DestroyMsgLoop(m_MsgLoop);
     }
 
     INT_PTR SHostDialog::DoModal(HWND hParent/*=NULL*/)

@@ -33,7 +33,7 @@ namespace SOUI
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
         void OnOK();
         void OnCancel();
-        virtual SMessageLoop * GetMsgLoop(){return m_MsgLoop;}
+        virtual IMessageLoop * GetMsgLoop(){return m_MsgLoop;}
         
         EVENT_MAP_BEGIN()
             EVENT_ID_COMMAND(IDOK,OnOK)
@@ -49,6 +49,6 @@ namespace SOUI
 
         INT_PTR m_nRetCode;
         
-        SMessageLoop * m_MsgLoop;
+        IMessageLoop* m_MsgLoop;
     };
 }

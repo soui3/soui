@@ -14,15 +14,15 @@ namespace SOUI
 
         BOOL Create();
 
-    public://IToolTip
-        /*virtual*/ void RelayEvent(const MSG *pMsg);
+	public://IToolTip
+		STDMETHOD_(BOOL,PreTranslateMessage)(THIS_ MSG* pMsg) OVERRIDE;
 
-        /*virtual*/ void UpdateTip(const TIPID &id, CRect rc,LPCTSTR pszTip,int nScale);
+		STDMETHOD_(void,UpdateTip)(THIS_ const TIPID *id, RECT rc,LPCTSTR pszTip, int nScale) OVERRIDE;
 
-        /*virtual*/ void ClearTip();
+		STDMETHOD_(void,ClearTip)(THIS) OVERRIDE;
 
-        /*virtual*/ BOOL WINAPI PreTranslateMessage(MSG* pMsg);
-    protected:
+		STDMETHOD_(void,RelayEvent)(THIS_ const MSG *pMsg) OVERRIDE;
+	protected:
         virtual void OnFinalMessage(HWND hWnd);
 
         void OnTimer(UINT_PTR idEvent);

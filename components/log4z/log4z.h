@@ -174,7 +174,7 @@ const int LOG4Z_LOGGER_MAX = 10;
 //! default logger output file.
 const char* const LOG4Z_DEFAULT_PATH = "./log/";
 //! default log filter level
-const int LOG4Z_DEFAULT_LEVEL = SOUI::ILog4zManager::LOG_LEVEL_DEBUG;
+const int LOG4Z_DEFAULT_LEVEL = SOUI::LOG_LEVEL_DEBUG;
 //! default logger display
 const bool LOG4Z_DEFAULT_DISPLAY = true;
 //! default logger output to file

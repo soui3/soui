@@ -12,24 +12,26 @@
  */
 
 #pragma once
-#include "core/ssingleton.h"
-#include "interface/SRender-i.h"
-#include "interface/SScriptModule-i.h"
-#include "interface/STranslator-i.h"
-#include "interface/STooltip-i.h"
-#include "interface/SLog-i.h"
-#include "interface/SAttrStorage-i.h"
-#include "interface/SInterpolator-i.h"
-#include "interface/SAnimation-i.h"
-#include "interface/SValueAnimator-i.h"
-#include "control/SRealWndHandler-i.h"
+#include <core/ssingleton.h>
+#include <interface/sapp-i.h>
+#include <interface/SRender-i.h>
+#include <interface/SScriptModule-i.h>
+#include <interface/STranslator-i.h>
+#include <interface/STooltip-i.h>
+#include <interface/SLog-i.h>
+#include <interface/SAttrStorage-i.h>
+#include <interface/SInterpolator-i.h>
+#include <interface/SAnimation-i.h>
+#include <interface/SValueAnimator-i.h>
+#include <control/SRealWndHandler-i.h>
 
-#include "res.mgr/SResProviderMgr.h"
-#include "res.mgr/SNamedValue.h"
+#include <res.mgr/SResProviderMgr.h>
+#include <res.mgr/SNamedValue.h>
 
-#include "core/smsgloop.h"
-#include "core/SObjectFactory.h"
+#include <core/smsgloop.h>
+#include <core/SObjectFactory.h>
 #include <OleAcc.h>
+#include <helper/obj-ref-impl.hpp>
 
 #define GETRESPROVIDER      SOUI::SApplication::getSingletonPtr()
 #define GETRENDERFACTORY    SOUI::SApplication::getSingleton().GetRenderFactory()
@@ -53,11 +55,7 @@
 namespace SOUI
 {
 struct IAccProxy;
-interface IMsgLoopFactory : public IObjRef
-{
-    virtual SMessageLoop * CreateMsgLoop() = 0;
-    virtual void DestoryMsgLoop(SMessageLoop * pMsgLoop) =0;
-};
+
 
 interface SOUI_EXP ISystemObjectRegister
 {
@@ -88,6 +86,7 @@ public:
  * Describe   SOUI Application
  */
 class SOUI_EXP SApplication :public SSingleton<SApplication>
+							,public TObjRefImpl<IApplication>
                             ,public SResProviderMgr
 	                        ,public SObjectFactoryMgr
 {
@@ -106,17 +105,32 @@ public:
 
     ~SApplication(void);
 
+public:
+	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) OVERRIDE;
+	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) OVERRIDE;
+	STDMETHOD_(void,SetTranslator)(THIS_ ITranslatorMgr * pTrans) OVERRIDE;
+	STDMETHOD_(IToolTipFactory *, GetToolTipFactory)(THIS) OVERRIDE;
+	STDMETHOD_(void,SetToolTipFactory)(THIS_ IToolTipFactory* pToolTipFac) OVERRIDE; 
 
-    /**
-     * GetModule
-     * @brief    获得应用程序句柄
-     * @return   HMODULE 
-     *
-     * Describe  
-     */
-    HMODULE GetModule() const;
+	STDMETHOD_(BOOL,SetMsgLoopFactory)(THIS_ IMsgLoopFactory *pMsgLoopFac) OVERRIDE;
+	STDMETHOD_(IMsgLoopFactory *,GetMsgLoopFactory)(THIS) OVERRIDE;
 
+	STDMETHOD_(void,SetLogManager)(THIS_ ILog4zManager * pLogMgr) OVERRIDE;
+	STDMETHOD_(ILog4zManager *,GetLogManager)(THIS) OVERRIDE;
+
+	STDMETHOD_(void,SetAttrStorageFactory)(THIS_ IAttrStorageFactory * pAttrStorageFactory) OVERRIDE;
+	STDMETHOD_(IAttrStorageFactory*,GetAttrStorageFactory)(THIS) OVERRIDE;
+
+	STDMETHOD_(int,Run)(THIS_ HWND hMainWnd) OVERRIDE;
+	STDMETHOD_(HWND,GetMainWnd)(THIS) OVERRIDE;
+
+	STDMETHOD_(BOOL,AddMsgLoop)(THIS_ IMessageLoop* pMsgLoop) OVERRIDE;
+	STDMETHOD_(BOOL,RemoveMsgLoop)(THIS) OVERRIDE;
+
+	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID = ::GetCurrentThreadId()) SCONST OVERRIDE;
     
+public:
     /**
      * Init
      * @brief    从数组里初始化命名ID列表
@@ -128,15 +142,6 @@ public:
      */
     void InitXmlNamedID(const SNamedID::NAMEDVALUE *pNamedValue,int nCount,BOOL bSorted);
     
-    /**
-     * LoadSystemNamedResource
-     * @brief    加载SOUI系统默认的命名资源
-     * @param    IResProvider * pResProvider --  
-     * @return   UINT 
-     *
-     * Describe  
-     */
-    UINT LoadSystemNamedResource(IResProvider *pResProvider);
     
     /**
      * LoadXmlDocment
@@ -182,24 +187,7 @@ public:
     void SetScriptFactory(IScriptFactory *pScriptModule);
     
         
-    /**
-     * GetTranslator
-     * @brief    获取语言翻译模块
-     * @return   ITranslator * 语言翻译模块指针
-     *
-     * Describe  
-     */
-    ITranslatorMgr * GetTranslator();
-    
-    /**
-     * SetTranslator
-     * @brief    设置语言翻译模块
-     * @param    ITranslator * pTrans --  语言翻译模块指针
-     * @return   void 
-     *
-     * Describe  
-     */
-    void SetTranslator(ITranslatorMgr * pTrans);
+
     
     /**
      * GetRealWndHander
@@ -218,49 +206,10 @@ public:
      */    
     void SetRealWndHandler(IRealWndHandler *pRealHandler);
 
-    /**
-     * GetToolTipFactory
-     * @brief    获取ToolTip处理接口
-     * @return   IToolTipFactory * -- ToolTip处理接口
-     * Describe  
-     */    
-    IToolTipFactory * GetToolTipFactory();
-
-    /**
-     * SetToolTipFactory
-     * @brief    设置ToolTip处理接口
-     * @param    IToolTipFactory * pToolTipFac --  ToolTip处理接口
-     * @return   void -- 
-     * Describe  
-     */    
-    void SetToolTipFactory(IToolTipFactory* pToolTipFac);
-
-    BOOL SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac);
-
-    IMsgLoopFactory * GetMsgLoopFactory();
-    
-    void SetLogManager(ILog4zManager * pLogMgr);
-    
-    ILog4zManager * GetLogManager();
-    
-	void SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFactory);
-	IAttrStorageFactory * GetAttrStorageFactory();
-
-    /**
-     * Run
-     * @brief    启动SOUI的主消息循环
-     * @param    HWND hMainWnd --  应用程序主窗口句柄
-     * @return   int 消息循环结束时的返回值
-     *
-     * Describe  
-     */
-    int Run(HWND hMainWnd);
-
     void SetAppDir(const SStringT & strAppDir);
 
     SStringT GetAppDir()const;
     
-    HWND GetMainWnd();
     
     template<class T>
     bool RegisterWindowClass()
@@ -303,13 +252,6 @@ public:
 
 	void * GetInnerSingleton(int nType);
 
-public:
-	// Message loop map methods
-	bool AddMsgLoop(IMessageLoop* pMsgLoop);
-
-	bool RemoveMsgLoop();
-
-	IMessageLoop* GetMsgLoop(DWORD dwThreadID = ::GetCurrentThreadId()) const;
 protected:
 	virtual void RegisterSystemObjects(){}
 
@@ -334,7 +276,7 @@ protected:
 
 	mutable SCriticalSection	m_cs;
 	SMap<DWORD,IMessageLoop * > m_msgLoopMap;
-	SMessageLoop *		 m_pMsgLoop;
+	IMessageLoop *		 m_pMsgLoop;
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];
 };

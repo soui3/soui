@@ -67,11 +67,11 @@ namespace SOUI
         }
     }
 
-    void STipCtrl::UpdateTip(const TIPID &id, CRect rc,LPCTSTR pszTip, int nScale)
+    void STipCtrl::UpdateTip(const TIPID *id, RECT rc,LPCTSTR pszTip, int nScale)
     {
-        if(m_id.dwHi == id.dwHi && m_id.dwLow== id.dwLow) return;
+        if(m_id.dwHi == id->dwHi && m_id.dwLow== id->dwLow) return;
 
-        m_id = id;
+        m_id = *id;
         m_rcTarget=rc;
         m_strTip=pszTip;
         if (m_nScale != nScale)

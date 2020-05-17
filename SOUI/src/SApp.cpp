@@ -72,7 +72,7 @@ public:
 class SDefToolTipFactory : public TObjRefImpl<IToolTipFactory>
 {
 public:
-    /*virtual */IToolTip * CreateToolTip(HWND hHost)
+	STDMETHOD_(IToolTip *,CreateToolTip)(THIS_ HWND hHost) OVERRIDE
     {
         STipCtrl *pTipCtrl = new STipCtrl;
         if(!pTipCtrl->Create())
@@ -83,7 +83,7 @@ public:
         return pTipCtrl;
     }
 
-    /*virtual */void DestroyToolTip(IToolTip *pToolTip)
+	STDMETHOD_(void,DestroyToolTip)(THIS_ IToolTip *pToolTip) OVERRIDE
     {
         if(pToolTip)
         {
@@ -96,14 +96,14 @@ public:
 class SDefMsgLoopFactory : public TObjRefImpl<IMsgLoopFactory>
 {
 public:
-    virtual SMessageLoop * CreateMsgLoop()
+	STDMETHOD_(IMessageLoop *,CreateMsgLoop)(THIS) OVERRIDE
     {
         return new SMessageLoop;
     }
 
-    virtual void DestoryMsgLoop(SMessageLoop * pMsgLoop)
+	STDMETHOD_(void,DestroyMsgLoop)(THIS_ IMessageLoop *pMsgLoop) OVERRIDE
     {
-        delete pMsgLoop;
+        delete (SMessageLoop*)pMsgLoop;
     }
 };
 
@@ -243,7 +243,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 SApplication::~SApplication(void)
 {
 	RemoveMsgLoop();
-    GetMsgLoopFactory()->DestoryMsgLoop(m_pMsgLoop);
+    GetMsgLoopFactory()->DestroyMsgLoop(m_pMsgLoop);
     
 	SResProviderMgr::RemoveAll();
     _DestroySingletons();
@@ -519,7 +519,7 @@ BOOL SApplication::SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac)
 {
 	if(m_msgLoopMap.GetCount()>0)
 		return FALSE;
-    m_msgLoopFactory->DestoryMsgLoop(m_pMsgLoop);
+    m_msgLoopFactory->DestroyMsgLoop(m_pMsgLoop);
     m_msgLoopFactory = pMsgLoopFac;
     m_pMsgLoop = m_msgLoopFactory->CreateMsgLoop();
     return TRUE;
@@ -616,7 +616,7 @@ void SApplication::SetAttrStorageFactory(IAttrStorageFactory * pAttrStorageFacto
 }
 
 
-bool SApplication::AddMsgLoop(IMessageLoop* pMsgLoop)
+BOOL SApplication::AddMsgLoop(IMessageLoop* pMsgLoop)
 {
 	SAutoLock autoLock(m_cs);
 	SASSERT(pMsgLoop != NULL);
@@ -628,7 +628,7 @@ bool SApplication::AddMsgLoop(IMessageLoop* pMsgLoop)
 	return true;
 }
 
-bool SApplication::RemoveMsgLoop()
+BOOL SApplication::RemoveMsgLoop()
 {
 	SAutoLock autoLock(m_cs);
 	return m_msgLoopMap.RemoveKey(::GetCurrentThreadId());
