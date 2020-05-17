@@ -55,4 +55,6 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
 
 };
 
+typedef IApplication * IApplicationPtr;
+
 SNSEND

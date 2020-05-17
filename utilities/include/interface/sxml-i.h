@@ -28,13 +28,13 @@ DECLARE_INTERFACE_(IXmlAttr,IObjRef)
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST PURE;
 
 	// Check if attribute is empty
-	STDMETHOD_(bool,Empty)(THIS) SCONST PURE;
+	STDMETHOD_(BOOL,Empty)(THIS) SCONST PURE;
 
 	// Get attribute name/value, or "" if attribute is empty
 	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST PURE;
 	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST PURE;
 
-	STDMETHOD_(bool,set_userdata)(THIS_ int data) PURE;
+	STDMETHOD_(BOOL,set_userdata)(THIS_ int data) PURE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST PURE;
 
 	// Get next/previous attribute in the attribute list of the parent node
@@ -78,7 +78,7 @@ DECLARE_INTERFACE_(IXmlNode,IObjRef)
 
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST PURE;
 
-	STDMETHOD_(bool,Empty)(THIS) SCONST PURE;
+	STDMETHOD_(BOOL,Empty)(THIS) SCONST PURE;
 
 	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST PURE;
 
@@ -86,24 +86,24 @@ DECLARE_INTERFACE_(IXmlNode,IObjRef)
 
 	STDMETHOD_(const wchar_t*,Text)(THIS) SCONST PURE;
 
-	STDMETHOD_(bool,set_userdata)(THIS_ int data) PURE;
+	STDMETHOD_(BOOL,set_userdata)(THIS_ int data) PURE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST PURE;
 
 	// Get attribute list
-	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST PURE;
 	STDMETHOD_(IXmlAttr*,FirstAttribute)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlAttr*,LastAttribute)(THIS) SCONST PURE;
 
 	// Get children list
-	STDMETHOD_(IXmlNode*,Child)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*,Child)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST PURE;
 	STDMETHOD_(IXmlNode*, FirstChild)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlNode*, LastChild)(THIS) SCONST PURE;
 
 	// Get next/previous sibling in the children list of the parent node
 	STDMETHOD_(IXmlNode*, NextSibling)(THIS) SCONST PURE;
 	STDMETHOD_(IXmlNode*, PrevSibling)(THIS) SCONST PURE;
-	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
-	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST PURE;
+	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST PURE;
 };
 
 typedef enum _XmlStatus
@@ -255,22 +255,22 @@ DECLARE_INTERFACE_(IXmlDoc,IObjRef)
 	STDMETHOD_(void,Copy)(THIS_ const IXmlDoc* proto) PURE;
 
 	// Load document from zero-terminated string. No encoding conversions are applied.
-	STDMETHOD_(bool,LoadString)(THIS_ const wchar_t* contents, unsigned int options) PURE;
+	STDMETHOD_(BOOL,LoadString)(THIS_ const wchar_t* contents, unsigned int options) PURE;
 
 	// Load document from file
-	STDMETHOD_(bool,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding) PURE;
-	STDMETHOD_(bool,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(BOOL,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding) PURE;
+	STDMETHOD_(BOOL,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
-	STDMETHOD_(bool,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(BOOL,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should ensure that buffer data will persist throughout the document's lifetime, and free the buffer memory manually once document is destroyed.
-	STDMETHOD_(bool,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
+	STDMETHOD_(BOOL,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding) PURE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should allocate the buffer with pugixml allocation function; document will free the buffer when it is no longer needed (you can't use it anymore).
-	STDMETHOD_(bool,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding ) PURE;
+	STDMETHOD_(BOOL,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding ) PURE;
 
 	STDMETHOD_(void,GetParseResult)(THIS_ XmlParseResult *pResult) SCONST PURE;
 
@@ -278,8 +278,8 @@ DECLARE_INTERFACE_(IXmlDoc,IObjRef)
 	STDMETHOD_(void,SaveBinary)(THIS_ FILE *f) SCONST PURE;
 
 	// Save XML to file
-	STDMETHOD_(bool,SaveFileA)(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
-	STDMETHOD_(bool,SaveFileW)(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
+	STDMETHOD_(BOOL,SaveFileA)(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
+	STDMETHOD_(BOOL,SaveFileW)(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST PURE;
 
 	// Get document element
 	STDMETHOD_(IXmlNode *,Root)(THIS) SCONST PURE;

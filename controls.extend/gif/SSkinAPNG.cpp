@@ -56,7 +56,11 @@ int SSkinAPNG::LoadFromFile( LPCTSTR pszFileName )
 {
     CAutoRefPtr<IImgX> imgX;
     GETRENDERFACTORY->GetImgDecoderFactory()->CreateImgX(&imgX);
-    imgX->LoadFromFile(pszFileName);
+#ifdef _UNICODE
+    imgX->LoadFromFileW(pszFileName);
+#else
+	imgX->LoadFromFileA(pszFileName);
+#endif
     return _InitImgFrame(imgX);
 }
 

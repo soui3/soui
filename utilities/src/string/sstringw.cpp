@@ -480,7 +480,7 @@ int SStringW::Find(const wchar_t* pszSub, int nStart /*= 0*/) const
 	return (psz == NULL) ? -1 : (int)(psz - m_pszData);
 }
 
-int SStringW::Find(wchar_t ch, int nStart /*= 0*/) const
+int SStringW::FindChar(wchar_t ch, int nStart /*= 0*/) const
 {
 	int nLength = GetData()->nDataLength;
 	if (nStart >= nLength)
@@ -587,7 +587,7 @@ int SStringW::Replace(const wchar_t* pszOld, const wchar_t* pszNew)
 	return nCount;
 }
 
-int SStringW::Replace(wchar_t chOld, wchar_t chNew)
+int SStringW::ReplaceChar(wchar_t chOld, wchar_t chNew)
 {
 	int nCount = 0;
 
@@ -662,7 +662,7 @@ int SStringW::Insert(int nIndex, const wchar_t* psz)
 	return nNewLength;
 }
 
-int SStringW::Insert(int nIndex, wchar_t ch)
+int SStringW::InsertChar(int nIndex, wchar_t ch)
 {
 	CopyBeforeWrite();
 
@@ -1007,7 +1007,7 @@ void SStringW::Empty() // free up the data
 	SASSERT(GetData()->IsLocked() || GetData()->nAllocLength == 0);
 }
 
-bool SStringW::IsEmpty() const
+BOOL SStringW::IsEmpty() const
 {
 	return GetData()->nDataLength == 0;
 }

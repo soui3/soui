@@ -50,7 +50,7 @@ public:
 	~SStringA();
 
 	STDMETHOD_(int, GetLength)(THIS) SCONST ;
-	STDMETHOD_(bool, IsEmpty)(THIS) SCONST ;
+	STDMETHOD_(BOOL, IsEmpty)(THIS) SCONST ;
 	STDMETHOD_(void, Empty)(THIS) ;
 
 	STDMETHOD_(char, GetAt)(THIS_ int nIndex) SCONST ;
@@ -62,14 +62,14 @@ public:
 	STDMETHOD_(int, CompareNoCase)(THIS_ const char* psz) SCONST ;
 
 	STDMETHOD_(void, TrimBlank)(THIS) ;
-	STDMETHOD_(int, Insert)(THIS_ int nIndex, char ch) ;
+	STDMETHOD_(int, InsertChar)(THIS_ int nIndex, char ch) ;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, const char* psz);
 	STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount=1);
-	STDMETHOD_(int, Replace)(THIS_ char chOld, char chNew);
+	STDMETHOD_(int, ReplaceChar)(THIS_ char chOld, char chNew);
 	STDMETHOD_(int, Replace)(THIS_ const char* pszOld, const char* pszNew);
 	STDMETHOD_(int, Remove)(THIS_ char chRemove);
 
-	STDMETHOD_(int, Find)(THIS_ char ch, int nStart = 0) SCONST ;
+	STDMETHOD_(int, FindChar)(THIS_ char ch, int nStart = 0) SCONST ;
 	STDMETHOD_(int, ReverseFind)(THIS_ char ch) SCONST ;
 
 	// find a sub-string (like strstr)

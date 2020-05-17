@@ -11,6 +11,7 @@
 #include <event/SEventcrack.h>
 #include <interface/stooltip-i.h>
 #include <interface/SHostMsgHandler-i.h>
+#include <interface/shostwnd-i.h>
 #include <core/SCaret.h>
 #include <core/SHostMsgDef.h>
 #include <layout/SLayoutsize.h>
@@ -93,8 +94,8 @@ namespace SOUI
         HICON   m_hAppIconBig;
     };
 
-class SOUI_EXP SHostWnd
-    : public SwndContainerImpl
+	class SOUI_EXP SHostWnd: public IHostWnd
+    , public SwndContainerImpl
     , public SNativeWnd
 	, protected IHostMsgHandler
 {
@@ -151,6 +152,20 @@ public:
 		kPulseTimer = 4321,		//soui timer. don't use it in app
 		kPulseInterval = 10,
 	};
+
+public:
+	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) OVERRIDE
+	{
+		m_strXmlLayout = pszLayoutId;
+	}
+	STDMETHOD_(HWND,CreateHostWindow)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE
+	{
+		return Create(hWndParent,dwStyle,dwExStyle,x,y,nWidth,nHeight);
+	}
+	STDMETHOD_(BOOL,DestroyHostWindow)(THIS) OVERRIDE
+	{
+		return DestroyWindow();
+	}
 public:
     SWindow * GetRoot() const {return (SWindow*)this;}
 

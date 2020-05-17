@@ -40,7 +40,7 @@ namespace SOUI
 
     inline int ParseResID(const SStringT & str,SStringTList & strLst)
     {
-        int nPos = str.Find(_T(':'));
+        int nPos = str.FindChar(_T(':'));
         if(nPos==-1)
         {
             strLst.Add(str);

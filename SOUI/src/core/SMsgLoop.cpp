@@ -143,5 +143,15 @@ namespace SOUI
 		return m_bRunning;
 	}
 
+	SMessageLoop::SMessageLoop() :m_bRunning(FALSE)
+	{
+
+	}
+
+	SMessageLoop::~SMessageLoop()
+	{
+
+	}
+
 
 }//end of namespace SOUI

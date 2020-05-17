@@ -24,13 +24,13 @@ public:
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST OVERRIDE;
 
 	// Check if attribute is empty
-	STDMETHOD_(bool,Empty)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(BOOL,Empty)(THIS) SCONST OVERRIDE;
 
 	// Get attribute name/value, or "" if attribute is empty
 	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(const wchar_t*,Value)(THIS) SCONST OVERRIDE;
 
-	STDMETHOD_(bool,set_userdata)(THIS_ int data) OVERRIDE;
+	STDMETHOD_(BOOL,set_userdata)(THIS_ int data) OVERRIDE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST OVERRIDE;
 
 	// Get next/previous attribute in the attribute list of the parent node
@@ -98,7 +98,7 @@ public:
 
 	STDMETHOD_(LPVOID,GetPrivPtr)(THIS) SCONST OVERRIDE;
 
-	STDMETHOD_(bool,Empty)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(BOOL,Empty)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(const wchar_t*,Name)(THIS) SCONST OVERRIDE;
 
@@ -106,24 +106,24 @@ public:
 
 	STDMETHOD_(const wchar_t*,Text)(THIS) SCONST OVERRIDE;
 
-	STDMETHOD_(bool,set_userdata)(THIS_ int data) OVERRIDE;
+	STDMETHOD_(BOOL,set_userdata)(THIS_ int data) OVERRIDE;
 	STDMETHOD_(int,get_userdata)(THIS) SCONST OVERRIDE;
 
 	// Get attribute list
-	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
+	STDMETHOD_(IXmlAttr*,Attribute)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST OVERRIDE;
 	STDMETHOD_(IXmlAttr*,FirstAttribute)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(IXmlAttr*,LastAttribute)(THIS) SCONST OVERRIDE;
 
 	// Get children list
-	STDMETHOD_(IXmlNode*,Child)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
+	STDMETHOD_(IXmlNode*,Child)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST OVERRIDE;
 	STDMETHOD_(IXmlNode*, FirstChild)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(IXmlNode*, LastChild)(THIS) SCONST OVERRIDE;
 
 	// Get next/previous sibling in the children list of the parent node
 	STDMETHOD_(IXmlNode*, NextSibling)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(IXmlNode*, PrevSibling)(THIS) SCONST OVERRIDE;
-	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
-	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST OVERRIDE;
+	STDMETHOD_(IXmlNode*, NextSibling2)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST OVERRIDE;
+	STDMETHOD_(IXmlNode*, PrevSibling2)(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST OVERRIDE;
 
 public:
 	operator bool() const;
@@ -247,23 +247,23 @@ public:
 	STDMETHOD_(void,Copy)(THIS_ const IXmlDoc* proto) OVERRIDE;
 
 	// Load document from zero-terminated string. No encoding conversions are applied.
-	STDMETHOD_(bool,LoadString)(THIS_ const wchar_t* contents, unsigned int options)OVERRIDE;
+	STDMETHOD_(BOOL,LoadString)(THIS_ const wchar_t* contents, unsigned int options)OVERRIDE;
 
 	// Load document from file
-	STDMETHOD_(bool,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(BOOL,LoadFileA)(THIS_ const char* path, unsigned int options, XmlEncoding encoding)OVERRIDE;
 
-	STDMETHOD_(bool,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(BOOL,LoadFileW)(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
-	STDMETHOD_(bool,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(BOOL,LoadBuffer)(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should ensure that buffer data will persist throughout the document's lifetime, and free the buffer memory manually once document is destroyed.
-	STDMETHOD_(bool,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
+	STDMETHOD_(BOOL,LoadBufferInplace)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)OVERRIDE;
 
 	// Load document from buffer, using the buffer for in-place parsing (the buffer is modified and used for storage of document data).
 	// You should allocate the buffer with pugixml allocation function; document will free the buffer when it is no longer needed (you can't use it anymore).
-	STDMETHOD_(bool,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding )OVERRIDE;
+	STDMETHOD_(BOOL,LoadBufferInplaceOwn)(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding )OVERRIDE;
 
 	STDMETHOD_(void,GetParseResult)(THIS_ XmlParseResult *pResult) SCONST OVERRIDE;
 
@@ -271,8 +271,8 @@ public:
 	STDMETHOD_(void,SaveBinary)(THIS_ FILE *f) SCONST OVERRIDE;
 
 	// Save XML to file
-	STDMETHOD_(bool,SaveFileA)(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST OVERRIDE;
-	STDMETHOD_(bool,SaveFileW)(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST OVERRIDE;
+	STDMETHOD_(BOOL,SaveFileA)(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST OVERRIDE;
+	STDMETHOD_(BOOL,SaveFileW)(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST OVERRIDE;
 
 	// Get document element
 	STDMETHOD_(IXmlNode *,Root)(THIS) SCONST OVERRIDE;

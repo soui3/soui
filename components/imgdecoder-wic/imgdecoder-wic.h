@@ -36,8 +36,8 @@ SNSBEGIN
         friend class SImgDecoderFactory_WIC;
     public:
 		STDMETHOD_(int,LoadFromMemory)(THIS_ void *pBuf,size_t bufLen) OVERRIDE;
-		STDMETHOD_(int,LoadFromFile)(THIS_ LPCWSTR pszFileName) OVERRIDE;
-		STDMETHOD_(int,LoadFromFile)(THIS_ LPCSTR pszFileName) OVERRIDE;
+		STDMETHOD_(int,LoadFromFileW)(THIS_ LPCWSTR pszFileName) OVERRIDE;
+		STDMETHOD_(int,LoadFromFileA)(THIS_ LPCSTR pszFileName) OVERRIDE;
 		STDMETHOD_(UINT,GetFrameCount)(THIS) OVERRIDE;
 		STDMETHOD_(IImgFrame *, GetFrame)(THIS_ UINT iFrame) OVERRIDE;
     protected:
@@ -61,7 +61,7 @@ SNSBEGIN
         ~SImgDecoderFactory_WIC();
         
 		STDMETHOD_(BOOL,CreateImgX)(THIS_ IImgX **ppImgDecoder) OVERRIDE;
-		STDMETHOD_(HRESULT,SaveImage)(THIS_ const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST OVERRIDE;  
+		STDMETHOD_(HRESULT,SaveImage)(THIS_ BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST OVERRIDE;
 		STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST OVERRIDE;
     protected:
         static SAutoRefPtr<IWICImagingFactory> s_wicImgFactory;

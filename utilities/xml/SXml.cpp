@@ -38,7 +38,7 @@ LPVOID SXmlAttr::GetPrivPtr(THIS) SCONST
 	return _attr.internal_object();
 }
 
-bool SXmlAttr::Empty(THIS) SCONST
+BOOL SXmlAttr::Empty(THIS) SCONST
 {
 	return _attr.empty();
 }
@@ -53,7 +53,7 @@ const wchar_t * SXmlAttr::Value(THIS) SCONST
 	return _attr.value();
 }
 
-bool SXmlAttr::set_userdata(THIS_ int data)
+BOOL SXmlAttr::set_userdata(THIS_ int data)
 {
 	return _attr.set_userdata(data);
 }
@@ -225,7 +225,7 @@ LPVOID SXmlNode::GetPrivPtr(THIS) SCONST
 	return _node.internal_object();
 }
 
-bool SXmlNode::Empty(THIS) SCONST
+BOOL SXmlNode::Empty(THIS) SCONST
 {
 	return _node.empty();
 }
@@ -245,7 +245,7 @@ const wchar_t * SXmlNode::Text(THIS) SCONST
 	return _node.text().get();
 }
 
-bool SXmlNode::set_userdata(THIS_ int data)
+BOOL SXmlNode::set_userdata(THIS_ int data)
 {
 	return _node.set_userdata(data);
 }
@@ -255,9 +255,9 @@ int SXmlNode::get_userdata(THIS) SCONST
 	return _node.get_userdata();
 }
 
-IXmlAttr * SXmlNode::Attribute(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST
+IXmlAttr * SXmlNode::Attribute(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST
 {
-	pugi::xml_attribute attr = _node.attribute(name,bCaseSensitive);
+	pugi::xml_attribute attr = _node.attribute(name,!!bCaseSensitive);
 	return SXmlAttr::toIXmlAttr(attr);
 }
 
@@ -273,9 +273,9 @@ IXmlAttr * SXmlNode::LastAttribute(THIS) SCONST
 	return SXmlAttr::toIXmlAttr(attr);
 }
 
-IXmlNode *SXmlNode::Child(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST
+IXmlNode *SXmlNode::Child(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST
 {
-	pugi::xml_node node = _node.child(name,bCaseSensitive);
+	pugi::xml_node node = _node.child(name,!!bCaseSensitive);
 	return toIXmlNode(node);
 }
 
@@ -303,15 +303,15 @@ IXmlNode *SXmlNode::PrevSibling(THIS) SCONST
 	return toIXmlNode(node);
 }
 
-IXmlNode *SXmlNode::NextSibling2(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST
+IXmlNode *SXmlNode::NextSibling2(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST
 {
-	pugi::xml_node node = _node.next_sibling(name,bCaseSensitive);
+	pugi::xml_node node = _node.next_sibling(name,!!bCaseSensitive);
 	return toIXmlNode(node);
 }
 
-IXmlNode *SXmlNode::PrevSibling2(THIS_ const wchar_t* name,bool bCaseSensitive) SCONST
+IXmlNode *SXmlNode::PrevSibling2(THIS_ const wchar_t* name,BOOL bCaseSensitive) SCONST
 {
-	pugi::xml_node node = _node.previous_sibling(name,bCaseSensitive);
+	pugi::xml_node node = _node.previous_sibling(name,!!bCaseSensitive);
 	return toIXmlNode(node);
 }
 
@@ -604,12 +604,12 @@ IXmlNode * SXmlDoc::Root(THIS) SCONST
 	return SXmlNode::toIXmlNode(*_doc);
 }
 
-bool SXmlDoc::SaveFileW(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
+BOOL SXmlDoc::SaveFileW(THIS_ const wchar_t* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
 {
 	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
 }
 
-bool SXmlDoc::SaveFileA(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
+BOOL SXmlDoc::SaveFileA(THIS_ const char* path, const wchar_t* indent , unsigned int flags, XmlEncoding encoding) SCONST
 {
 	return _doc->save_file(path,indent,flags,(pugi::xml_encoding)encoding);
 }
@@ -619,37 +619,37 @@ void SXmlDoc::SaveBinary(THIS_ FILE *f) SCONST
 	_doc->save_bin(f);
 }
 
-bool SXmlDoc::LoadBufferInplaceOwn(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+BOOL SXmlDoc::LoadBufferInplaceOwn(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
 	_result = _doc->load_buffer_inplace_own(contents,size,options,(pugi::xml_encoding)encoding);
 	return _result;
 }
 
-bool SXmlDoc::LoadBufferInplace(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+BOOL SXmlDoc::LoadBufferInplace(THIS_ void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
 	_result = _doc->load_buffer_inplace(contents,size,options,(pugi::xml_encoding)encoding);
 	return _result;
 }
 
-bool SXmlDoc::LoadBuffer(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)
+BOOL SXmlDoc::LoadBuffer(THIS_ const void* contents, size_t size, unsigned int options , XmlEncoding encoding)
 {
 	_result = _doc->load_buffer(contents,size,options,(pugi::xml_encoding)encoding);
 	return _result;
 }
 
-bool SXmlDoc::LoadFileW(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)
+BOOL SXmlDoc::LoadFileW(THIS_ const wchar_t* path, unsigned int options , XmlEncoding encoding)
 {
 	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
 	return _result;
 }
 
-bool SXmlDoc::LoadFileA(THIS_ const char* path, unsigned int options, XmlEncoding encoding)
+BOOL SXmlDoc::LoadFileA(THIS_ const char* path, unsigned int options, XmlEncoding encoding)
 {
 	_result = _doc->load_file(path,options,(pugi::xml_encoding)encoding);
 	return _result;
 }
 
-bool SXmlDoc::LoadString(THIS_ const wchar_t* contents, unsigned int options)
+BOOL SXmlDoc::LoadString(THIS_ const wchar_t* contents, unsigned int options)
 {
 	_result = _doc->load_string(contents,options);
 	return _result;

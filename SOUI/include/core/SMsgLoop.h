@@ -7,11 +7,8 @@ SNSBEGIN
 class SOUI_EXP SMessageLoop : public IMessageLoop
 {
 public:
-	SMessageLoop():m_bRunning(FALSE)
-	{
-
-	}
-	virtual ~SMessageLoop(){}
+	SMessageLoop();
+	virtual ~SMessageLoop();
 
 public:
 	// Message filter operations

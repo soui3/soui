@@ -51,18 +51,18 @@ namespace SOUI
         return _DoDecode(pdata);
     }
 
-    int SImgX_PNG::LoadFromFile( LPCWSTR pszFileName )
+    int SImgX_PNG::LoadFromFileW( LPCWSTR pszFileName )
     {
         APNGDATA * pdata =LoadAPNG_from_file(pszFileName);
         return _DoDecode(pdata);
     }
 
-    int SImgX_PNG::LoadFromFile( LPCSTR pszFileName )
+    int SImgX_PNG::LoadFromFileA( LPCSTR pszFileName )
     {
         wchar_t wszFileName[MAX_PATH+1];
         MultiByteToWideChar(CP_ACP,0,pszFileName,-1,wszFileName,MAX_PATH);
         if(GetLastError()==ERROR_INSUFFICIENT_BUFFER) return 0;
-        return LoadFromFile(wszFileName);
+        return LoadFromFileW(wszFileName);
     }
 
     SImgX_PNG::SImgX_PNG( BOOL bPremultiplied )
@@ -147,12 +147,10 @@ namespace SOUI
     }
     
   
-    HRESULT SImgDecoderFactory_PNG::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
+	HRESULT SImgDecoderFactory_PNG::SaveImage(BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST
     {
-        if(!pImg) return E_INVALIDARG;
-        
-        BYTE *pData = (BYTE*)pImg->GetPixelBits();
-        
+        if(!pBits) return E_INVALIDARG;
+                
         FILE *fp;  
         png_structp png_ptr;  
         png_infop info_ptr;  
@@ -208,8 +206,8 @@ namespace SOUI
         * 和 and PNG_FILTER_TYPE_BASE。 
         */  
 
-        png_uint_32 width = pImg->Width();
-        png_uint_32 height = pImg->Height();
+        png_uint_32 width = nWid;
+        png_uint_32 height = nHei;
         png_uint_32 bytes_per_pixel = 4;
 
         png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA,  
@@ -221,7 +219,7 @@ namespace SOUI
         /* 将原数据格式从预乘的rgba格式调整为不预乘的bgra格式 */  
         png_bytep image = (png_bytep) new png_byte[width*height*bytes_per_pixel];  
         png_bytep dst=image;
-        png_bytep src = (png_bytep)pData;
+        png_bytep src = (png_bytep)pBits;
         for(png_uint_32 y=0;y<height;y++) for(png_uint_32 x=0;x<width;x++)
         {
             png_byte a = src[3];

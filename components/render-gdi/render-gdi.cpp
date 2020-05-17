@@ -262,7 +262,11 @@ namespace SOUI
     {
         SAutoRefPtr<IImgX> imgDecoder;
         GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
-        if(imgDecoder->LoadFromFile(S_CT2W(pszFileName))==0) return S_FALSE;
+#ifdef _UNICODE
+		if(imgDecoder->LoadFromFileW(pszFileName)==0) return S_FALSE;
+#else
+		if(imgDecoder->LoadFromFileA(pszFileName)==0) return S_FALSE;
+#endif
         return ImgFromDecoder(imgDecoder);
     }
 
@@ -382,7 +386,8 @@ namespace SOUI
 
 	HRESULT SBitmap_GDI::Save(LPCWSTR pszFileName,const LPVOID pFormat) SCONST
 	{
-		return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(this,pszFileName,pFormat);
+		LPBYTE pBits = (LPBYTE)GetPixelBits();
+		return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(pBits,Width(),Height(),pszFileName,pFormat);
 	}
 
     //////////////////////////////////////////////////////////////////////////

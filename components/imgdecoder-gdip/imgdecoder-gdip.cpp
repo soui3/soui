@@ -99,7 +99,7 @@ namespace SOUI
         return nRet;   
     }
 
-    int SImgX_GDIP::LoadFromFile( LPCWSTR pszFileName )
+    int SImgX_GDIP::LoadFromFileW( LPCWSTR pszFileName )
     {
         Bitmap * bmpSrc= new Bitmap(pszFileName);    
         if (!bmpSrc) return 0;
@@ -108,12 +108,12 @@ namespace SOUI
         return nRet;   
     }
 
-    int SImgX_GDIP::LoadFromFile( LPCSTR pszFileName )
+    int SImgX_GDIP::LoadFromFileA( LPCSTR pszFileName )
     {
         wchar_t wszFileName[MAX_PATH+1];
         MultiByteToWideChar(CP_ACP,0,pszFileName,-1,wszFileName,MAX_PATH);
         if(GetLastError()==ERROR_INSUFFICIENT_BUFFER) return 0;
-        return LoadFromFile(wszFileName);
+        return LoadFromFileW(wszFileName);
     }
 
     SImgX_GDIP::SImgX_GDIP( BOOL bPremultiplied )
@@ -250,7 +250,7 @@ namespace SOUI
         return( CLSID_NULL );
     }
 
-    HRESULT SImgDecoderFactory_GDIP::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName,const LPVOID pFormat) SCONST
+	HRESULT SImgDecoderFactory_GDIP::SaveImage(BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST
     {
         const GUID * pFmtID = (const GUID*)pFormat;
         
@@ -285,8 +285,7 @@ namespace SOUI
             return( E_FAIL );
         }
         
-        LPVOID pBits = pImg->GetPixelBits();
-        Bitmap bmp(pImg->Width(),pImg->Height(),pImg->Width()*4,PixelFormat32bppPARGB,(BYTE*)pBits);
+        Bitmap bmp(nWid,nHei,nWid*4,PixelFormat32bppPARGB,pBits);
         Image *gdipImg = &bmp;
         return Ok == gdipImg->Save(pszFileName,&clsidEncoder)?S_OK:E_FAIL;
     }

@@ -18,16 +18,20 @@
 
 namespace SOUI
 {
-    class SOUI_EXP SHostDialog : public SHostWnd
+    class SOUI_EXP SHostDialog : public SHostWnd, public IHostDialog
     {
         SOUI_CLASS_NAME(SHostDialog,L"hostdlg")
     public:
         SHostDialog(LPCTSTR pszXmlName);
         ~SHostDialog(void);
         
-        virtual INT_PTR DoModal(HWND hParent=NULL);
-        
-        virtual void EndDialog(INT_PTR nResult);
+	public:
+		STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) OVERRIDE
+		{
+			return this;
+		}
+		STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent=NULL) OVERRIDE;
+		STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) OVERRIDE;
 
     protected:
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -51,4 +55,5 @@ namespace SOUI
         
         IMessageLoop* m_MsgLoop;
     };
+
 }

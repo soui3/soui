@@ -257,7 +257,11 @@ IImgX   * SResLoadFromFile::LoadImgX(LPCTSTR strPath )
 	IImgX *pImgX=NULL;
 	GETRENDERFACTORY->GetImgDecoderFactory()->CreateImgX(&pImgX);
 	if(!pImgX) return NULL;
-	if(0==pImgX->LoadFromFile(strPath))
+#ifdef _UNICODE
+	if(0==pImgX->LoadFromFileW(strPath))
+#else
+	if(0==pImgX->LoadFromFileA(strPath))
+#endif
 	{
 		pImgX->Release();
 		pImgX=NULL;

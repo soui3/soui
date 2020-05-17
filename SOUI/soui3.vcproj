@@ -348,6 +348,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\SHostFactory.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\helper\SHostMgr.cpp"
 				>
 			</File>
@@ -445,6 +449,10 @@
 			</File>
 			<File
 				RelativePath="src\core\SObjectFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soui4c.cpp"
 				>
 			</File>
 			<File
@@ -846,6 +854,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\SHostFactory.h"
+				>
+			</File>
+			<File
 				RelativePath="include\helper\SHostMgr.h"
 				>
 			</File>
@@ -855,6 +867,10 @@
 			</File>
 			<File
 				RelativePath="include\interface\SHostMsgHandler-i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\interface\shostwnd-i.h"
 				>
 			</File>
 			<File
@@ -1011,6 +1027,10 @@
 			</File>
 			<File
 				RelativePath="include\soui-version.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\soui4c.h"
 				>
 			</File>
 			<File
@@ -1282,11 +1302,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File

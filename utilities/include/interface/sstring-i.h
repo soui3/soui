@@ -23,7 +23,7 @@ DECLARE_INTERFACE_(IStringA,IObjRef)
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
 	STDMETHOD_(int, GetLength)(THIS) SCONST PURE;
-	STDMETHOD_(bool, IsEmpty)(THIS) SCONST PURE;
+	STDMETHOD_(BOOL, IsEmpty)(THIS) SCONST PURE;
 	STDMETHOD_(void, Empty)(THIS) PURE;
 
 	STDMETHOD_(char, GetAt)(THIS_ int nIndex) SCONST PURE;
@@ -35,14 +35,14 @@ DECLARE_INTERFACE_(IStringA,IObjRef)
 	STDMETHOD_(int, CompareNoCase)(THIS_ const char* psz) SCONST PURE;
 
 	STDMETHOD_(void, TrimBlank)(THIS) PURE;
-	STDMETHOD_(int, Insert)(THIS_ int nIndex, char ch) PURE;
+	STDMETHOD_(int, InsertChar)(THIS_ int nIndex, char ch) PURE;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, const char* psz)PURE;
 	STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount)PURE;
-	STDMETHOD_(int, Replace)(THIS_ char chOld, char chNew)PURE;
+	STDMETHOD_(int, ReplaceChar)(THIS_ char chOld, char chNew)PURE;
 	STDMETHOD_(int, Replace)(THIS_ const char* pszOld, const char* pszNew)PURE;
 	STDMETHOD_(int, Remove)(THIS_ char chRemove)PURE;
 
-	STDMETHOD_(int, Find)(THIS_ char ch, int nStart) SCONST PURE;
+	STDMETHOD_(int, FindChar)(THIS_ char ch, int nStart) SCONST PURE;
 	STDMETHOD_(int, ReverseFind)(THIS_ char ch) SCONST PURE;
 
 	// find a sub-string (like strstr)
@@ -79,7 +79,7 @@ DECLARE_INTERFACE_(IStringW,IObjRef)
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
 	STDMETHOD_(int, GetLength)(THIS) SCONST PURE;
-	STDMETHOD_(bool, IsEmpty)(THIS) SCONST PURE;
+	STDMETHOD_(BOOL, IsEmpty)(THIS) SCONST PURE;
 	STDMETHOD_(void, Empty)(THIS) PURE;
 
 	STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) SCONST PURE;
@@ -91,14 +91,14 @@ DECLARE_INTERFACE_(IStringW,IObjRef)
 	STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) SCONST PURE;
 
 	STDMETHOD_(void, TrimBlank)(THIS) PURE;
-	STDMETHOD_(int, Insert)(THIS_ int nIndex, wchar_t ch) PURE;
+	STDMETHOD_(int, InsertChar)(THIS_ int nIndex, wchar_t ch) PURE;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, const wchar_t* psz)PURE;
 	STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount)PURE;
-	STDMETHOD_(int, Replace)(THIS_ wchar_t chOld, wchar_t chNew)PURE;
+	STDMETHOD_(int, ReplaceChar)(THIS_ wchar_t chOld, wchar_t chNew)PURE;
 	STDMETHOD_(int, Replace)(THIS_ const wchar_t* pszOld, const wchar_t* pszNew)PURE;
 	STDMETHOD_(int, Remove)(THIS_ wchar_t chRemove)PURE;
 
-	STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart) SCONST PURE;
+	STDMETHOD_(int, FindChar)(THIS_ wchar_t ch, int nStart) SCONST PURE;
 	STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) SCONST PURE;
 
 	// find a sub-string (like strstr)

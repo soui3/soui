@@ -81,7 +81,7 @@ namespace SOUI
         return _DoDecode(decoder);
     }
 
-    int SImgX_WIC::LoadFromFile( LPCWSTR pszFileName )
+    int SImgX_WIC::LoadFromFileW( LPCWSTR pszFileName )
     {
         SASSERT(m_pImgArray == NULL);
         IWICImagingFactory*    factory    = SImgDecoderFactory_WIC::s_wicImgFactory;
@@ -101,12 +101,12 @@ namespace SOUI
         return _DoDecode(decoder);
     }
 
-    int SImgX_WIC::LoadFromFile( LPCSTR pszFileName )
+    int SImgX_WIC::LoadFromFileA( LPCSTR pszFileName )
     {
         wchar_t wszFileName[MAX_PATH+1];
         MultiByteToWideChar(CP_ACP,0,pszFileName,-1,wszFileName,MAX_PATH);
         if(GetLastError()==ERROR_INSUFFICIENT_BUFFER) return 0;
-        return LoadFromFile(wszFileName);
+        return LoadFromFileW(wszFileName);
     }
 
     int SImgX_WIC::_DoDecode( IWICBitmapDecoder * pDecoder )
@@ -185,7 +185,7 @@ namespace SOUI
         return TRUE;
     }
     
-    HRESULT SImgDecoderFactory_WIC::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
+	HRESULT SImgDecoderFactory_WIC::SaveImage(BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST
     {
         return E_NOTIMPL;
     }

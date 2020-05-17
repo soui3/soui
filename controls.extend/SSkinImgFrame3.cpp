@@ -24,7 +24,7 @@ namespace SOUI
 
     HRESULT SSkinImgFrame3::OnAttrSrc(const SStringW & strValue,BOOL bLoading)
     {
-        int iPos = strValue.Find(L'{');
+        int iPos = strValue.FindChar(L'{');
         if(iPos==-1) return E_FAIL;
         m_strImgKey = strValue.Left(iPos);
         SStringW strRgn = strValue.Right(strValue.GetLength()-iPos);

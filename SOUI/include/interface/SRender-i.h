@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-//#include <core/sobjType.h>
 #include <interface/obj-ref-i.h>
 #include <interface/sobject-i.h>
-#include <interface/SImgDecoder-i.h>
 #include <interface/SPathEffect-i.h>
+#include <interface/SImgDecoder-i.h>
 
 SNSBEGIN
 
@@ -18,7 +17,6 @@ struct IPath;
 struct IPathMeasure;
 struct IRenderTarget;
 struct IRenderFactory;
-struct IImgDecoderFactory;
 
 enum EXPEND_MODE
 {
@@ -93,6 +91,7 @@ struct fPoint {
 struct fRect {
 	float    fLeft, fTop, fRight, fBottom;
 };
+
 /**
 * @struct     IRenderFactory
 * @brief      RenderFactory对象
@@ -119,7 +118,7 @@ DECLARE_INTERFACE_(IRenderFactory,IObjRef)
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
 	STDMETHOD_(IImgDecoderFactory *,GetImgDecoderFactory)(THIS) PURE;
-	STDMETHOD_(void,SetImgDecoderFactory)(THIS_ IImgDecoderFactory *pImgDecoderFac) PURE;
+	STDMETHOD_(void,SetImgDecoderFactory)(THIS_ IImgDecoderFactory * pImgDecoderFac) PURE;
 	STDMETHOD_(BOOL,CreateRenderTarget)(THIS_ IRenderTarget ** ppRenderTarget,int nWid,int nHei) PURE;
 
 	/**
@@ -485,6 +484,8 @@ DECLARE_INTERFACE_(IBitmap,IRenderObj)
 	*/    
 	STDMETHOD_(HRESULT,Save)(THIS_ LPCWSTR pszFileName,const LPVOID pFormat) SCONST PURE;
 };
+
+typedef IBitmap * IBitmapPtr;
 
 /**
 * @struct     IFont

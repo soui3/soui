@@ -126,7 +126,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* @return   LPCWSTR -- 类型名
 	* Describe  这是一个虚函数，注意与GetClassName的区别。
 	*/    
-	STDMETHOD_(LPCWSTR,GetObjectClass)(THIS_) SCONST PURE;
+	STDMETHOD_(LPCWSTR,GetObjectClass)(THIS) SCONST PURE;
 
 	/**
 	* GetObjectType
@@ -239,7 +239,7 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 
 };
 
-extern "C++"{
+#ifdef __cplusplus
 /**
 * sobj_cast
 * @brief    SOUI Object 的类型安全的类型转换接口
@@ -259,6 +259,6 @@ T * sobj_cast(const IObject *pObj)
 		return NULL;
 }
 
-}
+#endif
 
 SNSEND

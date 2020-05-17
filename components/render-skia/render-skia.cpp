@@ -1596,7 +1596,12 @@ HRESULT SBitmap_Skia::LoadFromFile( LPCTSTR pszFileName)
 {
 	SAutoRefPtr<IImgX> imgDecoder;
 	GetRenderFactory()->GetImgDecoderFactory()->CreateImgX(&imgDecoder);
-	if(imgDecoder->LoadFromFile(S_CT2W(pszFileName))==0) return S_FALSE;
+#ifdef _UNICODE
+	if(imgDecoder->LoadFromFileW(pszFileName)==0) 
+#else
+	if(imgDecoder->LoadFromFileA(pszFileName)==0) 
+#endif
+		return S_FALSE;
 	return ImgFromDecoder(imgDecoder);
 }
 
@@ -1718,7 +1723,8 @@ HRESULT SBitmap_Skia::Scale2(IBitmap **pOutput,int nWid,int nHei,FilterLevel fil
 
 HRESULT SBitmap_Skia::Save(LPCWSTR pszFileName,const LPVOID pFormat) SCONST
 {
-	return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(this,pszFileName,pFormat);
+	LPBYTE pBits = (LPBYTE)GetPixelBits();
+	return GetRenderFactory()->GetImgDecoderFactory()->SaveImage(pBits,Width(),Height(),pszFileName,pFormat);
 }
 //////////////////////////////////////////////////////////////////////////
 static int s_cRgn =0;
@@ -1874,7 +1880,7 @@ SStringT FindPropValue(const SStringT & strProp, const SStringT & strKey)
 		if(nPos1<strProp.GetLength() && strProp[nPos1]==_T(':'))
 		{
 			nPos1++;
-			int nPos2=strProp.Find(_T(','),nPos1);
+			int nPos2=strProp.FindChar(_T(','),nPos1);
 			if(nPos2==-1) nPos2=strProp.GetLength();
 			strValue=strProp.Mid(nPos1,nPos2-nPos1);
 		}

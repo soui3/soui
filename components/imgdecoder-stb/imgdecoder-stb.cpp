@@ -55,7 +55,7 @@ namespace SOUI
         return 1;
     }
 
-    int SImgX_STB::LoadFromFile( LPCWSTR pszFileName )
+    int SImgX_STB::LoadFromFileW( LPCWSTR pszFileName )
     {
         if(m_pImg) delete m_pImg;
         m_pImg = NULL;
@@ -74,12 +74,12 @@ namespace SOUI
         return 1;
     }
 
-    int SImgX_STB::LoadFromFile( LPCSTR pszFileName )
+    int SImgX_STB::LoadFromFileA( LPCSTR pszFileName )
     {
         wchar_t wszFileName[MAX_PATH+1];
         MultiByteToWideChar(CP_ACP,0,pszFileName,-1,wszFileName,MAX_PATH);
         if(GetLastError()==ERROR_INSUFFICIENT_BUFFER) return 0;
-        return LoadFromFile(wszFileName);
+        return LoadFromFileW(wszFileName);
     }
 
     SImgX_STB::SImgX_STB(BOOL bPremultiple)
@@ -149,7 +149,7 @@ namespace SOUI
         return DESC_IMGDECODER;
     }
 
-	HRESULT SImgDecoderFactory_STB::SaveImage(const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST
+	HRESULT SImgDecoderFactory_STB::SaveImage(BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST
 	{
 		return E_NOTIMPL;
 	}

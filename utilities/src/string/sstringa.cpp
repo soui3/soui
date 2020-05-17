@@ -539,7 +539,7 @@ int SStringA::Find(const char* pszSub, int nStart /*= 0*/) const
 	return (psz == NULL) ? -1 : (int)(psz - m_pszData);
 }
 
-int SStringA::Find(char ch, int nStart /*= 0*/) const
+int SStringA::FindChar(char ch, int nStart /*= 0*/) const
 {
 	int nLength = GetData()->nDataLength;
 	if (nStart >= nLength)
@@ -646,7 +646,7 @@ int SStringA::Replace(const char* pszOld, const char* pszNew)
 	return nCount;
 }
 
-int SStringA::Replace(char chOld, char chNew)
+int SStringA::ReplaceChar(char chOld, char chNew)
 {
 	int nCount = 0;
 
@@ -721,7 +721,7 @@ int SStringA::Insert(int nIndex, const char* psz)
 	return nNewLength;
 }
 
-int SStringA::Insert(int nIndex, char ch)
+int SStringA::InsertChar(int nIndex, char ch)
 {
 	CopyBeforeWrite();
 
@@ -1066,7 +1066,7 @@ void SStringA::Empty() // free up the data
 	SASSERT(GetData()->IsLocked() || GetData()->nAllocLength == 0);
 }
 
-bool SStringA::IsEmpty() const
+BOOL SStringA::IsEmpty() const
 {
 	return GetData()->nDataLength == 0;
 }

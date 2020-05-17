@@ -14,9 +14,9 @@ namespace SOUI
 		SPathEffect_Corner();
 		~SPathEffect_Corner();
 
-		virtual void Init(float radius);
+		STDMETHOD_(void,Init)(THIS_ float radius) OVERRIDE;
 
-		virtual void * GetRealPathEffect();
+		STDMETHOD_(void *,GetRealPathEffect)(THIS) OVERRIDE;
 	private:
 		SkCornerPathEffect * m_skPathEffect;
 	};
@@ -27,9 +27,8 @@ namespace SOUI
 		SPathEffect_Dash();
 		~SPathEffect_Dash();
 
-		virtual void Init(float intervals[],int count, float phase);
-
-		virtual void * GetRealPathEffect();
+		STDMETHOD_(void,Init)(THIS_ float intervals[], int count, float phase) OVERRIDE;
+		STDMETHOD_(void *,GetRealPathEffect)(THIS) OVERRIDE;
 
 	private:
 		SkDashPathEffect *m_skPathEffect;
@@ -41,9 +40,9 @@ namespace SOUI
 		SPathEffect_Discrete();
 		~SPathEffect_Discrete();
 
-		virtual void Init(float segmentLength, float deviation);
+		STDMETHOD_(void,Init)(THIS_ float segmentLength, float deviation) OVERRIDE;
 
-		virtual void * GetRealPathEffect();
+		STDMETHOD_(void *,GetRealPathEffect)(THIS) OVERRIDE;
 
 	private:
 		SkDiscretePathEffect *m_skPathEffect;

@@ -14,6 +14,7 @@
 #pragma once
 
 #include <interface/obj-ref-i.h>
+//#include <interface/SRender-i.h>
 
 SNSBEGIN
 /**
@@ -102,7 +103,7 @@ DECLARE_INTERFACE_(IImgX,IObjRef)
 	* @return   int
 	* Describe  
 	*/    
-	STDMETHOD_(int,LoadFromFile)(THIS_ LPCWSTR pszFileName) PURE;
+	STDMETHOD_(int,LoadFromFileW)(THIS_ LPCWSTR pszFileName) PURE;
 
 	/**
 	* LoadFromFile
@@ -111,7 +112,7 @@ DECLARE_INTERFACE_(IImgX,IObjRef)
 	* @return   int
 	* Describe  
 	*/    
-	STDMETHOD_(int,LoadFromFile)(THIS_ LPCSTR pszFileName) PURE;
+	STDMETHOD_(int,LoadFromFileA)(THIS_ LPCSTR pszFileName) PURE;
 
 	/**
 	* GetFrameCount
@@ -131,7 +132,6 @@ DECLARE_INTERFACE_(IImgX,IObjRef)
 	STDMETHOD_(IImgFrame *, GetFrame)(THIS_ UINT iFrame) PURE;
 };
 
-struct IBitmap;
 /**
 * @struct     IImgDecoderFactory
 * @brief      image decoder factory
@@ -174,7 +174,7 @@ DECLARE_INTERFACE_(IImgDecoderFactory,IObjRef)
 	* @return   HRESULT 
 	* Describe  
 	*/    
-	STDMETHOD_(HRESULT,SaveImage)(THIS_ const IBitmap *pImg, LPCWSTR pszFileName, const LPVOID pFormat) SCONST PURE;
+	STDMETHOD_(HRESULT,SaveImage)(THIS_ BYTE* pBits, int nWid,int nHei, LPCWSTR pszFileName, LPVOID pFormat) SCONST PURE;
 
 	/**
 	* GetImgDecoderDesc
@@ -184,5 +184,7 @@ DECLARE_INTERFACE_(IImgDecoderFactory,IObjRef)
 	*/            
 	STDMETHOD_(LPCWSTR,GetDescription)(THIS) SCONST PURE;
 };
+
+typedef IImgDecoderFactory * IImgDecoderFactoryPtr;
 
 SNSEND

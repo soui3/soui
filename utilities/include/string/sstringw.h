@@ -49,7 +49,7 @@ public:
 	~SStringW();
 
 	STDMETHOD_(int, GetLength)(THIS) SCONST ;
-	STDMETHOD_(bool, IsEmpty)(THIS) SCONST ;
+	STDMETHOD_(BOOL, IsEmpty)(THIS) SCONST ;
 	STDMETHOD_(void, Empty)(THIS) ;
 
 	STDMETHOD_(wchar_t, GetAt)(THIS_ int nIndex) SCONST ;
@@ -61,14 +61,14 @@ public:
 	STDMETHOD_(int, CompareNoCase)(THIS_ const wchar_t* psz) SCONST ;
 
 	STDMETHOD_(void, TrimBlank)(THIS) ;
-	STDMETHOD_(int, Insert)(THIS_ int nIndex, wchar_t ch) ;
+	STDMETHOD_(int, InsertChar)(THIS_ int nIndex, wchar_t ch) ;
 	STDMETHOD_(int, Insert)(THIS_ int nIndex, const wchar_t* psz);
 	STDMETHOD_(int, Delete)(THIS_ int nIndex, int nCount= 1);
-	STDMETHOD_(int, Replace)(THIS_ wchar_t chOld, wchar_t chNew);
+	STDMETHOD_(int, ReplaceChar)(THIS_ wchar_t chOld, wchar_t chNew);
 	STDMETHOD_(int, Replace)(THIS_ const wchar_t* pszOld, const wchar_t* pszNew);
 	STDMETHOD_(int, Remove)(THIS_ wchar_t chRemove);
 
-	STDMETHOD_(int, Find)(THIS_ wchar_t ch, int nStart=0) SCONST ;
+	STDMETHOD_(int, FindChar)(THIS_ wchar_t ch, int nStart=0) SCONST ;
 	STDMETHOD_(int, ReverseFind)(THIS_ wchar_t ch) SCONST ;
 
 	// find a sub-string (like strstr)

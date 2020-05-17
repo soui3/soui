@@ -2,11 +2,11 @@
  * Copyright (C) 2014-2050 SOUI团队
  * All rights reserved.
  * 
- * @file       stabctrl.h
+ * @file       sapp.h
  * @brief      
- * @version    v1.0      
+ * @version    v3.0      
  * @author     soui      
- * @date       2014-07-06
+ * @date       2020-05-17
  * 
  * Describe    SOUI应用程序入口 
  */
@@ -280,7 +280,5 @@ protected:
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];
 };
-
-
 
 }//namespace SOUI
