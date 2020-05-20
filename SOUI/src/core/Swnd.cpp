@@ -2276,8 +2276,7 @@ namespace SOUI
 			{
 				m_animation->cancel();
 			}
-			m_animationHandler.OnAnimationStop();
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
+			OnAnimationStop(m_animation);
 			m_animation = NULL;
 		}
 	}

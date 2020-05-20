@@ -1489,7 +1489,7 @@ BOOL SHostWnd::DestroyWindow()
 		if(m_AniState &Ani_host)
 			StopHostAnimation();
 		if(m_AniState & Ani_win)
-			GetAnimation()->cancel();
+			ClearAnimation();
 		SASSERT(m_AniState==Ani_none);
 	}
 	if(m_aniExit)
