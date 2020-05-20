@@ -46,7 +46,7 @@
     ]]>
   </script>
   <root skin="_skin.sys.wnd.bkgnd" cache="1" on_init="on_init" on_exit="on_exit"
-        enterAnimation="anim:alpha_in">
+        enterAnimation="anim:alpha_in" exitAnimation="anim:alpha_out">
     <window pos="1,1,-1,-1" id="9527" skin="demoskinbk" cache="1" colorBkgnd="#169ada"/>
     <caption pos="0,0,-0,30" font="adding:2" focusable="1" layout="hbox" gravity="center" padding_left="10">
       <icon src="ICON_LOGO:16"/>

@@ -2272,11 +2272,11 @@ namespace SOUI
 	void SWindow::ClearAnimation() {
 		if (m_animation)
 		{
-			if (m_animation->hasStarted())
+			if (m_animation->hasStarted() && !m_animation->hasEnded())
 			{
 				m_animation->cancel();
+				OnAnimationStop(m_animation);
 			}
-			OnAnimationStop(m_animation);
 			m_animation = NULL;
 		}
 	}

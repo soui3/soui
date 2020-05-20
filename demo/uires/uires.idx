@@ -192,6 +192,7 @@
     <file name="scale_in" path="anim\scale_in.xml"/>
     <file name="scale_out" path="anim\scale_out.xml"/>
     <file name="alpha_in" path="anim\alpha_in.xml"/>
+    <file name="alpha_out" path="anim\alpha_out.xml"/>
   </anim>
   <valueAni>
     <file name="alphaAni" path="valueAni\alpha.xml"/>
