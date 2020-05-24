@@ -1476,6 +1476,22 @@ namespace SOUI
 		return 0;
 	}
 
+	void SWindow::DestroyAllChildren()
+	{
+		//destroy children windows
+		SWindow *pChild=m_pFirstChild;
+		while (pChild)
+		{
+			SWindow *pNextChild=pChild->m_pNextSibling;
+			pChild->SSendMessage(WM_DESTROY);
+			pChild->Release();
+
+			pChild=pNextChild;
+		}
+		m_pFirstChild=m_pLastChild=NULL;
+		m_nChildrenCount=0;
+	}
+
 	void SWindow::OnDestroy()
 	{
 		if(m_isDestroying)
@@ -1496,18 +1512,7 @@ namespace SOUI
 			}
 		}
 #endif
-		//destroy children windows
-		SWindow *pChild=m_pFirstChild;
-		while (pChild)
-		{
-			SWindow *pNextChild=pChild->m_pNextSibling;
-			pChild->SSendMessage(WM_DESTROY);
-			pChild->Release();
-
-			pChild=pNextChild;
-		}
-		m_pFirstChild=m_pLastChild=NULL;
-		m_nChildrenCount=0;
+		DestroyAllChildren();
 		ClearAnimation();
 		m_style = SwndStyle();
 		m_isDestroying = false;

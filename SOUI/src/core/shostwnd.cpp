@@ -181,7 +181,9 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
 		UpdateAutoSizeCount(true);
-		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
+		CRect rcWnd(CPoint(),e2->szWnd);
+		rcWnd.InflateRect(SWindow::GetStyle().GetMargin());
+		SetWindowPos(NULL, 0, 0, rcWnd.Width(), rcWnd.Height(), SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
 		UpdateAutoSizeCount(false);
 	}
 	return true;
@@ -343,24 +345,20 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
     SWindow::InitFromXml(xmlRoot);
 
-	if(m_hostAttr.m_bTranslucent)
-	{
-		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		m_dummyWnd = new SDummyWnd(this);
-		m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
-		m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
-		m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
-	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
-	{
-		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
-		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
-	}
-
     BuildWndTreeZorder();
 
 	int nWidth = m_szAppSetted.cx;
 	int nHeight = m_szAppSetted.cy;
+	ILayoutParam *pLayoutParam = GetLayoutParam();
+	if(pLayoutParam->IsSpecifiedSize(Horz))
+	{
+		nWidth = pLayoutParam->GetSpecifiedSize(Horz).toPixelSize(GetScale());
+	}
+	if(pLayoutParam->IsSpecifiedSize(Vert))
+	{
+		nHeight = pLayoutParam->GetSpecifiedSize(Vert).toPixelSize(GetScale());
+	}
+
 	if(nWidth <= 0 || nHeight <= 0)
 	{//计算出root大小		
 		if (nWidth <= 0)
@@ -544,6 +542,23 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
 	OnLoadLayoutFromResourceID(m_strXmlLayout);
+
+	DWORD dwExStyle = SNativeWnd::GetExStyle();
+	if(m_hostAttr.m_bTranslucent)
+	{
+		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		m_dummyWnd = new SDummyWnd(this);
+		SStringT strTitle = m_hostAttr.m_strTitle.GetText(FALSE);
+		m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+		m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+		m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
+	{
+		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
+	}
+
 	m_pTipCtrl = CreateTooltip();
 	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
 	UpdateAutoSizeCount(false);
@@ -1516,14 +1531,14 @@ BOOL SHostWnd::KillTimer(UINT_PTR id)
 CRect SHostWnd::GetWindowRect() const
 {
     CRect rc;
-    SNativeWnd::GetWindowRect(&rc);
+    SNativeWnd::GetClientRect(&rc);
     return rc;
 }
 
 CRect SHostWnd::GetClientRect() const
 {
     CRect rc;
-    SNativeWnd::GetClientRect(&rc);
+    SWindow::GetClientRect(&rc);
     return rc;
 }
 

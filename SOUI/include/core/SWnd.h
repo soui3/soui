@@ -174,7 +174,7 @@ namespace SOUI
         SWND    swnd;       //拥有tooltip的窗口
         DWORD   dwCookie;   //tooltip在窗口内的ID，对应一个窗口不同区域显示不同tip的情况，一般可以不提供
         CRect   rcTarget;   //tooltip感应区
-        SStringT strTip;    //top字符串
+        SStringT strTip;    //tip字符串
     };
 
 	enum{
@@ -674,6 +674,7 @@ namespace SOUI
          */
         BOOL DestroyChild(SWindow *pChild);
         
+		void DestroyAllChildren();
     public://窗口消息相关方法
         /**
         * SSendMessage
