@@ -345,6 +345,27 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
     SWindow::InitFromXml(xmlRoot);
 
+    if(m_hostAttr.m_bTranslucent)
+	{
+		if(!m_dummyWnd)
+		{
+			SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			m_dummyWnd = new SDummyWnd(this);
+			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+			m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+		}
+	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
+	{
+		if(m_dummyWnd)
+		{
+			m_dummyWnd->DestroyWindow();
+		}
+		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
+	}
+
     BuildWndTreeZorder();
 
 	int nWidth = m_szAppSetted.cx;
@@ -542,22 +563,6 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_szAppSetted.cy = lpCreateStruct->cy;
     SWindow::SetContainer(this);
 	OnLoadLayoutFromResourceID(m_strXmlLayout);
-
-	DWORD dwExStyle = SNativeWnd::GetExStyle();
-	if(m_hostAttr.m_bTranslucent)
-	{
-		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		m_dummyWnd = new SDummyWnd(this);
-		SStringT strTitle = m_hostAttr.m_strTitle.GetText(FALSE);
-		m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
-		m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
-		m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
-	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
-	{
-		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
-		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
-	}
 
 	m_pTipCtrl = CreateTooltip();
 	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
