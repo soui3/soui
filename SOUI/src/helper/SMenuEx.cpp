@@ -663,7 +663,7 @@ namespace SOUI
 		}
 		else
 		{
-			::SendMessage(hOwner, WM_COMMAND, MAKEWPARAM(nRet, 0), 0);
+			::PostMessage(hOwner, WM_COMMAND, MAKEWPARAM(nRet, 0), 0);
 			return TRUE;
 		}
 
