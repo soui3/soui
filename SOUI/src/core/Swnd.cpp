@@ -2232,6 +2232,10 @@ namespace SOUI
 	*/
 
 	void SWindow::SetAnimation(IAnimation * animation) {
+		if (m_isAnimating)
+		{
+			ClearAnimation();
+		}
 		m_animation = animation;
 		if (m_animation)
 		{
@@ -2241,10 +2245,6 @@ namespace SOUI
 				OnAnimationStart(m_animation);
 			}
 			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
-		}
-		else
-		{
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		}
 	}
 
