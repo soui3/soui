@@ -19,6 +19,7 @@ SSkinImgList::SSkinImgList()
 	, m_bVertical(FALSE)
 	, m_filterLevel(kNone_FilterLevel)
 	, m_bAutoFit(TRUE)
+	, m_bLazyLoad(FALSE)
 {
 	
 }
@@ -30,8 +31,8 @@ SSkinImgList::~SSkinImgList()
 SIZE SSkinImgList::GetSkinSize() const
 {
 	SIZE ret = {0, 0};
-	if(m_pImg)
-		ret = m_pImg->Size();
+	if(GetImage())
+		ret = GetImage()->Size();
 	if(m_bVertical)
 		ret.cy /= m_nStates;
     else 
@@ -46,14 +47,14 @@ int SSkinImgList::GetStates() const
 
 void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const
 {
-	if(!m_pImg) return;
+	if(!GetImage()) return;
 	SIZE sz = GetSkinSize();
 	RECT rcSrc = {0, 0, sz.cx, sz.cy};
 	if(m_bVertical) 
 		OffsetRect(&rcSrc, 0, iState*sz.cy);
 	else
 		OffsetRect(&rcSrc, iState*sz.cx, 0);
-	pRT->DrawBitmapEx(rcDraw ,m_pImg, &rcSrc, GetExpandMode(), byAlpha);
+	pRT->DrawBitmapEx(rcDraw , GetImage(), &rcSrc, GetExpandMode(), byAlpha);
 }
 
 UINT SSkinImgList::GetExpandMode() const
@@ -64,27 +65,58 @@ UINT SSkinImgList::GetExpandMode() const
         return MAKELONG(EM_NULL,m_filterLevel);
 }
 
+LRESULT SSkinImgList::OnAttrSrc(const SStringW& value, BOOL bLoading)
+{
+	m_strSrc = value;
+	if (!m_bLazyLoad)
+	{
+		m_pImg.Attach(LOADIMAGE2(value));
+	}
+	return S_OK;
+}
+
+bool SSkinImgList::SetImage(IBitmap* pImg)
+{
+	m_pImg = pImg;
+	m_strSrc.Empty();
+	m_bLazyLoad = FALSE;
+	return true;
+}
+
+IBitmap* SSkinImgList::GetImage() const
+{
+	if (m_pImg)
+		return m_pImg;
+	if (m_bLazyLoad && !m_strSrc.IsEmpty())
+	{
+		m_pImg.Attach(LOADIMAGE2(m_strSrc));
+		m_strSrc.Empty();
+	}
+	return m_pImg;
+}
+
 void SSkinImgList::OnColorize(COLORREF cr)
 {
     if(!m_bEnableColorize) return;
     if(cr == m_crColorize) return;
 	m_crColorize = cr;
 
+	IBitmap* pImg = GetImage();
     if(m_imgBackup)
     {//restore
         LPCVOID pSrc = m_imgBackup->GetPixelBits();
-        LPVOID pDst = m_pImg->LockPixelBits();
-        memcpy(pDst,pSrc,m_pImg->Width()*m_pImg->Height()*4);
-        m_pImg->UnlockPixelBits(pDst);
+        LPVOID pDst = pImg->LockPixelBits();
+        memcpy(pDst,pSrc, pImg->Width()* pImg->Height()*4);
+		pImg->UnlockPixelBits(pDst);
     }else
     {
-		if (!m_pImg) 
+		if (!pImg)
 			return;
-		if(S_OK != m_pImg->Clone(&m_imgBackup)) return;
+		if(S_OK != pImg->Clone(&m_imgBackup)) return;
     }
     
 	if(cr!=0)
-		SDIBHelper::Colorize(m_pImg,cr);
+		SDIBHelper::Colorize(pImg,cr);
 	else
 		m_imgBackup = NULL;//free backup
 }
@@ -99,7 +131,8 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 	pRet->m_filterLevel = m_filterLevel;
 	pRet->m_bAutoFit = m_bAutoFit;
 	pRet->m_state2Index = m_state2Index;
-	
+	pRet->m_bLazyLoad = FALSE;
+
 	CSize szSkin = GetSkinSize();
 	szSkin.cx = MulDiv(szSkin.cx, nScale, 100);
 	szSkin.cy = MulDiv(szSkin.cy, nScale, 100);
@@ -115,9 +148,10 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 	{
 		m_imgBackup->Scale(&pRet->m_imgBackup, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
-	if(m_pImg)
+	IBitmap* pImg = GetImage();
+	if(pImg)
 	{
-		m_pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
+		pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
 }
 
@@ -141,7 +175,7 @@ void SSkinImgCenter::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState
 	else
 		OffsetRect(&rcSrc, iState*szSkin.cx, 0);
 
-	pRT->DrawBitmapEx(rcTarget, m_pImg, &rcSrc, GetExpandMode(), byAlpha);
+	pRT->DrawBitmapEx(rcTarget, GetImage(), &rcSrc, GetExpandMode(), byAlpha);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,7 +187,7 @@ SSkinImgFrame::SSkinImgFrame()
 
 void SSkinImgFrame::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,BYTE byAlpha) const
 {
-    if(!m_pImg) return;
+    if(!GetImage()) return;
     SIZE sz=GetSkinSize();
     CPoint pt;
     if(IsVertical())
@@ -161,7 +195,7 @@ void SSkinImgFrame::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState,
     else
         pt.x=sz.cx*iState;
     CRect rcSour(pt,sz);
-    pRT->DrawBitmap9Patch(rcDraw,m_pImg,&rcSour,&m_rcMargin,GetExpandMode(),byAlpha);
+    pRT->DrawBitmap9Patch(rcDraw, GetImage(),&rcSour,&m_rcMargin,GetExpandMode(),byAlpha);
 }
 
 UINT SSkinImgFrame::GetExpandMode() const
@@ -385,7 +419,7 @@ CRect SSkinScrollbar::GetPartRect(int nSbCode, int nState,BOOL bVertical) const
 
 void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwState,BYTE byAlpha) const
 {
-    if(!m_pImg) return;
+    if(!GetImage()) return;
     int nSbCode=LOWORD(dwState);
     int nState=LOBYTE(HIWORD(dwState));
     BOOL bVertical=HIBYTE(HIWORD(dwState));
@@ -397,7 +431,7 @@ void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwS
 
     CRect rcSour=GetPartRect(nSbCode,nState,bVertical);
     
-    pRT->DrawBitmap9Patch(prcDraw,m_pImg,&rcSour,&rcMargin,m_bTile?EM_TILE:EM_STRETCH,byAlpha);
+    pRT->DrawBitmap9Patch(prcDraw, GetImage(),&rcSour,&rcMargin,m_bTile?EM_TILE:EM_STRETCH,byAlpha);
     
     if(nSbCode==SB_THUMBTRACK && m_bHasGripper)
     {
@@ -408,7 +442,7 @@ void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwS
             rcDraw.top+=(rcDraw.Height()-rcSour.Height())/2,rcDraw.bottom=rcDraw.top+rcSour.Height();
         else
             rcDraw.left+=(rcDraw.Width()-rcSour.Width())/2,rcDraw.right=rcDraw.left+rcSour.Width();
-        pRT->DrawBitmap9Patch(&rcDraw,m_pImg,&rcSour,&rcMargin,m_bTile?EM_TILE:EM_STRETCH,byAlpha);
+        pRT->DrawBitmap9Patch(&rcDraw, GetImage(),&rcSour,&rcMargin,m_bTile?EM_TILE:EM_STRETCH,byAlpha);
     }
 }
 
@@ -424,8 +458,8 @@ void SSkinScrollbar::_Scale(ISkinObj *skinObj, int nScale)
 
 int SSkinScrollbar::GetIdealSize() const
 {
-	if(!m_pImg) return 0;
-	return m_pImg->Width()/9;
+	if(!GetImage()) return 0;
+	return GetImage()->Width()/9;
 }
 
 
@@ -792,7 +826,7 @@ HRESULT SSkinImgFrame2::OnAttrSrc(const SStringW & strValue,BOOL bLoading)
 	pImg->UnlockPixelBits(pBuf);
 	pImgCenter->UnlockPixelBits(pBuf2);
 
-	m_pImg = pImgCenter;
+	SetImage(pImgCenter);
 	pImgCenter->Release();
 	pImg->Release();
 

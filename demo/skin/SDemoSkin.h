@@ -34,7 +34,6 @@ namespace SOUI
 		SDemoSkin();
 		SDemoSkin(ISetOrLoadSkinHandler *iSkinHander);
 	public:
-		virtual bool SetImage(IBitmap *pImg);
 		///
 		bool SetImage(SStringW imgfile);
 		bool SetColor(COLORREF bkColor);

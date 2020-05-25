@@ -208,6 +208,16 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         //SOUI系统总是从appdir去查找资源
         theApp->SetAppDir(strResDir);
 #endif
+        //加载系统资源
+        HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+        if (hSysResource)
+        {
+            SAutoRefPtr<IResProvider> sysResProvider;
+            CreateResProvider(RES_PE, (IObjRef**)&sysResProvider);
+            sysResProvider->Init((WPARAM)hSysResource, 0);
+            theApp->LoadSystemNamedResource(sysResProvider);
+            FreeLibrary(hSysResource);
+        }
 
         //定义一人个资源提供对象,SOUI系统中实现了3种资源加载方式，分别是从文件加载，从EXE的资源加载及从ZIP压缩包加载
         SAutoRefPtr<IResProvider>   pResProvider;
@@ -273,15 +283,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 #endif//DLL_CORE
 
         
-        //加载系统资源
-        HMODULE hSysResource=LoadLibrary(SYS_NAMED_RESOURCE);
-        if(hSysResource)
-        {
-            SAutoRefPtr<IResProvider> sysSesProvider;
-            CreateResProvider(RES_PE,(IObjRef**)&sysSesProvider);
-            sysSesProvider->Init((WPARAM)hSysResource,0);
-            theApp->LoadSystemNamedResource(sysSesProvider);
-        }
         //采用hook绘制菜单的边框
         SMenuWndHook::InstallHook(hInstance,L"_skin.sys.menu.border");
         

@@ -12,15 +12,6 @@ namespace SOUI
 	{
 	}
 
-	bool SDemoSkin::SetImage(IBitmap *pImg)
-	{
-		if (m_pImg)
-			m_pImg->Release();
-		m_pImg = pImg;
-		if (m_pImg)
-		 m_pImg->AddRef();
-		return true;
-	}
 
 	bool SDemoSkin::SetImage(SStringW imgfile)
 	{
@@ -29,7 +20,7 @@ namespace SOUI
 		IBitmap *image = LOADIMAGE2(L"file:" + imgfile);
 		if (image)
 		{
-			SetImage(image);
+			SSkinImgList::SetImage(image);
 			image->Release();
 			return true;
 		}
@@ -48,15 +39,12 @@ namespace SOUI
 	{
 		m_FilePath.Empty();
 		m_bIsColor = false;
-		m_pImg = NULL;
+		SSkinImgList::SetImage(NULL);
 	}
 
 	SIZE SDemoSkin::GetSkinSize()
 	{		
-		SIZE ret = { 0, 0 };
-		if (m_pImg)
-			ret = m_pImg->Size();
-		return ret;
+		return SSkinImgList::GetSkinSize();
 	}
 
 	BOOL SDemoSkin::IgnoreState()
@@ -119,12 +107,12 @@ namespace SOUI
 			COLORREF bkColor = m_bkColor | (byAlpha << 24);
 			pRT->FillSolidRect(rcDraw, bkColor);
 		}
-		else if (m_pImg)
+		else if (GetImage())
 		{
 			SIZE sz = GetSkinSize();
 			CPoint pt(0, 0);
 			CRect rcSour(pt, sz);
-			pRT->DrawBitmap9Patch(rcDraw, m_pImg, &rcSour, &m_rcMargin, GetExpandMode(), byAlpha);
+			pRT->DrawBitmap9Patch(rcDraw, GetImage(), &rcSour, &m_rcMargin, GetExpandMode(), byAlpha);
 		}		
 	}	
 
@@ -132,8 +120,8 @@ namespace SOUI
 	{
 		if (m_bIsColor)
 			return m_bkColor;
-		else if (m_pImg)
-			return SDIBHelper::CalcAvarageColor(m_pImg);
+		else if (GetImage())
+			return SDIBHelper::CalcAvarageColor(GetImage());
 		else
 			return CR_INVALID;
 	}

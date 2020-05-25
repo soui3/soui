@@ -24,16 +24,9 @@ public:
 
     virtual void SetStates(int nStates){m_nStates=nStates;}
 
-    virtual bool SetImage(IBitmap *pImg)
-    {
-        m_pImg=pImg;
-        return true;
-    }
+	virtual bool SetImage(IBitmap* pImg);
 
-    virtual IBitmap * GetImage()  const
-    {
-        return m_pImg;
-    }
+	virtual IBitmap* GetImage()  const;
 
     virtual void SetTile(BOOL bTile){m_bTile=bTile;}
     virtual BOOL IsTile()  const {return m_bTile;}
@@ -48,7 +41,6 @@ protected:
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
     virtual UINT GetExpandMode() const;
 
-    SAutoRefPtr<IBitmap> m_pImg;
 	int  m_nStates;				  // skin 状态值 
     BOOL m_bTile;
     BOOL m_bAutoFit;
@@ -56,12 +48,21 @@ protected:
     SAutoRefPtr<IBitmap> m_imgBackup;   //色调调整前的备分
     FilterLevel m_filterLevel;
 
+private:
+	mutable SAutoRefPtr<IBitmap> m_pImg;
+	mutable SStringW m_strSrc;
+	BOOL m_bLazyLoad;
+protected:
+	LRESULT OnAttrSrc(const SStringW& value, BOOL bLoading);
+
     SOUI_ATTRS_BEGIN()
+		ATTR_CUSTOM(L"src",OnAttrSrc)
         ATTR_IMAGEAUTOREF(L"src", m_pImg, FALSE)    //skinObj引用的图片文件定义在uires.idx中的name属性。
-        ATTR_INT(L"tile", m_bTile, FALSE)    //绘制是否平铺,0--位伸（默认），其它--平铺
-        ATTR_INT(L"autoFit", m_bAutoFit, FALSE)//autoFit为0时不自动适应绘图区大小
-        ATTR_INT(L"vertical", m_bVertical, FALSE)//子图是否垂直排列，0--水平排列(默认), 其它--垂直排列
+		ATTR_BOOL(L"tile", m_bTile, FALSE)    //绘制是否平铺,0--位伸（默认），其它--平铺
+		ATTR_BOOL(L"autoFit", m_bAutoFit, FALSE)//autoFit为0时不自动适应绘图区大小
+		ATTR_BOOL(L"vertical", m_bVertical, FALSE)//子图是否垂直排列，0--水平排列(默认), 其它--垂直排列
         ATTR_INT(L"states",m_nStates, FALSE)  //子图数量,默认为1
+		ATTR_BOOL(L"lazyLoad",m_bLazyLoad,FALSE)
         ATTR_ENUM_BEGIN(L"filterLevel",FilterLevel,FALSE)
             ATTR_ENUM_VALUE(L"none",kNone_FilterLevel)
             ATTR_ENUM_VALUE(L"low",kLow_FilterLevel)
