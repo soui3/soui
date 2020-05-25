@@ -3055,10 +3055,10 @@ namespace SOUI
 
 	void SWindow::OnAnimationStop(IAnimation *pAni)
 	{
+		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		m_isAnimating = false;
 		m_animationHandler.OnAnimationStop();
 		UpdateCacheMode();
-		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
 	void SWindow::OnAnimationInvalidate(IAnimation *pAni,bool bErase)
