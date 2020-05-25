@@ -371,11 +371,11 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	int nWidth = m_szAppSetted.cx;
 	int nHeight = m_szAppSetted.cy;
 	ILayoutParam *pLayoutParam = GetLayoutParam();
-	if(pLayoutParam->IsSpecifiedSize(Horz))
+	if(nWidth==0 && pLayoutParam->IsSpecifiedSize(Horz))
 	{
 		nWidth = pLayoutParam->GetSpecifiedSize(Horz).toPixelSize(GetScale());
 	}
-	if(pLayoutParam->IsSpecifiedSize(Vert))
+	if(nHeight == 0 && pLayoutParam->IsSpecifiedSize(Vert))
 	{
 		nHeight = pLayoutParam->GetSpecifiedSize(Vert).toPixelSize(GetScale());
 	}
