@@ -2277,7 +2277,7 @@ namespace SOUI
 	void SWindow::ClearAnimation() {
 		if (m_animation)
 		{
-			if (m_animation->hasStarted() && !m_animation->hasEnded())
+			if (m_isAnimating)
 			{
 				m_animation->cancel();
 				OnAnimationStop(m_animation);
