@@ -339,7 +339,7 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
         if(IsFileType(pszType))
         {
             pugi::xml_parse_result result= xmlDoc.load_file(pszXmlName,pugi::parse_default,pugi::encoding_auto);
-            SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,result.description(),result.offset);
+            SASSERT_FMTA(result,"parse xml error! xmlName=%s,desc=%s,offset=%d",S_CT2A(pszXmlName).c_str(),result.description(),result.offset);
             return result;
         }else
         {
@@ -356,7 +356,7 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,pugi::x
     pResProvider->GetRawBuffer(pszType,pszXmlName,strXml,dwSize);
 
     pugi::xml_parse_result result= xmlDoc.load_buffer(strXml,strXml.size(),pugi::parse_default,pugi::encoding_auto);
-	SASSERT_FMTW(result,L"parse xml error! xmlName=%s,desc=%s,offset=%d",pszXmlName,S_CA2W(result.description()),result.offset);
+	SASSERT_FMTA(result,"parse xml error! xmlName=%s,desc=%s,offset=%d",S_CT2A(pszXmlName).c_str(),result.description(),result.offset);
     return result;
 }
 

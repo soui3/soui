@@ -45,6 +45,14 @@ int SSkinImgList::GetStates() const
 	return m_nStates;
 }
 
+void SSkinImgList::OnInitFinished(pugi::xml_node xmlNode)
+{
+	if (!m_bLazyLoad && !m_strSrc.IsEmpty())
+	{
+		m_pImg.Attach(LOADIMAGE2(m_strSrc));
+	}
+}
+
 void SSkinImgList::_DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const
 {
 	if(!GetImage()) return;
@@ -68,9 +76,9 @@ UINT SSkinImgList::GetExpandMode() const
 LRESULT SSkinImgList::OnAttrSrc(const SStringW& value, BOOL bLoading)
 {
 	m_strSrc = value;
-	if (!m_bLazyLoad)
+	if (!bLoading)
 	{
-		m_pImg.Attach(LOADIMAGE2(value));
+		m_pImg.Attach(LOADIMAGE2(m_strSrc));
 	}
 	return S_OK;
 }
@@ -154,8 +162,6 @@ void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 		pImg->Scale(&pRet->m_pImg, szSkin.cx, szSkin.cy, kHigh_FilterLevel);
 	}
 }
-
-
 
 //////////////////////////////////////////////////////////////////////////
 //  SSkinImgCenter

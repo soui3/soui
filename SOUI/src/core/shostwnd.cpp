@@ -547,7 +547,7 @@ BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 		return InitFromXml(xmlDoc.child(L"SOUI"));
 	}else
 	{
-		SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
+		SASSERT_FMT(FALSE,_T("Load layout [%s] Failed"),m_strXmlLayout.c_str());
 		return FALSE;
 	}
 }
