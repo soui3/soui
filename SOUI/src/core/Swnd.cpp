@@ -138,11 +138,6 @@ namespace SOUI
 		m_bMsgHandled = bHandled?1:0;
 	}
 
-	IObject* SWindow::GetIObject()
-	{
-		return this;
-	}
-
 	// Get align
 	UINT SWindow::GetTextAlign() const
 	{
@@ -843,7 +838,7 @@ namespace SOUI
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
-			SObject::InitFromXml(pNode);
+			__super::InitFromXml(pNode);
 
 			MarkAttributeHandled(attrClass,false);
 			MarkAttributeHandled(attrLayout,false);
@@ -2952,7 +2947,7 @@ namespace SOUI
 			return m_attrStorage->OnGetAttribute(strAttr,strValue);
 		}else
 		{
-			return SObject::GetAttribute(strAttr,strValue);
+			return __super::GetAttribute(strAttr,strValue);
 		}
 	}
 

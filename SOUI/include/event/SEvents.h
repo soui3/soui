@@ -27,7 +27,7 @@ public:\
 	enum {\
 		EventID = id\
 	};\
-	evt(SOUI::SObject *pSender) :EventArgs(pSender){}\
+	evt(SOUI::IObject *pSender) :EventArgs(pSender){}\
 
 #define EVT_EXP
 #define SEVENT_BEGIN(evt,id) \
@@ -170,7 +170,7 @@ namespace SOUI
         /*************************************************************************
         Construction
         *************************************************************************/
-        EventArgs( SObject *pSender ) 
+        EventArgs( IObject *pSender ) 
             : handled(0)
             , sender(pSender)
             , bubbleUp(true)
@@ -195,7 +195,7 @@ namespace SOUI
         int  idFrom; /**< 事件发送者ID */
         LPCWSTR nameFrom; /**< 事件发送者name */
         
-        SObject *sender;  /**< 产生事件的原始SOUI对象，可能和idFrom and nameFrom指定的对象不同 */
+        IObject *sender;  /**< 产生事件的原始SOUI对象，可能和idFrom and nameFrom指定的对象不同 */
     };
     
 
@@ -206,7 +206,7 @@ namespace SOUI
     class TplEventArgs : public EventArgs
     {
     public:
-        TplEventArgs(SObject *pSender):EventArgs(pSender)
+        TplEventArgs(IObject *pSender):EventArgs(pSender)
         {
         }
 
@@ -217,7 +217,7 @@ namespace SOUI
     class SOUI_EXP EventCmnArgs : public EventArgs
     {
     public:
-        EventCmnArgs(SObject *pSender,int _nID):EventArgs(pSender),nID(_nID)
+        EventCmnArgs(IObject *pSender,int _nID):EventArgs(pSender),nID(_nID)
         {
 
         }

@@ -192,8 +192,7 @@ namespace SOUI
     * 
     * Describe   SOUI窗口基类,实现窗口的基本接口
     */
-	class SOUI_EXP SWindow : public TObjRefImpl<SObject>
-		, public IWindow
+	class SOUI_EXP SWindow : public TObjRefImpl< SObjectImpl<IWindow> >
 		, public ITrCtxProvider
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
@@ -236,8 +235,6 @@ namespace SOUI
 
 		STDMETHOD_(int,GetID)() SCONST OVERRIDE{return m_nID;}
 		STDMETHOD_(void,SetID)(int nID) OVERRIDE{m_nID=nID;}
-
-		STDMETHOD_(IObject*,GetIObject)(THIS) OVERRIDE;
 
 		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
 

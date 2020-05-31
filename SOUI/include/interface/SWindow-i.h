@@ -10,10 +10,8 @@ SNSBEGIN
 
 #undef INTERFACE
 #define INTERFACE IWindow
-DECLARE_INTERFACE(IWindow)
+DECLARE_INTERFACE_(IWindow,IObject)
 {
-	STDMETHOD_(IObject*,GetIObject)(THIS) PURE;
-
 	STDMETHOD_(ISwndContainer*,GetContainer)(THIS) PURE;
 
 	STDMETHOD_(SWND,GetSwnd)(THIS) SCONST PURE;

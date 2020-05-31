@@ -7,13 +7,8 @@
 namespace SOUI
 {
 
-	class EventGifPlayOver : public TplEventArgs<EventGifPlayOver>
-	{
-		SOUI_CLASS_NAME(EventGifPlayOver, L"on_gifplay_over")
-	public:
-		enum { EventID = EVT_EXTERNAL_BEGIN + 600 };
-		EventGifPlayOver(SObject *pSender) :TplEventArgs<EventGifPlayOver>(pSender) {}
-	};
+	SEVENT_BEGIN(EventGifPlayOver,EVT_EXTERNAL_BEGIN + 600)
+	SEVENT_END()
 	
     /**
     * @class     SGifPlayer

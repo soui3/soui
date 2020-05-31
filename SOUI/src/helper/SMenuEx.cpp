@@ -130,7 +130,7 @@ namespace SOUI
 			SXmlNode xmlRoot = xmlNode.root().first_child();
 			if (xmlNode != xmlRoot)
 			{
-				SObject::InitFromXml(&xmlRoot);
+				__super::InitFromXml(&xmlRoot);
 			}
 
 			BOOL bRet = __super::InitFromXml(&xmlNode);

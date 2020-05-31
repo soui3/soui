@@ -1,15 +1,9 @@
 #pragma once
 namespace SOUI{
 
-	class EventPath : public TplEventArgs<EventPath>
-	{
-		SOUI_CLASS_NAME(EventPath,L"on_event_path")
-	public:
-		enum {EventID=EVT_EXTERNAL_BEGIN+23451};
-		EventPath(SObject *pSender):TplEventArgs<EventPath>(pSender){}
-
+	SEVENT_BEGIN(EventPath,EVT_EXTERNAL_BEGIN+23451)
 		float fLength;
-	};
+	SEVENT_END()
 
 	class SPathView : public SWindow
 	{

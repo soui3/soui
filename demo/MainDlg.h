@@ -23,33 +23,18 @@ using namespace SOUI;
 
 extern UINT g_dwSkinChangeMessage;
 //演示使用SNotifyCenter的异步事件
-class EventThread : public TplEventArgs<EventThread>
-{
-	SOUI_CLASS_NAME(EventThread,L"on_event_thread")
-public:
-	EventThread(SObject *pSender):TplEventArgs<EventThread>(pSender){}
-	enum{EventID=EVT_EXTERNAL_BEGIN+30000};
-	
-	int nData;
-};
+SEVENT_BEGIN(EventThread,EVT_EXTERNAL_BEGIN+30000)
+int nData;
+SEVENT_END()
 
 //演示使用SNotifyCenter的同步事件
-class EventThreadStart : public TplEventArgs<EventThreadStart>
-{
-	SOUI_CLASS_NAME(EventThreadStart,L"on_event_thread_start")
-public:
-	EventThreadStart(SObject *pSender):TplEventArgs<EventThreadStart>(pSender){}
-	enum{EventID=EVT_EXTERNAL_BEGIN+30001};
-};
+SEVENT_BEGIN(EventThreadStart,EVT_EXTERNAL_BEGIN+30001)
+SEVENT_END()
+
 
 //演示使用SNotifyCenter的同步事件
-class EventThreadStop : public TplEventArgs<EventThreadStop>
-{
-	SOUI_CLASS_NAME(EventThreadStop,L"on_event_thread_stop")
-public:
-	EventThreadStop(SObject *pSender):TplEventArgs<EventThreadStop>(pSender){}
-	enum{EventID=EVT_EXTERNAL_BEGIN+30002};
-};
+SEVENT_BEGIN(EventThreadStop,EVT_EXTERNAL_BEGIN+30002)
+SEVENT_END()
 
 
 
