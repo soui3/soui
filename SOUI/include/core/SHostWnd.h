@@ -158,11 +158,9 @@ public:
 	{
 		m_strXmlLayout = pszLayoutId;
 	}
-	STDMETHOD_(HWND,CreateHostWindow)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE
-	{
-		return Create(hWndParent,dwStyle,dwExStyle,x,y,nWidth,nHeight);
-	}
-	STDMETHOD_(BOOL,DestroyHostWindow)(THIS) OVERRIDE
+	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE;
+
+	STDMETHOD_(BOOL,Destroy)(THIS) OVERRIDE
 	{
 		return DestroyWindow();
 	}
@@ -172,7 +170,6 @@ public:
 	SNativeWnd * GetNative(){return this;}
 
     HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
-    HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
 	BOOL WINAPI InitFromXml(IXmlNode * pNode);
     
