@@ -815,8 +815,8 @@ namespace SOUI
 					|| msg.message == WM_SYSKEYDOWN
 					|| msg.message == WM_KEYUP
 					|| msg.message == WM_SYSKEYUP
-					|| msg.message == WM_CHAR
-					|| msg.message == WM_IME_CHAR)
+					/*|| msg.message == WM_CHAR
+					|| msg.message == WM_IME_CHAR*/)
 				{
 					msg.hwnd = s_MenuData->GetMenuEx()->m_hWnd;
 				}
