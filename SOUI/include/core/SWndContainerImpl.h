@@ -38,12 +38,10 @@ namespace SOUI
 	};
 
     class SOUI_EXP SwndContainerImpl : public ISwndContainer
-                                     , public SRootWindow
 									 , public ITimelineHandler
     {
-        SOUI_CLASS_NAME(SwndContainerImpl,L"SwndContainerImpl")
     public:
-        SwndContainerImpl();
+        SwndContainerImpl(SWindow *pRoot);
         
         IDropTarget * GetDropTarget(){return &m_dropTarget;}
 
@@ -111,6 +109,7 @@ namespace SOUI
 	protected:
         void _BuildWndTreeZorder(SWindow *pWnd,UINT &iOrder);
     protected:
+		SWindow * m_pRoot;
         SWND m_hCapture;
         SWND m_hHover;
         BOOL    m_bNcHover;

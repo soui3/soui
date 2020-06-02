@@ -22,7 +22,7 @@ struct IItemContainer
     virtual void OnItemRequestRelayout(SItemPanel *pItem)=0;          //列表项请求重新布局
 };
 
-class SOUI_EXP SItemPanel : public SwndContainerImpl
+class SOUI_EXP SItemPanel : public SwndContainerImpl, public SWindow
 {
 	SOUI_CLASS_NAME(SItemPanel,L"itemPanel")
 public:

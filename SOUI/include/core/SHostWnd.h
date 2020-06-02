@@ -96,7 +96,7 @@ namespace SOUI
 
 	class SOUI_EXP SHostWnd: public IHostWnd
     , public SwndContainerImpl
-    , public SNativeWnd
+    , public SNativeWnd, public SRootWindow
 	, protected IHostMsgHandler
 {
     SOUI_CLASS_NAME(SHostWnd,L"hostwnd")

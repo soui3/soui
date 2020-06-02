@@ -139,6 +139,8 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_bResizing(false)
 , m_AniState(Ani_none)
 , m_dwThreadID(0)
+, SwndContainerImpl(this)
+
 {
     m_msgMouse.message = 0;
     m_privateStylePool.Attach(new SStylePool);
