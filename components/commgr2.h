@@ -83,6 +83,9 @@
 #if(SCOM_MASK&scom_mask_ipcobject)
 	#pragma comment(lib,"sipcobjectd")
 #endif
+#if(SCOM_MASK&scom_mask_script_lua)
+#pragma comment(lib,"scriptmodule_luad")
+#endif
 #else//_DEBUG
 #if(SCOM_MASK&scom_mask_render_skia)
     #pragma comment(lib,"skia")
@@ -124,6 +127,9 @@
 #endif
 #if(SCOM_MASK&scom_mask_ipcobject)
 	#pragma comment(lib,"sipcobject")
+#endif
+#if(SCOM_MASK&scom_mask_script_lua)
+#pragma comment(lib,"scriptmodule_lua")
 #endif
 #endif//_DEBUG
 

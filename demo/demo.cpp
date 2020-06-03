@@ -47,12 +47,12 @@
 
 #ifdef _DEBUG
 #define SYS_NAMED_RESOURCE _T("soui-sys-resourced.dll")
-#pragma comment(lib,"lua-52d")
-#pragma comment(lib,"scriptmodule-luad")
+//#pragma comment(lib,"lua-52d")
+//#pragma comment(lib,"scriptmodule-luad")
 #else
 #define SYS_NAMED_RESOURCE _T("soui-sys-resource.dll")
-#pragma comment(lib,"lua-52")
-#pragma comment(lib,"scriptmodule-lua")
+//#pragma comment(lib,"lua-52")
+//#pragma comment(lib,"scriptmodule-lua")
 #endif
 
 #include "../controls.extend/smiley/ssmileyctrl.h"
@@ -95,6 +95,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     SComMgr2 *pComMgr = new SComMgr2(_T("imgdecoder-png"));
     
 	{//test for task loop
+		SCriticalSection  cs;
+		SAutoLock lock(cs);
+
 		SAutoRefPtr<ITaskLoop> pTaskLoop;
 		pComMgr->CreateTaskLoop((IObjRef**)&pTaskLoop);
 		pTaskLoop->start("test",ITaskLoop::High);

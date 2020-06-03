@@ -24,6 +24,7 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pIte
     ,m_lpItemIndex(-1)
 	,SwndContainerImpl(this)
 {
+	SetContainer(this);
     SASSERT(m_pFrmHost);
     SASSERT(m_pItemContainer);
     if(xmlNode) 
