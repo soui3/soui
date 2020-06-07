@@ -97,7 +97,7 @@ public:
         @return reference to the closest-matching typeface. Call must call
                 unref() when they are done.
     */
-    static SkTypeface* CreateFromName(const char familyName[], Style style);
+    static SkTypeface* CreateFromName(const char familyName[], Style style,unsigned charSet=DEFAULT_CHARSET);
 
     /** Return a new reference to the typeface that most closely matches the
         requested typeface and specified Style. Use this call if you want to

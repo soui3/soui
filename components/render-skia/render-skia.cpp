@@ -1777,7 +1777,7 @@ namespace SOUI
         if(plf->lfItalic) style |= SkTypeface::kItalic;
         if(plf->lfWeight == FW_BOLD) style |= SkTypeface::kBold;
 
-        m_skFont=SkTypeface::CreateFromName(strFace,(SkTypeface::Style)style);
+        m_skFont=SkTypeface::CreateFromName(strFace,(SkTypeface::Style)style,plf->lfCharSet);
 
         m_skPaint.setTextSize(SkIntToScalar(abs(plf->lfHeight)));
         m_skPaint.setUnderlineText(!!plf->lfUnderline);

@@ -108,7 +108,7 @@ public:
     SkTypeface* createFromFile(const char path[], int ttcIndex = 0) const;
 
     SkTypeface* legacyCreateTypeface(const char familyName[],
-                                     unsigned typefaceStyleBits) const;
+                                     unsigned typefaceStyleBits,unsigned charSet) const;
 
     /**
      *  Return a ref to the default fontmgr. The caller must call unref() on
@@ -144,7 +144,7 @@ protected:
     virtual SkTypeface* onCreateFromFile(const char path[], int ttcIndex) const = 0;
 
     virtual SkTypeface* onLegacyCreateTypeface(const char familyName[],
-                                               unsigned styleBits) const = 0;
+                                               unsigned styleBits,unsigned charSet) const = 0;
 private:
     static SkFontMgr* Factory();    // implemented by porting layer
     static SkFontMgr* CreateDefault();
