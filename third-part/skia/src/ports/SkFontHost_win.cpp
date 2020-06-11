@@ -122,7 +122,7 @@ static void dcfontname_to_skstring(HDC deviceContext, const LOGFONT& lf, SkStrin
 static void make_canonical(LOGFONT* lf) {
     lf->lfHeight = -64;
     lf->lfQuality = CLEARTYPE_QUALITY;//PROOF_QUALITY;
-    lf->lfCharSet = DEFAULT_CHARSET;
+//    lf->lfCharSet = DEFAULT_CHARSET;
 //    lf->lfClipPrecision = 64;
 }
 
@@ -2578,13 +2578,14 @@ protected:
     }
 
     virtual SkTypeface* onLegacyCreateTypeface(const char familyName[],
-                                               unsigned styleBits) const SK_OVERRIDE {
+                                               unsigned styleBits,unsigned charSet) const SK_OVERRIDE {
         LOGFONT lf;
         if (NULL == familyName) {
             lf = get_default_font();
         } else {
             logfont_for_name(familyName, &lf);
         }
+		lf.lfCharSet = charSet;
         setStyle(&lf, (SkTypeface::Style)styleBits);
         return SkCreateTypefaceFromLOGFONT(lf);
     }

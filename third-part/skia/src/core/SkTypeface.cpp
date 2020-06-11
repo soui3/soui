@@ -88,7 +88,7 @@ SkTypeface* SkTypeface::CreateDefault(int style) {
     SkAutoMutexAcquire lock(&gCreateDefaultMutex);
 
     SkAutoTUnref<SkFontMgr> fm(SkFontMgr::RefDefault());
-    SkTypeface* t = fm->legacyCreateTypeface(NULL, style);;
+    SkTypeface* t = fm->legacyCreateTypeface(NULL, style,DEFAULT_CHARSET);;
     return t ? t : SkEmptyTypeface::Create();
 }
 
@@ -123,12 +123,12 @@ bool SkTypeface::Equal(const SkTypeface* facea, const SkTypeface* faceb) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkTypeface* SkTypeface::CreateFromName(const char name[], Style style) {
+SkTypeface* SkTypeface::CreateFromName(const char name[], Style style,unsigned charSet) {
     if (NULL == name) {
         return RefDefault(style);
     }
     SkAutoTUnref<SkFontMgr> fm(SkFontMgr::RefDefault());
-    return fm->legacyCreateTypeface(name, style);
+    return fm->legacyCreateTypeface(name, style,charSet);
 }
 
 SkTypeface* SkTypeface::CreateFromTypeface(const SkTypeface* family, Style s) {
