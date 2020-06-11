@@ -653,7 +653,9 @@ namespace SOUI
     {
         UINT expendModeLow = LOWORD(expendMode);
 
-        if(expendModeLow == EM_NULL || (RectWid(pRcDest)==RectWid(pRcSrc) && RectHei(pRcDest)==RectHei(pRcSrc)))
+		const SkMatrix & m = m_SkCanvas->getTotalMatrix();
+
+        if(m.isIdentity() && ( expendModeLow == EM_NULL || (RectWid(pRcDest)==RectWid(pRcSrc) && RectHei(pRcDest)==RectHei(pRcSrc))))
             return DrawBitmap(pRcDest,pBitmap,pRcSrc->left,pRcSrc->top,byAlpha);
             
         SBitmap_Skia *pBmp = (SBitmap_Skia*)pBitmap;

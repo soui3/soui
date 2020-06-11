@@ -26,25 +26,26 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
     SYSTEMTIME last_refresh_time;
     ::GetLocalTime(&last_refresh_time);
 
+	DWORD mode = MAKELONG(EM_STRETCH,kHigh_FilterLevel);
     {
         double angle = GetHourAngle(last_refresh_time.wHour,last_refresh_time.wMinute);
         SMatrix matrix = InitMatrix(angle,  center);
         pRT->SetTransform(matrix.GetData(), NULL);
-        pRT->DrawBitmapEx(rcDraw, pointer_hour, &rcSrc, EM_STRETCH, 255);
+        pRT->DrawBitmapEx(rcDraw, pointer_hour, &rcSrc, mode, 255);
     }
 
     {
         double angle = GetMinuteSecondAngle(last_refresh_time.wMinute);
         SMatrix matrix = InitMatrix(angle, center);
         pRT->SetTransform(matrix.GetData(), NULL);
-        pRT->DrawBitmapEx(rcDraw, pointer_minute, &rcSrc, EM_STRETCH, 255);
+        pRT->DrawBitmapEx(rcDraw, pointer_minute, &rcSrc, mode, 255);
     }
 
     {
         double angle = GetMinuteSecondAngle(last_refresh_time.wSecond);
         SMatrix matrix = InitMatrix(angle, center);
         pRT->SetTransform(matrix.GetData(), NULL);
-        pRT->DrawBitmapEx(rcDraw, pointer_second, &rcSrc, EM_STRETCH, 255);
+        pRT->DrawBitmapEx(rcDraw, pointer_second, &rcSrc, mode, 255);
     }
 	pRT->SetTransform(SMatrix().GetData());
 }
