@@ -279,7 +279,7 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 	SLOG_INFO("OnInitDialog");
 
 	m_bLayoutInited=TRUE;
-	FindChildByID2<SGroupList>(R.id.gl_catalog)->SelectPage(R.id.page_listctrl);
+	FindChildByID2<SGroupList>(R.id.gl_catalog)->SelectPage(R.id.page_mclistview);
 
 	STabCtrl *pTabCtrl = FindChildByName2<STabCtrl>(L"tab_radio2");
 	{
@@ -1066,7 +1066,7 @@ void CMainDlg::OnCtrlPageClick(EventArgs *e)
 {
 	EventGroupListItemCheck *e2=sobj_cast<EventGroupListItemCheck>(e);
 	STabCtrl *pTabOp = FindChildByID2<STabCtrl>(R.id.tab_ctrls);
-	int nIndex = e2->pItemInfo->id - R.id.page_listctrl;
+	int nIndex = e2->pItemInfo->id - R.id.page_mclistview;
 	pTabOp->SetCurSel(nIndex);
 
 }
