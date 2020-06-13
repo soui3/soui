@@ -946,9 +946,10 @@ namespace SOUI
 			if(pRTCache)
 			{//在窗口正在创建的时候进来pRTCache可能为NULL
 				CRect rcWnd=GetWindowRect();
+				pRTCache->SetViewportOrg(-rcWnd.TopLeft());
 				if(IsCacheDirty())
 				{
-					pRTCache->ClearRect(&rcWnd,0);
+					pRTCache->AlphaBlend(rcWnd,pRT,rcWnd,255);
 
 					SAutoRefPtr<IFont> oldFont;
 					COLORREF crOld=pRT->GetTextColor();
@@ -2567,7 +2568,6 @@ namespace SOUI
 		if(IsDrawToCache() && !m_cachedRT)
 		{
 			GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,GetWindowRect().Width(),GetWindowRect().Height());
-			m_cachedRT->SetViewportOrg(-GetWindowRect().TopLeft());
 			MarkCacheDirty(true);
 		}
 		if(!IsDrawToCache() && m_cachedRT)
