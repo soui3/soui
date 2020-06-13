@@ -9,8 +9,10 @@ namespace SOUI
 		FUN_ID_DISCONNECT,
 		FUN_ID_START,
 	};
+
 	enum {
-		UM_CALL_FUN = (WM_USER + 1000),
+		UM_REQ_FUN = (WM_USER + 1000),
+		UM_ACK_FUN,
 	};
 
 	struct IShareBuffer {
