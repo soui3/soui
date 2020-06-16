@@ -88,18 +88,33 @@ namespace SOUI
     int RectWid(LPCRECT pRc){return pRc->right-pRc->left;}
     int RectHei(LPCRECT pRc){return pRc->bottom-pRc->top;}
     
-	class SGetLineDashEffect
+#define PS_ENDCAP_ROUND     0x00000000
+#define PS_ENDCAP_SQUARE    0x00000100
+#define PS_ENDCAP_FLAT      0x00000200
+#define PS_ENDCAP_MASK      0x00000F00
+
+#define PS_JOIN_ROUND       0x00000000
+#define PS_JOIN_BEVEL       0x00001000
+#define PS_JOIN_MITER       0x00002000
+#define PS_JOIN_MASK        0x0000F000
+
+#define PS_COSMETIC         0x00000000
+#define PS_GEOMETRIC        0x00010000
+#define PS_TYPE_MASK        0x000F0000
+
+	class SLineDashEffect
 	{
 	public:
-		SGetLineDashEffect(int iStyle):pDashPathEffect(NULL)
+		SLineDashEffect(int iStyle):pDashPathEffect(NULL)
 		{
+			iStyle = iStyle&PS_STYLE_MASK;
 			if(iStyle>=PS_SOLID && iStyle<=PS_DASHDOTDOT)
 			{
 				const LineDashEffect *pEff=&LINEDASHEFFECT[iStyle];
 				pDashPathEffect=SkDashPathEffect::Create(pEff->fDash,pEff->nCount,0.0f);
 			}
 		}
-		~SGetLineDashEffect()
+		~SLineDashEffect()
 		{
 			if(pDashPathEffect) pDashPathEffect->unref();
 		}
@@ -107,6 +122,46 @@ namespace SOUI
 		SkDashPathEffect * Get() const{return pDashPathEffect;}
 	private:
 		SkDashPathEffect * pDashPathEffect;
+	};
+
+	class SStrokeCap{
+	public:
+		SStrokeCap(int iStyle){
+			iStyle = iStyle & PS_ENDCAP_MASK;
+			switch(iStyle)
+			{
+			case PS_ENDCAP_ROUND: m_Cap = SkPaint::kRound_Cap;break;
+			case PS_ENDCAP_SQUARE: m_Cap = SkPaint::kSquare_Cap;break;
+			case PS_ENDCAP_FLAT:default: m_Cap = SkPaint::kDefault_Cap; break;
+			}
+		}
+
+		SkPaint::Cap Get() const
+		{
+			return m_Cap;
+		}
+	private:
+		SkPaint::Cap m_Cap;
+	};
+
+	class SStrokeJoin{
+	public:
+		SStrokeJoin(int iStyle){
+			iStyle = iStyle & PS_JOIN_MASK;
+			switch(iStyle)
+			{
+			case PS_JOIN_ROUND: m_Join = SkPaint::kRound_Join;break;
+			case PS_JOIN_BEVEL: m_Join = SkPaint::kBevel_Join;break;
+			case PS_JOIN_MITER:default: m_Join = SkPaint::kDefault_Join; break;
+
+			}
+		}
+		SkPaint::Join Get() const
+		{
+			return m_Join;
+		}
+	private:
+		SkPaint::Join m_Join;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	// SRenderFactory_Skia
@@ -414,8 +469,12 @@ namespace SOUI
 		SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
 		paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-		SGetLineDashEffect skDash(m_curPen->GetStyle());
+		SLineDashEffect skDash(m_curPen->GetStyle());
  		paint.setPathEffect(skDash.Get());
+		SStrokeCap strokeCap(m_curPen->GetStyle());
+		paint.setStrokeCap(strokeCap.Get());
+		SStrokeJoin strokeJoin(m_curPen->GetStyle());
+		paint.setStrokeJoin(strokeJoin.Get());
 		if(m_bAntiAlias)
 		{
 			paint.setAntiAlias(true);
@@ -461,7 +520,7 @@ namespace SOUI
         SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
         paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-        SGetLineDashEffect skDash(m_curPen->GetStyle());
+        SLineDashEffect skDash(m_curPen->GetStyle());
         paint.setPathEffect(skDash.Get());
         paint.setStyle(SkPaint::kStroke_Style);
 		if(m_bAntiAlias)
@@ -548,8 +607,12 @@ namespace SOUI
 		}
 
         paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-        SGetLineDashEffect skDash(m_curPen->GetStyle());
+        SLineDashEffect skDash(m_curPen->GetStyle());
         paint.setPathEffect(skDash.Get());
+		SStrokeCap strokeCap(m_curPen->GetStyle());
+		paint.setStrokeCap(strokeCap.Get());
+		SStrokeJoin strokeJoin(m_curPen->GetStyle());
+		paint.setStrokeJoin(strokeJoin.Get());
         paint.setStyle(SkPaint::kStroke_Style);
         m_SkCanvas->drawPoints(SkCanvas::kPolygon_PointMode,nCount,pts,paint);
         delete []pts;
@@ -1157,7 +1220,7 @@ namespace SOUI
         SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
         paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-        SGetLineDashEffect skDash(m_curPen->GetStyle());
+        SLineDashEffect skDash(m_curPen->GetStyle());
         paint.setPathEffect(skDash.Get());
         paint.setStyle(SkPaint::kStroke_Style);
 		if(m_bAntiAlias)
@@ -1218,8 +1281,10 @@ namespace SOUI
         SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
         paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-        SGetLineDashEffect skDash(m_curPen->GetStyle());
+        SLineDashEffect skDash(m_curPen->GetStyle());
         paint.setPathEffect(skDash.Get());
+		SStrokeCap strokeCap(m_curPen->GetStyle());
+		paint.setStrokeCap(strokeCap.Get());
         paint.setStyle(SkPaint::kStroke_Style);
 		if(m_bAntiAlias)
 		{
@@ -1340,8 +1405,12 @@ namespace SOUI
 		SkPaint paint;
 		SetPaintXferMode(paint,m_xferMode);
 		paint.setColor(SColor(m_curPen->GetColor()).toARGB());
-		SGetLineDashEffect skDash(m_curPen->GetStyle());
+		SLineDashEffect skDash(m_curPen->GetStyle());
 		paint.setPathEffect(skDash.Get());
+		SStrokeCap strokeCap(m_curPen->GetStyle());
+		paint.setStrokeCap(strokeCap.Get());
+		SStrokeJoin strokeJoin(m_curPen->GetStyle());
+		paint.setStrokeJoin(strokeJoin.Get());
 		paint.setStyle(SkPaint::kStroke_Style);
 		if(m_bAntiAlias)
 		{
