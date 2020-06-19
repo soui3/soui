@@ -33,9 +33,9 @@ namespace SOUI
 
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp, BOOL &bHandled);
 
-		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idRemote);
+		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idSvr);
 
-		virtual HRESULT Disconnect();
+		virtual HRESULT Disconnect(ULONG_PTR idSvr);
 
 		virtual bool CallFun(IFunParams * pParam) const;
 
@@ -84,7 +84,6 @@ namespace SOUI
 	private:
 		LRESULT OnConnect(HWND hClient);
 		LRESULT OnDisconnect(HWND hClient);
-		LRESULT OnClientMsg(UINT uMsg, WPARAM wp, LPARAM lp);
 	private:
 		WNDPROC			  m_prevWndProc;
 		IIpcSvrCallback * m_pCallback;
