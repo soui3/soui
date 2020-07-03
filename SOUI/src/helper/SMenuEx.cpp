@@ -602,7 +602,7 @@ namespace SOUI
 
 
 		SMenuExRoot *pMenuRoot = new SMenuExRoot(this);
-		InsertChild(pMenuRoot);
+		GetRoot()->InsertChild(pMenuRoot);
 
 		pMenuRoot->InitFromXml(&xmlNode);
 
@@ -1170,7 +1170,7 @@ namespace SOUI
 			//拷贝属性
 			ParentRoot->Copy(pMenuRoot);
 		}
-		InsertChild(pMenuRoot);
+		GetRoot()->InsertChild(pMenuRoot);
 		pMenuRoot->SSendMessage(WM_CREATE);
 		pMenuRoot->GetLayoutParam()->SetWrapContent(Both);
 		return TRUE;

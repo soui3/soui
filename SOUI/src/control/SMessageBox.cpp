@@ -186,7 +186,7 @@ namespace SOUI
                     strBtnText = GETSTRING(strBtnText);
                 }
                 //从翻译引擎中翻译
-                strText = S_CW2T(tr(strBtnText));    
+                strText = S_CW2T(GetRoot()->tr(strBtnText));    
             }
             pBtn->SetWindowText(strText);
         }
@@ -208,7 +208,7 @@ namespace SOUI
         pMsg->SetWindowText(S_CW2T(TR(S_CT2W(s_MsgBoxInfo.pszText),GetTranslatorContext())));
 
         OnSetIcon(s_MsgBoxInfo.uType);
-        UpdateLayout();
+        GetRoot()->UpdateLayout();
 
 		CRect rcWnd = GetWindowRect();
 		CSize szWnd = rcWnd.Size();

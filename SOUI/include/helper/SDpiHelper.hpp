@@ -141,9 +141,9 @@ namespace SOUI{
 		virtual void HandleScaleChange(WORD nScale, const RECT *desRect)
 		{
 			T *pT = static_cast<T*>(this);
-			if (nScale != pT->SWindow::GetScale()) //As ShostWnd::GetScale is under protect, here, we using SWindow::GetScale.
+			if (nScale != pT->GetRoot()->GetScale()) //As ShostWnd::GetScale is under protect, here, we using SWindow::GetScale.
 			{
-				pT->SDispatchMessage(UM_SETSCALE, nScale, 0);
+				pT->GetRoot()->SDispatchMessage(UM_SETSCALE, nScale, 0);
 				pT->UpdateAutoSizeCount(true);
 				pT->SetWindowPos(
 					NULL,

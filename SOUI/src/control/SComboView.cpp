@@ -53,8 +53,8 @@ namespace SOUI
     void SComboView::OnCreateDropDown( SDropDownWnd *pDropDown)
     {
         __super::OnCreateDropDown(pDropDown);
-        pDropDown->InsertChild(m_pListBox);
-        pDropDown->UpdateChildrenPosition();
+        pDropDown->GetRoot()->InsertChild(m_pListBox);
+        pDropDown->GetRoot()->UpdateChildrenPosition();
 
         m_pListBox->SetVisible(TRUE);
         m_pListBox->SetFocus();
@@ -63,7 +63,7 @@ namespace SOUI
 
     void SComboView::OnDestroyDropDown( SDropDownWnd *pDropDown)
     {
-        pDropDown->RemoveChild(m_pListBox);
+        pDropDown->GetRoot()->RemoveChild(m_pListBox);
         m_pListBox->SetVisible(FALSE);
         m_pListBox->SetContainer(GetContainer());
         __super::OnDestroyDropDown(pDropDown);

@@ -12,10 +12,6 @@ namespace SOUI
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
 
 
-	SRootWindow::SRootWindow()
-	{
-	}
-
 //////////////////////////////////////////////////////////////////////////
 SwndContainerImpl::SwndContainerImpl(SWindow *pRoot)
     :m_pRoot(pRoot)

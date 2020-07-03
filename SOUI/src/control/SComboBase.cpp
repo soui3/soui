@@ -385,7 +385,7 @@ namespace SOUI
         if(!m_pDropDownWnd)
         {
             m_pDropDownWnd = new SDropDownWnd_ComboBox(this);
-            m_pDropDownWnd->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
+            m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETSCALE, GetScale(), 0);
 		}
 
 		EventCBDropdown evt(this);
@@ -567,7 +567,7 @@ namespace SOUI
         if(m_pSkinBtn) m_pSkinBtn->OnColorize(cr);
 		if (m_pDropDownWnd)
 		{
-			m_pDropDownWnd->SDispatchMessage(UM_SETCOLORIZE, cr, 0);
+			m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETCOLORIZE, cr, 0);
 		}
     }
 
@@ -576,7 +576,7 @@ namespace SOUI
 		HRESULT hr =__super::OnLanguageChanged();
 		if (m_pDropDownWnd)
 		{
-			m_pDropDownWnd->SDispatchMessage(UM_SETLANGUAGE, 0, 0);
+			m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETLANGUAGE, 0, 0);
 		}
 		return hr;
 	}
@@ -586,7 +586,7 @@ namespace SOUI
 		__super::OnScaleChanged(nScale);
 		if (m_pDropDownWnd)
 		{
-			m_pDropDownWnd->SDispatchMessage(UM_SETSCALE, nScale, 0);
+			m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETSCALE, nScale, 0);
 		}
         GetScaleSkin(m_pSkinBtn, nScale);
     }

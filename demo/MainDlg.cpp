@@ -266,9 +266,9 @@ HRESULT CMainDlg::OnSkinChangeMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
 	DWORD tm1=GetTickCount();
 	COLORREF crTheme = skin->GetThemeColor();
 	if (crTheme != CR_INVALID)
-		DoColorize(crTheme | 0xff000000);
+		GetRoot()->DoColorize(crTheme | 0xff000000);
 	else
-		DoColorize(0);
+		GetRoot()->DoColorize(0);
 
 	SLOG_INFO("DoColorize spend "<<GetTickCount()-tm1<<" ms");
 	return S_OK;
@@ -307,7 +307,7 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 
     //设置标题
     SStringW strTitle = SStringW().Format(GETSTRING(R.string.title),SOUI_VER1,SOUI_VER2,SOUI_VER3,SOUI_VER4);
-    FindChildByID(R.id.txt_title)->SetWindowText(S_CW2T(tr(strTitle)));
+    FindChildByID(R.id.txt_title)->SetWindowText(S_CW2T(GetRoot()->tr(strTitle)));
     
     //演示在SOUI中的拖放
     SWindow *pEdit2 = FindChildByName(L"edit_drop_bottom");
@@ -493,8 +493,8 @@ void CMainDlg::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
     {
         if(nID == 7)
         {
-            if(GetColorizeColor()==0) DoColorize(RGB(255,255,0));//将图片调整为粉红
-            else DoColorize(0);//恢复
+            if(GetRoot()->GetColorizeColor()==0) GetRoot()->DoColorize(RGB(255,255,0));//将图片调整为粉红
+            else GetRoot()->DoColorize(0);//恢复
         }
         else if(nID==6)
         {//nID==6对应menu_test定义的菜单的exit项。
@@ -507,17 +507,17 @@ void CMainDlg::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 		else if (nID == 51)
 		{//skin1
 			SSkinLoader::getSingleton().LoadSkin(_T("themes\\skin1"));
-			SWindow::Invalidate();
+			GetRoot()->Invalidate();
 		}
 		else if (nID == 52)
 		{//skin2
 			SSkinLoader::getSingleton().LoadSkin(_T("themes\\skin2"));
-			SWindow::Invalidate();
+			GetRoot()->Invalidate();
 		}
 		else if (nID == 53)
 		{//skin3
 			SSkinLoader::getSingleton().LoadSkin(_T("themes\\skin3"));
-			SWindow::Invalidate();
+			GetRoot()->Invalidate();
 		}
 		
 		else if(nID==100)
@@ -906,7 +906,7 @@ UINT CMainDlg::Run()
 			pOutput->AppendFormatText(strMsg);
 		);
 #else
-		EventThread *pEvt = new EventThread(this);
+		EventThread *pEvt = new EventThread(GetRoot());
 		pEvt->nData = nSleep;
 		SNotifyCenter::getSingleton().FireEventAsync(pEvt);
 		pEvt->Release();
@@ -923,7 +923,7 @@ void CMainDlg::OnBtnStartNotifyThread()
 	SNotifyCenter::getSingleton().addEvent(EVENTID(EventThreadStop));
 	SNotifyCenter::getSingleton().addEvent(EVENTID(EventThread));
 
-	EventThreadStart evt(this);
+	EventThreadStart evt(GetRoot());
 	SNotifyCenter::getSingleton().FireEventSync(&evt);
 	BeginThread();	
 }
@@ -933,7 +933,7 @@ void CMainDlg::OnBtnStopNotifyThread()
 	if(!IsRunning()) return;
 
 	EndThread();
-	EventThreadStop evt(this);
+	EventThreadStop evt(GetRoot());
 	SNotifyCenter::getSingleton().FireEventSync(&evt);
 
 	SNotifyCenter::getSingleton().removeEvent(EventThreadStart::EventID);

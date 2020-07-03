@@ -93,8 +93,8 @@ namespace SOUI
 		m_pCalendar->SetShowType(SHOW_MONTH);
 		m_pCalendar->SetDate(m_sysTime.wYear, m_sysTime.wMonth, m_sysTime.wDay);
 		//pDropDown->SetAttribute(L"sendWheel2Hover", L"1", TRUE);
-		pDropDown->InsertChild(m_pCalendar);
-		pDropDown->UpdateChildrenPosition();
+		pDropDown->GetRoot()->InsertChild(m_pCalendar);
+		pDropDown->GetRoot()->UpdateChildrenPosition();
 
 		m_pCalendar->SetVisible(TRUE);
 		m_pCalendar->SetFocus();
@@ -107,7 +107,7 @@ namespace SOUI
 
 	void SDateTimePicker::OnDestroyDropDown(SDropDownWnd* pDropDown)
 	{
-		pDropDown->RemoveChild(m_pCalendar);
+		pDropDown->GetRoot()->RemoveChild(m_pCalendar);
 
 		m_pCalendar->SetVisible(FALSE);
 		m_pCalendar->SetContainer(GetContainer());

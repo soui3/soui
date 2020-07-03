@@ -25,6 +25,7 @@ namespace SOUI
         SOUI_CLASS_NAME(SHostWndAttr, L"SHostWndAttr")
         enum {WT_UNDEFINE=0,WT_APPMAIN=1,WT_NORMAL=2};
 		friend class SHostWnd;
+		friend class SRootWindow;
     public:
 		SHostWndAttr(void);
 
@@ -94,13 +95,49 @@ namespace SOUI
         HICON   m_hAppIconBig;
     };
 
+	enum	AniState{
+		Ani_none=0,
+		Ani_win=1,
+		Ani_host=2,
+		Ani_both=(Ani_win|Ani_host),
+	};
+
+	class SOUI_EXP SRootWindow: public SWindow
+	{
+		SOUI_CLASS_NAME(SRootWindow,L"root")
+		friend class SHostWnd;
+	public:
+		SRootWindow(SHostWnd *pHostWnd);
+
+	protected:
+		virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
+		virtual void OnAnimationUpdate(IAnimation *pAni);
+		virtual void OnAnimationStop(IAnimation *pAni);
+	protected://Swindow 虚方法
+		virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
+		virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
+		virtual BOOL IsLayeredWindow() const{return FALSE;}
+		virtual void WINAPI UpdateLayout();
+		virtual HRESULT OnLanguageChanged(); 
+		virtual void OnScaleChanged(int scale);
+		virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
+	public:
+		SOUI_ATTRS_BEGIN()
+			ATTR_ANIMATION(L"enterAnimation",m_aniEnter,FALSE)
+			ATTR_ANIMATION(L"exitAnimation",m_aniExit,FALSE)
+		SOUI_ATTRS_END()
+	protected:
+		SAutoRefPtr<IAnimation>		m_aniEnter,m_aniExit;
+		SHostWnd*					m_pHostWnd;
+	};
+
 	class SOUI_EXP SHostWnd: public IHostWnd
     , public SwndContainerImpl
-    , public SNativeWnd, public SRootWindow
+    , public SNativeWnd
 	, protected IHostMsgHandler
 {
-    SOUI_CLASS_NAME(SHostWnd,L"hostwnd")
     friend class SDummyWnd;
+	friend class SRootWindow;
 protected:    
     SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */
@@ -134,15 +171,10 @@ protected:
 	bool                    m_bResizing;        /**<执行WM_SIZE*/
 
 	SAutoRefPtr<IAnimation> m_hostAnimation;
-	enum	AniState{
-		Ani_none=0,
-		Ani_win=1,
-		Ani_host=2,
-		Ani_both=(Ani_win|Ani_host),
-	};
 	DWORD m_AniState;
 
 	DWORD					m_dwThreadID;
+	SRootWindow*			m_pRoot;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
@@ -165,7 +197,46 @@ public:
 		return DestroyWindow();
 	}
 public:
-    SWindow * GetRoot() const {return (SWindow*)this;}
+
+	SWindow* FindChildByName(LPCWSTR strName , int nDeep =-1){
+		return GetRoot()->FindChildByName(strName,nDeep);
+	}
+
+	SWindow* FindChildByName(LPCSTR strName , int nDeep =-1)
+	{
+		return GetRoot()->FindChildByName(strName,nDeep);
+	}
+
+	template<class T>
+	T* FindChildByName2(LPCWSTR pszName, int nDeep =-1)
+	{
+		return GetRoot()->FindChildByName2<T>(pszName,nDeep);
+	}
+
+	template<class T>
+	T* FindChildByName2(LPCSTR pszName, int nDeep =-1)
+	{
+		return GetRoot()->FindChildByName2<T>(pszName,nDeep);
+	}
+
+	SWindow* FindChildByID(int nID, int nDeep =-1)
+	{
+		return GetRoot()->FindChildByID(nID,nDeep);
+	}
+
+	template<class T>
+	T* FindChildByID2(int nID, int nDeep =-1)
+	{
+		return GetRoot()->FindChildByID2<T>(nID,nDeep);
+	}
+
+	template<class T>
+	T * FindChildByClass(int nDeep=-1) const
+	{
+		return GetRoot()->FindChildByClass<T>(nDeep);
+	}
+
+    SWindow * GetRoot() const {return m_pRoot;}
 
 	SNativeWnd * GetNative(){return this;}
 
@@ -210,10 +281,6 @@ protected:
 	virtual void OnHostAnimationStarted(IAnimation * pAni);
 	virtual void OnHostAnimationStoped(IAnimation * pAni);
 
-protected:
-	virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
-	virtual void OnAnimationUpdate(IAnimation *pAni);
-	virtual void OnAnimationStop(IAnimation *pAni);
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
@@ -333,13 +400,6 @@ protected:// IContainer
 	virtual void OnCavasInvalidate(SWND swnd);
 
 	virtual void EnableIME(BOOL bEnable);
-protected://Swindow 虚方法
-    virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
-    virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
-    virtual BOOL IsLayeredWindow() const{return FALSE;}
-	virtual void WINAPI UpdateLayout();
-	virtual HRESULT OnLanguageChanged(); 
-	virtual void OnScaleChanged(int scale);
 
 protected:
 	virtual IToolTip * CreateTooltip() const;
@@ -351,7 +411,6 @@ protected:
 protected:
 	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
-    virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );
 	virtual bool onRootResize(EventArgs *e);
 	
 public://事件处理接口
