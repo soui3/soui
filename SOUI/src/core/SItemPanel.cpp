@@ -22,9 +22,9 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pIte
     ,m_crHover(CR_INVALID)
     ,m_crSelBk(RGBA(0,0,128,255))
     ,m_lpItemIndex(-1)
-	,SwndContainerImpl(this)
 {
 	SetContainer(this);
+	SwndContainerImpl::SetRoot(this);
     SASSERT(m_pFrmHost);
     SASSERT(m_pItemContainer);
     if(xmlNode) 

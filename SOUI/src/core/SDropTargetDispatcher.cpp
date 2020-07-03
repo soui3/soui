@@ -3,12 +3,17 @@
 #include "core/SwndContainerImpl.h"
 
 namespace SOUI{
-    SDropTargetDispatcher::SDropTargetDispatcher(SWindow * pOwner)
-        :m_pOwner(pOwner)
-        ,m_pDataObj(NULL)
+    SDropTargetDispatcher::SDropTargetDispatcher()
+        :m_pDataObj(NULL)
         ,m_hHover(0)
+		,m_pOwner(NULL)
     {
     }
+
+	void SDropTargetDispatcher::SetOwner(SWindow *pOwner)
+	{
+		m_pOwner = pOwner;
+	}
 
     SDropTargetDispatcher::~SDropTargetDispatcher(void)
     {

@@ -25,11 +25,13 @@ namespace SOUI
 									 , public ITimelineHandler
     {
     public:
-        SwndContainerImpl(SWindow *pRoot);
+        SwndContainerImpl();
         
         IDropTarget * GetDropTarget(){return &m_dropTarget;}
 
         SFocusManager * GetFocusManager() {return &m_focusMgr;}
+
+		void SetRoot(SWindow *pRoot);
     protected:
         //ISwndContainer
         virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget);

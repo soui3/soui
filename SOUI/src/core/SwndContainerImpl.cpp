@@ -13,22 +13,26 @@ namespace SOUI
 
 
 //////////////////////////////////////////////////////////////////////////
-SwndContainerImpl::SwndContainerImpl(SWindow *pRoot)
-    :m_pRoot(pRoot)
-	,m_hCapture(NULL)
+SwndContainerImpl::SwndContainerImpl()
+    :m_hCapture(NULL)
     ,m_hHover(NULL)
     ,m_bNcHover(FALSE)
-    ,m_dropTarget(pRoot)
-    ,m_focusMgr(pRoot)
     ,m_bZorderDirty(TRUE)
+	,m_pRoot(NULL)
 {
- //   SWindow::SetContainer(this);
 	m_caret.Attach(new SCaret(this));
 	SXmlNode xmlCaret = SUiDef::getSingletonPtr()->GetUiDef()->GetCaretInfo();
 	if (xmlCaret)
 	{
 		m_caret->InitFromXml(&xmlCaret);
 	}
+}
+
+void SwndContainerImpl::SetRoot(SWindow *pRoot)
+{
+	m_pRoot=pRoot;
+	m_dropTarget.SetOwner(pRoot);
+	m_focusMgr.SetOwner(pRoot);
 }
 
 LRESULT SwndContainerImpl::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)

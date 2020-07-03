@@ -185,13 +185,19 @@ namespace SOUI
     }
 
     //////////////////////////////////////////////////////////////////////////
-    SFocusManager::SFocusManager(SWindow *pOwner):m_pOwner(pOwner),focused_view_(0),focused_backup_(0)
+    SFocusManager::SFocusManager():m_pOwner(NULL),focused_view_(0),focused_backup_(0)
     {
     }
 
     SFocusManager::~SFocusManager(void)
     {
     }
+
+	void SFocusManager::SetOwner(SWindow *pOwner)
+	{
+		m_pOwner = pOwner;
+	}
+
 
     BOOL SFocusManager::IsTabTraversalKey( UINT vKey )
     {

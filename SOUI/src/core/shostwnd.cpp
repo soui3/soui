@@ -260,8 +260,8 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 , m_dwThreadID(0)
 , m_AniState(0)
 , m_pRoot(new SRootWindow(this))
-, SwndContainerImpl(m_pRoot)
 {
+	SwndContainerImpl::SetRoot(m_pRoot);
     m_msgMouse.message = 0;
     m_privateStylePool.Attach(new SStylePool);
     m_privateSkinPool.Attach(new SSkinPool);

@@ -25,8 +25,10 @@ namespace SOUI{
     class SDropTargetDispatcher : public IDropTarget
     {
     public:
-        SDropTargetDispatcher(SWindow * pFrame);
+        SDropTargetDispatcher();
         ~SDropTargetDispatcher(void);
+
+		void SetOwner(SWindow *pOwner);
 
         BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget);
         BOOL RevokeDragDrop(SWND swnd);

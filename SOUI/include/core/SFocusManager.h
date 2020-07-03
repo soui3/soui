@@ -122,8 +122,10 @@ namespace SOUI
 
         };
 
-        SFocusManager(SWindow *pOwner);
+        SFocusManager();
         ~SFocusManager(void);
+
+		void SetOwner(SWindow *pOwner);
 
         BOOL IsTabTraversalKey(UINT vKey);
         BOOL OnKeyDown(UINT vKey);
