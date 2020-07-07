@@ -30,7 +30,7 @@ namespace SOUI
             bEnableParent = TRUE;
         }
         
-		if (!Create(hParent, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 0, 0, 0))
+		if (!SHostWnd::Create(hParent, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 0, 0, 0))
 		{
 			if (bEnableParent)
 			{

@@ -25,12 +25,14 @@ namespace SOUI
         ~SHostDialog(void);
         
 	public:
-		STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) OVERRIDE
-		{
-			return this;
-		}
 		STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent=NULL) OVERRIDE;
 		STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) OVERRIDE;
+
+		STDMETHOD_(HRESULT,GetHostDialog)(THIS_ IHostDialog **ppDialog)
+		{
+			*ppDialog = this;
+			return S_OK;
+		}
 
     protected:
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);

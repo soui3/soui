@@ -131,7 +131,7 @@ namespace SOUI
 		SHostWnd*					m_pHostWnd;
 	};
 
-	class SOUI_EXP SHostWnd: public IHostWnd
+	class SOUI_EXP SHostWnd: public TObjRefImpl<IHostWnd>
     , public SwndContainerImpl
     , public SNativeWnd
 	, protected IHostMsgHandler
@@ -196,6 +196,11 @@ public:
 	{
 		return DestroyWindow();
 	}
+	STDMETHOD_(HRESULT,GetHostDialog)(THIS_ IHostDialog **ppDialog)
+	{
+		return E_NOTIMPL;
+	}
+
 public:
 
 	SWindow* FindChildByName(LPCWSTR strName , int nDeep =-1){
