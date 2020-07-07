@@ -4,7 +4,7 @@
 
 SNSBEGIN
 
-class SOUI_EXP SMessageLoop : public IMessageLoop
+class SOUI_EXP SMessageLoop : public TObjRefImpl<IMessageLoop>
 {
 public:
 	SMessageLoop();

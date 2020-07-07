@@ -54,7 +54,7 @@ namespace SOUI
 
         INT_PTR m_nRetCode;
         
-        IMessageLoop* m_MsgLoop;
+        SAutoRefPtr<IMessageLoop> m_MsgLoop;
     };
 
 }

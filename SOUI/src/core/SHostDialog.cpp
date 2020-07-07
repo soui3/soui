@@ -8,12 +8,12 @@ namespace SOUI
 
     SHostDialog::SHostDialog(LPCTSTR pszXmlName):SHostWnd(pszXmlName),m_nRetCode(RC_INIT)
     {
-        m_MsgLoop = SApplication::getSingleton().GetMsgLoopFactory()->CreateMsgLoop();
+        SApplication::getSingleton().GetMsgLoopFactory()->CreateMsgLoop(&m_MsgLoop);
     }
 
     SHostDialog::~SHostDialog(void)
     {
-		SApplication::getSingleton().GetMsgLoopFactory()->DestroyMsgLoop(m_MsgLoop);
+		m_MsgLoop=NULL;
     }
 
     INT_PTR SHostDialog::DoModal(HWND hParent/*=NULL*/)

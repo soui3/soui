@@ -21,8 +21,23 @@ DECLARE_INTERFACE(IIdleHandler)
 
 #undef INTERFACE
 #define INTERFACE IMessageLoop
-DECLARE_INTERFACE(IMessageLoop)
+DECLARE_INTERFACE_(IMessageLoop,IObjRef)
 {
+	//!添加引用
+	/*!
+	*/
+	STDMETHOD_(long,AddRef) (THIS) PURE;
+
+	//!释放引用
+	/*!
+	*/
+	STDMETHOD_(long,Release) (THIS) PURE;
+
+	//!释放对象
+	/*!
+	*/
+	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+
 	// Message filter operations
 	STDMETHOD_(BOOL,AddMessageFilter)(THIS_ IMessageFilter* pMessageFilter) PURE;
 
@@ -53,8 +68,7 @@ DECLARE_INTERFACE(IMessageLoop)
 #define INTERFACE IMsgLoopFactory
 DECLARE_INTERFACE_(IMsgLoopFactory,IObjRef)
 {
-	STDMETHOD_(IMessageLoop *,CreateMsgLoop)(THIS) PURE;
-	STDMETHOD_(void,DestroyMsgLoop)(THIS_ IMessageLoop *pMsgLoop) PURE;
+	STDMETHOD_(HRESULT,CreateMsgLoop)(THIS_ IMessageLoop ** ppMsgLoop) PURE;
 };
 
 SNSEND

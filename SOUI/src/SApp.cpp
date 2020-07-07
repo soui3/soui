@@ -96,14 +96,10 @@ public:
 class SDefMsgLoopFactory : public TObjRefImpl<IMsgLoopFactory>
 {
 public:
-	STDMETHOD_(IMessageLoop *,CreateMsgLoop)(THIS) OVERRIDE
+	STDMETHOD_(HRESULT,CreateMsgLoop)(THIS_ IMessageLoop **ppRet) OVERRIDE
     {
-        return new SMessageLoop;
-    }
-
-	STDMETHOD_(void,DestroyMsgLoop)(THIS_ IMessageLoop *pMsgLoop) OVERRIDE
-    {
-        delete (SMessageLoop*)pMsgLoop;
+        *ppRet = new SMessageLoop;
+		return S_OK;
     }
 };
 
@@ -230,7 +226,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
     SAppDir appDir(hInst);
     m_strAppDir = appDir.AppDir();
     
-    m_pMsgLoop = GetMsgLoopFactory()->CreateMsgLoop();
+    GetMsgLoopFactory()->CreateMsgLoop(&m_pMsgLoop);
 	AddMsgLoop(m_pMsgLoop);
 	sysObjRegister.RegisterLayouts(this);
 	sysObjRegister.RegisterSkins(this);
@@ -243,7 +239,7 @@ SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR 
 SApplication::~SApplication(void)
 {
 	RemoveMsgLoop();
-    GetMsgLoopFactory()->DestroyMsgLoop(m_pMsgLoop);
+	m_pMsgLoop=NULL;
     
 	SResProviderMgr::RemoveAll();
     _DestroySingletons();
@@ -517,11 +513,9 @@ HWND SApplication::GetMainWnd()
 
 BOOL SApplication::SetMsgLoopFactory(IMsgLoopFactory *pMsgLoopFac)
 {
-	if(m_msgLoopMap.GetCount()>0)
-		return FALSE;
-    m_msgLoopFactory->DestroyMsgLoop(m_pMsgLoop);
     m_msgLoopFactory = pMsgLoopFac;
-    m_pMsgLoop = m_msgLoopFactory->CreateMsgLoop();
+	m_pMsgLoop = NULL;
+    m_msgLoopFactory->CreateMsgLoop(&m_pMsgLoop);
     return TRUE;
 }
 
@@ -625,13 +619,22 @@ BOOL SApplication::AddMsgLoop(IMessageLoop* pMsgLoop)
 		return false;// in map yet
 
 	m_msgLoopMap[dwThreadID]= pMsgLoop;
+	pMsgLoop->AddRef();
+
 	return true;
 }
 
 BOOL SApplication::RemoveMsgLoop()
 {
 	SAutoLock autoLock(m_cs);
-	return m_msgLoopMap.RemoveKey(::GetCurrentThreadId());
+	SMap<DWORD,IMessageLoop*>::CPair *p = m_msgLoopMap.Lookup(::GetCurrentThreadId());
+	if(!p) 
+	{
+		return FALSE;
+	}
+	m_msgLoopMap.RemoveKey(p->m_key);
+	p->m_value->Release();
+	return TRUE;
 }
 
 IMessageLoop* SApplication::GetMsgLoop(DWORD dwThreadID /*= ::GetCurrentThreadId()*/) const

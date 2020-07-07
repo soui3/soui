@@ -276,7 +276,7 @@ protected:
 
 	mutable SCriticalSection	m_cs;
 	SMap<DWORD,IMessageLoop * > m_msgLoopMap;
-	IMessageLoop *		 m_pMsgLoop;
+	SAutoRefPtr<IMessageLoop>	m_pMsgLoop;
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];
 };
