@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include <interface/obj-ref-i.h>
 #include <interface/sstring-i.h>
-
+//#include <interface/SWindow-i.h>
 SNSBEGIN
 
-class SWindow;
+interface IWindow;
 
 #undef INTERFACE
 #define INTERFACE IAttrStorage
@@ -48,7 +48,7 @@ DECLARE_INTERFACE_(IAttrStorageFactory,IObjRef)
 	*/
 	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
 
-	STDMETHOD_(HRESULT,CreateAttrStorage)(THIS_ SWindow * owner,IAttrStorage** ppAttrStorage) SCONST PURE; 
+	STDMETHOD_(HRESULT,CreateAttrStorage)(THIS_ IWindow * owner,IAttrStorage** ppAttrStorage) SCONST PURE; 
 };
 
 SNSEND

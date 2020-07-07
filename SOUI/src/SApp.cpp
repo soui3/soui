@@ -632,8 +632,8 @@ BOOL SApplication::RemoveMsgLoop()
 	{
 		return FALSE;
 	}
-	m_msgLoopMap.RemoveKey(p->m_key);
 	p->m_value->Release();
+	m_msgLoopMap.RemoveKey(p->m_key);
 	return TRUE;
 }
 
