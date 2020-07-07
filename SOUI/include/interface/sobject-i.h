@@ -13,8 +13,6 @@
 */
 
 #pragma once
-#include <utilities-def.h>
-
 #include <interface/obj-ref-i.h>
 #include <interface/sstring-i.h>
 #include <interface/sxml-i.h>

@@ -1030,6 +1030,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\interface\souifactory-i.h"
+				>
+			</File>
+			<File
 				RelativePath="include\layout\SouiLayout.h"
 				>
 			</File>
@@ -1294,11 +1298,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File

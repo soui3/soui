@@ -22,31 +22,4 @@ DECLARE_INTERFACE_(IHostWnd,IObjRef)
 };
 
 
-
-#undef INTERFACE
-#define INTERFACE IHostFactory
-DECLARE_INTERFACE_(IHostFactory,IObjRef)
-{
-	//!添加引用
-	/*!
-	*/
-	STDMETHOD_(long,AddRef) (THIS) PURE;
-
-	//!释放引用
-	/*!
-	*/
-	STDMETHOD_(long,Release) (THIS) PURE;
-
-	//!释放对象
-	/*!
-	*/
-	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
-
-	STDMETHOD_(HRESULT,NewHostWnd)(THIS_ IHostWnd ** ppHostWnd) PURE;
-
-	STDMETHOD_(HRESULT,NewHostDialog)(THIS_ IHostDialog ** ppHostDialog) PURE;
-};
-
-typedef IHostFactory * IHostFactoryPtr;
-
 SNSEND

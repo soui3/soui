@@ -6,28 +6,18 @@
 #include <interface/slog-i.h>
 #include <interface/SAttrStorage-i.h>
 #include <interface/smsgloop-i.h>
+#include <interface/shostwnd-i.h>
 
 SNSBEGIN
 
 
 #undef INTERFACE
 #define INTERFACE IApplication
-DECLARE_INTERFACE_(IApplication,IObjRef)
+DECLARE_INTERFACE(IApplication)
 {
-	//!添加引用
-	/*!
-	*/
-	STDMETHOD_(long,AddRef) (THIS) PURE;
+	STDMETHOD_(HRESULT,NewHostWnd)(THIS_ IHostWnd ** ppHostWnd) PURE;
 
-	//!释放引用
-	/*!
-	*/
-	STDMETHOD_(long,Release) (THIS) PURE;
-
-	//!释放对象
-	/*!
-	*/
-	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
+	STDMETHOD_(HRESULT,NewHostDialog)(THIS_ IHostWnd ** ppHostDialog) PURE;
 
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST PURE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) PURE;
@@ -51,7 +41,7 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
 	STDMETHOD_(BOOL,AddMsgLoop)(THIS_ IMessageLoop* pMsgLoop) PURE;
 	STDMETHOD_(BOOL,RemoveMsgLoop)(THIS) PURE;
 
-	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID = ::GetCurrentThreadId()) SCONST PURE;
+	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID) SCONST PURE;
 
 };
 

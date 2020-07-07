@@ -21,7 +21,7 @@ namespace SOUI
     class SOUI_EXP SHostDialog : public SHostWnd, public IHostDialog
     {
     public:
-        SHostDialog(LPCTSTR pszXmlName);
+        SHostDialog(LPCTSTR pszXmlName = NULL);
         ~SHostDialog(void);
         
 	public:

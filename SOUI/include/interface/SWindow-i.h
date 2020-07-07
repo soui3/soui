@@ -1,6 +1,5 @@
 #pragma once
 
-#pragma once
 #include <interface/sobject-i.h>
 #include <interface/sstring-i.h>
 #include <interface/SAnimation-i.h>

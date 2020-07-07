@@ -86,7 +86,7 @@ public:
  * Describe   SOUI Application
  */
 class SOUI_EXP SApplication :public SSingleton<SApplication>
-							,public TObjRefImpl<IApplication>
+							,public IApplication
                             ,public SResProviderMgr
 	                        ,public SObjectFactoryMgr
 {
@@ -106,6 +106,10 @@ public:
     ~SApplication(void);
 
 public:
+	STDMETHOD_(HRESULT,NewHostWnd)(THIS_ IHostWnd ** ppHostWnd) OVERRIDE;
+
+	STDMETHOD_(HRESULT,NewHostDialog)(THIS_ IHostWnd ** ppHostDialog) OVERRIDE;
+
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) OVERRIDE;
 	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) OVERRIDE;
