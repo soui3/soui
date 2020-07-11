@@ -217,12 +217,12 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 
     //为了能够重入，先销毁原有的SOUI窗口
     SSendMessage(WM_DESTROY);   
-    //create new script module
+	m_bFirstShow = TRUE;
+   //create new script module
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
 	m_hostAttr.Init();
 	m_hostAttr.InitFromXml(xmlNode);
-
     if(m_privateStylePool->GetCount())
     {
         m_privateStylePool->RemoveAll();
@@ -351,7 +351,10 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 		{
 			SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			m_dummyWnd = new SDummyWnd(this);
-			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+			HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
+			MONITORINFO info;
+			GetMonitorInfo(hMonitor,&info);
+			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
 			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
 			m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
@@ -1555,10 +1558,23 @@ LRESULT SHostWnd::OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
-	if(lpWndPos->flags&SWP_SHOWWINDOW)
+	if(lpWndPos->flags&SWP_SHOWWINDOW && m_bFirstShow)
 	{
+		m_bFirstShow = FALSE;
 		OnHostShowWindow(TRUE,0);
 	}
+}
+
+void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
+{
+	if(!(lpWndPos->flags& SWP_NOMOVE) && m_dummyWnd)
+	{
+		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
+		MONITORINFO info;
+		GetMonitorInfo(hMonitor,&info);
+		m_dummyWnd->SetWindowPos(NULL,info.rcWork.left,info.rcWork.top,0,0,SWP_NOZORDER|SWP_NOSIZE|SWP_NOACTIVATE);
+	}
+	SetMsgHandled(FALSE);
 }
 
 LRESULT SHostWnd::OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam)

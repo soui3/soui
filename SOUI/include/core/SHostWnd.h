@@ -140,7 +140,7 @@ protected:
 		Ani_both=(Ani_win|Ani_host),
 	};
 	DWORD m_AniState;
-
+	BOOL  m_bFirstShow;
 	DWORD					m_dwThreadID;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
@@ -263,6 +263,7 @@ protected:
     LRESULT OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 	void OnWindowPosChanging(LPWINDOWPOS lpWndPos);
+	void OnWindowPosChanged(LPWINDOWPOS lpWndPos);
         
 	LRESULT OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -378,6 +379,7 @@ public://事件处理接口
         MESSAGE_HANDLER_EX(UM_SCRIPTTIMER,OnScriptTimer)
         MESSAGE_HANDLER_EX(UM_MENUEVENT,OnMenuExEvent)
 		MSG_WM_WINDOWPOSCHANGING(OnWindowPosChanging)
+		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
 		MESSAGE_HANDLER_EX(WM_GETOBJECT,OnGetObject)
     #ifndef DISABLE_SWNDSPY
         MESSAGE_HANDLER_EX(SPYMSG_SETSPY, OnSpyMsgSetSpy)
