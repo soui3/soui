@@ -11,8 +11,7 @@ namespace SOUI
 	};
 
 	enum {
-		UM_REQ_FUN = (WM_USER + 1000),
-		UM_ACK_FUN,
+		UM_CALL_FUN = (WM_USER + 1000),
 	};
 
 	struct IShareBuffer {
