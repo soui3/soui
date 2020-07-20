@@ -352,7 +352,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 			SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			m_dummyWnd = new SDummyWnd(this);
 			HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
-			MONITORINFO info;
+			MONITORINFO info = { sizeof(MONITORINFO) };
 			GetMonitorInfo(hMonitor,&info);
 			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
 			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
@@ -1570,9 +1570,11 @@ void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
 	if(!(lpWndPos->flags& SWP_NOMOVE) && m_dummyWnd)
 	{
 		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
-		MONITORINFO info;
-		GetMonitorInfo(hMonitor,&info);
-		m_dummyWnd->SetWindowPos(NULL,info.rcWork.left,info.rcWork.top,0,0,SWP_NOZORDER|SWP_NOSIZE|SWP_NOACTIVATE);
+		MONITORINFO info = { sizeof(MONITORINFO) };
+		if (GetMonitorInfo(hMonitor,&info))
+		{
+			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
+		}
 	}
 	SetMsgHandled(FALSE);
 }
@@ -1673,7 +1675,7 @@ bool SHostWnd::StartHostAnimation(IAnimation *pAni)
 	}else
 	{
 		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
-		MONITORINFO info;
+		MONITORINFO info = { sizeof(MONITORINFO) };
 		GetMonitorInfo(hMonitor,&info);
 		rcParent = info.rcWork;
 	}
