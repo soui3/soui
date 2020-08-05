@@ -949,6 +949,7 @@ namespace SOUI
 				pRTCache->SetViewportOrg(-rcWnd.TopLeft());
 				if(IsCacheDirty())
 				{
+					pRTCache->ClearRect(&rcWnd,0);
 					pRTCache->AlphaBlend(rcWnd,pRT,rcWnd,255);
 
 					SAutoRefPtr<IFont> oldFont;
