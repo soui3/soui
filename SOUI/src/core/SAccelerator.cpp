@@ -60,7 +60,7 @@ namespace SOUI
 			{//F1-F12
 				wKey = VK_F1 + _tstoi(pszKey + 1) - 1;
 			}
-			else if (_tcsncmp(pszKey, _T("num "), 4) == 0)
+			else if (_tcsnicmp(pszKey, _T("num "), 4) == 0)
 			{//Num 0 - Num 9 || Num Del
 				if (_tcsicmp(pszKey + 4, _T("del")) == 0)
 					wKey = VK_DECIMAL;
@@ -76,6 +76,8 @@ namespace SOUI
 		{
 			if (pszKey[0] >= _T('a') && pszKey[0] <= _T('z'))//a-z
 				wKey = pszKey[0] - 0x20;
+			else if(pszKey[0] >='A' && pszKey[0] <= 'Z')
+				wKey = pszKey[0];
 			else if (pszKey[0] >= _T('0') && pszKey[0] <= _T('9'))
 				wKey = pszKey[0];
 			else if (pszKey[0] == _T('-'))
