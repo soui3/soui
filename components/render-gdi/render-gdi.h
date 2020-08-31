@@ -37,6 +37,10 @@ namespace SOUI
 		virtual BOOL CreatePathEffect(REFGUID guidEffect,IPathEffect ** ppPathEffect);
 		
 		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure);
+
+		virtual HRESULT CreateBlurMaskFilter(float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter){return E_NOTIMPL;}
+		virtual HRESULT CreateEmbossMaskFilter(float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter){return E_NOTIMPL;}
+
     protected:
         SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
     };
@@ -363,6 +367,9 @@ namespace SOUI
             ::SetTextColor(m_hdc,color&0x00ffffff);
             return crOld;
         }
+
+		virtual void SetMaskFilter(IMaskFilter *pMaskFilter){}
+		virtual IMaskFilter* GetMaskFilter(){return NULL;}
 
         virtual HDC GetDC(UINT uFlag=0);
         virtual void ReleaseDC(HDC hdc);

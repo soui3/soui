@@ -13,7 +13,7 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
 
 	CRect rcClient;
 	GetClientRect(&rcClient);
-
+	rcClient.DeflateRect(5,5,5,5);
 	CPoint center = rcClient.CenterPoint();
 
 	// 计算矩形
@@ -23,7 +23,18 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
 	CRect rcSrc(0, 0, 200, 32);
 
 
-    SYSTEMTIME last_refresh_time;
+	//演示使用IMaskFilter
+	SAutoRefPtr<IMaskFilter> maskFilter;
+	SAutoRefPtr<IPen> br,oldBr;
+	pRT->CreatePen(PS_SOLID,RGBA(200,128,128,128),10,&br);
+	pRT->SelectObject(br,(IRenderObj**)&oldBr);
+	GETRENDERFACTORY->CreateBlurMaskFilter(3,IMaskFilter::kInner_SkBlurStyle,IMaskFilter::kNone_BlurFlag,&maskFilter);
+	pRT->SetMaskFilter(maskFilter);
+	pRT->DrawEllipse(&rcClient);
+	pRT->SetMaskFilter(NULL);
+	pRT->SelectObject(oldBr);
+
+	SYSTEMTIME last_refresh_time;
     ::GetLocalTime(&last_refresh_time);
 
 	DWORD mode = MAKELONG(EM_STRETCH,kHigh_FilterLevel);
