@@ -274,9 +274,3 @@ void APNG_Destroy( APNGDATA *apng )
         free(apng);
     }
 }
-
-bool SavePng(const unsigned char *pData, int nWid,int nHei,int nStride,const wchar_t * pszFileName)
-{
-    
-    return false;
-}
