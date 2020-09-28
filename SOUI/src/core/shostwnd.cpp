@@ -1824,7 +1824,7 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 	}
 	if(xform.hasAlpha())
 	{//change alpha.
-		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
+		if(m_pHostWnd->IsTranslucent())
 		{
 			CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
 			m_pHostWnd->UpdateHost(0,rcWnd,xform.getAlpha());

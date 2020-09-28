@@ -163,7 +163,7 @@ namespace SOUI
 		return FALSE;
 	}
 	
-	int SIPAddressCtrl::GetAddress(_Out_ BYTE& nField0,_Out_ BYTE& nField1,_Out_ BYTE& nField2,_Out_ BYTE& nField3) const
+	int SIPAddressCtrl::GetAddress( BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3) const
 	{
 		nField0 = m_editFields[0]->GetFiled();
 		nField1 = m_editFields[1]->GetFiled();
@@ -172,7 +172,7 @@ namespace SOUI
 		return 0;
 	}
 	
-	int SIPAddressCtrl::GetAddress(_Out_ DWORD& dwAddress) const
+	int SIPAddressCtrl::GetAddress( DWORD& dwAddress) const
 	{
 	    SASSERT(m_editFields[0]);
 	    dwAddress = MAKELONG(MAKEWORD(m_editFields[0]->GetFiled(),m_editFields[1]->GetFiled()),
@@ -180,7 +180,7 @@ namespace SOUI
 		return 0;
 	}
 	
-	void SIPAddressCtrl::SetAddress(_In_ DWORD dwAddress)
+	void SIPAddressCtrl::SetAddress( DWORD dwAddress)
 	{
 		in_addr inaddr;
 		inaddr.s_addr = dwAddress;
@@ -188,7 +188,7 @@ namespace SOUI
 					inaddr.S_un.S_un_b.s_b3,inaddr.S_un.S_un_b.s_b4);
 	}
 	
-	void SIPAddressCtrl::SetAddress(_In_ BYTE nField0,_In_ BYTE nField1,_In_ BYTE nField2,_In_ BYTE nField3)
+	void SIPAddressCtrl::SetAddress( BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3)
 	{
 		m_editFields[0]->SetField(nField0);
 		m_editFields[1]->SetField(nField1);

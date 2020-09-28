@@ -8,7 +8,7 @@ namespace SOUI
     public:\
     virtual HRESULT STDMETHODCALLTYPE QueryInterface2( \
         /* [in] */ REFIID riid,\
-        /* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)\
+        /* [iid_is][out] */  void __RPC_FAR *__RPC_FAR *ppvObject)\
         {\
             HRESULT hr = E_NOINTERFACE; \
             
@@ -44,7 +44,7 @@ namespace SOUI
         
         virtual HRESULT STDMETHODCALLTYPE QueryInterface2( 
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+            /* [iid_is][out] */  void __RPC_FAR *__RPC_FAR *ppvObject)
         {
 			(riid);
 			(ppvObject);
@@ -53,7 +53,7 @@ namespace SOUI
 
         HRESULT STDMETHODCALLTYPE QueryInterface( 
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+            /* [iid_is][out] */  void __RPC_FAR *__RPC_FAR *ppvObject)
         {
             HRESULT hr = E_NOINTERFACE;
             if(riid == __uuidof(IUnknown))

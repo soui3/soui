@@ -23,11 +23,11 @@ namespace SOUI
 
 		BOOL IsBlank() const;
 		void ClearAddress();
-		int GetAddress(_Out_ BYTE& nField0,_Out_  BYTE& nField1,_Out_  BYTE& nField2,_Out_  BYTE& nField3) const;
-		int GetAddress(_Out_ DWORD& dwAddress) const;
+		int GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3) const;
+		int GetAddress(DWORD& dwAddress) const;
 
-		void SetAddress(_In_ DWORD dwAddress);
-		void SetAddress(_In_ BYTE nField0,_In_ BYTE nField1,_In_ BYTE nField2,_In_ BYTE nField3);
+		void SetAddress( DWORD dwAddress);
+		void SetAddress( BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3);
 
 		void SetFieldFocus(WORD nField);
 		void SetFieldRange(int nField, BYTE nLower, BYTE nUpper);
