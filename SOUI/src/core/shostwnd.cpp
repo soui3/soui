@@ -1797,6 +1797,19 @@ void SHostWnd::OnHostAnimationStoped(IAnimation * pAni)
 	m_AniState&=~Ani_host;
 }
 
+void SHostWnd::OnSysCommand(UINT nID, CPoint lParam)
+{
+	if(nID==SC_RESTORE)
+	{
+		UpdateAutoSizeCount(true);
+		DefWindowProc();
+		UpdateAutoSizeCount(false);
+	}else
+	{
+		DefWindowProc();
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////
 //  SHostWnd::SHostAnimationHandler
