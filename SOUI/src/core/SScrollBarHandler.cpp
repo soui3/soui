@@ -259,7 +259,7 @@ end:
 			if (nInterHei<THUMB_MINSIZE) nSlideHei = 0;
 			int nEmptyHei = nInterHei - nSlideHei;
 			int nDragLen = IsVertical() ? (pt.y - m_ptClick.y) : (pt.x - m_ptClick.x);
-			int nSlide = (nEmptyHei == 0) ? 0 : (nDragLen*(__int64)(psi->nMax - psi->nMin - psi->nPage + 1) / nEmptyHei);
+			int nSlide = (int)((nEmptyHei == 0) ? 0 : (nDragLen*(__int64)(psi->nMax - psi->nMin - psi->nPage + 1) / nEmptyHei));
 			int nNewTrackPos = m_nClickPos + nSlide;
 			if (nNewTrackPos<psi->nMin)
 			{

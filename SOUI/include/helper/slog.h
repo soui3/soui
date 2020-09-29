@@ -1,5 +1,11 @@
 ﻿#pragma once
+#if _MSC_VER<=1400
+#define RetAddr() NULL
+#else
 #include <intrin.h>
+#define RetAddr() _ReturnAddress()
+#endif
+
 #include <stdio.h>
 #include <interface/slog-i.h>
 
@@ -41,7 +47,7 @@ namespace SOUI
 		ss << log;\
 		if (pLogMgr && pLogMgr->prePushLog(id_or_name,level)) \
 		{\
-			const void *pAddr = _ReturnAddress(); \
+			const void *pAddr = RetAddr(); \
 			pLogMgr->pushLog(id_or_name, level, filter, logBuf, __FILE__, __LINE__, __FUNCTION__, pAddr);\
 		}else if(level>=OUTLOG_LEVEL)\
 		{\
@@ -96,7 +102,7 @@ namespace SOUI
 		}\
 		if (pLogMgr && pLogMgr->prePushLog(id_or_name,level)) \
 		{\
-			pLogMgr->pushLog(id_or_name, level,filter, logbuf, __FILE__, __LINE__, __FUNCTION__,_ReturnAddress()); \
+			pLogMgr->pushLog(id_or_name, level,filter, logbuf, __FILE__, __LINE__, __FUNCTION__,RetAddr()); \
 		}else if(level>=OUTLOG_LEVEL)\
 		{\
 			char *logbuf2 = (char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE+1);\

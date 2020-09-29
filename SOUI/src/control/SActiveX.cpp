@@ -69,6 +69,9 @@ namespace SOUI
 
     BOOL SActiveX::InitActiveX()
     {
+#if _MSC_VER<=1400
+		return FALSE;
+#endif
         BOOL bRet=m_axContainer->CreateControl(m_clsid,m_clsCtx);
         if(bRet)
         {
