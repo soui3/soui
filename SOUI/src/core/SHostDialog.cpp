@@ -93,6 +93,11 @@ namespace SOUI
 		}
 	}
 
+	IHostWnd* SHostDialog::GetHostWnd(THIS)
+	{
+		return this;
+	}
+
     void SHostDialog::OnOK()
     {
         EndDialog(IDOK);

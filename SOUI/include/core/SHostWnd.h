@@ -196,10 +196,6 @@ public:
 	{
 		return DestroyWindow();
 	}
-	STDMETHOD_(HRESULT,GetHostDialog)(THIS_ IHostDialog **ppDialog)
-	{
-		return E_NOTIMPL;
-	}
 
 public:
 

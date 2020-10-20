@@ -27,11 +27,29 @@ namespace SOUI
 	public:
 		STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent=NULL) OVERRIDE;
 		STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) OVERRIDE;
-
-		STDMETHOD_(HRESULT,GetHostDialog)(THIS_ IHostDialog **ppDialog)
+		STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) OVERRIDE;
+		//!添加引用
+		/*!
+		*/
+		STDMETHOD_(long,AddRef) (THIS) OVERRIDE
 		{
-			*ppDialog = this;
-			return S_OK;
+			return SHostWnd::AddRef();
+		}
+
+		//!释放引用
+		/*!
+		*/
+		STDMETHOD_(long,Release) (THIS) OVERRIDE
+		{
+			return SHostWnd::Release();
+		}
+
+		//!释放对象
+		/*!
+		*/
+		STDMETHOD_(void,OnFinalRelease) (THIS) OVERRIDE
+		{
+			delete this;
 		}
 
     protected:
