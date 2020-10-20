@@ -196,6 +196,10 @@ public:
 	{
 		return DestroyWindow();
 	}
+	STDMETHOD_(IWindow*,GetWindow)(THIS) OVERRIDE
+	{
+		return m_pRoot;
+	}
 
 public:
 
@@ -460,4 +464,6 @@ public://事件处理接口
     END_MSG_MAP()
 };
 
+EXTERN_C 
+HRESULT SOUI_EXP CreateHostWnd(LPCTSTR pszResID,IHostWnd ** ppRet);
 }//namespace SOUI

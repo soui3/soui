@@ -1816,6 +1816,12 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 		m_pHostWnd->OnHostAnimationStoped(pAni);
 	}
 }
+ 
+HRESULT CreateHostWnd(LPCTSTR pszResID,IHostWnd ** ppRet)
+{
+	(*ppRet) = new SHostWnd(pszResID);
+	return S_OK;
+}
 
 
 }//namespace SOUI

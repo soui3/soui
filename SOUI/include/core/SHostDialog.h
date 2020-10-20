@@ -75,4 +75,6 @@ namespace SOUI
         SAutoRefPtr<IMessageLoop> m_MsgLoop;
     };
 
+	EXTERN_C HRESULT CreateHostDialog(LPCTSTR pszResID,IHostDialog ** ppRet);
+
 }

@@ -121,4 +121,11 @@ namespace SOUI
             }
         }
     }
+
+	HRESULT CreateHostDialog(LPCTSTR pszResID,IHostDialog ** ppRet)
+	{
+		(*ppRet) = new SHostDialog(pszResID);
+		return S_OK;
+	}
+
 }
