@@ -88,8 +88,13 @@ public://IOleObject
     STDMETHOD(GetMiscStatus)(DWORD dwAspect, DWORD *pdwStatus);
 
 public://IPersistStreamInitImpl
+#if _MSC_VER>1400
     HRESULT IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTRY* pMap);
-    HRESULT IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap);
+	HRESULT IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap);
+#else
+	HRESULT IPersistStreamInit_Load(LPSTREAM pStm, ATL_PROPMAP_ENTRY* pMap);
+	HRESULT IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, ATL_PROPMAP_ENTRY* pMap);
+#endif
     HRESULT FireViewChange();
     HRESULT	OnDraw(ATL_DRAWINFO& di);
 public://IPersistStorage
@@ -237,8 +242,11 @@ STDMETHODIMP SSmileyCtrl::OnTimer(HDC hdc)
     return S_OK;
 }
 
-
+#if _MSC_VER>1400
 HRESULT SSmileyCtrl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTRY* pMap)
+#else
+HRESULT SSmileyCtrl::IPersistStreamInit_Load(LPSTREAM pStm, ATL_PROPMAP_ENTRY* pMap)
+#endif
 {
     ATLASSERT(!m_pSmileySource);
     ATLASSERT(m_pSmileyHost);
@@ -256,7 +264,11 @@ HRESULT SSmileyCtrl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_EN
     return hr;
 }
 
+#if _MSC_VER>1400
 HRESULT SSmileyCtrl::IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap)
+#else
+HRESULT SSmileyCtrl::IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, ATL_PROPMAP_ENTRY* pMap)
+#endif
 {
     if(!m_pSmileySource) return E_FAIL;
     HRESULT hr = m_pSmileySource->Stream_Save(pStm);

@@ -33,6 +33,10 @@ public:
 
 	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) OVERRIDE;
 
+	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE {return E_NOTIMPL;}
+
+	STDMETHOD_(HRESULT,CreateEmbossMaskFilter)(THIS_ float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) OVERRIDE {return E_NOTIMPL;}
+
 	STDMETHOD_(BOOL,CreatePath)(THIS_ IPath ** ppPath) OVERRIDE;
 
 	STDMETHOD_(BOOL,CreatePathEffect)(THIS_ REFGUID guidEffect,IPathEffect ** ppPathEffect) OVERRIDE;
@@ -267,7 +271,8 @@ public:
 	STDMETHOD_(HRESULT,Scale2)(THIS_ IBitmap **pOutput,int nWid,int nHei,FilterLevel filterLevel) SCONST OVERRIDE;
 
 	STDMETHOD_(HRESULT,Save)(THIS_ LPCWSTR pszFileName,const LPVOID pFormat) SCONST OVERRIDE;
-
+		virtual void SetMaskFilter(IMaskFilter *pMaskFilter){}
+		virtual IMaskFilter* GetMaskFilter(){return NULL;}
 public:
 	HBITMAP  GetBitmap(){return m_hBmp;}
 
@@ -386,6 +391,8 @@ public:
 	STDMETHOD_(HRESULT,SelectObject)(THIS_ IRenderObj *pObj,IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
 	STDMETHOD_(COLORREF,GetTextColor)(THIS) OVERRIDE;
 	STDMETHOD_(COLORREF,SetTextColor)(THIS_ COLORREF color) OVERRIDE;
+	STDMETHOD_(void,SetMaskFilter)(THIS_ IMaskFilter *pMaskFilter) OVERRIDE{}
+	STDMETHOD_(IMaskFilter *,GetMaskFilter)(THIS) OVERRIDE{return NULL;}
 	STDMETHOD_(HDC,GetDC)(THIS_ UINT uFlag) OVERRIDE;
 	STDMETHOD_(void,ReleaseDC)(THIS_ HDC hdc) OVERRIDE;
 	STDMETHOD_(HRESULT,SetTransform)(THIS_ const float matrix[9], float oldMatrix[9]/*=NULL*/) OVERRIDE;

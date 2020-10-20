@@ -67,7 +67,7 @@ int SSkinPool::LoadSkins(SXmlNode xmlNode)
         }
         else
         {
-            SASSERT_FMTW(FALSE,L"load skin error,type=%s,name=%s",strTypeName,strSkinName);
+            SASSERT_FMTW(FALSE,L"load skin error,type=%s,name=%s",strTypeName.c_str(),strSkinName.c_str());
         }
         xmlSkin=xmlSkin.next_sibling();
     }
@@ -154,7 +154,7 @@ ISkinObj* SSkinPoolMgr::GetSkin( const SStringW & strSkinName, int nScale)
 
     if(wcscmp(strSkinName,L"")!=0)
     {
-        SASSERT_FMTW(FALSE,L"GetSkin[%s] Failed!",strSkinName);
+        SASSERT_FMTW(FALSE,L"GetSkin[%s] Failed!",strSkinName.c_str());
     }
     return NULL;
 }

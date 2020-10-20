@@ -304,7 +304,9 @@ bool SHostWnd::onRootResize( EventArgs *e )
 	{
 		EventSwndSize *e2 = sobj_cast<EventSwndSize>(e);
 		UpdateAutoSizeCount(true);
-		SetWindowPos(NULL, 0, 0, e2->szWnd.cx, e2->szWnd.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
+		CRect rcWnd(CPoint(),e2->szWnd);
+		rcWnd.InflateRect(GetRoot()->GetStyle().GetMargin());
+		SetWindowPos(NULL, 0, 0, rcWnd.Width(), rcWnd.Height(), SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
 		UpdateAutoSizeCount(false);
 	}
 	return true;
@@ -339,12 +341,12 @@ BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
 
     //为了能够重入，先销毁原有的SOUI窗口
     GetRoot()->SSendMessage(WM_DESTROY);   
-    //create new script module
+	m_bFirstShow = TRUE;
+   //create new script module
     SApplication::getSingleton().CreateScriptModule(&m_pScriptModule);
     
 	m_hostAttr.Init();
 	m_hostAttr.InitFromXml(pNode);
-
     if(m_privateStylePool->GetCount())
     {
         m_privateStylePool->RemoveAll();
@@ -469,16 +471,26 @@ BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
 
     GetRoot()->InitFromXml(&xmlRoot);
 
-	if(m_hostAttr.m_bTranslucent)
+    if(m_hostAttr.m_bTranslucent)
 	{
-		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		m_dummyWnd = new SDummyWnd(this);
-		m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
-		m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-		::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
-		m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+		if(!m_dummyWnd)
+		{
+			SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			m_dummyWnd = new SDummyWnd(this);
+			HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
+			MONITORINFO info = { sizeof(MONITORINFO) };
+			GetMonitorInfo(hMonitor,&info);
+			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
+			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
+			m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+		}
 	}else if(dwExStyle & WS_EX_LAYERED || GetRoot()->GetAlpha()!=0xFF)
 	{
+		if(m_dummyWnd)
+		{
+			m_dummyWnd->DestroyWindow();
+		}
 		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
 		::SetLayeredWindowAttributes(m_hWnd,0,GetRoot()->GetAlpha(),LWA_ALPHA);
 	}
@@ -487,6 +499,16 @@ BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
 
 	int nWidth = m_szAppSetted.cx;
 	int nHeight = m_szAppSetted.cy;
+	ILayoutParam *pLayoutParam = GetRoot()->GetLayoutParam();
+	if(nWidth==0 && pLayoutParam->IsSpecifiedSize(Horz))
+	{
+		nWidth = pLayoutParam->GetSpecifiedSize(Horz).toPixelSize(GetScale());
+	}
+	if(nHeight == 0 && pLayoutParam->IsSpecifiedSize(Vert))
+	{
+		nHeight = pLayoutParam->GetSpecifiedSize(Vert).toPixelSize(GetScale());
+	}
+
 	if(nWidth <= 0 || nHeight <= 0)
 	{//计算出root大小		
 		if (nWidth <= 0)
@@ -654,7 +676,7 @@ BOOL SHostWnd::OnLoadLayoutFromResourceID(const SStringT &resId)
 		return InitFromXml(&xmlDoc.root().child(L"SOUI"));
 	}else
 	{
-		SASSERT_FMTA(FALSE,"Load layout [%s] Failed",S_CT2A(m_strXmlLayout));
+		SASSERT_FMT(FALSE,_T("Load layout [%s] Failed"),m_strXmlLayout.c_str());
 		return FALSE;
 	}
 }
@@ -669,6 +691,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
 	OnLoadLayoutFromResourceID(m_strXmlLayout);
+
 	m_pTipCtrl = CreateTooltip();
 	if(m_pTipCtrl) GetMsgLoop()->AddMessageFilter(m_pTipCtrl);
 	UpdateAutoSizeCount(false);
@@ -1548,7 +1571,7 @@ BOOL SHostWnd::DestroyWindow()
 		if(m_AniState &Ani_host)
 			StopHostAnimation();
 		if(m_AniState & Ani_win)
-			GetRoot()->GetAnimation()->cancel();
+			GetRoot()->ClearAnimation();
 		SASSERT(m_AniState==Ani_none);
 	}
 	if(m_pRoot->m_aniExit)
@@ -1575,7 +1598,7 @@ BOOL SHostWnd::KillTimer(UINT_PTR id)
 CRect SHostWnd::GetWindowRect() const
 {
     CRect rc;
-    SNativeWnd::GetWindowRect(&rc);
+    SNativeWnd::GetClientRect(&rc);
     return rc;
 }
 
@@ -1594,10 +1617,25 @@ LRESULT SHostWnd::OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
-	if(lpWndPos->flags&SWP_SHOWWINDOW)
+	if(lpWndPos->flags&SWP_SHOWWINDOW && m_bFirstShow)
 	{
+		m_bFirstShow = FALSE;
 		OnHostShowWindow(TRUE,0);
 	}
+}
+
+void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
+{
+	if(!(lpWndPos->flags& SWP_NOMOVE) && m_dummyWnd)
+	{
+		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
+		MONITORINFO info = { sizeof(MONITORINFO) };
+		if (GetMonitorInfo(hMonitor,&info))
+		{
+			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
+		}
+	}
+	SetMsgHandled(FALSE);
 }
 
 LRESULT SHostWnd::OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1680,7 +1718,7 @@ bool SHostWnd::StartHostAnimation(IAnimation *pAni)
 	}else
 	{
 		HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
-		MONITORINFO info;
+		MONITORINFO info = { sizeof(MONITORINFO) };
 		GetMonitorInfo(hMonitor,&info);
 		rcParent = info.rcWork;
 	}
@@ -1801,7 +1839,7 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 	}
 	if(xform.hasAlpha())
 	{//change alpha.
-		if(m_pHostWnd->m_hostAttr.m_bTranslucent)
+		if(m_pHostWnd->IsTranslucent())
 		{
 			CRect rcWnd = m_pHostWnd->GetRoot()->GetWindowRect();
 			m_pHostWnd->UpdateHost(0,rcWnd,xform.getAlpha());

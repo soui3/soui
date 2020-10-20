@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set interpolator="Decelerate" shareInterpolator="true">
+  <alpha duration="500" fromAlpha="1.0" toAlpha="0.1"/>
+</set>

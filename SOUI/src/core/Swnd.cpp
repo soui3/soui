@@ -957,9 +957,11 @@ namespace SOUI
 			if(pRTCache)
 			{//在窗口正在创建的时候进来pRTCache可能为NULL
 				CRect rcWnd=GetWindowRect();
+				pRTCache->SetViewportOrg(-rcWnd.TopLeft());
 				if(IsCacheDirty())
 				{
 					pRTCache->ClearRect(&rcWnd,0);
+					pRTCache->AlphaBlend(rcWnd,pRT,rcWnd,255);
 
 					SAutoRefPtr<IFont> oldFont;
 					COLORREF crOld=pRT->GetTextColor();
@@ -1487,6 +1489,22 @@ namespace SOUI
 		return 0;
 	}
 
+	void SWindow::DestroyAllChildren()
+	{
+		//destroy children windows
+		SWindow *pChild=m_pFirstChild;
+		while (pChild)
+		{
+			SWindow *pNextChild=pChild->m_pNextSibling;
+			pChild->SSendMessage(WM_DESTROY);
+			pChild->Release();
+
+			pChild=pNextChild;
+		}
+		m_pFirstChild=m_pLastChild=NULL;
+		m_nChildrenCount=0;
+	}
+
 	void SWindow::OnDestroy()
 	{
 		if(m_isDestroying)
@@ -1507,18 +1525,7 @@ namespace SOUI
 			}
 		}
 #endif
-		//destroy children windows
-		SWindow *pChild=m_pFirstChild;
-		while (pChild)
-		{
-			SWindow *pNextChild=pChild->m_pNextSibling;
-			pChild->SSendMessage(WM_DESTROY);
-			pChild->Release();
-
-			pChild=pNextChild;
-		}
-		m_pFirstChild=m_pLastChild=NULL;
-		m_nChildrenCount=0;
+		DestroyAllChildren();
 		ClearAnimation();
 		m_style = SwndStyle();
 		m_isDestroying = false;
@@ -2238,6 +2245,10 @@ namespace SOUI
 	*/
 
 	void SWindow::SetAnimation(IAnimation * animation) {
+		if (m_isAnimating)
+		{
+			ClearAnimation();
+		}
 		m_animation = animation;
 		if (m_animation)
 		{
@@ -2247,10 +2258,6 @@ namespace SOUI
 				OnAnimationStart(m_animation);
 			}
 			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
-		}
-		else
-		{
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		}
 	}
 
@@ -2283,12 +2290,11 @@ namespace SOUI
 	void SWindow::ClearAnimation() {
 		if (m_animation)
 		{
-			if (m_animation->hasStarted())
+			if (m_isAnimating)
 			{
 				m_animation->cancel();
+				OnAnimationStop(m_animation);
 			}
-			m_animationHandler.OnAnimationStop();
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 			m_animation = NULL;
 		}
 	}
@@ -2574,7 +2580,6 @@ namespace SOUI
 		if(IsDrawToCache() && !m_cachedRT)
 		{
 			GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,GetWindowRect().Width(),GetWindowRect().Height());
-			m_cachedRT->SetViewportOrg(-GetWindowRect().TopLeft());
 			MarkCacheDirty(true);
 		}
 		if(!IsDrawToCache() && m_cachedRT)
@@ -3059,10 +3064,10 @@ namespace SOUI
 
 	void SWindow::OnAnimationStop(IAnimation *pAni)
 	{
+		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		m_isAnimating = false;
 		m_animationHandler.OnAnimationStop();
 		UpdateCacheMode();
-		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
 	void SWindow::OnAnimationInvalidate(IAnimation *pAni,bool bErase)

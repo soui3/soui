@@ -114,7 +114,7 @@ namespace SOUI
 		 * @param ptr object pointer.
 		 * @param disposer object disposer.
 		 */
-		SSharedPtr(T *ptr, PtrDisposer<T> &disposer) : _ptr(ptr), _sc(new SharedCount<T>(ptr, disposer))
+		SSharedPtr(T *ptr, PtrDisposer<T> &disposer) : _ptr(ptr), _sc(new SSharedCount<T>(ptr, disposer))
 		{
 		}
 

@@ -54,21 +54,21 @@ namespace SOUI
 
     public: //IDispatch
         virtual HRESULT STDMETHODCALLTYPE GetTypeInfoCount( 
-            /* [out] */ __RPC__out UINT *pctinfo){ return E_NOTIMPL;}
+            /* [out] */  UINT *pctinfo){ return E_NOTIMPL;}
 
         virtual HRESULT STDMETHODCALLTYPE GetTypeInfo( 
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
-            /* [out] */ __RPC__deref_out_opt ITypeInfo **ppTInfo){ return E_NOTIMPL;}
+            /* [out] */  ITypeInfo **ppTInfo){ return E_NOTIMPL;}
 
 
 
         virtual HRESULT STDMETHODCALLTYPE GetIDsOfNames( 
-            /* [in] */ __RPC__in REFIID riid,
-            /* [size_is][in] */ __RPC__in_ecount_full(cNames) LPOLESTR *rgszNames,
+            /* [in] */  REFIID riid,
+            /* [size_is][in] */  LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
             /* [in] */ LCID lcid,
-            /* [size_is][out] */ __RPC__out_ecount_full(cNames) DISPID *rgDispId){ return E_NOTIMPL;}
+            /* [size_is][out] */  DISPID *rgDispId){ return E_NOTIMPL;}
 
 
         virtual /* [local] */ HRESULT STDMETHODCALLTYPE Invoke( 

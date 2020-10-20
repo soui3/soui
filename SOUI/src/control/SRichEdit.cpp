@@ -677,7 +677,22 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
     CRect rcClient;
     GetClientRect(&rcClient);
     pRT->PushClipRect(&rcClient,RGN_AND);
-    HDC hdc=pRT->GetDC(0);
+	
+	float fMtx[9];
+	pRT->GetTransform(fMtx);
+	SMatrix mtx(fMtx);
+
+	SAutoRefPtr<IRenderTarget> rt;
+	if(!mtx.isIdentity())
+	{
+		GETRENDERFACTORY->CreateRenderTarget(&rt,rcClient.Width(),rcClient.Height());
+		rt->SetViewportOrg(-rcClient.TopLeft());
+		rt->AlphaBlend(&rcClient,pRT,&rcClient,255);
+	}else
+	{
+		rt = pRT;
+	}
+	HDC hdc=rt->GetDC(0);
 	int nOldMode = ::SetGraphicsMode(hdc, GM_COMPATIBLE);	//richedit需要将GraphicMode强制设置为GM_COMPATIBLE
 
     ALPHAINFO ai;
@@ -688,7 +703,7 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
     RECTL rcL= {rcClient.left,rcClient.top,rcClient.right,rcClient.bottom};
     m_pTxtHost->GetTextService()->TxDraw(
         DVASPECT_CONTENT,          // Draw Aspect
-        /*-1*/0,                        // Lindex
+        0,                        // Lindex
         NULL,                    // Info for drawing optimazation
         NULL,                    // target device information
         hdc,            // Draw device HDC
@@ -699,11 +714,14 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
         NULL,                        // Call back function
         NULL,                    // Call back parameter
         TXTVIEW_ACTIVE);
-
     CGdiAlpha::AlphaRestore(ai);
 	::SetGraphicsMode(hdc, nOldMode);
-
-    pRT->ReleaseDC(hdc);
+	rt->ReleaseDC(hdc);
+	if(!mtx.isIdentity())
+	{
+		pRT->AlphaBlend(&rcClient,rt,&rcClient,255);
+		rt=NULL;
+	}
     pRT->PopClip();
 }
 

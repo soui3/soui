@@ -9,6 +9,7 @@ namespace SOUI
 		FUN_ID_DISCONNECT,
 		FUN_ID_START,
 	};
+
 	enum {
 		UM_CALL_FUN = (WM_USER + 1000),
 	};
@@ -87,9 +88,9 @@ namespace SOUI
 
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp, BOOL &bHandled) = 0;
 
-		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idRemote) = 0;
+		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idSvr) = 0;
 
-		virtual HRESULT Disconnect() = 0;
+		virtual HRESULT Disconnect(ULONG_PTR idSvr) = 0;
 
 		virtual bool CallFun(IFunParams * pParam) const = 0;
 
@@ -123,7 +124,7 @@ namespace SOUI
 
 	struct IIpcSvrCallback 
 	{
-		virtual void OnNewConnection(IIpcHandle * pIpcHandle, IIpcConnection ** ppConn) = 0;
+		virtual ULONG_PTR OnNewConnection(IIpcHandle * pIpcHandle, IIpcConnection ** ppConn) = 0;
 		virtual void OnConnected(IIpcConnection * pConn) =0;
 		virtual void OnDisconnected(IIpcConnection * pConn) =0;
 		virtual void * GetSecurityAttr() const = 0;

@@ -16,10 +16,12 @@ namespace SOUI
 		void OnShowWindow(BOOL bShow, UINT nStatus);
 		BOOL OnEraseBkgnd(IRenderTarget *pRT){return TRUE;}
 		void OnPaint(IRenderTarget *pRT);
+		void OnDestroy();
 		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_SHOWWINDOW(OnShowWindow)
 			MSG_WM_PAINT_EX(OnPaint)
 			MSG_WM_ERASEBKGND_EX(OnEraseBkgnd)
+			MSG_WM_DESTROY(OnDestroy)
 		SOUI_MSG_MAP_END()
 
 		SOUI_ATTRS_BEGIN()

@@ -33,9 +33,9 @@ namespace SOUI
 
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp, BOOL &bHandled);
 
-		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idRemote);
+		virtual HRESULT ConnectTo(ULONG_PTR idLocal, ULONG_PTR idSvr);
 
-		virtual HRESULT Disconnect();
+		virtual HRESULT Disconnect(ULONG_PTR idSvr);
 
 		virtual bool CallFun(IFunParams * pParam) const;
 
@@ -56,8 +56,9 @@ namespace SOUI
 		virtual BOOL ToStream4Output(IFunParams * pParams,IShareBuffer * pBuf) const;
 
 		virtual BOOL FromStream4Output(IFunParams * pParams,IShareBuffer * pBuf) const;
-
 	protected:
+		static void CALLBACK OnSendMessageResult(HWND hwnd, UINT msg, ULONG_PTR data, LRESULT res);
+
 		HWND	m_hLocalId;
 		mutable CShareMemBuffer	m_sendBuf;
 		HWND	m_hRemoteId;
@@ -65,6 +66,7 @@ namespace SOUI
 		IIpcConnection * m_pConn;
 		mutable UINT	m_uCallSeq;
 		mutable int     m_nCallStack;
+		bool	m_bSameThread;
 	};
 
 
@@ -80,11 +82,10 @@ namespace SOUI
 		virtual void CheckConnectivity() override;
 		virtual LRESULT OnMessage(ULONG_PTR idLocal, UINT uMsg, WPARAM wp, LPARAM lp,BOOL &bHandled) override;
 		virtual void EnumClient(FunEnumConnection funEnum, ULONG_PTR data) override;
-		virtual BOOL FindConnection(ULONG_PTR idConn)override;
+		virtual BOOL FindConnection(ULONG_PTR idConn) override;
 	private:
 		LRESULT OnConnect(HWND hClient);
 		LRESULT OnDisconnect(HWND hClient);
-		LRESULT OnClientMsg(UINT uMsg, WPARAM wp, LPARAM lp);
 	private:
 		WNDPROC			  m_prevWndProc;
 		IIpcSvrCallback * m_pCallback;

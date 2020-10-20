@@ -137,7 +137,7 @@ protected:
     virtual SkTypeface* onCreateFromFile(const char[], int) const SK_OVERRIDE {
         return NULL;
     }
-    virtual SkTypeface* onLegacyCreateTypeface(const char [], unsigned) const SK_OVERRIDE {
+    virtual SkTypeface* onLegacyCreateTypeface(const char [], unsigned,unsigned) const SK_OVERRIDE {
         return NULL;
     }
 };
@@ -210,8 +210,8 @@ SkTypeface* SkFontMgr::createFromFile(const char path[], int ttcIndex) const {
 }
 
 SkTypeface* SkFontMgr::legacyCreateTypeface(const char familyName[],
-                                            unsigned styleBits) const {
-    return this->onLegacyCreateTypeface(familyName, styleBits);
+                                            unsigned styleBits,unsigned charSet) const {
+    return this->onLegacyCreateTypeface(familyName, styleBits,charSet);
 }
 
 SkFontMgr* SkFontMgr::CreateDefault() {

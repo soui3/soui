@@ -60,7 +60,7 @@ protected:
     virtual SkTypeface* onCreateFromData(SkData* data, int ttcIndex) const SK_OVERRIDE;
 
     virtual SkTypeface* onLegacyCreateTypeface(const char familyName[],
-                                               unsigned styleBits) const SK_OVERRIDE;
+                                               unsigned styleBits,unsigned charSet) const SK_OVERRIDE;
 
 private:
     SkTypeface* createTypefaceFromFontId(const SkFontIdentity& fontId) const;

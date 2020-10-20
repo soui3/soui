@@ -38,6 +38,11 @@ public:
 	STDMETHOD_(BOOL,CreatePathEffect)(THIS_ REFGUID guidEffect,IPathEffect ** ppPathEffect) OVERRIDE;
 
 	STDMETHOD_(BOOL,CreatePathMeasure)(THIS_ IPathMeasure ** ppPathMeasure) OVERRIDE;
+
+	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE;
+
+	STDMETHOD_(HRESULT,CreateEmbossMaskFilter)(THIS_ float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) OVERRIDE;
+
 protected:
 	SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
 };
@@ -111,6 +116,8 @@ protected:
 // SFont_Skia
 class SFont_Skia: public TSkiaRenderObjImpl<IFont,OT_FONT>
 {
+	friend class SRenderTarget_Skia;
+	friend class SPath_Skia;
 public:
 	SFont_Skia(IRenderFactory * pRenderFac,const LOGFONT * plf);
 
@@ -135,16 +142,17 @@ public:
 	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) OVERRIDE;
-public:
+private:
 	const SkPaint  GetPaint() const;
-	SkTypeface *GetFont()const;
-
+	SkTypeface *GetFont() const {return m_skFont;}
+	SkMaskFilter *GetBlurFilter() {return m_blurFilter;}
 protected:
 	SkTypeface *m_skFont;   //定义字体
 	SkPaint     m_skPaint;  //定义文字绘制属性
 	LOGFONT     m_lf;
 	SkBlurStyle m_blurStyle;
 	SkScalar	m_blurRadius;
+	SkMaskFilter *m_blurFilter;
 };
 
 class SBrush_Skia : public TSkiaRenderObjImpl<IBrush,OT_BRUSH>
@@ -415,6 +423,17 @@ protected:
 	SkPath      m_skPath;
 };
 
+class SMaskFilter_Skia : public TObjRefImpl<IMaskFilter>
+{
+	friend class SRenderTarget_Skia;
+public:
+	SMaskFilter_Skia(SkMaskFilter *maskFilter);
+
+	~SMaskFilter_Skia();
+protected:
+	SkMaskFilter * m_maskFilter;
+};
+
 //////////////////////////////////////////////////////////////////////////
 //	SRenderTarget_Skia
 //////////////////////////////////////////////////////////////////////////
@@ -483,6 +502,8 @@ public:
 	STDMETHOD_(HRESULT,SelectObject)(THIS_ IRenderObj *pObj,IRenderObj ** pOldObj/* = NULL*/) OVERRIDE;
 	STDMETHOD_(COLORREF,GetTextColor)(THIS) OVERRIDE;
 	STDMETHOD_(COLORREF,SetTextColor)(THIS_ COLORREF color) OVERRIDE;
+	STDMETHOD_(void,SetMaskFilter)(THIS_ IMaskFilter *pMaskFilter) OVERRIDE;
+	STDMETHOD_(IMaskFilter *,GetMaskFilter)(THIS) OVERRIDE;
 	STDMETHOD_(HDC,GetDC)(THIS_ UINT uFlag) OVERRIDE;
 	STDMETHOD_(void,ReleaseDC)(THIS_ HDC hdc) OVERRIDE;
 	STDMETHOD_(HRESULT,SetTransform)(THIS_ const float matrix[9], float oldMatrix[9]/*=NULL*/) OVERRIDE;
@@ -512,12 +533,14 @@ protected:
 	SAutoRefPtr<SFont_Skia> m_curFont;
 
 	SkPoint         m_ptOrg;
+	SkPaint			m_paint;
 
 	//注意保存4个默认的RenderObject对象
 	SAutoRefPtr<IBitmap> m_defBmp;
 	SAutoRefPtr<IPen> m_defPen;
 	SAutoRefPtr<IBrush> m_defBrush;
 	SAutoRefPtr<IFont> m_defFont;
+	SAutoRefPtr<IMaskFilter> m_curMaskFilter;
 
 	SAutoRefPtr<IRenderFactory> m_pRenderFactory;
 
