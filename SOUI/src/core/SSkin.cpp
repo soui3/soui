@@ -43,7 +43,7 @@ int SSkinImgList::GetStates() const
 	return m_nStates;
 }
 
-void SSkinImgList::OnInitFinished(pugi::xml_node xmlNode)
+void SSkinImgList::OnInitFinished(IXmlNode *  xmlNode)
 {
 	if (!m_bLazyLoad && !m_strSrc.IsEmpty())
 	{

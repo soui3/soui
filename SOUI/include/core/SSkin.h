@@ -33,7 +33,7 @@ public:
 
 
 protected:
-	virtual void OnInitFinished(pugi::xml_node xmlNode);
+	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode * pNode) OVERRIDE;
 	virtual void _DrawByIndex(IRenderTarget *pRT, LPCRECT rcDraw, int iState, BYTE byAlpha) const;
 	virtual void _Scale(ISkinObj *skinObj, int nScale);
 	virtual UINT GetExpandMode() const;
