@@ -155,7 +155,7 @@ void SRootWindow::OnAnimationStop(IAnimation *pAni)
 	}
 	if(pAni == m_aniExit && m_pHostWnd->m_AniState==Ani_none)
 	{
-		m_pHostWnd->DestroyWindow();
+		m_pHostWnd->GetNative()->DestroyWindow();
 	}
 }
 
