@@ -26,7 +26,8 @@ DECLARE_INTERFACE_(IHostWnd,IObjRef)
 	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) PURE;
 	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x /*= 0*/, int y /*= 0*/, int nWidth /*= 0*/, int nHeight /*= 0*/) PURE;
 	STDMETHOD_(BOOL,Destroy)(THIS) PURE;
-	STDMETHOD_(IWindow*,GetWindow)(THIS) PURE;
+	STDMETHOD_(IWindow*,GetIRoot)(THIS) PURE;
+	STDMETHOD_(HWND,GetHwnd)(THIS) PURE;
 };
 
 #undef INTERFACE

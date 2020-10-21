@@ -196,9 +196,13 @@ public:
 	{
 		return DestroyWindow();
 	}
-	STDMETHOD_(IWindow*,GetWindow)(THIS) OVERRIDE
+	STDMETHOD_(IWindow*,GetIRoot)(THIS) OVERRIDE
 	{
 		return m_pRoot;
+	}
+	STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
+	{
+		return m_hWnd;
 	}
 
 public:
