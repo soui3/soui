@@ -16,6 +16,21 @@
 #include <sobject/Sobject.hpp>
 #include <helper/obj-ref-impl.hpp>
 
+struct EvtEmptyData{};
+//定义一组事件定义的宏，简化事件的定义。
+#define DEF_EVT(evt,id,evt_name,api,evtData) \
+class api evt : public TObjRefImpl< SObject >, public SEvtBase, public evtData \
+{ \
+	SOUI_CLASS_NAME(evt,L#evt_name ) \
+public:\
+	STDMETHOD_(int,GetID)(THIS) const { return evt::EventID; }\
+	STDMETHOD_(LPCWSTR,GetName)(THIS) const { return evt::GetClassName(); }\
+	STDMETHOD_(LPCVOID,GetData)(THIS) {return (evtData*)this;}\
+	enum { EventID = id};\
+	evt(SOUI::IObject *pSender) :SEvtBase(pSender){}\
+};
+
+
 //定义一组事件定义的宏，简化事件的定义。
 #define SEVENT_BEGIN_EX(evt,id,evt_name, api) \
 class evt : public SOUI::EventArgs \
@@ -198,6 +213,53 @@ namespace SOUI
         IObject *sender;  /**< 产生事件的原始SOUI对象，可能和idFrom and nameFrom指定的对象不同 */
     };
     
+
+#undef INTERFACE
+#define INTERFACE IEvtBase
+	DECLARE_INTERFACE(IEvtBase)
+	{
+		STDMETHOD_(IObject*,GetSender)(THIS) PURE;
+		STDMETHOD_(int,GetIdFrom)(THIS) SCONST PURE;
+		STDMETHOD_(LPCWSTR,GetNameFrom) (THIS) SCONST PURE;
+		STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST PURE;
+		STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp) PURE;
+		STDMETHOD_(LPCVOID,GetData)(THIS) PURE;
+	};
+
+	class SEvtBase : public IEvtBase
+	{
+	public:
+		UINT handled; 
+		BOOL bubbleUp; 
+		int  idFrom; 
+		LPCWSTR nameFrom;
+		SAutoRefPtr<IObject> sender; 
+
+		STDMETHOD_(IObject*,GetSender)(THIS){return sender;}
+		STDMETHOD_(int,GetIdFrom) (THIS) SCONST{ return idFrom;}
+		STDMETHOD_(LPCWSTR,GetNameFrom) (THIS) SCONST{return nameFrom;}
+		STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST{return bubbleUp;}
+		STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp_) {bubbleUp = bBubbleUp_;}
+		STDMETHOD_(LPCVOID,GetData)(THIS) {return NULL;}
+		
+	public:
+		SEvtBase(IObject *pSender)
+			: handled(0)
+			, sender(pSender)
+			, bubbleUp(true)
+		{
+			if(NULL!=pSender) {
+				idFrom = pSender->GetID();
+				nameFrom = pSender->GetName();
+			} else {
+				idFrom = 0;
+				nameFrom = NULL;
+			}
+		}
+	};
+
+	
+
 
     /*!
     \brief 一个事件对象的模板类，用来实现EventArgs两个虚函数
