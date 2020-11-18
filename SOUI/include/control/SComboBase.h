@@ -447,6 +447,9 @@ namespace SOUI
 		BOOL m_bAutoFitDropBtn; /**< 自适应下拉按钮大小*/
 		COLORREF    m_crCue;
 		STrText    m_strCue;
+
+		SStringT	m_strMatch;	 /*快速输入用来定位下拉列表中的项*/
+		DWORD	m_LastPressTime; /*最后按键的时间,*/
     };
 
 }
