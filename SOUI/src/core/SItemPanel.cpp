@@ -115,11 +115,11 @@ LRESULT SItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     return lRet;
 }
 
-BOOL SItemPanel::OnFireEvent(EventArgs &evt)
+BOOL SItemPanel::OnFireEvent(IEvtArgs *evt)
 {
     EventOfPanel evt2(m_pFrmHost);
 	evt2.pPanel = this;
-	evt2.pOrgEvt = &evt;
+	evt2.pOrgEvt = evt;
     return m_pFrmHost->FireEvent(evt2);
 }
 

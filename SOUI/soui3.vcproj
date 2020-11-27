@@ -1298,11 +1298,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File
@@ -1356,6 +1356,7 @@
 						UsePrecompiledHeader="1"
 						PrecompiledHeaderThrough="souistd.h"
 						ForcedIncludeFiles="$(NOINHERIT)"
+						ShowIncludes="false"
 					/>
 				</FileConfiguration>
 			</File>

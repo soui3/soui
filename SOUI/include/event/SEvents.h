@@ -133,17 +133,17 @@ enum SOUI_EVENTS
 
 #undef INTERFACE
 #define INTERFACE IEvtArgs
-DECLARE_INTERFACE(IEvtArgs)
+DECLARE_INTERFACE_(IEvtArgs,IObject)
 {
-	STDMETHOD_(IObject*,GetSender)(THIS) PURE;
-	STDMETHOD_(int,GetIdFrom)(THIS) SCONST PURE;
-	STDMETHOD_(LPCWSTR,GetNameFrom) (THIS) SCONST PURE;
+	STDMETHOD_(IObject*,Sender)(THIS) PURE;
+	STDMETHOD_(int,IdFrom)(THIS) SCONST PURE;
+	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST PURE;
 	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST PURE;
 	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp) PURE;
 	STDMETHOD_(LPCVOID,GetData)(THIS) PURE;
 };
 
-class SEvtArgs : public IEvtArgs
+class SEvtArgs : public TObjRefImpl< IEvtArgs >
 {
 public:
 	UINT handled; 
@@ -152,9 +152,9 @@ public:
 	LPCWSTR nameFrom;
 	SAutoRefPtr<IObject> sender; 
 
-	STDMETHOD_(IObject*,GetSender)(THIS){return sender;}
-	STDMETHOD_(int,GetIdFrom) (THIS) SCONST{ return idFrom;}
-	STDMETHOD_(LPCWSTR,GetNameFrom) (THIS) SCONST{return nameFrom;}
+	STDMETHOD_(IObject*,Sender)(THIS){return sender;}
+	STDMETHOD_(int,IdFrom) (THIS) SCONST{ return idFrom;}
+	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST{return nameFrom;}
 	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST{return bubbleUp;}
 	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp_) {bubbleUp = bBubbleUp_;}
 	STDMETHOD_(LPCVOID,GetData)(THIS) {return NULL;}
@@ -178,7 +178,7 @@ public:
 
 //定义一组事件定义的宏，简化事件的定义。
 #define DEF_EVT_CLASS(evt,id,evt_name,evtData,api) \
-class api evt : public TObjRefImpl< SObject >, public SEvtArgs, public evtData \
+class api evt : public SEvtArgs, public evtData \
 { \
 	SOUI_CLASS_NAME(evt,L#evt_name ) \
 public:\

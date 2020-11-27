@@ -52,7 +52,7 @@ protected:
     void onDataSetInvalidated();
     void onItemDataChanged(int iItem);
 protected:
-    bool OnItemClick(EventArgs *pEvt);
+    bool OnItemClick(IEvtArgs *pEvt);
 
 protected:
     virtual BOOL OnScroll(BOOL bVertical, UINT uCode, int nPos);

@@ -298,7 +298,7 @@ HWND SHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
     return Create(hWndParent, WS_CLIPCHILDREN | WS_TABSTOP | WS_OVERLAPPED,0,x,y,nWidth,nHeight);
 }
 
-bool SHostWnd::onRootResize( EventArgs *e )
+bool SHostWnd::onRootResize( IEvtArgs *e )
 {
 	if (!m_bResizing)
 	{
@@ -888,9 +888,9 @@ void SHostWnd::OnActivate( UINT nState, BOOL bMinimized, HWND wndOther )
     }
 }
 
-BOOL SHostWnd::OnFireEvent(EventArgs &evt)
+BOOL SHostWnd::OnFireEvent(IEvtArgs evt)
 {
-    return _HandleEvent(&evt);
+    return _HandleEvent(evt);
 }
 
 CRect SHostWnd::GetContainerRect() const

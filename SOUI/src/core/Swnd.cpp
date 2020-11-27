@@ -1405,7 +1405,7 @@ namespace SOUI
 		return true;
 	}
 
-	BOOL SWindow::FireEvent(EventArgs &evt)
+	BOOL SWindow::FireEvent(IEvtArgs *evt)
 	{
 		ASSERT_UI_THREAD();
 		if(m_evtSet.isMuted()) return FALSE;
@@ -3193,7 +3193,7 @@ namespace SOUI
 		m_pOwner->Release();
 	}
 
-	bool SWindow::SAnimationHandler::OnOwnerResize(EventArgs * e)
+	bool SWindow::SAnimationHandler::OnOwnerResize(IEvtArgs * e)
 	{
 		CSize szOwner = m_pOwner->GetWindowRect().Size();
 		CSize szParent = szOwner;

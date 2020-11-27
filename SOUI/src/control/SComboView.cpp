@@ -83,16 +83,16 @@ namespace SOUI
         __super::OnSelChanged();
     }
 
-    BOOL SComboView::FireEvent( EventArgs &evt )
+    BOOL SComboView::FireEvent( IEvtArgs *evt )
     {
-        if(evt.idFrom == IDC_DROPDOWN_LIST && m_pDropDownWnd)
+        if(evt->IdFrom() == IDC_DROPDOWN_LIST && m_pDropDownWnd)
         {
-            if(evt.GetID()==EventLVSelChanged::EventID)
+            if(evt->GetID()==EventLVSelChanged::EventID)
             {
                 OnSelChanged();
                 return TRUE;
             }
-            if(evt.GetID() == EventCmd::EventID)
+            if(evt->GetID() == EventCmd::EventID)
             {
                 CloseUp();
                 return TRUE;

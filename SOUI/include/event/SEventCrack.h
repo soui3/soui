@@ -14,7 +14,7 @@
 
 #define EVENT_MAP_BEGIN()                           \
 public:                                          \
-    virtual BOOL _HandleEvent(SOUI::EventArgs *pEvt)\
+    virtual BOOL _HandleEvent(SOUI::IEvtArgs *pEvt)\
     {                                               \
         UINT      uCode = pEvt->GetID();            \
 		UINT	  nCount = 0;                       \
@@ -22,18 +22,18 @@ public:                                          \
 
 #define EVENT_MAP_DECLEAR()                         \
 protected:                                          \
-    virtual BOOL _HandleEvent(SOUI::EventArgs *pEvt);\
+    virtual BOOL _HandleEvent(SOUI::IEvtArgs *pEvt);\
     
 
 #define EVENT_MAP_BEGIN2(classname)                 \
-    BOOL classname::_HandleEvent(SOUI::EventArgs *pEvt)\
+    BOOL classname::_HandleEvent(SOUI::IEvtArgs *pEvt)\
     {                                               \
         UINT      uCode = pEvt->GetID();            \
 		UINT	  nCount = 0;                       \
 
 
 #define EVENT_MAP_END()                             \
-	    if(pEvt->bubbleUp)                          \
+	    if(pEvt->IsBubbleUp())                          \
 		{                                           \
 		     BOOL bRet = __super::_HandleEvent(pEvt);\
 			 nCount += bRet?1:0;                     \
@@ -46,20 +46,20 @@ protected:                                          \
     }                                               \
  
 #define CHAIN_EVENT_MAP(ChainClass)                 \
-    if(pEvt->bubbleUp)                              \
+    if(pEvt->IsBubbleUp())                              \
 	{\
 		BOOL bRet = ChainClass::_HandleEvent(pEvt);  \
 		nCount += bRet?1:0;                          \
-		if(bRet && !pEvt->bubbleUp)                  \
+		if(bRet && !pEvt->IsBubbleUp())                  \
 		    return TRUE;                             \
 	}
  
 #define CHAIN_EVENT_MAP_MEMBER(theChainMember)      \
-	if(pEvt->bubbleUp)                              \
+	if(pEvt->IsBubbleUp())                              \
 	{\
 		BOOL bRet = (theChainMember)._HandleEvent(pEvt);  \
 		nCount += bRet?1:0;                          \
-		if(bRet && !pEvt->bubbleUp)                  \
+		if(bRet && !pEvt->IsBubbleUp())                  \
 		    return TRUE;                             \
 	}
 
@@ -71,102 +71,102 @@ protected:                                          \
 			return FALSE;                               \
     }
 
-// void OnEvent(EventArgs *pEvt)
+// void OnEvent(IEvtArgs *pEvt)
 #define EVENT_HANDLER(cd, func)                     \
     if(cd == uCode)                                 \
     {                                               \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt);			\
-		if(!pEvt->bubbleUp) return TRUE;            \
+        pEvt->SetBubbleUp(false); func(pEvt);			\
+		if(!pEvt->IsBubbleUp()) return TRUE;            \
     } 
 
 
-// void OnEvent(EventArgs *pEvt)
+// void OnEvent(IEvtArgs *pEvt)
 #define EVENT_ID_HANDLER(id, cd, func)              \
-    if(cd == uCode && id == pEvt->idFrom)           \
+    if(cd == uCode && id == pEvt->IdFrom())           \
     {                                               \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt);         \
-		if(!pEvt->bubbleUp) return TRUE;            \
+        pEvt->SetBubbleUp(false); func(pEvt);         \
+		if(!pEvt->IsBubbleUp()) return TRUE;            \
     }
 
-// void OnEvent(EventArgs *pEvt)
+// void OnEvent(IEvtArgs *pEvt)
 #define EVENT_ID_RANGE_HANDLER(idMin, idMax , cd, func) \
-    if(cd == uCode  && idMin <= pEvt->idFrom && idMax >= pEvt->idFrom )\
+    if(cd == uCode  && idMin <= pEvt->IdFrom() && idMax >= pEvt->IdFrom() )\
     {                                               \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt);         \
-		if(!pEvt->bubbleUp) return TRUE;            \
+        pEvt->SetBubbleUp(false); func(pEvt);         \
+		if(!pEvt->IsBubbleUp()) return TRUE;            \
     }
 
 
-// void OnEvent(EventArgs *pEvt)
+// void OnEvent(IEvtArgs *pEvt)
 #define EVENT_NAME_HANDLER(name, cd, func)          \
-    if(cd == uCode && pEvt->nameFrom!= NULL && wcscmp(pEvt->nameFrom,name)==0) \
+    if(cd == uCode && pEvt->NameFrom()!= NULL && wcscmp(pEvt->NameFrom(),name)==0) \
     {                                               \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt);         \
-		if(!pEvt->bubbleUp) return TRUE;            \
+        pEvt->SetBubbleUp(false); func(pEvt);         \
+		if(!pEvt->IsBubbleUp()) return TRUE;            \
     }
 
 
-// void OnCommand(EventArgs *pEvt)
+// void OnCommand(IEvtArgs *pEvt)
 #define EVENT_COMMAND(func)                         \
     if (SOUI::EVT_CMD == uCode)                     \
     {                                               \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt);         \
-		if(!pEvt->bubbleUp) return TRUE;            \
+        pEvt->SetBubbleUp(false); func(pEvt);         \
+		if(!pEvt->IsBubbleUp()) return TRUE;            \
     }                                               \
 
 // void OnCommand()
 #define EVENT_ID_COMMAND(id, func)                   \
-    if (SOUI::EVT_CMD == uCode && id == pEvt->idFrom)\
+    if (SOUI::EVT_CMD == uCode && id == pEvt->IdFrom())\
     {                                                \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func();              \
-		if(!pEvt->bubbleUp) return TRUE;             \
+        pEvt->SetBubbleUp(false); func();              \
+		if(!pEvt->IsBubbleUp()) return TRUE;             \
     }                                                \
  
 // void OnCommand(int nID)
 #define EVENT_ID_COMMAND_RANGE(idMin, idMax, func)   \
-    if (SOUI::EVT_CMD == uCode && idMin <= pEvt->idFrom && idMax >= pEvt->idFrom )  \
+    if (SOUI::EVT_CMD == uCode && idMin <= pEvt->IdFrom() && idMax >= pEvt->IdFrom() )  \
     {                                                \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func(pEvt->idFrom);  \
-		if(!pEvt->bubbleUp) return TRUE;             \
+        pEvt->SetBubbleUp(false); func(pEvt->IdFrom());  \
+		if(!pEvt->IsBubbleUp()) return TRUE;             \
     }                                                \
 
 // void OnCommand()
 #define EVENT_NAME_COMMAND(name, func)               \
-    if (SOUI::EVT_CMD == uCode && pEvt->nameFrom!= NULL && wcscmp(pEvt->nameFrom,name)==0)  \
+    if (SOUI::EVT_CMD == uCode && pEvt->NameFrom()!= NULL && wcscmp(pEvt->NameFrom(),name)==0)  \
     {                                                \
 	    nCount++;                                   \
-        pEvt->bubbleUp = false; func();              \
-		if(!pEvt->bubbleUp) return TRUE;             \
+        pEvt->SetBubbleUp(false); func();              \
+		if(!pEvt->IsBubbleUp()) return TRUE;             \
     }                                                \
 
  
 // BOOL OnContextMenu(CPoint pt)
 #define EVENT_ID_CONTEXTMENU(id,func)                                      \
-    if (SOUI::EVT_CTXMENU == uCode && pEvt->idFrom==id)      \
+    if (SOUI::EVT_CTXMENU == uCode && pEvt->IdFrom()==id)      \
 	{                                                                          \
 	    nCount++;                                                              \
-		pEvt->bubbleUp = false;                                                \
+		pEvt->SetBubbleUp(false);                                                \
 		SOUI::EventCtxMenu* pEvtCtxMenu = (SOUI::EventCtxMenu*)pEvt;           \
 		pEvtCtxMenu->bCancel=func(pEvtCtxMenu->pt);                            \
-		if(!pEvt->bubbleUp) return TRUE;                                       \
+		if(!pEvt->IsBubbleUp()) return TRUE;                                       \
 	}                                                                          \
 
 
 // BOOL OnContextMenu(CPoint pt)
 #define EVENT_NAME_CONTEXTMENU(name,func)                                       \
-    if (SOUI::EVT_CTXMENU == uCode && pEvt->nameFrom!= NULL && wcscmp(pEvt->nameFrom,name)==0) \
+    if (SOUI::EVT_CTXMENU == uCode && pEvt->NameFrom()!= NULL && wcscmp(pEvt->NameFrom(),name)==0) \
 	{                                                                               \
 	    nCount++;                                                                   \
-		pEvt->bubbleUp = false;                                                     \
+		pEvt->SetBubbleUp(false);                                                     \
 		SOUI::EventCtxMenu* pEvtCtxMenu = (SOUI::EventCtxMenu*)pEvt;                \
 		pEvtCtxMenu->bCancel=func(pEvtCtxMenu->pt);                                 \
-		if(!pEvt->bubbleUp) return TRUE;                                            \
+		if(!pEvt->IsBubbleUp()) return TRUE;                                            \
 	}                                                                               \
 

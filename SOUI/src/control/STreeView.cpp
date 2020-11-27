@@ -1188,9 +1188,9 @@ namespace SOUI
     }
     
 
-    bool STreeView::OnItemClick(EventArgs *pEvt)
+    bool STreeView::OnItemClick(IEvtArgs *pEvt)
     {
-        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->sender);
+        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);
         HTREEITEM hItem = (HTREEITEM)pItemPanel->GetItemIndex();
         if(hItem != m_hSelected)
@@ -1200,9 +1200,9 @@ namespace SOUI
         return true;
     }
 
-    bool STreeView::OnItemDblClick(EventArgs *pEvt)
+    bool STreeView::OnItemDblClick(IEvtArgs *pEvt)
     {
-        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->sender);
+        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);
         HTREEITEM hItem = (HTREEITEM)pItemPanel->GetItemIndex();
         if(m_adapter->HasChildren(hItem))

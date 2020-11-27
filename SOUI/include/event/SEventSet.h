@@ -24,7 +24,7 @@ namespace SOUI
 
         bool unsubscribe(const ISlotFunctor& slot);
 
-        void operator()(EventArgs& args);
+        void operator()(IEvtArgs* args);
 
     protected:
         int findSlotFunctor(const ISlotFunctor& slot);
@@ -118,7 +118,7 @@ namespace SOUI
         }
 		//add by 2017.2.25 008
 		template<typename T>
-		bool subscribeEvent(const DWORD dwEventID, bool(T::*pFn)(EventArgs*),T *pObject) {
+		bool subscribeEvent(const DWORD dwEventID, bool(T::*pFn)(IEvtArgs*),T *pObject) {
 			return subscribeEvent(dwEventID, Subscriber(pFn,this));
 		}
 
@@ -134,10 +134,10 @@ namespace SOUI
         }
 		//add by 2017.2.25 008
 		template<typename T>
-		bool unsubscribeEvent(const DWORD dwEventID, bool(T::*pFn)(EventArgs*), T *pObject) {
+		bool unsubscribeEvent(const DWORD dwEventID, bool(T::*pFn)(IEvtArgs*), T *pObject) {
 			return unsubscribeEvent(dwEventID, Subscriber(pFn, this));
 		}
-        void FireEvent(EventArgs& args);
+        void FireEvent(IEvtArgs* args);
 
             /*!
     \brief

@@ -38,7 +38,7 @@ namespace SOUI
         SetMsgHandled(FALSE);
     }
 
-    BOOL SComboEdit::FireEvent(EventArgs & evt)
+    BOOL SComboEdit::FireEvent(IEvtArgs * evt)
     {
         if(evt.GetID()==EVT_RE_NOTIFY)
         {//转发richedit的txNotify消息
@@ -435,11 +435,11 @@ namespace SOUI
         FireEvent(evt);
     }
 
-    BOOL SComboBase::FireEvent( EventArgs &evt )
+    BOOL SComboBase::FireEvent( IEvtArgs *evt )
     {
         if(evt.GetID() == EventRENotify::EventID)
         {
-            EventRENotify *evtRe = (EventRENotify*)&evt;
+            EventRENotify *evtRe = (EventRENotify*)evt;
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
                 m_pEdit->GetEventSet()->setMutedState(true);

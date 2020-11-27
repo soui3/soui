@@ -217,7 +217,7 @@ namespace SOUI
 		public:
 			STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 		protected:
-			bool OnOwnerResize(EventArgs *e);
+			bool OnOwnerResize(IEvtArgs *e);
 		};
 
     public:
@@ -745,7 +745,7 @@ namespace SOUI
 
         virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
 
-        virtual BOOL FireEvent(EventArgs &evt);
+        virtual BOOL FireEvent(IEvtArgs *evt);
 
         virtual BOOL OnNcHitTest(CPoint pt);
 

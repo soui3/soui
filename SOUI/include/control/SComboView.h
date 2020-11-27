@@ -58,7 +58,7 @@ namespace SOUI
         * 
         * Describe  此函数是消息响应函数
         */ 
-        virtual BOOL FireEvent(EventArgs &evt);
+        virtual BOOL FireEvent(IEvtArgs *evt);
 
         virtual void OnScaleChanged(int nScale);
 

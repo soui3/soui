@@ -336,7 +336,7 @@ int SMCListView::GetHeaderHeight() const
 }
 
 
-bool SMCListView::OnHeaderClick(EventArgs *pEvt)
+bool SMCListView::OnHeaderClick(IEvtArgs *pEvt)
 {
     EventHeaderClick *pEvt2 = sobj_cast<EventHeaderClick>(pEvt);
     SASSERT(pEvt2);
@@ -366,7 +366,7 @@ bool SMCListView::OnHeaderClick(EventArgs *pEvt)
     return true;
 }
 
-bool SMCListView::OnHeaderSizeChanging(EventArgs *pEvt)
+bool SMCListView::OnHeaderSizeChanging(IEvtArgs *pEvt)
 {
     UpdateScrollBar();
     UpdateHeaderCtrl();
@@ -400,7 +400,7 @@ bool SMCListView::OnHeaderSizeChanging(EventArgs *pEvt)
     return true;
 }
 
-bool SMCListView::OnHeaderSwap(EventArgs *pEvt)
+bool SMCListView::OnHeaderSwap(IEvtArgs *pEvt)
 {
     OnHeaderSizeChanging(NULL);
     return true;
@@ -1207,9 +1207,9 @@ BOOL SMCListView::OnSetCursor(const CPoint &pt)
 
 }
 
-bool SMCListView::OnItemClick(EventArgs *pEvt)
+bool SMCListView::OnItemClick(IEvtArgs *pEvt)
 {
-    SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->sender);
+    SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
     SASSERT(pItemPanel);
     int iItem = (int)pItemPanel->GetItemIndex();
     if(iItem != m_iSelItem)

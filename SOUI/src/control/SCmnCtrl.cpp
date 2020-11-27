@@ -1328,12 +1328,12 @@ BOOL SRadioGroup::ClearCheck()
 	return FALSE;
 }
 
-BOOL SRadioGroup::FireEvent(EventArgs & evt) {
+BOOL SRadioGroup::FireEvent(IEvtArgs * evt) {
 	if (evt.sender == this)
 	{
 		return SWindow::FireEvent(evt);
 	}
-	if (evt.GetID() == EventSwndStateChanged::EventID && evt.sender &&evt.sender->IsClass(SRadioBox::GetClassName()))
+	if (evt.GetID() == EventSwndStateChanged::EventID && evt->GetSender() &&evt->GetSender->IsClass(SRadioBox::GetClassName()))
 	{
 		EventSwndStateChanged *evt2 = sobj_cast<EventSwndStateChanged>(&evt);
 		if (evt2->CheckState(WndState_Check))

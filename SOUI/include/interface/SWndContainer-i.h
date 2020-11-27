@@ -41,7 +41,7 @@ struct ISwndContainer : public ITimelineHandlersMgr
 
 	virtual BOOL RevokeDragDrop(SWND swnd)=0;
 
-	virtual BOOL OnFireEvent(EventArgs &evt)=0;
+	virtual BOOL OnFireEvent(IEvtArgs *evt)=0;
 
 	virtual HWND GetHostHwnd()=0;
 

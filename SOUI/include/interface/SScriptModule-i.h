@@ -74,20 +74,20 @@ struct IScriptModule : public IObjRef
 
     /*!
     \brief
-        Execute a scripted global 'event handler' function.  The function should take some kind of EventArgs like parameter
-        that the concrete implementation of this function can create from the passed EventArgs based object.  
+        Execute a scripted global 'event handler' function.  The function should take some kind of IEvtArgs like parameter
+        that the concrete implementation of this function can create from the passed IEvtArgs based object.  
 
     \param handler_name
         String object holding the name of the scripted handler function.
 
-    \param EventArgs *pEvt
+    \param IEvtArgs *pEvt
         SWindow based object that should be passed, by any appropriate means, to the scripted function.
 
     \return
         - true if the event was handled.
         - false if the event was not handled.
     */
-    virtual    bool    executeScriptedEventHandler(LPCSTR handler_name, EventArgs *pEvt)=0;
+    virtual    bool    executeScriptedEventHandler(LPCSTR handler_name, IEvtArgs *pEvt)=0;
 
 
     /*!

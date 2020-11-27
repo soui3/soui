@@ -412,7 +412,7 @@ namespace SOUI
         *
         * Describe  列表头单击事件
         */
-        bool            OnHeaderClick(EventArgs *pEvt);
+        bool            OnHeaderClick(IEvtArgs *pEvt);
         /**
         * SListCtrl::OnHeaderSizeChanging
         * @brief    列表头大小改变
@@ -420,7 +420,7 @@ namespace SOUI
         *
         * Describe  列表头大小改变
         */
-        bool            OnHeaderSizeChanging(EventArgs *pEvt);
+        bool            OnHeaderSizeChanging(IEvtArgs *pEvt);
         /**
         * SListCtrl::OnHeaderSwap
         * @brief    列表头交换
@@ -428,7 +428,7 @@ namespace SOUI
         *
         * Describe  列表头交换
         */
-        bool            OnHeaderSwap(EventArgs *pEvt);
+        bool            OnHeaderSwap(IEvtArgs *pEvt);
         /**
         * SListCtrl::OnScroll
         * @brief    滚动事件

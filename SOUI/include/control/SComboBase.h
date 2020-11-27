@@ -65,11 +65,11 @@ namespace SOUI
         /**
         * SComboEdit::FireEvent
         * @brief    通知消息
-        * @param    EventArgs & evt -- 事件对象 
+        * @param    IEvtArgs * evt -- 事件对象 
         * 
         * Describe  此函数是消息响应函数
         */   
-        virtual BOOL FireEvent(EventArgs & evt);
+        virtual BOOL FireEvent(IEvtArgs * evt);
 
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_MOUSEHOVER(OnMouseHover)
@@ -233,7 +233,7 @@ namespace SOUI
         virtual void OnSelChanged();
 
 
-        virtual BOOL FireEvent(EventArgs &evt);
+        virtual BOOL FireEvent(IEvtArgs *evt);
 
     protected:
 

@@ -372,7 +372,7 @@ public:
 
 protected:// IContainer
 
-    virtual BOOL OnFireEvent(EventArgs &evt);
+    virtual BOOL OnFireEvent(IEvtArgs *evt);
 
     virtual CRect GetContainerRect() const;
 
@@ -421,10 +421,10 @@ protected:
 protected:
 	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
-	virtual bool onRootResize(EventArgs *e);
+	virtual bool onRootResize(IEvtArgs *e);
 	
 public://事件处理接口
-    virtual BOOL _HandleEvent(EventArgs *pEvt){return FALSE;}
+    virtual BOOL _HandleEvent(IEvtArgs *pEvt){return FALSE;}
 
 
 	void OnHostShowWindow(BOOL bShow, UINT nStatus);

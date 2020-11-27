@@ -5,9 +5,7 @@
 #include <functional>
 #endif
 
-// Start of SOUI namespace section
-namespace SOUI
-{
+SNSBEGIN
 
 enum _SLOTTYPE{SLOT_FUN,SLOT_MEMBER,SLOT_STDFUNCTOR,SLOT_USER};
 /*!
@@ -19,7 +17,7 @@ enum _SLOTTYPE{SLOT_FUN,SLOT_MEMBER,SLOT_STDFUNCTOR,SLOT_USER};
 struct SOUI_EXP ISlotFunctor
 {
     virtual ~ISlotFunctor() {};
-    virtual bool operator()(EventArgs *pArg) = 0;
+    virtual bool operator()(IEvtArgs *pArg) = 0;
     virtual ISlotFunctor* Clone() const =0;
     virtual bool Equal(const ISlotFunctor & sour)const  =0;
     virtual UINT GetSlotType() const  =0;
@@ -30,7 +28,7 @@ struct SOUI_EXP ISlotFunctor
 \brief
     Slot functor class that calls back via a free function pointer.
 */
-template<typename A = EventArgs>
+template<typename A = IEvtArgs>
 class FreeFunctionSlot : public ISlotFunctor
 {
 public:
@@ -41,7 +39,7 @@ public:
         d_function(func)
     {}
 
-    virtual bool operator()(EventArgs *pArg)
+    virtual bool operator()(IEvtArgs *pArg)
     {
         return d_function(static_cast<A*>(pArg));
     }
@@ -66,7 +64,7 @@ private:
 };
 
 #if _MSC_VER >= 1700	//VS2012
-typedef std::function<bool(EventArgs*)> EventCallback;
+typedef std::function<bool(IEvtArgs*)> EventCallback;
 class StdFunctionSlot : public ISlotFunctor
 {
 public:
@@ -76,7 +74,7 @@ public:
 		d_function(fun)
 	{}
 
-	virtual bool operator()(EventArgs *pArg)
+	virtual bool operator()(IEvtArgs *pArg)
 	{
 		return d_function(pArg);
 	}
@@ -103,7 +101,7 @@ private:
     Slot template class that creates a functor that calls back via a class
     member function.
 */
-template<typename T, typename A = EventArgs>
+template<typename T, typename A = IEvtArgs>
 class MemberFunctionSlot;
 
 template<typename T, typename A>
@@ -119,7 +117,7 @@ public:
         d_eventid(A::EventID)
     {}
 
-    virtual bool operator()(EventArgs *pArg)
+    virtual bool operator()(IEvtArgs *pArg)
     {
         return (d_object->*d_function)(static_cast<A*>(pArg));
     }
@@ -146,18 +144,18 @@ private:
 };
 
 template<typename T>
-class MemberFunctionSlot<T, EventArgs> : public ISlotFunctor
+class MemberFunctionSlot<T, IEvtArgs> : public ISlotFunctor
 {
 public:
     //! Member function slot type.
-    typedef bool(T::*MemberFunctionType)(EventArgs *);
+    typedef bool(T::*MemberFunctionType)(IEvtArgs *);
 
     MemberFunctionSlot(MemberFunctionType func, T* obj) :
         d_function(func),
         d_object(obj)
     {}
 
-    virtual bool operator()(EventArgs *pArg)
+    virtual bool operator()(IEvtArgs *pArg)
     {
         return (d_object->*d_function)(pArg);
     }
@@ -187,9 +185,9 @@ MemberFunctionSlot<T,A> Subscriber(bool (T::* pFn)(A *), T* pObject)
 {
     return MemberFunctionSlot<T,A>(pFn, pObject);
 }
-inline FreeFunctionSlot<> Subscriber(bool (*pFn)(EventArgs *))
+inline FreeFunctionSlot<> Subscriber(bool (*pFn)(IEvtArgs *))
 {
     return FreeFunctionSlot<>(pFn); 
 }
 
-} // End of  CEGUI namespace section
+SNSEND
