@@ -114,7 +114,7 @@ namespace SOUI
             CHAIN_MSG_MAP(SHostWnd)
         END_MSG_MAP()
     protected:
-        virtual BOOL _HandleEvent(EventArgs *pEvt);
+        virtual BOOL _HandleEvent(IEvtArgs *pEvt);
 		virtual const SStringW & GetTranslatorContext()const;
 		virtual int WINAPI GetScale() const;
 

@@ -40,10 +40,10 @@ namespace SOUI
 
     BOOL SComboEdit::FireEvent(IEvtArgs * evt)
     {
-        if(evt.GetID()==EVT_RE_NOTIFY)
+        if(evt->GetID()==EVT_RE_NOTIFY)
         {//转发richedit的txNotify消息
-            evt.idFrom=GetOwner()->GetID();
-            evt.nameFrom=GetOwner()->GetName();
+            evt->SetIdFrom(GetOwner()->GetID());
+            evt->SetNameFrom(GetOwner()->GetName());
         }
         return SEdit::FireEvent(evt);
     }
@@ -390,7 +390,7 @@ namespace SOUI
 
 		EventCBDropdown evt(this);
 		evt.pDropDown = m_pDropDownWnd;
-		FireEvent(evt);
+		FireEvent(&evt);
 
 		CRect rcPopup;
 		BOOL bDown=CalcPopupRect(GetListBoxHeight(),rcPopup);
@@ -432,12 +432,12 @@ namespace SOUI
     {
         EventCBSelChange evt(this);
 		evt.nCurSel = GetCurSel();
-        FireEvent(evt);
+        FireEvent(&evt);
     }
 
     BOOL SComboBase::FireEvent( IEvtArgs *evt )
     {
-        if(evt.GetID() == EventRENotify::EventID)
+        if(evt->GetID() == EventRENotify::EventID)
         {
             EventRENotify *evtRe = (EventRENotify*)evt;
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())

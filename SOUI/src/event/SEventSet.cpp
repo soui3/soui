@@ -51,7 +51,7 @@ namespace SOUI
     }
 
 
-    void SEvent::operator()(SEvtArgs* args)
+    void SEvent::operator()(IEvtArgs* args)
     {
         // execute all subscribers, updating the 'handled' state as we go
         for (int i=(int)m_evtSlots.GetCount()-1;i>=0; i--)
@@ -59,7 +59,7 @@ namespace SOUI
             bool bHandled = (*m_evtSlots[i])(args);
             if(bHandled)
             {
-                ++args.handled;
+				args->IncreaseHandleCount();
                 if(!args->IsBubbleUp()) break;
             }
         }
@@ -117,7 +117,7 @@ namespace SOUI
     void SEventSet::FireEvent(IEvtArgs* args )
     {
         // find event object
-        SEvent* ev = GetEventObject(args.GetID());
+        SEvent* ev = GetEventObject(args->GetID());
 
         // fire the event if present and set is not muted
         if ((ev != 0) && m_nMuted==0)

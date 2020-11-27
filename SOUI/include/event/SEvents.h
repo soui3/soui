@@ -137,13 +137,17 @@ DECLARE_INTERFACE_(IEvtArgs,IObject)
 {
 	STDMETHOD_(IObject*,Sender)(THIS) PURE;
 	STDMETHOD_(int,IdFrom)(THIS) SCONST PURE;
+	STDMETHOD_(void,SetIdFrom)(THIS_ int id) PURE;
 	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST PURE;
+	STDMETHOD_(void,SetNameFrom) (THIS_ LPCWSTR name) PURE;
 	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST PURE;
 	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp) PURE;
-	STDMETHOD_(LPCVOID,GetData)(THIS) PURE;
+	STDMETHOD_(UINT,HandleCount)(THIS) SCONST PURE;
+	STDMETHOD_(void,IncreaseHandleCount)(THIS) PURE;
+	STDMETHOD_(LPCVOID,Data)(THIS) PURE;
 };
 
-class SEvtArgs : public TObjRefImpl< IEvtArgs >
+class SEvtArgs : public TObjRefImpl< SObjectImpl<IEvtArgs> >
 {
 public:
 	UINT handled; 
@@ -154,10 +158,14 @@ public:
 
 	STDMETHOD_(IObject*,Sender)(THIS){return sender;}
 	STDMETHOD_(int,IdFrom) (THIS) SCONST{ return idFrom;}
+	STDMETHOD_(void,SetIdFrom)(THIS_ int id) {idFrom = id;}
 	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST{return nameFrom;}
+	STDMETHOD_(void,SetNameFrom) (THIS_ LPCWSTR name) {nameFrom = name;}
 	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST{return bubbleUp;}
-	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp_) {bubbleUp = bBubbleUp_;}
-	STDMETHOD_(LPCVOID,GetData)(THIS) {return NULL;}
+	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bSet) {bubbleUp = bSet;}
+	STDMETHOD_(UINT,HandleCount)(THIS) SCONST {return handled;}
+	STDMETHOD_(void,IncreaseHandleCount)(THIS) {handled++;}
+	STDMETHOD_(LPCVOID,Data)(THIS) {return NULL;}
 
 public:
 	SEvtArgs(IObject *pSender)
@@ -205,6 +213,18 @@ DEF_EVT(EventInit, EVT_INIT,on_init,{});
 DEF_EVT(EventExit, EVT_EXIT,on_exit,{});
 DEF_EVT(EventTimer, EVT_TIMER, on_timer,{
 	UINT uID;
+});
+
+DEF_EVT(EventScroll, EVT_SCROLL, on_scroll, {
+	int         nSbCode;
+	int         nPos;
+	BOOL        bVertical;
+});
+
+DEF_EVT(EventSpinValue2String, EVT_SPIN_VALUE2STRING, on_spin_valuetostring, {
+	BOOL	 bInit;
+	int      nValue;
+	SStringT strValue;
 });
 
 DEF_EVT(EventSwndCreate, EVT_CREATE, on_create, {});
@@ -301,13 +321,6 @@ DEF_EVT(EventScrollViewOriginChanged, EVT_SCROLLVIEW_ORIGINCHANGED, on_scrollvie
 DEF_EVT(EventScrollViewSizeChanged, EVT_SCROLLVIEW_SIZECHANGED, on_scrollview_size_changed, {
 	SIZE szOldViewSize;
 	SIZE szNewViewSize;
-});
-
-
-DEF_EVT(EventScroll, EVT_SCROLL, on_scroll, {
-	int         nSbCode;
-	int         nPos;
-	BOOL        bVertical;
 });
 
 DEF_EVT(EventOfEvent, EVT_OFEVENT, on_event_of_event, {
@@ -493,11 +506,6 @@ DEF_EVT(EventTCDbClick, EVT_TC_DBCLICK, on_treectrl_item_dbclick, {
 	BOOL bCancel;
 });
 
-DEF_EVT(EventSpinValue2String, EVT_SPIN_VALUE2STRING, on_spin_value2string, {
-	bool	 bInit;
-	int      nValue;
-	SStringT strValue;
-});
 
 DEF_EVT(EventSplitPaneMoved, EVT_SPLIT_PANE_MOVED, on_split_pane_moved, {
 	RECT rcPane;

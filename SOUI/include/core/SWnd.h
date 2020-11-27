@@ -746,7 +746,7 @@ namespace SOUI
         virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
 
         virtual BOOL FireEvent(IEvtArgs *evt);
-
+		virtual BOOL FireEvent(SEvtArgs &evt){return FireEvent(&evt);}
         virtual BOOL OnNcHitTest(CPoint pt);
 
         /**

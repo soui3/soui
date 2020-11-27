@@ -78,19 +78,19 @@ SNotifyCenter::~SNotifyCenter(void)
 	SPOSITION pos = m_ayncEvent.GetTailPosition();
 	while (pos)
 	{
-		EventArgs *e = m_ayncEvent.GetNext(pos);
+		IEvtArgs *e = m_ayncEvent.GetNext(pos);
 		e->Release();
 	}
 }
 
-void SNotifyCenter::FireEventSync( EventArgs *e )
+void SNotifyCenter::FireEventSync( IEvtArgs *e )
 {
 	SASSERT(m_dwMainTrdID == GetCurrentThreadId());
 	OnFireEvent(e);
 }
 
 //把事件抛到事件队列，不检查事件是否注册，执行事件时再检查。
-void SNotifyCenter::FireEventAsync( EventArgs *e )
+void SNotifyCenter::FireEventAsync( IEvtArgs *e )
 {
 	SAutoLock lock(m_cs);
 	e->AddRef();
@@ -103,26 +103,26 @@ void SNotifyCenter::FireEventAsync( EventArgs *e )
 }
 
 
-void SNotifyCenter::OnFireEvent( EventArgs *e )
+void SNotifyCenter::OnFireEvent( IEvtArgs *e )
 {
 	if(!GetEventObject(e->GetID())) return;//确保事件是已经注册过的已经事件。
 
-	FireEvent(*e);
-	if(!e->bubbleUp) return ;
+	FireEvent(e);
+	if(!e->IsBubbleUp()) return ;
 
 	SPOSITION pos = m_evtHandlerMap.GetTailPosition();
 	while(pos)
 	{
 		ISlotFunctor * pSlot = m_evtHandlerMap.GetPrev(pos);
 		(*pSlot)(e);
-		if(!e->bubbleUp) break;
+		if(!e->IsBubbleUp()) break;
 	}
 }
 
 
 void SNotifyCenter::OnFireEvts()
 {
-	SList<EventArgs *> evts;
+	SList<IEvtArgs *> evts;
 #ifdef ENABLE_RUNONUI
 	SList< std::function<void(void)> *> cbs;
 #endif
@@ -140,7 +140,7 @@ void SNotifyCenter::OnFireEvts()
 		SPOSITION pos = evts.GetHeadPosition();
 		while (pos)
 		{
-			EventArgs *e = evts.GetNext(pos);
+			IEvtArgs *e = evts.GetNext(pos);
 			OnFireEvent(e);
 			e->Release();
 		}

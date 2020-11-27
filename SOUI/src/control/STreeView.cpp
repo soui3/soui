@@ -600,7 +600,7 @@ namespace SOUI
 			evt.bCancel = FALSE;
             evt.hOldSel = m_hSelected;
             evt.hNewSel = hItem;
-            FireEvent(evt);
+            FireEvent(&evt);
             if(evt.bCancel) 
             {//Cancel SetSel and restore selection state
                 return;

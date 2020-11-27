@@ -886,11 +886,11 @@ namespace SOUI
 
 	}
 
-	BOOL SMenuEx::_HandleEvent(EventArgs *pEvt)
+	BOOL SMenuEx::_HandleEvent(IEvtArgs *pEvt)
 	{
-		if (pEvt->sender->IsClass(SMenuExItem::GetClassName()))
+		if (pEvt->Sender()->IsClass(SMenuExItem::GetClassName()))
 		{
-			SMenuExItem *pMenuItem = sobj_cast<SMenuExItem>(pEvt->sender);
+			SMenuExItem *pMenuItem = sobj_cast<SMenuExItem>(pEvt->Sender());
 			if (pEvt->GetID() == EventSwndMouseHover::EventID)
 			{
 				if (pMenuItem->GetSubMenu() != NULL)

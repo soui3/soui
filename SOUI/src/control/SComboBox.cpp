@@ -108,14 +108,14 @@ namespace SOUI
 
 	BOOL SComboBox::FireEvent( IEvtArgs *evt )
 	{
-		if(evt.idFrom == IDC_DROPDOWN_LIST && m_pDropDownWnd)
+		if(evt->IdFrom() == IDC_DROPDOWN_LIST && m_pDropDownWnd)
 		{
-			if(evt.GetID()==EventLBSelChanged::EventID)
+			if(evt->GetID()==EventLBSelChanged::EventID)
 			{
 				OnSelChanged();
 				return TRUE;
 			}
-			if(evt.GetID() == EventCmd::EventID)
+			if(evt->GetID() == EventCmd::EventID)
 			{
 				CloseUp();
 				return TRUE;

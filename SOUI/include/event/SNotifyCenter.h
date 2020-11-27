@@ -19,9 +19,9 @@
 
 #endif
 
-namespace SOUI
-{
-	template<class T>
+SNSBEGIN
+
+template<class T>
 	class TAutoEventMapReg
 	{
 		typedef TAutoEventMapReg<T> _thisClass;
@@ -45,14 +45,14 @@ namespace SOUI
 			SNotifyCenter::getSingleton().UnregisterEventMap(Subscriber(&_thisClass::OnEvent, this));
 		}
 	protected:
-		bool OnEvent(EventArgs *e){
+		bool OnEvent(IEvtArgs *e){
 			T * pThis = static_cast<T*>(this);
 			return !!pThis->_HandleEvent(e);
 		}
 	};
 
 	struct INotifyCallback{
-		virtual void OnFireEvent(EventArgs *e) = 0;
+		virtual void OnFireEvent(IEvtArgs *e) = 0;
 		virtual void OnFireEvts() = 0;
 	};
 
@@ -74,7 +74,7 @@ namespace SOUI
         *
         * Describe  只能在UI线程中调用
         */
-		void FireEventSync(EventArgs *e);
+		void FireEventSync(IEvtArgs *e);
 
         /**
         * FireEventAsync
@@ -84,7 +84,7 @@ namespace SOUI
         *
         * Describe  可以在非UI线程中调用，EventArgs *e必须是从堆上分配的内存，调用后使用Release释放引用计数
         */
-		void FireEventAsync(EventArgs *e);
+		void FireEventAsync(IEvtArgs *e);
 
         /**
         * RegisterEventMap
@@ -106,7 +106,7 @@ namespace SOUI
         */
 		bool UnregisterEventMap(const ISlotFunctor & slot);
 	protected:
-		virtual void OnFireEvent(EventArgs *e);
+		virtual void OnFireEvent(IEvtArgs *e);
 		virtual void OnFireEvts();
 
 		DWORD				m_dwMainTrdID;//主线程ID
@@ -116,7 +116,7 @@ namespace SOUI
 		SNotifyReceiver	 *  m_pReceiver;
 
 		SCriticalSection	m_cs;
-		SList<EventArgs *> m_ayncEvent;
+		SList<IEvtArgs *> m_ayncEvent;
 		BOOL				m_bRunning;
 		int					m_nInterval;
 #ifdef ENABLE_RUNONUI
@@ -126,4 +126,5 @@ namespace SOUI
 		void RunOnUIAsync(std::function<void(void)> fn);
 #endif
 	};
-}
+
+SNSEND

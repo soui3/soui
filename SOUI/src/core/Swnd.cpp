@@ -184,7 +184,7 @@ namespace SOUI
 
 		EventSwndUpdateTooltip evt(this);
 		evt.bUpdated = FALSE;
-		FireEvent(evt);
+		FireEvent(&evt);
 
 		if (evt.bUpdated)
 		{
@@ -885,7 +885,7 @@ namespace SOUI
 		RequestRelayout();
 
 		EventSwndInitFinish evt(this);
-		FireEvent(evt);
+		FireEvent(&evt);
 		return TRUE;
 	}
 
@@ -1412,19 +1412,19 @@ namespace SOUI
 
 		//调用事件订阅的处理方法
 		m_evtSet.FireEvent(evt);
-		if(!evt.bubbleUp) return evt.handled>0;
+		if(!evt->IsBubbleUp()) return evt->HandleCount()>0;
 
 		//调用脚本事件处理方法
 		if(GetScriptModule())
 		{
-			SStringW strEvtName = evt.GetName();
+			SStringW strEvtName = evt->GetName();
 			if(!strEvtName.IsEmpty())
 			{
 				SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
 				if(!strScriptHandler.IsEmpty())
 				{
-					GetScriptModule()->executeScriptedEventHandler(strScriptHandler,&evt);
-					if(!evt.bubbleUp) return evt.handled>0;
+					GetScriptModule()->executeScriptedEventHandler(strScriptHandler,evt);
+					if(!evt->IsBubbleUp()) return evt->HandleCount()>0;
 				}
 			}
 		}

@@ -33,7 +33,7 @@ namespace SOUI
 
 		virtual void WINAPI OnFinalRelease() { delete this; }
 		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
-		bool OnCmd(EventArgs* e);
+		bool OnCmd(IEvtArgs* e);
 
 		void OnTimer(UINT_PTR timerID);
 
@@ -137,12 +137,12 @@ namespace SOUI
 		return size;
 	}
 
-	bool SMenuBarItem::OnCmd(EventArgs* e)
+	bool SMenuBarItem::OnCmd(IEvtArgs* e)
 	{
 		if (!::IsWindow(m_pHostMenu->m_hWnd))
 			m_pHostMenu->m_hWnd = GetContainer()->GetHostHwnd();
 
-		e->bubbleUp = false;
+		e->SetBubbleUp(false);
 		PopMenu();
 		return true;
 	}

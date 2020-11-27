@@ -888,7 +888,7 @@ void SHostWnd::OnActivate( UINT nState, BOOL bMinimized, HWND wndOther )
     }
 }
 
-BOOL SHostWnd::OnFireEvent(IEvtArgs evt)
+BOOL SHostWnd::OnFireEvent(IEvtArgs* evt)
 {
     return _HandleEvent(evt);
 }
@@ -1611,7 +1611,7 @@ CRect SHostWnd::GetClientRect() const
 
 LRESULT SHostWnd::OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-    return _HandleEvent((EventArgs *)lParam);
+    return _HandleEvent((IEvtArgs *)lParam);
 }
 
 

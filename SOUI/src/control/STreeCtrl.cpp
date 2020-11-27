@@ -326,10 +326,10 @@ BOOL STreeCtrl::Expand(HSTREEITEM hItem , UINT nCode)
         }
         if(bRet)
         {
-            EventTCExpand evt(this);
-            evt.hItem=hItem;
-            evt.bCollapsed=pItem->bCollapsed;
-            FireEvent(evt);
+            //EventTCExpand evt(this);
+            //evt.hItem=hItem;
+            //evt.bCollapsed=pItem->bCollapsed;
+            //FireEvent(evt);
             
             GetMaxItemWidth();
             CSize szView(m_nMaxItemWidth,m_nVisibleItems*m_nItemHei);
@@ -1065,7 +1065,7 @@ void STreeCtrl::ItemLButtonUp(HSTREEITEM hItem, UINT nFlags,CPoint pt)
             EventTCCheckState evt(this);
             evt.hItem=hItem;
             evt.uCheckState = pItem->dwCheckBoxState;
-            FireEvent(evt);
+            FireEvent(&evt);
         }
 
         m_nItemPushDownBtn = STVIBtn_None;
@@ -1085,7 +1085,7 @@ void STreeCtrl::ItemLButtonDbClick(HSTREEITEM hItem, UINT nFlags,CPoint pt)
     EventTCDbClick dbClick(this);
 	dbClick.bCancel = FALSE;
     dbClick.hItem = hItem;
-    FireEvent(dbClick);
+    FireEvent(&dbClick);
     if(!dbClick.bCancel)
     {
         Expand(hItem,TVE_TOGGLE);
@@ -1290,7 +1290,7 @@ BOOL STreeCtrl::SelectItem( HSTREEITEM hItem,BOOL bEnsureVisible/*=TRUE*/ )
     evt1.hOldSel=m_hSelItem;
     evt1.hNewSel=hItem;
 
-    FireEvent(evt1);
+    FireEvent(&evt1);
     if(evt1.bCancel) return FALSE;
 
     if(bEnsureVisible) EnsureVisible(hItem);
@@ -1301,7 +1301,7 @@ BOOL STreeCtrl::SelectItem( HSTREEITEM hItem,BOOL bEnsureVisible/*=TRUE*/ )
     
     m_hSelItem = hItem;
     
-    FireEvent(evt);
+    FireEvent(&evt);
 
     if(evt.hOldSel)
     {

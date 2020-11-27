@@ -895,7 +895,7 @@ namespace SOUI
 
     bool SListView::OnItemClick(IEvtArgs *pEvt)
     {
-        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->GetSender());
+        SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);
         int iItem = (int)pItemPanel->GetItemIndex();
         if(iItem != m_iSelItem)

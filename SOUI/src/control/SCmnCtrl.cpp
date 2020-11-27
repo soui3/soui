@@ -1329,17 +1329,17 @@ BOOL SRadioGroup::ClearCheck()
 }
 
 BOOL SRadioGroup::FireEvent(IEvtArgs * evt) {
-	if (evt.sender == this)
+	if (evt->Sender() == this)
 	{
 		return SWindow::FireEvent(evt);
 	}
-	if (evt.GetID() == EventSwndStateChanged::EventID && evt->GetSender() &&evt->GetSender->IsClass(SRadioBox::GetClassName()))
+	if (evt->GetID() == EventSwndStateChanged::EventID && evt->Sender() &&evt->Sender()->IsClass(SRadioBox::GetClassName()))
 	{
-		EventSwndStateChanged *evt2 = sobj_cast<EventSwndStateChanged>(&evt);
-		if (evt2->CheckState(WndState_Check))
+		EventSwndStateChanged *evt2 = sobj_cast<EventSwndStateChanged>(evt);
+		if (EventSwndStateChanged_CheckState(evt2,WndState_Check))
 		{
 			EventRadioGroupCheckChanged evt3(this);
-			SRadioBox *pSender = sobj_cast<SRadioBox>(evt.sender);
+			SRadioBox *pSender = sobj_cast<SRadioBox>(evt->Sender());
 			evt3.pChecked = pSender->IsChecked() ? pSender : NULL;
 			return SWindow::FireEvent(evt3);
 		}
