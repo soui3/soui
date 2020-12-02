@@ -46,7 +46,7 @@ namespace SOUI
             return new SPropertyItemColor(pOwner);
         }
     protected:
-        bool OnReNotify(EventArgs *pEvt);
+        bool OnReNotify(IEvtArgs *pEvt);
 
         SPropertyItemColor(SPropertyGrid *pOwner):SPropertyItemText(pOwner)
         {

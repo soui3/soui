@@ -711,7 +711,7 @@ HRESULT STDMETHODCALLTYPE CSmileyHost::SendMessage( /* [in] */ UINT uMsg, /* [in
 }
 
 
-bool CSmileyHost::OnHostVisibleChanged(SOUI::EventArgs *pEvt)
+bool CSmileyHost::OnHostVisibleChanged(SOUI::IEvtArgs *pEvt)
 {
     if(m_pHost->IsVisible(TRUE))
         m_pHost->GetContainer()->RegisterTimelineHandler(this);
@@ -720,7 +720,7 @@ bool CSmileyHost::OnHostVisibleChanged(SOUI::EventArgs *pEvt)
     return false;
 }
 
-bool CSmileyHost::OnHostUpdate(SOUI::EventArgs *pEvt)
+bool CSmileyHost::OnHostUpdate(SOUI::IEvtArgs *pEvt)
 {
     EventRENotify *pReNotify = (EventRENotify*)pEvt;
     if(pReNotify->iNotify == EN_UPDATE)

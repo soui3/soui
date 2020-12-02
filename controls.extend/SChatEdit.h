@@ -4,9 +4,9 @@ namespace SOUI
 {
     #define EVT_CHATEDIT_KEYRETURN (EVT_EXTERNAL_BEGIN+500)
     
-	SEVENT_BEGIN(EventChatEditKeyReturn,EVT_CHATEDIT_KEYRETURN)
+	DEF_EVT_EXT(EventChatEditKeyReturn,EVT_CHATEDIT_KEYRETURN,{
 		bool bCancel;
-	SEVENT_END()
+	});
     
     class SChatEdit : public SRichEdit
     {

@@ -4,11 +4,11 @@
 #define EVT_BTNSEL_CHANGING EVT_EXTERNAL_BEGIN+100
 #define EVT_BTNSEL_CHANGED EVT_BTNSEL_CHANGING+1
 
-class EventBtnSelChanging : public TplEventArgs<EventBtnSelChanging>
+class EventBtnSelChanging : public TplIEvtArgs<EventBtnSelChanging>
 {
 	SOUI_CLASS_NAME(EventTCSelChanging, L"on_btn_sel_changing")
 public:
-	EventBtnSelChanging(SObject *pSender) :TplEventArgs<EventBtnSelChanging>(pSender), bCancel(FALSE) {}
+	EventBtnSelChanging(SObject *pSender) :TplIEvtArgs<EventBtnSelChanging>(pSender), bCancel(FALSE) {}
 	enum {
 		EventID = EVT_BTNSEL_CHANGING
 	};
@@ -16,11 +16,11 @@ public:
 	int iNewSel;
 	BOOL bCancel;
 };
-class EventBtnSelChanged : public TplEventArgs<EventBtnSelChanged>
+class EventBtnSelChanged : public TplIEvtArgs<EventBtnSelChanged>
 {
 	SOUI_CLASS_NAME(EventTCSelChanging, L"on_btn_sel_changed")
 public:
-	EventBtnSelChanged(SObject *pSender) :TplEventArgs<EventBtnSelChanged>(pSender), bCancel(FALSE) {}
+	EventBtnSelChanged(SObject *pSender) :TplIEvtArgs<EventBtnSelChanged>(pSender), bCancel(FALSE) {}
 	enum {
 		EventID = EVT_BTNSEL_CHANGED
 	};

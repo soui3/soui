@@ -47,7 +47,7 @@ namespace SOUI
         }
     }
 
-    bool SPropertyItemColor::OnReNotify(EventArgs *pEvt)
+    bool SPropertyItemColor::OnReNotify(IEvtArgs *pEvt)
     {
         EventRENotify *pReEvt = (EventRENotify*)pEvt;
         if(pReEvt->iNotify == EN_CHANGE)

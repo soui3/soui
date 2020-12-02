@@ -299,7 +299,7 @@ namespace SOUI
 
     }
 
-    bool SChromeTabCtrl::OnBtnNewClick( EventArgs *pEvt )
+    bool SChromeTabCtrl::OnBtnNewClick( IEvtArgs *pEvt )
     {
         InsertTab(NULL,-1);
         return true;
@@ -340,9 +340,9 @@ namespace SOUI
     }
 
 
-    bool SChromeTabCtrl::OnBtnCloseTabClick( EventArgs *pEvt )
+    bool SChromeTabCtrl::OnBtnCloseTabClick( IEvtArgs *pEvt )
     {
-        SWindow *pBtn = (SWindow*)pEvt->sender;
+        SWindow *pBtn = (SWindow*)pEvt->Sender();
         SChromeTab *pTab = (SChromeTab*)pBtn->GetParent();
 
         EventChromeTabClose evt(this);
@@ -354,9 +354,9 @@ namespace SOUI
         return true;
     }
 
-    bool SChromeTabCtrl::OnTabClick( EventArgs *pEvt )
+    bool SChromeTabCtrl::OnTabClick( IEvtArgs *pEvt )
     {
-        SChromeTab *pTab = (SChromeTab*)pEvt->sender;
+        SChromeTab *pTab = (SChromeTab*)pEvt->Sender();
         
         SetCurSel(pTab->m_iOrder);
 

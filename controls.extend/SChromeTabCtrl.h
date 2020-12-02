@@ -12,61 +12,25 @@ namespace SOUI
 #define EVT_CHROMETAB_SELCHANGED    (EVT_CHROMETAB_BEGIN + 2)
 #define EVT_CHROMETAB_DBCLICK       (EVT_CHROMETAB_BEGIN + 3)
 
-    class EventChromeTabNew : public TplEventArgs<EventChromeTabNew>
-    {
-        SOUI_CLASS_NAME(EventChromeTabNew,L"on_chrometab_new")
-    public:
-        EventChromeTabNew(SWindow *pSender):TplEventArgs<EventChromeTabNew>(pSender)
-        {
+	DEF_EVT_EXT(EventChromeTabNew,EVT_CHROMETAB_NEW,{
+		SWindow * pNewTab;
+		int       iNewTab;
+	});
 
-        }
-        enum{EventID=EVT_CHROMETAB_NEW};
-        SWindow * pNewTab;
+	DEF_EVT_EXT(EventChromeTabClose,EVT_CHROMETAB_CLOSE,{
+		SWindow * pCloseTab;
+		int       iCloseTab;
+	});
 
-        int       iNewTab;
-    };
+	DEF_EVT_EXT(EventChromeTabSelChanged,EVT_CHROMETAB_SELCHANGED,{
+		int         iOldSel;
+		int         iNewSel;
+	});
 
-    class EventChromeTabClose : public TplEventArgs<EventChromeTabClose>
-    {
-        SOUI_CLASS_NAME(EventChromeTabClose,L"on_chrometab_close")
-    public:
-        EventChromeTabClose(SWindow *pSender):TplEventArgs<EventChromeTabClose>(pSender)
-        {
-
-        }
-        enum{EventID=EVT_CHROMETAB_CLOSE};
-
-        SWindow * pCloseTab;
-
-        int       iCloseTab;
-    };
-
-    class EventChromeTabSelChanged : public TplEventArgs<EventChromeTabSelChanged>
-    {
-        SOUI_CLASS_NAME(EventChromeTabSelChanged,L"on_chrometab_sel_changed")
-    public:
-        EventChromeTabSelChanged(SWindow *pSender):TplEventArgs<EventChromeTabSelChanged>(pSender)
-        {
-
-        }
-        enum{EventID=EVT_CHROMETAB_SELCHANGED};
-
-        int         iOldSel;
-        int         iNewSel;
-    };
-
-    class EventChromeTabDbClick : public TplEventArgs<EventChromeTabDbClick>
-    {
-        SOUI_CLASS_NAME(EventChromeTabDbClick,L"on_chrometab_dbclick")
-    public:
-        EventChromeTabDbClick(SWindow *pSender):TplEventArgs<EventChromeTabDbClick>(pSender)
-        {
-        }
-        enum{EventID=EVT_CHROMETAB_DBCLICK};
-
-        int iTabIndex;
-        int iOrder;        
-    };
+	DEF_EVT_EXT(EventChromeTabDbClick,EVT_CHROMETAB_DBCLICK,{
+		int iTabIndex;
+		int iOrder;        
+	});
 
     class SChromeTabCtrl : public SWindow, public ITimelineHandler
     {
@@ -104,9 +68,9 @@ namespace SOUI
         
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 
-        bool OnBtnNewClick(EventArgs *pEvt);
-        bool OnBtnCloseTabClick(EventArgs *pEvt);
-        bool OnTabClick(EventArgs *pEvt);
+        bool OnBtnNewClick(IEvtArgs *pEvt);
+        bool OnBtnCloseTabClick(IEvtArgs *pEvt);
+        bool OnTabClick(IEvtArgs *pEvt);
     
         int OnCreate(LPVOID);
         void OnDestroy();

@@ -478,13 +478,13 @@ namespace SOUI
         }
     }
 
-    bool SPropertyGrid::OnSelChanged( EventArgs *pEvt )
+    bool SPropertyGrid::OnSelChanged( IEvtArgs *pEvt )
     {
         UpdateChildrenPos(CHILD_CMDBTN);
         return true;
     }
 
-    bool SPropertyGrid::OnCmdBtnClicked( EventArgs *pEvt )
+    bool SPropertyGrid::OnCmdBtnClicked( IEvtArgs *pEvt )
     {
         int nCurSel = GetCurSel();
         SASSERT(nCurSel!=-1);

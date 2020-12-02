@@ -72,8 +72,8 @@ namespace SOUI
 		void DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD dwState );
 
 	   virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
-	   bool OnItemHover(EventArgs *pEvt);
-	   bool OnItemLeave(EventArgs *pEvt);
+	   bool OnItemHover(IEvtArgs *pEvt);
+	   bool OnItemLeave(IEvtArgs *pEvt);
  
         SOUI_MSG_MAP_BEGIN()
 			MSG_WM_CREATE(OnCreate)

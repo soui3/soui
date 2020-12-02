@@ -42,9 +42,9 @@ namespace SOUI
 		}
 	}
 
-	bool STabCtrlHeaderBinder::EvtHander(EventArgs *e)
+	bool STabCtrlHeaderBinder::EvtHander(IEvtArgs *e)
 	{
-		if (SMap<SWindow*, int>::CPair *pair = m_lstPages.Lookup((SWindow*)e->sender))
+		if (SMap<SWindow*, int>::CPair *pair = m_lstPages.Lookup((SWindow*)e->Sender()))
 		{
 			//m_pTabHost->GetEventSet()->setMutedState(true);
 			m_pTabHost->SetCurSel(pair->m_value);

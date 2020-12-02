@@ -179,10 +179,10 @@ namespace SOUI {
 		return pItem;
 	}
 
-	bool SGroupList::OnGroupClick(EventArgs * e)
+	bool SGroupList::OnGroupClick(IEvtArgs * e)
 	{
-		e->bubbleUp = false;
-		SWindow *pSender = sobj_cast<SWindow>(e->sender);
+		e->SetBubbleUp(FALSE);
+		SWindow *pSender = sobj_cast<SWindow>(e->Sender());
 		GroupInfo *pInfo = (GroupInfo*)pSender->GetParent()->GetUserData();
 		pInfo->bCollapsed = !pInfo->bCollapsed;
 		pSender->GetParent()->FindChildByName(L"container")->SetVisible(!pInfo->bCollapsed);
@@ -194,9 +194,9 @@ namespace SOUI {
 		return true;
 	}
 
-	bool SGroupList::OnItemClick(EventArgs * e)
+	bool SGroupList::OnItemClick(IEvtArgs * e)
 	{
-		SWindow *pSender = sobj_cast<SWindow>(e->sender);
+		SWindow *pSender = sobj_cast<SWindow>(e->Sender());
 		if (m_pSelectedItem != pSender)
 		{
 			pSender->SetCheck(TRUE);
@@ -210,7 +210,7 @@ namespace SOUI {
 			evt.pItemInfo = (ItemInfo*)pSender->GetUserData();
 			FireEvent(evt);
 		}
-		e->bubbleUp = false;
+		e->SetBubbleUp(false);
 		return true;
 	}
 

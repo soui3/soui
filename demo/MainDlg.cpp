@@ -200,11 +200,11 @@ int funCmpare(void* pCtx,const void *p1,const void *p2)
 }
 
 //表头点击事件处理函数
-bool CMainDlg::OnListHeaderClick(EventArgs *pEvtBase)
+bool CMainDlg::OnListHeaderClick(IEvtArgs *pEvtBase)
 {
     //事件对象强制转换
     EventHeaderClick *pEvt =(EventHeaderClick*)pEvtBase;
-    SHeaderCtrl *pHeader=(SHeaderCtrl*)pEvt->sender;
+    SHeaderCtrl *pHeader=(SHeaderCtrl*)pEvt->Sender();
     //从表头控件获得列表控件对象
     SListCtrl *pList= (SListCtrl*)pHeader->GetParent();
     //列表数据排序
@@ -670,12 +670,12 @@ void CMainDlg::OnBtnLRC()
     pHostWnd->ShowWindow(SW_SHOW);
 }
 
-void CMainDlg::OnTabPageRadioSwitch(EventArgs *pEvt)
+void CMainDlg::OnTabPageRadioSwitch(IEvtArgs *pEvt)
 {
     EventSwndStateChanged *pEvt2 = sobj_cast<EventSwndStateChanged>(pEvt);
-    if(pEvt2->CheckState(WndState_Check) && (pEvt2->dwNewState & WndState_Check))
+    if(EventSwndStateChanged_CheckState(pEvt2,WndState_Check) && (pEvt2->dwNewState & WndState_Check))
     {
-        int id= pEvt->idFrom;
+        int id= pEvt->IdFrom();
         STabCtrl *pTab =FindChildByName2<STabCtrl>(L"tab_radio2");
         if(pTab) pTab->SetCurSel(id-10000);
     }
@@ -708,7 +708,7 @@ void CMainDlg::OnBtnRtfOpen()
 }
 
 
-void CMainDlg::OnChromeTabNew( EventArgs *pEvt )
+void CMainDlg::OnChromeTabNew( IEvtArgs *pEvt )
 {
     static int iPage = 0;
     EventChromeTabNew *pEvtTabNew = (EventChromeTabNew*)pEvt;
@@ -735,7 +735,7 @@ void CMainDlg::OnBtnFileWnd()
 }
 
 //演示如何响应Edit的EN_CHANGE事件
-void CMainDlg::OnUrlReNotify(EventArgs *pEvt)
+void CMainDlg::OnUrlReNotify(IEvtArgs *pEvt)
 {
     EventRENotify *pEvt2 = sobj_cast<EventRENotify>(pEvt);
     SLOGFMTD(_T("OnUrlReNotify,iNotify = %d"),pEvt2->iNotify);
@@ -745,14 +745,14 @@ void CMainDlg::OnUrlReNotify(EventArgs *pEvt)
     }
 }
 
-void CMainDlg::OnMclvCtxMenu(EventArgs *pEvt)
+void CMainDlg::OnMclvCtxMenu(IEvtArgs *pEvt)
 {
     EventCtxMenu *pEvt2 = sobj_cast<EventCtxMenu>(pEvt);
     POINT pt = pEvt2->pt;
     
     {
         //选中鼠标点击行
-        SMCListView *pListview = sobj_cast<SMCListView>(pEvt2->sender);
+        SMCListView *pListview = sobj_cast<SMCListView>(pEvt2->Sender());
         CPoint pt2 = pt;
         SItemPanel *pItem = pListview->HitTest(pt2);
         if(pItem)
@@ -772,14 +772,14 @@ void CMainDlg::OnMclvCtxMenu(EventArgs *pEvt)
 
 }
 
-void CMainDlg::OnMclvEventOfPanel(EventArgs * pEvt)
+void CMainDlg::OnMclvEventOfPanel(IEvtArgs * pEvt)
 {
 	EventOfPanel *e2 = sobj_cast<EventOfPanel>(pEvt);
 	SASSERT(e2);
 	if (e2->pOrgEvt->GetID() == EventItemPanelDbclick::EventID)
 	{
 		EventItemPanelDbclick *e3 = sobj_cast<EventItemPanelDbclick>(e2->pOrgEvt);
-		SItemPanel *pSender = sobj_cast<SItemPanel>(e3->sender);
+		SItemPanel *pSender = sobj_cast<SItemPanel>(e3->Sender());
 		SASSERT(pSender);
 		int iItem = pSender->GetItemIndex();
 		SMessageBox(m_hWnd, SStringT().Format(_T("double click item:%d"), iItem+1), _T("haha"), MB_OK | MB_ICONSTOP);
@@ -787,11 +787,11 @@ void CMainDlg::OnMclvEventOfPanel(EventArgs * pEvt)
 }
 
 //处理模拟菜单中控件的事件
-void CMainDlg::OnMenuSliderPos(EventArgs *pEvt)
+void CMainDlg::OnMenuSliderPos(IEvtArgs *pEvt)
 {
     EventSliderPos *pEvt2 = sobj_cast<EventSliderPos>(pEvt);
     SASSERT(pEvt2);
-    SSliderBar * pSlider = sobj_cast<SSliderBar>(pEvt->sender);
+    SSliderBar * pSlider = sobj_cast<SSliderBar>(pEvt->Sender());
     SASSERT(pSlider);
     //注意此处不能调用this->FindChildByXXX，因为pEvt是菜单中的对象，和this不是一个host
     SWindow *pText = pSlider->GetParent()->FindChildByName(L"menu_text");
@@ -800,13 +800,13 @@ void CMainDlg::OnMenuSliderPos(EventArgs *pEvt)
 }
 
 
-void CMainDlg::OnMatrixWindowReNotify(EventArgs *pEvt)
+void CMainDlg::OnMatrixWindowReNotify(IEvtArgs *pEvt)
 {
     EventRENotify *pEvt2 = sobj_cast<EventRENotify>(pEvt);
     SASSERT(pEvt2);
     if(pEvt2->iNotify != EN_CHANGE)
         return;
-    SEdit *pEdit = sobj_cast<SEdit>(pEvt->sender);
+    SEdit *pEdit = sobj_cast<SEdit>(pEvt->Sender());
     SASSERT(pEdit);
     
     SStringW strValue = S_CT2W(pEdit->GetWindowText());
@@ -814,16 +814,16 @@ void CMainDlg::OnMatrixWindowReNotify(EventArgs *pEvt)
     SWindow *pMatrixWnd = FindChildByName(L"matrix_test");
     SASSERT(pMatrixWnd);
     
-    if(SStringW(L"edit_rotate") == pEvt->nameFrom)
+    if(SStringW(L"edit_rotate") == pEvt->NameFrom())
     {
         pMatrixWnd->SetAttribute(L"rotate",strValue);
-    }else if(SStringW(L"edit_skew") == pEvt->nameFrom)
+    }else if(SStringW(L"edit_skew") == pEvt->NameFrom())
     {
         pMatrixWnd->SetAttribute(L"skew",strValue);
-    }else if(SStringW(L"edit_scale")==pEvt->nameFrom)
+    }else if(SStringW(L"edit_scale") == pEvt->NameFrom())
     {
         pMatrixWnd->SetAttribute(L"scale",strValue);
-    }else if(SStringW(L"edit_translate") == pEvt->nameFrom)
+    }else if(SStringW(L"edit_translate") == pEvt->NameFrom())
     {
         pMatrixWnd->SetAttribute(L"translate",strValue);
     }
@@ -941,21 +941,21 @@ void CMainDlg::OnBtnStopNotifyThread()
 	SNotifyCenter::getSingleton().removeEvent(EventThread::EventID);
 }
 
-bool CMainDlg::OnEventThreadStart(EventArgs *e)
+bool CMainDlg::OnEventThreadStart(IEvtArgs *e)
 {
 	SChatEdit *pOutput = FindChildByID2<SChatEdit>(R.id.re_notifycenter);
 	pOutput->AppendFormatText(L"start Thread");
 	return true;
 }
 
-bool CMainDlg::OnEventThreadStop(EventArgs *e)
+bool CMainDlg::OnEventThreadStop(IEvtArgs *e)
 {
 	SChatEdit *pOutput = FindChildByID2<SChatEdit>(R.id.re_notifycenter);
 	pOutput->AppendFormatText(L"stop Thread");
 	return true;
 }
 
-bool CMainDlg::OnEventThread(EventArgs *e)
+bool CMainDlg::OnEventThread(IEvtArgs *e)
 {
 	EventThread *pEvt = sobj_cast<EventThread>(e);
 	SStringW strMsg = SStringW().Format(L"event thread, sleep = %d",pEvt->nData);
@@ -1013,10 +1013,10 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 	}
 }
 
-void CMainDlg::OnCbxInterpolotorChange(EventArgs *e)
+void CMainDlg::OnCbxInterpolotorChange(IEvtArgs *e)
 {
 	EventCBSelChange *e2=sobj_cast<EventCBSelChange>(e);
-	SComboBox *pCbx = sobj_cast<SComboBox>(e2->sender);
+	SComboBox *pCbx = sobj_cast<SComboBox>(e2->Sender());
 	if(e2->nCurSel!=-1)
 	{
 		SStringT str = pCbx->GetLBText(e2->nCurSel);
@@ -1031,14 +1031,14 @@ void CMainDlg::OnCbxInterpolotorChange(EventArgs *e)
 	}
 }
 
-void CMainDlg::OnEventPath(EventArgs *e)
+void CMainDlg::OnEventPath(IEvtArgs *e)
 {
 	EventPath * e2 = sobj_cast<EventPath>(e);
 	SStringT strLen = SStringT().Format(_T("%.2f"),e2->fLength);
 	FindChildByID(R.id.txt_path_length)->SetWindowText(strLen);
 }
 
-void CMainDlg::OnInitGroup(EventArgs *e)
+void CMainDlg::OnInitGroup(IEvtArgs *e)
 {
 	EventGroupListInitGroup *e2 = sobj_cast<EventGroupListInitGroup>(e);
 	SToggle *pTgl = e2->pItem->FindChildByID2<SToggle>(R.id.tgl_switch);
@@ -1046,14 +1046,14 @@ void CMainDlg::OnInitGroup(EventArgs *e)
 	e2->pItem->FindChildByID(R.id.txt_label)->SetWindowText(e2->pGroupInfo->strText);
 }
 
-void CMainDlg::OnInitItem(EventArgs *e)
+void CMainDlg::OnInitItem(IEvtArgs *e)
 {
 	EventGroupListInitItem *e2 = sobj_cast<EventGroupListInitItem>(e);
 	e2->pItem->FindChildByID(R.id.txt_label)->SetWindowText(e2->pItemInfo->strText);
 	e2->pItem->FindChildByID2<SImageWnd>(R.id.img_indicator)->SetIcon(e2->pItemInfo->iIcon);
 }
 
-void CMainDlg::OnGroupStateChanged(EventArgs *e)
+void CMainDlg::OnGroupStateChanged(IEvtArgs *e)
 {
 	EventGroupStateChanged *e2 = sobj_cast<EventGroupStateChanged>(e);
 	SToggle *pTgl = e2->pItem->FindChildByID2<SToggle>(R.id.tgl_switch);
@@ -1062,7 +1062,7 @@ void CMainDlg::OnGroupStateChanged(EventArgs *e)
 }
 
 
-void CMainDlg::OnCtrlPageClick(EventArgs *e)
+void CMainDlg::OnCtrlPageClick(IEvtArgs *e)
 {
 	EventGroupListItemCheck *e2=sobj_cast<EventGroupListItemCheck>(e);
 	STabCtrl *pTabOp = FindChildByID2<STabCtrl>(R.id.tab_ctrls);
@@ -1071,9 +1071,9 @@ void CMainDlg::OnCtrlPageClick(EventArgs *e)
 
 }
 
-void CMainDlg::OnMcLvHeaderRelayout(EventArgs * e)
+void CMainDlg::OnMcLvHeaderRelayout(IEvtArgs * e)
 {
-	SHeaderCtrl *pHeader = sobj_cast<SHeaderCtrl>(e->sender);
+	SHeaderCtrl *pHeader = sobj_cast<SHeaderCtrl>(e->Sender());
 	int nItems = pHeader->GetItemCount();
 	if (nItems > 1)
 	{
@@ -1098,7 +1098,7 @@ void CMainDlg::OnBtnCreateByTemp()
 	}
 }
 
-void CMainDlg::On3dViewRotate(EventArgs *e)
+void CMainDlg::On3dViewRotate(IEvtArgs *e)
 {
 	EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
 }
@@ -1147,9 +1147,9 @@ void CMainDlg::onAnimationEnd(IAnimation * animation)
 }
 
 
-void CMainDlg::OnToggleLeft(EventArgs *e)
+void CMainDlg::OnToggleLeft(IEvtArgs *e)
 {
-	SToggle *pToggle = sobj_cast<SToggle>(e->sender);
+	SToggle *pToggle = sobj_cast<SToggle>(e->Sender());
 	SASSERT(pToggle);
 	SWindow *pWnd = FindChildByName(L"pane_left");
 	if(!pWnd)

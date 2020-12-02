@@ -7,8 +7,7 @@
 namespace SOUI
 {
 
-	SEVENT_BEGIN(EventGifPlayOver,EVT_EXTERNAL_BEGIN + 600)
-	SEVENT_END()
+	DEF_EVT_EXT(EventGifPlayOver,EVT_EXTERNAL_BEGIN + 600,{});
 	
     /**
     * @class     SGifPlayer

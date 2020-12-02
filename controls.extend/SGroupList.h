@@ -16,25 +16,25 @@ namespace SOUI{
 		};
 	}
 
-	SEVENT_BEGIN(EventGroupListInitGroup, EVT_EXTERNAL_BEGIN + 3000)
+	DEF_EVT_EXT(EventGroupListInitGroup,EVT_EXTERNAL_BEGIN + 3000,{
 		SWindow *pItem;
 	    GroupListStuct::GroupInfo *pGroupInfo;
-	SEVENT_END()
+	});
 
-	SEVENT_BEGIN(EventGroupListInitItem, EVT_EXTERNAL_BEGIN + 3001)
+	DEF_EVT_EXT(EventGroupListInitItem,EVT_EXTERNAL_BEGIN + 3001,{
 		SWindow *pItem;
 		GroupListStuct::ItemInfo *pItemInfo;
-	SEVENT_END()
+	});
 
-	SEVENT_BEGIN(EventGroupListItemCheck, EVT_EXTERNAL_BEGIN + 3002)
+	DEF_EVT_EXT(EventGroupListItemCheck,EVT_EXTERNAL_BEGIN + 3002,{
 		SWindow *pItem;
 		GroupListStuct::ItemInfo *pItemInfo;
-	SEVENT_END()
+	});
 
-	SEVENT_BEGIN(EventGroupStateChanged, EVT_EXTERNAL_BEGIN + 3003)
+	DEF_EVT_EXT(EventGroupStateChanged,EVT_EXTERNAL_BEGIN + 3003,{
 		SWindow *pItem;
 		GroupListStuct::GroupInfo *pGroupInfo;
-	SEVENT_END()
+	});
 
 	class SGroupList : public SScrollView
 	{
@@ -47,8 +47,8 @@ namespace SOUI{
 		SWindow * InsertGroup(int iGroup,const SStringW & name,const SStringT & text, int iIcon, int nID);
 		SWindow * InsertItem(SWindow *pGroup,int iItem, const SStringW & name, const SStringT & text, int iIcon, int nID);
 	protected:
-		bool OnGroupClick(EventArgs *e);
-		bool OnItemClick(EventArgs *e);
+		bool OnGroupClick(IEvtArgs *e);
+		bool OnItemClick(IEvtArgs *e);
 
 		virtual BOOL CreateChildren(SXmlNode xmlNode);
 

@@ -15,7 +15,7 @@ namespace SOUI
 		CAutoRefPtr<STabCtrl> m_pTabHost;
 	protected:
 		SMap<SWindow*, int> m_lstPages;
-		bool EvtHander(EventArgs *e);
+		bool EvtHander(IEvtArgs *e);
 		bool TabSelChanged(EventTabSelChanged *evt_sel);
 	};
 }

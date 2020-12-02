@@ -83,9 +83,9 @@ CRect CSetSkinWnd::GetMargin(int id)
 	return CRect();
 }
 
-void CSetSkinWnd::OnSetSkin(EventArgs * e)
+void CSetSkinWnd::OnSetSkin(IEvtArgs * e)
 {
-	SWindow *sender = (SWindow*) e->sender;
+	SWindow *sender = (SWindow*) e->Sender();
 	int nIndex = sender->GetID();
 	SDemoSkin *skin = (SDemoSkin *) GETSKIN(L"demoskinbk",GetScale());
 	SStringT strSkinFile;
@@ -108,9 +108,9 @@ void CSetSkinWnd::OnSetSkin(EventArgs * e)
 }
 
 
-void CSetSkinWnd::OnColor(EventArgs * e)
+void CSetSkinWnd::OnColor(IEvtArgs * e)
 {
-	SWindow *sender = (SWindow*)e->sender;
+	SWindow *sender = (SWindow*)e->Sender();
 	SDemoSkin *skin = (SDemoSkin *)GETSKIN(L"demoskinbk", GetScale());
 	if (skin)
 	{

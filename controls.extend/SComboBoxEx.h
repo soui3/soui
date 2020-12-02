@@ -4,12 +4,12 @@
 namespace SOUI
 {
     
-    class EventOfComoboxExItem : public TplEventArgs<EventOfComoboxExItem>
+    class EventOfComoboxExItem : public TplIEvtArgs<EventOfComoboxExItem>
     {
         SOUI_CLASS_NAME(EventOfComoboxExItem,L"on_event_of_comboxex_item")
     public:
         EventOfComoboxExItem(SObject *pSender,EventCmd *_pOrgEvt )
-            :TplEventArgs<EventOfComoboxExItem>(pSender)
+            :TplIEvtArgs<EventOfComoboxExItem>(pSender)
             ,pOrgEvt(_pOrgEvt)
             ,bCancel(FALSE)
         {
@@ -187,11 +187,11 @@ protected:
     /**
      * SComboBoxEx::FireEvent
      * @brief    通知消息
-     * @param    EventArgs &evt -- 事件对象 
+     * @param    IEvtArgs &evt -- 事件对象 
      * 
      * Describe  此函数是消息响应函数
      */ 
-    virtual BOOL FireEvent(EventArgs &evt);
+    virtual BOOL FireEvent(IEvtArgs &evt);
 
     /**
      * SComboBoxEx::CreateListBox

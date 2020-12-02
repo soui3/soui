@@ -262,8 +262,8 @@ public://ITimelineHandler
 	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE
 	{OnTimer(10);}
 public:
-    bool OnHostUpdate(SOUI::EventArgs *pEvt);
-    bool OnHostVisibleChanged(SOUI::EventArgs *pEvt);
+    bool OnHostUpdate(SOUI::IEvtArgs *pEvt);
+    bool OnHostVisibleChanged(SOUI::IEvtArgs *pEvt);
 
 protected:
 

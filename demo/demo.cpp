@@ -82,13 +82,6 @@ public:
 	}
 };
 
-
-struct CmdData{
-	int a;
-	float b;
-};
-DEF_EVT(Cmd,100,Cmd,CmdData);
-
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
 	//必须要调用OleInitialize来初始化运行环境
@@ -97,9 +90,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	//LoadLibrary(L"E:\\soui.taobao\\richedit\\Debug\\riched20.dll");
 
     int nRet = 0; 
-	Cmd cmd(NULL);
-	cmd.a = 100;
-	cmd.b = 90.0f;
 
     //使用imgdecoder-png图片解码模块演示apng动画
     SComMgr2 *pComMgr = new SComMgr2(_T("imgdecoder-png"));

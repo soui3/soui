@@ -483,9 +483,9 @@ protected:
 	virtual void    UpdateChildrenPosition();
 	virtual void UpdateScrollBar();
 	int GetCountPerPage(BOOL bPartial);
-	bool OnHeaderClick(EventArgs *pEvt);
-	bool OnHeaderSizeChanging(EventArgs *pEvt);
-	bool OnHeaderSwap(EventArgs *pEvt);
+	bool OnHeaderClick(IEvtArgs *pEvt);
+	bool OnHeaderSizeChanging(IEvtArgs *pEvt);
+	bool OnHeaderSwap(IEvtArgs *pEvt);
 	int GetColumnCount() const;
 public:
     SOUI_ATTRS_BEGIN()

@@ -1,9 +1,9 @@
 #pragma once
 namespace SOUI{
 
-	SEVENT_BEGIN(EventPath,EVT_EXTERNAL_BEGIN+23451)
+	DEF_EVT_EXT(EventPath,EVT_EXTERNAL_BEGIN + 23451,{
 		float fLength;
-	SEVENT_END()
+	});
 
 	class SPathView : public SWindow
 	{

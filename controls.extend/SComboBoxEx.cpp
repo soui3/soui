@@ -126,7 +126,7 @@ namespace SOUI
         __super::OnSelChanged();
     }
 
-    BOOL SComboBoxEx::FireEvent( EventArgs &evt )
+    BOOL SComboBoxEx::FireEvent( IEvtArgs &evt )
     {
         if(evt.idFrom == IDC_DROPDOWN_LIST && m_pDropDownWnd)
         {

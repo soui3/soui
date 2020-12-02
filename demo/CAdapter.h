@@ -45,7 +45,7 @@ public:
 
 	bool OnCbxSelChange(EventCBSelChange *pEvt)
 	{
-		SComboBox *pCbx = sobj_cast<SComboBox>(pEvt->sender);
+		SComboBox *pCbx = sobj_cast<SComboBox>(pEvt->Sender());
 		int iItem = pCbx->GetRoot()->GetUserData();
 		m_pCbxSel[iItem] = pCbx->GetCurSel();
 		return true;
@@ -53,7 +53,7 @@ public:
 
 	bool OnButtonClick(EventCmd *pEvt)
 	{
-		SButton *pBtn = sobj_cast<SButton>(pEvt->sender);
+		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetRoot()->GetUserData();
 		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
 		return true;
@@ -129,18 +129,18 @@ public:
 		pBtn->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestAdapterFlex::OnButtonClick, this));
 	}
 
-	bool OnItemStateChanged(EventArgs *e)
+	bool OnItemStateChanged(IEvtArgs *e)
 	{
 		EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
-		if (!e2->CheckState(WndState_Hover)) return false;
+		if (!EventSwndStateChanged_CheckState(e2,WndState_Hover)) return false;
 		//通知界面重绘
 		notifyDataSetInvalidated();
 		return true;
 	}
 
-	bool OnButtonClick(EventArgs *pEvt)
+	bool OnButtonClick(IEvtArgs *pEvt)
 	{
-		SButton *pBtn = sobj_cast<SButton>(pEvt->sender);
+		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetUserData();
 		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
 		return true;
@@ -285,9 +285,9 @@ public:
 		pBtnUninstall->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestMcAdapterFix::OnButtonClick, this));
 	}
 
-	bool OnButtonClick(EventArgs *pEvt)
+	bool OnButtonClick(IEvtArgs *pEvt)
 	{
-		SButton *pBtn = sobj_cast<SButton>(pEvt->sender);
+		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetUserData();
 
 		if (SMessageBox(NULL, SStringT().Format(_T("Are you sure to uninstall the selected [%d] software?"), iItem), _T("uninstall"), MB_OKCANCEL | MB_ICONQUESTION) == IDOK)
@@ -413,9 +413,9 @@ public:
 		pBtn->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestTileAdapter::OnButtonClick, this));
 	}
 
-	bool OnButtonClick(EventArgs *pEvt)
+	bool OnButtonClick(IEvtArgs *pEvt)
 	{
-		SButton *pBtn = sobj_cast<SButton>(pEvt->sender);
+		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetRoot()->GetUserData();
 		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
 		return true;
@@ -475,9 +475,9 @@ public:
 		pSwitch->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTreeViewAdapter::OnSwitchClick, this));
 	}
 
-	bool OnSwitchClick(EventArgs *pEvt)
+	bool OnSwitchClick(IEvtArgs *pEvt)
 	{
-		SToggle *pToggle = sobj_cast<SToggle>(pEvt->sender);
+		SToggle *pToggle = sobj_cast<SToggle>(pEvt->Sender());
 		SASSERT(pToggle);
 		SItemPanel *pItem = sobj_cast<SItemPanel>(pToggle->GetRoot());
 		SASSERT(pItem);

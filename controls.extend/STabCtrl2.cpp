@@ -267,7 +267,7 @@ namespace SOUI
 		return iRet;
 	}
 
-	bool STabCtrl2::OnItemHover(EventArgs *pEvt)
+	bool STabCtrl2::OnItemHover(IEvtArgs *pEvt)
 	{
 		bool bRet = true;
 		EventTabItemHover *pEvt2 = sobj_cast<EventTabItemHover>(pEvt);
@@ -279,7 +279,7 @@ namespace SOUI
 		return bRet;
 	}
 
-	bool STabCtrl2::OnItemLeave(EventArgs *pEvt)
+	bool STabCtrl2::OnItemLeave(IEvtArgs *pEvt)
 	{
 		bool bRet = true;
 		EventTabItemLeave *pEvt2 = sobj_cast<EventTabItemLeave>(pEvt);

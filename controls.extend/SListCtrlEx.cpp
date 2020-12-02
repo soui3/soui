@@ -1035,12 +1035,12 @@ lblEnd:
 		return max(bPartial && divHeight.rem > 0 ? divHeight.quot + 1 : divHeight.quot, 1);
 	}
 
-	bool SListCtrlEx::OnHeaderClick(EventArgs *pEvt)
+	bool SListCtrlEx::OnHeaderClick(IEvtArgs *pEvt)
 	{
 		return true;
 	}
 
-	bool SListCtrlEx::OnHeaderSizeChanging(EventArgs *pEvt)
+	bool SListCtrlEx::OnHeaderSizeChanging(IEvtArgs *pEvt)
 	{
 		UpdateScrollBar();
 		InvalidateRect(GetListRect());
@@ -1048,7 +1048,7 @@ lblEnd:
 		return true;
 	}
 
-	bool SListCtrlEx::OnHeaderSwap(EventArgs *pEvt)
+	bool SListCtrlEx::OnHeaderSwap(IEvtArgs *pEvt)
 	{
 		InvalidateRect(GetListRect());
 		return true;

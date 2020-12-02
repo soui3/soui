@@ -69,7 +69,7 @@ public:
 		pItem->FindChildByName(L"btn_play")->SetUserData(position);
 	}
 	
-	bool btn_play(EventArgs *pEvt)
+	bool btn_play(IEvtArgs *pEvt)
 	{
 		SAutoLock autolock(updatalock);
 		SWindow *btn = sobj_cast<SWindow>(pEvt->sender);		
@@ -114,7 +114,7 @@ public:
 			ctxFun=NULL;
 		ctxFun = pFun.Clone();
 	}
-	bool OnItemCtxMenu(EventArgs *pEvt)
+	bool OnItemCtxMenu(IEvtArgs *pEvt)
 	{
 		if (ctxFun)
 		{
@@ -122,7 +122,7 @@ public:
 		}
 		return false;
 	}
-	bool OnItemStateChanged(EventArgs *pEvt)
+	bool OnItemStateChanged(IEvtArgs *pEvt)
 	{
 		SWindow *pItem = sobj_cast<SWindow>(pEvt->sender);
 		if ((pItem->GetState() & WndState_Check)|| (pItem->GetState() & WndState_Hover))
@@ -183,7 +183,7 @@ public:
 		return true;
 	}
 	/*
-	bool OnPanelMouseHover(EventArgs *pEvt)
+	bool OnPanelMouseHover(IEvtArgs *pEvt)
 	{
 		SWindow *pItem = sobj_cast<SWindow>(pEvt->sender);
 		pItem=pItem->FindChildByName(_T("playbtn"));
@@ -194,7 +194,7 @@ public:
 		return true;
 	}
 
-	bool OnPanelMouseLeave(EventArgs *pEvt)
+	bool OnPanelMouseLeave(IEvtArgs *pEvt)
 	{
 		SWindow *pItem = sobj_cast<SWindow>(pEvt->sender);
 		pItem = pItem->FindChildByName(_T("playbtn"));

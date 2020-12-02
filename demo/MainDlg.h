@@ -23,19 +23,16 @@ using namespace SOUI;
 
 extern UINT g_dwSkinChangeMessage;
 //演示使用SNotifyCenter的异步事件
-SEVENT_BEGIN(EventThread,EVT_EXTERNAL_BEGIN+30000)
+DEF_EVT_EXT(EventThread,EVT_EXTERNAL_BEGIN + 301,{
 int nData;
-SEVENT_END()
+});
 
 //演示使用SNotifyCenter的同步事件
-SEVENT_BEGIN(EventThreadStart,EVT_EXTERNAL_BEGIN+30001)
-SEVENT_END()
+DEF_EVT_EXT(EventThreadStart,EVT_EXTERNAL_BEGIN + 30001,{});
 
 
 //演示使用SNotifyCenter的同步事件
-SEVENT_BEGIN(EventThreadStop,EVT_EXTERNAL_BEGIN+30002)
-SEVENT_END()
-
+DEF_EVT_EXT(EventThreadStop,EVT_EXTERNAL_BEGIN + 30002,{});
 
 
 /**
@@ -156,24 +153,24 @@ protected:
 	bool LoadSkin();
 
 	//演示如何使用subscribeEvent来不使用事件映射表实现事件响应
-    bool OnListHeaderClick(EventArgs *pEvt);
+    bool OnListHeaderClick(IEvtArgs *pEvt);
 
         
-    void OnChromeTabNew(EventArgs *pEvt);
+    void OnChromeTabNew(IEvtArgs *pEvt);
 
-    void OnTabPageRadioSwitch(EventArgs *pEvt);
+    void OnTabPageRadioSwitch(IEvtArgs *pEvt);
     
     void OnBtnFileWnd();
 
-    void OnUrlReNotify(EventArgs *pEvt);
+    void OnUrlReNotify(IEvtArgs *pEvt);
     
-    void OnMclvCtxMenu(EventArgs *pEvt);
-	void OnMclvEventOfPanel(EventArgs *pEvt);
+    void OnMclvCtxMenu(IEvtArgs *pEvt);
+	void OnMclvEventOfPanel(IEvtArgs *pEvt);
 	
     //处理模拟菜单中控件的事件
-    void OnMenuSliderPos(EventArgs *pEvt);
+    void OnMenuSliderPos(IEvtArgs *pEvt);
     
-    void OnMatrixWindowReNotify(EventArgs *pEvt);
+    void OnMatrixWindowReNotify(IEvtArgs *pEvt);
 
     void OnBtnCreateChildren();
     void OnBtnSkin();
@@ -190,32 +187,32 @@ protected:
 	void OnBtnStartNotifyThread();
 	void OnBtnStopNotifyThread();
 
-	bool OnEventThreadStart(EventArgs *e);
-	bool OnEventThreadStop(EventArgs *e);
-	bool OnEventThread(EventArgs *e);
+	bool OnEventThreadStart(IEvtArgs *e);
+	bool OnEventThreadStop(IEvtArgs *e);
+	bool OnEventThread(IEvtArgs *e);
 	void OnBtnOpenWrapContent();
 	
-	void OnCbxInterpolotorChange(EventArgs *e);
+	void OnCbxInterpolotorChange(IEvtArgs *e);
 
-	void OnEventPath(EventArgs *e);
+	void OnEventPath(IEvtArgs *e);
 
 	HRESULT OnSkinChangeMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL bHandled);
 
-	void OnInitGroup(EventArgs *e);
-	void OnInitItem(EventArgs *e);
-	void OnGroupStateChanged(EventArgs *e);
-	void OnCtrlPageClick(EventArgs *e);
+	void OnInitGroup(IEvtArgs *e);
+	void OnInitItem(IEvtArgs *e);
+	void OnGroupStateChanged(IEvtArgs *e);
+	void OnCtrlPageClick(IEvtArgs *e);
 
-	void OnMcLvHeaderRelayout(EventArgs *e);
+	void OnMcLvHeaderRelayout(IEvtArgs *e);
 
 	//从模板创建子窗口demo
 	void OnBtnCreateByTemp();
 
-	void On3dViewRotate(EventArgs *e);
+	void On3dViewRotate(IEvtArgs *e);
 
 	void OnSetPropItemValue();
 
-	void OnToggleLeft(EventArgs *e);
+	void OnToggleLeft(IEvtArgs *e);
 
 	void OnSouiClick();
 

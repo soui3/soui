@@ -73,10 +73,10 @@ public:
 		//pItem->FindChildByName(L"btn_play")->SetUserData(position);
 	}
 
-// 	bool btn_play(EventArgs *pEvt)
+// 	bool btn_play(IEvtArgs *pEvt)
 // 	{
 // 		SAutoLock autolock(updatalock);
-// 		SWindow *btn = sobj_cast<SWindow>(pEvt->sender);
+// 		SWindow *btn = sobj_cast<SWindow>(pEvt->Sender());
 // 		m_curren_play = btn->GetUserData();
 // 		return SLibZplay::getSingleton().Play(m_musicList[m_curren_play].songpath);
 // 	}
@@ -118,7 +118,7 @@ public:
 // 			ctxFun = NULL;
 // 		ctxFun = pFun.Clone();
 // 	}
-// 	bool OnItemCtxMenu(EventArgs *pEvt)
+// 	bool OnItemCtxMenu(IEvtArgs *pEvt)
 // 	{
 // 		if (ctxFun)
 // 		{
@@ -126,9 +126,9 @@ public:
 // 		}
 // 		return false;
 // 	}
-	bool OnItemStateChanged(EventArgs *pEvt)
+	bool OnItemStateChanged(IEvtArgs *pEvt)
 	{
-		SWindow *pItem = sobj_cast<SWindow>(pEvt->sender);
+		SWindow *pItem = sobj_cast<SWindow>(pEvt->Sender());
 		if ((pItem->GetState() & WndState_Check) || (pItem->GetState() & WndState_Hover))
 		{
 			pItem = pItem->FindChildByName(_T("playbtn"));

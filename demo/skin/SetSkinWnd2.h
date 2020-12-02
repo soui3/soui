@@ -17,7 +17,7 @@ class CSetSkinWnd :
 	}
 	HRESULT OnSkinChangeMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL bHandled);
 	
-	void OnColor(EventArgs * e);
+	void OnColor(IEvtArgs * e);
 	BOOL OnInitDialog(HWND wndFocus, LPARAM lInitParam);
 protected:
 	virtual void OnFinalMessage(HWND hWnd) {
@@ -30,7 +30,7 @@ protected:
 public:
 	CSetSkinWnd();
 	~CSetSkinWnd();
-	void OnSetSkin(EventArgs *e);
+	void OnSetSkin(IEvtArgs *e);
 	void OnActivate(UINT nState, BOOL bMinimized, HWND wndOther);
 	void OnBuiltinSkin();
 

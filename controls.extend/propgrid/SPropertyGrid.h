@@ -8,10 +8,9 @@ namespace SOUI
 {
     #define EVT_PG_VALUECHANGED (EVT_EXTERNAL_BEGIN+100)
 
-	SEVENT_BEGIN(EventPropGridValueChanged,EVT_PG_VALUECHANGED)
+	DEF_EVT_EXT(EventPropGridValueChanged,EVT_EXTERNAL_BEGIN + 100,{
 		IPropertyItem * pItem;
-	SEVENT_END()
-
+	});
 
     class SPropertyGroup : public SPropertyItemBase
     {
@@ -138,8 +137,8 @@ namespace SOUI
         SWindow *   m_pInplaceActiveWnd;    //属性内嵌的窗口
         
     protected:
-        bool OnSelChanged(EventArgs *pEvt);
-        bool OnCmdBtnClicked(EventArgs *pEvt);
+        bool OnSelChanged(IEvtArgs *pEvt);
+        bool OnCmdBtnClicked(IEvtArgs *pEvt);
         
         int ExpandChildren(const IPropertyItem *pItem,int iInsert);
         void CollapseChildren(const IPropertyItem *pItem,int idx);
