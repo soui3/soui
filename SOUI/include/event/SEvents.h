@@ -12,16 +12,13 @@
 */
 
 #pragma once
-#include <core/sobjType.h>
-#include <sobject/Sobject.hpp>
-#include <helper/obj-ref-impl.hpp>
 
-
+#include <event/SEventImpl.hpp>
 
 SNSBEGIN
 
 class SWindow;
-enum SOUI_EVENTS
+typedef enum _SOUI_EVENTS
 {
 	EVT_INIT=8000,
 	EVT_EXIT,
@@ -87,7 +84,7 @@ enum SOUI_EVENTS
 	EVT_TC_SELCHANGED,
 	EVT_TC_EXPAND,
 	EVT_TC_CHECKSTATE,
-	EVT_TC_DBCLICK,    //treectrl的叶子节点双击事件, add by zhaosheng
+	EVT_TC_DBCLICK,
 
 	EVT_LV_SELCHANGING = 15100,
 	EVT_LV_SELCHANGED,
@@ -127,63 +124,10 @@ enum SOUI_EVENTS
 
 
 	EVT_EXTERNAL_BEGIN=10000000,
-};
+}SOUI_EVENTS;
 
 
-
-#undef INTERFACE
-#define INTERFACE IEvtArgs
-DECLARE_INTERFACE_(IEvtArgs,IObject)
-{
-	STDMETHOD_(IObject*,Sender)(THIS) PURE;
-	STDMETHOD_(int,IdFrom)(THIS) SCONST PURE;
-	STDMETHOD_(void,SetIdFrom)(THIS_ int id) PURE;
-	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST PURE;
-	STDMETHOD_(void,SetNameFrom) (THIS_ LPCWSTR name) PURE;
-	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST PURE;
-	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bBubbleUp) PURE;
-	STDMETHOD_(UINT,HandleCount)(THIS) SCONST PURE;
-	STDMETHOD_(void,IncreaseHandleCount)(THIS) PURE;
-	STDMETHOD_(LPCVOID,Data)(THIS) PURE;
-};
-
-class SEvtArgs : public TObjRefImpl< SObjectImpl<IEvtArgs> >
-{
-public:
-	UINT handled; 
-	BOOL bubbleUp; 
-	int  idFrom; 
-	LPCWSTR nameFrom;
-	SAutoRefPtr<IObject> sender; 
-
-	STDMETHOD_(IObject*,Sender)(THIS){return sender;}
-	STDMETHOD_(int,IdFrom) (THIS) SCONST{ return idFrom;}
-	STDMETHOD_(void,SetIdFrom)(THIS_ int id) {idFrom = id;}
-	STDMETHOD_(LPCWSTR,NameFrom) (THIS) SCONST{return nameFrom;}
-	STDMETHOD_(void,SetNameFrom) (THIS_ LPCWSTR name) {nameFrom = name;}
-	STDMETHOD_(BOOL,IsBubbleUp) (THIS) SCONST{return bubbleUp;}
-	STDMETHOD_(void,SetBubbleUp) (THIS_ BOOL bSet) {bubbleUp = bSet;}
-	STDMETHOD_(UINT,HandleCount)(THIS) SCONST {return handled;}
-	STDMETHOD_(void,IncreaseHandleCount)(THIS) {handled++;}
-	STDMETHOD_(LPCVOID,Data)(THIS) {return NULL;}
-
-public:
-	SEvtArgs(IObject *pSender)
-		: handled(0)
-		, sender(pSender)
-		, bubbleUp(true)
-	{
-		if(NULL!=pSender) {
-			idFrom = pSender->GetID();
-			nameFrom = pSender->GetName();
-		} else {
-			idFrom = 0;
-			nameFrom = NULL;
-		}
-	}
-};
-
-
+#ifdef __cplusplus
 //定义一组事件定义的宏，简化事件的定义。
 #define DEF_EVT_CLASS(evt,id,evt_name,evtData,api) \
 class api evt : public SEvtArgs, public evtData \
@@ -198,13 +142,19 @@ public:\
 };
 
 #define EVENTID(x) x::EventID,x::GetClassName()
+#endif
 
 #define DEF_EVT_STRUCT(n,x) \
 	typedef struct n x n;
 
+#ifdef __cplusplus
 #define DEF_EVENT(evt,id,name,x,api) \
 	DEF_EVT_STRUCT(st##evt,x) \
 	DEF_EVT_CLASS(evt,id,name,st##evt,api)
+#else
+#define DEF_EVENT(evt,id,name,x,api) \
+	DEF_EVT_STRUCT(st##evt,x)
+#endif
 
 #define DEF_EVT(evt,id,name,x) DEF_EVENT(evt,id,name,x,SOUI_EXP)
 #define DEF_EVT_EXT(evt,id,x) DEF_EVENT(evt,id,on_##evt,x,)

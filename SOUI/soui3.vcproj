@@ -794,6 +794,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\event\SEventImpl.hpp"
+				>
+			</File>
+			<File
 				RelativePath="include\event\SEvents.h"
 				>
 			</File>
@@ -803,6 +807,10 @@
 			</File>
 			<File
 				RelativePath="include\event\SEventSubscriber.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\interface\SEvtArgs-i.h"
 				>
 			</File>
 			<File

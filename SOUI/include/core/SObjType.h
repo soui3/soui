@@ -1,17 +1,17 @@
 #pragma once
 
-namespace SOUI
-{
+SNSBEGIN
 
-	enum SObjectType
-	{
-		None = -1,
-		Undef = 0,
-		Window,
-		Skin,
-		Layout,
-		Interpolator,
-		Animation,
-		ValueAnimator,
-	};
-}
+typedef enum _SObjectType
+{
+	None = -1,
+	Undef = 0,
+	Window,
+	Skin,
+	Layout,
+	Interpolator,
+	Animation,
+	ValueAnimator,
+}SObjectType;
+
+SNSEND
