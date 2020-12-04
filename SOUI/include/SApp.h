@@ -52,8 +52,9 @@
 
 #define CREATEINTERPOLATOR(x)  SOUI::SApplication::getSingleton().CreateInterpolatorByName(x)
 
-namespace SOUI
-{
+SNSBEGIN
+
+class SWindow;
 struct IAccProxy;
 
 
@@ -285,4 +286,4 @@ protected:
 	void * m_pSingletons[SINGLETON_COUNT];
 };
 
-}//namespace SOUI
+SNSEND

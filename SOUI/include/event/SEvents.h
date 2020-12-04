@@ -13,11 +13,12 @@
 
 #pragma once
 
+//#include <interface/SWindow-i.h>
 #include <event/SEventImpl.hpp>
 
 SNSBEGIN
 
-class SWindow;
+interface IWindow;
 typedef enum _SOUI_EVENTS
 {
 	EVT_INIT=8000,
@@ -215,7 +216,7 @@ DEF_EVT(EventSwndUpdateTooltip, EVT_UPDATE_TOOLTIP, on_update_tooltip, {
 });
 
 DEF_EVT(EventRadioGroupCheckChanged, EVT_RADIOGROUP_CHECK_CHANGED, on_radiogroup_check_changed, {
-	SWindow * pChecked;
+	IWindow * pChecked;
 });
 
 DEF_EVT(EventItemPanelRclick, EVT_ITEMPANEL_RCLICK, on_itemparem_rclick, {
@@ -277,9 +278,8 @@ DEF_EVT(EventOfEvent, EVT_OFEVENT, on_event_of_event, {
 	IEvtArgs * pOrgEvt;
 });
 
-class SItemPanel;
 DEF_EVT(EventOfPanel, EVT_OFPANEL, on_event_of_panel,{
-	SItemPanel *pPanel;
+	IWindow *pPanel;
 	IEvtArgs * pOrgEvt;
 });
 

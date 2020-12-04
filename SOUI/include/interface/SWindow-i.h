@@ -7,6 +7,8 @@
 
 SNSBEGIN
 
+interface ISwndContainer;
+
 #undef INTERFACE
 #define INTERFACE IWindow
 DECLARE_INTERFACE_(IWindow,IObject)

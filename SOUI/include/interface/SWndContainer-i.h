@@ -19,7 +19,7 @@
 #include <interface/SScriptModule-i.h>
 #include <interface/scaret-i.h>
 #include <interface/STimelineHandler-i.h>
-
+#include <interface/SAccelerator-i.h>
 SNSBEGIN
 
 enum{
@@ -28,7 +28,6 @@ enum{
 };
 
 enum GrtFlag;
-struct IAcceleratorMgr;
 /**
 * @struct     ISwndContainer
 * @brief      SOUI窗口容器接口

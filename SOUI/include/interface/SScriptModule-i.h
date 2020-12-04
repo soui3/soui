@@ -12,20 +12,21 @@
 */
 
 #pragma once
-
-#include <event/SEventSubscriber.h>
+#include <utilities-def.h>
 #include <interface/obj-ref-i.h>
+#include <interface/SEvtArgs-i.h>
 
-// Start of SOUI namespace section
-namespace SOUI
-{
-    class SWindow;
+SNSBEGIN
+
+interface IWindow;
 /*!
 \brief
     Abstract interface required for all scripting support modules to be used with
     the SOUI system.
 */
-struct IScriptModule : public IObjRef
+#undef INTERFACE
+#define INTERFACE IScriptModule
+DECLARE_INTERFACE_(IScriptModule,IObjRef)
 {
     /**
      * GetScriptEngine
@@ -33,7 +34,7 @@ struct IScriptModule : public IObjRef
      * @return   void * -- 脚本引擎的指针
      * Describe  
      */    
-    virtual void * GetScriptEngine () = 0;
+    STDMETHOD_(void *,GetScriptEngine)(THIS) PURE;
 
     /*************************************************************************
         Abstract interface
@@ -46,7 +47,7 @@ struct IScriptModule : public IObjRef
         String object holding the filename of the script file that is to be executed
         
     */
-    virtual void    executeScriptFile(LPCSTR pszScriptFile)  = 0;
+    STDMETHOD_(void,executeScriptFile)(THIS_ LPCSTR pszScriptFile)  PURE;
 
     /*!
     \brief
@@ -58,7 +59,7 @@ struct IScriptModule : public IObjRef
     \param sz
         size of buffer
     */
-    virtual	void	executeScriptBuffer(const char* buff, size_t sz)  = 0;
+    STDMETHOD_(void,executeScriptBuffer)(THIS_ LPCSTR buff, size_t sz)  PURE;
     /*!
     \brief
         Execute script code contained in the given String object.
@@ -69,7 +70,7 @@ struct IScriptModule : public IObjRef
     \return
         Nothing.
     */
-    virtual void executeString(LPCSTR str) = 0;
+    STDMETHOD_(void,executeString)(THIS_ LPCSTR str) PURE;
 
 
     /*!
@@ -81,13 +82,13 @@ struct IScriptModule : public IObjRef
         String object holding the name of the scripted handler function.
 
     \param IEvtArgs *pEvt
-        SWindow based object that should be passed, by any appropriate means, to the scripted function.
+        IEvtArgs based object that should be passed, by any appropriate means, to the scripted function.
 
     \return
         - true if the event was handled.
         - false if the event was not handled.
     */
-    virtual    bool    executeScriptedEventHandler(LPCSTR handler_name, IEvtArgs *pEvt)=0;
+    STDMETHOD_(BOOL,executeScriptedEventHandler)(THIS_ LPCSTR handler_name, IEvtArgs *pEvt) PURE;
 
 
     /*!
@@ -98,7 +99,7 @@ struct IScriptModule : public IObjRef
     \return
         String object holding a string that identifies the ScriptModule in use.
     */
-    virtual LPCSTR getIdentifierString() const = 0;
+    STDMETHOD_(LPCSTR,getIdentifierString)(THIS) SCONST PURE;
 
     /*!
     \brief
@@ -115,25 +116,26 @@ struct IScriptModule : public IObjRef
 
     \return 
     */
-    virtual bool subscribeEvent(SWindow* target, UINT uEvent, LPCSTR subscriber_name) = 0;
+    STDMETHOD_(BOOL,subscribeEvent)(THIS_ IWindow* target, UINT uEvent, LPCSTR subscriber_name) PURE;
 
     /**
      * unsubscribeEvent
      * @brief    取消事件订阅
-     * @param    SWindow * target --  目标窗口
+     * @param    IWindow * target --  目标窗口
      * @param    UINT uEvent --  目标事件
      * @param    LPCSTR subscriber_name --  脚本函数名
      * @return   bool -- true操作成功
      * Describe  
      */    
-    virtual bool unsubscribeEvent(SWindow* target, UINT uEvent, LPCSTR subscriber_name ) = 0;
+    STDMETHOD_(BOOL,unsubscribeEvent)(THIS_ IWindow* target, UINT uEvent, LPCSTR subscriber_name ) PURE;
 
 };
 
-struct IScriptFactory : public IObjRef
+#undef INTERFACE
+#define INTERFACE IScriptFactory
+DECLARE_INTERFACE_(IScriptFactory,IObjRef)
 {
-    virtual HRESULT CreateScriptModule(IScriptModule ** ppScriptModule) = 0;
+    STDMETHOD_(HRESULT,CreateScriptModule)(THIS_ IScriptModule ** ppScriptModule) PURE;
 };
 
-} // End of  SOUI namespace section
-
+SNSEND
