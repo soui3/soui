@@ -32,43 +32,43 @@ namespace SOUI
         SFocusManager * GetFocusManager() {return &m_focusMgr;}
 
 		void SetRoot(SWindow *pRoot);
+		virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
     protected:
         //ISwndContainer
-        virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget);
+        STDMETHOD_(BOOL,RegisterDragDrop)(THIS_ SWND swnd,IDropTarget *pDropTarget) OVERRIDE;
 
-        virtual BOOL RevokeDragDrop(SWND swnd);
+        STDMETHOD_(BOOL,RevokeDragDrop)(THIS_ SWND swnd) OVERRIDE;
 
-        virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
-        virtual BOOL OnReleaseSwndCapture();
+        STDMETHOD_(BOOL,OnReleaseSwndCapture)(THIS) OVERRIDE;
 
-        virtual SWND OnSetSwndCapture(SWND swnd);
-        virtual void OnSetSwndFocus(SWND swnd);
-        virtual void FrameToHost(RECT & rc) const{}
-        virtual SWND OnGetSwndCapture();
+        STDMETHOD_(SWND,OnSetSwndCapture)(THIS_ SWND swnd) OVERRIDE;
+        STDMETHOD_(void,OnSetSwndFocus)(THIS_ SWND swnd) OVERRIDE;
+        STDMETHOD_(void,FrameToHost)(THIS_ RECT & rc) SCONST OVERRIDE{}
+        STDMETHOD_(SWND,OnGetSwndCapture)(THIS) OVERRIDE;
 
-        virtual SWND GetFocus() const;
+		STDMETHOD_(SWND,GetFocus)(THIS) SCONST OVERRIDE;
 
-        virtual SWND GetHover() const;
+        STDMETHOD_(SWND,GetHover)(THIS) SCONST OVERRIDE;
 
-        virtual IAcceleratorMgr* GetAcceleratorMgr(){return &m_focusMgr;}
+        STDMETHOD_(IAcceleratorMgr*,GetAcceleratorMgr)(THIS){return &m_focusMgr;}
 
         STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 		STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 
-        virtual BOOL RegisterTrackMouseEvent(SWND swnd);
+		STDMETHOD_(BOOL,RegisterTrackMouseEvent)(THIS_ SWND swnd) OVERRIDE;
 
-        virtual BOOL UnregisterTrackMouseEvent(SWND swnd);
+		STDMETHOD_(BOOL,UnregisterTrackMouseEvent)(THIS_ SWND swnd) OVERRIDE;
 
         //标记窗口树的zorder失效
-        virtual void MarkWndTreeZorderDirty();
+        STDMETHOD_(void,MarkWndTreeZorderDirty)(THIS) OVERRIDE;
 
         //重建窗口树的zorder
-        virtual void BuildWndTreeZorder();
+        STDMETHOD_(void,BuildWndTreeZorder)(THIS) OVERRIDE;
 
-		virtual ICaret* GetCaret();
+		STDMETHOD_(ICaret*,GetCaret)(THIS) OVERRIDE;
 
-		virtual void OnCavasInvalidate(SWND swnd) {}
+		STDMETHOD_(void,OnCavasInvalidate)(SWND swnd) OVERRIDE{}
 
     public://ITimelineHandler
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;

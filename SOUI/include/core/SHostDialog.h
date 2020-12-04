@@ -56,7 +56,7 @@ namespace SOUI
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
         void OnOK();
         void OnCancel();
-        virtual IMessageLoop * GetMsgLoop(){return m_MsgLoop;}
+        STDMETHOD_(IMessageLoop *,GetMsgLoop)(){return m_MsgLoop;}
         
         EVENT_MAP_BEGIN()
             EVENT_ID_COMMAND(IDOK,OnOK)

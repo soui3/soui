@@ -39,36 +39,36 @@ protected:
 public://SwndContainerImpl
     virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
-    virtual BOOL OnFireEvent(IEvtArgs *evt);
+    STDMETHOD_(BOOL,OnFireEvent)(IEvtArgs *evt);
 
-    virtual CRect GetContainerRect() const;
+    STDMETHOD_(CRect,GetContainerRect)() const;
 
-    virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc ,GrtFlag gdcFlags);
+    STDMETHOD_(IRenderTarget *,OnGetRenderTarget)(LPCRECT rc ,GrtFlag gdcFlags);
 
-    virtual void OnReleaseRenderTarget(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags);
+    STDMETHOD_(void,OnReleaseRenderTarget)(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnRedraw(LPCRECT rc);
+    STDMETHOD_(void,OnRedraw)(LPCRECT rc);
 
-    virtual BOOL OnReleaseSwndCapture();
+    STDMETHOD_(BOOL,OnReleaseSwndCapture)();
 
-    virtual SWND OnSetSwndCapture(SWND swnd);
-    virtual HWND GetHostHwnd();
-    virtual const SStringW & GetTranslatorContext() const;
-    virtual void FrameToHost(RECT & rc) const;
-    virtual BOOL IsTranslucent() const;
-    virtual BOOL IsSendWheel2Hover() const;
+    STDMETHOD_(SWND,OnSetSwndCapture)(SWND swnd);
+    STDMETHOD_(HWND,GetHostHwnd)();
+    STDMETHOD_(const SStringW &,GetTranslatorContext)() const;
+    STDMETHOD_(void,FrameToHost)(RECT & rc) const;
+    STDMETHOD_(BOOL,IsTranslucent)() const;
+	STDMETHOD_(BOOL,IsSendWheel2Hover)() const;
     
-    virtual BOOL UpdateWindow();
+    STDMETHOD_(BOOL,UpdateWindow)();
 
-	virtual void UpdateTooltip();
+	STDMETHOD_(void,UpdateTooltip)();
 
-    virtual IMessageLoop *GetMsgLoop();
+    STDMETHOD_(IMessageLoop *,GetMsgLoop)();
     
-    virtual IScriptModule * GetScriptModule();
+    STDMETHOD_(IScriptModule *,GetScriptModule)();
 
-	virtual int WINAPI GetScale() const;
+	STDMETHOD_(int,GetScale)() const;
 
-	virtual void EnableIME(BOOL bEnable);
+	STDMETHOD_(void,EnableIME)(BOOL bEnable);
 public://SWindow
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);
 

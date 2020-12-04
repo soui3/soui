@@ -112,7 +112,7 @@ namespace SOUI
         //返回下拉列表的状态值，由派生类提供。
         virtual int GetValue() const {return 0;}
     protected:
-        virtual IMessageLoop * GetMsgLoop();
+        STDMETHOD_(IMessageLoop *,GetMsgLoop)();
         /**
          * OnReleaseSwndCapture
          * @brief    阻止窗口的ReleaseCapture
@@ -120,7 +120,7 @@ namespace SOUI
          *
          * Describe  调用ReleaseCapture后重新调用SetCapture
          */
-        virtual BOOL OnReleaseSwndCapture();
+        STDMETHOD_(BOOL,OnReleaseSwndCapture)();
     
         /**
          * PreTranslateMessage

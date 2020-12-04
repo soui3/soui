@@ -45,70 +45,70 @@ inline int RectHeight(LPCRECT rc) {return rc->bottom-rc->top;}
 #define INTERFACE ISwndContainer
 DECLARE_INTERFACE_(ISwndContainer,ITimelineHandlersMgr)
 {
-	virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget)=0;
+	STDMETHOD_(BOOL,RegisterDragDrop)(THIS_ SWND swnd,IDropTarget *pDropTarget) PURE;
 
-	virtual BOOL RevokeDragDrop(SWND swnd)=0;
+	STDMETHOD_(BOOL,RevokeDragDrop)(THIS_ SWND swnd) PURE;
 
-	virtual BOOL OnFireEvent(IEvtArgs *evt)=0;
+	STDMETHOD_(BOOL,OnFireEvent)(THIS_ IEvtArgs *evt) PURE;
 
-	virtual HWND GetHostHwnd()=0;
+	STDMETHOD_(HWND,GetHostHwnd)(THIS) PURE;
 
-	virtual const SStringW & GetTranslatorContext() const=0;
+	STDMETHOD_(const SStringW &,GetTranslatorContext)(THIS) SCONST PURE;
 
-	virtual BOOL IsTranslucent() const =0;
+	STDMETHOD_(BOOL,IsTranslucent)(THIS) SCONST PURE;
 
-	virtual BOOL IsSendWheel2Hover() const =0;
+	STDMETHOD_(BOOL,IsSendWheel2Hover)(THIS) SCONST PURE;
 
-	virtual CRect GetContainerRect() const =0;
+	STDMETHOD_(CRect,GetContainerRect)(THIS) SCONST PURE;
 
-	virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags)=0;
+	STDMETHOD_(IRenderTarget *,OnGetRenderTarget)(THIS_ LPCRECT rc,GrtFlag gdcFlags) PURE;
 
-	virtual void OnReleaseRenderTarget(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags)=0;
+	STDMETHOD_(void,OnReleaseRenderTarget)(THIS_ IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags) PURE;
 
-	virtual void OnRedraw(LPCRECT rc)=0;
+	STDMETHOD_(void,OnRedraw)(THIS_ LPCRECT rc) PURE;
 
-	virtual SWND OnGetSwndCapture()=0;
+	STDMETHOD_(SWND,OnGetSwndCapture)(THIS) PURE;
 
-	virtual BOOL OnReleaseSwndCapture()=0;
+	STDMETHOD_(BOOL,OnReleaseSwndCapture)(THIS) PURE;
 
-	virtual SWND OnSetSwndCapture(SWND swnd)=0;
+	STDMETHOD_(SWND,OnSetSwndCapture)(THIS_ SWND swnd) PURE;
 
-	virtual void OnSetSwndFocus(SWND swnd)=0;
+	STDMETHOD_(void,OnSetSwndFocus)(THIS_ SWND swnd) PURE;
 
-	virtual SWND GetHover() const=0;
+	STDMETHOD_(SWND,GetHover)(THIS) SCONST PURE;
 
-	virtual SWND GetFocus() const=0;
+	STDMETHOD_(SWND,GetFocus)(THIS) SCONST PURE;
 
-	virtual BOOL UpdateWindow()=0;
+	STDMETHOD_(BOOL,UpdateWindow)(THIS) PURE;
 
-	virtual void UpdateTooltip() = 0;
+	STDMETHOD_(void,UpdateTooltip)(THIS) PURE;
 
 	//将当前Frame的矩形坐标转换成最终Host的坐标
-	virtual void FrameToHost(RECT & rc) const = 0;
+	STDMETHOD_(void,FrameToHost)(THIS_ RECT & rc) SCONST PURE;
 
-	virtual IAcceleratorMgr* GetAcceleratorMgr()=0;
+	STDMETHOD_(IAcceleratorMgr*,GetAcceleratorMgr)(THIS) PURE;
 
-	virtual BOOL RegisterTrackMouseEvent(SWND swnd)=0;
+	STDMETHOD_(BOOL,RegisterTrackMouseEvent)(THIS_ SWND swnd) PURE;
 
-	virtual BOOL UnregisterTrackMouseEvent(SWND swnd)=0;
+	STDMETHOD_(BOOL,UnregisterTrackMouseEvent)(THIS_ SWND swnd) PURE;
 
-	virtual IMessageLoop * GetMsgLoop() =0;
+	STDMETHOD_(IMessageLoop *,GetMsgLoop)(THIS) PURE;
 
 	//标记窗口树的zorder失效
-	virtual void MarkWndTreeZorderDirty() = 0;
+	STDMETHOD_(void,MarkWndTreeZorderDirty)(THIS) PURE;
 
 	//重建窗口树的zorder
-	virtual void BuildWndTreeZorder() = 0;
+	STDMETHOD_(void,BuildWndTreeZorder)(THIS) PURE;
 
-	virtual IScriptModule * GetScriptModule() = 0;
+	STDMETHOD_(IScriptModule *,GetScriptModule)(THIS) PURE;
 
-	virtual int WINAPI GetScale() const = 0;
+	STDMETHOD_(int,GetScale)(THIS) SCONST PURE;
 
-	virtual ICaret* GetCaret() = 0;
+	STDMETHOD_(ICaret*,GetCaret)(THIS) PURE;
 
-	virtual void OnCavasInvalidate(SWND swnd) = 0;
+	STDMETHOD_(void,OnCavasInvalidate)(THIS_ SWND swnd) PURE;
 
-	virtual void EnableIME(BOOL bEnable) = 0;
+	STDMETHOD_(void,EnableIME)(THIS_ BOOL bEnable) PURE;
 };
 
 SNSEND

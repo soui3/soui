@@ -372,44 +372,44 @@ public:
 
 protected:// IContainer
 
-    virtual BOOL OnFireEvent(IEvtArgs *evt);
+    STDMETHOD_(BOOL,OnFireEvent)(IEvtArgs *evt);
 
-    virtual CRect GetContainerRect() const;
+    STDMETHOD_(CRect,GetContainerRect)() const;
 
-    virtual HWND GetHostHwnd();
+    STDMETHOD_(HWND,GetHostHwnd)();
 
-    virtual const SStringW & GetTranslatorContext() const;
+    STDMETHOD_(const SStringW &,GetTranslatorContext)() const;
 
-    virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags);
+    STDMETHOD_(IRenderTarget *,OnGetRenderTarget)(LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnReleaseRenderTarget(IRenderTarget * pRT,LPCRECT rc,GrtFlag gdcFlags);
+    STDMETHOD_(void,OnReleaseRenderTarget)(IRenderTarget * pRT,LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnRedraw(LPCRECT rc);
+    STDMETHOD_(void,OnRedraw)(LPCRECT rc);
 
-    virtual BOOL OnReleaseSwndCapture();
+    STDMETHOD_(BOOL,OnReleaseSwndCapture)();
 
-    virtual SWND OnSetSwndCapture(SWND swnd);
+    STDMETHOD_(SWND,OnSetSwndCapture)(SWND swnd);
 
-    virtual BOOL IsTranslucent() const;
+    STDMETHOD_(BOOL,IsTranslucent)() const;
     
-    virtual BOOL IsSendWheel2Hover() const;
+    STDMETHOD_(BOOL,IsSendWheel2Hover)() const;
 
-    virtual BOOL UpdateWindow();
+    STDMETHOD_(BOOL,UpdateWindow)();
 
-	virtual void UpdateTooltip();
+	STDMETHOD_(void,UpdateTooltip)();
 
 	STDMETHOD_(BOOL,RegisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 	STDMETHOD_(BOOL,UnregisterTimelineHandler)(THIS_ ITimelineHandler *pHandler) OVERRIDE;
 
-    virtual IMessageLoop * GetMsgLoop();
+    STDMETHOD_(IMessageLoop *,GetMsgLoop)();
 
-    virtual IScriptModule * GetScriptModule();
+    STDMETHOD_(IScriptModule *, GetScriptModule)();
 
-	virtual int WINAPI GetScale() const;
+	STDMETHOD_(int,GetScale)() const;
 
-	virtual void OnCavasInvalidate(SWND swnd);
+	STDMETHOD_(void,OnCavasInvalidate)(SWND swnd);
 
-	virtual void EnableIME(BOOL bEnable);
+	STDMETHOD_(void,EnableIME)(BOOL bEnable);
 
 protected:
 	virtual IToolTip * CreateTooltip() const;
