@@ -20,6 +20,7 @@
 #include <interface/scaret-i.h>
 #include <interface/STimelineHandler-i.h>
 #include <interface/SAccelerator-i.h>
+
 SNSBEGIN
 
 enum{
@@ -28,13 +29,21 @@ enum{
 };
 
 enum GrtFlag;
+
+//todo: move to other place.
+inline int RectWidth(LPCRECT rc) {return rc->right-rc->left;}
+inline int RectHeight(LPCRECT rc) {return rc->bottom-rc->top;}
+
 /**
 * @struct     ISwndContainer
 * @brief      SOUI窗口容器接口
 * 
 * Describe    
 */
-struct ISwndContainer : public ITimelineHandlersMgr
+
+#undef INTERFACE
+#define INTERFACE ISwndContainer
+DECLARE_INTERFACE_(ISwndContainer,ITimelineHandlersMgr)
 {
 	virtual BOOL RegisterDragDrop(SWND swnd,IDropTarget *pDropTarget)=0;
 
@@ -52,11 +61,11 @@ struct ISwndContainer : public ITimelineHandlersMgr
 
 	virtual CRect GetContainerRect() const =0;
 
-	virtual IRenderTarget * OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)=0;
+	virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags)=0;
 
-	virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)=0;
+	virtual void OnReleaseRenderTarget(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags)=0;
 
-	virtual void OnRedraw(const CRect &rc)=0;
+	virtual void OnRedraw(LPCRECT rc)=0;
 
 	virtual SWND OnGetSwndCapture()=0;
 

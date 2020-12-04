@@ -341,7 +341,7 @@ protected:
     void OnSetFocus(HWND wndOld);
     void OnKillFocus(HWND wndFocus);
         
-    void UpdateHost(HDC dc,const CRect &rc,BYTE byAlpha=255);
+    void UpdateHost(HDC dc,LPCRECT rc,BYTE byAlpha=255);
     void UpdateLayerFromRenderTarget(IRenderTarget *pRT,BYTE byAlpha, LPCRECT prcDirty=NULL);
 
     void OnCaptureChanged(HWND wnd);
@@ -380,11 +380,11 @@ protected:// IContainer
 
     virtual const SStringW & GetTranslatorContext() const;
 
-    virtual IRenderTarget * OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags);
+    virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag gdcFlags);
+    virtual void OnReleaseRenderTarget(IRenderTarget * pRT,LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnRedraw(const CRect &rc);
+    virtual void OnRedraw(LPCRECT rc);
 
     virtual BOOL OnReleaseSwndCapture();
 

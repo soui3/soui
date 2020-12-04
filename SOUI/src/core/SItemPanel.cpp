@@ -130,24 +130,24 @@ CRect SItemPanel::GetContainerRect() const
     return rcItem;
 }
 
-IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
+IRenderTarget * SItemPanel::OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags)
 {
 	IRenderTarget *pRT =NULL;
-	GETRENDERFACTORY->CreateRenderTarget(&pRT,rc.Width(),rc.Height());
+	GETRENDERFACTORY->CreateRenderTarget(&pRT,RectWidth(rc),RectHeight(rc));
 	SASSERT(pRT);
-	pRT->OffsetViewportOrg(-rc.left,-rc.top,NULL);
+	pRT->OffsetViewportOrg(-rc->left,-rc->top,NULL);
 	pRT->PushClipRect(rc,RGN_AND);
 	return pRT;
 }
 
-void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)
+void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags)
 {
 	OnRedraw(rc);
 	pRT->PopClip();
 	pRT->Release();
 }
 
-void SItemPanel::OnRedraw(const CRect &rc)
+void SItemPanel::OnRedraw(LPCRECT rc)
 {
     if(m_pFrmHost->IsUpdateLocked()) return;
 
@@ -167,7 +167,7 @@ void SItemPanel::OnRedraw(const CRect &rc)
             IRenderTarget *pRT=OnGetRenderTarget(rc,GRT_PAINTBKGND);
             SAutoRefPtr<IRegion> rgn;
             GETRENDERFACTORY->CreateRegion(&rgn);
-            rgn->CombineRect(&rc,RGN_COPY);
+            rgn->CombineRect(rc,RGN_COPY);
             RedrawRegion(pRT,rgn);
             OnReleaseRenderTarget(pRT,rc,GRT_PAINTBKGND);
         }

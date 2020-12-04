@@ -43,11 +43,11 @@ public://SwndContainerImpl
 
     virtual CRect GetContainerRect() const;
 
-    virtual IRenderTarget * OnGetRenderTarget(const CRect & rc ,GrtFlag gdcFlags);
+    virtual IRenderTarget * OnGetRenderTarget(LPCRECT rc ,GrtFlag gdcFlags);
 
-    virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags);
+    virtual void OnReleaseRenderTarget(IRenderTarget *pRT,LPCRECT rc,GrtFlag gdcFlags);
 
-    virtual void OnRedraw(const CRect &rc);
+    virtual void OnRedraw(LPCRECT rc);
 
     virtual BOOL OnReleaseSwndCapture();
 

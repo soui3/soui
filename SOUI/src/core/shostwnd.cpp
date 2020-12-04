@@ -903,13 +903,13 @@ HWND SHostWnd::GetHostHwnd()
     return m_hWnd;
 }
 
-IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
+IRenderTarget * SHostWnd::OnGetRenderTarget(LPCRECT rc,GrtFlag gdcFlags)
 {
 	IRenderTarget *pRT = NULL;
 	if (gdcFlags == GRT_NODRAW)
 	{
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
-		pRT->OffsetViewportOrg(-rc.left, -rc.top,NULL);
+		pRT->OffsetViewportOrg(-rc->left, -rc->top,NULL);
 		pRT->ClearRect(rc, 0);
 	}
 	else
@@ -921,7 +921,7 @@ IRenderTarget * SHostWnd::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
     return pRT;
 }
 
-void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag gdcFlags)
+void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,LPCRECT rc,GrtFlag gdcFlags)
 {
     if(gdcFlags != GRT_NODRAW)
     {
@@ -933,32 +933,32 @@ void SHostWnd::OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag
             ReleaseDC(dc);
         }else
         {
-            m_lstUpdatedRect.AddTail(rc);
+            m_lstUpdatedRect.AddTail(*rc);
         }
     }
     pRT->Release();
 }
 
-void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid, BYTE byAlpha)
+void SHostWnd::UpdateHost(HDC dc, LPCRECT rcInvalid, BYTE byAlpha)
 {
     byAlpha=(BYTE)((int)byAlpha*GetRoot()->GetAlpha()/255);
     if(m_hostAttr.m_bTranslucent)
     {
-        UpdateLayerFromRenderTarget(m_memRT,byAlpha,&rcInvalid);
+        UpdateLayerFromRenderTarget(m_memRT,byAlpha,rcInvalid);
     }
     else
     {
         HDC hdc=m_memRT->GetDC(0);
-        ::BitBlt(dc,rcInvalid.left,rcInvalid.top,rcInvalid.Width(),rcInvalid.Height(),hdc,rcInvalid.left,rcInvalid.top,SRCCOPY);
+        ::BitBlt(dc,rcInvalid->left,rcInvalid->top,RectWidth(rcInvalid),RectHeight(rcInvalid),hdc,rcInvalid->left,rcInvalid->top,SRCCOPY);
         m_memRT->ReleaseDC(hdc);
     }
 }
 
-void SHostWnd::OnRedraw(const CRect &rc)
+void SHostWnd::OnRedraw(LPCRECT rc)
 {
     if(!IsWindow()) return;
     
-    m_rgnInvalidate->CombineRect(&rc,RGN_OR);
+    m_rgnInvalidate->CombineRect(rc,RGN_OR);
     
     m_bNeedRepaint = TRUE;
 
