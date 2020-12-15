@@ -2,9 +2,9 @@
 
 #include <interface/obj-ref-i.h>
 
-namespace SOUI
-{
-	enum {
+SNSBEGIN
+
+enum {
 		FUN_ID_CONNECT = 100,
 		FUN_ID_DISCONNECT,
 		FUN_ID_START,
@@ -149,4 +149,4 @@ namespace SOUI
 	};
 
 
-}
+SNSEND

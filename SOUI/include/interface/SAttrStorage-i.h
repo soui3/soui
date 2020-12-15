@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <interface/obj-ref-i.h>
 #include <interface/sstring-i.h>
-//#include <interface/SWindow-i.h>
+
 SNSBEGIN
 
 interface IWindow;

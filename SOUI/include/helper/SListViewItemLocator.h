@@ -9,27 +9,18 @@ namespace SOUI
     public:
         SListViewItemLocatorFix(SLayoutSize nItemHei,SLayoutSize nDividerSize=SLayoutSize());
 
-        virtual void SetAdapter(ILvAdapter *pAdapter);
-
-        virtual void OnDataSetChanged(){}
-
-        virtual bool IsFixHeight() const;
-
-        virtual int GetItemHeight(int iItem) const ;
-
-        virtual void SetItemHeight(int iItem,int nHeight);
-
-
-        virtual int GetTotalHeight();
-        virtual int Item2Position(int iItem);
-
-        virtual int Position2Item(int position);
-
-        virtual int GetScrollLineSize() const;
-
-		virtual int GetDividerSize() const;
-
-		virtual void SetScale(int nScale);
+	public:
+		STDMETHOD_(void,SetAdapter)(THIS_ ILvAdapter *pAdapter) OVERRIDE;
+		STDMETHOD_(void,OnDataSetChanged)(THIS) OVERRIDE {}
+		STDMETHOD_(BOOL,IsFixHeight)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetItemHeight)(THIS_ int iItem) SCONST OVERRIDE;
+		STDMETHOD_(void,SetItemHeight)(THIS_ int iItem,int nHeight) OVERRIDE;
+		STDMETHOD_(int,GetTotalHeight)(THIS) OVERRIDE;
+		STDMETHOD_(int,Item2Position)(THIS_ int iItem) OVERRIDE;
+		STDMETHOD_(int,Position2Item)(THIS_ int position) OVERRIDE;
+		STDMETHOD_(int,GetScrollLineSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetDividerSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(void,SetScale)(THIS_ int nScale) OVERRIDE;
     protected:
 		int GetFixItemHeight() const;
 
@@ -48,26 +39,18 @@ namespace SOUI
         ~SListViewItemLocatorFlex();
 
 
-        virtual void SetAdapter(ILvAdapter *pAdapter);
-        virtual void OnDataSetChanged();
+		STDMETHOD_(void,SetAdapter)(THIS_ ILvAdapter *pAdapter) OVERRIDE;
+		STDMETHOD_(void,OnDataSetChanged)(THIS) OVERRIDE;
+		STDMETHOD_(BOOL,IsFixHeight)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetItemHeight)(THIS_ int iItem) SCONST OVERRIDE;
+		STDMETHOD_(void,SetItemHeight)(THIS_ int iItem,int nHeight) OVERRIDE;
+		STDMETHOD_(int,GetTotalHeight)(THIS) OVERRIDE;
+		STDMETHOD_(int,Item2Position)(THIS_ int iItem) OVERRIDE;
+		STDMETHOD_(int,Position2Item)(THIS_ int position) OVERRIDE;
+		STDMETHOD_(int,GetScrollLineSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetDividerSize)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(void,SetScale)(THIS_ int nScale) OVERRIDE;
 
-        virtual bool IsFixHeight() const;
-
-        virtual int GetItemHeight(int iItem) const;
-
-        virtual void SetItemHeight(int iItem,int nHeight);
-
-
-        virtual int GetTotalHeight();
-        virtual int Item2Position(int iItem);
-
-        virtual int Position2Item(int position);
-
-        virtual int GetScrollLineSize() const;   
-
-		virtual int GetDividerSize() const;
-
-		virtual void SetScale(int nScale);
     protected:
         void InitIndex(HSTREEITEM hParent,int nItems,int nSubBranchSize);
 		int GetFixItemHeight() const;

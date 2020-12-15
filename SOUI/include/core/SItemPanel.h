@@ -29,13 +29,13 @@ public:
     
     SWindow * GetHostWindow() { return m_pFrmHost;}
 
-	static BOOL IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem);
+	static BOOL IsItemInClip(const SMatrix &mtx,const CRect &rcClip,const IRegion * clipRgn,const CRect & rcItem);
 
 protected:
     SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer);
     virtual ~SItemPanel() {}
 
-    virtual void WINAPI OnFinalRelease();
+    STDMETHOD_(void,OnFinalRelease)(THIS);
 
 public://SwndContainerImpl
 

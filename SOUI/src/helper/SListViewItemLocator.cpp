@@ -69,9 +69,9 @@ namespace SOUI
         return m_nItemHeight.toPixelSize(m_nScale);
     }
 
-    bool SListViewItemLocatorFix::IsFixHeight() const
+    BOOL SListViewItemLocatorFix::IsFixHeight() const
     {
-        return true;
+        return TRUE;
     }
 
     void SListViewItemLocatorFix::SetAdapter(ILvAdapter *pAdapter)
@@ -209,9 +209,9 @@ namespace SOUI
         return nRet;
     }
 
-    bool SListViewItemLocatorFlex::IsFixHeight() const
+    BOOL SListViewItemLocatorFlex::IsFixHeight() const
     {
-        return false;
+        return FALSE;
     }
 
     void SListViewItemLocatorFlex::SetAdapter(ILvAdapter *pAdapter)

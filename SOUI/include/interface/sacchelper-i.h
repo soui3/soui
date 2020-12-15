@@ -1,13 +1,16 @@
 #pragma once
+#include <utilities-def.h>
 
-namespace SOUI
+SNSBEGIN
+
+interface IWindow;
+
+#undef INTERFACE
+#define INTERFACE IObjRef
+DECLARE_INTERFACE_IID_(IAccHelper,IUnknown,"9FAF3067-6723-40DA-A56B-CDCB11B8902B")
 {
-	class SWindow;
+	STDMETHOD_(void,SetOwner)(THIS_ IWindow *pOwner) PURE;
+	STDMETHOD_(IWindow *,GetOwner)(THIS) SCONST PURE;
+};
 
-	struct __declspec(uuid("9FAF3067-6723-40DA-A56B-CDCB11B8902B")) 
-	IAccHelper : public IUnknown
-	{
-		virtual void SetOwner(SWindow *pOwner) = 0;
-		virtual SWindow *GetOwner() const = 0;
-	};
-}
+SNSEND
