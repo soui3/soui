@@ -15,31 +15,23 @@ namespace SOUI
 
         ~STreeViewItemLocator();
 
-        virtual void SetAdapter(ITvAdapter *pAdapter);
+	public:
+		STDMETHOD_(void,SetAdapter)(THIS_ ITvAdapter *pAdapter) OVERRIDE;
+		STDMETHOD_(void,OnBranchChanged)(THIS_ HTREEITEM hItem) OVERRIDE;
+		STDMETHOD_(void,OnBranchExpandedChanged)(THIS_ HTREEITEM hItem,BOOL bExpandedOld,BOOL bExpandedNew) OVERRIDE;
 
-        virtual void OnBranchChanged(HTREEITEM hItem);
+		STDMETHOD_(int,GetTotalHeight)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,GetTotalWidth)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(int,Item2Position)(THIS_ HTREEITEM hItem) SCONST OVERRIDE;
+		STDMETHOD_(HTREEITEM,Position2Item)(THIS_ int position) SCONST OVERRIDE;
+		STDMETHOD_(int,GetScrollLineSize)(THIS) SCONST OVERRIDE;
 
-        virtual void OnBranchExpandedChanged(HTREEITEM hItem,BOOL bExpandedOld,BOOL bExpandedNew);
+		STDMETHOD_(void,SetItemWidth)(THIS_ HTREEITEM hItem,int nWidth) OVERRIDE;
+		STDMETHOD_(int,GetItemWidth)(THIS_ HTREEITEM hItem) SCONST OVERRIDE;
+		STDMETHOD_(void,SetItemHeight)(THIS_ HTREEITEM hItem,int nHeight) OVERRIDE;
+		STDMETHOD_(int,GetItemHeight)(THIS_ HTREEITEM hItem) SCONST OVERRIDE;
+		STDMETHOD_(int,GetItemIndent)(THIS_ HTREEITEM hItem) SCONST OVERRIDE;
 
-        virtual int GetTotalHeight() const;
-
-        virtual int GetTotalWidth() const;
-
-        virtual int GetScrollLineSize() const;
-
-        virtual int Item2Position(HTREEITEM hItem) const;
-
-        virtual HTREEITEM Position2Item(int position) const;
-
-        virtual void SetItemWidth(HTREEITEM hItem,int nWidth);
-
-        virtual void SetItemHeight(HTREEITEM hItem,int nHeight);
-
-        virtual int GetItemWidth(HTREEITEM hItem) const;
-
-        virtual int GetItemHeight(HTREEITEM hItem) const;
-
-        virtual int GetItemIndent(HTREEITEM hItem) const;
     protected:
         BOOL IsItemExpanded(HTREEITEM hItem) const;
 

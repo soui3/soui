@@ -2,25 +2,27 @@
 
 #include <interface/SAdapter-i.h>
 
-namespace SOUI
-{
-    interface ITreeViewItemLocator : public IObjRef
-    {
-        virtual void SetAdapter(ITvAdapter *pAdapter) PURE;
-        virtual void OnBranchChanged(HTREEITEM hItem) PURE;
-        virtual void OnBranchExpandedChanged(HTREEITEM hItem,BOOL bExpandedOld,BOOL bExpandedNew) PURE;
+SNSBEGIN
 
-        virtual int GetTotalHeight() const PURE;
-        virtual int GetTotalWidth() const PURE;
-        virtual int Item2Position(HTREEITEM hItem) const PURE;
-        virtual HTREEITEM Position2Item(int position) const PURE;
-        virtual int GetScrollLineSize() const PURE;
-        
-        virtual void SetItemWidth(HTREEITEM hItem,int nWidth) PURE;
-        virtual int GetItemWidth(HTREEITEM hItem) const PURE;
-        virtual void SetItemHeight(HTREEITEM hItem,int nHeight) PURE;
-        virtual int GetItemHeight(HTREEITEM hItem) const PURE;
-        virtual int GetItemIndent(HTREEITEM hItem) const PURE;
-    };
+#undef INTERFACE
+#define INTERFACE ITreeViewItemLocator
+DECLARE_INTERFACE_(ITreeViewItemLocator,IObjRef)
+{
+	STDMETHOD_(void,SetAdapter)(THIS_ ITvAdapter *pAdapter) PURE;
+	STDMETHOD_(void,OnBranchChanged)(THIS_ HTREEITEM hItem) PURE;
+	STDMETHOD_(void,OnBranchExpandedChanged)(THIS_ HTREEITEM hItem,BOOL bExpandedOld,BOOL bExpandedNew) PURE;
+
+	STDMETHOD_(int,GetTotalHeight)(THIS) SCONST PURE;
+	STDMETHOD_(int,GetTotalWidth)(THIS) SCONST PURE;
+	STDMETHOD_(int,Item2Position)(THIS_ HTREEITEM hItem) SCONST PURE;
+	STDMETHOD_(HTREEITEM,Position2Item)(THIS_ int position) SCONST PURE;
+	STDMETHOD_(int,GetScrollLineSize)(THIS) SCONST PURE;
+
+	STDMETHOD_(void,SetItemWidth)(THIS_ HTREEITEM hItem,int nWidth) PURE;
+	STDMETHOD_(int,GetItemWidth)(THIS_ HTREEITEM hItem) SCONST PURE;
+	STDMETHOD_(void,SetItemHeight)(THIS_ HTREEITEM hItem,int nHeight) PURE;
+	STDMETHOD_(int,GetItemHeight)(THIS_ HTREEITEM hItem) SCONST PURE;
+	STDMETHOD_(int,GetItemIndent)(THIS_ HTREEITEM hItem) SCONST PURE;
+};
     
-}
+SNSEND
