@@ -248,7 +248,7 @@ void STileView::OnPaint(IRenderTarget *pRT)
             {
                 nLastBottom = rcItem.bottom + m_tvItemLocator->GetMarginSize();
             }            
-			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
+			if(SItemPanel::IsItemInClip(mtx,rcClip,rgnClip,rcItem))
             {
                 ii.pItem->Draw(pRT, rcItem);
             }

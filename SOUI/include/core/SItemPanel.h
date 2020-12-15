@@ -9,8 +9,7 @@
 
 #include "SwndContainerImpl.h"
 
-namespace SOUI
-{
+SNSBEGIN
 
 class SItemPanel;
 
@@ -30,6 +29,8 @@ public:
     
     SWindow * GetHostWindow() { return m_pFrmHost;}
 
+	static BOOL IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem);
+
 protected:
     SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer);
     virtual ~SItemPanel() {}
@@ -37,7 +38,6 @@ protected:
     virtual void WINAPI OnFinalRelease();
 
 public://SwndContainerImpl
-    virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
     STDMETHOD_(BOOL,OnFireEvent)(IEvtArgs *evt);
 
@@ -70,6 +70,7 @@ public://SwndContainerImpl
 
 	STDMETHOD_(void,EnableIME)(BOOL bEnable);
 public://SWindow
+	virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);
 
     virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
@@ -113,6 +114,5 @@ protected:
     LPARAM        m_lpItemIndex;
 };
 
-BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem);
 
-}//namespace SOUI
+SNSEND

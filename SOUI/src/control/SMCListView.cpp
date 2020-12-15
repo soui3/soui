@@ -501,7 +501,7 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
         {
             ItemInfo ii = m_lstItems.GetNext(pos);
             CRect rcItem = _OnItemGetRect(iFirst+i);
-			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
+			if(SItemPanel::IsItemInClip(mtx,rcClip,rgnClip,rcItem))
                 ii.pItem->Draw(pRT,rcItem);
 			if(m_crGrid!=CR_INVALID)
 			{

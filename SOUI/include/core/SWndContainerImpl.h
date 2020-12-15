@@ -18,8 +18,7 @@
 #include <core/SCaret.h>
 #include <core/STimerlineHandlerMgr.h>
 
-namespace SOUI
-{
+SNSBEGIN
 
     class SOUI_EXP SwndContainerImpl : public ISwndContainer
 									 , public ITimelineHandler
@@ -112,5 +111,4 @@ namespace SOUI
 		STimerlineHandlerMgr	    m_timelineHandlerMgr;
     };
 
-}//namespace SOUI
-
+SNSEND

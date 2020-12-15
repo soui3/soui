@@ -10,9 +10,7 @@
 
 #pragma warning(disable:4018)
 
-namespace SOUI
-{
-
+SNSBEGIN
 
 SItemPanel::SItemPanel(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer)
     :m_pFrmHost(pFrameHost)
@@ -411,7 +409,8 @@ COLORREF SItemPanel::GetBkgndColor() const
 	}
 	return m_crBk;
 }
-BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem)
+
+BOOL SItemPanel::IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem)
 {
 	if(!mtx.isIdentity())//don't clip any item if matrix is not identify.
 		return TRUE;
@@ -419,4 +418,5 @@ BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion *
 	rc.IntersectRect(rcClip,rcItem);
 	return !rc.IsRectEmpty() && (!clipRgn|| clipRgn->RectInRegion(rcItem));
 }
-}//namespace SOUI
+
+SNSEND

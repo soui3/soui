@@ -5,8 +5,7 @@
 #include "core/SwndContainerImpl.h"
 
 
-namespace SOUI
-{
+SNSBEGIN
 
 #define WM_NCMOUSEFIRST WM_NCMOUSEMOVE
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
@@ -483,4 +482,4 @@ void SwndContainerImpl::OnNextFrame()
 }
 
 
-}//namespace SOUI
+SNSEND

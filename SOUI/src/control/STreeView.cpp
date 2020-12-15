@@ -506,7 +506,7 @@ namespace SOUI
 		    
 		    CRect rcItem(pt,szItem);
 		    rcItem.OffsetRect(rcClient.TopLeft());
-			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
+			if(SItemPanel::IsItemInClip(mtx,rcClip,rgnClip,rcItem))
 		    {//draw the item
 		        ii.pItem->Draw(pRT,rcItem);
 		    }

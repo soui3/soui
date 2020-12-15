@@ -243,7 +243,7 @@ namespace SOUI
                 ItemInfo ii = m_lstItems.GetNext(pos);
                 rcItem.top=rcItem.bottom;
                 rcItem.bottom = rcItem.top + m_lvItemLocator->GetItemHeight(iFirst+i);
-				if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
+				if(SItemPanel::IsItemInClip(mtx,rcClip,rgnClip,rcItem))
 				{
 					ii.pItem->Draw(pRT, rcItem);
 				}
