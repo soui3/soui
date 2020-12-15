@@ -30,9 +30,6 @@ enum{
 
 enum GrtFlag;
 
-//todo: move to other place.
-inline int RectWidth(LPCRECT rc) {return rc->right-rc->left;}
-inline int RectHeight(LPCRECT rc) {return rc->bottom-rc->top;}
 
 /**
 * @struct     ISwndContainer
