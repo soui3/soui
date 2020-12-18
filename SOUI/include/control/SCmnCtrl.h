@@ -271,7 +271,7 @@ protected:
      *
      * Describe  根据内容窗体矩形大小，计算出适合的大小
      */
-    virtual CSize GetDesiredSize(int wid,int hei);
+    STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei)  OVERRIDE;
 
 };
 
@@ -358,7 +358,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(int wid, int hei) ;
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
 
 	int m_iTile;		/**<绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺 */
     BOOL m_bManaged;	/**< 是否要自动释放当前的m_pSkin对象 */
@@ -438,7 +438,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
 	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     virtual void OnColorize(COLORREF cr);
     
@@ -544,7 +544,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
     virtual void OnColorize(COLORREF cr);
 	virtual void OnScaleChanged(int scale);
 
@@ -679,7 +679,7 @@ protected:
      *
      * Describe  根据矩形的大小，获取预期大小(解释有点不对)
      */
-    virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
     /**
      * SCheckBox::GetTextRect
      * @brief    获取文本大小
@@ -786,7 +786,7 @@ protected:
 	*
 	* Describe  根据矩形的大小，获取预期大小(解释有点不对)
 	*/
-	virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
     HICON m_theIcon; /**< 图标资源句柄 */
 
     SOUI_ATTRS_BEGIN()
@@ -843,7 +843,7 @@ protected:
      *
      * Describe  获取预期大小值
      */
-    virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
     /**
      * SRadioBox::NeedRedrawWhenStateChange
      * @brief    当状态改变时候是否需要重绘
@@ -1000,7 +1000,7 @@ public:
     BOOL GetToggle();
 
 protected:
-	virtual CSize GetDesiredSize(int wid, int hei);
+	STDMETHOD_(SIZE, GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
 	virtual BOOL NeedRedrawWhenStateChange(){return TRUE;}	
 
 protected:
@@ -1025,8 +1025,8 @@ public:
     SGroup();
 
 protected:
-    virtual CRect GetChildrenLayoutRect() const;
-	virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
+    STDMETHOD_(RECT,GetChildrenLayoutRect)(THIS) SCONST OVERRIDE;
+	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
 
     void OnPaint(IRenderTarget *pRT);
     

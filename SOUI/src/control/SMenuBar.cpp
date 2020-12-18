@@ -32,7 +32,7 @@ namespace SOUI
 		HRESULT OnAttrSrc(const SStringW& strValue, BOOL bLoading);
 
 		virtual void WINAPI OnFinalRelease() { delete this; }
-		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei);
 		bool OnCmd(IEvtArgs* e);
 
 		void OnTimer(UINT_PTR timerID);
@@ -129,7 +129,7 @@ namespace SOUI
 		return LoadMenu(S_CW2T(strValue)) ? S_OK : E_INVALIDARG;
 	}
 
-	CSize SMenuBarItem::GetDesiredSize(int nParentWid, int nParentHei)
+	SIZE SMenuBarItem::GetDesiredSize(int nParentWid, int nParentHei)
 	{
 		CSize size = SWindow::GetDesiredSize(nParentWid, nParentHei);
 		size.cx += 13;

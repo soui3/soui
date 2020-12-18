@@ -329,7 +329,7 @@ namespace SOUI
         Relayout(GetChildrenLayoutRect());
     }
 
-	CRect SSplitWnd::GetChildrenLayoutRect() const
+	RECT SSplitWnd::GetChildrenLayoutRect() const
 	{
 		CRect rc = GetClientRect();
 		rc.DeflateRect(GetStyle().GetPadding());

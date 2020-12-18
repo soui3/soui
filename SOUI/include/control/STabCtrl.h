@@ -323,7 +323,7 @@ namespace SOUI
         *
         * Describe  
         */
-        virtual CRect GetChildrenLayoutRect() const;
+        STDMETHOD_(RECT, GetChildrenLayoutRect)(THIS) SCONST OVERRIDE;
         
         /**
          * GetTitleRect
@@ -379,9 +379,9 @@ namespace SOUI
         *
         * Describe  
         */
-        virtual void UpdateChildrenPosition();
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
 
-        virtual void WINAPI OnInitFinished(SXmlNode xmlNode);
+		STDMETHOD_(void,OnInitFinished)(THIS_ SXmlNode xmlNode);
         
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);

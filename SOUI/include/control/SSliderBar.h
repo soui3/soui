@@ -95,7 +95,7 @@ protected:
      *
      * Describe  获取大小 
      */
-    virtual CSize    GetDesiredSize(int wid,int hei);
+	STDMETHOD_(SIZE, GetDesiredSize)(THIS_ int nParentWid, int nParentHei);
     
     virtual void OnColorize(COLORREF cr);
 

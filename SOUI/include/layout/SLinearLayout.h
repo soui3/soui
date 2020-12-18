@@ -62,10 +62,10 @@ namespace SOUI
         SLinearLayout(void);
         ~SLinearLayout(void);
 
-		STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ ILayoutParam *pLayoutParam) SCONST OVERRIDE;
-		STDMETHOD_(void,LayoutChildren)(THIS_ SWindow * pParent) OVERRIDE;
+		STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ const ILayoutParam *pLayoutParam) SCONST OVERRIDE;
+		STDMETHOD_(void,LayoutChildren)(THIS_ IWindow * pParent) OVERRIDE;
 		STDMETHOD_(ILayoutParam *, CreateLayoutParam)(THIS) SCONST OVERRIDE;
-		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const SWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
+		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const IWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
 
         
         SOUI_ATTRS_BEGIN()

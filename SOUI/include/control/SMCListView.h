@@ -224,7 +224,7 @@ namespace SOUI
         * Describe  更新列表头控件
         */
         void            UpdateHeaderCtrl();
-        void            UpdateChildrenPosition();
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
         
 		int		GetHeaderHeight() const;
     protected:

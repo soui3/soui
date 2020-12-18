@@ -171,7 +171,7 @@ public:
     void RemoveItem( SSplitPane * pane );
 
 protected:
-	virtual CRect GetChildrenLayoutRect() const;
+	STDMETHOD_(RECT,GetChildrenLayoutRect)(THIS) SCONST OVERRIDE;
 	
 	/**
      * SSplitWnd::UpdateChildrenPosition
@@ -179,7 +179,7 @@ protected:
      *
      * Describe  更新子窗口位置
      */
-    virtual void UpdateChildrenPosition();
+	STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
 
     
     /**

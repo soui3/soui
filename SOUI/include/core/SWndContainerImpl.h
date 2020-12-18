@@ -92,7 +92,7 @@ SNSBEGIN
         void OnActivateApp(BOOL bActive, DWORD dwThreadID);
 
 	protected:
-        void _BuildWndTreeZorder(SWindow *pWnd,UINT &iOrder);
+        void _BuildWndTreeZorder(IWindow *pWnd,UINT &iOrder);
     protected:
 		SWindow * m_pRoot;
         SWND m_hCapture;

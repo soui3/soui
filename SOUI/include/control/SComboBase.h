@@ -174,7 +174,7 @@ namespace SOUI
         virtual int FindString(LPCTSTR pszFind,int nAfter=-1);
 
 
-		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
+		STDMETHOD_(SIZE, GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
 
         /**
         * SComboBoxBase::DropDown
@@ -384,7 +384,7 @@ namespace SOUI
         BOOL WINAPI IsFocusable() const;
 
         void OnSetFocus(SWND wndOld);
-		void UpdateChildrenPosition();
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
 
         void OnKillFocus(SWND wndFocus);
 

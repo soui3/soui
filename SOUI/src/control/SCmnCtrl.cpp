@@ -542,7 +542,7 @@ SImageButton::SImageButton()
 }
 
 
-CSize SImageButton::GetDesiredSize( int wid, int hei )
+SIZE SImageButton::GetDesiredSize( int wid, int hei ) 
 {
 	SASSERT(m_pBgSkin);
 	CSize szRet=SButton::GetDesiredSize(wid,hei);
@@ -676,7 +676,7 @@ BOOL SImageWnd::SetIcon( int nSubID )
     return TRUE;
 }
 
-CSize SImageWnd::GetDesiredSize(int wid,int hei)
+SIZE SImageWnd::GetDesiredSize(int wid,int hei)
 {
     CSize szRet;
     if(m_pImg) szRet = m_pImg->Size();
@@ -747,7 +747,7 @@ void SAnimateImgWnd::OnDestroy()
 	__super::OnDestroy();
 }
 
-CSize SAnimateImgWnd::GetDesiredSize(int wid, int hei)
+SIZE SAnimateImgWnd::GetDesiredSize(int wid, int hei)
 {
     CSize szRet;
     if(m_pSkin) szRet=m_pSkin->GetSkinSize();
@@ -818,7 +818,7 @@ SProgress::SProgress()
 }
 
 
-CSize SProgress::GetDesiredSize(int wid, int hei)
+SIZE SProgress::GetDesiredSize(int wid, int hei)
 {
     CSize szRet;
     SIZE sizeBg = m_pSkinBg->GetSkinSize();
@@ -1006,7 +1006,7 @@ void SCheckBox::DrawFocus(IRenderTarget *pRT)
     }
 }
 
-CSize SCheckBox::GetDesiredSize(int wid, int hei)
+SIZE SCheckBox::GetDesiredSize(int wid, int hei)
 {
     SASSERT(m_pSkin);
     CSize szCheck=m_pSkin->GetSkinSize();
@@ -1080,7 +1080,7 @@ void SIconWnd::OnPaint(IRenderTarget *pRT)
 }
 
 
-CSize SIconWnd::GetDesiredSize(int wid, int hei)
+SIZE SIconWnd::GetDesiredSize(int wid, int hei)
 {
     if(!m_theIcon) return CSize();
     ICONINFO iconInfo={0};
@@ -1197,7 +1197,7 @@ void SRadioBox::DrawFocus(IRenderTarget *pRT)
 }
 
 
-CSize SRadioBox::GetDesiredSize(int wid, int hei)
+SIZE SRadioBox::GetDesiredSize(int wid, int hei)
 {
     CSize szRet=__super::GetDesiredSize(wid,hei);
     CSize szRaio=m_pSkin->GetSkinSize();
@@ -1380,7 +1380,7 @@ void SToggle::OnPaint(IRenderTarget *pRT)
     m_pSkin->DrawByState(pRT,GetWindowRect(),GetState());
 }
 
-CSize SToggle::GetDesiredSize(int wid, int hei)
+SIZE SToggle::GetDesiredSize(int wid, int hei)
 {
     CSize sz;
     if(m_pSkin) sz=m_pSkin->GetSkinSize();
@@ -1464,14 +1464,14 @@ void SGroup::OnPaint(IRenderTarget *pRT)
     AfterPaint(pRT, painter);
 }
 
-CRect SGroup::GetChildrenLayoutRect() const
+RECT SGroup::GetChildrenLayoutRect() const
 {
     CRect rcLayout = SWindow::GetChildrenLayoutRect();
     rcLayout.top += m_nHeaderHeight.toPixelSize(GetScale());
     return rcLayout;
 }
 
-CSize SGroup::GetDesiredSize(int nParentWid, int nParentHei)
+SIZE SGroup::GetDesiredSize(int nParentWid, int nParentHei)
 {
 	CSize szRet = __super::GetDesiredSize(nParentWid,nParentHei);
 	szRet.cy += m_nHeaderHeight.toPixelSize(GetScale());

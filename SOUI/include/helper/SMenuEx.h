@@ -28,7 +28,7 @@ namespace SOUI
     protected:
         virtual BOOL CreateChildren(SXmlNode xmlNode);
 
-        virtual CSize GetDesiredSize(int wid, int hei);
+        STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid, int hei);
 
         virtual void GetTextRect(LPRECT pRect);
 

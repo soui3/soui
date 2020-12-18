@@ -502,7 +502,7 @@ namespace SOUI
         *
         * Describe  更新子项位置
         */
-        virtual void    UpdateChildrenPosition();
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
         /**
         * SListCtrl::GetListRect
         * @brief    获取list位置

@@ -453,14 +453,14 @@ ICaret * SwndContainerImpl::GetCaret()
 	return m_caret;
 }
 
-void SwndContainerImpl::_BuildWndTreeZorder( SWindow *pWnd,UINT & iOrder )
+void SwndContainerImpl::_BuildWndTreeZorder( IWindow *pWnd,UINT & iOrder )
 {
-    pWnd->m_uZorder = iOrder++;
-    SWindow *pChild = pWnd->GetWindow(GSW_FIRSTCHILD);
+    ((SWindow*)pWnd)->m_uZorder = iOrder++;
+    IWindow *pChild = pWnd->GetIWindow(GSW_FIRSTCHILD);
     while(pChild)
     {
         _BuildWndTreeZorder(pChild,iOrder);
-        pChild=pChild->GetWindow(GSW_NEXTSIBLING);
+        pChild=pChild->GetIWindow(GSW_NEXTSIBLING);
     }
 }
 

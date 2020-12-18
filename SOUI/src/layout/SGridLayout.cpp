@@ -214,7 +214,7 @@ namespace SOUI
 	{
 	}
 
-	BOOL SGridLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
+	BOOL SGridLayout::IsParamAcceptable(const ILayoutParam *pLayoutParam) const
 	{
 		return pLayoutParam->IsClass(SGridLayoutParam::GetClassName());
 	}
@@ -229,7 +229,7 @@ namespace SOUI
 	/*
 	* MeasureChildren 计算gridlayout的子窗口大小
 	*/
-	SIZE SGridLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
+	SIZE SGridLayout::MeasureChildren(const IWindow * pParent,int nWidth,int nHeight) const
 	{
 		SUNUSED(nWidth);
 		SUNUSED(nHeight);
@@ -253,10 +253,10 @@ namespace SOUI
 		}
 
 		int iRow=0,iCol=0;
-		SWindow *pCell = pParent->GetNextLayoutChild(NULL);
+		const IWindow *pCell = pParent->GetNextLayoutIChild2(NULL);
 		while(pCell)
 		{
-			SGridLayoutParam * pLayoutParam = pCell->GetLayoutParamT<SGridLayoutParam>();
+			const SGridLayoutParam * pLayoutParam = (const SGridLayoutParam*)pCell->GetLayoutParam2();
 			SASSERT(pLayoutParam);
 			//将当前网络所占用的空间位置清0
 			int colSpan = pLayoutParam->nColSpan;
@@ -281,7 +281,7 @@ namespace SOUI
 			}
 
 			//计算出网络大小
-			CSize szCell = pCell->GetDesiredSize(SIZE_WRAP_CONTENT, SIZE_WRAP_CONTENT);
+			CSize szCell = ((IWindow*)pCell)->GetDesiredSize(SIZE_WRAP_CONTENT, SIZE_WRAP_CONTENT);
 			//填充网格,把大小平均分散到网格中。
 			szCell.cx/=colSpan;
 			szCell.cy/=rowSpan;
@@ -314,7 +314,7 @@ namespace SOUI
 				}
 			}
 			if(!bFind) break;
-			pCell = pParent->GetNextLayoutChild(pCell);
+			pCell = pParent->GetNextLayoutIChild2(pCell);
 		}
 
 		CSize szRet;
@@ -349,7 +349,7 @@ namespace SOUI
 		return szRet;
 	}
 
-	void SGridLayout::LayoutChildren(SWindow * pParent)
+	void SGridLayout::LayoutChildren(IWindow * pParent)
 	{
 		if(m_nCols==-1 && m_nRows == -1)
 			return ;
@@ -371,7 +371,7 @@ namespace SOUI
 		bool  * pCellsOccupy=new bool[cells];
 		float * pCellsColWeight = new float[cells];
 		float * pCellsRowWeight = new float[cells];
-		SWindow **pCellsChild = new SWindow*[cells];
+		IWindow **pCellsChild = new IWindow*[cells];
 		CPoint * pCellsSpan = new CPoint[cells];
 		bool *  pCellsSpanFlagX	= new bool[cells];
 		bool *  pCellsSpanFlagY	= new bool[cells];
@@ -383,11 +383,11 @@ namespace SOUI
 		}
 
 		int iRow=0,iCol=0;
-		SWindow *pCell = pParent->GetNextLayoutChild(NULL);
+		IWindow *pCell = pParent->GetNextLayoutIChild(NULL);
 		while(pCell)
 		{
 			pCellsChild[iRow*nCols+iCol] = pCell;
-			SGridLayoutParam * pLayoutParam = pCell->GetLayoutParamT<SGridLayoutParam>();
+			SGridLayoutParam * pLayoutParam = (SGridLayoutParam *)pCell->GetLayoutParam();
 			SASSERT(pLayoutParam);
 			//将当前网络所占用的空间位置清0
 			int colSpan = pLayoutParam->nColSpan;
@@ -455,7 +455,7 @@ namespace SOUI
 				}
 			}
 			if(!bFind) break;
-			pCell = pParent->GetNextLayoutChild(pCell);
+			pCell = pParent->GetNextLayoutIChild(pCell);
 		}
 
 
@@ -555,10 +555,10 @@ namespace SOUI
 					pt.x += pCellsWidth[x] + xInter;
 					continue;
 				}
-				SWindow *pCell = pCellsChild[iCell];
+				IWindow *pCell = pCellsChild[iCell];
 				if(!pCell) break;
 
-				SGridLayoutParam * pLayoutParam = pCell->GetLayoutParamT<SGridLayoutParam>();
+				SGridLayoutParam * pLayoutParam = (SGridLayoutParam *)pCell->GetLayoutParam();
 
 				CSize szCell;
 				for(int xx=0;xx<pCellsSpan[iCell].x;xx++)
@@ -608,18 +608,18 @@ namespace SOUI
 		delete []pCellsSpan;
 	}
 
-	int SGridLayout::CalcCells(const SWindow *pParent) const
+	int SGridLayout::CalcCells(const IWindow *pParent) const
 	{
 		int nCells = 0;
-		SWindow *pCell = pParent->GetNextLayoutChild(NULL);
+		const IWindow *pCell = pParent->GetNextLayoutIChild2(NULL);
 		while(pCell)
 		{
-			SGridLayoutParam *pParam = pCell->GetLayoutParamT<SGridLayoutParam>();
+			const SGridLayoutParam *pParam = (const SGridLayoutParam *)pCell->GetLayoutParam2();
 			SASSERT(pParam);
 			int nColSpan = pParam->nColSpan;
 			int nRowSpan = pParam->nRowSpan;
 			nCells += nColSpan * nRowSpan;
-			pCell = pParent->GetNextLayoutChild(pCell);
+			pCell = pParent->GetNextLayoutIChild2(pCell);
 		}
 		return nCells;
 	}

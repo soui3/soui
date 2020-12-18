@@ -464,7 +464,7 @@ namespace SOUI
 		return -1;
     }
 
-	CSize SComboBase::GetDesiredSize(int nParentWid, int nParentHei)
+	SIZE SComboBase::GetDesiredSize(int nParentWid, int nParentHei)
 	{
 		CSize szRet(-1, -1);
 		if (GetLayoutParam()->IsSpecifiedSize(Horz))

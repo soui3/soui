@@ -67,10 +67,10 @@ namespace SOUI
 		SGridLayout(void);
 		~SGridLayout(void);
 
-		STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ ILayoutParam *pLayoutParam) SCONST OVERRIDE;
-		STDMETHOD_(void,LayoutChildren)(THIS_ SWindow * pParent) OVERRIDE;
+		STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ const ILayoutParam *pLayoutParam) SCONST OVERRIDE;
+		STDMETHOD_(void,LayoutChildren)(THIS_ IWindow * pParent) OVERRIDE;
 		STDMETHOD_(ILayoutParam *, CreateLayoutParam)(THIS) SCONST OVERRIDE;
-		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const SWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
+		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const IWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
 
 
 		SOUI_ATTRS_BEGIN()
@@ -84,7 +84,7 @@ namespace SOUI
 			ATTR_GRIDGRAVITY(L"gravity",m_GravityX=m_GravityY,TRUE)
 		SOUI_ATTRS_BREAK()
 	protected:
-		int CalcCells(const SWindow *pParent) const;
+		int CalcCells(const IWindow *pParent) const;
 
 		int m_nCols;				/**<行数 */
 		int m_nRows;				/**<列数 */

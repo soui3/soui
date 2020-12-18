@@ -250,7 +250,7 @@ LRESULT SSliderBar::NotifyPos(UINT uCode, int nPos)
     return FireEvent(evt);
 }
 
-CSize SSliderBar::GetDesiredSize(int wid, int hei)
+SIZE SSliderBar::GetDesiredSize(int wid, int hei)
 {
     SASSERT(m_pSkinBg && m_pSkinThumb);
     CSize szRet;

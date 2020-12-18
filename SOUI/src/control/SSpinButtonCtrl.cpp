@@ -49,7 +49,7 @@ namespace SOUI
 
 
 
-    CSize SSpinButtonCtrl::GetDesiredSize(int wid, int hei)
+    SIZE SSpinButtonCtrl::GetDesiredSize(int wid, int hei)
     {
         CSize szRet;
         if(GetLayoutParam()->IsSpecifiedSize(Horz))

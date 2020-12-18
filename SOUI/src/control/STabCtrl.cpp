@@ -359,7 +359,7 @@ void STabCtrl::OnPaint(IRenderTarget *pRT)
     AfterPaint(pRT,painter);
 }
 
-CRect STabCtrl::GetChildrenLayoutRect() const
+RECT STabCtrl::GetChildrenLayoutRect() const
 {
     CRect rcRet;
     GetClientRect(rcRet);

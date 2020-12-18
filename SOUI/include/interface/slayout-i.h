@@ -7,7 +7,7 @@ SOUI窗口布局接口
 
 SNSBEGIN
 
-class SWindow;
+interface IWindow;
 class SLayoutSize;
 
 
@@ -302,10 +302,10 @@ DECLARE_INTERFACE_(ILayout,IObject)
 	*/  
 	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
-	STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ ILayoutParam *pLayoutParam) SCONST PURE;
-	STDMETHOD_(void,LayoutChildren)(THIS_ SWindow * pParent) PURE;
+	STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ const ILayoutParam *pLayoutParam) SCONST PURE;
+	STDMETHOD_(void,LayoutChildren)(THIS_ IWindow * pParent) PURE;
 	STDMETHOD_(ILayoutParam *, CreateLayoutParam)(THIS) SCONST PURE;
-	STDMETHOD_(SIZE, MeasureChildren)(THIS_ const SWindow * pParent,int nWidth,int nHeight) SCONST PURE;
+	STDMETHOD_(SIZE, MeasureChildren)(THIS_ const IWindow * pParent,int nWidth,int nHeight) SCONST PURE;
 };
 
 SNSEND

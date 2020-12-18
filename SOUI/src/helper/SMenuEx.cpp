@@ -98,9 +98,7 @@ namespace SOUI
 			return GetDesiredSize(WIDTH_MENU_INIT, WIDTH_MENU_INIT);
 		}
 
-		//CRect GetMargin() const;
-
-		virtual CSize GetDesiredSize(int wid,int hei)
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei)
 		{
 			CSize szRet;
 			SWindow *pItem = GetWindow(GSW_FIRSTCHILD);
@@ -155,13 +153,13 @@ namespace SOUI
 			return TRUE;
 		}
 
-		virtual CRect GetChildrenLayoutRect() const
+		STDMETHOD_(RECT,GetChildrenLayoutRect)(THIS) SCONST OVERRIDE
 		{
 			CRect rcClient = GetClientRect();
 			return rcClient;
 		}
 
-		virtual void UpdateChildrenPosition()
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE
 		{
 			CRect rcClient = GetChildrenLayoutRect();
 
@@ -333,7 +331,7 @@ namespace SOUI
 		if (m_pSubMenu) pRect->right -= pMenuRoot->m_pArrowSkin->GetSkinSize().cx;
 	}
 
-	CSize SMenuExItem::GetDesiredSize(int wid,int hei)
+	SIZE SMenuExItem::GetDesiredSize(int wid,int hei)
 	{
 		if (!IsVisible())
 			return CSize();
@@ -411,7 +409,7 @@ namespace SOUI
 			m_bDisable = TRUE;
 		}
 
-		virtual CSize GetDesiredSize(int wid, int hei)
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid, int hei)  OVERRIDE
 		{
 			SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
 			(void)pMenuRoot;

@@ -17,7 +17,7 @@ namespace SOUI
 		SWindow * GetBuddy();
 
     protected:
-        virtual CSize GetDesiredSize(int wid,int hei);
+		STDMETHOD_(SIZE, GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
 		virtual BOOL NeedRedrawWhenStateChange() { return TRUE; }
         virtual void OnColorize(COLORREF cr);
 

@@ -211,12 +211,12 @@ namespace SOUI
     {
     }
 
-    void SLinearLayout::LayoutChildren(SWindow * pParent)
+    void SLinearLayout::LayoutChildren(IWindow * pParent)
     {
         CRect rcParent = pParent->GetChildrenLayoutRect();
 		        
         SIZE *pSize = new SIZE [pParent->GetChildrenCount()];
-		SWindow ** pChilds = new SWindow * [pParent->GetChildrenCount()];
+		IWindow ** pChilds = new IWindow * [pParent->GetChildrenCount()];
 		memset(pSize,0,sizeof(SIZE)*pParent->GetChildrenCount());
 
 		int nChilds = 0;
@@ -229,10 +229,10 @@ namespace SOUI
 
             int iChild = 0;
 
-			SWindow *pChild=pParent->GetNextLayoutChild(NULL);
+			IWindow *pChild=pParent->GetNextLayoutIChild(NULL);
             while(pChild)
             {
-				SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+				const SLinearLayoutParam *pLinearLayoutParam = (const SLinearLayoutParam*)pChild->GetLayoutParam2();
 
 				int nScale = pChild->GetScale();
 
@@ -280,7 +280,7 @@ namespace SOUI
 				offset += interval;//add interval
 
 				iChild++;
-				pChild=pParent->GetNextLayoutChild(pChild);
+				pChild=pParent->GetNextLayoutIChild(pChild);
             }
 
 			nChilds = iChild;
@@ -298,8 +298,8 @@ namespace SOUI
             {
 				if (SLayoutSize::fequal(fWeight, 0.0f))
 					break;
-				SWindow *pChild = pChilds[iChild];
-				SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+				IWindow *pChild = pChilds[iChild];
+				SLinearLayoutParam *pLinearLayoutParam = (SLinearLayoutParam *)pChild->GetLayoutParam();
 				int nScale = pChild->GetScale();
                 if(pLinearLayoutParam->weight > 0.0f)
                 {
@@ -341,9 +341,9 @@ namespace SOUI
             offset = 0;
 			for(int iChild = 0;iChild < nChilds;iChild ++)
 			{
-				SWindow *pChild = pChilds[iChild];
+				IWindow *pChild = pChilds[iChild];
 
-                SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+                SLinearLayoutParam *pLinearLayoutParam = (SLinearLayoutParam *)pChild->GetLayoutParam();
 				int nScale = pChild->GetScale();
                 Gravity gravity = pLinearLayoutParam->gravity == G_Undefined? m_gravity:pLinearLayoutParam->gravity;
                 if(gravity == G_Undefined) gravity = G_Left;
@@ -397,23 +397,23 @@ namespace SOUI
     }
 
 	//nWidth,nHeight == -1:wrap_content
-	SIZE SLinearLayout::MeasureChildren(const SWindow * pParent,int nWidth,int nHeight) const
+	SIZE SLinearLayout::MeasureChildren(const IWindow * pParent,int nWidth,int nHeight) const
 	{
 		SIZE *pSize = new SIZE [pParent->GetChildrenCount()];
 		memset(pSize,0,sizeof(SIZE)*pParent->GetChildrenCount());
-		SWindow ** ppChilds = new SWindow *[pParent->GetChildrenCount()];
+		const IWindow ** ppChilds = new const IWindow *[pParent->GetChildrenCount()];
 
-        ILayoutParam * pParentLayoutParam = pParent->GetLayoutParam();
+        const ILayoutParam * pParentLayoutParam = (const ILayoutParam *)pParent->GetLayoutParam2();
 
 		float fWeight = 0;
         int nChilds = 0;
         {
 			int iChild = 0;
 
-			SWindow *pChild = pParent->GetNextLayoutChild(NULL);
+			const IWindow *pChild = pParent->GetNextLayoutIChild2(NULL);
 			while(pChild)
 			{
-				SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+				const SLinearLayoutParam *pLinearLayoutParam = (const SLinearLayoutParam *)pChild->GetLayoutParam2();
 				int nScale = pChild->GetScale();
 				CSize szChild(SIZE_WRAP_CONTENT,SIZE_WRAP_CONTENT);
 				if(pLinearLayoutParam->IsMatchParent(Horz))
@@ -440,7 +440,7 @@ namespace SOUI
 				{
 					int nWid = szChild.cx, nHei = szChild.cy;
 
-					CSize szCalc = pChild->GetDesiredSize(nWid,nHei);
+					CSize szCalc = ((IWindow*)pChild)->GetDesiredSize(nWid,nHei);
 					if(szChild.cx == SIZE_WRAP_CONTENT) 
 					{
 						szChild.cx = szCalc.cx;
@@ -456,7 +456,7 @@ namespace SOUI
 
 				ppChilds[iChild]=pChild;
 				pSize [iChild] = szChild;
-				pChild = pParent->GetNextLayoutChild(pChild);
+				pChild = pParent->GetNextLayoutIChild2(pChild);
 				iChild++;
 			}
 			nChilds = iChild;
@@ -482,8 +482,8 @@ namespace SOUI
 				{
 					if (SLayoutSize::fequal(fWeight, 0.0f))
 						break;
-					SWindow *pChild = ppChilds[iChild];
-					SLinearLayoutParam *pLinearLayoutParam = pChild->GetLayoutParamT<SLinearLayoutParam>();
+					IWindow *pChild = (IWindow*)ppChilds[iChild];
+					SLinearLayoutParam *pLinearLayoutParam = (SLinearLayoutParam *)pChild->GetLayoutParam();
 					int nScale = pChild->GetScale();
 					if(pLinearLayoutParam->weight > 0.0f)
 					{
@@ -551,7 +551,7 @@ namespace SOUI
 		return szRet;
 	}
 
-	BOOL SLinearLayout::IsParamAcceptable(ILayoutParam *pLayoutParam) const
+	BOOL SLinearLayout::IsParamAcceptable(const ILayoutParam *pLayoutParam) const
 	{
 		return pLayoutParam->IsClass(SLinearLayoutParam::GetClassName());
 	}

@@ -285,7 +285,7 @@ namespace SOUI
 		if(prect)
 		{
 			m_bFloat = TRUE;//使用Move后，程序不再自动计算窗口坐标
-			OnRelayout(prect);
+			OnRelayout(*prect);
 		}else if(GetParent())
 		{
 			//恢复自动计算位置
@@ -382,24 +382,22 @@ namespace SOUI
 	}
 
 
-	SWindow *SWindow::GetParent() const
+	IWindow *SWindow::GetIParent()
 	{
-		return m_pParent;
+		return GetParent();
 	}
 
 
-	SWindow * SWindow::GetRoot() const
+	IWindow * SWindow::GetIRoot()
 	{
-		SWindow *pParent=(SWindow*)this;
-		while(pParent->GetParent()) pParent=pParent->GetParent();
-		return pParent;
+		return GetRoot();
 	}
 
 
 	BOOL SWindow::IsDescendant( const SWindow *pWnd ) const
 	{
 		if(!pWnd) return FALSE;
-		SWindow *pParent=GetParent();
+		const SWindow *pParent=GetParent();
 		while(pParent)
 		{
 			if(pParent == pWnd) return TRUE;
@@ -446,9 +444,8 @@ namespace SOUI
 	void SWindow::InsertChild(SWindow *pNewChild,SWindow *pInsertAfter/*=ICWND_LAST*/)
 	{
 		ASSERT_UI_THREAD();
-		if(pNewChild->m_pParent == this) 
+		if(pNewChild->GetParent() == this) 
 			return;
-
 		pNewChild->SetContainer(GetContainer());
 		pNewChild->m_pParent=this;
 		pNewChild->m_pPrevSibling=pNewChild->m_pNextSibling=NULL;
@@ -507,7 +504,7 @@ namespace SOUI
 		ASSERT_UI_THREAD();
 		if(this != pChild->GetParent()) 
 			return FALSE;
-
+		
 		OnRemoveChild(pChild);
 
 		SWindow *pPrevSib=pChild->m_pPrevSibling;
@@ -622,23 +619,23 @@ namespace SOUI
 
 	SWindow* SWindow::_FindChildByID(int id, int nDeep)
 	{
-		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+		SWindow *pChild = (SWindow*)GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
 			if (pChild->GetID() == id)
 				return pChild;
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			pChild = (SWindow*)pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 
 		if(nDeep>0) nDeep--;
 		if(nDeep==0) return NULL;
 
-		pChild = GetWindow(GSW_FIRSTCHILD);
+		pChild = (SWindow*)GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
 			SWindow *pChildFind=pChild->_FindChildByID(id,nDeep);
 			if(pChildFind) return pChildFind;
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			pChild = (SWindow*)pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 
 		return NULL;
@@ -646,23 +643,23 @@ namespace SOUI
 
 	SWindow* SWindow::_FindChildByName(const SStringW & strName, int nDeep)
 	{
-		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+		SWindow *pChild = (SWindow*)GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
 			if (pChild->m_strName == strName)
 				return pChild;
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			pChild = (SWindow*)pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 
 		if(nDeep>0) nDeep--;
 		if(nDeep==0) return NULL;
 
-		pChild = GetWindow(GSW_FIRSTCHILD);
+		pChild = (SWindow*)GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
 			SWindow *pChildFind=pChild->_FindChildByName(strName,nDeep);
 			if(pChildFind) return pChildFind;
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			pChild = (SWindow*)pChild->GetWindow(GSW_NEXTSIBLING);
 		}
 
 		return NULL;
@@ -1383,26 +1380,26 @@ namespace SOUI
 		AdjustZOrder(ICWND_LAST);
 	}
 
-	bool SWindow::AdjustZOrder(SWindow *pInsertAfter)
+	BOOL SWindow::AdjustZOrder(SWindow *pInsertAfter)
 	{
 		ASSERT_UI_THREAD();
 		SWindow *pParent=GetParent();
 		if(!pParent)
-			return true;
+			return TRUE;
 		if(m_isDestroying)
-			return true;
+			return TRUE;
 		if(pInsertAfter != ICWND_FIRST && pInsertAfter != ICWND_LAST && pInsertAfter->GetParent() != pParent)
 		{
-			return false;
+			return FALSE;
 		}
 		if(pInsertAfter == this)
 		{
-			return false;
+			return FALSE;
 		}
 		pParent->RemoveChild(this);
 		pParent->InsertChild(this,pInsertAfter);
 		pParent->Invalidate();
-		return true;
+		return TRUE;
 	}
 
 	BOOL SWindow::FireEvent(IEvtArgs *evt)
@@ -1432,11 +1429,11 @@ namespace SOUI
 		return GetContainer()->OnFireEvent(evt);
 	}
 
-	BOOL SWindow::OnRelayout(const CRect &rcWnd)
+	BOOL SWindow::OnRelayout(RECT rcWnd)
 	{
-		if (rcWnd.EqualRect(m_rcWindow) && m_layoutDirty == dirty_clean)
+		if (m_rcWindow.EqualRect(&rcWnd) && m_layoutDirty == dirty_clean)
 			return FALSE;
-		if(!rcWnd.EqualRect(m_rcWindow))
+		if(!m_rcWindow.EqualRect(&rcWnd))
 		{
 			m_layoutDirty = dirty_self;
 
@@ -1630,7 +1627,7 @@ namespace SOUI
 	}
 
 	static const int KWnd_MaxSize  = 10000;
-	CSize SWindow::GetDesiredSize(int nParentWid , int nParentHei )
+	SIZE SWindow::GetDesiredSize(int nParentWid , int nParentHei )
 	{
 		//检查当前窗口的MatchParent属性及容器窗口的WrapContent属性。
 		ILayoutParam * pLayoutParam = GetLayoutParam();
@@ -1915,7 +1912,7 @@ namespace SOUI
 		return bRet;
 	}
 
-	CRect SWindow::GetChildrenLayoutRect() const
+	RECT SWindow::GetChildrenLayoutRect() const
 	{
 		CRect rcRet;
 		GetClientRect(rcRet);
@@ -1947,7 +1944,7 @@ namespace SOUI
 			SWindow *pChild = GetNextLayoutChild(NULL);
 			while(pChild)
 			{
-				if(pChild->m_layoutDirty != dirty_clean)
+				if(pChild->IsLayoutDirty())
 				{
 					pChild->UpdateChildrenPosition();
 				}
@@ -1990,20 +1987,14 @@ namespace SOUI
 	}
 
 
-	SWindow * SWindow::GetNextLayoutChild(SWindow *pCurChild) const
+	const IWindow * SWindow::GetNextLayoutIChild2(const IWindow *pCurChild) const
 	{
-		SWindow *pRet = NULL;
-		if(pCurChild == NULL)
-		{
-			pRet = GetWindow(GSW_FIRSTCHILD);
-		}else
-		{
-			pRet = pCurChild->GetWindow(GSW_NEXTSIBLING);
-		}
+		return GetNextLayoutChild((const SWindow*)pCurChild);
+	}
 
-		if(pRet && (pRet->IsFloat() || (!pRet->IsDisplay() && !pRet->IsVisible(FALSE))))
-			return GetNextLayoutChild(pRet);
-		return pRet;
+	IWindow* SWindow::GetNextLayoutIChild(THIS_ IWindow* pCurChild)
+	{
+		return GetNextLayoutChild((SWindow*)pCurChild);
 	}
 
 	void SWindow::OnSetFocus(SWND wndOld)
@@ -2354,45 +2345,14 @@ namespace SOUI
 		return !rcClient.PtInRect(pt);
 	}
 
-	SWindow * SWindow::GetWindow(int uCode) const
+	IWindow * SWindow::GetIWindow(int uCode)
 	{
-		SWindow *pRet=NULL;
-		switch(uCode)
-		{
-		case GSW_FIRSTCHILD:
-			pRet=m_pFirstChild;
-			break;
-		case GSW_LASTCHILD:
-			pRet=m_pLastChild;
-			break;
-		case GSW_PREVSIBLING:
-			pRet=m_pPrevSibling;
-			break;
-		case GSW_NEXTSIBLING:
-			pRet=m_pNextSibling;
-			break;
-		case GSW_OWNER:
-			pRet=m_pOwner;
-			break;
-		case GSW_PARENT:
-			pRet=m_pParent;
-			break;
-		}
-		return pRet;
+		return GetWindow(uCode);
 	}
 
-	SWindow * SWindow::GetChild(int iChild)
+	IWindow * SWindow::GetIChild(int iChild)
 	{
-		if (iChild == CHILDID_SELF)
-			return this;
-		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
-		for (int i = 0; i < iChild-1 && pChild; i++)
-		{
-			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
-			if (!pChild) return NULL;
-		}
-
-		return pChild;
+		return GetChild(iChild);
 	}
 
 
@@ -3102,6 +3062,176 @@ namespace SOUI
 	BOOL SWindow::IsClipClient() const
 	{
 		return m_bClipClient;
+	}
+
+	BOOL SWindow::IsLayoutDirty() const
+	{
+		return m_layoutDirty != dirty_clean;
+	}
+
+	const SWindow * SWindow::GetWindow(int uCode) const
+	{
+		SWindow *pRet=NULL;
+		switch(uCode)
+		{
+		case GSW_FIRSTCHILD:
+			pRet=m_pFirstChild;
+			break;
+		case GSW_LASTCHILD:
+			pRet=m_pLastChild;
+			break;
+		case GSW_PREVSIBLING:
+			pRet=m_pPrevSibling;
+			break;
+		case GSW_NEXTSIBLING:
+			pRet=m_pNextSibling;
+			break;
+		case GSW_OWNER:
+			pRet=m_pOwner;
+			break;
+		case GSW_PARENT:
+			pRet=m_pParent;
+			break;
+		}
+		return pRet;
+	}
+
+	SWindow * SWindow::GetWindow(int uCode)
+	{
+		SWindow *pRet=NULL;
+		switch(uCode)
+		{
+		case GSW_FIRSTCHILD:
+			pRet=m_pFirstChild;
+			break;
+		case GSW_LASTCHILD:
+			pRet=m_pLastChild;
+			break;
+		case GSW_PREVSIBLING:
+			pRet=m_pPrevSibling;
+			break;
+		case GSW_NEXTSIBLING:
+			pRet=m_pNextSibling;
+			break;
+		case GSW_OWNER:
+			pRet=m_pOwner;
+			break;
+		case GSW_PARENT:
+			pRet=m_pParent;
+			break;
+		}
+		return pRet;
+	}
+
+	const SWindow * SWindow::GetChild(int iChild) const
+	{
+		if (iChild == CHILDID_SELF)
+			return this;
+		const SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+		for (int i = 0; i < iChild-1 && pChild; i++)
+		{
+			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			if (!pChild) return NULL;
+		}
+
+		return pChild;
+	}
+
+	SWindow * SWindow::GetChild(int iChild)
+	{
+		if (iChild == CHILDID_SELF)
+			return this;
+		SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
+		for (int i = 0; i < iChild-1 && pChild; i++)
+		{
+			pChild = pChild->GetWindow(GSW_NEXTSIBLING);
+			if (!pChild) return NULL;
+		}
+
+		return pChild;
+	}
+
+	const SWindow * SWindow::GetParent() const
+	{
+		return m_pParent;
+	}
+
+	SWindow * SWindow::GetParent()
+	{
+		return m_pParent;
+	}
+
+	SWindow * SWindow::GetRoot()
+	{
+		SWindow *pParent = this;
+		while(pParent->GetParent()) pParent=pParent->GetParent();
+		return pParent;
+	}
+
+	const SWindow * SWindow::GetRoot() const
+	{
+		const SWindow *pParent = this;
+		while(pParent->GetParent()) pParent=pParent->GetParent();
+		return pParent;
+	}
+
+	const SWindow * SWindow::GetNextLayoutChild(const SWindow* pCurChild) const
+	{
+		const SWindow *pRet = NULL;
+		if(pCurChild == NULL)
+		{
+			pRet = GetWindow(GSW_FIRSTCHILD);
+		}else
+		{
+			pRet = pCurChild->GetWindow(GSW_NEXTSIBLING);
+		}
+
+		if(pRet && (pRet->IsFloat() || (!pRet->IsDisplay() && !pRet->IsVisible(FALSE))))
+			return GetNextLayoutChild(pRet);
+		return pRet;
+
+	}
+
+	SWindow * SWindow::GetNextLayoutChild(SWindow* pCurChild)
+	{
+		SWindow *pRet = NULL;
+		if(pCurChild == NULL)
+		{
+			pRet = GetWindow(GSW_FIRSTCHILD);
+		}else
+		{
+			pRet = pCurChild->GetWindow(GSW_NEXTSIBLING);
+		}
+
+		if(pRet && (pRet->IsFloat() || (!pRet->IsDisplay() && !pRet->IsVisible(FALSE))))
+			return GetNextLayoutChild(pRet);
+		return pRet;
+
+	}
+
+	BOOL SWindow::IsIDescendant(THIS_ const IWindow *pWnd) const
+	{
+		return IsDescendant((const SWindow*)pWnd);
+	}
+
+	BOOL SWindow::AdjustIZOrder(THIS_ IWindow *pInsertAfter)
+	{
+		return AdjustZOrder((SWindow*)pInsertAfter);
+	}
+
+	void SWindow::InsertIChild(THIS_ IWindow *pNewChild,IWindow *pInsertAfter/*=ICWND_LAST*/)
+	{
+		return InsertChild((SWindow*)pNewChild,(SWindow*)pInsertAfter);
+	}
+
+	BOOL SWindow::RemoveIChild(THIS_ IWindow *pChild)
+	{
+		return RemoveChild((SWindow*)pChild);
+	}
+
+	BOOL SWindow::DestroyIChild(THIS_ IWindow *pChild)
+	{
+		return DestroyChild((SWindow*)pChild);
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;

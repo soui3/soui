@@ -236,8 +236,6 @@ namespace SOUI
 		STDMETHOD_(int,GetID)() SCONST OVERRIDE{return m_nID;}
 		STDMETHOD_(void,SetID)(int nID) OVERRIDE{m_nID=nID;}
 
-		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
-
 		STDMETHOD_(SWND,GetSwnd)(THIS) SCONST OVERRIDE;
 
 		STDMETHOD_(ILayout *,GetLayout)(THIS) OVERRIDE
@@ -245,7 +243,12 @@ namespace SOUI
 			return m_pLayout;
 		}
 
-		STDMETHOD_(ILayoutParam *, GetLayoutParam)(THIS) SCONST OVERRIDE
+		STDMETHOD_(const ILayoutParam *, GetLayoutParam2)(THIS) SCONST OVERRIDE
+		{
+			return m_pLayoutParam;
+		}
+
+		STDMETHOD_(ILayoutParam *, GetLayoutParam)(THIS) OVERRIDE
 		{
 			return m_pLayoutParam;
 		}
@@ -280,12 +283,7 @@ namespace SOUI
 		STDMETHOD_(COLORREF,GetColorizeColor)(THIS) SCONST OVERRIDE;
 		STDMETHOD_(BOOL,Destroy)(THIS) OVERRIDE;
 		STDMETHOD_(void,BringWindowToTop)(THIS) OVERRIDE;
-		//STDMETHOD_(IWindow*,GetParent_C)(THIS) SCONST OVERRIDE;
-		//STDMETHOD_(IWindow*,FindChildByID_C)(THIS_ int nID, int nDeep) SCONST OVERRIDE;
-		//STDMETHOD_(IWindow*,FindChildByName_C)(THIS_ LPCWSTR strName, int nDeep) SCONST OVERRIDE;
-		//STDMETHOD_(IWindow*,CreateChildren_C)(THIS_ LPCWSTR strXml) OVERRIDE;
 		STDMETHOD_(UINT,GetChildrenCount)(THIS) SCONST OVERRIDE;
-		//STDMETHOD_(BOOL,DestroyChild)(THIS_ SWND hChild) OVERRIDE;
 		STDMETHOD_(LRESULT,SSendMessage)(THIS_ UINT uMsg, WPARAM wParam=0, LPARAM lParam=0,BOOL *pbMsgHandled=NULL) OVERRIDE;
 		STDMETHOD_(void,SDispatchMessage)(THIS_ UINT uMsg, WPARAM wParam=0, LPARAM lParam=0) OVERRIDE;
 
@@ -336,7 +334,155 @@ namespace SOUI
 		STDMETHOD_(BOOL,IsFocusable)(THIS) SCONST OVERRIDE;
 
 		STDMETHOD_(BOOL,IsClipClient)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(BOOL,IsLayoutDirty)(THIS) SCONST OVERRIDE;
 
+		/**
+        * GetNextLayoutChild
+        * @brief    获取下一个参与布局的窗口
+		* @param	SWindow *pCurChild -- 当前子窗口指针
+        * @return   SWindow * -- 下一个布局子窗口 
+        *
+        * Describe  
+        */
+		STDMETHOD_(const IWindow*,GetNextLayoutIChild2)(THIS_ const IWindow* pCurChild) SCONST OVERRIDE;
+		STDMETHOD_(IWindow*,GetNextLayoutIChild)(THIS_ IWindow* pCurChild) OVERRIDE;
+
+		/**
+        * UpdateChildrenPosition
+        * @brief    更新子窗口位置
+        * @return   void 
+        *
+        * Describe  
+        */
+        STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
+
+		STDMETHOD_(IWindow *,GetIWindow)(THIS_ int uCode)  OVERRIDE;
+
+		STDMETHOD_(IWindow *,GetIChild)(THIS_ int iChild)  OVERRIDE;
+
+
+		 /**
+         * GetParent
+         * @brief    获得父窗口
+         * @return   SWindow * 父窗口指针
+         *
+         * Describe  
+         */
+		STDMETHOD_(IWindow *,GetIParent)(THIS)  OVERRIDE;
+
+        /**
+         * GetRoot
+         * @brief    获得顶层窗口
+         * @return   SWindow * 顶层窗口指针
+         *
+         * Describe  
+         */
+		STDMETHOD_(IWindow *,GetIRoot)(THIS)  OVERRIDE;
+        
+        
+        /**
+         * IsDesendant
+         * @brief    determining whether this window is a descendant of pWnd or not
+         * @param    const SWindow * pWnd --  the tested ascendant window
+         * @return   BOOL -- TRUE: descendant
+         * Describe  
+         */    
+        STDMETHOD_(BOOL,IsIDescendant)(THIS_ const IWindow *pWnd) SCONST OVERRIDE;
+
+
+		/**
+         * AdjustZOrder
+         * @brief    调整窗口Z序
+		 * @param    SWindow *pInsertAfter --  插入在这个窗口之后
+         * @return   bool,  pInsertAfter与this非同级窗口返回失败
+         *
+         * Describe  pInsertAfter可以为NULL，或是与this同一级的兄弟窗口
+         */
+		STDMETHOD_(BOOL,AdjustIZOrder)(THIS_ IWindow *pInsertAfter) OVERRIDE;
+
+		        /**
+         * InsertChild
+         * @brief    在窗口树中插入一个子窗口
+         * @param    SWindow * pNewChild --  子窗口对象
+         * @param    SWindow * pInsertAfter --  插入位置
+         * @return   void 
+         *
+         * Describe  一般用于UI初始化的时候创建，插入的窗口不会自动进入布局流程
+         */
+        STDMETHOD_(void,InsertIChild)(THIS_ IWindow *pNewChild,IWindow *pInsertAfter=ICWND_LAST) OVERRIDE;
+
+        /**
+         * RemoveChild
+         * @brief    从窗口树中移除一个子窗口对象
+         * @param    SWindow * pChild --  子窗口对象
+         * @return   BOOL 
+         *
+         * Describe  子窗口不会自动释放
+         */
+        STDMETHOD_(BOOL,RemoveIChild)(THIS_ IWindow *pChild) OVERRIDE;
+        
+        /**
+         * DestroyChild
+         * @brief    销毁一个子窗口
+         * @param    SWindow * pChild --  子窗口对象
+         * @return   BOOL 
+         *
+         * Describe  先调用RemoveChild，再调用pChild->Release来释放子窗口对象
+         */
+        STDMETHOD_(BOOL,DestroyIChild)(THIS_ IWindow *pChild) OVERRIDE;
+        
+		STDMETHOD_(void,DestroyAllChildren)(THIS) OVERRIDE;
+
+
+		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
+		STDMETHOD_(void,SetContainer)(THIS_ ISwndContainer *pContainer) OVERRIDE;
+
+		const ISwndContainer* GetContainer() const;
+
+
+		/**
+        * GetChildrenLayoutRect
+        * @brief    获得子窗口的布局空间
+        * @return   CRect 
+        *
+        * Describe  通常是客户区，但是tab,group这样的控件不一样
+        */
+		STDMETHOD_(RECT,GetChildrenLayoutRect)(THIS) SCONST OVERRIDE;
+
+        /**
+        * GetDesiredSize
+        * @brief    当没有指定窗口大小时，通过如皮肤计算窗口的期望大小
+        * @param    int nParentWid -- 容器宽度，<0代表容器宽度依赖当前窗口宽度
+        * @param    int nParentHei -- 容器高度，<0代表容器高度依赖当前窗口高度
+        * @return   CSize 
+        *
+        * Describe  
+        */
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
+
+		/**
+        * OnRelayout
+        * @brief    窗口位置发生变化
+        * @param    const CRect & rcWnd --  新位置
+        * @return   void 
+        *
+        * Describe  窗口位置发生变化,更新窗口及计算子窗口位置
+        */
+		STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) OVERRIDE;
+
+
+		virtual void OnContentChanged();
+
+        /**
+        * FindChildByID
+        * @brief    通过ID查找对应的子窗口
+        * @param    int nID --  窗口ID
+        * @param    int nDeep --  搜索深度,-1代表无限度
+        * @return   SWindow* 
+        *
+        * Describe  
+        */
+        SWindow* FindChildByID(int nID, int nDeep =-1);
 	public:
 		
 		IAccessible * GetAccessible();
@@ -350,22 +496,66 @@ namespace SOUI
 			return sobj_cast<T>(GetLayoutParam());
 		}
 
+		const SWindow * GetWindow(int uCode) const;
+		SWindow * GetWindow(int uCode);
+
+		const SWindow * GetChild(int iChild) const;;
+		SWindow * GetChild(int iChild);;
+
+		const SWindow * GetParent() const;
+		SWindow * GetParent();
+
+		const SWindow * GetRoot() const;
+		SWindow * GetRoot();
+
+		const SWindow * GetNextLayoutChild(const SWindow* pCurChild) const;
+		SWindow * GetNextLayoutChild(SWindow* pCurChild);
+
+        BOOL IsDescendant(const SWindow *pWnd) const;
+
 
 		/**
-        * GetNextLayoutChild
-        * @brief    获取下一个参与布局的窗口
-		* @param	SWindow *pCurChild -- 当前子窗口指针
-        * @return   SWindow * -- 下一个布局子窗口 
-        *
-        * Describe  
-        */
-		SWindow * GetNextLayoutChild(SWindow *pCurChild) const;
+         * AdjustZOrder
+         * @brief    调整窗口Z序
+		 * @param    SWindow *pInsertAfter --  插入在这个窗口之后
+         * @return   bool,  pInsertAfter与this非同级窗口返回失败
+         *
+         * Describe  pInsertAfter可以为NULL，或是与this同一级的兄弟窗口
+         */
+		BOOL AdjustZOrder(SWindow *pInsertAfter);
 
+		        /**
+         * InsertChild
+         * @brief    在窗口树中插入一个子窗口
+         * @param    SWindow * pNewChild --  子窗口对象
+         * @param    SWindow * pInsertAfter --  插入位置
+         * @return   void 
+         *
+         * Describe  一般用于UI初始化的时候创建，插入的窗口不会自动进入布局流程
+         */
+        void InsertChild(SWindow *pNewChild,SWindow *pInsertAfter=ICWND_LAST);
+
+        /**
+         * RemoveChild
+         * @brief    从窗口树中移除一个子窗口对象
+         * @param    SWindow * pChild --  子窗口对象
+         * @return   BOOL 
+         *
+         * Describe  子窗口不会自动释放
+         */
+        BOOL RemoveChild(SWindow *pChild);
+        
+        /**
+         * DestroyChild
+         * @brief    销毁一个子窗口
+         * @param    SWindow * pChild --  子窗口对象
+         * @return   BOOL 
+         *
+         * Describe  先调用RemoveChild，再调用pChild->Release来释放子窗口对象
+         */
+        BOOL DestroyChild(SWindow *pChild);
     public://SWindow状态相关方法
 
-        SWindow *GetWindow(int uCode) const;    
-
-		SWindow * GetChild(int iChild);
 
         /**
         * GetWindowText
@@ -402,8 +592,6 @@ namespace SOUI
 
         DWORD GetState(void) const;
         DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
-		const ISwndContainer* GetContainer() const;
-        void SetContainer(ISwndContainer *pContainer);
 
 
         /**
@@ -431,55 +619,7 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
         
     public://窗口树结构相关方法
-        /**
-         * GetParent
-         * @brief    获得父窗口
-         * @return   SWindow * 父窗口指针
-         *
-         * Describe  
-         */
-        SWindow *GetParent() const;
 
-        /**
-         * GetRoot
-         * @brief    获得顶层窗口
-         * @return   SWindow * 顶层窗口指针
-         *
-         * Describe  
-         */
-        SWindow * GetRoot() const;
-        
-        
-        /**
-         * IsDesendant
-         * @brief    determining whether this window is a descendant of pWnd or not
-         * @param    const SWindow * pWnd --  the tested ascendant window
-         * @return   BOOL -- TRUE: descendant
-         * Describe  
-         */    
-        BOOL IsDescendant(const SWindow *pWnd) const;
-
-
-		/**
-         * AdjustZOrder
-         * @brief    调整窗口Z序
-		 * @param    SWindow *pInsertAfter --  插入在这个窗口之后
-         * @return   bool,  pInsertAfter与this非同级窗口返回失败
-         *
-         * Describe  pInsertAfter可以为NULL，或是与this同一级的兄弟窗口
-         */
-		bool AdjustZOrder(SWindow *pInsertAfter);
-
-        /**
-        * FindChildByID
-        * @brief    通过ID查找对应的子窗口
-        * @param    int nID --  窗口ID
-        * @param    int nDeep --  搜索深度,-1代表无限度
-        * @return   SWindow* 
-        *
-        * Describe  
-        */
-        SWindow* FindChildByID(int nID, int nDeep =-1);
 
         /**
         * FindChildByID2
@@ -580,38 +720,7 @@ namespace SOUI
         */
         SWindow *CreateChildren(LPCWSTR pszXml);
 
-        /**
-         * InsertChild
-         * @brief    在窗口树中插入一个子窗口
-         * @param    SWindow * pNewChild --  子窗口对象
-         * @param    SWindow * pInsertAfter --  插入位置
-         * @return   void 
-         *
-         * Describe  一般用于UI初始化的时候创建，插入的窗口不会自动进入布局流程
-         */
-        void InsertChild(SWindow *pNewChild,SWindow *pInsertAfter=ICWND_LAST);
 
-        /**
-         * RemoveChild
-         * @brief    从窗口树中移除一个子窗口对象
-         * @param    SWindow * pChild --  子窗口对象
-         * @return   BOOL 
-         *
-         * Describe  子窗口不会自动释放
-         */
-        BOOL RemoveChild(SWindow *pChild);
-        
-        /**
-         * DestroyChild
-         * @brief    销毁一个子窗口
-         * @param    SWindow * pChild --  子窗口对象
-         * @return   BOOL 
-         *
-         * Describe  先调用RemoveChild，再调用pChild->Release来释放子窗口对象
-         */
-        BOOL DestroyChild(SWindow *pChild);
-        
-		void DestroyAllChildren();
     public://窗口消息相关方法
 
         /**
@@ -739,7 +848,6 @@ namespace SOUI
         */
         virtual void RequestRelayout(SWND hSource,BOOL bSourceResizable);
                 
-		virtual void OnContentChanged();
 
         virtual SStringW tr(const SStringW &strSrc);
 
@@ -749,14 +857,6 @@ namespace SOUI
 		virtual BOOL FireEvent(SEvtArgs &evt){return FireEvent(&evt);}
         virtual BOOL OnNcHitTest(CPoint pt);
 
-        /**
-        * UpdateChildrenPosition
-        * @brief    更新子窗口位置
-        * @return   void 
-        *
-        * Describe  
-        */
-        virtual void UpdateChildrenPosition();
         
         /**
         * OnUpdateFloatPosition
@@ -768,35 +868,6 @@ namespace SOUI
         */
 		virtual void OnUpdateFloatPosition(const CRect & rcParent){};
                 
-        /**
-        * OnRelayout
-        * @brief    窗口位置发生变化
-        * @param    const CRect & rcWnd --  新位置
-        * @return   void 
-        *
-        * Describe  窗口位置发生变化,更新窗口及计算子窗口位置
-        */
-		virtual BOOL OnRelayout(const CRect &rcWnd);
-
-        /**
-        * GetChildrenLayoutRect
-        * @brief    获得子窗口的布局空间
-        * @return   CRect 
-        *
-        * Describe  通常是客户区，但是tab,group这样的控件不一样
-        */
-        virtual CRect GetChildrenLayoutRect() const;
-
-        /**
-        * GetDesiredSize
-        * @brief    当没有指定窗口大小时，通过如皮肤计算窗口的期望大小
-        * @param    int nParentWid -- 容器宽度，<0代表容器宽度依赖当前窗口宽度
-        * @param    int nParentHei -- 容器高度，<0代表容器高度依赖当前窗口高度
-        * @return   CSize 
-        *
-        * Describe  
-        */
-		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
 
         /**
          * NeedRedrawWhenStateChange
@@ -1007,14 +1078,6 @@ namespace SOUI
         */    
         void MarkCacheDirty(bool bDirty);
 
-
-		/**
-        * IsLayoutDirty
-        * @brief    检测布局Dirty标志
-		* @return   bool -- true表示layout已经Dirty
-        * Describe  
-        */    
-		bool IsLayoutDirty() const {return m_layoutDirty != dirty_clean;}
 
         /**
         * IsDrawToCache
