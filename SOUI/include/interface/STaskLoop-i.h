@@ -7,6 +7,7 @@ namespace SOUI
 	{
 		virtual ~IRunnable() {}
 		virtual IRunnable* clone() const = 0;
+		virtual void destroy() = 0;
 		virtual void run() = 0;
 		virtual void *getObject() = 0;
 		virtual const char *getClassInfo() const = 0;

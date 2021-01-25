@@ -3,6 +3,20 @@
 
 namespace SOUI
 {
+	template<class T>
+	BOOL RemoveElementFromArray(SArray<T> &arr, T ele)
+	{
+		for(size_t i=0;i<arr.GetCount();i++)
+		{
+			if(arr[i] == ele)
+			{
+				arr.RemoveAt(i);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
 
 
     void SMessageLoop::OnMsg(LPMSG pMsg)
@@ -30,6 +44,21 @@ namespace SOUI
 		m_bQuit = FALSE;
         for(;;)
         {
+			{
+				m_cs.Enter();
+				SList<IRunnable *> runnable;
+				runnable.Copy(m_runnables);
+				m_runnables.RemoveAll();
+				m_cs.Leave();
+				SPOSITION pos = runnable.GetHeadPosition();
+				while(pos)
+				{
+					IRunnable *pRunnable = runnable.GetNext(pos);
+					pRunnable->run();
+					pRunnable->destroy();
+				}
+                runnable.RemoveAll();
+			}
             while(bDoIdle && !::PeekMessage(&m_msg, NULL, 0, 0, PM_NOREMOVE))
             {
                 if(!OnIdle(nIdleCount++))
@@ -61,6 +90,16 @@ namespace SOUI
         }
 
 	exit_loop:
+		{
+			SAutoLock lock(m_cs);
+			SPOSITION pos = m_runnables.GetHeadPosition();
+			while(pos)
+			{
+				IRunnable *pRunnable = m_runnables.GetNext(pos);
+				pRunnable->destroy();
+			}
+			m_runnables.RemoveAll();
+		}
         m_bRunning = FALSE;
         return (int)m_msg.wParam;
     }
@@ -124,6 +163,12 @@ namespace SOUI
         m_aMsgFilter.Add(pMessageFilter);
 		return TRUE;
     }
+
+	void SMessageLoop::postTask(const IRunnable & runable)
+	{
+		SAutoLock lock(m_cs);
+		m_runnables.AddTail(runable.clone());
+	}
 
 
 }//end of namespace SOUI

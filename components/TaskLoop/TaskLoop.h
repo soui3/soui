@@ -24,7 +24,7 @@ namespace SOUI
 		virtual ~STaskLoop();
 
 		/**
-		* Start task mgr thread.
+		* Start task loop thread.
 		*/
 		void start(const char * pszName, Priority priority);
 
@@ -73,12 +73,24 @@ namespace SOUI
 		bool getRunningTaskInfo(char *buf, int bufLen);
 
 	private:
+		class RunnableDisposer : public PtrDisposer<IRunnable>
+		{
+		public:
+			virtual void dispose(IRunnable *ptr)
+			{
+				if (ptr)
+				{
+					ptr->destroy();
+				}
+			}
+		};
+		static RunnableDisposer kRunnableDisposer;
 		class TaskItem
 		{
 		public:
 			TaskItem(IRunnable *runnable_, int nPriority_) 
 				: taskID(0)
-				, runnable(runnable_)
+				, runnable(runnable_,kRunnableDisposer)
 				, nPriority(nPriority_)
 				, semaphore(NULL) 
 			{}

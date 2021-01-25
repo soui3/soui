@@ -3,7 +3,7 @@
 #include <interface/STaskLoop-i.h>
 #include <helper/SSharedPtr.hpp>
 #include <unknown/obj-ref-impl.hpp>
-#include <helper/SFunctor.hpp>
+//#include <helper/SFunctor.hpp>
 #include <core/SNativeWnd.h>
 #include <helper/SSemaphore.h>
 #include <souicoll.h>
