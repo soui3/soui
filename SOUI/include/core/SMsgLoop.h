@@ -25,10 +25,7 @@ namespace SOUI
     class SOUI_EXP SMessageLoop
     {
     public:
-        SMessageLoop():m_bRunning(FALSE)
-        {
-        
-        }
+        SMessageLoop();
         virtual ~SMessageLoop(){}
         
         SArray<IMessageFilter*> m_aMsgFilter;
@@ -62,13 +59,14 @@ namespace SOUI
         
 		virtual void Quit();
 
-		virtual void postTask(const IRunnable & runable);
+		virtual BOOL postTask(const IRunnable & runable);
 
     protected:
         BOOL m_bRunning;
 		BOOL m_bQuit;
 		SCriticalSection m_cs;
 		SList<IRunnable*>	m_runnables;
+		DWORD  m_tid;
     };
 
 

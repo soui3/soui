@@ -17,6 +17,11 @@ namespace SOUI
 		return FALSE;
 	}
 
+	SMessageLoop::SMessageLoop() :m_bRunning(FALSE),m_tid(0)
+	{
+
+	}
+
 
 
     void SMessageLoop::OnMsg(LPMSG pMsg)
@@ -41,6 +46,7 @@ namespace SOUI
         BOOL bRet;
         
         m_bRunning = TRUE;
+		m_tid = GetCurrentThreadId();
 		m_bQuit = FALSE;
         for(;;)
         {
@@ -164,10 +170,17 @@ namespace SOUI
 		return TRUE;
     }
 
-	void SMessageLoop::postTask(const IRunnable & runable)
+	BOOL SMessageLoop::postTask(const IRunnable & runable)
 	{
 		SAutoLock lock(m_cs);
+		if(m_tid == 0)
+			return FALSE;
 		m_runnables.AddTail(runable.clone());
+		if(m_runnables.GetCount()==1)
+		{
+			PostThreadMessage(m_tid,WM_NULL,0,0);
+		}
+		return TRUE;
 	}
 
 
