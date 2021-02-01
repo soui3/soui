@@ -1095,6 +1095,7 @@ public:
     void MoveToHead( SPOSITION pos );
     void MoveToTail( SPOSITION pos );
     void SwapElements( SPOSITION pos1, SPOSITION pos2 );
+	void Swap(SList< E, ETraits > &src);
 
 #ifdef _DEBUG
     void AssertValid() const;
@@ -1763,6 +1764,31 @@ void SList< E, ETraits >::MoveToTail( SPOSITION pos )
     pNode->m_pPrev = m_pTail;
     pNode->m_pNext = NULL;
     m_pTail = pNode;
+}
+
+template< typename E, class ETraits >
+void SList< E, ETraits >::Swap(SList<E,ETraits> &src)
+{
+	CNode* pHead = m_pHead;
+	CNode* pTail = m_pTail;
+	size_t nElements = m_nElements;
+	SPlex* pBlocks = m_pBlocks;
+	CNode* pFree = m_pFree;
+	UINT nBlockSize = m_nBlockSize;
+
+	m_pHead = src.m_pHead;
+	m_pTail = src.m_pTail;
+	m_nElements = src.m_nElements;
+	m_pBlocks = src.m_pBlocks;
+	m_pFree = src.m_pFree;
+	m_nBlockSize = src.m_nBlockSize;
+
+	src.m_pHead = pHead;
+	src.m_pTail = pTail;
+	src.m_nElements = nElements;
+	src.m_pBlocks = pBlocks;
+	src.m_pFree = pFree;
+	src.m_nBlockSize = nBlockSize;
 }
 
 template< typename E, class ETraits >

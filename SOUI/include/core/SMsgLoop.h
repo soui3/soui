@@ -59,13 +59,15 @@ namespace SOUI
         
 		virtual void Quit();
 
-		virtual BOOL postTask(const IRunnable & runable);
-
+		virtual BOOL PostTask(const IRunnable & runable);
+		virtual int  RemoveTasksForObject(void *pObj);
     protected:
         BOOL m_bRunning;
 		BOOL m_bQuit;
 		SCriticalSection m_cs;
 		SList<IRunnable*>	m_runnables;
+		SCriticalSection m_csRunningQueue;
+		SList<IRunnable*>	m_runningQueue;
 		DWORD  m_tid;
     };
 
