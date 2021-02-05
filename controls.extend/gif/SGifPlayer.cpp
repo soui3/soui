@@ -88,7 +88,7 @@ HRESULT SGifPlayer::OnAttrSkin( const SStringW & strValue, BOOL bLoading )
 	return bLoading?S_OK:S_FALSE;
 }
 
-CSize SGifPlayer::GetDesiredSize(int wid,int hei )
+SIZE SGifPlayer::GetDesiredSize(int wid,int hei )
 {
 	CSize sz;
 	if(m_aniSkin) sz=m_aniSkin->GetSkinSize();

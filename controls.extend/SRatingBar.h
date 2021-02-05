@@ -11,10 +11,10 @@ namespace SOUI
         
         void SetValue(float fValue);
     protected:
-        void DrawStars(IRenderTarget *pRT,CRect rc,BOOL bForeground);
-        
-        virtual CSize GetDesiredSize(int wid,int hei);
-        
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
+
+		void DrawStars(IRenderTarget *pRT,CRect rc,BOOL bForeground);
+                
         void OnPaint(IRenderTarget *pRT);
         
         SOUI_MSG_MAP_BEGIN()

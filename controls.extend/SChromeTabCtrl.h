@@ -64,7 +64,8 @@ namespace SOUI
         int ChangeTabPos(SChromeTab* pCurMove,CPoint ptCur);
 
         virtual BOOL CreateChildren(SXmlNode xmlNode);
-        virtual void UpdateChildrenPosition();
+
+		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
         
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 

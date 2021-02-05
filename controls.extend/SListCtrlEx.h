@@ -480,7 +480,7 @@ protected:
 	int             m_nHeaderHeight;  /**< 列表头高度 */
 	SHeaderCtrl*  m_pHeader;  /**< 列表头控件 */
 	int InsertColumn(int nIndex, LPCTSTR pszText, int nWidth, LPARAM lParam=0);
-	virtual void    UpdateChildrenPosition();
+	STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
 	virtual void UpdateScrollBar();
 	int GetCountPerPage(BOOL bPartial);
 	bool OnHeaderClick(IEvtArgs *pEvt);

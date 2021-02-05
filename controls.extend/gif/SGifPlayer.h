@@ -41,7 +41,7 @@ namespace SOUI
         BOOL PlayAPNGFile(LPCTSTR pszFileName);
 
     protected://SWindowµÄÐéº¯Êý
-        virtual CSize GetDesiredSize(int wid,int hei);
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
     protected://ITimerLineHander
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 

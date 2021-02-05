@@ -12,7 +12,7 @@ namespace SOUI
         ~SRadioBox2(void);
         
     protected:
-        virtual CSize GetDesiredSize(int wid,int hei)
+		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE
         {
             if(m_pSkin) return m_pSkin->GetSkinSize();
             else return SWindow::GetDesiredSize(wid,hei);

@@ -27,7 +27,7 @@ namespace SOUI
         pRT->PopClip();
     }
 
-    CSize SRatingBar::GetDesiredSize(int wid,int hei)
+    SIZE SRatingBar::GetDesiredSize(int wid,int hei)
     {
 		if (!m_pStar)
 			return CSize(16,16);
