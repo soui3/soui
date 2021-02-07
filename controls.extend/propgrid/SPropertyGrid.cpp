@@ -571,7 +571,7 @@ namespace SOUI
 		for(int i=0;i<GetCount();i++)
 		{
 			IPropertyItem *p = (IPropertyItem *)GetItemData(i);
-			if(_tcsicmp(p->GetName(),pszName) == 0) 
+			if(_wcsicmp(p->GetName(),pszName) == 0) 
 			{
 				return p;
 			}

@@ -998,7 +998,7 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 			if(pLove)
 			{
 				pAniHost->UpdateLayout();
-				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:love");
+				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:love"));
 				if(pAni)
 				{
 					pAni->setStartOffset(rand()%100);//random delay max to 100 ms to play the animation.
@@ -1127,7 +1127,7 @@ void CMainDlg::InitSoui3Animation()
 	SWindow *pWnd = FindChildByName(L"img_soui");
 	if (pWnd)
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:rotate");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:rotate"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1156,7 +1156,7 @@ void CMainDlg::OnToggleLeft(EventArgs *e)
 		return;
 	if(pToggle->GetToggle())
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_show");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:slide_show"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1164,7 +1164,7 @@ void CMainDlg::OnToggleLeft(EventArgs *e)
 		}
 	}else
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_hide");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:slide_hide"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1175,7 +1175,7 @@ void CMainDlg::OnToggleLeft(EventArgs *e)
 
 void CMainDlg::OnSouiClick()
 {
-	IValueAnimator * pAni = SApplication::getSingletonPtr()->LoadValueAnimator(L"valueAni:colorAni");
+	IValueAnimator * pAni = SApplication::getSingletonPtr()->LoadValueAnimator(_T("valueAni:colorAni"));
 	if(pAni)
 	{
 		pAni->addListener(this);
