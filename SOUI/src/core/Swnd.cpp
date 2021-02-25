@@ -752,7 +752,9 @@ namespace SOUI
 						for (pugi::xml_attribute param = xmlData.first_attribute(); param; param = param.next_attribute())
 						{
 							SStringW strParam = SStringW().Format(KTempParamFmt, param.name());
-							strXml.Replace(strParam, param.value());//replace params to value.
+							SStringW strValue = param.value();
+							strValue.Replace(L"\"",L"&#34;");//防止数据中包含“双引号”，导致破坏XML结构
+							strXml.Replace(strParam, strValue);//replace params to value.
 						}
 						pugi::xml_document xmlDoc;
 						if (xmlDoc.load_buffer_inplace(strXml.GetBuffer(strXml.GetLength()), strXml.GetLength() * sizeof(WCHAR), 116, pugi::encoding_utf16))
