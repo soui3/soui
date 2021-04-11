@@ -8,7 +8,7 @@ SOUI向导 已创建此 [!output PROJECT_NAME] 项目作为起点。
 
 
 license.txt
-SOUI license，发布请带上，tks！SOUI使用(MIT)协议，商业个人完全免费，使用请带上license.txt。感觉启程软件的无私！
+SOUI license，发布请带上，tks！从3.0版本开始，开源协议从MIT调整为个人用户免费(个人商用收费），公司收费的形式，收费方式请联系作者。
 
 ReadMe.txt
 些项目的简要说明。

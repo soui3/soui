@@ -34,8 +34,8 @@ res\soui_res.rc2
 [uires]image\traymenu_icons.png
 trayicon\SShellNotifyIcon.h
 trayicon\SShellNotifyIcon.cpp
-trayicon\SShellNofityHwnd2.h
-trayicon\SShellNofityHwnd2.cpp
+trayicon\SShellNofityHwnd.h
+trayicon\SShellNofityHwnd.cpp
 [!endif]
 
 [!if ResLoaderType!=0]
@@ -75,5 +75,8 @@ trayicon\SShellNofityHwnd2.cpp
 [theme_sys_res]sys_vert_prog_bar.png
 [theme_sys_res]sys_vert_prog_bkgnd.png
 [theme_sys_res]sys_wnd_bkgnd.png
+[theme_sys_res]sys_spin_down.png
+[theme_sys_res]sys_spin_up.png
+[theme_sys_res]sys_tree_lines.png
 [!endif]
 [!endif]
