@@ -2995,7 +2995,7 @@ namespace SOUI
 	}
 
 
-	void SWindow::GetScaleSkin(ISkinObj * &pSkin,int nScale)
+	void SWindow::GetScaleSkin(SAutoRefPtr<ISkinObj> &pSkin,int nScale)
 	{
 		if(!pSkin) return;
 		SStringW strName=pSkin->GetName();

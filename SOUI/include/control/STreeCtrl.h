@@ -198,9 +198,9 @@ protected:
     int            m_nItemHei,m_nIndent, m_nItemMargin;
     BOOL        m_bCheckBox;
     BOOL        m_bRightClickSel;
-    ISkinObj * m_pItemBgSkin, * m_pItemSelSkin;
-    ISkinObj * m_pIconSkin, * m_pToggleSkin, * m_pCheckSkin;
-	ISkinObj * m_pLineSkin;
+    SAutoRefPtr<ISkinObj> m_pItemBgSkin, m_pItemSelSkin;
+    SAutoRefPtr<ISkinObj> m_pIconSkin, m_pToggleSkin, m_pCheckSkin;
+	SAutoRefPtr<ISkinObj> m_pLineSkin;
 
     COLORREF m_crItemBg,m_crItemSelBg;
     COLORREF m_crItemText,m_crItemSelText;

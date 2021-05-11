@@ -1311,7 +1311,7 @@ namespace SOUI
 
         void TestMainThread();
         
-		void GetScaleSkin(ISkinObj * &pSkin,int nScale);
+		void GetScaleSkin(SAutoRefPtr<ISkinObj> &pSkin,int nScale);
     protected:// Message Handler
 
         /**
@@ -1512,8 +1512,8 @@ namespace SOUI
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
         SAutoRefPtr<IRegion>       m_clipRgn;    /**< 窗口Region */
 		SAutoRefPtr<IPath>		   m_clipPath;  /**< 窗口Path */
-        ISkinObj *          m_pBgSkin;          /**< 背景skin */
-        ISkinObj *          m_pNcSkin;          /**< 非客户区skin */
+        SAutoRefPtr<ISkinObj>      m_pBgSkin;          /**< 背景skin */
+        SAutoRefPtr<ISkinObj>      m_pNcSkin;          /**< 非客户区skin */
         ULONG_PTR           m_uData;            /**< 窗口的数据位,可以通过GetUserData获得 */
 
         SLayoutSize         m_nMaxWidth;        /**< 自动计算大小时，窗口的最大宽度 */

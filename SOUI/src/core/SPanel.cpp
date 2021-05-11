@@ -622,9 +622,9 @@ void SPanel::OnScaleChanged(int nScale)
 	__super::OnScaleChanged(nScale);
 	if(m_pSkinSb)
 	{
-		ISkinObj *pSkin = m_pSkinSb;
+		SAutoRefPtr<ISkinObj> pSkin = m_pSkinSb;
 		GetScaleSkin(pSkin,nScale);
-		m_pSkinSb = (SSkinScrollbar*)pSkin;
+		m_pSkinSb = (SSkinScrollbar*)(ISkinObj*)pSkin;
 		SSendMessage(WM_NCCALCSIZE);
 	}
 }
