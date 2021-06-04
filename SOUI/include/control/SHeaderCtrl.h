@@ -335,8 +335,8 @@ namespace SOUI
           MSG_WM_DESTROY(OnDestroy)
       SOUI_MSG_MAP_END()
 
-      ISkinObj *    m_pSkinItem;  /**< 表头绘制Skin */
-      ISkinObj *    m_pSkinSort;  /**< 排序标志Skin */
+      SAutoRefPtr<ISkinObj>   m_pSkinItem;  /**< 表头绘制Skin */
+      SAutoRefPtr<ISkinObj>   m_pSkinSort;  /**< 排序标志Skin */
       BOOL          m_bSortHeader;      /**< 表头可以点击排序 */
       BOOL          m_bFixWidth;        /**< 表项宽度固定开关 */
       BOOL          m_bItemSwapEnable;  /**< 允许拖动调整位置开关 */

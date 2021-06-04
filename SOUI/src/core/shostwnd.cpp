@@ -560,7 +560,9 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_dwThreadID = GetCurrentThreadId();
 	SHostMgr::getSingletonPtr()->AddHostMsgHandler(this);
 	UpdateAutoSizeCount(true);
+	m_memRT=NULL;
     GETRENDERFACTORY->CreateRenderTarget(&m_memRT,0,0);
+	m_rgnInvalidate=NULL;
     GETRENDERFACTORY->CreateRegion(&m_rgnInvalidate);    
 	m_szAppSetted.cx = lpCreateStruct->cx;
 	m_szAppSetted.cy = lpCreateStruct->cy;
@@ -1795,6 +1797,19 @@ void SHostWnd::OnHostAnimationStarted(IAnimation * pAni)
 void SHostWnd::OnHostAnimationStoped(IAnimation * pAni)
 {
 	m_AniState&=~Ani_host;
+}
+
+void SHostWnd::OnSysCommand(UINT nID, CPoint lParam)
+{
+	if(nID==SC_RESTORE)
+	{
+		UpdateAutoSizeCount(true);
+		DefWindowProc();
+		UpdateAutoSizeCount(false);
+	}else
+	{
+		DefWindowProc();
+	}
 }
 
 

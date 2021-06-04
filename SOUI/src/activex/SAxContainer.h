@@ -634,9 +634,9 @@ class S_NO_VTABLE ActiveXSite :   public IOleClientSite,
         }
         SComQIPtr<IAdviseSink> advise_sink=m_spControl;
         m_spOleObject->Advise(advise_sink, &m_dwOleObjSink);
-
         if (m_spViewObject)
-            hr=m_spViewObject->SetAdvise(DVASPECT_CONTENT, 0, this);
+            hr=m_spViewObject->SetAdvise(DVASPECT_CONTENT, 0, advise_sink);
+        m_spOleObject->SetHostNames(OLESTR("SOUIAXWIN"), NULL);
 
         // Do Inplace activate if possible
         hr = DoVerb(OLEIVERB_INPLACEACTIVATE);

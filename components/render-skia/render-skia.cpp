@@ -622,7 +622,9 @@ namespace SOUI
         SkPaint paint=m_paint;
 		if(m_bAntiAlias)
 		{
-			paint.setStrokeWidth((SkScalar)m_curPen->GetWidth()-0.5f);
+			SkScalar wid = m_curPen->GetWidth();
+			if(wid>1.0f) wid-=0.5f;
+			paint.setStrokeWidth(wid);
 		}else
 		{
 			paint.setStrokeWidth((SkScalar)m_curPen->GetWidth());

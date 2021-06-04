@@ -161,13 +161,13 @@
 						<text name="songname" dotted="1" pos="5,|,]-30,-0" offset="0,-0.5" font="bold:1,adding:-1">天天想听</text>
 						<window pos="-0,|" name="playbtn" offset="-1.2,-0.5" display="0" show="0" />
 					</window>
-					<window name="col2" clipClient="1">
-						<hr pos="0,0,-0,1" colorLine="#666666" />
-						<text name="artist">卖炭翁</text>
+					<window name="col2" clipClient="1" layout="vbox" gravity="center">
+						<hr size="-2,1" colorLine="#666666" />
+						<text name="artist" size="-1,0" weight="1">卖炭翁</text>
 					</window>
-					<window name="col3" clipClient="1">
-						<hr pos="0,0,-0,1" colorLine="#666666" />
-						<text name="album">SOUI就是棒</text>
+					<window name="col3" clipClient="1"  layout="vbox" gravity="center">
+            <hr size="-2,1" colorLine="#666666" />
+            <text name="album" size="-1,0" weight="1">SOUI就是棒</text>
 					</window>
 					<window name="col4" clipClient="1">
 						<hr pos="0,0,-0,1" colorLine="#666666" />

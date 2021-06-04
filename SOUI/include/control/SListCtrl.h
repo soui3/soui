@@ -546,9 +546,9 @@ namespace SOUI
         COLORREF        m_crText;  /**< 文本颜色 */
         COLORREF        m_crSelText;  /**< 选中文本颜色 */
 
-        ISkinObj*    m_pItemSkin;  /**< */
-        ISkinObj*    m_pIconSkin;  /**< */
-        ISkinObj*    m_pCheckSkin; /**< */
+        SAutoRefPtr<ISkinObj>    m_pItemSkin;  /**< */
+        SAutoRefPtr<ISkinObj>    m_pIconSkin;  /**< */
+        SAutoRefPtr<ISkinObj>    m_pCheckSkin; /**< */
         BOOL        m_bCheckBox;
         BOOL        m_bMultiSelection;
 

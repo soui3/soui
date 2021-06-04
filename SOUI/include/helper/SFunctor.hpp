@@ -1,5 +1,8 @@
 #pragma once
 #include <interface/STaskLoop-i.h>
+#if _MSC_VER>=1700
+#include <functional>
+#endif
 
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
@@ -11,14 +14,17 @@ namespace SOUI
 	class SRunnable : public IRunnable
 	{
 	public:
-		SRunnable(void * pObj = NULL) :_pObj(pObj) {}
+		SRunnable(const void * pObj = NULL) :_pObj(pObj) {}
 		virtual ~SRunnable() {}
-		virtual void *getObject()
+		virtual  const void *getObject() override
 		{
 			return _pObj;
 		}
+		virtual void destroy() {
+			delete this;
+		}
 	protected:
-		void * _pObj;
+		const void * _pObj;
 	};
 
 	#define IMPL_GETCLASSINFO \
@@ -27,6 +33,29 @@ namespace SOUI
 	{\
 		return __PRETTY_FUNCTION__;\
 	}
+
+#if _MSC_VER>=1700
+
+	class StdRunnable : public SRunnable
+	{
+		IMPL_GETCLASSINFO
+	public:
+		StdRunnable(const std::function<void(void)> & fun):_func(fun)
+		{
+		}
+
+		virtual IRunnable * clone() const {
+			return new StdRunnable(_func);
+		}
+
+		virtual void run()
+		{
+			_func();
+		}
+	protected:
+		std::function<void(void)> _func;
+	};
+#endif
 
 	template <typename TClass, typename Func>
 	class SFunctor0 : public SRunnable
@@ -527,7 +556,7 @@ namespace SOUI
 		T5 _param5;
 	};
 
-
+	class SMessageLoop;
 	class STaskHelper {
 	public:
 		template<typename TClass,typename Fun>
@@ -600,5 +629,75 @@ namespace SOUI
 			return pTaskLoop->postTask(&runnable, waitUntilDone,nPriority);
 		}
 
+		//////////////////////////////////////////////////////////////////////////
+		template<typename TClass,typename Fun>
+		static void post(SMessageLoop *pMsgLoop,TClass * pObj, Fun fun)
+		{
+			SFunctor0<TClass, Fun> runnable(pObj, fun);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun,typename P1>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1)
+		{
+			SFunctor1<TClass,Fun,P1> runnable(pObj, fun,p1);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 )
+		{
+			SFunctor2<TClass, Fun, P1,P2> runnable(pObj, fun, p1,p2);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3)
+		{
+			SFunctor3<TClass, Fun, P1,P2,P3> runnable(pObj, fun, p1,p2,p3);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4)
+		{
+			SFunctor4<TClass, Fun, P1,P2,P3,P4> runnable(pObj, fun, p1,p2,p3,p4);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4, typename P5>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4, P5 p5)
+		{
+			SFunctor5<TClass, Fun, P1,P2,P3,P4,P5> runnable(pObj, fun, p1,p2,p3,p4,p5);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4, P5 p5,P6 p6)
+		{
+			SFunctor6<TClass, Fun, P1,P2,P3,P4,P5,P6> runnable(pObj, fun, p1,p2,p3,p4,p5,p6);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4, P5 p5,P6 p6,P7 p7)
+		{
+			SFunctor7<TClass, Fun, P1,P2,P3,P4,P5,P6,P7> runnable(pObj, fun, p1,p2,p3,p4,p5,p6,p7);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4, P5 p5,P6 p6,P7 p7,P8 p8)
+		{
+			SFunctor8<TClass, Fun, P1,P2,P3,P4,P5,P6,P7,P8> runnable(pObj, fun, p1,p2,p3,p4,p5,p6,p7,p8);
+			pMsgLoop->PostTask(runnable);
+		}
+
+		template<typename TClass, typename Fun, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>
+		static void post(SMessageLoop *pMsgLoop, TClass * pObj, Fun fun, P1 p1, P2 p2 ,P3 p3,P4 p4, P5 p5,P6 p6,P7 p7,P8 p8,P9 p9)
+		{
+			SFunctor9<TClass, Fun, P1,P2,P3,P4,P5,P6,P7,P8,P9> runnable(pObj, fun, p1,p2,p3,p4,p5,p6,p7,p8,p9);
+			pMsgLoop->PostTask(runnable);
+		}
 	};
 }

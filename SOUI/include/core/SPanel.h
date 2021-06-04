@@ -85,7 +85,7 @@ namespace SOUI
         HRESULT OnAttrScrollbarSkin(SStringW strValue,BOOL bLoading);
 
         SCROLLINFO m_siVer,m_siHoz;
-        SSkinScrollbar *m_pSkinSb;
+        SAutoRefPtr<SSkinScrollbar> m_pSkinSb;
 
 	private:	//修改为私有，派生类只能使用GetSbArrowSize(),GetSbWidth()获取
         SLayoutSize    m_nSbArrowSize;

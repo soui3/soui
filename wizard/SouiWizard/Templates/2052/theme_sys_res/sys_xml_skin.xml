@@ -1,14 +1,15 @@
 <skin>
-  <imglist name="_skin.sys.checkbox" src="PNG:SYS_CHECKBOX" states="8"  />
-  <imglist name="_skin.sys.radio" src="PNG:SYS_RADIO" states="8" />
+  <imglist name="_skin.sys.checkbox" src="PNG:SYS_CHECKBOX" states="8" checkAsPushdown="0"/>
+  <imglist name="_skin.sys.radio" src="PNG:SYS_RADIO" states="8" checkAsPushdown="0"/>
   <imglist name="_skin.sys.focuscheckbox" src="PNG:SYS_FOCUS_CHECKBOX"/>
   <imglist name="_skin.sys.focusradio" src="PNG:SYS_FOCUS_RADIO"/>
   <button name="_skin.sys.btn.normal" colorBorder="#7D9EBC" colorUp="#FEFEFE" colorDown="#C6E2FD" colorUpHover="#FEFEFE" colorDownHover="#DBEDFE" colorUpPush="#C6E2FD" colorDownPush="#FEFEFE"/>
   <scrollbar name="_skin.sys.scrollbar" src="PNG:SYS_SCROLLBAR" margin="3" hasgripper="0"/>
   <imgframe name="_skin.sys.border" src="PNG:SYS_BORDER" states="2" margin-x="2" margin-y="2"/>
-  <imglist name="_skin.sys.dropbtn" src="PNG:SYS_DROPBTN" states="3"/>
+  <imgcenter name="_skin.sys.dropbtn" src="PNG:SYS_DROPBTN" states="3"/>
   <imglist name="_skin.sys.tree.toggle" src="PNG:SYS_TREE_TOGGLE" states="6"/>
   <imglist name="_skin.sys.tree.checkbox" src="PNG:SYS_TREE_CHECKBOX" states="9"/>
+  <imglist name="_skin.sys.tree.lines" src="PNG:SYS_TREE_LINES" states="9"/>
   <imglist name="_skin.sys.tab.page" src="PNG:SYS_TAB_PAGE" states="3"/>
   <imgframe name="_skin.sys.header" src="PNG:SYS_HEADER" margin-x="3" margin-y="3" states="4"/>
   <imgframe name="_skin.sys.split.vert" src="PNG:SYS_SPLIT_VERT" top="20" bottom="10"/>
@@ -26,12 +27,13 @@
 
   <imglist name="_skin.sys.menu.check" src="PNG:SYS_MENU_CHECK" states="3" />
   <imglist name="_skin.sys.menu.arrow" src="PNG:SYS_MENU_ARROW" states="2" />
-  <imgframe name="_skin.sys.menu.sep" src="PNG:SYS_MENU_SEP" left="25"/>
+  <imgframe name="_skin.sys.menu.sep" src="PNG:SYS_MENU_SEP" left="26"/>
   <imgframe name="_skin.sys.menu.border" src="PNG:SYS_MENU_BORDER" margin-x="2" margin-y="2"/>
-  <imgframe name="_skin.sys.menu.skin" src="PNG:SYS_MENU_SKIN" states="2" left="25" top="2" bottom="2"/>
+  <imgframe name="_skin.sys.menu.skin" src="PNG:SYS_MENU_SKIN" states="2" margin="26,2,5,2"/>
   <imglist name="_skin.sys.icons" src="PNG:SYS_ICONS" states="12"/>
   <imgframe name="_skin.sys.wnd.bkgnd"  src="PNG:SYS_WND_BKGND" left="5" right="5" top="40" bottom="40"/>
-  <imglist name="_skin.sys.btn.prev" src="PNG:SYS_BTN_PREV" states="3" />
-  <imglist name="_skin.sys.btn.next" src="PNG:SYS_BTN_NEXT" states="3" />
-  <imglist name="_skin.sys.btn.spin" src="PNG:SYS_BTN_SPIN" states="6" vertical="1" />
+  <imgcenter name="_skin.sys.btn.prev" src="PNG:SYS_BTN_PREV" states="3" />
+  <imgcenter name="_skin.sys.btn.next" src="PNG:SYS_BTN_NEXT" states="3" />
+  <imgcenter name="_skin.sys.spin.up" src="PNG:SYS_SPIN_UP" states="3" vertical="1" />
+  <imgcenter name="_skin.sys.spin.down" src="PNG:SYS_SPIN_DOWN" states="3" vertical="1" />
 </skin>

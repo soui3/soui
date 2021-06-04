@@ -3,6 +3,25 @@
 
 namespace SOUI
 {
+	template<class T>
+	BOOL RemoveElementFromArray(SArray<T> &arr, T ele)
+	{
+		for(size_t i=0;i<arr.GetCount();i++)
+		{
+			if(arr[i] == ele)
+			{
+				arr.RemoveAt(i);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	SMessageLoop::SMessageLoop() :m_bRunning(FALSE),m_tid(0)
+	{
+
+	}
+
 
 
     void SMessageLoop::OnMsg(LPMSG pMsg)
@@ -27,9 +46,25 @@ namespace SOUI
         BOOL bRet;
         
         m_bRunning = TRUE;
+		m_tid = GetCurrentThreadId();
 		m_bQuit = FALSE;
         for(;;)
         {
+			{
+				m_cs.Enter();
+				m_runningQueue.Swap(m_runnables);
+				m_cs.Leave();
+				for(;;)
+				{
+					SAutoLock lock(m_csRunningQueue);
+					if(m_runningQueue.IsEmpty())
+						break;
+					IRunnable *pRunnable = m_runningQueue.GetHead();
+					m_runningQueue.RemoveHead();
+					pRunnable->run();
+					pRunnable->destroy();
+				}
+			}
             while(bDoIdle && !::PeekMessage(&m_msg, NULL, 0, 0, PM_NOREMOVE))
             {
                 if(!OnIdle(nIdleCount++))
@@ -61,6 +96,16 @@ namespace SOUI
         }
 
 	exit_loop:
+		{
+			SAutoLock lock(m_cs);
+			SPOSITION pos = m_runnables.GetHeadPosition();
+			while(pos)
+			{
+				IRunnable *pRunnable = m_runnables.GetNext(pos);
+				pRunnable->destroy();
+			}
+			m_runnables.RemoveAll();
+		}
         m_bRunning = FALSE;
         return (int)m_msg.wParam;
     }
@@ -124,6 +169,51 @@ namespace SOUI
         m_aMsgFilter.Add(pMessageFilter);
 		return TRUE;
     }
+
+	BOOL SMessageLoop::PostTask(const IRunnable & runable)
+	{
+		SAutoLock lock(m_cs);
+		if(m_tid == 0)
+			return FALSE;
+		m_runnables.AddTail(runable.clone());
+		if(m_runnables.GetCount()==1)
+		{
+			PostThreadMessage(m_tid,WM_NULL,0,0);
+		}
+		return TRUE;
+	}
+
+	int SMessageLoop::RemoveTasksForObject(void *pObj)
+	{
+		int nRet = 0;
+		SAutoLock lock(m_cs);
+		SPOSITION pos = m_runnables.GetHeadPosition();
+		while(pos)
+		{
+			SPOSITION pos2 = pos;
+			IRunnable *p = m_runnables.GetNext(pos);
+			if(p->getObject() == pObj)
+			{
+				p->destroy();
+				m_runnables.RemoveAt(pos2);
+				nRet ++;
+			}
+		}
+		SAutoLock lock2(m_csRunningQueue);
+		pos = m_runningQueue.GetHeadPosition();
+		while(pos)
+		{
+			SPOSITION pos2 = pos;
+			IRunnable *p = m_runningQueue.GetNext(pos);
+			if(p->getObject() == pObj)
+			{
+				p->destroy();
+				m_runningQueue.RemoveAt(pos2);
+				nRet ++;
+			}
+		}
+		return  nRet;
+	}
 
 
 }//end of namespace SOUI

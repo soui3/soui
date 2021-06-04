@@ -134,7 +134,7 @@ namespace SOUI
         SArray<SList<SItemPanel*> *>    m_itemRecycle;//item回收站,每一种样式在回收站中保持一个列表，以便重复利用
                 
         pugi::xml_document              m_xmlTemplate;
-        ISkinObj*                       m_pSkinDivider;
+        SAutoRefPtr<ISkinObj>           m_pSkinDivider;
         SLayoutSize                     m_nDividerSize;
         BOOL                            m_bWantTab;
     };

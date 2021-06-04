@@ -8,6 +8,8 @@
 namespace SOUI
 {
 
+	STaskLoop::RunnableDisposer STaskLoop::kRunnableDisposer;
+
 	STaskLoop::STaskLoop() :
 		m_taskListLock(),
 		m_runningLock(),
@@ -59,7 +61,7 @@ namespace SOUI
 		if (Thread::getCurrentThreadID() == m_thread.getThreadID() && waitUntilDone)
 		{
 			pCloneRunnable->run();
-			delete pCloneRunnable;
+			pCloneRunnable->destroy();
 			return -1;
 		}
 

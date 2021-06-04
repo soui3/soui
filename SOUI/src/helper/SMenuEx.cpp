@@ -23,11 +23,11 @@ namespace SOUI
 		friend class SMenuEx;
 		friend class SMenuExItem;
 	protected:
-		ISkinObj * m_pItemSkin;
-		ISkinObj * m_pIconSkin;
-		ISkinObj * m_pCheckSkin;
-		ISkinObj * m_pArrowSkin;
-		ISkinObj * m_pSepSkin;
+		SAutoRefPtr<ISkinObj> m_pItemSkin;
+		SAutoRefPtr<ISkinObj> m_pIconSkin;
+		SAutoRefPtr<ISkinObj> m_pCheckSkin;
+		SAutoRefPtr<ISkinObj> m_pArrowSkin;
+		SAutoRefPtr<ISkinObj> m_pSepSkin;
 
 		SMenuEx  * m_pMenuEx;
 
