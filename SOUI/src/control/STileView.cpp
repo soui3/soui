@@ -188,8 +188,8 @@ void STileView::onDataSetInvalidated()
 void STileView::UpdateVisibleItem(int iItem)
 {
 	SItemPanel * pItem = GetItemPanel(iItem);
-	SASSERT(pItem);
-	m_adapter->getView(iItem, pItem, m_xmlTemplate.first_child());
+	if(pItem)
+		m_adapter->getView(iItem, pItem, m_xmlTemplate.first_child());
 }
 
 void STileView::onItemDataChanged(int iItem)
