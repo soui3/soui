@@ -78,6 +78,7 @@ namespace SOUI
 		,m_bAutoFitDropBtn(TRUE)
 		,m_crCue(RGBA(0xcc,0xcc,0xcc,0xff))
 		,m_strCue(this)
+		,m_LastPressTime(0)
     {
         m_bFocusable=TRUE;
 		m_style.SetAlign(SwndStyle::Align_Left);
@@ -244,6 +245,47 @@ namespace SOUI
                     SetCurSel(iSel);
             }
             break;
+		default:
+			{
+				if (isprint(nChar))
+				{
+					if ((GetTickCount() - m_LastPressTime) > 300)
+					{
+						m_strMatch.Empty();
+					}
+					m_LastPressTime = GetTickCount();
+					m_strMatch += nChar;
+					int iCurSel = GetCurSel();
+					int iStart = iCurSel + 1;
+					bool matched = false;
+					while (iStart < GetCount())
+					{
+						SStringT itemText = GetLBText(iStart);
+						if (itemText.StartsWith(m_strMatch, true))
+						{
+							SetCurSel(iStart);
+							matched = true;
+							break;
+						}
+						iStart++;
+					}
+					if (!matched)
+					{
+						iStart = 0;
+						while (iStart <= iCurSel)
+						{
+							SStringT itemText = GetLBText(iStart);
+							if (itemText.StartsWith(m_strMatch, true))
+							{
+								SetCurSel(iStart);
+								matched = true;
+								break;
+							}
+							iStart++;
+						}
+					}					
+				}
+			}
         }
     }
 
