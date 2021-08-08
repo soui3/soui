@@ -363,7 +363,7 @@ protected:
 	int m_iTile;		/**<绘制是否平铺,0--位伸（默认），1--不变常规绘制, 2--平铺 */
     BOOL m_bManaged;	/**< 是否要自动释放当前的m_pSkin对象 */
     int m_iIcon;		/**< 绘制状态索引 */
-    ISkinObj *m_pSkin;  /**< ISkinObj对象 */
+    SAutoRefPtr<ISkinObj>   m_pSkin;  /**< ISkinObj对象 */
     SAutoRefPtr<IBitmap>    m_pImg;/**<使用代码设定的图片*/
     FilterLevel             m_fl;/**<绘制图片的放大精度*/
 	bool m_bKeepAspect; /**< keep aspect ratio */
@@ -461,7 +461,7 @@ protected:
     SOUI_ATTRS_END()
 
 protected:
-    ISkinObj     *m_pSkin;        /**< 动画图片 */
+    SAutoRefPtr<ISkinObj> m_pSkin;        /**< 动画图片 */
     int           m_nSpeed;       /**< 速度 */
     int           m_iCurFrame;    /**< 当前帧 */
     BOOL          m_bAutoStart;   /**< 是否自动启动 */
@@ -558,8 +558,8 @@ protected:
     BOOL m_bShowPercent; /**< 是否显示百分比 */
     BOOL m_bVertical;    /**< 是否竖直状态 */
 
-    ISkinObj *m_pSkinBg;   /**< 背景资源 */
-    ISkinObj *m_pSkinPos;  /**< 前景资源 */
+    SAutoRefPtr<ISkinObj> m_pSkinBg;   /**< 背景资源 */
+    SAutoRefPtr<ISkinObj> m_pSkinPos;  /**< 前景资源 */
 
     SOUI_MSG_MAP_BEGIN()
         MSG_WM_PAINT_EX(OnPaint)
@@ -660,8 +660,8 @@ public:
 
 protected:
 
-    ISkinObj *m_pSkin;   /**< 状态图片资源 */
-    ISkinObj *m_pFocusSkin; /**< 焦点状态资源 */
+    SAutoRefPtr<ISkinObj> m_pSkin;   /**< 状态图片资源 */
+    SAutoRefPtr<ISkinObj> m_pFocusSkin; /**< 焦点状态资源 */
     /**
      * SCheckBox::GetCheckRect
      * @brief    获得复选框矩形
@@ -948,8 +948,8 @@ protected:
 
 protected:
 
-	ISkinObj * m_pSkin;  /**< 皮肤资源 */
-	ISkinObj *m_pFocusSkin; /**< 焦点皮肤资源 */
+	SAutoRefPtr<ISkinObj> m_pSkin;  /**< 皮肤资源 */
+	SAutoRefPtr<ISkinObj> m_pFocusSkin; /**< 焦点皮肤资源 */
 	UINT m_uIconAlign;
 	UINT m_uIconVAlign;
 	int m_nRadioBoxSpacing;

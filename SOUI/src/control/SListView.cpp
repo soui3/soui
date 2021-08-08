@@ -412,8 +412,8 @@ namespace SOUI
 	{
 		SASSERT(m_lvItemLocator->IsFixHeight());
 		SItemPanel * pItem = GetItemPanel(iItem);
-		SASSERT(pItem);
-		m_adapter->getView(iItem,pItem,m_xmlTemplate.first_child());
+		if(pItem)
+			m_adapter->getView(iItem,pItem,m_xmlTemplate.first_child());
 	}
 
 

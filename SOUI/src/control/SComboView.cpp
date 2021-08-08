@@ -144,4 +144,12 @@ namespace SOUI
         return TRUE;
     }
 
+	HRESULT SComboView::OnLanguageChanged()
+	{
+		HRESULT hr = __super::OnLanguageChanged();
+		if(m_pListBox)
+			m_pListBox->SSendMessage(UM_SETLANGUAGE);
+		return hr;
+	}
+
 }

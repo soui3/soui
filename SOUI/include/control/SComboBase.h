@@ -436,7 +436,7 @@ namespace SOUI
         }
         SRichEdit *m_pEdit;      /**< SRichEdit指针 */
         DWORD     m_dwBtnState;  /**< 按钮状态      */
-        ISkinObj *m_pSkinBtn;    /**< 按钮资源      */
+        SAutoRefPtr<ISkinObj>    m_pSkinBtn;    /**< 按钮资源      */
 
         bool m_bDropdown;        /**< Editable or dropdown only   */
         SLayoutSize  m_nDropHeight;      /**< 下拉框高度 */

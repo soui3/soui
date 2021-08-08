@@ -237,10 +237,10 @@ namespace SOUI
 		COLORREF				m_crSelDayBack;			// 选中 的 天 背颜色
 		COLORREF				m_crHoverText;
 
-		ISkinObj*				m_pSkinPrev;
-		ISkinObj*				m_pSkinNext;
-		ISkinObj*				m_pSkinDay;					// 天 皮肤 
-		ISkinObj*				m_pSkinWeek;
+		SAutoRefPtr<ISkinObj>	m_pSkinPrev;
+		SAutoRefPtr<ISkinObj>	m_pSkinNext;
+		SAutoRefPtr<ISkinObj>	m_pSkinDay;					// 天 皮肤 
+		SAutoRefPtr<ISkinObj>	m_pSkinWeek;
 		STrText					m_strWeek[7];/**< 表头文本 */
 
 		struct wDayInfo

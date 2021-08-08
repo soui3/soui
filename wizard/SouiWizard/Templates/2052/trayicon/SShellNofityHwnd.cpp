@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "SShellNofityHwnd2.h"
+#include "SShellNofityHwnd.h"
 
 namespace SOUI
 {
-	CShellNotifyHwnd2::CShellNotifyHwnd2(SHostWnd * pMainWnd, SShellNotifyIcon* shellnotifyicon) :m_pMainWnd(pMainWnd),m_ShellNotifyIcon(shellnotifyicon)
+	CShellNotifyHwnd::CShellNotifyHwnd(SHostWnd * pMainWnd, SShellNotifyIcon* shellnotifyicon) :m_pMainWnd(pMainWnd),m_ShellNotifyIcon(shellnotifyicon)
 	{
 		MsgTaskbarCreated = RegisterWindowMessage(L"TaskbarCreated");
 		Create(L"shell_nofity_msg_windows", 0, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr);
@@ -11,7 +11,7 @@ namespace SOUI
 
 	//托盘通知消息处理函数
 
-	LRESULT CShellNotifyHwnd2::OnIconNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL)
+	LRESULT CShellNotifyHwnd::OnIconNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL)
 	{
 		LRESULT bRet = S_FALSE;
 		switch (lParam)
@@ -36,18 +36,18 @@ namespace SOUI
 		return bRet;
 	}
 
-	LRESULT CShellNotifyHwnd2::OnTaskbarCreated(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL)
+	LRESULT CShellNotifyHwnd::OnTaskbarCreated(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL)
 	{
 		return m_ShellNotifyIcon->Show();
 	}
 
-	void CShellNotifyHwnd2::OnFinalMessage(HWND hWnd)
+	void CShellNotifyHwnd::OnFinalMessage(HWND hWnd)
 	{
 		__super::OnFinalMessage(hWnd);
 		delete this;
 	}
 
-	void CShellNotifyHwnd2::OnTimer(UINT_PTR nIDEvent)
+	void CShellNotifyHwnd::OnTimer(UINT_PTR nIDEvent)
 	{
 		switch (nIDEvent)
 		{
