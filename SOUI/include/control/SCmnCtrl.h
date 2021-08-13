@@ -819,15 +819,6 @@ public:
      */
     SRadioBox();
 
-	/**
-	 * SRadioBox::GetSelectedSiblingInGroup
-	 * @brief    获取一个group中有选中状态的兄弟
-	 * @return   返回选中状态的兄弟窗口索引0 索引
-	 *
-	 * Describe  没有选中状态兄弟时返回-1
-	 */
-	virtual int GetValue();
-	
 protected:
     /**
      * SRadioBox::GetRadioRect
