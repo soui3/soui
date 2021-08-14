@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="scintilla"
-	ProjectGUID="{6081B012-CA4A-3DF0-B5AA-336B438BAE49}"
+	ProjectGUID="{B5F90EFD-58C2-3C8C-A56F-D8642C949002}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -141,13 +141,21 @@
 			<File
 				RelativePath="src\Document.cxx" />
 			<File
+				RelativePath="src\EditModel.cxx" />
+			<File
+				RelativePath="src\EditView.cxx" />
+			<File
 				RelativePath="src\Editor.cxx" />
 			<File
 				RelativePath="src\ExternalLexer.cxx" />
 			<File
+				RelativePath="win32\HanjaDic.cxx" />
+			<File
 				RelativePath="src\Indicator.cxx" />
 			<File
 				RelativePath="src\KeyMap.cxx" />
+			<File
+				RelativePath="lexers\LexCPP.cxx" />
 			<File
 				RelativePath="lexers\LexHTML.cxx" />
 			<File
@@ -160,6 +168,8 @@
 				RelativePath="lexlib\LexerSimple.cxx" />
 			<File
 				RelativePath="src\LineMarker.cxx" />
+			<File
+				RelativePath="src\MarginView.cxx" />
 			<File
 				RelativePath="src\PerLine.cxx" />
 			<File
@@ -226,6 +236,10 @@
 			<File
 				RelativePath="src\Document.h" />
 			<File
+				RelativePath="src\EditModel.h" />
+			<File
+				RelativePath="src\EditView.h" />
+			<File
 				RelativePath="src\Editor.h" />
 			<File
 				RelativePath="src\ExternalLexer.h" />
@@ -256,6 +270,8 @@
 			<File
 				RelativePath="src\LineMarker.h" />
 			<File
+				RelativePath="src\MarginView.h" />
+			<File
 				RelativePath="lexlib\OptionSet.h" />
 			<File
 				RelativePath="src\Partitioning.h" />
@@ -265,6 +281,8 @@
 				RelativePath="\include\Platform.h" />
 			<File
 				RelativePath="include\Platform.h" />
+			<File
+				RelativePath="src\Position.h" />
 			<File
 				RelativePath="src\PositionCache.h" />
 			<File
@@ -277,6 +295,8 @@
 				RelativePath="\include\SciLexer.h" />
 			<File
 				RelativePath="include\SciLexer.h" />
+			<File
+				RelativePath="include\Sci_Position.h" />
 			<File
 				RelativePath="\include\Scintilla.h" />
 			<File
@@ -291,6 +311,8 @@
 				RelativePath="lexlib\SparseState.h" />
 			<File
 				RelativePath="src\SplitVector.h" />
+			<File
+				RelativePath="lexlib\StringCopy.h" />
 			<File
 				RelativePath="src\Style.h" />
 			<File

@@ -1116,25 +1116,6 @@ SRadioBox::SRadioBox()
     m_bFocusable=TRUE;
 }
 
-int SRadioBox::GetValue()
-{
-	int index = -1;
-	SWindow *pParent = GetParent();
-	SASSERT(pParent);
-	SWindow *pSibling = pParent->GetWindow(GSW_FIRSTCHILD);
-	while (pSibling)
-	{
-		if (pSibling->IsClass(GetClassName()))
-		{
-			index++;
-			SRadioBox * pRadio = (SRadioBox*)pSibling;
-			if (pRadio->IsChecked()) return index;
-		}
-		pSibling = pSibling->GetWindow(GSW_NEXTSIBLING);
-	}
-	return -1;
-}
-
 
 CRect SRadioBox::GetRadioRect()
 {

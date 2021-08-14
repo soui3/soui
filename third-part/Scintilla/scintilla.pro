@@ -9,8 +9,8 @@ TARGET = $$TARGET"64"
 DEPENDPATH += .
 INCLUDEPATH += . \
 		   .\src \
-                             .\include \
-                             .\lexlib
+           .\include \
+           .\lexlib
 
 
 CONFIG += staticlib
@@ -25,6 +25,7 @@ DEFINES += SCI_LEXER STATIC_BUILD
 HEADERS += include/ILexer.h \
            include/Platform.h \
            include/SciLexer.h \
+           include/Sci_Position.h \
            include/Scintilla.h \
            include/ScintillaWidget.h \
            lexlib/Accessor.h \
@@ -38,6 +39,7 @@ HEADERS += include/ILexer.h \
            lexlib/OptionSet.h \
            lexlib/PropSetSimple.h \
            lexlib/SparseState.h \
+           lexlib/StringCopy.h \
            lexlib/StyleContext.h \
            lexlib/SubStyles.h \
            lexlib/WordList.h \
@@ -52,13 +54,17 @@ HEADERS += include/ILexer.h \
            src/Decoration.h \
            src/Document.h \
            src/Editor.h \
+           src/EditModel.h \
+           src/EditView.h \
            src/ExternalLexer.h \
            src/FontQuality.h \
            src/Indicator.h \
            src/KeyMap.h \
            src/LineMarker.h \
+           src/MarginView.h \
            src/Partitioning.h \
            src/PerLine.h \
+           src/Position.h \
            src/PositionCache.h \
            src/RESearch.h \
            src/RunStyles.h \
@@ -82,6 +88,7 @@ HEADERS += include/ILexer.h \
            /include/Platform.h
 
 SOURCES += lexers/LexHTML.cxx \
+           lexers/LexCPP.cxx \
            lexlib/Accessor.cxx \
            lexlib/CharacterCategory.cxx \
            lexlib/CharacterSet.cxx \
@@ -103,10 +110,13 @@ SOURCES += lexers/LexHTML.cxx \
            src/Decoration.cxx \
            src/Document.cxx \
            src/Editor.cxx \
+           src/EditModel.cxx \
+           src/EditView.cxx \           
            src/ExternalLexer.cxx \
            src/Indicator.cxx \
            src/KeyMap.cxx \
            src/LineMarker.cxx \
+           src/MarginView.cxx \
            src/PerLine.cxx \
            src/PositionCache.cxx \
            src/RESearch.cxx \
@@ -118,5 +128,6 @@ SOURCES += lexers/LexHTML.cxx \
            src/ViewStyle.cxx \
            src/XPM.cxx
 
-SOURCES += win32/PlatWin.cxx \
-                   win32/ScintillaWin.cxx
+SOURCES += win32/HanjaDic.cxx \
+           win32/PlatWin.cxx \
+           win32/ScintillaWin.cxx
