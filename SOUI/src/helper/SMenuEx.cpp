@@ -586,7 +586,7 @@ namespace SOUI
 			&& xmlNode.name() != SStringW(SMenuExItem::GetClassName()))
 			return FALSE;
 
-		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
+		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST |WS_EX_NOACTIVATE, 0, 0, 0, 0);
 		pugi::xml_document souiXml;
 		pugi::xml_node root = souiXml.append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);
@@ -795,6 +795,11 @@ namespace SOUI
 		BOOL bMsgQuit(FALSE);
 		HWND hCurMenu(NULL);
 
+		//禁用输入法，打开微软输入法的情况下，拦截消息可能导致界面卡死，不知道什么原因。hjx 2021-09-02
+		HWND hActive = GetActiveWindow();
+		HIMC hImc = ImmGetContext(hActive);
+		ImmAssociateContext(hActive,NULL);
+
 		for (;;)
 		{
 
@@ -816,9 +821,7 @@ namespace SOUI
 					|| msg.message == WM_SYSKEYDOWN
 					|| msg.message == WM_SYSKEYUP
 					)
-				{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
-					msg.hwnd = s_MenuData->GetMenuEx()->m_hWnd;
-
+				{
 					if(msg.wParam == VK_MENU)
 					{//handle alt key down, exit menu loop
 						s_MenuData->ExitMenu(0);
@@ -850,8 +853,7 @@ namespace SOUI
 				}
 
 				//移除消息队列中当前的消息。
-				MSG msgT;
-				::GetMessage(&msgT, 0, 0, 0);
+				::GetMessage(&msg, 0, 0, 0);
 
 				//拦截非菜单窗口的MouseMove消息
 				if (msg.message == WM_MOUSEMOVE)
@@ -872,14 +874,20 @@ namespace SOUI
 					}
 
 				}
-
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
+				
+				if (msg.message == WM_KEYDOWN
+					|| msg.message == WM_KEYUP
+					|| msg.message == WM_SYSKEYDOWN
+					|| msg.message == WM_SYSKEYUP
+					|| msg.message == WM_CHAR
+					)
+				{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
+					::SendMessage(s_MenuData->GetMenuEx()->m_hWnd,msg.message,msg.wParam,msg.lParam);
+				}
 			}
-			else
-			{
-				MsgWaitForMultipleObjects(0, 0, 0, 10, QS_ALLINPUT);
-			}
+			
 
 			if (bMsgQuit)
 			{
@@ -887,7 +895,7 @@ namespace SOUI
 				break;
 			}
 		}
-
+		ImmAssociateContext(hActive,hImc);
 	}
 
 	BOOL SMenuEx::_HandleEvent(EventArgs *pEvt)
