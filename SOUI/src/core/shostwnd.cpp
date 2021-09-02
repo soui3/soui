@@ -1517,7 +1517,7 @@ BOOL SHostWnd::DestroyWindow()
 			ClearAnimation();
 		SASSERT(m_AniState==Ani_none);
 	}
-	if(m_aniExit)
+	if(m_aniExit && !IsIconic())
 	{
 		StartAnimation(m_aniExit);
 		m_AniState |= Ani_win;
