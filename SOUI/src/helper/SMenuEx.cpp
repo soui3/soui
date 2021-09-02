@@ -795,10 +795,6 @@ namespace SOUI
 		BOOL bMsgQuit(FALSE);
 		HWND hCurMenu(NULL);
 
-		//禁用输入法，打开微软输入法的情况下，拦截消息可能导致界面卡死，不知道什么原因。hjx 2021-09-02
-		HWND hActive = GetActiveWindow();
-		HIMC hImc = ImmGetContext(hActive);
-		ImmAssociateContext(hActive,NULL);
 
 		for (;;)
 		{
@@ -814,80 +810,90 @@ namespace SOUI
 			}
 			MSG msg = { 0 };
 
-			if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
-			{//获取消息，不从消息队列中移除。
-				if (msg.message == WM_KEYDOWN
-					|| msg.message == WM_KEYUP
-					|| msg.message == WM_SYSKEYDOWN
-					|| msg.message == WM_SYSKEYUP
-					)
+			for(;;)
+			{//获取菜单相关消息，抄自wine代码
+				if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
 				{
-					if(msg.wParam == VK_MENU)
-					{//handle alt key down, exit menu loop
-						s_MenuData->ExitMenu(0);
+					if(!CallMsgFilter(&msg,MSGF_MENU))
 						break;
-					}
-				}
-				else if (msg.message == WM_LBUTTONDOWN
-					|| msg.message == WM_RBUTTONDOWN
-					|| msg.message == WM_NCLBUTTONDOWN
-					|| msg.message == WM_NCRBUTTONDOWN
-					|| msg.message == WM_LBUTTONDBLCLK
-					)
+					PeekMessage(&msg, NULL, msg.message, msg.message, PM_REMOVE);
+				}else
 				{
-					//click on other window
-					if (!s_MenuData->IsMenuWnd(msg.hwnd))
-					{
-						s_MenuData->ExitMenu(0);
-						break;
-					}
-					else
-					{
-						SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
-						pMenu->HideSubMenu();
-					}
-				}
-				else if (msg.message == WM_QUIT)
-				{
-					bMsgQuit = TRUE;
-				}
-
-				//移除消息队列中当前的消息。
-				::GetMessage(&msg, 0, 0, 0);
-
-				//拦截非菜单窗口的MouseMove消息
-				if (msg.message == WM_MOUSEMOVE)
-				{
-					if (msg.hwnd != hCurMenu)
-					{
-						if (hCurMenu)
-						{
-							::SendMessage(hCurMenu, WM_MOUSELEAVE, 0, 0);
-						}
-						hCurMenu = msg.hwnd;
-					}
-
-					SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
-					if (!pMenu)
-					{
-						hCurMenu = NULL;
-					}
-
-				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-				
-				if (msg.message == WM_KEYDOWN
-					|| msg.message == WM_KEYUP
-					|| msg.message == WM_SYSKEYDOWN
-					|| msg.message == WM_SYSKEYUP
-					|| msg.message == WM_CHAR
-					)
-				{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
-					::SendMessage(s_MenuData->GetMenuEx()->m_hWnd,msg.message,msg.wParam,msg.lParam);
+					WaitMessage();
 				}
 			}
-			
+
+
+			if (msg.message == WM_KEYDOWN
+				|| msg.message == WM_KEYUP
+				|| msg.message == WM_SYSKEYDOWN
+				|| msg.message == WM_SYSKEYUP
+				)
+			{//拦截alt键
+				if(msg.wParam == VK_MENU)
+				{//handle alt key down, exit menu loop
+					s_MenuData->ExitMenu(0);
+					break;
+				}
+			}
+			else if (msg.message == WM_LBUTTONDOWN
+				|| msg.message == WM_RBUTTONDOWN
+				|| msg.message == WM_NCLBUTTONDOWN
+				|| msg.message == WM_NCRBUTTONDOWN
+				|| msg.message == WM_LBUTTONDBLCLK
+				)
+			{
+				//click on other window
+				if (!s_MenuData->IsMenuWnd(msg.hwnd))
+				{
+					s_MenuData->ExitMenu(0);
+					break;
+				}
+				else
+				{
+					SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
+					pMenu->HideSubMenu();
+				}
+			}
+			else if (msg.message == WM_QUIT)
+			{
+				bMsgQuit = TRUE;
+			}
+
+			//移除消息队列中当前的消息。
+			PeekMessage(&msg, NULL, msg.message, msg.message, PM_REMOVE);
+
+			//拦截非菜单窗口的MouseMove消息
+			if (msg.message == WM_MOUSEMOVE)
+			{
+				if (msg.hwnd != hCurMenu)
+				{
+					if (hCurMenu)
+					{
+						::SendMessage(hCurMenu, WM_MOUSELEAVE, 0, 0);
+					}
+					hCurMenu = msg.hwnd;
+				}
+
+				SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
+				if (!pMenu)
+				{
+					hCurMenu = NULL;
+				}
+
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_KEYDOWN
+				|| msg.message == WM_KEYUP
+				|| msg.message == WM_CHAR
+				)
+			{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
+				HWND menuWnd = s_MenuData->GetMenuEx()->m_hWnd;
+				::SendMessage(menuWnd,msg.message,msg.wParam,msg.lParam);
+			}
 
 			if (bMsgQuit)
 			{
@@ -895,7 +901,6 @@ namespace SOUI
 				break;
 			}
 		}
-		ImmAssociateContext(hActive,hImc);
 	}
 
 	BOOL SMenuEx::_HandleEvent(EventArgs *pEvt)
@@ -1030,6 +1035,7 @@ namespace SOUI
 		case VK_LEFT:
 			if (m_pParent)
 			{
+				SLOG_INFO("hide sub menu");
 				HideMenu(TRUE);
 			}
 			else
