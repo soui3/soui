@@ -43,17 +43,21 @@ for /f "skip=2 delims=: tokens=1,*" %%i in ('%windir%\system32\reg query "HKLM\S
 		set var=%%j
 		set "var=!var:"=!"
 		if not "!var:~-1!"=="=" set strCMD=!str:~-1!:!var!
-	 )
-	 SET strCMD=%strCMD%\Microsoft Visual Studio\Installer\vswhere.exe
+)
+SET strCMD=%strCMD%\Microsoft Visual Studio\Installer\vswhere.exe
 	
-	 if exist "%strCMD%" (
-	 for /f "delims=" %%i in ('"%strCMD%" -nologo -version [16.0^,17.0] -prerelease -property installationPath -format value') do (
-	    set vs2019path=%%i
-		)
-	 )
+if exist "%strCMD%" (
+	for /f "delims=" %%i in ('"%strCMD%" -nologo -version [16.0^,17.0] -prerelease -property installationPath -format value') do (
+		set vs2019path=%%i
+	)
+	for /f "delims=" %%i in ('"%strCMD%" -nologo -version [17.0^,18.0] -prerelease -property installationPath -format value') do (
+		set vs2022path=%%i
+		rem echo vs2022 is:!vs2022path!
+	)
+)
 
 rem 选择开发环境
-SET /p selected=2.选择开发环境[1=2005;2=2008;3=2010;4=2012;5=2013;6=2015;7=2017;8=2019]:
+SET /p selected=2.选择开发环境[1=2005;2=2008;3=2010;4=2012;5=2013;6=2015;7=2017;8=2019;9=2022]:
 
 if %selected%==1 (
 	SET specs=win32-msvc2005
@@ -94,25 +98,33 @@ if %selected%==1 (
 ) else if %selected%==7 (
 	SET specs=win32-msvc2017
 	for /f "skip=2 delims=: tokens=1,*" %%i in ('%windir%\system32\reg query "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VS7" /v "15.0" /reg:32') do ( 
-	    set str=%%i
+		set str=%%i
 		set var=%%j
 		set "var=!var:"=!"
 		if not "!var:~-1!"=="=" set value=!str:~-1!:!var!
-	 )
-	 SET value=!value!\VC\Auxiliary\Build\vcvarsall.bat
-	 rem ECHO Vs2017 path is:!value! 
-		SET vsvarbat="!value!"
-		call !vsvarbat! %target%
-		rem call "!value!" %target%
-		goto toolsetxp
+	)
+	SET value=!value!\VC\Auxiliary\Build\vcvarsall.bat
+	rem ECHO Vs2017 path is:!value! 
+	SET vsvarbat="!value!"
+	call !vsvarbat! %target%
+	rem call "!value!" %target%
+	goto toolsetxp
 ) else if %selected%==8 (		 
-	  SET specs=win32-msvc2017
-	  SET vs2019path=!vs2019path!\VC\Auxiliary\Build\vcvarsall.bat
-	  ECHO Vs2019 path is:!vs2019path! 
-		SET vsvarbat="!vs2019path!"
-		call !vsvarbat! %target%
-		rem call "!value!" %target%
-		goto toolsetxp
+	SET specs=win32-msvc2017
+	SET vs2019path=!vs2019path!\VC\Auxiliary\Build\vcvarsall.bat
+	ECHO Vs2019 path is:!vs2019path! 
+	SET vsvarbat="!vs2019path!"
+	call !vsvarbat! %target%
+	rem call "!value!" %target%
+	goto toolsetxp
+) else if %selected%==9 (		 
+	SET specs=win32-msvc2017
+	SET vs2022path=!vs2022path!\VC\Auxiliary\Build\vcvarsall.bat
+	ECHO Vs2022 path is:!vs2022path! 
+	SET vsvarbat="!vs2022path!"
+	call !vsvarbat! %target%
+	rem call "!value!" %target%
+	goto toolsetxp
 )else (
 	goto error
 )
