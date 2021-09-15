@@ -89,33 +89,25 @@ namespace SOUI
 			m_nIconBarWidth.setSize(24.f, SLayoutSize::dp);
 			m_nMinWidth.setSize(WIDTH_MENU_MIN, SLayoutSize::dp);
 			OnAttrLayout(SVBox::GetClassName(), TRUE);//set layout to vbox
+			GetLayoutParam()->SetWrapContent(Both);
 		}
 		
 		SMenuExItem * GetNextMenuItem(SMenuExItem *pItem, BOOL bForword, int nCount = 0);
 
 		CSize CalcMenuSize()
 		{
-			return GetDesiredSize(WIDTH_MENU_INIT, WIDTH_MENU_INIT);
+			HMONITOR hMonitor = MonitorFromWindow(m_pMenuEx->m_hWnd,MONITOR_DEFAULTTOPRIMARY);
+			MONITORINFO monitorInfo={sizeof(MONITORINFO),0};
+			GetMonitorInfo(hMonitor,&monitorInfo);
+			int maxHei = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+			return GetDesiredSize(-1, maxHei);
+
 		}
 
-		//CRect GetMargin() const;
 
 		virtual CSize GetDesiredSize(int wid,int hei)
 		{
-			CSize szRet;
-			SWindow *pItem = GetWindow(GSW_FIRSTCHILD);
-			while (pItem)
-			{
-				CSize szItem = pItem->GetDesiredSize(wid,hei);
-				if (szItem.cx < WIDTH_MENU_MAX)
-					szRet.cx = smax(szRet.cx, szItem.cx);
-				szRet.cy += szItem.cy;
-				pItem = pItem->GetWindow(GSW_NEXTSIBLING);
-			}
-			CRect rcMargin = m_style.GetMargin();
-			szRet.cx += rcMargin.left + rcMargin.right;
-			szRet.cy += rcMargin.top + rcMargin.bottom;
-
+			CSize szRet = __super::GetDesiredSize(wid,hei);
 			if (szRet.cx > m_nMaxWidth.toPixelSize(GetScale()) && !m_nMaxWidth.isWrapContent())
 				szRet.cx = m_nMaxWidth.toPixelSize(GetScale());
 			if (szRet.cx < m_nMinWidth.toPixelSize(GetScale()))
@@ -148,6 +140,7 @@ namespace SOUI
 				{
 					InsertChild(pMenuItem);
 					pMenuItem->InitFromXml(xmlItem);
+					pMenuItem->GetLayoutParam()->SetMatchParent(Horz);
 				}
 				xmlItem = xmlItem.next_sibling();
 			}
@@ -156,25 +149,12 @@ namespace SOUI
 
 		virtual CRect GetChildrenLayoutRect() const
 		{
-			CRect rcClient = GetClientRect();
-			return rcClient;
+			return GetClientRect();
 		}
 
 		virtual void UpdateChildrenPosition()
 		{
-			CRect rcClient = GetChildrenLayoutRect();
-
-			SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
-			CRect rcItem = rcClient;
-			rcItem.bottom = rcItem.top;
-			while (pChild)
-			{
-				CSize szItem = pChild->GetDesiredSize(rcClient.Width(),rcClient.Height());
-				rcItem.top = rcItem.bottom;
-				rcItem.bottom += szItem.cy;
-				pChild->Move(rcItem);
-				pChild = pChild->GetWindow(GSW_NEXTSIBLING);
-			}
+			GetLayout()->LayoutChildren(this);
 		}
 
 		virtual void OnScaleChanged(int nScale)
@@ -249,6 +229,7 @@ namespace SOUI
 		, m_bRadio(FALSE)
 		, m_cHotKey(0)
 	{
+		m_bDisplay = FALSE;
 		m_pBgSkin = pItemSkin;
 		m_style.m_bTrackMouseEvent = TRUE;
 		m_style.SetAlign(DT_LEFT);
@@ -334,20 +315,20 @@ namespace SOUI
 
 	CSize SMenuExItem::GetDesiredSize(int wid,int hei)
 	{
-		if (!IsVisible())
-			return CSize();
 		CSize szRet = __super::GetDesiredSize(wid,hei);
-
 		SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
 		SASSERT(pMenuRoot);
-		if (!GetLayoutParam()->IsSpecifiedSize(Horz))
+		if(GetChildrenCount()==0)
 		{
-			szRet.cx += pMenuRoot->m_nIconBarWidth.toPixelSize(GetScale()) + pMenuRoot->m_nTextOffset.toPixelSize(GetScale());
-			if (m_pSubMenu) szRet.cx += pMenuRoot->m_pArrowSkin->GetSkinSize().cx;//加上子菜单箭头宽度
+			if (!GetLayoutParam()->IsSpecifiedSize(Horz))
+			{
+				szRet.cx += pMenuRoot->m_nIconBarWidth.toPixelSize(GetScale()) + pMenuRoot->m_nTextOffset.toPixelSize(GetScale());
+				if (m_pSubMenu) szRet.cx += pMenuRoot->m_pArrowSkin->GetSkinSize().cx;//加上子菜单箭头宽度
+			}
 		}
 		if (!GetLayoutParam()->IsSpecifiedSize(Vert))
 		{
-			szRet.cy = pMenuRoot->m_nItemHei.toPixelSize(GetScale());
+			szRet.cy = smax(szRet.cy,pMenuRoot->m_nItemHei.toPixelSize(GetScale()));
 		}
 		return szRet;
 	}
@@ -416,7 +397,7 @@ namespace SOUI
 			(void)pMenuRoot;
 			SASSERT(pMenuRoot);
 			CSize szRet;
-			szRet.cx = WIDTH_MENU_INIT;
+			szRet.cx = 0;
 			if (!GetLayoutParam()->IsSpecifiedSize(Vert))
 			{
 				if (m_pBgSkin)
@@ -525,6 +506,14 @@ namespace SOUI
 
 		void ExitMenu(int nCmdID)
 		{
+			//hide all menu window
+			SPOSITION pos = m_lstMenuEx.GetTailPosition();
+			while (pos)
+			{
+				SMenuEx * pMenuEx = m_lstMenuEx.GetPrev(pos);
+				pMenuEx->ShowWindow(SW_HIDE);
+			}
+
 			m_bExit = TRUE;
 			m_nCmdID = nCmdID;
 		}
@@ -610,14 +599,26 @@ namespace SOUI
 		return TRUE;
 	}
 
-	SMenuExItem * SMenuEx::GetMenuItem(int nID)
+	SMenuExItem * SMenuEx::GetMenuItem(int nID,BOOL byCmdId)
 	{
-		return FindChildByID2<SMenuExItem>(nID);
+		if(byCmdId)
+		{
+			return FindChildByID2<SMenuExItem>(nID);
+		}else
+		{
+			SMenuExRoot *pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
+			SWindow * pItem = pMenuRoot->GetWindow(GSW_FIRSTCHILD);
+			for(int i=0;i<nID && pItem;i++)
+			{
+				pItem = pItem->GetWindow(GSW_NEXTSIBLING);
+			}
+			return sobj_cast<SMenuExItem>(pItem);
+		}
 	}
 
-	SMenuEx * SMenuEx::GetSubMenu(int nID)
+	SMenuEx * SMenuEx::GetSubMenu(int nID,BOOL byCmdId)
 	{
-		SMenuExItem * pItem = GetMenuItem(nID);
+		SMenuExItem * pItem = GetMenuItem(nID,byCmdId);
 		if (!pItem) return NULL;
 		return pItem->GetSubMenu();
 	}
