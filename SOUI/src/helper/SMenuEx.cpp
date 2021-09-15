@@ -585,7 +585,7 @@ namespace SOUI
 		}
 		m_hParent = hParent;
 		InitFromXml(root);
-
+		m_hostAttr.SetSendWheel2Hover(true);
 		if (!hWnd) return FALSE;
 
 

@@ -121,6 +121,21 @@ CSize SHostWndAttr::GetMinSize(int nScale) const
 	return szRet;
 }
 
+void SHostWndAttr::SetTranslucent(bool bTranslucent)
+{
+	m_bTranslucent = bTranslucent;
+}
+
+void SHostWndAttr::SetTrCtx(const SStringW & strTrCtx)
+{
+	m_strTrCtx = strTrCtx;
+}
+
+void SHostWndAttr::SetSendWheel2Hover(bool value)
+{
+	m_bSendWheel2Hover = value;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // SHostWnd
@@ -446,6 +461,8 @@ void SHostWnd::_Redraw()
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
 {
+	if(!IsWindowVisible())
+		return;
 	SMatrix mtx = _GetMatrixEx();
     //刷新前重新布局，会自动检查布局脏标志
 	UpdateLayout();
