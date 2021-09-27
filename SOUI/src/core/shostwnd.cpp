@@ -373,7 +373,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 			m_dummyWnd->Create(dummyTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
 			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
-			if(IsWindowVisible()) m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
+			m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
 		}
 	}else if(dwExStyle & WS_EX_LAYERED || GetAlpha()!=0xFF)
 	{
@@ -462,6 +462,8 @@ void SHostWnd::_Redraw()
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
 {
+	if(!IsWindowVisible())
+		return;
 	SMatrix mtx = _GetMatrixEx();
     //刷新前重新布局，会自动检查布局脏标志
 	UpdateLayout();
@@ -1766,10 +1768,6 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
 {
 	DefWindowProc();
-	if(m_dummyWnd)
-	{
-		m_dummyWnd->ShowWindow(bShow?SW_SHOWNOACTIVATE:SW_HIDE);
-	}
 	if(bShow && m_aniEnter)
 	{
 		if(m_aniEnter)
