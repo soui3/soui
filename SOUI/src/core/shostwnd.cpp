@@ -369,7 +369,8 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 			HMONITOR hMonitor = MonitorFromWindow(m_hWnd,MONITOR_DEFAULTTONEAREST);
 			MONITORINFO info = { sizeof(MONITORINFO) };
 			GetMonitorInfo(hMonitor,&info);
-			m_dummyWnd->Create(strTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
+			SStringT dummyTitle = SStringT().Format(_T("%s_dummy"),strTitle.c_str());
+			m_dummyWnd->Create(dummyTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
 			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
 			if(IsWindowVisible()) m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);
@@ -378,7 +379,7 @@ BOOL SHostWnd::InitFromXml(pugi::xml_node xmlNode)
 	{
 		if(m_dummyWnd)
 		{
-			m_dummyWnd->DestroyWindow();
+			m_dummyWnd->DestroyWindow();//m_dummyWnd will be set to null in SDummyWnd::OnDestroy
 		}
 		if(!(dwExStyle & WS_EX_LAYERED)) ModifyStyleEx(0,WS_EX_LAYERED);
 		::SetLayeredWindowAttributes(m_hWnd,0,GetAlpha(),LWA_ALPHA);
@@ -1764,6 +1765,7 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 
 void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
 {
+	DefWindowProc();
 	if(m_dummyWnd)
 	{
 		m_dummyWnd->ShowWindow(bShow?SW_SHOWNOACTIVATE:SW_HIDE);
