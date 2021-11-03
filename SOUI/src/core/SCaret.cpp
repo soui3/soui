@@ -21,6 +21,9 @@ namespace SOUI{
 
 	BOOL SCaret::Init(HBITMAP hBmp, int nWid, int nHei)
 	{
+		::CreateCaret(m_pContainer->GetHostHwnd(),hBmp,nWid,nHei);
+		::HideCaret(m_pContainer->GetHostHwnd());
+
 		m_bDrawCaret = true;
 		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, nWid, nHei);
@@ -108,6 +111,7 @@ namespace SOUI{
 		{
 			m_bDrawCaret = TRUE;
 		}
+		::SetCaretPos(x,y);
 	}
 
 	BOOL SCaret::SetVisible(BOOL bVisible,SWND owner)
