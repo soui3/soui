@@ -111,7 +111,9 @@ namespace SOUI{
 		{
 			m_bDrawCaret = TRUE;
 		}
-		::SetCaretPos(x,y);
+		RECT rc={0};
+		m_pContainer->FrameToHost(&rc);
+		::SetCaretPos(rc.left+x,rc.top+y);
 	}
 
 	BOOL SCaret::SetVisible(BOOL bVisible,SWND owner)
