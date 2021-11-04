@@ -284,11 +284,19 @@ HRESULT STextHost::TxActivate( LONG * plOldState )
 
 BOOL STextHost::TxClientToScreen( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x += rc.left;
+	lppt->y += rc.top;
     return ::ClientToScreen(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
 BOOL STextHost::TxScreenToClient( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x -= rc.left;
+	lppt->y -= rc.top;
     return ::ScreenToClient(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
@@ -852,7 +860,6 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
 			GetClientRect((LPRECT)lParam);
 			return TRUE;
 		}
-
         if(m_pTxtHost->GetTextService()->TxSendMessage(uMsg,wParam,lParam,&lResult)==S_OK)
         {
             SetMsgHandled(TRUE);
