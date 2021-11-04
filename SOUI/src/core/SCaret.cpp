@@ -112,7 +112,7 @@ namespace SOUI{
 			m_bDrawCaret = TRUE;
 		}
 		RECT rc={0};
-		m_pContainer->FrameToHost(&rc);
+		m_pContainer->FrameToHost(rc);
 		::SetCaretPos(rc.left+x,rc.top+y);
 	}
 
