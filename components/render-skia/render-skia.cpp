@@ -580,7 +580,7 @@ namespace SOUI
         }else
         {
             paint.setFilterBitmap(false);
-            paint.setColor(m_curBrush->GetColor());
+            paint.setColor(SColor(m_curBrush->GetColor()).toARGB());
         }
         paint.setStyle(SkPaint::kFill_Style);
 
@@ -1446,7 +1446,7 @@ namespace SOUI
 		}else
 		{
 			paint.setFilterBitmap(false);
-			paint.setColor(m_curBrush->GetColor());
+			paint.setColor(SColor(m_curBrush->GetColor()).toARGB());
 		}
 		paint.setStyle(SkPaint::kFill_Style);
 
