@@ -635,7 +635,7 @@ namespace SOUI
 		if (!hOwner || !::IsWindowEnabled(hOwner)) hActive = ::GetActiveWindow();
 
 		HWND hRoot = hActive;
-		while (::GetParent(hRoot))
+		while (::GetWindowLongPtr(hRoot,GWL_STYLE)&WS_CHILD && ::GetParent(hRoot))
 		{
 			hRoot = ::GetParent(hRoot);
 		}

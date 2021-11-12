@@ -146,13 +146,13 @@ public:
     DWORD GetStyle() const
     {
         SASSERT(::IsWindow(m_hWnd));
-        return (DWORD)::GetWindowLong(m_hWnd, GWL_STYLE);
+        return (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
     }
 
     DWORD GetExStyle() const
     {
         SASSERT(::IsWindow(m_hWnd));
-        return (DWORD)::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+        return (DWORD)::GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
     }
 
     LONG_PTR GetWindowLongPtr(int nIndex) const
