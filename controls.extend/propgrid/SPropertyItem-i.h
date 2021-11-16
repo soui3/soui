@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace SOUI
 {
@@ -32,15 +32,17 @@ namespace SOUI
         virtual BOOL RemoveChild(IPropertyItem * pChild)=0;
         virtual int ChildrenCount() const =0;
 
-        virtual SStringW GetName2() const =0;
-        virtual void SetName(const SStringW & strName) =0;
+        virtual SStringT GetTitle() const =0;
+		virtual SStringW GetName2() const = 0;
+        virtual void SetTitle(const SStringT & strName) =0;
         virtual void SetID(int nID) =0;
         virtual SStringT GetDescription() const =0;
         virtual void SetDescription(const SStringT & strDescription) =0;
         virtual SStringT GetString() const =0;
         virtual void SetString(const SStringT & strValue) =0;
-        virtual const void* GetValue() const =0;
-        virtual void SetValue(void *pValue)=0;
+
+		virtual void SetStringOnly(const SStringT & strValue)=0;
+
         virtual void DrawItem(IRenderTarget *pRT,CRect rc) =0;
         virtual void AdjustInplaceActiveWndRect(CRect & rc)=0;
         virtual bool IsInplaceActive()=0;
@@ -48,6 +50,9 @@ namespace SOUI
         virtual void OnButtonClick()=0;
         virtual void OnValueChanged()=0;
         virtual void OnChildValueChanged(IPropertyItem *pChild)=0;
+
+		virtual IPropertyItem * FindChildByName(LPCWSTR pszName) const = 0;
+		virtual IPropertyItem * FindChildById(int nID) = 0;
     };
 
     struct IPropInplaceWnd{

@@ -365,8 +365,9 @@
 				<edit name="prop_value" size="150,30" text="haha" />
 				<button name="btn_set_prop_value" text="set prop" size="100,30" />
 			</window>
-			<propgrid name="prop_test" size="-2,0" weight="1" nameWidth="180" orderType="group" switchSkin="skin_propswitch" colorBkgnd="#ffffff" itemHeight="30">
+			<propgrid name="prop_test" size="-2,0" weight="1" titleWidth="180" orderType="group" switchSkin="skin_propswitch" colorBkgnd="#ffffff" itemHeight="30">
 				<cmdbtnstyle skin="_skin.sys.btn.normal">...</cmdbtnstyle>
+        <editStyle colorBkgnd="#ffffff"/>
 				<groups>
 					<propgroup name="group1" description="desc of group1">
 						<proptext name="text1.1" value="value 1.1">
@@ -380,7 +381,7 @@
 					</propgroup>
 					<propgroup name="group2" description="desc of group2">
 						<propoption name="option2.1" value="1" options="true|false|empty" />
-						<propsize name="size2.1" value="200,300" childrenNames="宽|高" />
+						<propsize name="size2.1" value="200,300" childrenTitle="宽|高" />
 						<proptext name="text2.2" value="value 2.2" />
 						<propcolor name="color2.1" value="#00ff00" format="#%02x%02x%02x%02x" />
 						<proptext name="text2.1" value="value 2.1" />

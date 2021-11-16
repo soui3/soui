@@ -62,6 +62,9 @@ set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-option.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-color.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-size.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-group.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/colorpicker/ColourPopup.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/colorpicker/SColorPicker.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/sfadeframe.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/sradiobox2.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/SChromeTabCtrl.cpp

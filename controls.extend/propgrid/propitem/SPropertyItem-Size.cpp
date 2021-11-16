@@ -1,7 +1,8 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "SPropertyItem-Size.h"
 #include "../SPropertyEmbedWndHelper.hpp"
 #include "../SPropertyGrid.h"
+
 #include <helper/SplitString.h>
 
 #define CHILD_WIDTH     1
@@ -11,39 +12,53 @@ namespace SOUI
 {
     SPropertyItemSize::SPropertyItemSize( SPropertyGrid *pOwner ) :SPropertyItemText(pOwner),m_bChildChanged(FALSE)
     {
-        IPropertyItem *pWidth = SPropertyItemText::CreatePropItem(pOwner);
+		IPropertyItem *pWidth = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pWidth->SetID(CHILD_WIDTH);
-        pWidth->SetName(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pWidth->SetTitle(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext()));
         InsertChild(pWidth);
         pWidth->Release();
-        IPropertyItem *pHeight = SPropertyItemText::CreatePropItem(pOwner);
+        IPropertyItem *pHeight = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pHeight->SetID(CHILD_HEIGHT);
-        pHeight->SetName(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pHeight->SetTitle(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext()));
         InsertChild(pHeight);
         pHeight->Release();
         m_szValue.cx=m_szValue.cy=0;
     }
 
-    void SPropertyItemSize::SetValue( void *pValue)
-    {
-        m_szValue = *(SIZE*)pValue;
-        OnValueChanged();
-    }
-
-    const void* SPropertyItemSize::GetValue() const
-    {
-        return &m_szValue;
-    }
 
     void SPropertyItemSize::SetString( const SStringT & strValue )
     {
         SIZE sz;
         if(_stscanf(strValue,_T("%d,%d"),&sz.cx,&sz.cy)==2)
         {
-            m_szValue = sz;
-            OnValueChanged();
+			//如果值有变化，就发送通知
+			if (sz.cy != m_szValue.cy || sz.cy != m_szValue.cy)
+			{
+
+				m_szValue = sz;
+				OnValueChanged();
+			}
+			
+
         }
     }
+
+	void SPropertyItemSize::SetStringOnly( const SStringT & strValue )
+	{
+		if (strValue.IsEmpty())
+		{
+			/*m_szValue.cy = 0;
+			m_szValue.cx = 0;*/
+			return ;
+		}
+		
+
+		SIZE sz;
+		if(_stscanf(strValue,_T("%d,%d"),&sz.cx,&sz.cy)==2)
+		{
+			m_szValue = sz;
+		}
+	}
 
     void SPropertyItemSize::OnChildValueChanged( IPropertyItem *pChild )
     {
@@ -83,14 +98,14 @@ namespace SOUI
         return S_OK;
     }
 
-    HRESULT SPropertyItemSize::OnAttrChildrenNames( const SStringW & strValue,BOOL bLoading )
+    HRESULT SPropertyItemSize::OnAttrChildrenTitles( const SStringW & strValue,BOOL bLoading )
     {
         SArray<SStringW> strNames;
         SplitString(TR(strValue,GetOwner()->GetContainer()->GetTranslatorContext()),L'|',strNames);
         if(strNames.GetCount()==2)
         {
-            GetItem(GPI_FIRSTCHILD)->SetName(strNames[0]);
-            GetItem(GPI_LASTCHILD)->SetName(strNames[1]);
+            GetItem(GPI_FIRSTCHILD)->SetTitle(S_CW2T(strNames[0]));
+            GetItem(GPI_LASTCHILD)->SetTitle(S_CW2T(strNames[1]));
         }
         return S_OK;
     }

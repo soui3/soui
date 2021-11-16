@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "SPropertyItem-i.h"
 #include <sobject/sobject.hpp>
@@ -28,17 +28,19 @@ namespace SOUI
         virtual BOOL RemoveChild(IPropertyItem * pChild);
         virtual int ChildrenCount() const;
 
-        virtual SStringW GetName2() const{return m_strName;}
-        virtual LPCWSTR GetName() const{return m_strName;}
-        virtual void SetName(const SStringW & strName){m_strName=strName;}
+		virtual SStringT GetTitle() const{return m_strTitle.IsEmpty()?S_CW2T(m_strName):m_strTitle;}
+        virtual void SetTitle(const SStringW & strName){m_strTitle=strName;}
+		virtual LPCWSTR  GetName() const {return m_strName;}
+		virtual SStringW GetName2() const {return m_strName;}
         virtual int GetID()const {return m_nID;}
         virtual void SetID(int nID) {m_nID = nID;}
         virtual SStringT GetDescription() const {return m_strDescription;}
         virtual void SetDescription(const SStringT & strDescription){m_strDescription =strDescription;}
         virtual SStringT GetString() const {return _T("");}
         virtual void SetString(const SStringT & strValue) {}
-        virtual const void* GetValue() const {return NULL;}
-        virtual void SetValue(void *pValue){}
+
+		virtual void SetStringOnly(const SStringT & strValue){};
+
 
         virtual void AdjustInplaceActiveWndRect(CRect & rc){rc.bottom--;}
         virtual void DrawItem(IRenderTarget *pRT,CRect rc){}
@@ -46,13 +48,17 @@ namespace SOUI
         virtual void OnInplaceActive(bool bActive){ m_bInplaceActive = bActive;}
         virtual void OnButtonClick(){}
         virtual void OnValueChanged();
-        virtual void OnChildValueChanged( IPropertyItem *pChild ){}
+        virtual void OnChildValueChanged( IPropertyItem *pChild ){};
+		virtual SList<IPropertyItem*>* GetItemList(){return &m_childs;};
+		IPropertyItem * FindChildByName(LPCWSTR pszName) const;
+		IPropertyItem * FindChildById(int nID);
 
         SOUI_ATTRS_BEGIN()
-            ATTR_STRINGW(L"name",m_strName,FALSE)
-            ATTR_INT(L"id",m_nID,FALSE)
+            ATTR_STRINGT(L"title",m_strTitle,TRUE)
+			ATTR_STRINGW(L"name",m_strName,FALSE)
+			ATTR_INT(L"id",m_nID,FALSE)
             ATTR_STRINGT(L"description",m_strDescription,FALSE)
-            ATTR_INT(L"readOnly",m_bReadOnly,TRUE)
+            ATTR_INT(L"readOnly",m_bReadOnly,FALSE)
             ATTR_CUSTOM(L"expanded",OnAttrExpanded)
         SOUI_ATTRS_END()
 
@@ -60,8 +66,9 @@ namespace SOUI
     protected:
         HRESULT OnAttrExpanded(const SStringW &  strValue,BOOL bLoading);
 
-        SStringW        m_strName;
-        int             m_nID;
+        SStringW        m_strTitle;
+		SStringW		m_strName;
+		int				m_nID;
         SStringT        m_strDescription;
 
         SPropertyGrid * m_pOwner;
@@ -71,7 +78,7 @@ namespace SOUI
         typedef SList<IPropertyItemPtr> PropItemList;
         PropItemList    m_childs;
 
-        BOOL            m_bExpanded;
+        BOOL            m_bExpanded;  //折叠或展开
         BOOL            m_bReadOnly;
         bool            m_bInplaceActive;
     protected:
