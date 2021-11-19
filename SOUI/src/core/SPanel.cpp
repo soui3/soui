@@ -802,6 +802,7 @@ void SScrollView::UpdateScrollBar()
 
 	if(m_ptOrigin  != ptOrigin)
 	{
+		m_layoutDirty = dirty_self;
 		OnViewOriginChanged(ptOrigin,m_ptOrigin);
 	}
     Invalidate();

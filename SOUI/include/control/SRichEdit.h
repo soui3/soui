@@ -12,7 +12,6 @@
 */
 #pragma once
 
-#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
@@ -151,13 +150,7 @@ namespace SOUI
             return pserv;
         }
 
-        /**
-        * STextHost::GetCaretPos
-        * @brief     获取坐标
-        *
-        * Describe   获取坐标   
-        */
-        POINT GetCaretPos(){return m_ptCaret;}
+
     protected:
 
         /**

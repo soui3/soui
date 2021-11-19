@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "SPropertyItem-Text.h"
 
@@ -6,11 +6,14 @@ namespace SOUI
 {
     class SPropertyItemSize : public SPropertyItemText
     {
+		friend class SPropertyGrid;
         SOUI_CLASS_NAME(SPropertyItemSize,L"propsize")
     public:
-        virtual void SetValue(void *pValue);
-        virtual const void* GetValue() const;
+		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
+
         virtual void SetString(const SStringT & strValue);
+		//add
+		virtual void SetStringOnly( const SStringT & strValue );
         
         virtual SStringT GetString() const {
             SStringT strValue;
@@ -22,21 +25,16 @@ namespace SOUI
         
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"value",OnAttrValue)
-            ATTR_CUSTOM(L"childrenNames",OnAttrChildrenNames)
+            ATTR_CUSTOM(L"childrenTitles",OnAttrChildrenTitles)
         SOUI_ATTRS_END()
 
     protected:
         HRESULT OnAttrValue(const SStringW & strValue,BOOL bLoading);
-        HRESULT OnAttrChildrenNames(const SStringW & strValue,BOOL bLoading);
+        HRESULT OnAttrChildrenTitles(const SStringW & strValue,BOOL bLoading);
         
         SIZE    m_szValue;
         
         BOOL    m_bChildChanged;
-    public:
-        static IPropertyItem * CreatePropItem(SPropertyGrid *pOwner)
-        {
-            return new SPropertyItemSize(pOwner);
-        }
     protected:
         SPropertyItemSize(SPropertyGrid *pOwner);
     };

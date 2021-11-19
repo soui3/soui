@@ -35,6 +35,7 @@ STreeCtrl::STreeCtrl()
 , m_nItemHoverBtn(STVIBtn_None)
 , m_nItemPushDownBtn(STVIBtn_None)
 , m_bHasLines(FALSE)
+, m_pListener(NULL)
 {
     m_bClipClient = TRUE;
     m_bFocusable  = TRUE;
@@ -455,7 +456,6 @@ HSTREEITEM STreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM
 
     HSTREEITEM hRet= CSTree<LPTVITEM>::InsertItem(pItemObj,hParent,hInsertAfter);
     pItemObj->hItem = hRet;
-    OnInsertItem(pItemObj);
     
     if(pItemObj->bVisible)
     {
@@ -1341,5 +1341,20 @@ BOOL STreeCtrl::VerifyItem(HSTREEITEM hItem) const
 #endif
 	return TRUE;
 }
+
+void STreeCtrl::OnNodeFree(LPTVITEM & pItemData)
+{
+	if(m_pListener)
+	{
+		m_pListener->OnDeleteItem(this,pItemData->hItem,pItemData->lParam);
+	}
+	delete pItemData;
+}
+
+void STreeCtrl::SetListener(IListener *pListener)
+{
+	m_pListener = pListener;
+}
+
 
 }//namespace SOUI

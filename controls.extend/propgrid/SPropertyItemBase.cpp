@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "SPropertyItemBase.h"
 #include "SPropertyGrid.h"
 
@@ -88,12 +88,19 @@ namespace SOUI
 
     BOOL SPropertyItemBase::InsertChild( IPropertyItem * pChild,IPropertyItem * pInsertAfter/*=IC_LAST*/ )
     {
-        if(pInsertAfter == IC_LAST) m_childs.InsertAfter(NULL,pChild);
-        else if(pInsertAfter == IC_FIRST) m_childs.InsertBefore(NULL,pChild);
+        if(pInsertAfter == IC_LAST)
+		{
+			m_childs.InsertAfter(NULL,pChild);
+		}
+        else if(pInsertAfter == IC_FIRST)
+		{
+			m_childs.InsertBefore(NULL,pChild);
+		}
         else
         {
             SPOSITION pos = m_childs.Find(pInsertAfter);
             if(!pos) return FALSE;
+
             m_childs.InsertAfter(pos,pChild);            
         }
         pChild->SetParent(this);
@@ -132,7 +139,7 @@ namespace SOUI
         pugi::xml_node xmlProp=xmlNode.first_child();
         while(xmlProp)
         {
-            IPropertyItem * pItem = SPropItemMap::CreatePropItem(xmlProp.name(),GetOwner());
+            IPropertyItem * pItem = GetOwner()->CreateItem(xmlProp.name());
             if(pItem)
             {
                 SPropertyItemBase *pItem2 = static_cast<SPropertyItemBase*>(pItem);
@@ -162,4 +169,36 @@ namespace SOUI
         if(GetParent()) GetParent()->OnChildValueChanged(this);
     }
 
+	IPropertyItem * SPropertyItemBase::FindChildByName(LPCWSTR pszName) const
+	{
+		SPOSITION pos = m_childs.GetHeadPosition();
+		while(pos)
+		{
+			IPropertyItem *pChild = m_childs.GetNext(pos);
+			if(pChild->GetName2()==pszName)
+				return pChild;
+			IPropertyItem *pFind = pChild->FindChildByName(pszName);
+			if(pFind)
+				return pFind;
+		}
+		return NULL;
+	}
+
+	IPropertyItem * SPropertyItemBase::FindChildById(int nID)
+	{
+		SPOSITION pos = m_childs.GetHeadPosition();
+		while(pos)
+		{
+			IPropertyItem *pChild = m_childs.GetNext(pos);
+			if(pChild->GetID()==nID)
+				return pChild;
+			IPropertyItem *pFind = pChild->FindChildById(nID);
+			if(pFind)
+				return pFind;
+		}
+		return NULL;
+
+	}
+
 }
+

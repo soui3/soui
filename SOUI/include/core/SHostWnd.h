@@ -39,14 +39,11 @@ namespace SOUI
 
 		CSize GetMinSize(int nScale) const;
 
-		void SetTranslucent(bool bTranslucent) {
-			m_bTranslucent = bTranslucent;
-		}
+		void SetTranslucent(bool bTranslucent);
 
-		void SetTrCtx(const SStringW & strTrCtx)
-		{
-			m_strTrCtx = strTrCtx;
-		}
+		void SetTrCtx(const SStringW & strTrCtx);
+
+		void SetSendWheel2Hover(bool value);
 
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGW(L"trCtx",m_strTrCtx,FALSE)
