@@ -812,13 +812,18 @@ namespace SOUI
 			if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
 			{//获取消息，不从消息队列中移除。
 				if (msg.message == WM_KEYDOWN
-					|| msg.message == WM_SYSKEYDOWN
 					|| msg.message == WM_KEYUP
+					|| msg.message == WM_SYSKEYDOWN
 					|| msg.message == WM_SYSKEYUP
-					/*|| msg.message == WM_CHAR
-					|| msg.message == WM_IME_CHAR*/)
-				{
+					)
+				{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
 					msg.hwnd = s_MenuData->GetMenuEx()->m_hWnd;
+
+					if(msg.wParam == VK_MENU)
+					{//handle alt key down, exit menu loop
+						s_MenuData->ExitMenu(0);
+						break;
+					}
 				}
 				else if (msg.message == WM_LBUTTONDOWN
 					|| msg.message == WM_RBUTTONDOWN

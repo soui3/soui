@@ -28,5 +28,5 @@
   <menuItem icon="1" cursor="hand" >设置</menuItem>
   <sep margin="0,5,0,1"/>
   <menuItem cursor="hand">退出登陆</menuItem>
-  <menuItem id="6" icon="2" hotKey="x" cursor="hand">退出SOUI音乐</menuItem>
+  <menuItem id="6" icon="2" hotKey="x" cursor="hand">退出SOUI</menuItem>
 </menuRoot>
