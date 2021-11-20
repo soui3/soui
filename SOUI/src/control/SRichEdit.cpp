@@ -405,7 +405,6 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
 
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-	SLOG_INFO("TxSetScrollPos,nPos:"<<nPos);
     return m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
 }
 
