@@ -405,12 +405,8 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
 
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-    BOOL bRet=FALSE;
-    if(m_pRichEdit->m_fScrollPending) return TRUE;
-    m_pRichEdit->m_fScrollPending=TRUE;
-    bRet= m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
-    m_pRichEdit->m_fScrollPending=FALSE;
-    return bRet;
+	SLOG_INFO("TxSetScrollPos,nPos:"<<nPos);
+    return m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
 }
 
 void STextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
@@ -1608,7 +1604,9 @@ BOOL SRichEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		return SWindow::OnMouseWheel(nFlags, zDelta, pt);
 	}else
 	{
-		return SPanel::OnMouseWheel(nFlags,zDelta,pt);
+		PSWNDMSG  p = GetCurMsg();
+		LRESULT lResult = 0;
+		return m_pTxtHost->GetTextService()->TxSendMessage(p->uMsg,p->wParam,p->lParam,&lResult)==S_OK;
 	}
 }
 
