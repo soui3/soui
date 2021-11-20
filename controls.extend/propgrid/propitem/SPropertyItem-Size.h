@@ -11,18 +11,14 @@ namespace SOUI
     public:
 		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
 
-        virtual void SetString(const SStringT & strValue);
-		//add
-		virtual void SetStringOnly( const SStringT & strValue );
+        virtual void SetValue(const SStringT & strValue);
         
-        virtual SStringT GetString() const {
-            SStringT strValue;
-            strValue.Format(_T("%d,%d"),m_szValue.cx,m_szValue.cy);
-            return strValue;
-        }
+        virtual SStringT GetValue() const;
         virtual void OnValueChanged();
         virtual void OnChildValueChanged(IPropertyItem *pChild);
         
+		SIZE GetValue2() const{return m_szValue;}
+
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"value",OnAttrValue)
             ATTR_CUSTOM(L"childrenTitles",OnAttrChildrenTitles)

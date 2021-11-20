@@ -3,6 +3,7 @@
 #include "../SPropertyEmbedWndHelper.hpp"
 #include "../SPropertyGrid.h"
 #include <commdlg.h>
+#include <res.mgr/SNamedValue.h>
 
 const int KColorWidth   = 30;
 const int KTransGridSize    =5;
@@ -33,11 +34,11 @@ namespace SOUI
         pRT->DrawRectangle(&rcColor);
         CRect rcValue = rc;
         rcValue.left += KColorWidth;
-        SStringT strValue = GetString();
+        SStringT strValue = GetValue();
         pRT->DrawText(strValue,strValue.GetLength(),&rcValue,DT_SINGLELINE|DT_VCENTER);
     }
     
-    void SPropertyItemColor::OnInplaceActive(bool bActive)
+    void SPropertyItemColor::OnInplaceActive(BOOL bActive)
     {
         SPropertyItemText::OnInplaceActive(bActive);
         if(bActive)
@@ -68,12 +69,12 @@ namespace SOUI
     }
     
 
-    void SPropertyItemColor::SetString( const SStringT & strValue )
+    void SPropertyItemColor::SetValue( const SStringT & strValue )
     {
 
 		COLORREF crTmp;
 		crTmp = CR_INVALID;
-		ParseValue(strValue,crTmp);
+		SColorParser::ParseValue(strValue,crTmp);
 		if (m_crValue != crTmp)
 		{
 			m_crValue = crTmp;
@@ -81,52 +82,15 @@ namespace SOUI
 		}
     }
 
-	void SPropertyItemColor::SetStringOnly( const SStringT & strValue )
-	{
-
-		COLORREF crTmp;
-		crTmp = CR_INVALID;
-		ParseValue(strValue,crTmp);
-		m_crValue = crTmp;
-	}
-
-    void SPropertyItemColor::OnButtonClick()
+    BOOL SPropertyItemColor::OnButtonClick()
     {
 		CColourPopup *pCrPopup = new CColourPopup(GetOwner()->GetContainer()->GetHostHwnd(),this);
 		CPoint pt;
 		GetCursorPos(&pt);
 		pt.x += 10;
 		pCrPopup->Create(pt,m_crValue,_T("默认"),_T("更多"));
-
+		return TRUE;
     }
-
-
-    bool SPropertyItemColor::ParseValue(const SStringT & strValue, COLORREF & value)
-	{
-		int r,g,b,a=255;
-		int nSeg=0;
-		SStringW strValueL = strValue;
-		strValueL.MakeLower();
-		if(strValueL.Left(1)==L"#")
-		{
-			nSeg = swscanf(strValueL,L"#%02x%02x%02x%02x",&r,&g,&b,&a);
-		}else if(strValueL.Left(4).CompareNoCase(L"rgba")==0)
-		{
-			nSeg = swscanf(strValueL,L"rgba(%d,%d,%d,%d)",&r,&g,&b,&a);                
-		}else if(strValueL.Left(3).CompareNoCase(L"rgb")==0)
-		{
-			nSeg = swscanf(strValueL,L"rgb(%d,%d,%d)",&r,&g,&b); 
-		}
-		if(nSeg!=3 && nSeg != 4)
-		{
-			value = CR_INVALID;
-			return false;
-		}else
-		{
-			value = RGBA(r,g,b,a);
-			return true;
-		}
-	}
 
     void SPropertyItemColor::AdjustInplaceActiveWndRect( CRect & rc )
     {
@@ -160,6 +124,23 @@ namespace SOUI
 	SMessageLoop * SPropertyItemColor::GetMsgLoop()
 	{
 		return GetOwner()->GetContainer()->GetMsgLoop();
+	}
+
+	SOUI::SStringT SPropertyItemColor::GetValue() const
+	{
+		if (m_crValue == CR_INVALID)
+		{
+			return _T("");
+		}
+
+		SStringT str;
+		int r,g,b,a;
+		r = GetRValue(m_crValue);
+		g = GetGValue(m_crValue);
+		b = GetBValue(m_crValue);
+		a = GetAValue(m_crValue);
+		str.Format(m_strFormat,r,g,b,a);
+		return str;
 	}
 
 }

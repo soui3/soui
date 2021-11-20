@@ -11,35 +11,32 @@ namespace SOUI
         SOUI_CLASS_NAME(SPropertyItemOption,L"propoption")
     public:
 		static LPCWSTR GetInplaceItemStyleName();
-        virtual void DrawItem(IRenderTarget *pRT,CRect rc);
         
-		//add
-        virtual void SetStringOnly(const SStringT & strValue);
+        virtual void SetValue(const SStringT & strValue);
 
-        virtual void SetString(const SStringT & strValue);
-        virtual SStringT GetString() const;
+        virtual SStringT GetValue() const;
+
+		void SetValue2(int nValue);
 
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"options",OnAttrOptions)
+			ATTR_CUSTOM(L"value",OnAttrValue)
             ATTR_INT(L"dropHeight",m_nDropHeight,FALSE)
-            ATTR_INT(L"value",m_nValue,FALSE)
-			ATTR_INT(L"CanEmpty",m_bCanEmpty,FALSE)
         SOUI_ATTRS_END()
 
     protected:
-        virtual void OnInplaceActive(bool bActive);
+		virtual void DrawItem(IRenderTarget *pRT,CRect rc);
+        virtual void OnInplaceActive(BOOL bActive);
     protected:
         HRESULT OnAttrOptions(const SStringW & strValue,BOOL bLoading);
+		HRESULT OnAttrValue(const SStringW & strValue,BOOL bLoading);
 
 
         int      m_nDropHeight;
         int      m_nValue;
-		SStringT      m_strValue;
-		bool     m_bCanEmpty:  1;
 
-		SStringT m_strDisplay;
-        //SArray<SStringT>    m_options;     
-		SMap<SStringT, SStringT> m_options;
+        SArray<SStringT>    m_options;//value options   
+		SMap<SStringT, SStringT> m_value2text;//value 2 text map.
 
         SComboBox  * m_pCombobox;
         

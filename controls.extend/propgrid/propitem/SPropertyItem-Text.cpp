@@ -34,7 +34,7 @@ namespace SOUI
         virtual void UpdateData()
         {
             SStringT strValue=GetWindowText();
-            m_pOwner->SetString(strValue);
+            m_pOwner->SetValue(strValue);
         }
 
     protected:
@@ -51,12 +51,12 @@ namespace SOUI
 
     void SPropertyItemText::DrawItem( IRenderTarget *pRT,CRect rc )
     {
-        SStringT strValue = GetString();
+        SStringT strValue = GetValue();
 		rc.left += 5;
         pRT->DrawText(strValue,strValue.GetLength(),rc,DT_SINGLELINE|DT_VCENTER);
     }
     
-    void SPropertyItemText::OnInplaceActive(bool bActive)
+    void SPropertyItemText::OnInplaceActive(BOOL bActive)
     {
         __super::OnInplaceActive(bActive);
         if(bActive)
@@ -73,7 +73,7 @@ namespace SOUI
 				inplaceStyle.append_attribute(L"autoWordSel").set_value(L"1");
 			}
             m_pOwner->OnInplaceActiveWndCreate(this,m_pEdit,inplaceStyle);
-            m_pEdit->SetWindowText(GetString());
+            m_pEdit->SetWindowText(GetValue());
 			m_pEdit->SetFocus();
         }else
         {
@@ -87,10 +87,10 @@ namespace SOUI
     }
 
 
-    void SPropertyItemText::SetString( const SStringT & strValue )
+    void SPropertyItemText::SetValue( const SStringT & strValue )
     {
 		//如果值没有改变，就不发送通知
-		if (m_strValue.CompareNoCase(strValue) != 0)
+		if (m_strValue != strValue)
 		{
 			m_strValue = strValue;
 			OnValueChanged();
@@ -98,24 +98,8 @@ namespace SOUI
 		
     }
 
-	void SPropertyItemText::SetStringOnly( const SStringT & strValue )
-	{
-		m_strValue = strValue;
-	}
-
-
-    void SPropertyItemText::OnButtonClick()
-	{
-		GetOwner()->OnItemButtonClick(this, m_strButtonType);
-	}
-
     BOOL SPropertyItemText::HasButton() const 
 	{
-		if (m_strButtonType.IsEmpty())
-		{
-			return FALSE;
-		}
-		
-		return TRUE;
+		return m_hasButton;
 	}
 }

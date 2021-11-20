@@ -12,7 +12,6 @@ namespace SOUI
         SOUI_CLASS_NAME(SPropertyItemBase,L"propitembase")
     public:
         virtual ~SPropertyItemBase();
-        virtual LPCWSTR GetItemClass() const {return GetClassName();}
 
         virtual BOOL IsGroup() const {return FALSE;}
         virtual BOOL HasButton() const {return FALSE;}
@@ -36,20 +35,20 @@ namespace SOUI
         virtual void SetID(int nID) {m_nID = nID;}
         virtual SStringT GetDescription() const {return m_strDescription;}
         virtual void SetDescription(const SStringT & strDescription){m_strDescription =strDescription;}
-        virtual SStringT GetString() const {return _T("");}
-        virtual void SetString(const SStringT & strValue) {}
-
-		virtual void SetStringOnly(const SStringT & strValue){};
-
+        virtual SStringT GetValue() const {return _T("");}
+        virtual void SetValue(const SStringT & strValue) {}
 
         virtual void AdjustInplaceActiveWndRect(CRect & rc){rc.bottom--;}
         virtual void DrawItem(IRenderTarget *pRT,CRect rc){}
-        virtual bool IsInplaceActive(){return m_bInplaceActive;}
-        virtual void OnInplaceActive(bool bActive){ m_bInplaceActive = bActive;}
-        virtual void OnButtonClick(){}
+        virtual BOOL IsInplaceActive(){return m_bInplaceActive;}
+        virtual void OnInplaceActive(BOOL bActive){ m_bInplaceActive = bActive;}
+        virtual BOOL OnButtonClick(){ return FALSE;}
         virtual void OnValueChanged();
         virtual void OnChildValueChanged( IPropertyItem *pChild ){};
 		virtual SList<IPropertyItem*>* GetItemList(){return &m_childs;};
+		
+		virtual BOOL IsReadOnly() const{return m_bReadOnly;}
+		virtual void SetReadOnly(BOOL bReadOnly);
 		IPropertyItem * FindChildByName(LPCWSTR pszName) const;
 		IPropertyItem * FindChildById(int nID);
 
@@ -78,16 +77,17 @@ namespace SOUI
         typedef SList<IPropertyItemPtr> PropItemList;
         PropItemList    m_childs;
 
-        BOOL            m_bExpanded;  //折叠或展开
-        BOOL            m_bReadOnly;
-        bool            m_bInplaceActive;
+		BOOL            m_bExpanded:1;  //折叠或展开
+		BOOL            m_bReadOnly:1;
+		BOOL            m_bInplaceActive:1;
     protected:
         SPropertyItemBase(SPropertyGrid * pOwner)
             :m_pOwner(pOwner)
             ,m_pParent(NULL)
             ,m_bExpanded(TRUE)
             ,m_nID(0)
-            ,m_bInplaceActive(false)
+			,m_bReadOnly(FALSE)
+            ,m_bInplaceActive(FALSE)
         {
             SASSERT(pOwner);
         }

@@ -17,7 +17,6 @@ namespace SOUI
             GPI_PREVSIBLINIG,
         };
         virtual ~IPropertyItem(){}
-        virtual LPCWSTR GetItemClass() const =0;
         virtual BOOL IsGroup() const =0;
         virtual BOOL HasButton() const =0;
         virtual int  GetLevel() const =0;
@@ -38,18 +37,19 @@ namespace SOUI
         virtual void SetID(int nID) =0;
         virtual SStringT GetDescription() const =0;
         virtual void SetDescription(const SStringT & strDescription) =0;
-        virtual SStringT GetString() const =0;
-        virtual void SetString(const SStringT & strValue) =0;
-
-		virtual void SetStringOnly(const SStringT & strValue)=0;
+        virtual SStringT GetValue() const =0;
+        virtual void SetValue(const SStringT & strValue) =0;
 
         virtual void DrawItem(IRenderTarget *pRT,CRect rc) =0;
         virtual void AdjustInplaceActiveWndRect(CRect & rc)=0;
-        virtual bool IsInplaceActive()=0;
-        virtual void OnInplaceActive(bool bActive)=0;
-        virtual void OnButtonClick()=0;
+        virtual BOOL IsInplaceActive()=0;
+        virtual void OnInplaceActive(BOOL bActive)=0;
+        virtual BOOL OnButtonClick()=0;
         virtual void OnValueChanged()=0;
         virtual void OnChildValueChanged(IPropertyItem *pChild)=0;
+
+		virtual BOOL IsReadOnly() const = 0;
+		virtual void SetReadOnly(BOOL bReadOnly) =0;
 
 		virtual IPropertyItem * FindChildByName(LPCWSTR pszName) const = 0;
 		virtual IPropertyItem * FindChildById(int nID) = 0;

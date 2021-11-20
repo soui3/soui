@@ -28,7 +28,6 @@ namespace SOUI
 		enum{EventID=EVT_PG_ITEMCLICK};
 
 		IPropertyItem * pItem;
-		SStringT strType;
 	};
 
 
@@ -144,7 +143,8 @@ namespace SOUI
 		void OnInplaceActiveWndCreate(IPropertyItem *pItem,SWindow *pWnd,pugi::xml_node xmlInit);
 		void OnInplaceActiveWndDestroy(IPropertyItem *pItem,SWindow *pWnd);
 		void OnItemValueChanged(IPropertyItem *pItem);
-		void OnItemButtonClick(IPropertyItem *pItem, SStringT strType);
+		void OnItemInvalidate(IPropertyItem *pItem);
+		void OnItemButtonClick(IPropertyItem *pItem);
 	protected:
 		SWindow *   m_pInplaceActiveWnd;    //属性内嵌的窗口
 
