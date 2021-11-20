@@ -165,7 +165,7 @@ namespace SOUI
 
     void SPropertyItemBase::OnValueChanged()
     {
-        GetOwner()->OnItemValueChanged(this);
+		GetOwner()->OnItemValueChanged(this);
         if(GetParent()) GetParent()->OnChildValueChanged(this);
     }
 
@@ -198,6 +198,12 @@ namespace SOUI
 		}
 		return NULL;
 
+	}
+
+	void SPropertyItemBase::SetReadOnly(BOOL bReadOnly)
+	{
+		m_bReadOnly = bReadOnly;
+		GetOwner()->OnItemInvalidate(this);
 	}
 
 }

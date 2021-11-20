@@ -87,7 +87,7 @@ public:
      *
      * Describe  设置选中项
      */
-    BOOL SetCurSel(int nIndex);
+    BOOL SetCurSel(int nIndex,BOOL bNotifyChange=FALSE);
 
     /**
      * SListBox::GetTopIndex

@@ -407,19 +407,22 @@ namespace SOUI
                 {
                     IPropertyItem *pItem = (IPropertyItem*)GetItemData(iItem);
 
-					EventPropGridItemActive evt(this);
-					evt.pItem = pItem;
-					FireEvent(evt);
+					if(!pItem->IsReadOnly()){
+						EventPropGridItemActive evt(this);
+						evt.pItem = pItem;
+						FireEvent(evt);
 
-                    pItem->OnInplaceActive(true);
+						pItem->OnInplaceActive(true);
+					}
 
                 }else if (ip == IP_TITLE)
 				{
 					IPropertyItem *pItem = (IPropertyItem*)GetItemData(iItem);
-
-					EventPropGridItemActive evt(this);
-					evt.pItem = pItem;
-					FireEvent(evt);
+					if(!pItem->IsReadOnly()){
+						EventPropGridItemActive evt(this);
+						evt.pItem = pItem;
+						FireEvent(evt);
+					}
 				}
             }
         }
@@ -522,7 +525,10 @@ namespace SOUI
         SASSERT(nCurSel!=-1);
         IPropertyItem *pItem =(IPropertyItem*)GetItemData(nCurSel);
         SASSERT(pItem->HasButton());
-        pItem->OnButtonClick();
+		if(!pItem->IsReadOnly())
+		{
+			OnItemButtonClick(pItem);
+		}
         return true;
     }
     
@@ -642,12 +648,14 @@ namespace SOUI
 		return NULL;
 	}
 
-	void SPropertyGrid::OnItemButtonClick(IPropertyItem *pItem, SStringT strType)
+	void SPropertyGrid::OnItemButtonClick(IPropertyItem *pItem)
 	{
-		EventPropGridItemClick evt(this);
-		evt.pItem = pItem;
-		evt.strType = strType;
-		FireEvent(evt);
+		if(!pItem->OnButtonClick())
+		{
+			EventPropGridItemClick evt(this);
+			evt.pItem = pItem;
+			FireEvent(evt);
+		}
 	}
 
 	void SPropertyGrid::LoadFromXml(pugi::xml_node data)
@@ -681,9 +689,9 @@ namespace SOUI
 	BOOL SPropertyGrid::SetItemAttribute(IPropertyItem * pItem,const SStringW & attr,const SStringW & value)
 	{
 		HRESULT hRet = pItem->SetAttribute(attr,value,FALSE);
-		if(hRet == S_OK && IsItemVisible(pItem))
+		if(hRet == S_OK)
 		{//update view.
-			Invalidate();
+			OnItemInvalidate(pItem);
 		}
 		return SUCCEEDED(hRet);
 	}
@@ -691,6 +699,19 @@ namespace SOUI
 	COLORREF SPropertyGrid::GetGroupColor() const
 	{
 		return m_crGroup;
+	}
+
+	void SPropertyGrid::OnItemInvalidate(IPropertyItem *pItem)
+	{
+		for(int i=0;i<GetCount();i++)
+		{
+			IPropertyItem *p = (IPropertyItem *)GetItemData(i);
+			if(p==pItem)
+			{
+				RedrawItem(i);
+				break;
+			}
+		}
 	}
 
 }
