@@ -87,6 +87,7 @@ namespace SOUI
         m_evtSet.addEvent(EVENTID(EventCBSelChange));
         m_evtSet.addEvent(EVENTID(EventRENotify));
 		m_evtSet.addEvent(EVENTID(EventCBDropdown));
+		m_evtSet.addEvent(EVENTID(EventCBBeforeCloseUp));
     }
 
     SComboBase::~SComboBase(void)
@@ -448,7 +449,11 @@ namespace SOUI
 
     void SComboBase::CloseUp()
     {
-        if(m_pDropDownWnd)
+		EventCBBeforeCloseUp evt(this);
+		evt.bCloseBlock = false;
+		FireEvent(evt);
+
+        if(!evt.bCloseBlock && m_pDropDownWnd)
         {
             m_pDropDownWnd->EndDropDown(IDCANCEL);
         }

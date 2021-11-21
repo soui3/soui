@@ -125,6 +125,7 @@ namespace SOUI
 
         EVT_CB_SELCHANGE=19000,
 		EVT_CB_DROPDOWN,
+		EVT_CB_BEFORE_CLOSEUP,
 
         EVT_CALENDAR_SELDAY=20000,
         EVT_CALENDAR_SETDATE,
@@ -473,6 +474,10 @@ namespace SOUI
 	class SDropDownWnd;
 	SEVENT_BEGIN_EX(EventCBDropdown, EVT_CB_DROPDOWN, on_combobox_dropdown, SOUI_EXP)
 		SDropDownWnd *pDropDown;
+	SEVENT_END()
+
+	SEVENT_BEGIN_EX(EventCBBeforeCloseUp, EVT_CB_BEFORE_CLOSEUP, on_combobox_before_closeup, SOUI_EXP)
+		bool bCloseBlock;
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventLCSelChanging, EVT_LC_SELCHANGING, on_listctrl_sel_changing, SOUI_EXP)
