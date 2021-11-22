@@ -1105,6 +1105,8 @@ namespace SOUI
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
 		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
+
+		BOOL OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1191,7 +1193,6 @@ namespace SOUI
 			ATTR_CUSTOM(L"passwordChar",OnAttrPasswordChar)
 			ATTR_CUSTOM(L"enableDragdrop",OnAttrEnableDragdrop)
        SOUI_ATTRS_END()
-
     protected:
         
         CHARFORMAT2W   m_cfDef;              /**< Default character format  */

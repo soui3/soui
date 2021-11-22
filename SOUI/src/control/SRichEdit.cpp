@@ -403,9 +403,28 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
     return m_pRichEdit->SetScrollRange(fnBar!=SB_HORZ,nMinPos,nMaxPos,fRedraw);
 }
 
+BOOL SRichEdit::OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw)
+{
+	if(m_fScrollPending) return TRUE;
+	BOOL bVertical = fnBar!=SB_HORZ;
+	SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
+
+	if(psi->nPos != nPos)
+	{
+		psi->nPos = nPos;
+		CRect rcSb = GetScrollBarRect(!!bVertical);
+		InvalidateRect(rcSb);
+	}
+	if (fRedraw)
+	{
+		Invalidate();
+	}
+	return TRUE;
+}
+
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-    return m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
+    return m_pRichEdit->OnTxSetScrollPos(fnBar,nPos,fRedraw);
 }
 
 void STextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
