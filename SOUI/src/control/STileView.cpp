@@ -476,6 +476,8 @@ CRect STileView::CalcItemDrawRect(int iItem) const
 BOOL STileView::OnItemGetRect(const SItemPanel *pItem, CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
+	if(iPosition<0 || iPosition >= m_adapter->getCount())
+		return FALSE;
     rcItem = CalcItemDrawRect(iPosition);
     return TRUE;
 }

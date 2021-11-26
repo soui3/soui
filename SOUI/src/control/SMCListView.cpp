@@ -800,6 +800,8 @@ BOOL SMCListView::IsItemRedrawDelay() const
 BOOL SMCListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
+	if(iPosition<0 || iPosition >= m_adapter->getCount())
+		return FALSE;
     rcItem = _OnItemGetRect(iPosition);
     return TRUE;
 }

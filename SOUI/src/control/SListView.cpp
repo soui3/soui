@@ -482,6 +482,8 @@ namespace SOUI
     BOOL SListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
     {
         int iPosition = (int)pItem->GetItemIndex();
+		if(iPosition<0 || iPosition >= m_adapter->getCount())
+			return FALSE;
         int nOffset = m_lvItemLocator->Item2Position(iPosition)-m_siVer.nPos;
         rcItem = GetClientRect();
         rcItem.top += nOffset;
