@@ -377,6 +377,16 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
         pAdapter->Release();
     }
 
+	//行高固定的列表
+	SListView *pLstViewFixHorz = FindChildByName2<SListView>("lv_test_fix_horz");
+	if(pLstViewFixHorz)
+	{
+		ILvAdapter *pAdapter = new CTestAdapterFixHorz;
+		pLstViewFixHorz->SetAdapter(pAdapter);
+		pAdapter->Release();
+	}
+
+
     //行高可变的列表
     SListView *pLstViewFlex = FindChildByName2<SListView>("lv_test_flex");
     if(pLstViewFlex)
