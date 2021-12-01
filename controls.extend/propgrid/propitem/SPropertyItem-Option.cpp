@@ -43,6 +43,12 @@ namespace SOUI
 
     };
     
+
+	SPropertyItemOption::SPropertyItemOption(SPropertyGrid *pOwner) :SPropertyItemBase(pOwner),m_pCombobox(NULL),m_nValue(-1),m_nDropHeight(200)
+	{
+
+	}
+
 	static const WCHAR * kOptionStyle = L"optionStyle";
 
 	LPCWSTR SPropertyItemOption::GetInplaceItemStyleName()
@@ -101,22 +107,18 @@ namespace SOUI
     SStringT SPropertyItemOption::GetValue() const
     {
         if(m_nValue<0 || m_nValue>=(int)m_options.GetCount()) return _T("");
-        return m_options[m_nValue];
+		return m_options[m_nValue];
     }
 
     void SPropertyItemOption::SetValue( const SStringT & strValue )
     {
 		int nValue = -1;
-		SPOSITION pos = m_value2text.GetStartPosition();
-		SMap<SStringT,SStringT>::CPair * p = m_value2text.Lookup(strValue);
-		if(p){
-			for(UINT i=0;i<m_options.GetCount();i++)
+		for(UINT i=0;i<m_options.GetCount();i++)
+		{
+			if(m_options[i]==strValue)
 			{
-				if(m_options[i]==p->m_value)
-				{
-					nValue = i;
-					break;
-				}
+				nValue = i;
+				break;
 			}
 		}
 		SetValue2(nValue);
@@ -139,10 +141,10 @@ namespace SOUI
 			SplitString(strItem,_T(':'),lstTextValue);
 			SStringT strText = lstTextValue[0];
 			SStringT strValue = lstTextValue.GetCount()>1? lstTextValue[1] : strText;
-			if(!m_value2text.Lookup(strValue))
+			if(!m_text2option.Lookup(strText))
 			{
 				m_options.Add(strText);
-				m_value2text[strValue]=strText;
+				m_text2option[strText]=strValue;
 			}
 		}
         return S_FALSE;
@@ -180,6 +182,24 @@ namespace SOUI
 			if(m_nValue<0) m_nValue = -1;
 			return S_FALSE;
 		}
+	}
+
+	BOOL SPropertyItemOption::HasValue() const
+	{
+		return m_nValue != -1;
+	}
+
+	void SPropertyItemOption::ClearValue()
+	{
+		m_nValue = -1;
+		OnValueChanged();
+	}
+
+	SStringT SPropertyItemOption::Value2Option(const SStringT& value) const
+	{
+		const SMap<SStringT, SStringT>::CPair* p = m_text2option.Lookup(value);
+		if (!p) return _T("");
+		return p->m_value;
 	}
 
 }

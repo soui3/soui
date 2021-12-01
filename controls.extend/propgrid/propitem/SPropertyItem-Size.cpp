@@ -96,4 +96,16 @@ namespace SOUI
         }
         return S_OK;
     }
+
+	BOOL SPropertyItemSize::HasValue() const
+	{
+		return m_szValue.cx || m_szValue.cy;
+	}
+
+	void SPropertyItemSize::ClearValue()
+	{
+		m_szValue.cx = m_szValue.cy =0;
+		OnValueChanged();
+	}
+
 }

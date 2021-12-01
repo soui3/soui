@@ -5,6 +5,15 @@ namespace SOUI
     #define IC_FIRST    (IPropertyItem *)0
     #define IC_LAST     (IPropertyItem *)1
 
+	typedef enum _PropType{
+		PT_UNKNOWN=0,
+		PT_GROUP,
+		PT_TEXT,
+		PT_SIZE,
+		PT_OPTION,
+		PT_COLOR,
+	}PropType;
+
     class SPropertyGrid;
     struct IPropertyItem : public IObjRef
                          , public SObject
@@ -17,7 +26,7 @@ namespace SOUI
             GPI_PREVSIBLINIG,
         };
         virtual ~IPropertyItem(){}
-        virtual BOOL IsGroup() const =0;
+		virtual PropType GetType() const = 0;
         virtual BOOL HasButton() const =0;
         virtual int  GetLevel() const =0;
         virtual BOOL IsExpand() const =0;
@@ -50,6 +59,9 @@ namespace SOUI
 
 		virtual BOOL IsReadOnly() const = 0;
 		virtual void SetReadOnly(BOOL bReadOnly) =0;
+
+		virtual BOOL HasValue() const = 0;
+		virtual void ClearValue() = 0;
 
 		virtual IPropertyItem * FindChildByName(LPCWSTR pszName) const = 0;
 		virtual IPropertyItem * FindChildById(int nID) = 0;

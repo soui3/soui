@@ -9,6 +9,11 @@ const int KColorWidth   = 30;
 const int KTransGridSize    =5;
 namespace SOUI
 {
+	SPropertyItemColor::SPropertyItemColor(SPropertyGrid *pOwner) :SPropertyItemText(pOwner),m_crValue(CR_INVALID)
+	{
+		m_strFormat = _T("#%02x%02x%02x%02x");
+	}
+
     void SPropertyItemColor::DrawItem( IRenderTarget *pRT,CRect rc )
     {
         CRect rcColor = rc;
@@ -30,12 +35,29 @@ namespace SOUI
         }
         pRT->PopClip();
         
-        pRT->FillSolidRect(&rcColor,m_crValue);
-        pRT->DrawRectangle(&rcColor);
-        CRect rcValue = rc;
-        rcValue.left += KColorWidth;
-        SStringT strValue = GetValue();
-        pRT->DrawText(strValue,strValue.GetLength(),&rcValue,DT_SINGLELINE|DT_VCENTER);
+		if(m_crValue!=CR_INVALID)
+		{
+			pRT->FillSolidRect(&rcColor,m_crValue);
+			pRT->DrawRectangle(&rcColor);
+			CRect rcValue = rc;
+			rcValue.left += KColorWidth;
+			SStringT strValue = GetValue();
+			pRT->DrawText(strValue,strValue.GetLength(),&rcValue,DT_SINGLELINE|DT_VCENTER);
+		}else
+		{
+			SAutoRefPtr<IPen> pen,oldPen;
+			pRT->CreatePen(PS_SOLID,RGBA(255,0,0,255),1,&pen);
+			pRT->SelectObject(pen,(IRenderObj**)&oldPen);
+			{
+				CPoint pts[2]={rcColor.TopLeft(),rcColor.BottomRight()};
+				pRT->DrawLines(pts,2);
+			}
+			{
+				CPoint pts[2]={CPoint(rcColor.left,rcColor.bottom),CPoint(rcColor.right,rcColor.top)};
+				pRT->DrawLines(pts,2);
+			}
+			pRT->SelectObject(oldPen);
+		}
     }
     
     void SPropertyItemColor::OnInplaceActive(BOOL bActive)
@@ -141,6 +163,17 @@ namespace SOUI
 		a = GetAValue(m_crValue);
 		str.Format(m_strFormat,r,g,b,a);
 		return str;
+	}
+
+	BOOL SPropertyItemColor::HasValue() const
+	{
+		return m_crValue != CR_INVALID;
+	}
+
+	void SPropertyItemColor::ClearValue()
+	{
+		m_crValue = CR_INVALID;
+		OnValueChanged();
 	}
 
 }

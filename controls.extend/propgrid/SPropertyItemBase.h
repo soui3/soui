@@ -13,7 +13,6 @@ namespace SOUI
     public:
         virtual ~SPropertyItemBase();
 
-        virtual BOOL IsGroup() const {return FALSE;}
         virtual BOOL HasButton() const {return FALSE;}
         virtual int  GetLevel() const ;
         virtual BOOL IsExpand() const ;
@@ -38,7 +37,7 @@ namespace SOUI
         virtual SStringT GetValue() const {return _T("");}
         virtual void SetValue(const SStringT & strValue) {}
 
-        virtual void AdjustInplaceActiveWndRect(CRect & rc){rc.bottom--;}
+        virtual void AdjustInplaceActiveWndRect(CRect & rc){}
         virtual void DrawItem(IRenderTarget *pRT,CRect rc){}
         virtual BOOL IsInplaceActive(){return m_bInplaceActive;}
         virtual void OnInplaceActive(BOOL bActive){ m_bInplaceActive = bActive;}

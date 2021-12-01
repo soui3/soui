@@ -12,11 +12,18 @@ namespace SOUI
     public:
 		static LPCWSTR GetInplaceItemStyleName();
         
+		virtual PropType GetType() const {return PT_OPTION;}
         virtual void SetValue(const SStringT & strValue);
 
         virtual SStringT GetValue() const;
 
 		void SetValue2(int nValue);
+		int GetValue2() const {return m_nValue;}
+
+		virtual BOOL HasValue() const ;
+		virtual void ClearValue() ;
+
+        SStringT Value2Option(const SStringT& value) const;
 
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"options",OnAttrOptions)
@@ -36,15 +43,13 @@ namespace SOUI
         int      m_nValue;
 
         SArray<SStringT>    m_options;//value options   
-		SMap<SStringT, SStringT> m_value2text;//value 2 text map.
+		SMap<SStringT, SStringT> m_text2option;//text to option map.
 
         SComboBox  * m_pCombobox;
         
     public:
 		bool OnCBSelChange(EventArgs *pEvt);
     protected:
-        SPropertyItemOption(SPropertyGrid *pOwner):SPropertyItemBase(pOwner),m_pCombobox(NULL),m_nValue(-1),m_nDropHeight(200)
-        {
-        }
+        SPropertyItemOption(SPropertyGrid *pOwner);
     };
 }

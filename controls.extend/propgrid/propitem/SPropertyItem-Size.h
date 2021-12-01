@@ -11,6 +11,7 @@ namespace SOUI
     public:
 		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
 
+		virtual PropType GetType() const {return PT_SIZE;}
         virtual void SetValue(const SStringT & strValue);
         
         virtual SStringT GetValue() const;
@@ -18,6 +19,8 @@ namespace SOUI
         virtual void OnChildValueChanged(IPropertyItem *pChild);
         
 		SIZE GetValue2() const{return m_szValue;}
+		virtual BOOL HasValue() const ;
+		virtual void ClearValue() ;
 
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"value",OnAttrValue)

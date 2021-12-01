@@ -10,12 +10,17 @@ namespace SOUI
         SOUI_CLASS_NAME(SPropertyItemText,L"proptext")
     public:
 		static LPCWSTR GetInplaceItemStyleName();
-        virtual void DrawItem(IRenderTarget *pRT,CRect rc);
+
+		virtual PropType GetType() const {return PT_TEXT;}
         
         virtual void SetValue(const SStringT & strValue);
         virtual SStringT GetValue() const {return m_strValue;}
 		virtual BOOL HasButton() const;
-       
+
+		virtual void DrawItem(IRenderTarget *pRT,CRect rc);
+		virtual BOOL HasValue() const ;
+		virtual void ClearValue() ;
+
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGT(L"value",m_strValue,TRUE)
 			ATTR_BOOL(L"hasButton",m_hasButton,TRUE)
@@ -28,8 +33,6 @@ namespace SOUI
         BOOL	m_hasButton;
         SEdit  * m_pEdit;
     protected:
-        SPropertyItemText(SPropertyGrid *pOwner):SPropertyItemBase(pOwner),m_pEdit(NULL),m_hasButton(FALSE)
-        {
-        }
+        SPropertyItemText(SPropertyGrid *pOwner);
     };
 }

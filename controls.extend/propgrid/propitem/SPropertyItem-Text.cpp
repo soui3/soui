@@ -42,6 +42,10 @@ namespace SOUI
 
     };
     
+	SPropertyItemText::SPropertyItemText(SPropertyGrid *pOwner) :SPropertyItemBase(pOwner),m_pEdit(NULL),m_hasButton(FALSE)
+	{
+	}
+
 	static const WCHAR * kEditStyle = L"editStyle";
 
 	LPCWSTR SPropertyItemText::GetInplaceItemStyleName()
@@ -102,4 +106,17 @@ namespace SOUI
 	{
 		return m_hasButton;
 	}
+
+
+	BOOL SPropertyItemText::HasValue() const
+	{
+		return !m_strValue.IsEmpty();
+	}
+
+	void SPropertyItemText::ClearValue()
+	{
+		m_strValue.Empty();
+		OnValueChanged();
+	}
+
 }

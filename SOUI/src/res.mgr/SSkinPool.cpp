@@ -79,6 +79,16 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
 }
 
 
+BOOL SSkinPool::AddSkin(ISkinObj* pSkin)
+{
+	SkinKey key = {pSkin->GetName(),pSkin->GetScale()};
+	if(HasKey(key))
+		return FALSE;
+	AddKeyObject(key,pSkin);
+	pSkin->AddRef();
+	return TRUE;
+}
+
 
 ISkinObj* SSkinPool::GetSkin(const SStringW & strSkinName,int nScale)
 {
@@ -126,6 +136,8 @@ SSkinPoolMgr::SSkinPoolMgr()
 {
     m_bulitinSkinPool.Attach(new SSkinPool);
     PushSkinPool(m_bulitinSkinPool);
+	m_userSkinPool.Attach(new SSkinPool);
+	PushSkinPool(m_userSkinPool);
 }
 
 SSkinPoolMgr::~SSkinPoolMgr()
@@ -229,6 +241,17 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     }
     if(pRet) pRet->Release();
     return pRet;
+}
+
+
+SSkinPool * SSkinPoolMgr::GetUserSkinPool()
+{
+	return m_userSkinPool;
+}
+
+SSkinPool * SSkinPoolMgr::GetBuiltinSkinPool()
+{
+	return m_bulitinSkinPool;
 }
 
 }//namespace SOUI

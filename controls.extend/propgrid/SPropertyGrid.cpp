@@ -60,6 +60,7 @@ namespace SOUI
 	,m_crItem(CR_INVALID)
 	,m_crItemText(RGBA(0,0,0,255))
 	,m_crItemSel(RGBA(0,120,215,255))
+	,m_orderType(OT_GROUP)
     {
 		//注册事件   
 		//1、item的值改变的时候响应
@@ -277,13 +278,13 @@ namespace SOUI
 		rcTitle.left = rcSwitch.right;
 		rcTitle.right = rcTitle.left + m_nTitleWidth;
 		pRT->FillSolidRect(rcSwitch,m_crGroup);
-		pRT->FillSolidRect(rcTitle,iItem == SListBox::GetCurSel()? m_crItemSel:(pItem->IsGroup()?m_crGroup:m_crItem));
+		pRT->FillSolidRect(rcTitle,iItem == SListBox::GetCurSel()? m_crItemSel:(pItem->GetType()==PT_GROUP?m_crGroup:m_crItem));
 		int iLevel = pItem->GetLevel();
 		if(iLevel>1) rcSwitch.OffsetRect(rcSwitch.Width()*(iLevel-1),0);
 		if(pItem->ChildrenCount() && m_switchSkin)
 		{
 			int iState = pItem->IsExpand()?GROUP_EXPANDED:GROUP_COLLAPSED;
-			if(!pItem->IsGroup()) iState += 2;
+			if(pItem->GetType()!=PT_GROUP) iState += 2;
 			CRect rcDraw = rcSwitch;
 			rcDraw.DeflateRect((rcSwitch.Size()-m_switchSkin->GetSkinSize())/2);
 			m_switchSkin->DrawByIndex(pRT,rcDraw,iState);
@@ -323,7 +324,7 @@ namespace SOUI
             if(pItem->ChildrenCount())
             {
                 pItem->Expand(!pItem->IsExpand());
-            }else if(!pItem->IsGroup() && !pItem->IsInplaceActive()) 
+            }else if(pItem->GetType()!=PT_GROUP && !pItem->IsInplaceActive()) 
             {
                 pItem->OnInplaceActive(true);
             }
@@ -545,11 +546,7 @@ namespace SOUI
 		InsertChild(pWnd);
 		pWnd->InitFromXml(xmlInit);
 
-		CRect rcItem = GetItemRect(pItem);
-		CRect rcValue= rcItem;
-		rcValue.left += rcItem.Height()+m_nTitleWidth + 1;
-		if(pItem->HasButton()) rcValue.right -= rcValue.Height();
-		pItem->AdjustInplaceActiveWndRect(rcValue);
+		CRect rcValue = GetInplaceWndPos(pItem);
 		pWnd->Move(rcValue);
 		m_pInplaceActiveWnd = pWnd;
     }
@@ -567,31 +564,25 @@ namespace SOUI
         if(nCurSel==-1) return;
         
         IPropertyItem * pItem = (IPropertyItem*)GetItemData(nCurSel);
-        CRect rcItem = GetItemRect(pItem);
-        rcItem.left += rcItem.Height()+m_nTitleWidth;
-        
-        CRect rcValue = rcItem;
-        if(pItem->HasButton())
-        {
-            rcValue.right -= rcValue.Height();
-        }
         
         if(m_pInplaceActiveWnd && childs&CHILD_INPLACEWND)
         {
-            pItem->AdjustInplaceActiveWndRect(rcValue);
+			CRect rcValue = GetInplaceWndPos(pItem);
             m_pInplaceActiveWnd->Move(rcValue);
         }
         
         if(childs & CHILD_CMDBTN)
         {
-            m_pCmdBtn->SetVisible(FALSE);
             if(pItem->HasButton())
             {
-                CRect rcBtn = rcItem;
+                CRect rcBtn = GetCmdButtonPos(pItem);
                 rcBtn.left = rcBtn.right-rcBtn.Height();
                 m_pCmdBtn->Move(&rcBtn);
                 m_pCmdBtn->SetVisible(TRUE,TRUE);
-            }
+            }else
+			{
+				m_pCmdBtn->SetVisible(FALSE,TRUE);
+			}
         }
     }
 
@@ -712,6 +703,58 @@ namespace SOUI
 				break;
 			}
 		}
+	}
+
+	void SPropertyGrid::EnumProp(FunEnumProp funEnum,void* opaque)
+	{
+		SPOSITION pos = m_lstGroup.GetHeadPosition();
+		while(pos)
+		{
+			SPropertyGroup *pGroup = m_lstGroup.GetNext(pos);
+			if(!funEnum(pGroup,opaque))
+				return;
+			IPropertyItem *pItem = pGroup->GetItem(IPropertyItem::GPI_FIRSTCHILD);
+			while(pItem)
+			{
+				if(!funEnum(pItem,opaque))
+					return;	
+				pItem = pItem->GetItem(IPropertyItem::GPI_NEXTSIBLING);
+			}
+		}
+	}
+
+	CRect SPropertyGrid::GetInplaceWndPos(IPropertyItem *pItem) const
+	{
+		CRect rcItem = GetItemRect(pItem);
+		rcItem.left += rcItem.Height()+m_nTitleWidth;
+
+		CRect rcValue = rcItem;
+		rcValue.DeflateRect(0,0,1,1);
+		if(pItem->HasButton())
+		{
+			rcValue.right -= rcValue.Height();
+		}
+		pItem->AdjustInplaceActiveWndRect(rcValue);
+		return rcValue;
+	}
+
+	CRect SPropertyGrid::GetCmdButtonPos(IPropertyItem *pItem) const
+	{
+		if(pItem->HasButton())
+		{
+			CRect rcItem = GetItemRect(pItem);
+			rcItem.left += rcItem.Height()+m_nTitleWidth;
+
+			CRect rcValue = rcItem;
+			rcValue.DeflateRect(0,0,1,1);
+			rcValue.left = rcValue.right-rcValue.Height();
+			return rcValue;
+
+		}else
+		{
+			return CRect();
+		}
+
 	}
 
 }

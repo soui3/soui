@@ -63,6 +63,9 @@ namespace SOUI
 			OT_GROUP,
 			OT_NAME,
 		};
+
+		typedef BOOL (*FunEnumProp)(IPropertyItem *pItem,void * opaque);
+
 		SPropertyGrid(void);
 		~SPropertyGrid(void);
 
@@ -88,6 +91,8 @@ namespace SOUI
 		BOOL SetItemAttribute(IPropertyItem * pItem,const SStringW & attr,const SStringW & value);
 
 		COLORREF GetGroupColor() const;
+
+		void EnumProp(FunEnumProp funEnum,void* opaque);
 
 		SOUI_ATTRS_BEGIN()
 			ATTR_INT(L"indent",m_nIndent,TRUE)
@@ -159,6 +164,8 @@ namespace SOUI
 		enum {CHILD_CMDBTN=1,CHILD_INPLACEWND=2};
 		void UpdateChildrenPos(UINT childs=CHILD_CMDBTN|CHILD_INPLACEWND);
 		BOOL IsInplaceItemStyle(const SStringW& strName);
+		CRect GetInplaceWndPos(IPropertyItem *pItem) const;
+		CRect GetCmdButtonPos(IPropertyItem *pItem) const;
 	protected:
 		int m_nIndent;          //缩进大小
 		int m_nTitleWidth;    //属性名占用空间
