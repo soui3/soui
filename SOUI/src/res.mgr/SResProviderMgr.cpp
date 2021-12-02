@@ -139,7 +139,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(IsFileType(strType))
         {
-            return SResLoadFromFile::GetRawBuffer(pszResName,pBuf,size);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::GetRawBuffer(strPath,pBuf,size);
         }else
         {
 #ifdef _DEBUG
@@ -156,7 +157,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(IsFileType(strType))
         {
-            return SResLoadFromFile::GetRawBufferSize(pszResName);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::GetRawBufferSize(strPath);
         }else
         {
 #ifdef _DEBUG
@@ -174,7 +176,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(IsFileType(strType))
         {
-            return SResLoadFromFile::LoadImgX(pszResName);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadImgX(strPath);
         }else
         {
 #ifdef _DEBUG
@@ -193,7 +196,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(IsFileType(pszType))
         {
-            return SResLoadFromFile::LoadImage(pszResName);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadImage(strPath);
         }else
         {
 #ifdef _DEBUG
@@ -217,7 +221,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(bFromFile)
         {
-            return SResLoadFromFile::LoadBitmap(pszResName);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadBitmap(strPath);
         }else
         {
 #ifdef _DEBUG
@@ -240,8 +245,9 @@ namespace SOUI
     {
         SAutoLock lock(m_cs);
         if(IS_INTRESOURCE(pszResName))
-            return ::LoadCursor(NULL, pszResName);
-        else 
+		{
+			return ::LoadCursor(NULL, pszResName);
+		}else 
         {
             LPCTSTR pszCursorID=SysCursorName2ID(pszResName);
             if(pszCursorID)
@@ -253,7 +259,8 @@ namespace SOUI
         HCURSOR hRet = NULL;
         if(bFromFile)
         {
-            hRet = SResLoadFromFile::LoadCursor(pszResName);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            hRet = SResLoadFromFile::LoadCursor(strPath);
         }else
         {
         
@@ -285,7 +292,8 @@ namespace SOUI
         SAutoLock lock(m_cs);
         if(bFromFile)
         {
-            return SResLoadFromFile::LoadIcon(pszResName,cx,cy);
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadIcon(strPath,cx,cy);
         }else
         {
 #ifdef _DEBUG
@@ -397,4 +405,13 @@ namespace SOUI
 
 		return SUiDef::getSingleton().GetUiDef()->GetNamedDimension().Get(idx);
 	}
+
+	void SResProviderMgr::SetFilePrefix(LPCTSTR pszFilePrefix)
+	{
+		SAutoLock lock(m_cs);
+		m_strFilePrefix = pszFilePrefix;
+		if(!m_strFilePrefix.EndsWith(_T("\\")))
+			m_strFilePrefix.Append(_T("\\"));
+	}
+
 }
