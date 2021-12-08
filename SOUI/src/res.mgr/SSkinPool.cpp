@@ -135,9 +135,11 @@ void SSkinPool::OnKeyRemoved(const SSkinPtr & obj )
 SSkinPoolMgr::SSkinPoolMgr()
 {
     m_bulitinSkinPool.Attach(new SSkinPool);
-    PushSkinPool(m_bulitinSkinPool);
+    m_lstSkinPools.AddTail(m_bulitinSkinPool);
+	m_bulitinSkinPool->AddRef();
 	m_userSkinPool.Attach(new SSkinPool);
-	PushSkinPool(m_userSkinPool);
+	m_lstSkinPools.AddTail(m_userSkinPool);
+	m_userSkinPool->AddRef();
 }
 
 SSkinPoolMgr::~SSkinPoolMgr()
@@ -227,7 +229,9 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     SSkinPool * pRet=NULL;
     if(pSkinPool)
     {
-        if(pSkinPool == m_bulitinSkinPool) return NULL;
+        if(pSkinPool == m_bulitinSkinPool
+			|| pSkinPool == m_userSkinPool) 
+			return NULL;
 
         SPOSITION pos=m_lstSkinPools.Find(pSkinPool);
         if(pos)
