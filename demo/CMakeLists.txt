@@ -6,6 +6,7 @@ include_directories(${PROJECT_SOURCE_DIR}/utilities/include)
 include_directories(${PROJECT_SOURCE_DIR}/SOUI/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/wke/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/mhook/mhook-lib)
+include_directories(${PROJECT_SOURCE_DIR}/third-part/third-part/nanosvg/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB_RECURSE CURRENT_HEADERS *.h *.hpp)

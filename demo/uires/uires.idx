@@ -198,4 +198,7 @@
     <file name="alphaAni" path="valueAni\alpha.xml"/>
     <file name="colorAni" path="valueAni\color.xml"/>
   </valueAni>
+  <svg>
+    <file name="tiger" path="svg\tiger.svg"/>
+  </svg>
 </resource>

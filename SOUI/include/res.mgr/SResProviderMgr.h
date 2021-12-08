@@ -33,15 +33,16 @@ namespace SOUI
 
         HBITMAP LoadBitmap(LPCTSTR pszResName,BOOL bFromFile = FALSE);
         
-        IBitmap * LoadImage(LPCTSTR pszType,LPCTSTR pszResName);
-
-        IImgX * LoadImgX(LPCTSTR pszType,LPCTSTR pszResName);
-
         size_t GetRawBufferSize(LPCTSTR pszType,LPCTSTR pszResName);
 
         BOOL GetRawBuffer(LPCTSTR pszType,LPCTSTR pszResName,LPVOID pBuf,size_t size);
         
 		void SetFilePrefix(LPCTSTR pszFilePrefix);
+
+	public:
+		virtual IBitmap * LoadImage(LPCTSTR pszType,LPCTSTR pszResName);
+
+		virtual IImgX * LoadImgX(LPCTSTR pszType,LPCTSTR pszResName);
     public:
         //从字符串返回颜色值，字符串可以是：@color/red (red是在资源包中的颜色表定义的颜色名)，也可以是rgba(r,g,b,a)，也可以是rgb(r,g,b)，还可以是#ff0000(ff)这样的格式
         COLORREF GetColor(const SStringW & strColor);

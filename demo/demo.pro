@@ -13,6 +13,7 @@ INCLUDEPATH += . \
 			   ../soui/include \
 			   ../third-part/wke/include \
 			   ../third-part/mhook/mhook-lib \
+			   ../third-part/nanosvg/src \
 			   ../components
 			   
 dir = ..
