@@ -117,8 +117,8 @@ SOURCES += demo.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-color.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-size.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-group.cpp \
-          ../controls.extend/propgrid/colorpicker/ColourPopup.cpp
-          ../controls.extend/propgrid/colorpicker/SColorPicker.cpp
+          ../controls.extend/propgrid/colorpicker/ColourPopup.cpp \
+          ../controls.extend/propgrid/colorpicker/SColorPicker.cpp \
           ../controls.extend/sfadeframe.cpp \
           ../controls.extend/sradiobox2.cpp \
           ../controls.extend/SChromeTabCtrl.cpp \
