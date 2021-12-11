@@ -337,9 +337,11 @@ namespace SOUI
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventSetFocus, EVT_SETFOCUS, on_set_focus, SOUI_EXP)
+		SWND wndOld;
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventKillFocus, EVT_KILLFOCUS, on_kill_focus, SOUI_EXP)
+		SWND wndFocus;
 	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventScrollViewOriginChanged, EVT_SCROLLVIEW_ORIGINCHANGED, on_scrollview_origin_changed, SOUI_EXP)

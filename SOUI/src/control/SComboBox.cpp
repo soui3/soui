@@ -16,8 +16,9 @@ namespace SOUI
 	{
 		if(m_pListBox)
 		{
+			m_pListBox->SetOwner(NULL);
 			m_pListBox->SSendMessage(WM_DESTROY);
-			delete m_pListBox;
+			m_pListBox->Release();
 		}
 	}
 

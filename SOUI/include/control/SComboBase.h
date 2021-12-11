@@ -33,7 +33,7 @@ namespace SOUI
         *
         * Describe  析构函数
         */
-        virtual ~SComboEdit(){}
+        virtual ~SComboEdit();
     protected:
         /**
         * SComboEdit::OnMouseHover
@@ -71,11 +71,16 @@ namespace SOUI
         */   
         virtual BOOL FireEvent(EventArgs & evt);
 
+		virtual void OnFinalRelease();
+
+		void OnKillFocus(SWND wndFocus);
+
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_MOUSEHOVER(OnMouseHover)
             MSG_WM_MOUSELEAVE(OnMouseLeave)
             MSG_WM_KEYDOWN(OnKeyDown)
-            SOUI_MSG_MAP_END()
+			MSG_WM_KILLFOCUS_EX(OnKillFocus)
+        SOUI_MSG_MAP_END()
     };
 
     class SOUI_EXP SDropDownWnd_ComboBox : public SDropDownWnd
@@ -175,6 +180,8 @@ namespace SOUI
 
 
 		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
+
+		virtual void SetFocus();
 
         /**
         * SComboBoxBase::DropDown
@@ -376,14 +383,13 @@ namespace SOUI
         UINT OnGetDlgCode();
 
         /**
-        * SComboBoxBase::IsTabStop
+        * SComboBoxBase::IsFocusable
         * @brief    是否禁止TAB键
         * 
         * Describe  是否禁止TAB键
         */  
         BOOL IsFocusable();
 
-        void OnSetFocus(SWND wndOld);
 		void UpdateChildrenPosition();
 
         void OnKillFocus(SWND wndFocus);
@@ -412,7 +418,6 @@ namespace SOUI
             MSG_WM_KEYDOWN(OnKeyDown) 
             MSG_WM_CHAR(OnChar)
             MSG_WM_DESTROY(OnDestroy)
-            MSG_WM_SETFOCUS_EX(OnSetFocus)
             MSG_WM_KILLFOCUS_EX(OnKillFocus)
         SOUI_MSG_MAP_END()
 

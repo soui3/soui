@@ -717,8 +717,8 @@ namespace SOUI
 
     public://操控SWindow的方法
 
-        void SetFocus();
-        void KillFocus();
+        virtual void SetFocus();
+        virtual void KillFocus();
         BOOL IsFocused();
         
         void Invalidate();

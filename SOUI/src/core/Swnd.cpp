@@ -235,6 +235,9 @@ namespace SOUI
 		LRESULT lResult = 0;
 
 		ASSERT_UI_THREAD();
+		SWindow *pOwner = GetOwner();
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->AddRef();
 		AddRef();
 		SWNDMSG msgCur= {Msg,wParam,lParam};
 		SWNDMSG *pOldMsg=m_pCurMsg;
@@ -252,7 +255,8 @@ namespace SOUI
 
 		m_pCurMsg=pOldMsg;
 		Release();
-
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->Release();
 		return lResult;
 	}
 
@@ -597,7 +601,6 @@ namespace SOUI
 		return m_bMsgTransparent;
 	}
 
-	// add by dummyz@126.com
 	const SwndStyle& SWindow::GetStyle() const
 	{
 		return m_style;
@@ -1401,26 +1404,43 @@ namespace SOUI
 		ASSERT_UI_THREAD();
 		if(m_evtSet.isMuted()) return FALSE;
 
-		//调用事件订阅的处理方法
-		m_evtSet.FireEvent(evt);
-		if(!evt.bubbleUp) return evt.handled>0;
-
-		//调用脚本事件处理方法
-		if(GetScriptModule())
-		{
-			SStringW strEvtName = evt.GetName();
-			if(!strEvtName.IsEmpty())
+		AddRef();
+		BOOL bRet = FALSE;
+		do{
+			//调用事件订阅的处理方法
+			m_evtSet.FireEvent(evt);
+			if(!evt.bubbleUp)
 			{
-				SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
-				if(!strScriptHandler.IsEmpty())
+				bRet = evt.handled>0;
+				break;
+			}
+
+			//调用脚本事件处理方法
+			if(GetScriptModule())
+			{
+				SStringW strEvtName = evt.GetName();
+				if(!strEvtName.IsEmpty())
 				{
-					GetScriptModule()->executeScriptedEventHandler(strScriptHandler,&evt);
-					if(!evt.bubbleUp) return evt.handled>0;
+					SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
+					if(!strScriptHandler.IsEmpty())
+					{
+						GetScriptModule()->executeScriptedEventHandler(strScriptHandler,&evt);
+						if(!evt.bubbleUp) {
+							bRet = evt.handled>0;
+							break;
+						}
+					}
 				}
 			}
-		}
-		if(GetOwner()) return GetOwner()->FireEvent(evt);
-		return GetContainer()->OnFireEvent(evt);
+			if(GetOwner()) 
+			{
+				bRet = GetOwner()->FireEvent(evt);
+				break;
+			}
+			bRet = GetContainer()->OnFireEvent(evt);
+		}while(false);
+		Release();
+		return bRet;
 	}
 
 	BOOL SWindow::OnRelayout(const CRect &rcWnd)
@@ -1999,17 +2019,19 @@ namespace SOUI
 
 	void SWindow::OnSetFocus(SWND wndOld)
 	{
-		EventSetFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
 		accNotifyEvent(EVENT_OBJECT_FOCUS);
+		EventSetFocus evt(this);
+		evt.wndOld = wndOld;
+		FireEvent(evt);
 	}
 
 	void SWindow::OnKillFocus(SWND wndFocus)
 	{
-		EventKillFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
+		EventKillFocus evt(this);
+		evt.wndFocus = wndFocus;
+		FireEvent(evt);
 	}
 
 	LRESULT SWindow::OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam)

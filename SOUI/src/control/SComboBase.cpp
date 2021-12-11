@@ -14,6 +14,10 @@ namespace SOUI
         SetOwner(pOwner);
     }
 
+	SComboEdit::~SComboEdit()
+	{
+	}
+
     void SComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
     {
         __super::OnMouseHover(wParam,ptPos);
@@ -47,6 +51,17 @@ namespace SOUI
         }
         return SEdit::FireEvent(evt);
     }
+
+	void SComboEdit::OnKillFocus(SWND wndFocus)
+	{
+		__super::OnKillFocus(wndFocus);
+		GetOwner()->SSendMessage(WM_KILLFOCUS,wndFocus);
+	}
+
+	void SComboEdit::OnFinalRelease()
+	{
+		delete this;
+	}
 
     //////////////////////////////////////////////////////////////////////////
     // SDropDownWnd_ComboBox
@@ -459,16 +474,6 @@ namespace SOUI
         }
     }
 
-
-    void SComboBase::OnSetFocus(SWND wndOld)
-    {
-        if(!m_bDropdown) 
-            m_pEdit->SetFocus();
-        else
-            __super::OnSetFocus(wndOld);
-    }
-
-
     void SComboBase::OnDestroy()
     {
         CloseUp();
@@ -652,6 +657,14 @@ namespace SOUI
 	SStringT SComboBase::GetCueText(BOOL bRawText) const
 	{
 		return m_strCue.GetText(bRawText);
+	}
+
+	void SComboBase::SetFocus()
+	{
+		if(!m_bDropdown) 
+			m_pEdit->SetFocus();
+		else
+			__super::SetFocus();
 	}
 
 }
