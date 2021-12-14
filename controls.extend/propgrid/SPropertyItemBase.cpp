@@ -81,6 +81,19 @@ namespace SOUI
         return NULL;
     }
 
+
+	IPropertyItem * SPropertyItemBase::GetChildById(int nID) const
+	{
+		SPOSITION pos = m_childs.GetHeadPosition();
+		while(pos)
+		{
+			IPropertyItem *pItem = m_childs.GetNext(pos);
+			if(pItem->GetID() == nID)
+				return pItem;
+		}
+		return NULL;
+	}
+
     SPropertyGrid * SPropertyItemBase::GetOwner() const
     {
         return m_pOwner;
@@ -157,7 +170,7 @@ namespace SOUI
 
     HRESULT SPropertyItemBase::OnAttrExpanded( const SStringW & strValue,BOOL bLoading )
     {
-        BOOL bExpanded = strValue!=L"0";
+        BOOL bExpanded = STRINGASBOOL(strValue);
         if(!bLoading) Expand(bExpanded);
         else m_bExpanded = bExpanded;
         return S_FALSE;
@@ -165,8 +178,10 @@ namespace SOUI
 
     void SPropertyItemBase::OnValueChanged()
     {
-		GetOwner()->OnItemValueChanged(this);
-        if(GetParent()) GetParent()->OnChildValueChanged(this);
+		if(GetParent()) 
+			GetParent()->OnChildValueChanged(this);		
+		else
+			GetOwner()->OnItemValueChanged(this);
     }
 
 	IPropertyItem * SPropertyItemBase::FindChildByName(LPCWSTR pszName) const
@@ -205,6 +220,7 @@ namespace SOUI
 		m_bReadOnly = bReadOnly;
 		GetOwner()->OnItemInvalidate(this);
 	}
+
 
 }
 

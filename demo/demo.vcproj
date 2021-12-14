@@ -246,6 +246,8 @@
 			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-option.cpp" />
 			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-rect.cpp" />
+			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-size.cpp" />
 			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-text.cpp" />
@@ -269,6 +271,8 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\ColourPopup.h" />
+			<File
 				RelativePath="..\controls.extend\FileHelper.h" />
 			<File
 				RelativePath="FormatMsgDlg.h" />
@@ -280,6 +284,8 @@
 				RelativePath="SCheckBox2.h" />
 			<File
 				RelativePath="..\controls.extend\SChromeTabCtrl.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\SColorPicker.h" />
 			<File
 				RelativePath="skin\SDemoSkin.h" />
 			<File
@@ -296,8 +302,6 @@
 				RelativePath="..\controls.extend\SMcListViewEx\SMcListViewEx.h" />
 			<File
 				RelativePath="SPathView.h" />
-			<File
-				RelativePath="..\controls.extend\propgrid\SPropertyGrid.h" />
 			<File
 				RelativePath="qrcode\SQrCtrl.h" />
 			<File
@@ -372,6 +376,22 @@
 				RelativePath="smatrixwindow.h" />
 			<File
 				RelativePath="..\controls.extend\sprogressring.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\spropertygrid.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-color.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-group.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-option.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-rect.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-size.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-text.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\spropertyitembase.h" />
 			<File
 				RelativePath="..\controls.extend\sradiobox2.h" />
 			<File

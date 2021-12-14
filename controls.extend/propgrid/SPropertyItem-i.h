@@ -31,10 +31,11 @@ namespace SOUI
         virtual int  GetLevel() const =0;
         virtual BOOL IsExpand() const =0;
         virtual void Expand(BOOL bExpend) =0;
-
+		virtual SStringW GetExtendType() const =0;
         virtual IPropertyItem * GetParent() const =0;
         virtual void SetParent(IPropertyItem * pParent) =0;
         virtual IPropertyItem * GetItem(PROPITEMTYPE  type) const =0;
+		virtual IPropertyItem * GetChildById(int nID) const = 0;
         virtual SPropertyGrid * GetOwner() const =0;
         virtual BOOL InsertChild(IPropertyItem * pChild,IPropertyItem * pInsertAfter=IC_LAST)=0;
         virtual BOOL RemoveChild(IPropertyItem * pChild)=0;
@@ -51,7 +52,7 @@ namespace SOUI
 
         virtual void DrawItem(IRenderTarget *pRT,CRect rc) =0;
         virtual void AdjustInplaceActiveWndRect(CRect & rc)=0;
-        virtual BOOL IsInplaceActive()=0;
+        virtual BOOL IsInplaceActive() const =0;
         virtual void OnInplaceActive(BOOL bActive)=0;
         virtual BOOL OnButtonClick()=0;
         virtual void OnValueChanged()=0;
