@@ -94,6 +94,8 @@ namespace SOUI
 		,m_crCue(RGBA(0xcc,0xcc,0xcc,0xff))
 		,m_strCue(this)
 		,m_LastPressTime(0)
+		,m_bAutoMatch(FALSE)
+		,m_nTextLength(0)
     {
         m_bFocusable=TRUE;
 		m_style.SetAlign(SwndStyle::Align_Left);
@@ -494,10 +496,27 @@ namespace SOUI
             EventRENotify *evtRe = (EventRENotify*)&evt;
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
-                m_pEdit->GetEventSet()->setMutedState(true);
-				SStringT strTxt = m_pEdit->GetWindowText();
-                SetCurSel(FindString(strTxt,-1,FALSE));
-                m_pEdit->GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(true);
+				if(m_bAutoMatch)
+				{
+					SStringT strTxt = m_pEdit->GetWindowText();
+					if(strTxt.GetLength()>m_nTextLength)
+					{
+						int iItem = FindString(strTxt,-1,TRUE);
+						if(iItem!=-1)
+						{
+							SStringT strItem = GetLBText(iItem);
+							m_pEdit->SetWindowText(strItem);
+							m_pEdit->SetSel(strTxt.GetLength(),strItem.GetLength(),TRUE);
+						}
+					}
+					m_nTextLength = strTxt.GetLength();
+				}
+
+				GetEventSet()->setMutedState(true);
+				SetCurSel(-1);
+				GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(false);
             }
         }
         return SWindow::FireEvent(evt);
@@ -590,8 +609,8 @@ namespace SOUI
     void SComboBase::SetWindowText(LPCTSTR pszText)
     {
         SWindow::SetWindowText(pszText);
-        SetCurSel(FindString(pszText));
 		m_pEdit->SetWindowText(pszText);
+		m_nTextLength = _tcslen(pszText);
 	}
 
     void SComboBase::OnKillFocus(SWND wndFocus)

@@ -407,6 +407,7 @@ namespace SOUI
 			ATTR_INT(L"autoFitDropBtn", m_bAutoFitDropBtn, TRUE)
 			ATTR_COLOR(L"cueColor",m_crCue,TRUE)
 			ATTR_I18NSTRT(L"cueText",m_strCue,TRUE)
+			ATTR_BOOL(L"autoMatch",m_bAutoMatch,FALSE)
         SOUI_ATTRS_END()
 
         SOUI_MSG_MAP_BEGIN()
@@ -455,6 +456,8 @@ namespace SOUI
 
 		SStringT	m_strMatch;	 /*快速输入用来定位下拉列表中的项*/
 		DWORD	m_LastPressTime; /*最后按键的时间,*/
+		BOOL		m_bAutoMatch;
+		int			m_nTextLength;
     };
 
 }

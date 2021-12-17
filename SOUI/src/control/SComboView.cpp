@@ -77,7 +77,7 @@ namespace SOUI
         {
             SStringT strText=GetLBText(m_pListBox->GetSel(),FALSE);
             m_pEdit->GetEventSet()->setMutedState(true);
-            m_pEdit->SetWindowText(strText);
+            SComboBase::SetWindowText(strText);
             m_pEdit->GetEventSet()->setMutedState(false);
         }
         Invalidate();

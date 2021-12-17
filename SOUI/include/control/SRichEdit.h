@@ -675,7 +675,7 @@ namespace SOUI
 		*
 		* Describe   设置选中, 支持超长文本
 		*/
-    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
+    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项
