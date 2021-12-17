@@ -176,7 +176,7 @@ namespace SOUI
         * @return   int -- 目标索引，失败返回-1。
         * Describe  
         */    
-        virtual int FindString(LPCTSTR pszFind,int nAfter=-1);
+        virtual int FindString(LPCTSTR pszFind,int nAfter=-1, BOOL bPartMatch=TRUE);
 
 
 		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);

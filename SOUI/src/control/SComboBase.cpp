@@ -495,14 +495,15 @@ namespace SOUI
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
                 m_pEdit->GetEventSet()->setMutedState(true);
-                SetCurSel(FindString(m_pEdit->GetWindowText()));
+				SStringT strTxt = m_pEdit->GetWindowText();
+                SetCurSel(FindString(strTxt,-1,FALSE));
                 m_pEdit->GetEventSet()->setMutedState(false);
             }
         }
         return SWindow::FireEvent(evt);
     }
 
-    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ )
+    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ , BOOL bPartMatch/*=TRUE*/)
     {
 		if(iFindAfter<0) iFindAfter=-1;
 		int iStart = iFindAfter+1;
@@ -510,8 +511,15 @@ namespace SOUI
 		{
 			int iTarget = (i+iStart)%GetCount();
 			SStringT strItem = GetLBText(iTarget,TRUE);
-			if(strItem.StartsWith(pszFind))
-				return iTarget;
+			if(bPartMatch)
+			{
+				if(strItem.StartsWith(pszFind))
+					return iTarget;
+			}else
+			{
+				if(strItem.Compare(pszFind)==0)
+					return iTarget;
+			}
 		}
 		return -1;
     }
