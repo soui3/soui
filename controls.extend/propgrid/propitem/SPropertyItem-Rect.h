@@ -4,14 +4,16 @@
 
 namespace SOUI
 {
-    class SPropertyItemSize : public SPropertyItemText
+    class SPropertyItemRect : public SPropertyItemText
     {
 		friend class SPropertyGrid;
-        SOUI_CLASS_NAME(SPropertyItemSize,L"propsize")
+        SOUI_CLASS_NAME(SPropertyItemRect,L"proprect")
 
 			enum{
-				CHILD_WIDTH=1,
-				CHILD_HEIGHT=2
+				CHILD_LEFT=1,
+				CHILD_TOP,
+				CHILD_RIGHT,
+				CHILD_BOTTOM,
 		};
     public:
 		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
@@ -23,7 +25,7 @@ namespace SOUI
         virtual void OnValueChanged();
         virtual void OnChildValueChanged(IPropertyItem *pChild);
         
-		SIZE GetValue2() const{return m_szValue;}
+		RECT GetValue2() const{return m_rcValue;}
 		virtual BOOL HasValue() const ;
 		virtual void ClearValue() ;
 
@@ -37,11 +39,11 @@ namespace SOUI
         HRESULT OnAttrValue(const SStringW & strValue,BOOL bLoading);
         HRESULT OnAttrChildrenTitles(const SStringW & strValue,BOOL bLoading);
         
-        SIZE    m_szValue;
-        SStringT m_strValue[2];
-		BOOL	m_bDigit;
+		BOOL	 m_bDigit;
+        CRect    m_rcValue;
+        SStringT m_strValue[4];
         BOOL    m_bChildChanged;
     protected:
-        SPropertyItemSize(SPropertyGrid *pOwner);
+        SPropertyItemRect(SPropertyGrid *pOwner);
     };
 }

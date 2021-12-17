@@ -17,18 +17,18 @@ namespace SOUI
 
         virtual SStringT GetValue() const;
 
-		void SetValue2(int nValue);
-		int GetValue2() const {return m_nValue;}
-
 		virtual BOOL HasValue() const ;
 		virtual void ClearValue() ;
 
-        SStringT Value2Option(const SStringT& value) const;
+        SStringT Option2Value(const SStringT& value) const;
+
+		SStringT Value2Option(const SStringT& value) const;
 
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"options",OnAttrOptions)
 			ATTR_CUSTOM(L"value",OnAttrValue)
             ATTR_INT(L"dropHeight",m_nDropHeight,FALSE)
+			ATTR_BOOL(L"dropDown",m_bDropDown,FALSE)
         SOUI_ATTRS_END()
 
     protected:
@@ -40,10 +40,11 @@ namespace SOUI
 
 
         int      m_nDropHeight;
-        int      m_nValue;
+		bool	 m_bDropDown;
+        SStringT m_strValue;
 
         SArray<SStringT>    m_options;//value options   
-		SMap<SStringT, SStringT> m_text2option;//text to option map.
+		SMap<SStringT, SStringT> m_option2value;//text to option map.
 
         SComboBox  * m_pCombobox;
         

@@ -54,7 +54,16 @@ HEADERS += MainDlg.h \
           ../controls.extend/SSkinNewScrollbar.h \
           ../controls.extend/FileHelper.h \
           ../controls.extend/sipaddressctrl.h \
-          ../controls.extend/propgrid/SPropertyGrid.h \
+          ../controls.extend/propgrid/spropertygrid.h \
+          ../controls.extend/propgrid/spropertyitembase.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-text.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-option.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-color.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-size.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-rect.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-group.h \
+          ../controls.extend/propgrid/colorpicker/ColourPopup.h \
+          ../controls.extend/propgrid/colorpicker/SColorPicker.h \
           ../controls.extend/sfadeframe.h \
           ../controls.extend/sradiobox2.h \
           ../controls.extend/SChromeTabCtrl.h \
@@ -80,7 +89,7 @@ HEADERS += MainDlg.h \
           httpsvr/httpserver.h \
           magnet/magnetframe.h \
           smatrixwindow.h \
-		  sroundimage.h \
+          sroundimage.h \
           memflash.h \          
           threadObject.h \
           SmileyCreateHook.h \
@@ -117,6 +126,7 @@ SOURCES += demo.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-option.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-color.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-size.cpp \
+          ../controls.extend/propgrid/propitem/spropertyitem-rect.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-group.cpp \
           ../controls.extend/propgrid/colorpicker/ColourPopup.cpp \
           ../controls.extend/propgrid/colorpicker/SColorPicker.cpp \

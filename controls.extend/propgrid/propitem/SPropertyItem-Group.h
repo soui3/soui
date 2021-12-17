@@ -14,6 +14,7 @@ public:
 	virtual void DrawItem(IRenderTarget *pRT,CRect rc);
 	virtual BOOL HasValue() const ;
 	virtual void ClearValue() ;
+	virtual void OnChildValueChanged( IPropertyItem *pChild );
 protected:
 	SPropertyGroup(SPropertyGrid *pOwner);
 };

@@ -23,4 +23,9 @@ namespace SOUI
 		return ChildrenCount()!=0;
 	}
 
+	void SPropertyGroup::OnChildValueChanged(IPropertyItem *pChild)
+	{
+		GetOwner()->OnItemValueChanged(pChild);
+	}
+
 }
