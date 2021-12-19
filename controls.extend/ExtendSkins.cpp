@@ -3,122 +3,125 @@
 #include "core/Sskin.h"
 #include "ExtendSkins.h"
 
-namespace SOUI{
+
 //////////////////////////////////////////////////////////////////////////
-// SColorMask
-SColorMask::SColorMask()
-{ 
-    m_crStates[0]=(RGB(0xEE, 0xEE, 0xEE));
-    m_crStates[1]=(RGB(0xD6, 0xD6, 0xD6));
-    m_crStates[2]=(RGB(0xEE, 0xEE, 0xEE));
-    m_crStates[3]=(RGB(0xE0, 0xE0, 0xE0));
-}
-
-void SColorMask::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int dwState, BYTE byAlpha) const
+namespace SOUI
 {
-    CRect rcDraw = *prcDraw;
+	// SColorMask
+	SColorMask::SColorMask()
+	{
+		m_crStates[0] = (RGB(0xEE, 0xEE, 0xEE));
+		m_crStates[1] = (RGB(0xD6, 0xD6, 0xD6));
+		m_crStates[2] = (RGB(0xEE, 0xEE, 0xEE));
+		m_crStates[3] = (RGB(0xE0, 0xE0, 0xE0));
+	}
 
-    //STRACE(_T("skin btn state:%d"), dwState);
-    if (dwState >= 0 && dwState < STATE_COUNT && m_bmpSkin)
-    {
-        SColor cr(m_crStates[dwState]);
-        cr.updateAlpha(byAlpha);
+	void SColorMask::_DrawByIndex(IRenderTarget *pRT, LPCRECT prcDraw, int dwState, BYTE byAlpha) const
+	{
+		CRect rcDraw = *prcDraw;
 
-        int nWidthPerState = m_size.cx / STATE_COUNT;
-        CRect rcSrc(CPoint(dwState * nWidthPerState, 0), CSize(nWidthPerState, m_size.cy));
-        pRT->DrawBitmapEx(rcDraw, m_bmpSkin, &rcSrc, EM_STRETCH, byAlpha);
-    }
-}
+		//STRACE(_T("skin btn state:%d"), dwState);
+		if (dwState >= 0 && dwState < STATE_COUNT && m_bmpSkin)
+		{
+			SColor cr(m_crStates[dwState]);
+			cr.updateAlpha(byAlpha);
 
-void SColorMask::SetColors(COLORREF cr[4])
-{
-    memcpy(m_crStates, cr, 4*sizeof(COLORREF));
-}
+			int nWidthPerState = m_size.cx / STATE_COUNT;
+			CRect rcSrc(CPoint(dwState * nWidthPerState, 0), CSize(nWidthPerState, m_size.cy));
+			pRT->DrawBitmapEx(rcDraw, m_bmpSkin, &rcSrc, EM_STRETCH, byAlpha);
+		}
+	}
 
-HRESULT SColorMask::OnAttrMask(const SStringW & strValue, BOOL bLoading)
-{
-    SStringW strChannel = strValue.Right(2);
-    m_iMaskChannel = -1;
-    if(strChannel == L".a")
-        m_iMaskChannel = 3;
-    else if(strChannel == L".r")
-        m_iMaskChannel =0;
-    else if(strChannel == L".g")
-        m_iMaskChannel = 1;
-    else if(strChannel == L".b")
-        m_iMaskChannel = 2;
+	void SColorMask::SetColors(COLORREF cr[4])
+	{
+		memcpy(m_crStates, cr, 4 * sizeof(COLORREF));
+	}
 
-    IBitmap *pImg = NULL;
-    if(m_iMaskChannel==-1)
-    {//use alpha channel as default
-        m_iMaskChannel = 0;
-        pImg = LOADIMAGE2(strValue);
-    }else
-    {
-        pImg = LOADIMAGE2(strValue.Left(strValue.GetLength()-2));
-    }
-    if(!pImg)
-    {
-        return E_FAIL;
-    }
-    m_bmpMask = pImg;
-    pImg->Release();
+	HRESULT SColorMask::OnAttrMask(const SStringW & strValue, BOOL bLoading)
+	{
+		SStringW strChannel = strValue.Right(2);
+		m_iMaskChannel = -1;
+		if (strChannel == L".a")
+			m_iMaskChannel = 3;
+		else if (strChannel == L".r")
+			m_iMaskChannel = 0;
+		else if (strChannel == L".g")
+			m_iMaskChannel = 1;
+		else if (strChannel == L".b")
+			m_iMaskChannel = 2;
 
-    MakeCacheApha();
+		IBitmap *pImg = NULL;
+		if (m_iMaskChannel == -1)
+		{//use alpha channel as default
+			m_iMaskChannel = 0;
+			pImg = LOADIMAGE2(strValue);
+		}
+		else
+		{
+			pImg = LOADIMAGE2(strValue.Left(strValue.GetLength() - 2));
+		}
+		if (!pImg)
+		{
+			return E_FAIL;
+		}
+		m_bmpMask = pImg;
+		pImg->Release();
 
-    return S_OK;
-}
+		MakeCacheApha();
 
-void SColorMask::MakeCacheApha()
-{
-    int nWidthPerSize  = m_size.cx / STATE_COUNT;
+		return S_OK;
+	}
 
-    m_bmpSkin = NULL;
-    GETRENDERFACTORY->CreateBitmap(&m_bmpSkin);
-    m_bmpSkin->Init(m_size.cx, m_size.cy);
+	void SColorMask::MakeCacheApha()
+	{
+		int nWidthPerSize = m_size.cx / STATE_COUNT;
 
-    // 创建画布并把skin选进画布
-    CAutoRefPtr<IRenderTarget> pRTDst;
-    GETRENDERFACTORY->CreateRenderTarget(&pRTDst,0,0);
-    CAutoRefPtr<IRenderObj> pOldBmp;
-    pRTDst->SelectObject(m_bmpSkin,&pOldBmp);
-    for (int i = 0; i < STATE_COUNT; ++i)
-    {
-        CRect rc(CPoint(i * nWidthPerSize, 0), m_size);
-        SColor cr(m_crStates[i]);
-        pRTDst->FillSolidRect(&rc, cr.toCOLORREF());
-    }
-    pRTDst->SelectObject(pOldBmp);
+		m_bmpSkin = NULL;
+		GETRENDERFACTORY->CreateBitmap(&m_bmpSkin);
+		m_bmpSkin->Init(m_size.cx, m_size.cy);
 
-    //从mask的指定channel中获得alpha通道，与cache按位运算
-    LPBYTE pBitCache = (LPBYTE)m_bmpSkin->LockPixelBits();
-    LPBYTE pBitMask = (LPBYTE)m_bmpMask->LockPixelBits();
+		// 创建画布并把skin选进画布
+		CAutoRefPtr<IRenderTarget> pRTDst;
+		GETRENDERFACTORY->CreateRenderTarget(&pRTDst, 0, 0);
+		CAutoRefPtr<IRenderObj> pOldBmp;
+		pRTDst->SelectObject(m_bmpSkin, &pOldBmp);
+		for (int i = 0; i < STATE_COUNT; ++i)
+		{
+			CRect rc(CPoint(i * nWidthPerSize, 0), m_size);
+			SColor cr(m_crStates[i]);
+			pRTDst->FillSolidRect(&rc, cr.toCOLORREF());
+		}
+		pRTDst->SelectObject(pOldBmp);
 
-    int cx = m_bmpMask->Width() < m_bmpSkin->Width() ? m_bmpMask->Width() : m_bmpSkin->Width();
-    int cy = m_bmpMask->Height() < m_bmpSkin->Height() ? m_bmpMask->Height() : m_bmpSkin->Height();
+		//从mask的指定channel中获得alpha通道，与cache按位运算
+		LPBYTE pBitCache = (LPBYTE)m_bmpSkin->LockPixelBits();
+		LPBYTE pBitMask = (LPBYTE)m_bmpMask->LockPixelBits();
 
-    for (int i = 0; i < STATE_COUNT; ++i)
-    {    
-        for (int y = 0; y < cy; ++y)
-        {
-            LPBYTE pDst = pBitCache + (y * m_bmpSkin->Width()  + i * nWidthPerSize) * 4;
-            LPBYTE pSrc = pBitMask + y * m_bmpMask->Width() * 4 + m_iMaskChannel;
+		int cx = m_bmpMask->Width() < m_bmpSkin->Width() ? m_bmpMask->Width() : m_bmpSkin->Width();
+		int cy = m_bmpMask->Height() < m_bmpSkin->Height() ? m_bmpMask->Height() : m_bmpSkin->Height();
 
-            for (int x = 0; x < cx; ++x)
-            {
-                BYTE byAlpha = *pSrc;
-                pSrc += 4;
+		for (int i = 0; i < STATE_COUNT; ++i)
+		{
+			for (int y = 0; y < cy; ++y)
+			{
+				LPBYTE pDst = pBitCache + (y * m_bmpSkin->Width() + i * nWidthPerSize) * 4;
+				LPBYTE pSrc = pBitMask + y * m_bmpMask->Width() * 4 + m_iMaskChannel;
 
-                *pDst++ = ((*pDst) * byAlpha)>>8;//做premutiply
-                *pDst++ = ((*pDst) * byAlpha)>>8;//做premutiply
-                *pDst++ = ((*pDst) * byAlpha)>>8;//做premutiply
-                *pDst++ = byAlpha;
-            }
-        }
-    }
+				for (int x = 0; x < cx; ++x)
+				{
+					BYTE byAlpha = *pSrc;
+					pSrc += 4;
 
-    m_bmpSkin->UnlockPixelBits(pBitCache);
-    m_bmpMask->UnlockPixelBits(pBitMask);
-}
+					*pDst++ = ((*pDst) * byAlpha) >> 8;//做premutiply
+					*pDst++ = ((*pDst) * byAlpha) >> 8;//做premutiply
+					*pDst++ = ((*pDst) * byAlpha) >> 8;//做premutiply
+					*pDst++ = byAlpha;
+				}
+			}
+		}
+
+		m_bmpSkin->UnlockPixelBits(pBitCache);
+		m_bmpMask->UnlockPixelBits(pBitMask);
+	}
 
 }

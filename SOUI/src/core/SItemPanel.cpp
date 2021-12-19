@@ -130,15 +130,19 @@ CRect SItemPanel::GetContainerRect() const
 
 IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 {
-	SASSERT(m_cachedRT);
-	m_cachedRT->PushClipRect(rc);
-	return m_cachedRT;
+	IRenderTarget *pRT =NULL;
+	GETRENDERFACTORY->CreateRenderTarget(&pRT,rc.Width(),rc.Height());
+	SASSERT(pRT);
+	pRT->OffsetViewportOrg(-rc.left,-rc.top);
+	pRT->PushClipRect(rc);
+	return pRT;
 }
 
 void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)
 {
-	m_cachedRT->PopClip();
 	OnRedraw(rc);
+	pRT->PopClip();
+	pRT->Release();
 }
 
 void SItemPanel::OnRedraw(const CRect &rc)
@@ -227,27 +231,36 @@ SWND SItemPanel::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 void SItemPanel::Draw(IRenderTarget *pRT,const CRect & rc)
 {
     UpdateLayout();
+	BuildWndTreeZorder();
 
-    m_style.m_crBg=m_crBk;
-    if((m_dwState & WndState_Hover) && m_crHover != CR_INVALID) m_style.m_crBg=m_crHover;
-    if((m_dwState & WndState_Check) && m_crSelBk != CR_INVALID) m_style.m_crBg=m_crSelBk;
+	float fMat[9];
+	pRT->GetTransform(fMat);
+	SMatrix mtx(fMat);
+	if(mtx.isIdentity())
+	{
+		SPainter painter;
+		BeforePaint(pRT,painter);
+		pRT->OffsetViewportOrg(rc.left,rc.top);
+		SAutoRefPtr<IRegion> rgn;
+		pRT->GetClipRegion(&rgn);
+		RedrawRegion(pRT,rgn);
+		pRT->OffsetViewportOrg(-rc.left,-rc.top);
+		AfterPaint(pRT,painter);
+	}else
+	{//draw to cache
+		IRenderTarget *pMemRT=NULL;
+		CRect rcMem=rc;
+		rcMem.MoveToXY(0,0);
+		GETRENDERFACTORY->CreateRenderTarget(&pMemRT,rc.Width(),rc.Height());
+		pMemRT->AlphaBlend(rcMem,pRT,rc,255);
+		SPainter painter;
+		BeforePaint(pMemRT,painter);
+		RedrawRegion(pMemRT,NULL);
+		AfterPaint(pMemRT,painter);
+		pRT->AlphaBlend(rc,pMemRT,rcMem,255);
+		pMemRT->Release();
+	}
 
-    SPainter painter;
-    BeforePaint(pRT,painter);
-
-    SAutoRefPtr<IRegion> rgn;
-    pRT->GetClipRegion(&rgn);
-    
-    pRT->OffsetViewportOrg(rc.left,rc.top);
-    if(rgn)
-    {
-        rgn->Offset(-rc.TopLeft());
-    }
-    BuildWndTreeZorder();
-    RedrawRegion(pRT,rgn);
-    pRT->OffsetViewportOrg(-rc.left,-rc.top);
-    
-    AfterPaint(pRT,painter);
 }
 
 void SItemPanel::SetSkin(ISkinObj *pSkin)
@@ -383,4 +396,25 @@ void SItemPanel::EnableIME(BOOL bEnable)
 	m_pFrmHost->GetContainer()->EnableIME(bEnable);
 }
 
+
+COLORREF SItemPanel::GetBkgndColor() const
+{
+	if((m_dwState & WndState_Check) && m_crSelBk != CR_INVALID)
+	{
+		return m_crSelBk;
+	}
+	if((m_dwState & WndState_Hover) && m_crHover != CR_INVALID) 
+	{
+		return m_crHover;
+	}
+	return m_crBk;
+}
+BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem)
+{
+	if(!mtx.isIdentity())//don't clip any item if matrix is not identify.
+		return TRUE;
+	CRect rc;
+	rc.IntersectRect(rcClip,rcItem);
+	return !rc.IsRectEmpty() && (!clipRgn|| clipRgn->RectInRegion(rcItem));
+}
 }//namespace SOUI

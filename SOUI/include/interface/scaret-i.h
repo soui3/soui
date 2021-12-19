@@ -11,7 +11,7 @@ namespace SOUI
 
 		virtual void SetPosition(int x, int y) = 0;
 
-		virtual BOOL SetVisible(BOOL bVisible) = 0;
+		virtual BOOL SetVisible(BOOL bVisible,SWND owner) = 0;
 
 		virtual BOOL IsVisible() const = 0;
 

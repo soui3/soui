@@ -52,10 +52,10 @@ protected:
 protected:
 	virtual void OnInitFinished(pugi::xml_node xmlNode);
 
-    ISkinObj			*m_pItemSkin;    //菜单项皮肤，包含2种状态：正常状态+选中状态
-    ISkinObj			*m_pIconSkin;    //菜单图标
-    ISkinObj			*m_pSepSkin;    //分割栏皮肤
-    ISkinObj			*m_pCheckSkin;    //选中状态,包含两种状态:勾选+圈选
+    SAutoRefPtr<ISkinObj>	m_pItemSkin;    //菜单项皮肤，包含2种状态：正常状态+选中状态
+    SAutoRefPtr<ISkinObj>	m_pIconSkin;    //菜单图标
+    SAutoRefPtr<ISkinObj>	m_pSepSkin;    //分割栏皮肤
+    SAutoRefPtr<ISkinObj>	m_pCheckSkin;    //选中状态,包含两种状态:勾选+圈选
 	SLayoutSize			m_nItemHei;    //菜单项高度
 	SLayoutSize			m_nIconMargin;//图标边缘空间
 	SLayoutSize			m_nTextMargin;//文本边缘空间
@@ -233,6 +233,8 @@ public:
 
     BOOL LoadMenu(pugi::xml_node xmlMenu);
 
+	void SetIconSkin(SAutoRefPtr<ISkinObj> icons);
+
 	/**
      * SMenu::InsertMenu
      * @brief    插入一个菜单项,参数和Windows API类似。
@@ -272,6 +274,7 @@ protected:
 	void SetMenuAttr(HMENU hMenu,SMenuAttr *pMenuAttr) const;
 
 	bool m_bAttached;
+	SAutoRefPtr<ISkinObj> m_icons;
 };
 
 }//namespace SOUI

@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/SComboBox.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -17,8 +16,9 @@ namespace SOUI
 	{
 		if(m_pListBox)
 		{
+			m_pListBox->SetOwner(NULL);
 			m_pListBox->SSendMessage(WM_DESTROY);
-			delete m_pListBox;
+			m_pListBox->Release();
 		}
 	}
 
@@ -69,7 +69,7 @@ namespace SOUI
 		{
 			int nItemHeight=m_pListBox->GetItemHeight();
 			CRect rcMargin = m_pListBox->GetStyle().GetMargin();
-			nDropHeight = (std::min)(nDropHeight,(int)(nItemHeight*GetCount()+rcMargin.top + rcMargin.bottom));
+			nDropHeight = smin(nDropHeight,(int)(nItemHeight*GetCount()+rcMargin.top + rcMargin.bottom));
 		}
 		return nDropHeight;    
 	}
@@ -100,7 +100,7 @@ namespace SOUI
 		{
 			SStringT strText=GetLBText(m_pListBox->GetCurSel());
 			m_pEdit->GetEventSet()->setMutedState(true);
-			m_pEdit->SetWindowText(strText);
+			SComboBase::SetWindowText(strText);
 			m_pEdit->GetEventSet()->setMutedState(false);
 		}
 		Invalidate();

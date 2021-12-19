@@ -539,10 +539,10 @@ namespace SOUI
         SRenderTarget_GDI *pRTSrc_GDI=(SRenderTarget_GDI*)pRTSour;
 
         ALPHAINFO ai;
-        if(dwRop!=SRCCOPY)
+//        if(dwRop!=SRCCOPY)
             CGdiAlpha::AlphaBackup(m_hdc,pRcDest,ai);
         ::BitBlt(m_hdc,pRcDest->left,pRcDest->top,pRcDest->right-pRcDest->left,pRcDest->bottom-pRcDest->top,pRTSrc_GDI->m_hdc,xSrc,ySrc,dwRop);
-        if(dwRop!=SRCCOPY)
+//        if(dwRop!=SRCCOPY)
             CGdiAlpha::AlphaRestore(ai);
         return S_OK;
     }
@@ -1029,7 +1029,7 @@ namespace SOUI
 		RECT rcBuf = *pRect;
 		::InflateRect(&rcBuf,m_curPen->GetWidth()/2,m_curPen->GetWidth()/2);
 		DCBuffer dcBuf(m_hdc,&rcBuf,GetAValue(m_curPen->GetColor()));
-
+        ::SelectObject(dcBuf, (HBRUSH)GetStockObject(NULL_BRUSH));
         ::Ellipse(dcBuf,pRect->left,pRect->top,pRect->right,pRect->bottom);
         return S_OK;
     }
@@ -1219,6 +1219,11 @@ namespace SOUI
 		int nOldMode = ::SetROP2(m_hdc,mode);
 		if(pOldMode) *pOldMode = nOldMode;
 		return S_OK;
+	}
+
+	BOOL SRenderTarget_GDI::SetAntiAlias(BOOL bAntiAlias)
+	{
+		return FALSE;
 	}
 
 

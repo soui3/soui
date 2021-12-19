@@ -7,6 +7,14 @@
 namespace SOUI
 {
 
+	class EventGifPlayOver : public TplEventArgs<EventGifPlayOver>
+	{
+		SOUI_CLASS_NAME(EventGifPlayOver, L"on_gifplay_over")
+	public:
+		enum { EventID = EVT_EXTERNAL_BEGIN + 600 };
+		EventGifPlayOver(SObject *pSender) :TplEventArgs<EventGifPlayOver>(pSender) {}
+	};
+	
     /**
     * @class     SGifPlayer
     * @brief     GIF图片显示控件
@@ -46,7 +54,11 @@ namespace SOUI
     public://属性处理
         SOUI_ATTRS_BEGIN()		
             ATTR_CUSTOM(L"skin", OnAttrSkin) //为控件提供一个skin属性，用来接收SSkinObj对象的name
-        SOUI_ATTRS_END()
+			ATTR_INT(L"scale", m_nScale, FALSE)
+			ATTR_BOOL(L"enableScale", m_bEnableScale, TRUE)
+			ATTR_BOOL(L"tile", m_bTile, TRUE)
+			ATTR_BOOL(L"loop", m_bLoop, TRUE)
+			SOUI_ATTRS_END()
     protected:
         HRESULT OnAttrSkin(const SStringW & strValue, BOOL bLoading);
         
@@ -83,9 +95,13 @@ namespace SOUI
         SOUI_MSG_MAP_END()	
 
     protected:
-        SSkinAni *m_aniSkin;
-        int	m_iCurFrame;
+        SAutoRefPtr<SSkinAni> m_aniSkin;
+        int		m_iCurFrame;
         int     m_nNextInterval;
-    };
+		int		m_nScale;
+		BOOL	m_bEnableScale;
+		BOOL	m_bTile;
+		BOOL	m_bLoop;
+   };
 
 }

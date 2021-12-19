@@ -120,7 +120,7 @@ protected:
 public:
     virtual HRESULT STDMETHODCALLTYPE QueryInterface( 
         /* [in] */ REFIID riid,
-        /* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+        /* [iid_is][out] */  void __RPC_FAR *__RPC_FAR *ppvObject)
     {
         return E_NOINTERFACE;
     }

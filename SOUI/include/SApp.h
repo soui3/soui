@@ -240,8 +240,6 @@ public:
 
     IMsgLoopFactory * GetMsgLoopFactory();
     
-    SMessageLoop * GetMsgLoop();
-
     void SetLogManager(ILog4zManager * pLogMgr);
     
     ILog4zManager * GetLogManager();
@@ -306,10 +304,13 @@ public:
 
 	void * GetInnerSingleton(int nType);
 
-protected:
-	friend class SMessageLoop;
-	void PushMsgLoop(SMessageLoop * pMsgLoop);
-	SMessageLoop * PopMsgLoop();
+public:
+	// Message loop map methods
+	bool AddMsgLoop(SMessageLoop* pMsgLoop);
+
+	bool RemoveMsgLoop();
+
+	SMessageLoop* GetMsgLoop(DWORD dwThreadID = ::GetCurrentThreadId()) const;
 protected:
 	virtual void RegisterSystemObjects(){}
 
@@ -332,9 +333,9 @@ protected:
     HINSTANCE   m_hInst;
     HWND        m_hMainWnd;
 
+	mutable SCriticalSection	m_cs;
+	SMap<DWORD,SMessageLoop * > m_msgLoopMap;
 	SMessageLoop *		 m_pMsgLoop;
-	SList<SMessageLoop*> m_lstMsgLoop;
-
 	//一组单例指针
 	void * m_pSingletons[SINGLETON_COUNT];
 };

@@ -39,6 +39,8 @@ IFontPtr SFontPool::GetFont(FONTSTYLE style, const SStringW & fontFaceName,pugi:
 
 	FontInfo info = {style.dwStyle,strFace,strXmlProp};
 
+	SAutoLock autoLock(m_cs);
+
 	if(HasKey(info))
 	{
 		hftRet=GetKeyObject(info);
@@ -179,6 +181,7 @@ const FontInfo & SFontPool::GetDefFontInfo() const
 
 void SFontPool::SetDefFontInfo(const FontInfo & fontInfo)
 {
+	SAutoLock autoLock(m_cs);
 	m_defFontInfo = fontInfo;
 	RemoveAll();
 	SHostMgr::getSingletonPtr()->DispatchMessage(true,UM_UPDATEFONT);

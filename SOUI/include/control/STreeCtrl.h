@@ -63,7 +63,6 @@ typedef struct tagTVITEM {
 
 } TVITEM, *LPTVITEM;
 
-
 class SOUI_EXP STreeCtrl
     : public SScrollView
     , protected CSTree<LPTVITEM>
@@ -71,10 +70,17 @@ class SOUI_EXP STreeCtrl
     SOUI_CLASS_NAME(STreeCtrl, L"treectrl")
 public:
 
+	struct IListener
+	{
+		virtual void OnDeleteItem(STreeCtrl *pTreeCtrl,HSTREEITEM hItem,LPARAM lParam) = 0;
+	};
+
     STreeCtrl();
 
     virtual ~STreeCtrl();
     
+	void SetListener(IListener *pListener);
+
     HSTREEITEM InsertItem(LPCTSTR lpszItem, HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=TRUE);
     HSTREEITEM InsertItem(LPCTSTR lpszItem, int nImage,
         int nSelectedImage, HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=TRUE);        
@@ -172,12 +178,8 @@ protected:
     void OnMouseMove(UINT nFlags,CPoint pt);
     void OnMouseLeave();
 
-    virtual void OnNodeFree(LPTVITEM & pItemData){
-        delete pItemData;
-    }
-    virtual void OnInsertItem(LPTVITEM & pItemData)
-    {
-    }
+protected:
+    virtual void OnNodeFree(LPTVITEM & pItemData);
 protected:
 
     HSTREEITEM    m_hSelItem;
@@ -198,9 +200,10 @@ protected:
     int            m_nItemHei,m_nIndent, m_nItemMargin;
     BOOL        m_bCheckBox;
     BOOL        m_bRightClickSel;
-    ISkinObj * m_pItemBgSkin, * m_pItemSelSkin;
-    ISkinObj * m_pIconSkin, * m_pToggleSkin, * m_pCheckSkin;
-	ISkinObj * m_pLineSkin;
+	IListener	* m_pListener;
+    SAutoRefPtr<ISkinObj> m_pItemBgSkin, m_pItemSelSkin;
+    SAutoRefPtr<ISkinObj> m_pIconSkin, m_pToggleSkin, m_pCheckSkin;
+	SAutoRefPtr<ISkinObj> m_pLineSkin;
 
     COLORREF m_crItemBg,m_crItemSelBg;
     COLORREF m_crItemText,m_crItemSelText;
@@ -210,8 +213,8 @@ protected:
         ATTR_INT(L"indent", m_nIndent, TRUE)
         ATTR_INT(L"itemHeight", m_nItemHei, TRUE)
         ATTR_INT(L"itemMargin", m_nItemMargin, TRUE)
-        ATTR_INT(L"checkBox", m_bCheckBox, TRUE)
-        ATTR_INT(L"rightClickSel", m_bRightClickSel, TRUE)
+        ATTR_BOOL(L"checkBox", m_bCheckBox, TRUE)
+        ATTR_BOOL(L"rightClickSel", m_bRightClickSel, TRUE)
         ATTR_SKIN(L"itemBkgndSkin", m_pItemBgSkin, TRUE)
         ATTR_SKIN(L"itemSelSkin", m_pItemSelSkin, TRUE)
         ATTR_SKIN(L"toggleSkin", m_pToggleSkin, TRUE)            

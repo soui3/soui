@@ -13,7 +13,7 @@ public:
 	// IUnknown
 	virtual HRESULT STDMETHODCALLTYPE QueryInterface(
 		/* [in] */ REFIID riid,
-		/* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+		/* [iid_is][out] */  void __RPC_FAR *__RPC_FAR *ppvObject)
 	{
 		HRESULT hr = S_FALSE;
 		if (riid == __uuidof(IUnknown))
@@ -37,10 +37,10 @@ public:
 	// IDropTarget
 
 	virtual HRESULT STDMETHODCALLTYPE DragEnter(
-		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [unique][in] */  IDataObject *pDataObj,
 		/* [in] */ DWORD grfKeyState,
 		/* [in] */ POINTL pt,
-		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+		/* [out][in] */  DWORD *pdwEffect)
 	{
 		*pdwEffect = DROPEFFECT_LINK;
 		return S_OK;
@@ -49,7 +49,7 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE DragOver(
 		/* [in] */ DWORD grfKeyState,
 		/* [in] */ POINTL pt,
-		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+		/* [out][in] */  DWORD *pdwEffect)
 	{
 		*pdwEffect = DROPEFFECT_LINK;
 		return S_OK;
@@ -80,10 +80,10 @@ public:
 	}
 public:
 	virtual HRESULT STDMETHODCALLTYPE Drop(
-		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [unique][in] */  IDataObject *pDataObj,
 		/* [in] */ DWORD grfKeyState,
 		/* [in] */ POINTL pt,
-		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+		/* [out][in] */  DWORD *pdwEffect)
 	{
 		FORMATETC format =
 		{

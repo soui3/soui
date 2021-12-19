@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/SSliderBar.h"
-#include <algorithm>
 namespace SOUI
 {
 
@@ -101,7 +100,7 @@ CRect SSliderBar::GetPartRect(UINT uSBCode)
         RANGE r = _GetPartRange(rcClient.Height(),szThumb.cy,m_bThumbInRail,m_nMinValue,m_nMaxValue,m_nValue,uSBCode);
         CRect rc(rcClient.left, rcClient.Height()-r.value2,rcClient.right, rcClient.Height()-r.value1);
         rc.OffsetRect(0,rcClient.top);
-        int   nSliderSize = (std::max)(szThumb.cx,szRail.cx);
+        int   nSliderSize = smax(szThumb.cx,szRail.cx);
         rc.DeflateRect((rcClient.Width()-nSliderSize)/2,0);
         if(uSBCode != SC_THUMB)
         {
@@ -113,7 +112,7 @@ CRect SSliderBar::GetPartRect(UINT uSBCode)
         RANGE r = _GetPartRange(rcClient.Width(),szThumb.cx,m_bThumbInRail,m_nMinValue,m_nMaxValue,m_nValue,uSBCode);
         CRect rc(r.value1,rcClient.top,r.value2,rcClient.bottom);
         rc.OffsetRect(rcClient.left,0);
-        int   nSliderSize = (std::max)(szThumb.cy,szRail.cy);
+        int   nSliderSize = smax(szThumb.cy,szRail.cy);
         rc.DeflateRect(0,(rcClient.Height()-nSliderSize)/2);
         if(uSBCode != SC_THUMB)
         {
@@ -260,11 +259,11 @@ CSize SSliderBar::GetDesiredSize(int wid, int hei)
     
     if(IsVertical())
     {
-        szRet.cx=(std::max)(sizeBg.cx,sizeThumb.cx);
+        szRet.cx=smax(sizeBg.cx,sizeThumb.cx);
         szRet.cy=100;
     }else
     {
-        szRet.cy=(std::max)(sizeBg.cy,sizeThumb.cy);
+        szRet.cy=smax(sizeBg.cy,sizeThumb.cy);
         szRet.cx=100;
     }
     return szRet;

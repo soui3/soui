@@ -1,25 +1,14 @@
 ﻿#pragma once
 
+#include <interface/STaskLoop-i.h>
+#include <helper/SCriticalSection.h>
+
 #ifndef WM_SYSTIMER
 #define WM_SYSTIMER 0x0118   //(caret blink)
 #endif//WM_SYSTIMER
 
 namespace SOUI
 {
-    template<class T>
-    BOOL RemoveElementFromArray(SArray<T> &arr, T ele)
-    {
-        for(size_t i=0;i<arr.GetCount();i++)
-        {
-            if(arr[i] == ele)
-            {
-                arr.RemoveAt(i);
-                return TRUE;
-            }
-        }
-        return FALSE;
-    }
-    
     struct IMessageFilter
     {
         virtual BOOL PreTranslateMessage(MSG* pMsg) = 0;
@@ -36,10 +25,7 @@ namespace SOUI
     class SOUI_EXP SMessageLoop
     {
     public:
-        SMessageLoop():m_bRunning(FALSE)
-        {
-        
-        }
+        SMessageLoop();
         virtual ~SMessageLoop(){}
         
         SArray<IMessageFilter*> m_aMsgFilter;
@@ -72,9 +58,17 @@ namespace SOUI
         virtual void OnMsg(LPMSG pMsg);
         
 		virtual void Quit();
+
+		virtual BOOL PostTask(const IRunnable & runable);
+		virtual int  RemoveTasksForObject(void *pObj);
     protected:
         BOOL m_bRunning;
 		BOOL m_bQuit;
+		SCriticalSection m_cs;
+		SList<IRunnable*>	m_runnables;
+		SCriticalSection m_csRunningQueue;
+		SList<IRunnable*>	m_runningQueue;
+		DWORD  m_tid;
     };
 
 

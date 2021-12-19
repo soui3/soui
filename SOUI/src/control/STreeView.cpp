@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/STreeView.h"
-#include <algorithm>
 
 namespace SOUI 
 {
@@ -137,7 +136,7 @@ namespace SOUI
         if(m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
         {
             int nIndent = m_adapter->GetParentItem(hItem) == ITvAdapter::ITEM_ROOT?0:m_nIndent;
-            nRet = (std::max)(nRet,_GetBranchWidth(hItem)+nIndent);
+            nRet = smax(nRet,_GetBranchWidth(hItem)+nIndent);
         }
         return nRet;
     }
@@ -247,7 +246,7 @@ namespace SOUI
                 nNewBranchWidth = 0;
                 while(hSib!=ITvAdapter::ITEM_NULL)
                 {
-                    nNewBranchWidth = (std::max)(nNewBranchWidth,_GetItemVisibleWidth(hSib));
+                    nNewBranchWidth = smax(nNewBranchWidth,_GetItemVisibleWidth(hSib));
                     hSib = m_adapter->GetNextSiblingItem(hSib);
                 }
                 nNewBranchWidth += nIndent;
@@ -483,12 +482,16 @@ namespace SOUI
         GetClientRect(&rcClient);
         pRT->PushClipRect(&rcClient, RGN_AND);
 
-        CRect rcClip, rcInter;
+        CRect rcClip;
         pRT->GetClipBox(&rcClip);
 		SAutoRefPtr<IRegion> rgnClip;
 		pRT->GetClipRegion(&rgnClip);
 
 		CPoint pt(0,-1);
+		float fMat[9];
+		pRT->GetTransform(fMat);
+		SMatrix mtx(fMat);
+
 		for(SPOSITION pos = m_visible_items.GetHeadPosition();pos;)
 		{
 		    ItemInfo ii = m_visible_items.GetNext(pos);
@@ -503,7 +506,7 @@ namespace SOUI
 		    
 		    CRect rcItem(pt,szItem);
 		    rcItem.OffsetRect(rcClient.TopLeft());
-		    if(!(rcItem & rcClip).IsRectEmpty() && rgnClip->RectInRegion(rcItem))
+			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
 		    {//draw the item
 		        ii.pItem->Draw(pRT,rcItem);
 		    }

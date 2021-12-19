@@ -61,6 +61,49 @@ public:
 };
 
 
+class CTestAdapterFixHorz : public SAdapterBase
+{
+public:
+
+	CTestAdapterFixHorz()
+	{
+	}
+
+	~CTestAdapterFixHorz()
+	{
+	}
+
+	virtual int getCount()
+	{
+		return 300;
+	}
+
+	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	{
+		if (pItem->GetChildrenCount() == 0)
+		{
+			pItem->InitFromXml(xmlTemplate);
+		}
+
+		SImageWnd *pImg = pItem->FindChildByName2<SImageWnd>(L"btn_icon");
+		pImg->SetIcon(position%9);
+		SWindow *pText = pItem->FindChildByName(L"btn_text");
+		pText->SetWindowText(SStringT().Format(_T("item_%d"),position+1));
+
+		pImg->GetParent()->GetEventSet()->subscribeEvent(&CTestAdapterFixHorz::OnButtonClick, this);
+	}
+
+
+	bool OnButtonClick(EventCmd *pEvt)
+	{
+		SWindow *pBtn = sobj_cast<SWindow>(pEvt->sender);
+		SItemPanel *pItem = (SItemPanel*)pBtn->GetRoot();
+		int iItem = pItem->GetItemIndex();
+		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
+		return true;
+	}
+};
+
 const wchar_t * KAttrName_Height[] = {
 	L"oddHeight",
 	L"evenHeight",
@@ -83,21 +126,21 @@ public:
 
 	}
 
-	virtual void InitByTemplate(pugi::xml_node xmlTemplate)
+	virtual void InitByTemplate(pugi::xml_node xmlTemplate) override
 	{
 		m_nItemHeight[0] = xmlTemplate.attribute(KAttrName_Height[0]).as_int(50);
 		m_nItemHeight[1] = xmlTemplate.attribute(KAttrName_Height[1]).as_int(60);
 		m_nItemHeight[2] = xmlTemplate.attribute(KAttrName_Height[2]).as_int(70);
 	}
 
-	virtual int getCount()
+	virtual int getCount() override
 	{
 		return 12340;
 	}
 
-	virtual int getViewTypeCount() { return 3; }
+	virtual int getViewTypeCount() override{ return 3; }
 
-	virtual int getItemViewType(int position, DWORD dwState)
+	virtual int getItemViewType(int position, DWORD dwState) override
 	{
 		if (position % 2 == 0)
 			return 0;//1,3,5,... odd lines
@@ -107,7 +150,7 @@ public:
 			return 1;//even lines 
 	}
 
-	virtual SIZE getViewDesiredSize(int position, SWindow *pItem, LPCRECT prcContainer)
+	virtual SIZE getViewDesiredSize(int position, SWindow *pItem, int nWid,int nHei) override
 	{
 		DWORD dwState = pItem->GetState();
 		int viewType = getItemViewType(position, dwState);
@@ -275,8 +318,11 @@ public:
 		pItem->FindChildByName(L"txt_index")->SetWindowText(SStringT().Format(_T("第%d行"), position + 1));
 
 		SButton *pBtnUninstall = pItem->FindChildByName2<SButton>(L"btn_uninstall");
+		CRect rcBtn = pBtnUninstall->GetWindowRect();
 		SMatrix mtx;
-		mtx.rotate(20);
+		mtx.setRotate(45);
+		mtx.preTranslate(-rcBtn.Width()/2,-rcBtn.Height()/2);
+		mtx.postTranslate(rcBtn.Width()/2,rcBtn.Height()/2);
 		pBtnUninstall->SetMatrix(mtx);
 		pBtnUninstall->SetUserData(position);
 		pBtnUninstall->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestMcAdapterFix::OnButtonClick, this));

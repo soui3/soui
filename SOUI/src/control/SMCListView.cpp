@@ -51,6 +51,7 @@ namespace SOUI
 		,m_bDatasetInvalidated(TRUE)
 		,m_bPendingUpdate(false)
 		,m_iPendingUpdateItem(-2)
+		,m_crGrid(CR_INVALID)
     {
         m_bFocusable = TRUE;
         m_bClipClient = TRUE;
@@ -192,7 +193,8 @@ CRect SMCListView::GetListRect()
 void SMCListView::UpdateScrollBar()
 {
     CSize szView;
-    szView.cx = m_pHeader->GetTotalWidth();
+    szView.cx = m_pHeader->GetTotalWidth(false);
+	int nMinWid = m_pHeader->GetTotalWidth(true);
     szView.cy = m_lvItemLocator->GetTotalHeight();
 
     CRect rcClient;
@@ -212,9 +214,10 @@ void SMCListView::UpdateScrollBar()
         m_siVer.nMax  = szView.cy-1;
         m_siVer.nPage = rcClient.Height();
 
-        if (size.cx-GetSbWidth() < szView.cx)
+		int horzSize = size.cx-GetSbWidth();
+        if (horzSize < nMinWid)
         {
-            //  需要横向滚动条
+            // 小于表头的最小宽度, 需要横向滚动条
             m_wBarVisible |= SSB_HORZ;
             m_siVer.nPage=size.cy-GetSbWidth() > 0 ? size.cy-GetSbWidth() : 0;//注意同时调整纵向滚动条page信息
 
@@ -222,10 +225,17 @@ void SMCListView::UpdateScrollBar()
             m_siHoz.nMax  = szView.cx-1;
             m_siHoz.nPage = (size.cx-GetSbWidth()) > 0 ? (size.cx-GetSbWidth()) : 0;
         }
-        else
+        else 
         {
+			if(horzSize<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+horzSize;
+				m_pHeader->Move(rcHead);
+				szView.cx = horzSize;
+			}
             //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
+            m_siHoz.nPage = szView.cx;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = m_siHoz.nPage-1;
             m_siHoz.nPos  = 0;
@@ -239,9 +249,9 @@ void SMCListView::UpdateScrollBar()
         m_siVer.nMax  = size.cy-1;
         m_siVer.nPos  = 0;
 
-        if (size.cx < szView.cx)
+        if (size.cx < nMinWid)
         {
-            //  需要横向滚动条
+            //小于表头的最小宽度,  需要横向滚动条
             m_wBarVisible |= SSB_HORZ;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = szView.cx-1;
@@ -249,8 +259,15 @@ void SMCListView::UpdateScrollBar()
         }
         else
         {
+			if(size.cx<szView.cx || m_pHeader->IsAutoResize())
+			{//大于最小宽度，小于现在宽度，则调整表头的宽度。
+				CRect rcHead = m_pHeader->GetWindowRect();
+				rcHead.right=rcHead.left+size.cx;
+				m_pHeader->Move(rcHead);
+				szView.cx=size.cx;
+			}
             //  不需要横向滚动条
-            m_siHoz.nPage = size.cx;
+            m_siHoz.nPage = szView.cx;
             m_siHoz.nMin  = 0;
             m_siHoz.nMax  = m_siHoz.nPage-1;
             m_siHoz.nPos  = 0;
@@ -404,7 +421,8 @@ void SMCListView::onDataSetChanged()
 	m_pHeader->GetEventSet()->setMutedState(true);
 	for(size_t i=0;i<m_pHeader->GetItemCount();i++)
 	{
- 		m_pHeader->SetItemVisible(i,m_adapter->IsColumnVisible(i));
+		int iCol = m_pHeader->GetOriItemIndex(i);
+ 		m_pHeader->SetItemVisible(i,m_adapter->IsColumnVisible(iCol));
 	}
 	m_pHeader->GetEventSet()->setMutedState(false);
 
@@ -451,7 +469,10 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
     SPainter duiDC;
     BeforePaint(pRT,duiDC);
 
-
+	float fMat[9];
+	pRT->GetTransform(fMat);
+	SMatrix mtx(fMat);
+	
     int iFirst = m_iFirstVisible;
     if(iFirst!=-1)
     {
@@ -468,13 +489,32 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
         
         SPOSITION pos= m_lstItems.GetHeadPosition();
         int i=0;
+		IRenderObj *oldPen=NULL;
+		if(m_crGrid!=CR_INVALID)
+		{
+			SAutoRefPtr<IPen> pen;
+			pRT->CreatePen(PS_SOLID,m_crGrid,1,&pen);
+			pRT->SelectObject(pen,&oldPen);
+		}
+		
         for(;pos;i++)
         {
             ItemInfo ii = m_lstItems.GetNext(pos);
             CRect rcItem = _OnItemGetRect(iFirst+i);
-            rcInter.IntersectRect(&rcClip,&rcItem);
-            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
                 ii.pItem->Draw(pRT,rcItem);
+			if(m_crGrid!=CR_INVALID)
+			{
+				BOOL bAntiAlias = pRT->SetAntiAlias(FALSE);
+				if(i==0)
+				{
+					POINT pts[2]={{rcItem.left,rcItem.top},{rcItem.right,rcItem.top}};
+					pRT->DrawLines(pts,2);
+				}
+				POINT pts[2]={{rcItem.left,rcItem.bottom-1},{rcItem.right,rcItem.bottom-1}};
+				pRT->DrawLines(pts,2);
+				pRT->SetAntiAlias(bAntiAlias);
+			}
             rcItem.top = rcItem.bottom;
             rcItem.bottom += m_lvItemLocator->GetDividerSize();
 			if (m_pSkinDivider && !rcItem.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
@@ -482,7 +522,29 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
                 m_pSkinDivider->DrawByIndex(pRT,rcItem,0);
             }
         }
+		if(m_crGrid != CR_INVALID)
+		{
+			//draw vertical grid.
+			BOOL bAntiAlias = pRT->SetAntiAlias(FALSE);
 
+			CRect rcTop=_OnItemGetRect(iFirst);
+			CRect rcBottom = _OnItemGetRect(iFirst+m_lstItems.GetCount()-1);
+			POINT pts[2]={{rcTop.left,rcTop.top},{rcTop.left,rcBottom.bottom}};
+			pRT->DrawLines(pts,2);
+			pts[0].x--,pts[1].x--;
+			for(int i=0;i<m_pHeader->GetItemCount();i++)
+			{					
+				if(!m_pHeader->IsItemVisible(i))
+					continue;
+				int wid = m_pHeader->GetItemWidth(i);
+				pts[0].x+=wid;
+				pts[1].x+=wid;
+				pRT->DrawLines(pts,2);
+			}
+			pRT->SetAntiAlias(bAntiAlias);
+
+			pRT->SelectObject(oldPen);
+		}
         pRT->PopClip();
     }
     AfterPaint(pRT,duiDC);
@@ -666,8 +728,8 @@ void SMCListView::UpdateVisibleItem(int iItem)
 {
 	SASSERT(m_lvItemLocator->IsFixHeight());
 	SItemPanel * pItem = GetItemPanel(iItem);
-	SASSERT(pItem);
-	m_adapter->getView(iItem,pItem,m_xmlTemplate.first_child());
+	if(pItem)
+	    m_adapter->getView(iItem,pItem,m_xmlTemplate.first_child());
 }
 
 
@@ -738,6 +800,8 @@ BOOL SMCListView::IsItemRedrawDelay() const
 BOOL SMCListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
+	if(iPosition<0 || iPosition >= m_adapter->getCount())
+		return FALSE;
     rcItem = _OnItemGetRect(iPosition);
     return TRUE;
 }

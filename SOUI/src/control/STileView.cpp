@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/STileView.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -144,7 +143,7 @@ void STileView::UpdateScrollBar()
         m_siVer.nMin  = 0;
         m_siVer.nMax  = szView.cy - 1;
         m_siVer.nPage = size.cy;
-        m_siVer.nPos = (std::min)(m_siVer.nPos, m_siVer.nMax - (int)m_siVer.nPage);
+        m_siVer.nPos = smin(m_siVer.nPos, m_siVer.nMax - (int)m_siVer.nPage);
     }
     else
     {
@@ -189,8 +188,8 @@ void STileView::onDataSetInvalidated()
 void STileView::UpdateVisibleItem(int iItem)
 {
 	SItemPanel * pItem = GetItemPanel(iItem);
-	SASSERT(pItem);
-	m_adapter->getView(iItem, pItem, m_xmlTemplate.first_child());
+	if(pItem)
+		m_adapter->getView(iItem, pItem, m_xmlTemplate.first_child());
 }
 
 void STileView::onItemDataChanged(int iItem)
@@ -225,7 +224,11 @@ void STileView::OnPaint(IRenderTarget *pRT)
         GetClientRect(&rcClient);
         pRT->PushClipRect(&rcClient, RGN_AND);
         
-        CRect rcClip, rcInter;
+		float fMat[9];
+		pRT->GetTransform(fMat);
+		SMatrix mtx(fMat);
+
+        CRect rcClip;
         pRT->GetClipBox(&rcClip);
 		SAutoRefPtr<IRegion> rgnClip;
 		pRT->GetClipRegion(&rgnClip);
@@ -244,10 +247,8 @@ void STileView::OnPaint(IRenderTarget *pRT)
             if(m_tvItemLocator->IsLastInRow(iFirst + i))
             {
                 nLastBottom = rcItem.bottom + m_tvItemLocator->GetMarginSize();
-            }
-            
-            rcInter.IntersectRect(&rcClip, &rcItem);
-            if(!rcInter.IsRectEmpty() && rgnClip->RectInRegion(&rcItem))
+            }            
+			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
             {
                 ii.pItem->Draw(pRT, rcItem);
             }
@@ -475,6 +476,8 @@ CRect STileView::CalcItemDrawRect(int iItem) const
 BOOL STileView::OnItemGetRect(const SItemPanel *pItem, CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
+	if(iPosition<0 || iPosition >= m_adapter->getCount())
+		return FALSE;
     rcItem = CalcItemDrawRect(iPosition);
     return TRUE;
 }

@@ -82,9 +82,8 @@ public://SWindow
 
     virtual BOOL NeedRedrawWhenStateChange();
     virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
-    virtual BOOL IsLayeredWindow() const {return FALSE;}
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable);
-	virtual bool IsDrawToCache() const {return true;}//force to draw to cache.
+	virtual COLORREF GetBkgndColor() const;
 
     CRect GetItemRect() const;
     void SetItemCapture(BOOL bCapture);
@@ -114,5 +113,6 @@ protected:
     LPARAM        m_lpItemIndex;
 };
 
+BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem);
 
 }//namespace SOUI

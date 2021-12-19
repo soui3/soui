@@ -3,7 +3,8 @@
 
 namespace SOUI
 {
-	SDpiAwareFont::SDpiAwareFont(void)
+	static const SStringW KNoneFont = L"none";
+	SDpiAwareFont::SDpiAwareFont(void):m_strDesc(KNoneFont)
 	{
 	}
 
@@ -24,7 +25,7 @@ namespace SOUI
 
 	void SDpiAwareFont::UpdateFont(int nScale)
 	{
-		if (m_strDesc.IsEmpty()) return;
+		if (m_strDesc == KNoneFont) return;
 		m_object = OnGetFont(m_strDesc, nScale);
 	}
 

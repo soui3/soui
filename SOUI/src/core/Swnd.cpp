@@ -235,6 +235,9 @@ namespace SOUI
 		LRESULT lResult = 0;
 
 		ASSERT_UI_THREAD();
+		SWindow *pOwner = GetOwner();
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->AddRef();
 		AddRef();
 		SWNDMSG msgCur= {Msg,wParam,lParam};
 		SWNDMSG *pOldMsg=m_pCurMsg;
@@ -252,7 +255,8 @@ namespace SOUI
 
 		m_pCurMsg=pOldMsg;
 		Release();
-
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->Release();
 		return lResult;
 	}
 
@@ -597,7 +601,6 @@ namespace SOUI
 		return m_bMsgTransparent;
 	}
 
-	// add by dummyz@126.com
 	const SwndStyle& SWindow::GetStyle() const
 	{
 		return m_style;
@@ -752,7 +755,9 @@ namespace SOUI
 						for (pugi::xml_attribute param = xmlData.first_attribute(); param; param = param.next_attribute())
 						{
 							SStringW strParam = SStringW().Format(KTempParamFmt, param.name());
-							strXml.Replace(strParam, param.value());//replace params to value.
+							SStringW strValue = param.value();
+							strValue.Replace(L"\"",L"&#34;");//防止数据中包含“双引号”，导致破坏XML结构
+							strXml.Replace(strParam, strValue);//replace params to value.
 						}
 						pugi::xml_document xmlDoc;
 						if (xmlDoc.load_buffer_inplace(strXml.GetBuffer(strXml.GetLength()), strXml.GetLength() * sizeof(WCHAR), 116, pugi::encoding_utf16))
@@ -946,9 +951,11 @@ namespace SOUI
 			if(pRTCache)
 			{//在窗口正在创建的时候进来pRTCache可能为NULL
 				CRect rcWnd=GetWindowRect();
+				pRTCache->SetViewportOrg(-rcWnd.TopLeft());
 				if(IsCacheDirty())
 				{
 					pRTCache->ClearRect(&rcWnd,0);
+					pRTCache->AlphaBlend(rcWnd,pRT,rcWnd,255);
 
 					SAutoRefPtr<IFont> oldFont;
 					COLORREF crOld=pRT->GetTextColor();
@@ -1004,6 +1011,8 @@ namespace SOUI
 		GETRENDERFACTORY->CreateRegion(&rgn);
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = SWindow::GetClientRect();
+		if(rcWnd == rcClient)
+			return;
 		rgn->CombineRect(&rcWnd,RGN_COPY);
 		rgn->CombineRect(&rcClient,RGN_DIFF);
 		if(m_clipRgn)
@@ -1122,18 +1131,25 @@ namespace SOUI
 		SMatrix oriMtx;
 		bool bMtx = _ApplyMatrix(pRT, oriMtx);
 
-
+		
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = GetClientRect();
-
-		CRect rcRgn = rcWnd;
-		if(pRgn && !pRgn->IsEmpty())
-		{
-			pRgn->GetRgnBox(&rcRgn);
+		float fMat[9];
+		pRT->GetTransform(fMat);
+		SMatrix curMtx(fMat);
+		BOOL bRgnInClient = FALSE;
+		if(curMtx.isIdentity())
+		{//detect client area only if matrix is identity.
+			CRect rcRgn = rcWnd;
+			if(pRgn && !pRgn->IsEmpty())
+			{
+				pRgn->GetRgnBox(&rcRgn);
+			}
+			CRect rcRgnUnionClient;
+			rcRgnUnionClient.UnionRect(rcClient,rcRgn);
+			bRgnInClient = rcRgnUnionClient == rcClient;
 		}
-		CRect rcRgnUnionClient;
-		rcRgnUnionClient.UnionRect(rcClient,rcRgn);
-		BOOL bRgnInClient = rcRgnUnionClient == rcClient;
+
 
 		IRenderTarget * pRTBackup;//backup current RT
 
@@ -1388,26 +1404,43 @@ namespace SOUI
 		ASSERT_UI_THREAD();
 		if(m_evtSet.isMuted()) return FALSE;
 
-		//调用事件订阅的处理方法
-		m_evtSet.FireEvent(evt);
-		if(!evt.bubbleUp) return evt.handled>0;
-
-		//调用脚本事件处理方法
-		if(GetScriptModule())
-		{
-			SStringW strEvtName = evt.GetName();
-			if(!strEvtName.IsEmpty())
+		AddRef();
+		BOOL bRet = FALSE;
+		do{
+			//调用事件订阅的处理方法
+			m_evtSet.FireEvent(evt);
+			if(!evt.bubbleUp)
 			{
-				SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
-				if(!strScriptHandler.IsEmpty())
+				bRet = evt.handled>0;
+				break;
+			}
+
+			//调用脚本事件处理方法
+			if(GetScriptModule())
+			{
+				SStringW strEvtName = evt.GetName();
+				if(!strEvtName.IsEmpty())
 				{
-					GetScriptModule()->executeScriptedEventHandler(strScriptHandler,&evt);
-					if(!evt.bubbleUp) return evt.handled>0;
+					SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
+					if(!strScriptHandler.IsEmpty())
+					{
+						GetScriptModule()->executeScriptedEventHandler(strScriptHandler,&evt);
+						if(!evt.bubbleUp) {
+							bRet = evt.handled>0;
+							break;
+						}
+					}
 				}
 			}
-		}
-		if(GetOwner()) return GetOwner()->FireEvent(evt);
-		return GetContainer()->OnFireEvent(evt);
+			if(GetOwner()) 
+			{
+				bRet = GetOwner()->FireEvent(evt);
+				break;
+			}
+			bRet = GetContainer()->OnFireEvent(evt);
+		}while(false);
+		Release();
+		return bRet;
 	}
 
 	BOOL SWindow::OnRelayout(const CRect &rcWnd)
@@ -1467,6 +1500,22 @@ namespace SOUI
 		return 0;
 	}
 
+	void SWindow::DestroyAllChildren()
+	{
+		//destroy children windows
+		SWindow *pChild=m_pFirstChild;
+		while (pChild)
+		{
+			SWindow *pNextChild=pChild->m_pNextSibling;
+			pChild->SSendMessage(WM_DESTROY);
+			pChild->Release();
+
+			pChild=pNextChild;
+		}
+		m_pFirstChild=m_pLastChild=NULL;
+		m_nChildrenCount=0;
+	}
+
 	void SWindow::OnDestroy()
 	{
 		if(m_isDestroying)
@@ -1487,18 +1536,7 @@ namespace SOUI
 			}
 		}
 #endif
-		//destroy children windows
-		SWindow *pChild=m_pFirstChild;
-		while (pChild)
-		{
-			SWindow *pNextChild=pChild->m_pNextSibling;
-			pChild->SSendMessage(WM_DESTROY);
-			pChild->Release();
-
-			pChild=pNextChild;
-		}
-		m_pFirstChild=m_pLastChild=NULL;
-		m_nChildrenCount=0;
+		DestroyAllChildren();
 		ClearAnimation();
 		m_style = SwndStyle();
 		m_isDestroying = false;
@@ -1510,7 +1548,7 @@ namespace SOUI
 		CRect rcClient=GetClientRect();
 		if (!m_pBgSkin)
 		{
-			COLORREF crBg = GetStyle().m_crBg;
+			COLORREF crBg = GetBkgndColor();
 
 			if (CR_INVALID != crBg)
 			{
@@ -1981,17 +2019,19 @@ namespace SOUI
 
 	void SWindow::OnSetFocus(SWND wndOld)
 	{
-		EventSetFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
 		accNotifyEvent(EVENT_OBJECT_FOCUS);
+		EventSetFocus evt(this);
+		evt.wndOld = wndOld;
+		FireEvent(evt);
 	}
 
 	void SWindow::OnKillFocus(SWND wndFocus)
 	{
-		EventKillFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
+		EventKillFocus evt(this);
+		evt.wndFocus = wndFocus;
+		FireEvent(evt);
 	}
 
 	LRESULT SWindow::OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2218,19 +2258,19 @@ namespace SOUI
 	*/
 
 	void SWindow::SetAnimation(IAnimation * animation) {
+		if (m_isAnimating)
+		{
+			ClearAnimation();
+		}
 		m_animation = animation;
 		if (m_animation)
 		{
 			if (m_animation->getStartTime() == IAnimation::START_ON_FIRST_FRAME)
 			{
 				m_animation->startNow();
-				OnAnimationStart();
+				OnAnimationStart(m_animation);
 			}
 			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
-		}
-		else
-		{
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		}
 	}
 
@@ -2263,12 +2303,11 @@ namespace SOUI
 	void SWindow::ClearAnimation() {
 		if (m_animation)
 		{
-			if (m_animation->hasStarted())
+			if (m_isAnimating)
 			{
 				m_animation->cancel();
+				OnAnimationStop(m_animation);
 			}
-			m_animationHandler.OnAnimationStop();
-			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 			m_animation = NULL;
 		}
 	}
@@ -2554,7 +2593,6 @@ namespace SOUI
 		if(IsDrawToCache() && !m_cachedRT)
 		{
 			GETRENDERFACTORY->CreateRenderTarget(&m_cachedRT,GetWindowRect().Width(),GetWindowRect().Height());
-			m_cachedRT->SetViewportOrg(-GetWindowRect().TopLeft());
 			MarkCacheDirty(true);
 		}
 		if(!IsDrawToCache() && m_cachedRT)
@@ -2783,7 +2821,7 @@ namespace SOUI
 	void SWindow::ShowCaret(BOOL bShow)
 	{
 		ICaret * pCaret = GetContainer()->GetCaret();
-		if (pCaret->SetVisible(bShow))
+		if (pCaret->SetVisible(bShow,m_swnd))
 		{
 			CRect rcCaret = pCaret->GetRect();
 			InvalidateRect(rcCaret);
@@ -2979,7 +3017,7 @@ namespace SOUI
 	}
 
 
-	void SWindow::GetScaleSkin(ISkinObj * &pSkin,int nScale)
+	void SWindow::GetScaleSkin(SAutoRefPtr<ISkinObj> &pSkin,int nScale)
 	{
 		if(!pSkin) return;
 		SStringW strName=pSkin->GetName();
@@ -3033,24 +3071,33 @@ namespace SOUI
 		return true;
 	}
 
-	void SWindow::OnAnimationStart()
+	void SWindow::OnAnimationStart(IAnimation *pAni)
 	{
 		m_isAnimating = true;
 		m_animationHandler.OnAnimationStart();
 		UpdateCacheMode();
 	}
 
-	void SWindow::OnAnimationStop()
+	void SWindow::OnAnimationStop(IAnimation *pAni)
 	{
+		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		m_isAnimating = false;
 		m_animationHandler.OnAnimationStop();
 		UpdateCacheMode();
-		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 	}
 
-	void SWindow::OnAnimationInvalidate()
+	void SWindow::OnAnimationInvalidate(IAnimation *pAni,bool bErase)
 	{
 		InvalidateRect(NULL);
+	}
+
+	void SWindow::OnAnimationUpdate(IAnimation *pAni)
+	{//do nothing.
+	}
+
+	COLORREF SWindow::GetBkgndColor() const
+	{
+		return GetStyle().m_crBg;
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;
@@ -3117,14 +3164,14 @@ namespace SOUI
 		uint64_t tm = pAni->getStartTime();
 		if (tm == -1)
 		{
-			m_pOwner->OnAnimationStart();
+			m_pOwner->OnAnimationStart(pAni);
 		}
 		if (tm > 0)
 		{
-			m_pOwner->OnAnimationInvalidate();
+			m_pOwner->OnAnimationInvalidate(pAni,true);
 			pAni->AddRef();
 			bool bMore = pAni->getTransformation(STime::GetCurrentTimeMs(), m_transform);
-			m_pOwner->OnAnimationInvalidate();
+			m_pOwner->OnAnimationInvalidate(pAni,false);
 			if (!bMore)
 			{//animation stopped.
 				if(pAni->isFillEnabled() && pAni->getFillAfter())
@@ -3134,10 +3181,11 @@ namespace SOUI
 				{
 					m_bFillAfter = false;
 				}
-				m_pOwner->OnAnimationStop();
+				m_pOwner->OnAnimationStop(pAni);
 			}
 			pAni->Release();
 		}
+		m_pOwner->OnAnimationUpdate(pAni);
 		m_pOwner->Release();
 	}
 

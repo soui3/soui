@@ -112,10 +112,10 @@ namespace SOUI
         SLayoutSize m_nTabInterSize; /**< tab页面间距   */
         SLayoutSize m_szTab[2]; /**< tab SIZE   */
         SLayoutSize m_nTabPos;  /**< tab位置       */
-        ISkinObj *m_pSkinTab; /**< ISkibObj对象 */
-        ISkinObj *m_pSkinIcon; /**< ISkibObj对象  */
-        ISkinObj *m_pSkinTabInter;  /**< ISkibObj对象  */
-        ISkinObj *m_pSkinFrame;     /**< ISkibObj对象  */
+        SAutoRefPtr<ISkinObj> m_pSkinTab; /**< ISkibObj对象 */
+        SAutoRefPtr<ISkinObj> m_pSkinIcon; /**< ISkibObj对象  */
+        SAutoRefPtr<ISkinObj> m_pSkinTabInter;  /**< ISkibObj对象  */
+        SAutoRefPtr<ISkinObj> m_pSkinFrame;     /**< ISkibObj对象  */
         SLayoutSize m_ptIcon[2]; /**< 图标位置 */
         SLayoutSize m_ptText[2]; /**< 标题位置 */
         int m_nTabAlign;   /**< 排列方式 */

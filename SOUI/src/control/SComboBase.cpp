@@ -14,6 +14,10 @@ namespace SOUI
         SetOwner(pOwner);
     }
 
+	SComboEdit::~SComboEdit()
+	{
+	}
+
     void SComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
     {
         __super::OnMouseHover(wParam,ptPos);
@@ -29,7 +33,7 @@ namespace SOUI
     void SComboEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     {
         SWindow *pOwner = GetOwner();
-        if (pOwner && (nChar == VK_DOWN || nChar == VK_ESCAPE))
+        if (pOwner && (nChar == VK_DOWN || nChar==VK_UP || nChar == VK_ESCAPE))
         {
             pOwner->SSendMessage(WM_KEYDOWN, nChar, MAKELONG(nFlags, nRepCnt));
             return;
@@ -47,6 +51,17 @@ namespace SOUI
         }
         return SEdit::FireEvent(evt);
     }
+
+	void SComboEdit::OnKillFocus(SWND wndFocus)
+	{
+		__super::OnKillFocus(wndFocus);
+		GetOwner()->SSendMessage(WM_KILLFOCUS,wndFocus);
+	}
+
+	void SComboEdit::OnFinalRelease()
+	{
+		delete this;
+	}
 
     //////////////////////////////////////////////////////////////////////////
     // SDropDownWnd_ComboBox
@@ -76,6 +91,11 @@ namespace SOUI
         ,m_pDropDownWnd(NULL)
         ,m_iInitSel(-1)
 		,m_bAutoFitDropBtn(TRUE)
+		,m_crCue(RGBA(0xcc,0xcc,0xcc,0xff))
+		,m_strCue(this)
+		,m_LastPressTime(0)
+		,m_bAutoMatch(FALSE)
+		,m_nTextLength(0)
     {
         m_bFocusable=TRUE;
 		m_style.SetAlign(SwndStyle::Align_Left);
@@ -84,6 +104,7 @@ namespace SOUI
         m_evtSet.addEvent(EVENTID(EventCBSelChange));
         m_evtSet.addEvent(EVENTID(EventRENotify));
 		m_evtSet.addEvent(EVENTID(EventCBDropdown));
+		m_evtSet.addEvent(EVENTID(EventCBBeforeCloseUp));
     }
 
     SComboBase::~SComboBase(void)
@@ -119,10 +140,14 @@ namespace SOUI
     void SComboBase::GetDropBtnRect(LPRECT prc)
     {
         SIZE szBtn=m_pSkinBtn->GetSkinSize();
-        GetClientRect(prc);
+        CRect rcClient = GetClientRect();
+		CRect rcPadding = GetStyle().GetPadding();
+		rcClient.DeflateRect(rcPadding);
+		*prc = rcClient;
+
 		int nHei = prc->bottom - prc->top;
         prc->left= prc->right-nHei*szBtn.cx/szBtn.cy;
-		if (m_bAutoFitDropBtn) {
+		if (m_bAutoFitDropBtn && szBtn.cy<nHei) {
 			prc->top += (prc->bottom - prc->top - szBtn.cy) / 2;
 			prc->left = prc->right - szBtn.cx;
 			prc->right = prc->left + szBtn.cx;
@@ -145,13 +170,25 @@ namespace SOUI
         SPainter painter;
 
         BeforePaint(pRT, painter);
-        if(GetCurSel() != -1 && m_bDropdown)
-        {
-            CRect rcText;
-            GetTextRect(rcText);
-            SStringT strText=GetWindowText();
-            DrawText(pRT,strText, strText.GetLength(), rcText, GetTextAlign());
-        }
+		if(m_bDropdown)
+		{
+			CRect rcText;
+			GetTextRect(rcText);
+			if(GetCurSel() != -1)
+			{
+				SStringT strText=GetWindowText();
+				DrawText(pRT,strText, strText.GetLength(), rcText, GetTextAlign());
+			}else
+			{
+				SStringT strCue = GetCueText();
+				if(!strCue.IsEmpty())
+				{
+					COLORREF crOld = pRT->SetTextColor(m_crCue);
+					DrawText(pRT,strCue,strCue.GetLength(),rcText,GetTextAlign());
+					pRT->SetTextColor(crOld);
+				}
+			}
+		}
         //draw focus rect
         if(IsFocused())
         {
@@ -226,6 +263,47 @@ namespace SOUI
                     SetCurSel(iSel);
             }
             break;
+		default:
+			{
+				if (isprint(nChar))
+				{
+					if ((GetTickCount() - m_LastPressTime) > 300)
+					{
+						m_strMatch.Empty();
+					}
+					m_LastPressTime = GetTickCount();
+					m_strMatch += nChar;
+					int iCurSel = GetCurSel();
+					int iStart = iCurSel + 1;
+					bool matched = false;
+					while (iStart < GetCount())
+					{
+						SStringT itemText = GetLBText(iStart);
+						if (itemText.StartsWith(m_strMatch, true))
+						{
+							SetCurSel(iStart);
+							matched = true;
+							break;
+						}
+						iStart++;
+					}
+					if (!matched)
+					{
+						iStart = 0;
+						while (iStart <= iCurSel)
+						{
+							SStringT itemText = GetLBText(iStart);
+							if (itemText.StartsWith(m_strMatch, true))
+							{
+								SetCurSel(iStart);
+								matched = true;
+								break;
+							}
+							iStart++;
+						}
+					}					
+				}
+			}
         }
     }
 
@@ -388,21 +466,15 @@ namespace SOUI
 
     void SComboBase::CloseUp()
     {
-        if(m_pDropDownWnd)
+		EventCBBeforeCloseUp evt(this);
+		evt.bCloseBlock = false;
+		FireEvent(evt);
+
+        if(!evt.bCloseBlock && m_pDropDownWnd)
         {
             m_pDropDownWnd->EndDropDown(IDCANCEL);
         }
     }
-
-
-    void SComboBase::OnSetFocus(SWND wndOld)
-    {
-        if(!m_bDropdown) 
-            m_pEdit->SetFocus();
-        else
-            __super::OnSetFocus(wndOld);
-    }
-
 
     void SComboBase::OnDestroy()
     {
@@ -424,22 +496,51 @@ namespace SOUI
             EventRENotify *evtRe = (EventRENotify*)&evt;
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
-                m_pEdit->GetEventSet()->setMutedState(true);
-                SetCurSel(-1);
-                m_pEdit->GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(true);
+				if(m_bAutoMatch)
+				{
+					SStringT strTxt = m_pEdit->GetWindowText();
+					if(strTxt.GetLength()>m_nTextLength)
+					{
+						int iItem = FindString(strTxt,-1,TRUE);
+						if(iItem!=-1)
+						{
+							SStringT strItem = GetLBText(iItem);
+							m_pEdit->SetWindowText(strItem);
+							m_pEdit->SetSel(strTxt.GetLength(),strItem.GetLength(),TRUE);
+						}
+					}
+					m_nTextLength = strTxt.GetLength();
+				}
+
+				GetEventSet()->setMutedState(true);
+				SetCurSel(-1);
+				GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(false);
             }
         }
         return SWindow::FireEvent(evt);
     }
 
-    int SComboBase::FindString( LPCTSTR pszFind,int nAfter/*=0*/ )
+    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ , BOOL bPartMatch/*=TRUE*/)
     {
-        for(int i=nAfter;i<GetCount();i++)
-        {
-            SStringT strItem = GetLBText(i,TRUE);
-            if(strItem == pszFind) return i;
-        }
-        return -1;
+		if(iFindAfter<0) iFindAfter=-1;
+		int iStart = iFindAfter+1;
+		for(int i=0;i<GetCount();i++)
+		{
+			int iTarget = (i+iStart)%GetCount();
+			SStringT strItem = GetLBText(iTarget,TRUE);
+			if(bPartMatch)
+			{
+				if(strItem.StartsWith(pszFind))
+					return iTarget;
+			}else
+			{
+				if(strItem.Compare(pszFind)==0)
+					return iTarget;
+			}
+		}
+		return -1;
     }
 
 	CSize SComboBase::GetDesiredSize(int nParentWid, int nParentHei)
@@ -508,8 +609,8 @@ namespace SOUI
     void SComboBase::SetWindowText(LPCTSTR pszText)
     {
         SWindow::SetWindowText(pszText);
-        SetCurSel(-1);
 		m_pEdit->SetWindowText(pszText);
+		m_nTextLength = _tcslen(pszText);
 	}
 
     void SComboBase::OnKillFocus(SWND wndFocus)
@@ -532,10 +633,9 @@ namespace SOUI
 		SIZE szBtn = m_pSkinBtn->GetSkinSize();		
 		CRect rcPadding = GetStyle().GetPadding();
 		CRect rcEdit = GetClientRect();
-		int nHei = rcEdit.Height();
-		int nBtnWid = nHei *szBtn.cx/ szBtn.cy;
-		rcPadding.right += nBtnWid;
-		rcEdit.DeflateRect(rcPadding);
+		CRect rcBtn;
+		GetDropBtnRect(&rcBtn);
+		rcEdit.right = rcBtn.left;
 		m_pEdit->Move(rcEdit);
 	}
 	
@@ -579,6 +679,19 @@ namespace SOUI
 	{
 		m_bDropdown = bDropdown;
 		m_pEdit->SetVisible(!m_bDropdown, TRUE);
+	}
+
+	SStringT SComboBase::GetCueText(BOOL bRawText) const
+	{
+		return m_strCue.GetText(bRawText);
+	}
+
+	void SComboBase::SetFocus()
+	{
+		if(!m_bDropdown) 
+			m_pEdit->SetFocus();
+		else
+			__super::SetFocus();
 	}
 
 }

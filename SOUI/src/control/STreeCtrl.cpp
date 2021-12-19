@@ -6,7 +6,6 @@
 
 #include "souistd.h"
 #include "control/STreeCtrl.h"
-#include <algorithm>
 
 namespace SOUI{
 
@@ -36,6 +35,7 @@ STreeCtrl::STreeCtrl()
 , m_nItemHoverBtn(STVIBtn_None)
 , m_nItemPushDownBtn(STVIBtn_None)
 , m_bHasLines(FALSE)
+, m_pListener(NULL)
 {
     m_bClipClient = TRUE;
     m_bFocusable  = TRUE;
@@ -456,14 +456,13 @@ HSTREEITEM STreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM
 
     HSTREEITEM hRet= CSTree<LPTVITEM>::InsertItem(pItemObj,hParent,hInsertAfter);
     pItemObj->hItem = hRet;
-    OnInsertItem(pItemObj);
     
     if(pItemObj->bVisible)
     {
         m_nVisibleItems++;
 
         int nViewWidth = CalcItemWidth(pItemObj);
-        m_nMaxItemWidth = (std::max)(nViewWidth,m_nMaxItemWidth);
+        m_nMaxItemWidth = smax(nViewWidth,m_nMaxItemWidth);
 
         CSize szView(m_nMaxItemWidth, m_nVisibleItems*m_nItemHei);
         SetViewSize(szView);
@@ -1342,5 +1341,20 @@ BOOL STreeCtrl::VerifyItem(HSTREEITEM hItem) const
 #endif
 	return TRUE;
 }
+
+void STreeCtrl::OnNodeFree(LPTVITEM & pItemData)
+{
+	if(m_pListener)
+	{
+		m_pListener->OnDeleteItem(this,pItemData->hItem,pItemData->lParam);
+	}
+	delete pItemData;
+}
+
+void STreeCtrl::SetListener(IListener *pListener)
+{
+	m_pListener = pListener;
+}
+
 
 }//namespace SOUI

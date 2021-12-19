@@ -174,8 +174,6 @@ namespace SOUI
 		virtual IObject * OnCreateUnknownObject(const SObjectInfo & objInfo) const;
 
         static void OnFactoryRemoved(const SObjectFactoryPtr & obj);
-
-        void AddStandardFactory();
     };
 
 }//namespace SOUI

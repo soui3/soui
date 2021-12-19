@@ -6,7 +6,6 @@
 #include "control/SCmnCtrl.h"
 #include <windows.h>
 #include <shellapi.h>
-#include <algorithm>
 
 #if _MSC_VER < 1500
 #include <tmschema.h> //for VS2005
@@ -1013,7 +1012,7 @@ CSize SCheckBox::GetDesiredSize(int wid, int hei)
     CSize szCheck=m_pSkin->GetSkinSize();
     CSize szRet=__super::GetDesiredSize(wid,hei);
     szRet.cx+=szCheck.cx + CheckBoxSpacing;
-    szRet.cy=(std::max)(szRet.cy, szCheck.cy);
+    szRet.cy=smax(szRet.cy, szCheck.cy);
     return szRet;
 }
 
@@ -1203,7 +1202,7 @@ CSize SRadioBox::GetDesiredSize(int wid, int hei)
     CSize szRet=__super::GetDesiredSize(wid,hei);
     CSize szRaio=m_pSkin->GetSkinSize();
     szRet.cx+=szRaio.cx + m_nRadioBoxSpacing;
-    szRet.cy=(std::max)(szRet.cy,szRaio.cy);
+    szRet.cy=smax(szRet.cy,szRaio.cy);
     return szRet;
 }
 

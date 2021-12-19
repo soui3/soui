@@ -12,6 +12,11 @@ namespace SOUI
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
 
 
+	SRootWindow::SRootWindow()
+	{
+	}
+
+//////////////////////////////////////////////////////////////////////////
 SwndContainerImpl::SwndContainerImpl()
     :m_hCapture(NULL)
     ,m_hHover(NULL)
@@ -349,10 +354,11 @@ void SwndContainerImpl::OnFrameMouseWheel( UINT uMsg,WPARAM wParam,LPARAM lParam
 LRESULT SwndContainerImpl::OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	LRESULT lRet = 0;
-	if(GetKeyState(VK_MENU)&0x80)
-	{//todo:处理alt+x的快捷键组合，暂时这样处理。应该还有更好的方法。
-		if(wParam>='a' && wParam <='z') wParam -= 0x20;//转换成VK
-		if(m_focusMgr.OnKeyDown((UINT)wParam))
+	if((uMsg==WM_KEYDOWN|| uMsg == WM_KEYUP) && GetKeyState(VK_MENU)&0x80)
+	{
+		UINT vKey = wParam;
+		if(vKey>='a' && vKey <='z') vKey -= 0x20;//转换成VK
+		if(m_focusMgr.OnKeyDown(vKey))
 			return lRet; //首先处理焦点切换
 	}
 

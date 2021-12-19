@@ -174,7 +174,7 @@ namespace SOUI
         SWND    swnd;       //拥有tooltip的窗口
         DWORD   dwCookie;   //tooltip在窗口内的ID，对应一个窗口不同区域显示不同tip的情况，一般可以不提供
         CRect   rcTarget;   //tooltip感应区
-        SStringT strTip;    //top字符串
+        SStringT strTip;    //tip字符串
     };
 
 	enum{
@@ -237,7 +237,7 @@ namespace SOUI
 			void OnAnimationStop();
 			const STransformation & GetTransformation() const;
 			bool getFillAfter() const;
-		protected:
+		public:
 			void OnNextFrame() override;
 		protected:
 			bool OnOwnerResize(EventArgs *e);
@@ -674,6 +674,7 @@ namespace SOUI
          */
         BOOL DestroyChild(SWindow *pChild);
         
+		void DestroyAllChildren();
     public://窗口消息相关方法
         /**
         * SSendMessage
@@ -716,8 +717,8 @@ namespace SOUI
 
     public://操控SWindow的方法
 
-        void SetFocus();
-        void KillFocus();
+        virtual void SetFocus();
+        virtual void KillFocus();
         BOOL IsFocused();
         
         void Invalidate();
@@ -890,9 +891,10 @@ namespace SOUI
 		BYTE GetAlpha() const;
 
 	protected:
-		virtual void OnAnimationStart();
-		virtual void OnAnimationStop();
-		virtual void OnAnimationInvalidate();
+		virtual void OnAnimationStart(IAnimation *pAni);
+		virtual void OnAnimationStop(IAnimation *pAni);
+		virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
+		virtual void OnAnimationUpdate(IAnimation *pAni);
 	public:// Virtual functions
 
 		virtual int GetScale() const;
@@ -1273,6 +1275,7 @@ namespace SOUI
 		*/
 		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
 
+		virtual COLORREF GetBkgndColor() const;
     protected://helper functions
 
 		SWindow* _FindChildByID(int nID, int nDeep);
@@ -1308,7 +1311,7 @@ namespace SOUI
 
         void TestMainThread();
         
-		void GetScaleSkin(ISkinObj * &pSkin,int nScale);
+		void GetScaleSkin(SAutoRefPtr<ISkinObj> &pSkin,int nScale);
     protected:// Message Handler
 
         /**
@@ -1478,8 +1481,8 @@ namespace SOUI
         SWindow *           m_pParent;          /**< 父窗口 */
         SWindow *           m_pFirstChild;      /**< 第一子窗口 */
         SWindow *           m_pLastChild;       /**< 最后窗口 */
-        SWindow *           m_pNextSibling;     /**< 前一兄弟窗口 */
-        SWindow *           m_pPrevSibling;     /**< 后一兄弟窗口 */
+        SWindow *           m_pNextSibling;     /**< 后一兄弟窗口 */
+        SWindow *           m_pPrevSibling;     /**< 前一兄弟窗口 */
         UINT                m_nChildrenCount;   /**< 子窗口数量 */
 
         SWNDMSG *           m_pCurMsg;          /**< 当前正在处理的窗口消息 */
@@ -1509,8 +1512,8 @@ namespace SOUI
         SAutoRefPtr<IRenderTarget> m_cachedRT;  /**< 缓存窗口绘制的RT */
         SAutoRefPtr<IRegion>       m_clipRgn;    /**< 窗口Region */
 		SAutoRefPtr<IPath>		   m_clipPath;  /**< 窗口Path */
-        ISkinObj *          m_pBgSkin;          /**< 背景skin */
-        ISkinObj *          m_pNcSkin;          /**< 非客户区skin */
+        SAutoRefPtr<ISkinObj>      m_pBgSkin;          /**< 背景skin */
+        SAutoRefPtr<ISkinObj>      m_pNcSkin;          /**< 非客户区skin */
         ULONG_PTR           m_uData;            /**< 窗口的数据位,可以通过GetUserData获得 */
 
         SLayoutSize         m_nMaxWidth;        /**< 自动计算大小时，窗口的最大宽度 */

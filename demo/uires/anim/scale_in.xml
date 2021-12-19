@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set interpolator="Decelerate" shareInterpolator="true">
+  <scale duration="500" fromXScale="0.5" toXScale="1" fromYScale="0.5" toYScale="1"  pivotX="50%" pivotY="50%" />
+</set>

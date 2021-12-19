@@ -72,7 +72,7 @@ protected:
     int       m_nDragValue;     /**< 拖动距离 */
     int       m_uHtPrev;        /**< 上次的鼠标位置 */
 
-    ISkinObj *m_pSkinThumb;     /**< 皮肤对象 */
+    SAutoRefPtr<ISkinObj> m_pSkinThumb;     /**< 皮肤对象 */
     BOOL      m_bThumbInRail;   /**< 滑块包含在轨道中 */
 protected:
     
@@ -170,7 +170,7 @@ protected:
 
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"thumbSkin", m_pSkinThumb, TRUE)
-        ATTR_INT(L"thumbInRail",m_bThumbInRail,TRUE)
+        ATTR_BOOL(L"thumbInRail",m_bThumbInRail,TRUE)
     SOUI_ATTRS_END()
 };
 

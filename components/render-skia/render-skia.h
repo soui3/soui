@@ -38,6 +38,9 @@ namespace SOUI
 
 		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure);
 
+		virtual HRESULT CreateBlurMaskFilter(float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter);
+		virtual HRESULT CreateEmbossMaskFilter(float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter);
+
 
 	protected:
         SAutoRefPtr<IImgDecoderFactory> m_imgDecoderFactory;
@@ -121,10 +124,9 @@ namespace SOUI
         virtual BOOL IsStrikeOut(){return m_lf.lfStrikeOut;}
 		virtual BOOL UpdateFont(const LOGFONT *pLogFont);
 
-        const SkPaint  GetPaint() const {return m_skPaint;}
         SkTypeface *GetFont()const {return m_skFont;}
+		SkMaskFilter *GetBlurFilter() {return m_blurFilter;}
 
-		virtual HRESULT DefAttributeProc(const SStringW & strAttribName,const SStringW & strValue, BOOL bLoading);
 		virtual void OnInitFinished(pugi::xml_node xmlNode); 
 		SOUI_ATTRS_BEGIN()
 			ATTR_ENUM_BEGIN(L"blurStyle",SkBlurStyle,FALSE)
@@ -137,10 +139,10 @@ namespace SOUI
 		SOUI_ATTRS_END()
 	protected:
         SkTypeface *m_skFont;   //定义字体
-        SkPaint     m_skPaint;  //定义文字绘制属性
         LOGFONT     m_lf;
 		SkBlurStyle m_blurStyle;
 		SkScalar	m_blurRadius;
+		SkMaskFilter *m_blurFilter;
 	};
 
 	class SBrush_Skia : public TSkiaRenderObjImpl<IBrush>
@@ -384,6 +386,17 @@ namespace SOUI
 		SkPath      m_skPath;
 	};
 
+	class SMaskFilter_Skia : public TObjRefImpl<IMaskFilter>
+	{
+		friend class SRenderTarget_Skia;
+	public:
+		SMaskFilter_Skia(SkMaskFilter *maskFilter);
+
+		~SMaskFilter_Skia();
+	protected:
+		SkMaskFilter * m_maskFilter;
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 	//	SRenderTarget_Skia
 	//////////////////////////////////////////////////////////////////////////
@@ -400,7 +413,6 @@ namespace SOUI
 		virtual HRESULT CreateSolidColorBrush(COLORREF cr,IBrush ** ppBrush);
 		virtual HRESULT CreateBitmapBrush( IBitmap *pBmp,IBrush ** ppBrush );
 		virtual HRESULT CreateRegion(IRegion ** ppRegion);
-
 		virtual HRESULT Resize(SIZE sz);
 
         virtual HRESULT OffsetViewportOrg(int xOff, int yOff, LPPOINT lpPoint=NULL);
@@ -463,17 +475,13 @@ namespace SOUI
         virtual HRESULT SelectObject(IRenderObj *pObj,IRenderObj ** ppOldObj = NULL);
 
 
-		virtual COLORREF GetTextColor()
-		{
-			return m_curColor.toCOLORREF();
-		}
+		virtual COLORREF GetTextColor();
 		
-		virtual COLORREF SetTextColor(COLORREF color)
-		{
-			COLORREF crOld=m_curColor.toCOLORREF();
- 			m_curColor.setRGB(color);
-			return crOld;
-		}
+		virtual COLORREF SetTextColor(COLORREF color);
+
+		virtual IMaskFilter* GetMaskFilter();
+
+		virtual void SetMaskFilter(IMaskFilter *pMaskFilter);
 		
         virtual HDC GetDC(UINT uFlag=0);
 
@@ -500,6 +508,8 @@ namespace SOUI
 		virtual HRESULT PopLayer() ;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode/* =NULL */);
+
+		virtual BOOL SetAntiAlias(BOOL bAntiAlign);
     public:
         SkCanvas *GetCanvas(){return m_SkCanvas;}
 
@@ -524,9 +534,10 @@ namespace SOUI
 		SAutoRefPtr<SPen_Skia> m_curPen;
 		SAutoRefPtr<SBrush_Skia> m_curBrush;
         SAutoRefPtr<SFont_Skia> m_curFont;
-    
+		SAutoRefPtr<IMaskFilter> m_curMaskFilter;
+
         SkPoint         m_ptOrg;
-        
+        SkPaint			m_paint;
         //注意保存4个默认的RenderObject对象
         SAutoRefPtr<IBitmap> m_defBmp;
         SAutoRefPtr<IPen> m_defPen;
@@ -537,7 +548,7 @@ namespace SOUI
 
         HDC m_hGetDC;
         UINT m_uGetDCFlag;
-
+		
 		bool			m_bAntiAlias;
 		SList<int>		m_lstLayerId;	//list to save layer ids
 		int				m_xferMode;

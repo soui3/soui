@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="demo"
-	ProjectGUID="{5D9FB0E6-7FB8-3858-89C1-C6F61A4BD803}"
+	ProjectGUID="{E3891D4D-E74A-3FAB-AA22-F682307D06F3}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
 				AssemblerListingLocation="..\obj\release\demo\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"
@@ -85,7 +85,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
 				AssemblerListingLocation="..\obj\debug\demo\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"
@@ -144,6 +144,8 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\ColourPopup.cpp" />
+			<File
 				RelativePath="FormatMsgDlg.cpp" />
 			<File
 				RelativePath="MainDlg.cpp" />
@@ -153,6 +155,8 @@
 				RelativePath="SCheckBox2.cpp" />
 			<File
 				RelativePath="..\controls.extend\SChromeTabCtrl.cpp" />
+			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\SColorPicker.cpp" />
 			<File
 				RelativePath="skin\SDemoSkin.cpp" />
 			<File
@@ -238,7 +242,11 @@
 			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-color.cpp" />
 			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-group.cpp" />
+			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-option.cpp" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-rect.cpp" />
 			<File
 				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-size.cpp" />
 			<File
@@ -263,6 +271,8 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\ColourPopup.h" />
+			<File
 				RelativePath="..\controls.extend\FileHelper.h" />
 			<File
 				RelativePath="FormatMsgDlg.h" />
@@ -274,6 +284,8 @@
 				RelativePath="SCheckBox2.h" />
 			<File
 				RelativePath="..\controls.extend\SChromeTabCtrl.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\colorpicker\SColorPicker.h" />
 			<File
 				RelativePath="skin\SDemoSkin.h" />
 			<File
@@ -290,8 +302,6 @@
 				RelativePath="..\controls.extend\SMcListViewEx\SMcListViewEx.h" />
 			<File
 				RelativePath="SPathView.h" />
-			<File
-				RelativePath="..\controls.extend\propgrid\SPropertyGrid.h" />
 			<File
 				RelativePath="qrcode\SQrCtrl.h" />
 			<File
@@ -366,6 +376,22 @@
 				RelativePath="smatrixwindow.h" />
 			<File
 				RelativePath="..\controls.extend\sprogressring.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\spropertygrid.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-color.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-group.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-option.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-rect.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-size.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\propitem\spropertyitem-text.h" />
+			<File
+				RelativePath="..\controls.extend\propgrid\spropertyitembase.h" />
 			<File
 				RelativePath="..\controls.extend\sradiobox2.h" />
 			<File

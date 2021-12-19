@@ -284,11 +284,19 @@ HRESULT STextHost::TxActivate( LONG * plOldState )
 
 BOOL STextHost::TxClientToScreen( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x += rc.left;
+	lppt->y += rc.top;
     return ::ClientToScreen(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
 BOOL STextHost::TxScreenToClient( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x -= rc.left;
+	lppt->y -= rc.top;
     return ::ScreenToClient(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
@@ -395,14 +403,28 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
     return m_pRichEdit->SetScrollRange(fnBar!=SB_HORZ,nMinPos,nMaxPos,fRedraw);
 }
 
+BOOL SRichEdit::OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw)
+{
+	if(m_fScrollPending) return TRUE;
+	BOOL bVertical = fnBar!=SB_HORZ;
+	SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
+
+	if(psi->nPos != nPos)
+	{
+		psi->nPos = nPos;
+		CRect rcSb = GetScrollBarRect(!!bVertical);
+		InvalidateRect(rcSb);
+	}
+	if (fRedraw)
+	{
+		Invalidate();
+	}
+	return TRUE;
+}
+
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-    BOOL bRet=FALSE;
-    if(m_pRichEdit->m_fScrollPending) return TRUE;
-    m_pRichEdit->m_fScrollPending=TRUE;
-    bRet= m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
-    m_pRichEdit->m_fScrollPending=FALSE;
-    return bRet;
+    return m_pRichEdit->OnTxSetScrollPos(fnBar,nPos,fRedraw);
 }
 
 void STextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
@@ -677,7 +699,22 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
     CRect rcClient;
     GetClientRect(&rcClient);
     pRT->PushClipRect(&rcClient);
-    HDC hdc=pRT->GetDC(0);
+	
+	float fMtx[9];
+	pRT->GetTransform(fMtx);
+	SMatrix mtx(fMtx);
+
+	SAutoRefPtr<IRenderTarget> rt;
+	if(!mtx.isIdentity())
+	{
+		GETRENDERFACTORY->CreateRenderTarget(&rt,rcClient.Width(),rcClient.Height());
+		rt->SetViewportOrg(-rcClient.TopLeft());
+		rt->AlphaBlend(&rcClient,pRT,&rcClient,255);
+	}else
+	{
+		rt = pRT;
+	}
+	HDC hdc=rt->GetDC(0);
 	int nOldMode = ::SetGraphicsMode(hdc, GM_COMPATIBLE);	//richedit需要将GraphicMode强制设置为GM_COMPATIBLE
 
     ALPHAINFO ai;
@@ -688,7 +725,7 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
     RECTL rcL= {rcClient.left,rcClient.top,rcClient.right,rcClient.bottom};
     m_pTxtHost->GetTextService()->TxDraw(
         DVASPECT_CONTENT,          // Draw Aspect
-        /*-1*/0,                        // Lindex
+        0,                        // Lindex
         NULL,                    // Info for drawing optimazation
         NULL,                    // target device information
         hdc,            // Draw device HDC
@@ -699,11 +736,14 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
         NULL,                        // Call back function
         NULL,                    // Call back parameter
         TXTVIEW_ACTIVE);
-
     CGdiAlpha::AlphaRestore(ai);
 	::SetGraphicsMode(hdc, nOldMode);
-
-    pRT->ReleaseDC(hdc);
+	rt->ReleaseDC(hdc);
+	if(!mtx.isIdentity())
+	{
+		pRT->AlphaBlend(&rcClient,rt,&rcClient,255);
+		rt=NULL;
+	}
     pRT->PopClip();
 }
 
@@ -828,6 +868,12 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
 {
     if(m_pTxtHost && m_pTxtHost->GetTextService())
     {
+		if(uMsg == EM_GETRECT)
+		{
+			SetMsgHandled(TRUE);
+			GetClientRect((LPRECT)lParam);
+			return TRUE;
+		}
         if(m_pTxtHost->GetTextService()->TxSendMessage(uMsg,wParam,lParam,&lResult)==S_OK)
         {
             SetMsgHandled(TRUE);
@@ -1110,6 +1156,7 @@ void SRichEdit::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
+	SWNDMSG msg = *GetCurMsg();
     switch(nChar)
     {
         // Ctrl-Return generates Ctrl-J (LF), treat it as an ordinary return
@@ -1127,6 +1174,18 @@ void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
     default:
         if(m_dwStyle&ES_NUMBER && !isdigit(nChar) && nChar!='-' && nChar!='.' && nChar!=',')
             return;
+		if((m_dwStyle&ES_UPPERCASE) && nChar>='a'&&nChar<='z')
+		{
+			nChar-=0x20;
+			msg.wParam=nChar;
+			break;
+		}
+		if((m_dwStyle&ES_LOWERCASE) && nChar>='A'&&nChar<='Z')
+		{
+			nChar+=0x20;
+			msg.wParam=nChar;
+			break;
+		}
 #ifndef _UNICODE
         if(m_byDbcsLeadByte==0)
         {
@@ -1145,7 +1204,7 @@ void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 #endif//_UNICODE
         break;
     }
-    m_pTxtHost->GetTextService()->TxSendMessage(GetCurMsg()->uMsg,GetCurMsg()->wParam,GetCurMsg()->lParam,NULL);
+    m_pTxtHost->GetTextService()->TxSendMessage(msg.uMsg,msg.wParam,msg.lParam,NULL);
 }
 
 LRESULT SRichEdit::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
@@ -1479,7 +1538,7 @@ HRESULT SRichEdit::OnAttrAlign( const SStringW & strValue,BOOL bLoading )
 
 HRESULT SRichEdit::OnAttrNotifyChange(const SStringW & strValue,BOOL bLoading)
 {
-    m_fNotifyChange = strValue!=L"0";
+	m_fNotifyChange = STRINGASBOOL(strValue);
     if(!bLoading)
     {
         LPARAM lEvtMask = SSendMessage(EM_GETEVENTMASK);
@@ -1563,7 +1622,9 @@ BOOL SRichEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		return SWindow::OnMouseWheel(nFlags, zDelta, pt);
 	}else
 	{
-		return SPanel::OnMouseWheel(nFlags,zDelta,pt);
+		PSWNDMSG  p = GetCurMsg();
+		LRESULT lResult = 0;
+		return m_pTxtHost->GetTextService()->TxSendMessage(p->uMsg,p->wParam,p->lParam,&lResult)==S_OK;
 	}
 }
 
@@ -1574,97 +1635,36 @@ BOOL SRichEdit::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
 	return SWindow::CreateCaret(pBmp,nWid,nHeight);
 }
 
-HRESULT SRichEdit::OnAttrHscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~WS_HSCROLL;
-	else
-		m_dwStyle|=WS_HSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
 
-HRESULT SRichEdit::OnAttrVscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~WS_VSCROLL;
-	else
-		m_dwStyle|=WS_VSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrAutoHscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_AUTOHSCROLL;
-	else
-		m_dwStyle|=ES_AUTOHSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrAutoVscrollBar(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_AUTOVSCROLL;
-	else
-		m_dwStyle|=ES_AUTOVSCROLL;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_SCROLLBARCHANGE,TXTBIT_SCROLLBARCHANGE);
-	return bLoading?S_FALSE:S_OK;
-}
-
-HRESULT SRichEdit::OnAttrMultiLines(const SStringW & strValue,BOOL bLoading)
+HRESULT SRichEdit::OnAttrReStyle(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
 	DWORD dwBit = 0;
 	if(!bValue)
-		m_dwStyle&=~ES_MULTILINE;
+		m_dwStyle&=~dwStyle;
 	else
-		m_dwStyle|=ES_MULTILINE,dwBit = TXTBIT_MULTILINE;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_MULTILINE,dwBit);
+		m_dwStyle|=dwStyle,dwBit = txtBit;
+	if(!bLoading && txtBit!=0)
+	{
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(txtBit,dwBit);
+	}
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrReadOnly(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	DWORD dwBit = 0;
-	if(!bValue)
-		m_dwStyle&=~ES_READONLY;
-	else
-		m_dwStyle|=ES_READONLY,dwBit = TXTBIT_READONLY;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_READONLY,dwBit);
-	return bLoading?S_FALSE:S_OK;
-
-}
-
-HRESULT SRichEdit::OnAttrWantReturn(const SStringW & strValue,BOOL bLoading)
+HRESULT SRichEdit::OnAttrReStyle2(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading)
 {
 	BOOL bValue = STRINGASBOOL(strValue);
 	if(!bValue)
-		m_dwStyle&=~ES_WANTRETURN;
+		m_dwStyle&=~dwStyle;
 	else
-		m_dwStyle|=ES_WANTRETURN;
+		m_dwStyle|=dwStyle;
+	if(!bLoading && txtBit!=0)
+	{
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(txtBit,txtBit);
+	}
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrPassword(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	DWORD dwBit = 0;
-	if(!bValue)
-		m_dwStyle&=~ES_PASSWORD;
-	else
-		m_dwStyle|=ES_PASSWORD,dwBit = TXTBIT_USEPASSWORD;
-	if(!bLoading) m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_USEPASSWORD,dwBit);
-	return bLoading?S_FALSE:S_OK;
-
-}
 
 HRESULT SRichEdit::OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading)
 {
@@ -1673,15 +1673,6 @@ HRESULT SRichEdit::OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading)
 	return bLoading?S_FALSE:S_OK;
 }
 
-HRESULT SRichEdit::OnAttrNumber(const SStringW & strValue,BOOL bLoading)
-{
-	BOOL bValue = STRINGASBOOL(strValue);
-	if(!bValue)
-		m_dwStyle&=~ES_NUMBER;
-	else
-		m_dwStyle|=ES_NUMBER;
-	return S_FALSE;
-}
 
 HRESULT SRichEdit::OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading)
 {
@@ -1693,11 +1684,6 @@ HRESULT SRichEdit::OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading)
 	return S_FALSE;
 }
 
-HRESULT SRichEdit::OnAttrAutoSel(const SStringW & strValue,BOOL bLoading)
-{
-	m_fAutoSel = STRINGASBOOL(strValue);
-	return S_FALSE;
-}
 
 LRESULT SRichEdit::OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp)
 {
@@ -1740,7 +1726,8 @@ UINT SEdit::GetCueTextAlign()
 void SEdit::OnPaint( IRenderTarget * pRT )
 {
     SRichEdit::OnPaint(pRT);
-    if(!m_strCue.GetText(FALSE).IsEmpty() && GetWindowTextLength() == 0 && !IsFocused())
+	SStringT strCue = GetCueText();
+    if(!strCue.IsEmpty() && GetWindowTextLength() == 0 && !IsFocused())
     {
         SPainter painter;
         BeforePaint(pRT,painter);
@@ -1750,7 +1737,7 @@ void SEdit::OnPaint( IRenderTarget * pRT )
         GetClientRect(&rc);
         CRect rcInsetPixel = GetStyle().GetPadding();
         rc.DeflateRect(rcInsetPixel.left, rcInsetPixel.top, rcInsetPixel.right, rcInsetPixel.bottom);
-		pRT->DrawText(m_strCue.GetText(FALSE),m_strCue.GetText(FALSE).GetLength(),&rc,GetCueTextAlign());
+		pRT->DrawText(strCue,strCue.GetLength(),&rc,GetCueTextAlign());
         
         pRT->SetTextColor(crOld);
         AfterPaint(pRT,painter);

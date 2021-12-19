@@ -121,6 +121,7 @@ namespace SOUI
 
         SAutoRefPtr<IRenderFactory> m_RenderFactory;
 		FontInfo					m_defFontInfo;
+		SCriticalSection			m_cs;
     };
 
 }//namespace SOUI

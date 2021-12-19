@@ -115,9 +115,8 @@ protected:
     SOUI_MSG_MAP_END()
     
     SOUI_ATTRS_BEGIN()
-		//ATTR_INT(L"marginSize", m_nMarginSize, FALSE)
         ATTR_LAYOUTSIZE(L"marginSize", m_nMarginSize, FALSE)
-		ATTR_INT(L"wantTab", m_bWantTab, FALSE)
+		ATTR_BOOL(L"wantTab", m_bWantTab, FALSE)
     SOUI_ATTRS_END()
 protected:
     SAutoRefPtr<ILvAdapter>           m_adapter;

@@ -5,16 +5,19 @@ namespace SOUI
 {
 	SIpcHandle::SIpcHandle() 
 		:m_pConn(NULL), m_hLocalId(0),m_hRemoteId(0)
-		,m_uCallSeq(0),m_nCallStack(0)
+		,m_uCallSeq(0),m_nCallStack(0),m_bSameThread(false)
 	{
 	}
 
-	SIpcHandle::~SIpcHandle() {}
+	SIpcHandle::~SIpcHandle() {
+	}
+
 
 	BOOL SIpcHandle::InitShareBuf(ULONG_PTR idLocal, ULONG_PTR idRemote, UINT uBufSize, void* pSa)
 	{
 		assert(m_hRemoteId == NULL);
 		assert(m_hLocalId == NULL);
+
 
 		TCHAR szName[MAX_PATH];
 		
@@ -34,7 +37,11 @@ namespace SOUI
 
 		m_hLocalId = (HWND)idLocal;
 		m_hRemoteId = (HWND)idRemote;
-
+		
+		DWORD dwProcLocal=0,dwProcRemote=0;
+		DWORD dwTrdLocal = GetWindowThreadProcessId(m_hLocalId,&dwProcLocal);
+		DWORD dwTrdRemote = GetWindowThreadProcessId(m_hRemoteId,&dwProcRemote);
+		m_bSameThread = (dwProcLocal == dwProcRemote) && (dwTrdLocal == dwTrdRemote);
 		return TRUE;
 	}
 
@@ -57,22 +64,21 @@ namespace SOUI
 		UINT uFunId = 0;
 		pBuf->Read(&uFunId,4);
 		SParamStream ps(pBuf);
-		//SLOG_WARN("+++++handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
+		//SLOG_INFO("handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
 		bool bReqHandled = m_pConn->HandleFun(uFunId, ps);
-		//SLOG_WARN("=====handle call, this:"<<this<<" seq="<<nCallSeq<<" fun id="<<uFunId<<" wp="<<wp);
+
 		return  bReqHandled?1:0;
 	}
 
-	HRESULT SIpcHandle::ConnectTo(ULONG_PTR idLocal, ULONG_PTR idRemote)
+	HRESULT SIpcHandle::ConnectTo(ULONG_PTR idLocal, ULONG_PTR idSvr)
 	{
-		HWND hLocal = (HWND)idLocal;
-		HWND hRemote = (HWND)idRemote;
-		if (!IsWindow(hLocal))
+		HWND hSvr = (HWND)idSvr;
+		if (!IsWindow((HWND)idLocal))
 			return E_INVALIDARG;
-		if (!IsWindow(hRemote))
+		if (!IsWindow(hSvr))
 			return E_INVALIDARG;
-		ULONG_PTR dwResult = 0;
-		LRESULT lRet = ::SendMessageTimeout(hRemote, UM_CALL_FUN, FUN_ID_CONNECT, (LPARAM)hLocal, SMTO_ABORTIFHUNG,100,&dwResult);
+		DWORD_PTR dwResult = 0;
+		LRESULT lRet = ::SendMessageTimeout(hSvr, UM_CALL_FUN, FUN_ID_CONNECT, (LPARAM)idLocal, SMTO_ABORTIFHUNG,100,&dwResult);
 		if (lRet == 0)
 		{
 			return E_FAIL;
@@ -81,22 +87,33 @@ namespace SOUI
 		{
 			return E_FAIL;
 		}
-		InitShareBuf(idLocal, idRemote, 0, NULL);
+		InitShareBuf(idLocal, dwResult, 0, NULL);
 		return S_OK;
 	}
 
-	HRESULT SIpcHandle::Disconnect()
+	HRESULT SIpcHandle::Disconnect(ULONG_PTR idSvr)
 	{
 		if (m_hLocalId == NULL)
 			return E_UNEXPECTED;
 		if (m_hRemoteId == NULL)
 			return E_UNEXPECTED;
-		::PostMessage(m_hRemoteId, UM_CALL_FUN, FUN_ID_DISCONNECT, (LPARAM)m_hLocalId);
+		::PostMessage((HWND)idSvr, UM_CALL_FUN, FUN_ID_DISCONNECT, (LPARAM)m_hLocalId);
 		m_hRemoteId = NULL;
 		m_recvBuf.Close();
 		m_hLocalId = NULL;
 		m_sendBuf.Close();
 		return S_OK;
+	}
+
+	struct MsgRet{
+		bool bRet;
+		LRESULT ret;
+	};
+	void SIpcHandle::OnSendMessageResult(HWND hwnd, UINT msg, ULONG_PTR data, LRESULT res)
+	{
+		MsgRet *msgRet = (MsgRet*)data;
+		msgRet->ret = res;
+		msgRet->bRet = true;
 	}
 
 	bool SIpcHandle::CallFun(IFunParams * pParam) const
@@ -106,11 +123,11 @@ namespace SOUI
 
 		//make sure msg queue is empty.
 		MSG msg;
-		while(::PeekMessage(&msg, NULL, UM_CALL_FUN, UM_CALL_FUN, PM_REMOVE))
+		while(::PeekMessage(&msg, m_hLocalId, UM_CALL_FUN, UM_CALL_FUN, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)
 			{
-				PostQuitMessage(msg.wParam);
+				PostQuitMessage((int)msg.wParam);
 				return false;
 			}
 			DispatchMessage(&msg);
@@ -119,19 +136,41 @@ namespace SOUI
 		assert(m_nCallStack >= 0);
 		if (m_nCallStack + 1 > m_pConn->GetStackSize())
 			return false;
-		//SLOG_WARN("call function, this:"<<this<<" seq="<<nCallSeq<<" id="<<pParam->GetID());
 		pBuf->Seek(IShareBuffer::seek_set, m_nCallStack * m_pConn->GetBufSize());
 		m_nCallStack++;
 
 		int nCallSeq = m_uCallSeq ++;
-		if(m_uCallSeq>100000) m_uCallSeq=0;
+		if(m_uCallSeq>=0xFFFF) m_uCallSeq=0;
+		//SLOG_WARN("call function, this:"<<this<<" seq="<<nCallSeq<<" id="<<pParam->GetID());
 		pBuf->Write(&nCallSeq,4);//write call seq first.
 		UINT uFunId = pParam->GetID();
 		pBuf->Write(&uFunId,4);
 		ToStream4Input(pParam, pBuf);
 		DWORD dwPos = pBuf->Tell();
-		LRESULT lRet = SendMessage(m_hRemoteId, UM_CALL_FUN, (WPARAM)m_nCallStack-1, (LPARAM)m_hLocalId);
-		if (lRet != 0)
+
+		MsgRet msgRet={false,0};
+		if(m_bSameThread)
+		{
+			msgRet.ret = SendMessage(m_hRemoteId,UM_CALL_FUN, (WPARAM)m_nCallStack - 1, (LPARAM)m_hLocalId);
+		}else{
+			SendMessageCallback(m_hRemoteId, UM_CALL_FUN, (WPARAM)m_nCallStack - 1, (LPARAM)m_hLocalId,OnSendMessageResult,(ULONG_PTR)&msgRet);
+			while(!msgRet.bRet)
+			{
+				if(::PeekMessage(&msg, m_hLocalId, UM_CALL_FUN, UM_CALL_FUN, PM_REMOVE))
+				{
+					if(msg.message == WM_QUIT)
+					{
+						PostQuitMessage((int)msg.wParam);
+						return false;
+					}
+					DispatchMessage(&msg);
+				}
+				if(!IsWindow(m_hRemoteId))
+					break;
+			}
+		}
+
+		if (msgRet.ret!=0)
 		{
 			pBuf->Seek(IShareBuffer::seek_set,dwPos);//output param must be follow input params.
 			BOOL bRet = FromStream4Output(pParam,&m_sendBuf);
@@ -140,7 +179,7 @@ namespace SOUI
 		//clear params.
 		m_nCallStack--;
 
-		return lRet!=0;
+		return msgRet.ret!=0;
 	}
 
 	void SIpcHandle::SetIpcConnection(IIpcConnection *pConn)
@@ -237,21 +276,12 @@ namespace SOUI
 		if (UM_CALL_FUN != uMsg)
 			return 0;
 		bHandled = TRUE;
-		return OnClientMsg(uMsg, wp, lp);
-	}
-
-	LRESULT SIpcServer::OnClientMsg(UINT uMsg, WPARAM wp, LPARAM lp)
-	{
 		if (wp == FUN_ID_CONNECT)
 			return OnConnect((HWND)lp);
 		else if (wp == FUN_ID_DISCONNECT)
 			return OnDisconnect((HWND)lp);
-		HWND hClient = (HWND)lp;
-		std::map<HWND, IIpcConnection*>::iterator it = m_mapClients.find(hClient);
-		if (it == m_mapClients.end())
+		else
 			return 0;
-		BOOL bHandled=FALSE;
-		return it->second->GetIpcHandle()->OnMessage((ULONG_PTR)m_hSvr,uMsg,wp,lp,bHandled);
 	}
 
 	void SIpcServer::EnumClient(FunEnumConnection funEnum, ULONG_PTR data)
@@ -283,12 +313,12 @@ namespace SOUI
 		pIpcHandle.Attach(new SIpcHandle);
 
 		IIpcConnection *pConn = NULL;
-		m_pCallback->OnNewConnection(pIpcHandle, &pConn);
+		ULONG_PTR connId = m_pCallback->OnNewConnection(pIpcHandle, &pConn);
 		assert(pConn);
 		pIpcHandle->SetIpcConnection(pConn);
 
 		void * pSa = m_pCallback->GetSecurityAttr();
-		if (!pIpcHandle->InitShareBuf((ULONG_PTR)m_hSvr, (ULONG_PTR)hClient, pConn->GetBufSize()* pConn->GetStackSize(), pSa))
+		if (!pIpcHandle->InitShareBuf(connId, (ULONG_PTR)hClient, pConn->GetBufSize()* pConn->GetStackSize(), pSa))
 		{
 			m_pCallback->ReleaseSecurityAttr(pSa);
 			pConn->Release();
@@ -298,7 +328,7 @@ namespace SOUI
 
 		m_mapClients[hClient] = pConn;
 		m_pCallback->OnConnected(pConn);
-		return 1;
+		return connId;
 	}
 
 	LRESULT SIpcServer::OnDisconnect(HWND hClient)
@@ -334,6 +364,7 @@ namespace SOUI
 		{
 			if (!::IsWindow(it->first))
 			{
+				m_pCallback->OnDisconnected(it->second);
 				it->second->Release();
 				it = m_mapClients.erase(it);
 			}
@@ -343,6 +374,12 @@ namespace SOUI
 			}
 		}
 	}
+
+	BOOL SIpcServer::FindConnection(ULONG_PTR idConn)
+	{
+		return m_mapClients.find((HWND)idConn)!=m_mapClients.end();
+	}
+
 	////////////////////////////////////////////////////////////////////////
 	HRESULT SIpcFactory::CreateIpcServer(IIpcServer ** ppServer)
 	{
@@ -355,11 +392,11 @@ namespace SOUI
 		return S_OK;
 	}
 
-
 	BOOL  IPC::SCreateInstance(IObjRef ** ppIpcFactory)
 	{
 		*ppIpcFactory = new SIpcFactory();
 		return TRUE;
 	}
-
 }
+
+ 

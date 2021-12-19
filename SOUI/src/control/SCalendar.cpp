@@ -898,7 +898,7 @@ void SCalendar::OnLButtonDown(UINT nFlags, CPoint point)
 		SetShowType(SHOW_MONTH);
 		SetDate(m_Today.wYear, m_Today.wMonth, m_Today.wDay, HIT_TODAY, true);
 	}
-	else if (m_nSelItem != nItem)
+	else //if (m_nSelItem != nItem)
 	{
 		m_showTypeLbdown = m_showType;
 		if (m_showType == SHOW_MONTH)

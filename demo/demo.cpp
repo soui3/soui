@@ -32,6 +32,11 @@
 #include <helper/SLogDef.h>
 //-->
 
+#define NANOSVG_IMPLEMENTATION
+#include <nanosvg.h>
+#define NANOSVGRAST_IMPLEMENTATION
+#include <nanosvgrast.h>
+
 #include "MainDlg.h"
 
 
@@ -82,41 +87,66 @@ public:
 	}
 };
 
+class SApplication2 : public SApplication
+{
+public:
+	SApplication2(IRenderFactory *pRendFactory,HINSTANCE hInst):SApplication(pRendFactory,hInst){}
+
+protected:
+	virtual IBitmap * LoadImage(LPCTSTR pszType,LPCTSTR pszResName)
+	{
+		int nBufSize = GetRawBufferSize(pszType,pszResName);
+		char *pBuf = (char*)malloc(nBufSize);
+		BOOL bLoad = GetRawBuffer(pszType,pszResName,pBuf,nBufSize);
+		if(bLoad && nBufSize>6)
+		{
+			if(_tcscmp(pszType,L"svg")!=0)
+			{
+				return SApplication::LoadImage(pszType,pszResName);
+			}
+			const unsigned char bom16[2]={0xff,0xfe};
+			const unsigned char bom8[3]={0xef,0xbb,0xbf};
+			SStringA strBuf;
+			if(memcmp(pBuf,bom16,2)==0)
+			{
+				strBuf = S_CW2A(SStringW((WCHAR*)(pBuf+2),(nBufSize-2)/2),CP_UTF8);
+			}else if(memcmp(pBuf,bom8,3)==0)
+			{
+				strBuf = SStringA(pBuf+3,nBufSize-3);
+			}else
+			{
+				strBuf = S_CA2A(SStringA(pBuf,nBufSize),CP_ACP,CP_UTF8);
+			}
+			if(strBuf.Left(4)=="<svg")
+			{
+				NSVGimage *image = nsvgParse((char*)strBuf.c_str(),"px", 96.0f);
+				IBitmap *Ret=NULL;
+				if(image)
+				{
+					int w = (int)image->width;
+					int h = (int)image->height;
+
+					NSVGrasterizer* rast = nsvgCreateRasterizer();
+
+					unsigned char *img = (unsigned char*)malloc(w*h*4);
+					nsvgRasterize(rast, image, 0,0,1, img, w, h, w*4);
+					GETRENDERFACTORY->CreateBitmap(&Ret);
+					Ret->Init(w,h,img);
+					free(img);
+
+					nsvgDeleteRasterizer(rast);
+					nsvgDelete(image);
+
+				}
+				return Ret;
+			}
+		}
+		return SResLoadFromMemory::LoadImage(pBuf,nBufSize);
+	}
+};
+
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
-	/* XML预编译前面加载效率比较
-	for(int i=0;i<100;i++)
-	{
-		int spanText=0,spanBin=0;
-		{
-			pugi::xml_document doc;
-
-			LARGE_INTEGER perf;
-			QueryPerformanceFrequency(&perf);
-			LARGE_INTEGER t1, t2;
-			QueryPerformanceCounter(&t1);
-			doc.load_file(L"d:\\test.xml");
-			QueryPerformanceCounter(&t2);
-			spanText= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
-		}
-
-		{
-			pugi::xml_document doc;
-
-			LARGE_INTEGER perf;
-			QueryPerformanceFrequency(&perf);
-			LARGE_INTEGER t1, t2;
-			QueryPerformanceCounter(&t1);
-			doc.load_file(L"d:\\test.xml.bin");
-			QueryPerformanceCounter(&t2);
-			spanBin= (t2.QuadPart - t1.QuadPart) * 1000000 / perf.QuadPart;
-		}
-		SStringA strRes = SStringA().Format("text xml: %d, bin xml:%d",spanText,spanBin);
-		OutputDebugStringA(strRes);
-	}
-	return 0;
-    //*/
-
 	//必须要调用OleInitialize来初始化运行环境
 	HRESULT hRes = OleInitialize(NULL);
 	SASSERT(SUCCEEDED(hRes));
@@ -127,10 +157,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     //使用imgdecoder-png图片解码模块演示apng动画
     SComMgr2 *pComMgr = new SComMgr2(_T("imgdecoder-png"));
     
-
-
     {
-
         int nType=MessageBox(GetActiveWindow(),_T("选择渲染类型：\n[yes]: Skia\n[no]:GDI\n[cancel]:Quit"),_T("select a render"),MB_ICONQUESTION|MB_YESNOCANCEL);
         if(nType == IDCANCEL)
         {
@@ -146,18 +173,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         SAutoRefPtr<ITranslatorMgr> trans;                  //多语言翻译模块，由translator.dll提供
         SAutoRefPtr<IScriptFactory> pScriptLua;              //lua脚本模块，由scriptmodule-lua.dll提供
         SAutoRefPtr<ILog4zManager>  pLogMgr;                //log4z对象
-        
-		//演示异步任务。
-		SAutoRefPtr<ITaskLoop>  pTaskLoop;
-		if (pComMgr->CreateTaskLoop((IObjRef**)&pTaskLoop))
-		{
-			CAsyncTaskObj obj;
-			pTaskLoop->start("test", ITaskLoop::Low);
-			STaskHelper::post(pTaskLoop, &obj, &CAsyncTaskObj::task1, 100,true);
-			STaskHelper::post(pTaskLoop, &obj, &CAsyncTaskObj::task2, 100,"abc", true);
-			pTaskLoop->stop();
-			pTaskLoop = NULL;
-		}
 
 		BOOL bLoaded = FALSE;
 		//从各组件中显式创建上述组件对象
@@ -187,7 +202,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         pRenderFactory->SetImgDecoderFactory(pImgDecoderFactory);
 
         //定义一个唯一的SApplication对象，SApplication管理整个应用程序的资源
-        SApplication *theApp=new SApplication(pRenderFactory,hInstance);
+        SApplication *theApp=new SApplication2(pRenderFactory,hInstance);
         
         theApp->SetLogManager(pLogMgr);
         SLOG_INFO("test="<<200);
@@ -256,6 +271,16 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         //SOUI系统总是从appdir去查找资源
         theApp->SetAppDir(strResDir);
 #endif
+        //加载系统资源
+        HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+        if (hSysResource)
+        {
+            SAutoRefPtr<IResProvider> sysResProvider;
+            CreateResProvider(RES_PE, (IObjRef**)&sysResProvider);
+            sysResProvider->Init((WPARAM)hSysResource, 0);
+            theApp->LoadSystemNamedResource(sysResProvider);
+            FreeLibrary(hSysResource);
+        }
 
         //定义一人个资源提供对象,SOUI系统中实现了3种资源加载方式，分别是从文件加载，从EXE的资源加载及从ZIP压缩包加载
         SAutoRefPtr<IResProvider>   pResProvider;
@@ -321,15 +346,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 #endif//DLL_CORE
 
         
-        //加载系统资源
-        HMODULE hSysResource=LoadLibrary(SYS_NAMED_RESOURCE);
-        if(hSysResource)
-        {
-            SAutoRefPtr<IResProvider> sysSesProvider;
-            CreateResProvider(RES_PE,(IObjRef**)&sysSesProvider);
-            sysSesProvider->Init((WPARAM)hSysResource,0);
-            theApp->LoadSystemNamedResource(sysSesProvider);
-        }
         //采用hook绘制菜单的边框
         SMenuWndHook::InstallHook(hInstance,L"_skin.sys.menu.border");
         

@@ -1,5 +1,11 @@
 ﻿#pragma once
+#if _MSC_VER<=1400
+#define RetAddr() NULL
+#else
 #include <intrin.h>
+#define RetAddr() _ReturnAddress()
+#endif
+
 #include <stdio.h>
 #include <interface/slog-i.h>
 
@@ -35,12 +41,13 @@ namespace SOUI
 #define SOUI_LOG_STREAM(id_or_name, filter, level,  log)\
     do{\
 		SOUI::ILog4zManager * pLogMgr = GETLOGMGR(); \
-		char *logBuf= (char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE);\
+		char *logBuf= (char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE+1);\
+		logBuf[SOUI::LOG4Z_LOG_BUF_SIZE]=0;\
 		SOUI::Log4zStream ss(logBuf, SOUI::LOG4Z_LOG_BUF_SIZE);\
 		ss << log;\
 		if (pLogMgr && pLogMgr->prePushLog(id_or_name,level)) \
 		{\
-			const void *pAddr = _ReturnAddress(); \
+			const void *pAddr = RetAddr(); \
 			pLogMgr->pushLog(id_or_name, level, filter, logBuf, __FILE__, __LINE__, __FUNCTION__, pAddr);\
 		}else if(level>=OUTLOG_LEVEL)\
 		{\
@@ -75,27 +82,32 @@ namespace SOUI
 #define LOG_FORMAT(id_or_name, level, filter, logformat, ...) \
     do{ \
 		SOUI::ILog4zManager * pLogMgr = GETLOGMGR(); \
-		char *logbuf=(char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE); \
+		char *logbuf=(char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE+1); \
 		if(sizeof(logformat[0]) == sizeof(char))\
-			_snprintf_s(logbuf, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const char*)logformat, ##__VA_ARGS__); \
+		{\
+			int nLen =_snprintf_s(logbuf, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const char*)logformat, ##__VA_ARGS__); \
+			logbuf[nLen]=0;\
+		}\
 		else \
 		{\
-			wchar_t *logbufw = (wchar_t*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE*sizeof(wchar_t)); \
-			_snwprintf_s(logbufw, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const wchar_t*)logformat, ##__VA_ARGS__); \
-			DWORD dwLen = WideCharToMultiByte(CP_ACP, 0, logbufw, -1, NULL, 0, NULL, NULL);\
-			if (dwLen < SOUI::LOG4Z_LOG_BUF_SIZE)\
+			wchar_t *logbufw = (wchar_t*)malloc((SOUI::LOG4Z_LOG_BUF_SIZE+1)*sizeof(wchar_t)); \
+			int nwLen=_snwprintf_s(logbufw, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, (const wchar_t*)logformat, ##__VA_ARGS__); \
+			int ncLen = WideCharToMultiByte(CP_ACP, 0, logbufw, nwLen, NULL, 0, NULL, NULL);\
+			if (nwLen < SOUI::LOG4Z_LOG_BUF_SIZE)\
 			{\
-				WideCharToMultiByte(CP_ACP, 0, logbufw, -1, logbuf, dwLen, NULL, NULL);\
+				WideCharToMultiByte(CP_ACP, 0, logbufw, nwLen, logbuf, ncLen, NULL, NULL);\
+				logbuf[nwLen]=0;\
 			}\
 			free(logbufw);\
 		}\
 		if (pLogMgr && pLogMgr->prePushLog(id_or_name,level)) \
 		{\
-			pLogMgr->pushLog(id_or_name, level,filter, logbuf, __FILE__, __LINE__, __FUNCTION__,_ReturnAddress()); \
+			pLogMgr->pushLog(id_or_name, level,filter, logbuf, __FILE__, __LINE__, __FUNCTION__,RetAddr()); \
 		}else if(level>=OUTLOG_LEVEL)\
 		{\
-			char *logbuf2 = (char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE);\
-			_snprintf_s(logbuf2, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, "%s %s %s:%d\n",logbuf, __FUNCTION__, __FILE__, __LINE__ ); \
+			char *logbuf2 = (char*)malloc(SOUI::LOG4Z_LOG_BUF_SIZE+1);\
+			int nLen = _snprintf_s(logbuf2, SOUI::LOG4Z_LOG_BUF_SIZE, _TRUNCATE, "%s %s %s:%d\n",logbuf, __FUNCTION__, __FILE__, __LINE__ ); \
+			logbuf2[nLen]=0;\
 			OutputDebugStringA(logbuf2);\
 			free(logbuf2);\
 		}\

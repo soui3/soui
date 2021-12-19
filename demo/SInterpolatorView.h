@@ -15,11 +15,9 @@ namespace SOUI
 	public:
 		int OnCreate(void*);
 		void OnDestroy();
-		void OnPaint(IRenderTarget * pRT);
 		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_CREATE(OnCreate)
 			MSG_WM_DESTROY(OnDestroy)
-			MSG_WM_PAINT_EX(OnPaint)
 		SOUI_MSG_MAP_END()
 	protected:
 		virtual void OnNextFrame();

@@ -1,6 +1,5 @@
 ﻿#include "souistd.h"
 #include "control/SSplitWnd.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -191,7 +190,7 @@ namespace SOUI
             {
                 maxShrink += lstPaneSize2[i].actural - lstPaneSize2[i].minimum;
             }
-            diff = (std::min)(diff, (std::min)(maxShrink,maxExtent));
+            diff = smin(diff, smin(maxShrink,maxExtent));
             if(diff==0) return;
 
             //伸长part1
@@ -245,7 +244,7 @@ namespace SOUI
             }
 
             diff *= -1;
-            diff = (std::min)(diff, (std::min)(maxShrink,maxExtent));
+            diff = smin(diff, smin(maxShrink,maxExtent));
             if(diff == 0) return;
 
             //压缩part1

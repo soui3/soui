@@ -13,11 +13,7 @@ purpose:	自定义皮肤对象
 #include <unknown/obj-ref-impl.hpp>
 
 #include "SSkinAni.h"
-
-namespace Gdiplus
-{
-class Bitmap;
-}
+#include <GdiPlus.h>
 
 namespace SOUI
 {
@@ -32,13 +28,14 @@ namespace SOUI
     {
         SOUI_CLASS_NAME(SSkinGif, L"gif")
     public:
-        SSkinGif():m_pFrames(NULL)
+        SSkinGif():m_pFrames(NULL), m_pImg(NULL)
         {
         }
 
 		~SSkinGif()
 		{
 			if (m_pFrames) delete[]m_pFrames;
+			if (m_pImg) delete m_pImg;			
 		}
 
 		/**
@@ -74,7 +71,7 @@ namespace SOUI
          */    
         int LoadFromMemory(LPVOID pBits,size_t szData);
 
-	public:
+    public:
 		virtual SIZE GetSkinSize() const override;
 		virtual int GetStates() const  override;
 
@@ -87,7 +84,10 @@ namespace SOUI
 
         HRESULT OnAttrSrc(const SStringW &strValue,BOOL bLoading);
         int LoadFromGdipImage(Gdiplus::Bitmap * pImg);
+		int LoadFrame(int i, Gdiplus::Bitmap* pImage) const;
 
-		SAniFrame * m_pFrames;
+		SAniFrame			*m_pFrames;
+		SAutoRefPtr<IBitmap> m_pCurFrameBmp;
+		Gdiplus::Bitmap		*m_pImg;
     };
 }//end of name space SOUI

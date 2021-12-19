@@ -39,14 +39,11 @@ namespace SOUI
 
 		CSize GetMinSize(int nScale) const;
 
-		void SetTranslucent(bool bTranslucent) {
-			m_bTranslucent = bTranslucent;
-		}
+		void SetTranslucent(bool bTranslucent);
 
-		void SetTrCtx(const SStringW & strTrCtx)
-		{
-			m_strTrCtx = strTrCtx;
-		}
+		void SetTrCtx(const SStringW & strTrCtx);
+
+		void SetSendWheel2Hover(bool value);
 
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGW(L"trCtx",m_strTrCtx,FALSE)
@@ -63,7 +60,6 @@ namespace SOUI
             ATTR_INT(L"toolWindow",m_bToolWnd,FALSE)
             ATTR_ICON(L"smallIcon",m_hAppIconSmall,FALSE)
             ATTR_ICON(L"bigIcon",m_hAppIconBig,FALSE)
-            ATTR_UINT(L"alpha",m_byAlpha,FALSE)
             ATTR_INT(L"allowSpy",m_bAllowSpy,FALSE)
             ATTR_ENUM_BEGIN(L"wndType",DWORD,FALSE)
                 ATTR_ENUM_VALUE(L"undefine",WT_UNDEFINE)
@@ -77,7 +73,6 @@ namespace SOUI
 		SLayoutSize m_szMin[2];          //窗口最小值
 		SLayoutSize m_rcMaxInset[4];     //窗口最大化时超出屏幕的边缘大小。经测试，WS_OVERLAPPED style的窗口该属性无效
 
-        DWORD m_byAlpha:8;          //透明度
         DWORD m_byWndType:8;         //主窗口标志,有该标志的窗口关闭时自动发送WM_QUIT
         DWORD m_bResizable:1;       //窗口大小可调节
         DWORD m_bAppWnd:1;          //APP窗口，在任务栏上显示按钮
@@ -135,6 +130,15 @@ protected:
 	bool                    m_bResizing;        /**<执行WM_SIZE*/
 
 	SAutoRefPtr<IAnimation> m_hostAnimation;
+	enum	AniState{
+		Ani_none=0,
+		Ani_win=1,
+		Ani_host=2,
+		Ani_both=(Ani_win|Ani_host),
+	};
+	DWORD m_AniState;
+	BOOL  m_bFirstShow;
+	DWORD					m_dwThreadID;
 public:
     SHostWnd(LPCTSTR pszResName = NULL);
     virtual ~SHostWnd();
@@ -175,28 +179,32 @@ public:
 		return m_pTipCtrl;
 	}
 
-	void SetHostAnimation(IAnimation *pAni,bool startNow = true);
-	bool StartHostAnimation();
+	bool StartHostAnimation(IAnimation *pAni);
 	bool StopHostAnimation();
 	void UpdateAutoSizeCount(bool bInc);
 protected:
 	class SHostAnimationHandler : public ITimelineHandler
 	{
 	public:
-		STransformation			m_hostTransform;
 		SHostWnd *				m_pHostWnd;
 		CRect					m_rcInit;
 	protected:
 		virtual void OnNextFrame()override;
 	} m_hostAnimationHandler;
 
-	virtual void OnHostAnimationStarted(IAnimation * pAni){}
-	virtual void OnHostAnimationStoped(IAnimation * pAni){}
+	virtual void OnHostAnimationStarted(IAnimation * pAni);
+	virtual void OnHostAnimationStoped(IAnimation * pAni);
+
+protected:
+	virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
+	virtual void OnAnimationUpdate(IAnimation *pAni);
+	virtual void OnAnimationStop(IAnimation *pAni);
 protected://辅助函数
     void _Redraw();
     void _UpdateNonBkgndBlendSwnd();
     void _RestoreClickState();
 	void _Invalidate(LPCRECT prc);
+
 protected:
     //////////////////////////////////////////////////////////////////////////
     // Message handler
@@ -252,8 +260,10 @@ protected:
     LRESULT OnMenuExEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 	void OnWindowPosChanging(LPWINDOWPOS lpWndPos);
+	void OnWindowPosChanged(LPWINDOWPOS lpWndPos);
         
 	LRESULT OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void OnSysCommand(UINT nID, CPoint lParam);
 
 #ifndef DISABLE_SWNDSPY
 protected:
@@ -267,6 +277,8 @@ protected:
 
     HWND    m_hSpyWnd;
 #endif
+public:
+	virtual BOOL ShowWindow(int nCmdShow);
 
 protected:// IContainer
 
@@ -334,7 +346,9 @@ public://事件处理接口
     virtual BOOL _HandleEvent(EventArgs *pEvt){return FALSE;}
 
 
+	void OnHostShowWindow(BOOL bShow, UINT nStatus);
     BEGIN_MSG_MAP_EX(SHostWnd)
+		MSG_WM_SHOWWINDOW(OnHostShowWindow)
         MSG_WM_SIZE(OnSize)
         MSG_WM_PRINT(OnPrint)
         MSG_WM_PAINT(OnPaint)
@@ -363,7 +377,9 @@ public://事件处理接口
         MESSAGE_HANDLER_EX(UM_SCRIPTTIMER,OnScriptTimer)
         MESSAGE_HANDLER_EX(UM_MENUEVENT,OnMenuExEvent)
 		MSG_WM_WINDOWPOSCHANGING(OnWindowPosChanging)
+		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
 		MESSAGE_HANDLER_EX(WM_GETOBJECT,OnGetObject)
+		MSG_WM_SYSCOMMAND(OnSysCommand)
     #ifndef DISABLE_SWNDSPY
         MESSAGE_HANDLER_EX(SPYMSG_SETSPY, OnSpyMsgSetSpy)
         MESSAGE_HANDLER_EX(SPYMSG_SWNDENUM, OnSpyMsgSwndEnum)

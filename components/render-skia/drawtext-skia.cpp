@@ -1,4 +1,7 @@
 ﻿#include "drawtext-skia.h"
+#include <core/SkTypeface.h>
+#include <string/tstring.h>
+#include <string/strcpcvt.h>
 
 #define DT_ELLIPSIS (DT_PATH_ELLIPSIS|DT_END_ELLIPSIS|DT_WORD_ELLIPSIS)
 #define CH_ELLIPSIS L"..."
@@ -32,7 +35,7 @@ static size_t breakTextEx(const SkPaint *pPaint, const wchar_t* textD, size_t le
 	return nRet;
 }
 
-SkRect DrawText_Skia(SkCanvas* canvas,const wchar_t *text,int len,SkRect box,const SkPaint& paint,UINT uFormat)
+SkRect DrawText_Skia(SkCanvas* canvas,const wchar_t *text,int len,SkRect box, SkPaint& paint,UINT uFormat)
 {
 	if(len<0)	len = wcslen(text);
     SkTextLayoutEx layout;
@@ -42,7 +45,7 @@ SkRect DrawText_Skia(SkCanvas* canvas,const wchar_t *text,int len,SkRect box,con
 }
 
 //////////////////////////////////////////////////////////////////////////
-void SkTextLayoutEx::init( const wchar_t text[], size_t length,SkRect rc, const SkPaint &paint,UINT uFormat )
+void SkTextLayoutEx::init( const wchar_t text[], size_t length,SkRect rc,  SkPaint &paint,UINT uFormat )
 {
     if(uFormat & DT_NOPREFIX)
     {
@@ -113,7 +116,7 @@ SkScalar SkTextLayoutEx::drawLine( SkCanvas *canvas, SkScalar x, SkScalar y, int
 
     if(!(m_uFormat & DT_CALCRECT))
     {
-        canvas->drawText(text,(iEnd-iBegin)*sizeof(wchar_t),x,y,*m_paint);
+        drawText(canvas,text,(iEnd-iBegin),x,y,*m_paint);
         int i=0;
         while(i<m_prefix.count())
         {
@@ -125,7 +128,7 @@ SkScalar SkTextLayoutEx::drawLine( SkCanvas *canvas, SkScalar x, SkScalar y, int
         SkScalar xBase = x;
         if(m_paint->getTextAlign() != SkPaint::kLeft_Align)
         {
-            SkScalar nTextWidth = m_paint->measureText(text,(iEnd-iBegin)*sizeof(wchar_t));
+            SkScalar nTextWidth = measureText(m_paint,text,(iEnd-iBegin));
             switch(m_paint->getTextAlign())
             {
             case SkPaint::kCenter_Align:
@@ -145,18 +148,18 @@ SkScalar SkTextLayoutEx::drawLine( SkCanvas *canvas, SkScalar x, SkScalar y, int
             i++;
         }
     }
-    return m_paint->measureText(text,(iEnd-iBegin)*sizeof(wchar_t));
+    return measureText(m_paint,text,(iEnd-iBegin));
 }
 
 SkScalar SkTextLayoutEx::drawLineEndWithEllipsis( SkCanvas *canvas, SkScalar x, SkScalar y, int iBegin,int iEnd,SkScalar maxWidth )
 {
-    SkScalar widReq=m_paint->measureText(m_text.begin()+iBegin,(iEnd-iBegin)*sizeof(wchar_t));
+    SkScalar widReq=measureText(m_paint,m_text.begin()+iBegin,(iEnd-iBegin));
     if(widReq<=m_rcBound.width())
     {
         return drawLine(canvas,x,y,iBegin,iEnd);
     }else
     {
-        SkScalar fWidEllipsis = m_paint->measureText(CH_ELLIPSIS,sizeof(CH_ELLIPSIS)-sizeof(wchar_t));
+        SkScalar fWidEllipsis = measureText(m_paint,CH_ELLIPSIS,3);
         maxWidth-=fWidEllipsis;
         
         int i=0;
@@ -164,7 +167,7 @@ SkScalar SkTextLayoutEx::drawLineEndWithEllipsis( SkCanvas *canvas, SkScalar x, 
         SkScalar fWid=0.0f;
         while(i<(iEnd-iBegin))
         {
-            SkScalar fWord = m_paint->measureText(text+i,sizeof(wchar_t));
+            SkScalar fWord = measureText(m_paint,text+i,1);
             if(fWid + fWord > maxWidth) break;
             fWid += fWord;
             i++;
@@ -174,7 +177,7 @@ SkScalar SkTextLayoutEx::drawLineEndWithEllipsis( SkCanvas *canvas, SkScalar x, 
             wchar_t *pbuf=new wchar_t[i+3];
             memcpy(pbuf,text,i*sizeof(wchar_t));
             memcpy(pbuf+i,CH_ELLIPSIS,3*sizeof(wchar_t));
-            canvas->drawText(pbuf,(i+3)*sizeof(wchar_t),x,y,*m_paint);
+            drawText(canvas,pbuf,(i+3),x,y,*m_paint);
             delete []pbuf;
         }
         return fWid+fWidEllipsis;
@@ -184,7 +187,6 @@ SkScalar SkTextLayoutEx::drawLineEndWithEllipsis( SkCanvas *canvas, SkScalar x, 
 SkRect SkTextLayoutEx::draw( SkCanvas* canvas )
 {
     SkPaint::FontMetrics metrics;
-
     m_paint->getFontMetrics(&metrics);
     float lineSpan = metrics.fBottom-metrics.fTop;
 
@@ -264,4 +266,33 @@ SkRect SkTextLayoutEx::draw( SkCanvas* canvas )
     }
     canvas->restore();
     return rcDraw;
+}
+
+void SkTextLayoutEx::drawText(SkCanvas *canvas,const wchar_t* text, size_t length, SkScalar x, SkScalar y,  SkPaint& paint)
+{
+	SkTypeface *pfont = paint.getTypeface();
+	uint16_t* glyphs = new uint16_t[length];
+	int nValids=pfont->charsToGlyphs(text,SkTypeface::kUTF16_Encoding,glyphs,length);
+	if(nValids==length)
+	{
+		canvas->drawText(text,length*sizeof(wchar_t),x,y,paint);
+	}else
+	{
+#ifdef UNICODE
+		SOUI::SStringA strFace=SOUI::S_CT2A(L"宋体",CP_UTF8);
+#else
+		SOUI::SStringA strFace="宋体";
+#endif
+		SkTypeface * font2=SkTypeface::CreateFromName(strFace,pfont->style());
+		paint.setTypeface(font2);
+		canvas->drawText(text,length*sizeof(wchar_t),x,y,paint);
+		paint.setTypeface(pfont);
+		font2->unref();
+	}
+	delete []glyphs;
+}
+
+SkScalar SkTextLayoutEx::measureText( SkPaint *paint,const wchar_t* text, size_t length)
+{
+	return paint->measureText(text,length*sizeof(wchar_t));
 }

@@ -67,7 +67,7 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
         }
         else
         {
-            SASSERT_FMTW(FALSE,L"load skin error,type=%s,name=%s",strTypeName,strSkinName);
+            SASSERT_FMTW(FALSE,L"load skin error,type=%s,name=%s",strTypeName.c_str(),strSkinName.c_str());
         }
         xmlSkin=xmlSkin.next_sibling();
     }
@@ -78,6 +78,16 @@ int SSkinPool::LoadSkins(pugi::xml_node xmlNode)
     return nLoaded;
 }
 
+
+BOOL SSkinPool::AddSkin(ISkinObj* pSkin)
+{
+	SkinKey key = {pSkin->GetName(),pSkin->GetScale()};
+	if(HasKey(key))
+		return FALSE;
+	AddKeyObject(key,pSkin);
+	pSkin->AddRef();
+	return TRUE;
+}
 
 
 ISkinObj* SSkinPool::GetSkin(const SStringW & strSkinName,int nScale)
@@ -125,7 +135,11 @@ void SSkinPool::OnKeyRemoved(const SSkinPtr & obj )
 SSkinPoolMgr::SSkinPoolMgr()
 {
     m_bulitinSkinPool.Attach(new SSkinPool);
-    PushSkinPool(m_bulitinSkinPool);
+    m_lstSkinPools.AddTail(m_bulitinSkinPool);
+	m_bulitinSkinPool->AddRef();
+	m_userSkinPool.Attach(new SSkinPool);
+	m_lstSkinPools.AddTail(m_userSkinPool);
+	m_userSkinPool->AddRef();
 }
 
 SSkinPoolMgr::~SSkinPoolMgr()
@@ -154,7 +168,7 @@ ISkinObj* SSkinPoolMgr::GetSkin( const SStringW & strSkinName, int nScale)
 
     if(wcscmp(strSkinName,L"")!=0)
     {
-        SASSERT_FMTW(FALSE,L"GetSkin[%s] Failed!",strSkinName);
+        SASSERT_FMTW(FALSE,L"GetSkin[%s] Failed!",strSkinName.c_str());
     }
     return NULL;
 }
@@ -215,7 +229,9 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     SSkinPool * pRet=NULL;
     if(pSkinPool)
     {
-        if(pSkinPool == m_bulitinSkinPool) return NULL;
+        if(pSkinPool == m_bulitinSkinPool
+			|| pSkinPool == m_userSkinPool) 
+			return NULL;
 
         SPOSITION pos=m_lstSkinPools.Find(pSkinPool);
         if(pos)
@@ -229,6 +245,17 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     }
     if(pRet) pRet->Release();
     return pRet;
+}
+
+
+SSkinPool * SSkinPoolMgr::GetUserSkinPool()
+{
+	return m_userSkinPool;
+}
+
+SSkinPool * SSkinPoolMgr::GetBuiltinSkinPool()
+{
+	return m_bulitinSkinPool;
 }
 
 }//namespace SOUI

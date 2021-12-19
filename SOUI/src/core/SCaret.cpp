@@ -8,13 +8,22 @@ namespace SOUI{
 		:m_pContainer(pContainer)
 		,m_bDrawCaret(true),m_bVisible(FALSE),m_iFrame(0),m_byAlpha(0xFF)
 		,m_crCaret(RGBA(0,0,0,255)), m_nAniFrames(20),m_nShowFrames(20),m_bAniCaret(FALSE)
+		,m_hOwner(0)
     {
 		m_AniInterpolator.Attach(CREATEINTERPOLATOR(SAccelerateInterpolator::GetClassName()));
+	}
+
+	SCaret::~SCaret()
+	{
+		m_pContainer->UnregisterTimelineHandler(this);
 	}
 
 
 	BOOL SCaret::Init(HBITMAP hBmp, int nWid, int nHei)
 	{
+		::CreateCaret(m_pContainer->GetHostHwnd(),hBmp,nWid,nHei);
+		::HideCaret(m_pContainer->GetHostHwnd());
+
 		m_bDrawCaret = true;
 		SAutoRefPtr<IRenderTarget> pRT;
 		GETRENDERFACTORY->CreateRenderTarget(&pRT, nWid, nHei);
@@ -76,7 +85,7 @@ namespace SOUI{
 				int iFrame = m_iFrame-m_nShowFrames-m_nAniFrames;
 				m_byAlpha = (BYTE)(255 * m_AniInterpolator->getInterpolation( iFrame*1.0f / m_nAniFrames));
 			}
-			m_pContainer->OnRedraw(GetRect());
+			Invalidate();
 		}
 		else
 		{
@@ -84,11 +93,11 @@ namespace SOUI{
 			{
 				m_bDrawCaret = true;
 				m_byAlpha = 255;
-				m_pContainer->OnRedraw(GetRect());
+				Invalidate();
 			}else if(m_iFrame == m_nShowFrames)
 			{
 				m_bDrawCaret = false;
-				m_pContainer->OnRedraw(GetRect());
+				Invalidate();
 			}
 		}
 	}
@@ -102,12 +111,16 @@ namespace SOUI{
 		{
 			m_bDrawCaret = TRUE;
 		}
+		RECT rc={0};
+		m_pContainer->FrameToHost(rc);
+		::SetCaretPos(rc.left+x,rc.top+y);
 	}
 
-	BOOL SCaret::SetVisible(BOOL bVisible)
+	BOOL SCaret::SetVisible(BOOL bVisible,SWND owner)
 	{
-		if (bVisible == m_bVisible)
+		if (m_hOwner==owner && bVisible == m_bVisible)
 			return FALSE;
+		m_hOwner = owner;
 		m_bVisible = bVisible;
 
 		m_iFrame = 0;
@@ -132,6 +145,19 @@ namespace SOUI{
 		CSize szCaret;
 		if (m_bmpCaret) szCaret = m_bmpCaret->Size();
 		return	CRect(m_ptCaret, szCaret);
+	}
+
+	void SCaret::Invalidate()
+	{
+		if(m_hOwner)
+		{
+			SWindow	* pOwner = SWindowMgr::GetWindow(m_hOwner);
+			if(pOwner)
+			{
+				RECT rcCaret = GetRect();
+				pOwner->InvalidateRect(&rcCaret);
+			}
+		}
 	}
 
 }

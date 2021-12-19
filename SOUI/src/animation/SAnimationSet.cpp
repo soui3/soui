@@ -173,7 +173,7 @@ namespace SOUI {
 					mRepeated = 1;
 				}
 				mChildStarted = false;
-				mStartTime = -1;
+				mStartTime = currentTime;
 				more = true;
 				fireAnimationRepeat();
 			}

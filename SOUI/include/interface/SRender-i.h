@@ -91,6 +91,30 @@ namespace SOUI
 	struct fRect {
 		float    fLeft, fTop, fRight, fBottom;
 	};
+
+	struct IMaskFilter : public IObjRef, public SObject
+	{
+		enum SkBlurStyle {
+			kNormal_SkBlurStyle,  //!< fuzzy inside and outside
+			kSolid_SkBlurStyle,   //!< solid inside, fuzzy outside
+			kOuter_SkBlurStyle,   //!< nothing inside, fuzzy outside
+			kInner_SkBlurStyle,   //!< fuzzy inside, nothing outside
+
+			kLastEnum_SkBlurStyle = kInner_SkBlurStyle
+		};
+
+
+		enum SkBlurFlags {
+			kNone_BlurFlag = 0x00,
+			/** The blur layer's radius is not affected by transforms */
+			kIgnoreTransform_BlurFlag   = 0x01,
+			/** Use a smother, higher qulity blur algorithm */
+			kHighQuality_BlurFlag       = 0x02,
+			/** mask for all blur flags */
+			kAll_BlurFlag = 0x03
+		};
+	};
+
     /**
     * @struct     IRenderFactory
     * @brief      RenderFactory对象
@@ -124,6 +148,10 @@ namespace SOUI
 		virtual BOOL CreatePathEffect(REFGUID guidEffect,IPathEffect ** ppPathEffect) = 0;
 
 		virtual BOOL CreatePathMeasure(IPathMeasure ** ppPathMeasure) = 0;
+
+		virtual HRESULT CreateBlurMaskFilter(float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) = 0;
+
+		virtual HRESULT CreateEmbossMaskFilter(float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) = 0;
     };
 
     enum OBJTYPE
@@ -1140,7 +1168,8 @@ namespace SOUI
         virtual HRESULT SelectObject(IRenderObj *pObj,IRenderObj ** pOldObj = NULL) =0;
         virtual COLORREF GetTextColor() =0;
         virtual COLORREF SetTextColor(COLORREF color)=0;
-
+		virtual void SetMaskFilter(IMaskFilter *pMaskFilter) = 0;
+		virtual IMaskFilter *GetMaskFilter() = 0;
         //两个兼容GDI操作的接口
         virtual HDC GetDC(UINT uFlag=0)=0;
         virtual void ReleaseDC(HDC hdc) =0;
@@ -1224,6 +1253,7 @@ namespace SOUI
 		virtual HRESULT PopLayer() = 0;
 
 		virtual HRESULT SetXfermode(int mode,int *pOldMode=NULL) = 0;
+		virtual BOOL SetAntiAlias(BOOL bAntiAlias) = 0;
 	};
 
 

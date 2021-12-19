@@ -99,6 +99,12 @@ namespace SOUI
 		}
 	}
 
+	void S3dWindow::OnDestroy()
+	{
+		GetContainer()->UnregisterTimelineHandler(this);
+		__super::OnDestroy();
+	}
+
 
 	/////////////////////////////////////////////////////////////////////////
 SMatrixWindow::SMatrixWindow(void)

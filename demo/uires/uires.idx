@@ -189,9 +189,16 @@
     <file name="slide_hide" path="anim\slide_hide.xml"/>
     <file name="rotate" path="anim\rotate.xml"/>
     <file name="anihost" path="anim\anihost.xml"/>
+    <file name="scale_in" path="anim\scale_in.xml"/>
+    <file name="scale_out" path="anim\scale_out.xml"/>
+    <file name="alpha_in" path="anim\alpha_in.xml"/>
+    <file name="alpha_out" path="anim\alpha_out.xml"/>
   </anim>
   <valueAni>
     <file name="alphaAni" path="valueAni\alpha.xml"/>
     <file name="colorAni" path="valueAni\color.xml"/>
   </valueAni>
+  <svg>
+    <file name="tiger" path="svg\tiger.svg"/>
+  </svg>
 </resource>

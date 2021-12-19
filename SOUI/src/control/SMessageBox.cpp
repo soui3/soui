@@ -2,7 +2,6 @@
 #include "SApp.h"
 #include "control/SMessageBox.h"
 #include "control/SCmnCtrl.h"
-#include <algorithm>
 
 namespace SOUI
 {
@@ -40,13 +39,12 @@ namespace SOUI
         UINT    uType;
     }s_MsgBoxInfo;
     
-    INT_PTR SMessageBoxImpl::MessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType ,int nScale)
+    INT_PTR SMessageBoxImpl::MessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
     {
         if(!GetMsgTemplate()) return ::MessageBox(hWnd,lpText,lpCaption,uType);
         s_MsgBoxInfo.pszText=lpText;
         s_MsgBoxInfo.pszCaption=lpCaption;
         s_MsgBoxInfo.uType=uType;
-		m_nScale = nScale;
         return DoModal(hWnd);
     }
 
@@ -226,10 +224,10 @@ namespace SOUI
     }
 
     //////////////////////////////////////////////////////////////////////////
-    INT_PTR SMessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType,int nScale)
+    INT_PTR SMessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
     {
         SMessageBoxImpl msgBox;
-        return msgBox.MessageBox(hWnd,lpText,lpCaption,uType, nScale);
+        return msgBox.MessageBox(hWnd,lpText,lpCaption,uType);
     }
 
 

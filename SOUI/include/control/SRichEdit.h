@@ -12,7 +12,6 @@
 */
 #pragma once
 
-#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
@@ -151,13 +150,7 @@ namespace SOUI
             return pserv;
         }
 
-        /**
-        * STextHost::GetCaretPos
-        * @brief     获取坐标
-        *
-        * Describe   获取坐标   
-        */
-        POINT GetCaretPos(){return m_ptCaret;}
+
     protected:
 
         /**
@@ -682,7 +675,7 @@ namespace SOUI
 		*
 		* Describe   设置选中, 支持超长文本
 		*/
-    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
+    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项
@@ -1112,6 +1105,8 @@ namespace SOUI
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
 		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
+
+		BOOL OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1140,7 +1135,14 @@ namespace SOUI
 			MESSAGE_HANDLER_EX(EM_GETRECT,OnGetRect)
         SOUI_MSG_MAP_END()
 
-	public:
+	protected:
+		#define ATTR_RE_STYLE(attr,style,txtBit, func)   \
+		if (0 == strAttribName.CompareNoCase(attr))      \
+        {                                                \
+			hRet = func(strValue,style,txtBit,bLoading); \
+        }                                                \
+        else                                             \
+
         /**
         * SRichEdit::OnAttrTextColor
         * @brief    设置文本颜色
@@ -1154,19 +1156,12 @@ namespace SOUI
         HRESULT OnAttrRTF(const SStringW &  strValue,BOOL bLoading);
         HRESULT OnAttrAlign(const SStringW &  strValue,BOOL bLoading);
         HRESULT OnAttrNotifyChange(const SStringW &  strValue,BOOL bLoading);
-		HRESULT OnAttrHscrollBar(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrVscrollBar(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrAutoHscrollBar(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrAutoVscrollBar(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrMultiLines(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrReadOnly(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrWantReturn(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrPassword(const SStringW & strValue,BOOL bLoading);
 		HRESULT OnAttrPasswordChar(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrNumber(const SStringW & strValue,BOOL bLoading);
 		HRESULT OnAttrEnableDragdrop(const SStringW & strValue,BOOL bLoading);
-		HRESULT OnAttrAutoSel(const SStringW & strValue,BOOL bLoading);
-
+		
+		HRESULT OnAttrReStyle(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading);
+		HRESULT OnAttrReStyle2(const SStringW &strValue,DWORD dwStyle,DWORD txtBit,BOOL bLoading);
+	public:
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"style",m_dwStyle,FALSE)
             ATTR_INT(L"maxBuf",m_cchTextMost,FALSE)
@@ -1178,25 +1173,26 @@ namespace SOUI
             ATTR_INT(L"autoWordSel",m_fEnableAutoWordSel,FALSE)
             ATTR_INT(L"vcenter",m_fSingleLineVCenter,FALSE)
 			ATTR_INT(L"disableCaret",m_fDisableCaret,FALSE)
+			ATTR_BOOL(L"wantTab",m_fWantTab,FALSE)
+			ATTR_BOOL(L"autoSel",m_fAutoSel,FALSE)
             ATTR_CUSTOM(L"colorText",OnAttrTextColor)
             ATTR_CUSTOM(L"rtf",OnAttrRTF)
             ATTR_CUSTOM(L"align",OnAttrAlign)
             ATTR_CUSTOM(L"notifyChange",OnAttrNotifyChange)
-			ATTR_BOOL(L"wantTab",m_fWantTab,FALSE)
-			ATTR_CUSTOM(L"hscrollBar",OnAttrHscrollBar)
-			ATTR_CUSTOM(L"vscrollBar",OnAttrVscrollBar)
-			ATTR_CUSTOM(L"autoHscroll",OnAttrAutoHscrollBar)
-			ATTR_CUSTOM(L"autoVscroll",OnAttrAutoVscrollBar)
-			ATTR_CUSTOM(L"multiLines",OnAttrMultiLines)
-			ATTR_CUSTOM(L"readOnly",OnAttrReadOnly)
-			ATTR_CUSTOM(L"wantReturn",OnAttrWantReturn)
-			ATTR_CUSTOM(L"password",OnAttrPassword)
+			ATTR_RE_STYLE(L"wantReturn",ES_WANTRETURN,0,OnAttrReStyle)
+			ATTR_RE_STYLE(L"number",ES_NUMBER,0,OnAttrReStyle)
+			ATTR_RE_STYLE(L"upperCase",ES_UPPERCASE,0,OnAttrReStyle)
+			ATTR_RE_STYLE(L"lowerCase",ES_LOWERCASE,0,OnAttrReStyle)
+			ATTR_RE_STYLE(L"password",ES_PASSWORD,TXTBIT_USEPASSWORD, OnAttrReStyle)
+			ATTR_RE_STYLE(L"readOnly",ES_READONLY,TXTBIT_READONLY,OnAttrReStyle)
+			ATTR_RE_STYLE(L"multiLines",ES_MULTILINE,TXTBIT_MULTILINE,OnAttrReStyle)
+			ATTR_RE_STYLE(L"autoHscroll",ES_AUTOHSCROLL,TXTBIT_SCROLLBARCHANGE,OnAttrReStyle2)
+			ATTR_RE_STYLE(L"autoVscroll",ES_AUTOVSCROLL,TXTBIT_SCROLLBARCHANGE,OnAttrReStyle2)
+			ATTR_RE_STYLE(L"hscrollBar",WS_HSCROLL,TXTBIT_SCROLLBARCHANGE,OnAttrReStyle2)
+			ATTR_RE_STYLE(L"vscrollBar",WS_VSCROLL,TXTBIT_SCROLLBARCHANGE,OnAttrReStyle2)
 			ATTR_CUSTOM(L"passwordChar",OnAttrPasswordChar)
-			ATTR_CUSTOM(L"number",OnAttrNumber)
 			ATTR_CUSTOM(L"enableDragdrop",OnAttrEnableDragdrop)
-			ATTR_CUSTOM(L"autoSel",OnAttrAutoSel)
        SOUI_ATTRS_END()
-
     protected:
         
         CHARFORMAT2W   m_cfDef;              /**< Default character format  */

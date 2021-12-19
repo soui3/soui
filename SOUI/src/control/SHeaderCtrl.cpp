@@ -324,6 +324,7 @@ namespace SOUI
 			{//调节宽度
 				if (!m_bFixWidth)
 				{
+					int iItem = LOWORD(m_dwHitTest);
 					int cxNew = m_nAdjItemOldWidth + pt.x - m_ptClick.x;
 					if (cxNew < 0) cxNew = 0;
 					CRect rc = GetClientRect();
@@ -336,25 +337,39 @@ namespace SOUI
 						nTotalWid += m_arrItems[i].cx;
 						fTotalWeight += m_arrItems[i].fWeight;
 					}
-					if(nTotalWid != rc.Width() && fTotalWeight>0.0f)
-					{//set cx to visible width.
-						int nRemain = rc.Width()-nTotalWid;
-						for(UINT i=0;i<m_arrItems.GetCount() && nRemain>0 && fTotalWeight>0.0f;i++)
-						{
-							if(!m_arrItems[i].bVisible)
-								continue;
-							int nAppend = (int)(nRemain*m_arrItems[i].fWeight/fTotalWeight);
-							m_arrItems[i].cx += nAppend;
-							nRemain -= nAppend;
-							fTotalWeight -= m_arrItems[i].fWeight;
+					if(fTotalWeight>0.0f)
+					{
+						if(nTotalWid!=rc.Width())
+						{//first adjust, split the remain size into columns based on column weight.
+							int nRemain = rc.Width()-nTotalWid;
+							for(UINT i=0;i<m_arrItems.GetCount() && nRemain>0 && fTotalWeight>0.0f;i++)
+							{
+								if(!m_arrItems[i].bVisible)
+									continue;
+								int nAppend = (int)(nRemain*m_arrItems[i].fWeight/fTotalWeight);
+								m_arrItems[i].cx += nAppend;
+								nRemain -= nAppend;
+								fTotalWeight -= m_arrItems[i].fWeight;
+							}
 						}
+						if(iItem==m_arrItems.GetCount()-1)//can't adjust last column
+							return;
+						int nDelta = cxNew - m_arrItems[iItem].cx;
+						if(m_arrItems[iItem].cx + nDelta<0)
+							nDelta = -m_arrItems[iItem].cx;
+						if(m_arrItems[iItem+1].cx-nDelta<0)
+							nDelta = m_arrItems[iItem+1].cx;
+						m_arrItems[iItem].cx += nDelta;	//add the delta the the select column.
+						m_arrItems[iItem+1].cx -= nDelta;//sub the delta from the next column.
+					}else
+					{//no weight data
+						m_arrItems[iItem].cx = cxNew;
 					}
-					m_arrItems[LOWORD(m_dwHitTest)].cx = cxNew;
 
 					Invalidate();
 					//发出调节宽度消息
 					EventHeaderItemChanging evt(this);
-					evt.iItem = LOWORD(m_dwHitTest);
+					evt.iItem = iItem;
 					evt.nWidth = cxNew;
 					FireEvent(evt);
 
@@ -537,7 +552,7 @@ namespace SOUI
 		ReleaseRenderTarget(pRT);
 	}
 
-	int SHeaderCtrl::GetTotalWidth() const
+	int SHeaderCtrl::GetTotalWidth(bool bMinWid) const
 	{
 		CRect rc = GetClientRect();
 
@@ -550,7 +565,7 @@ namespace SOUI
 			nTotalWidth += m_arrItems[i].cx;
 			fTotalWeight += m_arrItems[i].fWeight;
 		}
-		if(fTotalWeight>0.0f)
+		if(!bMinWid && fTotalWeight>0.0f)
 		{
 			return smax(nTotalWidth,rc.Width());
 		}else
@@ -590,7 +605,7 @@ namespace SOUI
 				{
 					return m_arrItems[iItem].cx;
 				}
-				for(int i=0;i<iItem-1;i++)
+				for(int i=0;i<iItem;i++)
 				{
 					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
 					nRemain-=nAppend;
@@ -691,6 +706,16 @@ namespace SOUI
 	{
 		SASSERT(iItem >= 0 && iItem < (int)m_arrItems.GetCount());
 		return m_arrItems[iItem].bVisible;
+	}
+
+	bool SHeaderCtrl::IsAutoResize() const
+	{
+		for(UINT i=0;i<m_arrItems.GetCount();i++)
+		{
+			if(m_arrItems[i].fWeight>0.0f)
+				return true;
+		}
+		return false;
 	}
 
 

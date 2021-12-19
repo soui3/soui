@@ -23,11 +23,11 @@ namespace SOUI
 		friend class SMenuEx;
 		friend class SMenuExItem;
 	protected:
-		ISkinObj * m_pItemSkin;
-		ISkinObj * m_pIconSkin;
-		ISkinObj * m_pCheckSkin;
-		ISkinObj * m_pArrowSkin;
-		ISkinObj * m_pSepSkin;
+		SAutoRefPtr<ISkinObj> m_pItemSkin;
+		SAutoRefPtr<ISkinObj> m_pIconSkin;
+		SAutoRefPtr<ISkinObj> m_pCheckSkin;
+		SAutoRefPtr<ISkinObj> m_pArrowSkin;
+		SAutoRefPtr<ISkinObj> m_pSepSkin;
 
 		SMenuEx  * m_pMenuEx;
 
@@ -89,33 +89,25 @@ namespace SOUI
 			m_nIconBarWidth.setSize(24.f, SLayoutSize::dp);
 			m_nMinWidth.setSize(WIDTH_MENU_MIN, SLayoutSize::dp);
 			OnAttrLayout(SVBox::GetClassName(), TRUE);//set layout to vbox
+			GetLayoutParam()->SetWrapContent(Both);
 		}
 		
 		SMenuExItem * GetNextMenuItem(SMenuExItem *pItem, BOOL bForword, int nCount = 0);
 
 		CSize CalcMenuSize()
 		{
-			return GetDesiredSize(WIDTH_MENU_INIT, WIDTH_MENU_INIT);
+			HMONITOR hMonitor = MonitorFromWindow(m_pMenuEx->m_hWnd,MONITOR_DEFAULTTOPRIMARY);
+			MONITORINFO monitorInfo={sizeof(MONITORINFO),0};
+			GetMonitorInfo(hMonitor,&monitorInfo);
+			int maxHei = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+			return GetDesiredSize(-1, maxHei);
+
 		}
 
-		//CRect GetMargin() const;
 
 		virtual CSize GetDesiredSize(int wid,int hei)
 		{
-			CSize szRet;
-			SWindow *pItem = GetWindow(GSW_FIRSTCHILD);
-			while (pItem)
-			{
-				CSize szItem = pItem->GetDesiredSize(wid,hei);
-				if (szItem.cx < WIDTH_MENU_MAX)
-					szRet.cx = smax(szRet.cx, szItem.cx);
-				szRet.cy += szItem.cy;
-				pItem = pItem->GetWindow(GSW_NEXTSIBLING);
-			}
-			CRect rcMargin = m_style.GetMargin();
-			szRet.cx += rcMargin.left + rcMargin.right;
-			szRet.cy += rcMargin.top + rcMargin.bottom;
-
+			CSize szRet = __super::GetDesiredSize(wid,hei);
 			if (szRet.cx > m_nMaxWidth.toPixelSize(GetScale()) && !m_nMaxWidth.isWrapContent())
 				szRet.cx = m_nMaxWidth.toPixelSize(GetScale());
 			if (szRet.cx < m_nMinWidth.toPixelSize(GetScale()))
@@ -148,6 +140,7 @@ namespace SOUI
 				{
 					InsertChild(pMenuItem);
 					pMenuItem->InitFromXml(xmlItem);
+					pMenuItem->GetLayoutParam()->SetMatchParent(Horz);
 				}
 				xmlItem = xmlItem.next_sibling();
 			}
@@ -156,25 +149,12 @@ namespace SOUI
 
 		virtual CRect GetChildrenLayoutRect() const
 		{
-			CRect rcClient = GetClientRect();
-			return rcClient;
+			return GetClientRect();
 		}
 
 		virtual void UpdateChildrenPosition()
 		{
-			CRect rcClient = GetChildrenLayoutRect();
-
-			SWindow *pChild = GetWindow(GSW_FIRSTCHILD);
-			CRect rcItem = rcClient;
-			rcItem.bottom = rcItem.top;
-			while (pChild)
-			{
-				CSize szItem = pChild->GetDesiredSize(rcClient.Width(),rcClient.Height());
-				rcItem.top = rcItem.bottom;
-				rcItem.bottom += szItem.cy;
-				pChild->Move(rcItem);
-				pChild = pChild->GetWindow(GSW_NEXTSIBLING);
-			}
+			GetLayout()->LayoutChildren(this);
 		}
 
 		virtual void OnScaleChanged(int nScale)
@@ -249,6 +229,7 @@ namespace SOUI
 		, m_bRadio(FALSE)
 		, m_cHotKey(0)
 	{
+		m_bDisplay = FALSE;
 		m_pBgSkin = pItemSkin;
 		m_style.m_bTrackMouseEvent = TRUE;
 		m_style.SetAlign(DT_LEFT);
@@ -334,20 +315,20 @@ namespace SOUI
 
 	CSize SMenuExItem::GetDesiredSize(int wid,int hei)
 	{
-		if (!IsVisible())
-			return CSize();
 		CSize szRet = __super::GetDesiredSize(wid,hei);
-
 		SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
 		SASSERT(pMenuRoot);
-		if (!GetLayoutParam()->IsSpecifiedSize(Horz))
+		if(GetChildrenCount()==0)
 		{
-			szRet.cx += pMenuRoot->m_nIconBarWidth.toPixelSize(GetScale()) + pMenuRoot->m_nTextOffset.toPixelSize(GetScale());
-			if (m_pSubMenu) szRet.cx += pMenuRoot->m_pArrowSkin->GetSkinSize().cx;//加上子菜单箭头宽度
+			if (!GetLayoutParam()->IsSpecifiedSize(Horz))
+			{
+				szRet.cx += pMenuRoot->m_nIconBarWidth.toPixelSize(GetScale()) + pMenuRoot->m_nTextOffset.toPixelSize(GetScale());
+				if (m_pSubMenu) szRet.cx += pMenuRoot->m_pArrowSkin->GetSkinSize().cx;//加上子菜单箭头宽度
+			}
 		}
 		if (!GetLayoutParam()->IsSpecifiedSize(Vert))
 		{
-			szRet.cy = pMenuRoot->m_nItemHei.toPixelSize(GetScale());
+			szRet.cy = smax(szRet.cy,pMenuRoot->m_nItemHei.toPixelSize(GetScale()));
 		}
 		return szRet;
 	}
@@ -416,7 +397,7 @@ namespace SOUI
 			(void)pMenuRoot;
 			SASSERT(pMenuRoot);
 			CSize szRet;
-			szRet.cx = WIDTH_MENU_INIT;
+			szRet.cx = 0;
 			if (!GetLayoutParam()->IsSpecifiedSize(Vert))
 			{
 				if (m_pBgSkin)
@@ -525,6 +506,14 @@ namespace SOUI
 
 		void ExitMenu(int nCmdID)
 		{
+			//hide all menu window
+			SPOSITION pos = m_lstMenuEx.GetTailPosition();
+			while (pos)
+			{
+				SMenuEx * pMenuEx = m_lstMenuEx.GetPrev(pos);
+				pMenuEx->ShowWindow(SW_HIDE);
+			}
+
 			m_bExit = TRUE;
 			m_nCmdID = nCmdID;
 		}
@@ -586,7 +575,7 @@ namespace SOUI
 			&& xmlNode.name() != SStringW(SMenuExItem::GetClassName()))
 			return FALSE;
 
-		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
+		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST |WS_EX_NOACTIVATE, 0, 0, 0, 0);
 		pugi::xml_document souiXml;
 		pugi::xml_node root = souiXml.append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);
@@ -596,7 +585,7 @@ namespace SOUI
 		}
 		m_hParent = hParent;
 		InitFromXml(root);
-
+		m_hostAttr.SetSendWheel2Hover(true);
 		if (!hWnd) return FALSE;
 
 
@@ -610,14 +599,26 @@ namespace SOUI
 		return TRUE;
 	}
 
-	SMenuExItem * SMenuEx::GetMenuItem(int nID)
+	SMenuExItem * SMenuEx::GetMenuItem(int nID,BOOL byCmdId)
 	{
-		return FindChildByID2<SMenuExItem>(nID);
+		if(byCmdId)
+		{
+			return FindChildByID2<SMenuExItem>(nID);
+		}else
+		{
+			SMenuExRoot *pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
+			SWindow * pItem = pMenuRoot->GetWindow(GSW_FIRSTCHILD);
+			for(int i=0;i<nID && pItem;i++)
+			{
+				pItem = pItem->GetWindow(GSW_NEXTSIBLING);
+			}
+			return sobj_cast<SMenuExItem>(pItem);
+		}
 	}
 
-	SMenuEx * SMenuEx::GetSubMenu(int nID)
+	SMenuEx * SMenuEx::GetSubMenu(int nID,BOOL byCmdId)
 	{
-		SMenuExItem * pItem = GetMenuItem(nID);
+		SMenuExItem * pItem = GetMenuItem(nID,byCmdId);
 		if (!pItem) return NULL;
 		return pItem->GetSubMenu();
 	}
@@ -634,7 +635,7 @@ namespace SOUI
 		if (!hOwner || !::IsWindowEnabled(hOwner)) hActive = ::GetActiveWindow();
 
 		HWND hRoot = hActive;
-		while (::GetParent(hRoot))
+		while ((::GetWindowLongPtr(hRoot,GWL_STYLE)&WS_CHILD) && ::GetParent(hRoot))
 		{
 			hRoot = ::GetParent(hRoot);
 		}
@@ -795,6 +796,7 @@ namespace SOUI
 		BOOL bMsgQuit(FALSE);
 		HWND hCurMenu(NULL);
 
+
 		for (;;)
 		{
 
@@ -809,71 +811,89 @@ namespace SOUI
 			}
 			MSG msg = { 0 };
 
-			if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
-			{//获取消息，不从消息队列中移除。
-				if (msg.message == WM_KEYDOWN
-					|| msg.message == WM_SYSKEYDOWN
-					|| msg.message == WM_KEYUP
-					|| msg.message == WM_SYSKEYUP
-					|| msg.message == WM_CHAR
-					|| msg.message == WM_IME_CHAR)
+			for(;;)
+			{//获取菜单相关消息，抄自wine代码
+				if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
 				{
-					msg.hwnd = s_MenuData->GetMenuEx()->m_hWnd;
-				}
-				else if (msg.message == WM_LBUTTONDOWN
-					|| msg.message == WM_RBUTTONDOWN
-					|| msg.message == WM_NCLBUTTONDOWN
-					|| msg.message == WM_NCRBUTTONDOWN
-					|| msg.message == WM_LBUTTONDBLCLK
-					)
-				{
-					//click on other window
-					if (!s_MenuData->IsMenuWnd(msg.hwnd))
-					{
-						s_MenuData->ExitMenu(0);
+					if(!CallMsgFilter(&msg,MSGF_MENU))
 						break;
-					}
-					else
-					{
-						SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
-						pMenu->HideSubMenu();
-					}
-				}
-				else if (msg.message == WM_QUIT)
+					PeekMessage(&msg, NULL, msg.message, msg.message, PM_REMOVE);
+				}else
 				{
-					bMsgQuit = TRUE;
+					WaitMessage();
 				}
-
-				//移除消息队列中当前的消息。
-				MSG msgT;
-				::GetMessage(&msgT, 0, 0, 0);
-
-				//拦截非菜单窗口的MouseMove消息
-				if (msg.message == WM_MOUSEMOVE)
-				{
-					if (msg.hwnd != hCurMenu)
-					{
-						if (hCurMenu)
-						{
-							::SendMessage(hCurMenu, WM_MOUSELEAVE, 0, 0);
-						}
-						hCurMenu = msg.hwnd;
-					}
-
-					SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
-					if (!pMenu)
-					{
-						hCurMenu = NULL;
-					}
-
-				}
-
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
 			}
-			else
+
+
+			if (msg.message == WM_KEYDOWN
+				|| msg.message == WM_KEYUP
+				|| msg.message == WM_SYSKEYDOWN
+				|| msg.message == WM_SYSKEYUP
+				)
+			{//拦截alt键
+				if(msg.wParam == VK_MENU)
+				{//handle alt key down, exit menu loop
+					s_MenuData->ExitMenu(0);
+					break;
+				}
+			}
+			else if (msg.message == WM_LBUTTONDOWN
+				|| msg.message == WM_RBUTTONDOWN
+				|| msg.message == WM_NCLBUTTONDOWN
+				|| msg.message == WM_NCRBUTTONDOWN
+				|| msg.message == WM_LBUTTONDBLCLK
+				)
 			{
-				MsgWaitForMultipleObjects(0, 0, 0, 10, QS_ALLINPUT);
+				//click on other window
+				if (!s_MenuData->IsMenuWnd(msg.hwnd))
+				{
+					s_MenuData->ExitMenu(0);
+					break;
+				}
+				else
+				{
+					SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
+					pMenu->HideSubMenu();
+				}
+			}
+			else if (msg.message == WM_QUIT)
+			{
+				bMsgQuit = TRUE;
+			}
+
+			//移除消息队列中当前的消息。
+			PeekMessage(&msg, NULL, msg.message, msg.message, PM_REMOVE);
+
+			//拦截非菜单窗口的MouseMove消息
+			if (msg.message == WM_MOUSEMOVE)
+			{
+				if (msg.hwnd != hCurMenu)
+				{
+					if (hCurMenu)
+					{
+						::SendMessage(hCurMenu, WM_MOUSELEAVE, 0, 0);
+					}
+					hCurMenu = msg.hwnd;
+				}
+
+				SMenuEx *pMenu = s_MenuData->SMenuExFromHwnd(msg.hwnd);
+				if (!pMenu)
+				{
+					hCurMenu = NULL;
+				}
+
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_KEYDOWN
+				|| msg.message == WM_KEYUP
+				|| msg.message == WM_CHAR
+				)
+			{//将键盘事件强制发送到最后一级菜单窗口，让菜单处理快速键
+				HWND menuWnd = s_MenuData->GetMenuEx()->m_hWnd;
+				::SendMessage(menuWnd,msg.message,msg.wParam,msg.lParam);
 			}
 
 			if (bMsgQuit)
@@ -882,7 +902,6 @@ namespace SOUI
 				break;
 			}
 		}
-
 	}
 
 	BOOL SMenuEx::_HandleEvent(EventArgs *pEvt)
@@ -1017,6 +1036,7 @@ namespace SOUI
 		case VK_LEFT:
 			if (m_pParent)
 			{
+				SLOG_INFO("hide sub menu");
 				HideMenu(TRUE);
 			}
 			else

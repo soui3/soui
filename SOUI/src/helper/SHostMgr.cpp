@@ -14,6 +14,7 @@ namespace SOUI
 
 	bool SHostMgr::AddHostMsgHandler(IHostMsgHandler * pHost)
 	{
+		SAutoLock autoLock(m_cs);
 		if(m_mapHostMsgHandler.Lookup(pHost))
 			return false;
 		m_mapHostMsgHandler[pHost]=true;
@@ -22,11 +23,13 @@ namespace SOUI
 
 	bool SHostMgr::RemoveHostMsgHandler(IHostMsgHandler * pHost)
 	{
+		SAutoLock autoLock(m_cs);
 		return m_mapHostMsgHandler.RemoveKey(pHost);
 	}
 
 	void SHostMgr::DispatchMessage(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
 	{
+		SAutoLock autoLock(m_cs);
 		SPOSITION pos = m_mapHostMsgHandler.GetStartPosition();
 		while(pos)
 		{

@@ -108,7 +108,8 @@ namespace SOUI
         SOUI_ATTRS_BEGIN()
             ATTR_SKIN(L"dividerSkin",m_pSkinDivider,TRUE)
             ATTR_LAYOUTSIZE(L"dividerSize",m_nDividerSize,FALSE)
-            ATTR_INT(L"wantTab",m_bWantTab,FALSE)
+            ATTR_BOOL(L"wantTab",m_bWantTab,FALSE)
+			ATTR_BOOL(L"vertical",m_bVertical,FALSE)
         SOUI_ATTRS_END()
 	protected:
         SAutoRefPtr<ILvAdapter>           m_adapter;
@@ -134,8 +135,9 @@ namespace SOUI
         SArray<SList<SItemPanel*> *>    m_itemRecycle;//item回收站,每一种样式在回收站中保持一个列表，以便重复利用
                 
         pugi::xml_document              m_xmlTemplate;
-        ISkinObj*                       m_pSkinDivider;
+        SAutoRefPtr<ISkinObj>           m_pSkinDivider;
         SLayoutSize                     m_nDividerSize;
         BOOL                            m_bWantTab;
+		BOOL							m_bVertical;
     };
 }

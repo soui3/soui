@@ -1,20 +1,26 @@
-#include "StdAfx.h"
+ï»¿#include "stdafx.h"
 #include "SPropertyItem-Color.h"
 #include "../SPropertyEmbedWndHelper.hpp"
 #include "../SPropertyGrid.h"
 #include <commdlg.h>
+#include <res.mgr/SNamedValue.h>
 
-const int KColorWidth   = 50;
+const int KColorWidth   = 30;
 const int KTransGridSize    =5;
 namespace SOUI
 {
+	SPropertyItemColor::SPropertyItemColor(SPropertyGrid *pOwner) :SPropertyItemText(pOwner),m_crValue(CR_INVALID)
+	{
+		m_strFormat = _T("#%02x%02x%02x%02x");
+	}
+
     void SPropertyItemColor::DrawItem( IRenderTarget *pRT,CRect rc )
     {
         CRect rcColor = rc;
         rcColor.right = rcColor.left + KColorWidth;
         rcColor.DeflateRect(2,2);
         
-        //»­Ò»¸ö´ú±íÍ¸Ã÷µÄÍø¸ñ±³¾°
+        //ç”»ä¸€ä¸ªä»£è¡¨é€æ˜Žçš„ç½‘æ ¼èƒŒæ™¯
         pRT->PushClipRect(&rcColor);
         bool bDrawY=true;
         for(int y=rcColor.top;y<rcColor.bottom;y+=KTransGridSize)
@@ -29,21 +35,37 @@ namespace SOUI
         }
         pRT->PopClip();
         
-        pRT->FillSolidRect(&rcColor,m_crValue);
-        pRT->DrawRectangle(&rcColor);
-        CRect rcValue = rc;
-        rcValue.left += KColorWidth;
-        SStringT strValue = GetString();
-        pRT->DrawText(strValue,strValue.GetLength(),&rcValue,DT_SINGLELINE|DT_VCENTER);
+		if(m_crValue!=CR_INVALID)
+		{
+			pRT->FillSolidRect(&rcColor,m_crValue);
+			pRT->DrawRectangle(&rcColor);
+			CRect rcValue = rc;
+			rcValue.left += KColorWidth;
+			SStringT strValue = GetValue();
+			pRT->DrawText(strValue,strValue.GetLength(),&rcValue,DT_SINGLELINE|DT_VCENTER);
+		}else
+		{
+			SAutoRefPtr<IPen> pen,oldPen;
+			pRT->CreatePen(PS_SOLID,RGBA(255,0,0,255),1,&pen);
+			pRT->SelectObject(pen,(IRenderObj**)&oldPen);
+			{
+				CPoint pts[2]={rcColor.TopLeft(),rcColor.BottomRight()};
+				pRT->DrawLines(pts,2);
+			}
+			{
+				CPoint pts[2]={CPoint(rcColor.left,rcColor.bottom),CPoint(rcColor.right,rcColor.top)};
+				pRT->DrawLines(pts,2);
+			}
+			pRT->SelectObject(oldPen);
+		}
     }
     
-    void SPropertyItemColor::OnInplaceActive(bool bActive)
+    void SPropertyItemColor::OnInplaceActive(BOOL bActive)
     {
         SPropertyItemText::OnInplaceActive(bActive);
         if(bActive)
         {
             LRESULT lr=m_pEdit->SSendMessage(EM_SETEVENTMASK,0,ENM_CHANGE);
-            m_pEdit->GetEventSet()->subscribeEvent(EventRENotify::EventID,Subscriber(&SPropertyItemColor::OnReNotify,this));
         }
     }
 
@@ -52,63 +74,44 @@ namespace SOUI
         EventRENotify *pReEvt = (EventRENotify*)pEvt;
         if(pReEvt->iNotify == EN_CHANGE)
         {
-            SStringT strValue=m_pEdit->GetWindowText();
-            int r,g,b,a;
-            int nGet=_stscanf(strValue,m_strFormat,&r,&g,&b,&a);
-            if(nGet==4)
-            {
-                m_crValue = RGBA(r,g,b,a);
-                CRect rcColor;
-                m_pEdit->GetWindowRect(&rcColor);
-                rcColor.right=rcColor.left;
-                rcColor.left -= KColorWidth;
-                m_pOwner->InvalidateRect(rcColor);
-            }
+			SStringT strValue=m_pEdit->GetWindowText();
+			int r,g,b,a;
+			int nGet=_stscanf(strValue,m_strFormat,&r,&g,&b,&a);
+			if(nGet==4)
+			{
+			m_crValue = RGBA(r,g,b,a);
+			CRect rcColor;
+			m_pEdit->GetWindowRect(&rcColor);
+			rcColor.right=rcColor.left;
+			rcColor.left -= KColorWidth;
+			m_pOwner->InvalidateRect(rcColor);
+			}
         }
         return true;
     }
     
-    void SPropertyItemColor::SetValue( void *pValue)
+
+    void SPropertyItemColor::SetValue( const SStringT & strValue )
     {
-        m_crValue = *(COLORREF*)pValue;
-        OnValueChanged();
+
+		COLORREF crTmp;
+		crTmp = CR_INVALID;
+		SColorParser::ParseValue(strValue,crTmp);
+		if (m_crValue != crTmp)
+		{
+			m_crValue = crTmp;
+			OnValueChanged();
+		}
     }
 
-    const void* SPropertyItemColor::GetValue()
+    BOOL SPropertyItemColor::OnButtonClick()
     {
-        return &m_crValue;
-    }
-
-    void SPropertyItemColor::SetString( const SStringT & strValue )
-    {
-        int r,g,b,a;
-        if(_stscanf(strValue,m_strFormat,&r,&g,&b,&a)==4)
-        {
-            m_crValue = RGBA(r,g,b,a);
-            OnValueChanged();
-        }
-    }
-
-    void SPropertyItemColor::OnButtonClick()
-    {
-        CHOOSECOLOR cc;                 // common dialog box structure 
-        static COLORREF acrCustClr[16]; // array of custom colors 
-
-        // Initialize CHOOSECOLOR 
-        ZeroMemory(&cc, sizeof(cc));
-        cc.lStructSize = sizeof(cc);
-        cc.hwndOwner = GetOwner()->GetContainer()->GetHostHwnd();
-        cc.lpCustColors = (LPDWORD) acrCustClr;
-        cc.rgbResult = m_crValue;
-        cc.Flags = CC_FULLOPEN | CC_RGBINIT;
-        
-        if (ChooseColor(&cc))
-        {
-            m_crValue = cc.rgbResult|0xff000000;
-            OnValueChanged();
-            CRect rc=GetOwner()->GetItemRect(this);
-            GetOwner()->InvalidateRect(&rc);
-        }
+		CColourPopup *pCrPopup = new CColourPopup(GetOwner()->GetContainer()->GetHostHwnd(),this);
+		CPoint pt;
+		GetCursorPos(&pt);
+		pt.x += 10;
+		pCrPopup->Create(pt,m_crValue,_T("é»˜è®¤"),_T("æ›´å¤š"));
+		return TRUE;
     }
 
     void SPropertyItemColor::AdjustInplaceActiveWndRect( CRect & rc )
@@ -116,5 +119,61 @@ namespace SOUI
         __super::AdjustInplaceActiveWndRect(rc);
         rc.left += KColorWidth;
     }
+
+	void SPropertyItemColor::OnColorChanged( COLORREF cr )
+	{
+	}
+
+	void SPropertyItemColor::OnColorEnd( BOOL bCancel,COLORREF cr )
+	{
+		if(!bCancel)
+		{
+			COLORREF crTmp = cr|0xff000000;
+
+		  if (m_crValue == crTmp)
+		  {
+			  return;
+		  }else
+		  {
+			  m_crValue = crTmp;
+		  }
+		  OnValueChanged();
+		  CRect rc=GetOwner()->GetItemRect(this);
+		  GetOwner()->InvalidateRect(&rc);
+		}
+	}
+
+	SMessageLoop * SPropertyItemColor::GetMsgLoop()
+	{
+		return GetOwner()->GetContainer()->GetMsgLoop();
+	}
+
+	SOUI::SStringT SPropertyItemColor::GetValue() const
+	{
+		if (m_crValue == CR_INVALID)
+		{
+			return _T("");
+		}
+
+		SStringT str;
+		int r,g,b,a;
+		r = GetRValue(m_crValue);
+		g = GetGValue(m_crValue);
+		b = GetBValue(m_crValue);
+		a = GetAValue(m_crValue);
+		str.Format(m_strFormat,r,g,b,a);
+		return str;
+	}
+
+	BOOL SPropertyItemColor::HasValue() const
+	{
+		return m_crValue != CR_INVALID;
+	}
+
+	void SPropertyItemColor::ClearValue()
+	{
+		m_crValue = CR_INVALID;
+		OnValueChanged();
+	}
 
 }

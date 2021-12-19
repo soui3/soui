@@ -6,9 +6,9 @@ namespace SOUI
 
     SAccelerator::SAccelerator(UINT vKey,bool bCtrl,bool bAlt,bool bShift):m_wVK(vKey),m_wModifier(0)
     {
-        if(bCtrl) m_wModifier|=MOD_CONTROL;
-        if(bAlt) m_wModifier |=MOD_ALT;
-        if(bShift) m_wModifier |= MOD_SHIFT;
+        if(bCtrl) m_wModifier|=Mod_Ctrl;
+        if(bAlt) m_wModifier |=Mod_Alt;
+        if(bShift) m_wModifier |= Mod_Shift;
     }
 
     SAccelerator::SAccelerator(DWORD dwAccel):m_wVK(LOWORD(dwAccel)),m_wModifier(HIWORD(dwAccel))
@@ -60,7 +60,7 @@ namespace SOUI
 			{//F1-F12
 				wKey = VK_F1 + _tstoi(pszKey + 1) - 1;
 			}
-			else if (_tcsncmp(pszKey, _T("num "), 4) == 0)
+			else if (_tcsnicmp(pszKey, _T("num "), 4) == 0)
 			{//Num 0 - Num 9 || Num Del
 				if (_tcsicmp(pszKey + 4, _T("del")) == 0)
 					wKey = VK_DECIMAL;
@@ -76,6 +76,8 @@ namespace SOUI
 		{
 			if (pszKey[0] >= _T('a') && pszKey[0] <= _T('z'))//a-z
 				wKey = pszKey[0] - 0x20;
+			else if(pszKey[0] >='A' && pszKey[0] <= 'Z')
+				wKey = pszKey[0];
 			else if (pszKey[0] >= _T('0') && pszKey[0] <= _T('9'))
 				wKey = pszKey[0];
 			else if (pszKey[0] == _T('-'))
@@ -198,11 +200,11 @@ namespace SOUI
 		if (wModifier == 0 && wVk == 0)
 			return _T("无");
 		SStringT str;
-		if (wModifier & MOD_CONTROL)
+		if (wModifier & Mod_Ctrl)
 			str = _T("Ctrl+");
-		if (wModifier & MOD_SHIFT)
+		if (wModifier & Mod_Shift)
 			str += _T("Shift+");
-		if (wModifier & MOD_ALT)
+		if (wModifier & Mod_Alt)
 			str += _T("Alt+");
 
 		str += GetKeyName(wVk);
@@ -213,7 +215,7 @@ namespace SOUI
     DWORD SAccelerator::TranslateAccelKey( LPCTSTR pszAccelKey )
     {
         TCHAR szBuf[101]={0};//保证字符串结束有两个结束符
-        WORD wModifier=0;
+        WORD wModifier=Mod_None;
         WORD wKey=0;
         int nKeyLen=(int)_tcslen(pszAccelKey);
         if(_tcslen(pszAccelKey)>=100) return 0;
@@ -226,13 +228,13 @@ namespace SOUI
         {
             if(_tcsicmp(pszKey,_T("ctrl"))==0)
             {
-                wModifier|=MOD_CONTROL;
+                wModifier|=Mod_Ctrl;
             }else if(_tcsicmp(pszKey,_T("alt"))==0)
             {
-                wModifier |=MOD_ALT;
+                wModifier |=Mod_Alt;
             }else if(_tcsicmp(pszKey,_T("shift"))==0)
             {
-                wModifier |= MOD_SHIFT;
+                wModifier |=Mod_Shift;
 			}else
             {
 				wKey = VkFromString(pszKey);

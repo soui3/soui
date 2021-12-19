@@ -34,24 +34,21 @@ BOOL CShareMemBuffer::OpenMemFile(LPCTSTR pszName,DWORD dwMaximumSize , void * p
 {
 	if(m_hMap) return FALSE;
 	SECURITY_ATTRIBUTES *psa = (SECURITY_ATTRIBUTES*)pSecurityAttr;
+	TCHAR szMutex[MAX_PATH];
+	_stprintf(szMutex, _T("%s_mutex"), pszName);
 	if (dwMaximumSize == 0)
 	{
-		m_hMap = ::OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, pszName);
+		m_hMap = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, pszName);
+		m_hMutex = OpenEvent(SYNCHRONIZE, FALSE, szMutex);
 	}
 	else
 	{
-		m_hMap = ::CreateFileMapping(INVALID_HANDLE_VALUE, psa, PAGE_READWRITE, 0, dwMaximumSize + sizeof(BufHeader), pszName);
+		m_hMap = CreateFileMapping(INVALID_HANDLE_VALUE, psa, PAGE_READWRITE, 0, dwMaximumSize + sizeof(BufHeader), pszName);
+		m_hMutex = CreateEvent(psa, FALSE, TRUE, szMutex);
 	}
-	if (!m_hMap)	goto error;
+	if (!m_hMap || !m_hMutex)	goto error;
 	m_pMemBuf=::MapViewOfFile(m_hMap, FILE_MAP_READ | FILE_MAP_WRITE,0,0,0);//map whole file
 	if (!m_pMemBuf) goto error;
-	TCHAR szMutex[MAX_PATH];
-	_stprintf(szMutex, _T("mutex_%s"), pszName);
-	m_hMutex = CreateEvent(psa, FALSE, TRUE, szMutex);
-	if (!m_hMutex && GetLastError() == ERROR_ACCESS_DENIED)
-	{
-		m_hMutex = OpenEvent(SYNCHRONIZE, FALSE, szMutex);
-	}
 	m_pHeader = (BufHeader*)m_pMemBuf;
 	m_pBuffer = (LPBYTE)(m_pHeader + 1);
 	if (dwMaximumSize != 0)
@@ -67,6 +64,11 @@ error:
 	{
 		::CloseHandle(m_hMap);
 		m_hMap = 0;
+	}
+	if(m_hMutex)
+	{
+		CloseHandle(m_hMutex);
+		m_hMutex=0;
 	}
 	return FALSE;
 }
@@ -133,8 +135,8 @@ UINT CShareMemBuffer::Seek(SEEK mode, int nOffset)
 	default:
 		break;
 	}
-	assert(nOffset >= 0 && nOffset < pHeader->dwSize);
-	if (nOffset > pHeader->dwTailPos)
+	assert(nOffset >= 0 && nOffset < (int)pHeader->dwSize);
+	if (nOffset > (int)pHeader->dwTailPos)
 	{//auto expend buffer used size.
 		pHeader->dwTailPos = nOffset;
 	}
