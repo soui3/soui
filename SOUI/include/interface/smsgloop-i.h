@@ -1,6 +1,7 @@
 #pragma once
 
 #include <interface/obj-ref-i.h>
+#include <interface/STaskLoop-i.h>
 
 SNSBEGIN
 
@@ -61,6 +62,11 @@ DECLARE_INTERFACE_(IMessageLoop,IObjRef)
 	STDMETHOD_(void,OnMsg)(THIS_ LPMSG pMsg) PURE;
 
 	STDMETHOD_(void,Quit)(THIS) PURE;
+
+	STDMETHOD_(BOOL,PostTask)(THIS_ IRunnable * runable) PURE;
+
+	STDMETHOD_(int ,RemoveTasksForObject)(THIS_ void *pObj) PURE;
+
 };
 
 

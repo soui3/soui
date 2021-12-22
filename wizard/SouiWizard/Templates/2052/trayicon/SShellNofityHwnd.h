@@ -30,11 +30,11 @@
 namespace SOUI
 {
 	class SShellNotifyIcon;
-	class CShellNotifyHwnd2 :public SNativeWnd
+	class CShellNotifyHwnd :public SNativeWnd
 	{
 	public:
-		CShellNotifyHwnd2(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
-		~CShellNotifyHwnd2(){}
+		CShellNotifyHwnd(SHostWnd* pMainWnd,SShellNotifyIcon* shellnotifyicon);
+		~CShellNotifyHwnd(){}
 	protected:
 		//托盘通知消息处理函数
 		LRESULT OnIconNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL/* bHandled*/);

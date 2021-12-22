@@ -308,8 +308,8 @@ namespace SOUI
         }
         if(pNewFocus && !pNewFocus->IsDisabled(TRUE) && pNewFocus->IsFocusable())
         {
+			focused_view_ = swnd;
             pNewFocus->SSendMessage(WM_SETFOCUS,(WPARAM)focused_view_,(LPARAM)reason);
-            focused_view_ = swnd;
         }
     }
 

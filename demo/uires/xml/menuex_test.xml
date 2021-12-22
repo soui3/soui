@@ -27,6 +27,10 @@
   <sep margin="0,1,0,5"/>
   <menuItem icon="1" cursor="hand" >设置</menuItem>
   <sep margin="0,5,0,1"/>
-  <menuItem cursor="hand">退出登陆</menuItem>
-  <menuItem id="6" icon="2" hotKey="x" cursor="hand">退出SOUI音乐</menuItem>
+  <menuItem cursor="hand" text="SubMenu">
+    <menuItem icon="0" cursor="hand">显示桌面歌词1</menuItem>
+    <menuItem icon="0" cursor="hand">显示桌面歌词2</menuItem>
+    <menuItem icon="0" cursor="hand">显示桌面歌词3</menuItem>
+  </menuItem>
+  <menuItem id="6" icon="2" hotKey="x" cursor="hand">退出SOUI</menuItem>
 </menuRoot>

@@ -107,4 +107,5 @@
       <state index="5" value="hover|pushdown|checked"/>
     </states>
   </imglist>
+  <imglist name="svg_tiger" src="svg:tiger"/>
 </skin>

@@ -34,15 +34,25 @@ public:
 	STDMETHOD_(void,OnMsg)(THIS_ LPMSG pMsg) OVERRIDE;
 
 	STDMETHOD_(void,Quit)(THIS) OVERRIDE;
+
+	STDMETHOD_(BOOL,PostTask)(THIS_ IRunnable * runable) OVERRIDE;
+
+	STDMETHOD_(int ,RemoveTasksForObject)(THIS_ void *pObj) OVERRIDE;
+
 public:
 	static BOOL IsIdleMessage( MSG* pMsg );
 protected:
-	BOOL m_bRunning;
-	BOOL m_bQuit;
-
 	SArray<IMessageFilter*> m_aMsgFilter;
 	SArray<IIdleHandler*> m_aIdleHandler;
 	MSG m_msg;
+
+	BOOL m_bRunning;
+	BOOL m_bQuit;
+	SCriticalSection m_cs;
+	SList<IRunnable*>	m_runnables;
+	SCriticalSection m_csRunningQueue;
+	SList<IRunnable*>	m_runningQueue;
+	DWORD  m_tid;
 };
 
 

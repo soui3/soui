@@ -55,6 +55,7 @@ public:
     {
         if(m_pListBox->SetCurSel(iSel))
         {
+			m_pListBox->EnsureVisible(iSel);
             OnSelChanged();
             return TRUE;
         }

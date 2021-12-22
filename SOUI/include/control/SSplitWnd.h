@@ -97,7 +97,7 @@ protected:
     int                 m_orintation;         /**< 分割方向，参考 SPLIT_ORINTATION */
 
     BOOL                m_bAdjustable;        /**< 是否支持拖动调节窗格大小 */
-    ISkinObj *          m_pSkinSep;           /**< ISkinObj对象 */
+    SAutoRefPtr<ISkinObj>  m_pSkinSep;           /**< ISkinObj对象 */
 
     CPoint              m_ptDragPrev;         /**< 拖动调整的前一个位置 */
     int                 m_iDragSep;           /**< 正在拖动哪一根分隔条,-1代表没有拖动状态 */
@@ -265,7 +265,7 @@ public:
     SOUI_ATTRS_BEGIN()
         ATTR_INT(L"sepSize", m_spliterSize, TRUE)
         ATTR_SKIN(L"sepSkin",m_pSkinSep,TRUE)
-        ATTR_INT(L"adjustable", m_bAdjustable, TRUE)
+        ATTR_BOOL(L"adjustable", m_bAdjustable, TRUE)
         ATTR_INT(L"vertical", m_orintation, TRUE)
     SOUI_ATTRS_END()
 

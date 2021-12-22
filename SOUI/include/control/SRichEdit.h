@@ -12,7 +12,6 @@
 */
 #pragma once
 
-#include <Imm.h>
 #include <Richedit.h>
 #include <TextServ.h>
 #include "core/SPanel.h"
@@ -151,13 +150,7 @@ namespace SOUI
             return pserv;
         }
 
-        /**
-        * STextHost::GetCaretPos
-        * @brief     获取坐标
-        *
-        * Describe   获取坐标   
-        */
-        POINT GetCaretPos(){return m_ptCaret;}
+
     protected:
 
         /**
@@ -682,7 +675,7 @@ namespace SOUI
 		*
 		* Describe   设置选中, 支持超长文本
 		*/
-    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
+    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项
@@ -1112,6 +1105,8 @@ namespace SOUI
         void OnShowWindow(BOOL bShow, UINT nStatus);
 
 		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
+
+		BOOL OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1198,7 +1193,6 @@ namespace SOUI
 			ATTR_CUSTOM(L"passwordChar",OnAttrPasswordChar)
 			ATTR_CUSTOM(L"enableDragdrop",OnAttrEnableDragdrop)
        SOUI_ATTRS_END()
-
     protected:
         
         CHARFORMAT2W   m_cfDef;              /**< Default character format  */

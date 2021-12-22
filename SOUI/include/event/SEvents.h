@@ -86,6 +86,7 @@ typedef enum _SOUI_EVENTS
 	EVT_TC_EXPAND,
 	EVT_TC_CHECKSTATE,
 	EVT_TC_DBCLICK,
+		EVT_CB_BEFORE_CLOSEUP,
 
 	EVT_LV_SELCHANGING = 15100,
 	EVT_LV_SELCHANGED,
@@ -260,9 +261,14 @@ DEF_EVT(EventCtxMenu, EVT_CTXMENU, on_conext_menu, {
 	BOOL            bCancel;
 });
 
-DEF_EVT(EventSetFocus, EVT_SETFOCUS, on_set_focus, {});
+DEF_EVT(EventSetFocus, EVT_SETFOCUS, on_set_focus, {
+	SWND wndOld;
+});
 
-DEF_EVT(EventKillFocus, EVT_KILLFOCUS, on_kill_focus, {});
+
+DEF_EVT(EventKillFocus, EVT_KILLFOCUS, on_kill_focus, {
+	SWND wndFocus;
+});
 
 DEF_EVT(EventScrollViewOriginChanged, EVT_SCROLLVIEW_ORIGINCHANGED, on_scrollview_origin_changed, {
 	POINT ptOldOrigin;
@@ -388,6 +394,10 @@ DEF_EVT(EventCBSelChange, EVT_CB_SELCHANGE, on_combobox_sel_change, {
 class SDropDownWnd;
 DEF_EVT(EventCBDropdown, EVT_CB_DROPDOWN, on_combobox_dropdown, {
 	SDropDownWnd *pDropDown;
+});
+
+DEF_EVT(EventCBBeforeCloseUp, EVT_CB_BEFORE_CLOSEUP, on_combobox_before_closeup, {
+	bool bCloseBlock;
 });
 
 DEF_EVT(EventLCSelChanging, EVT_LC_SELCHANGING, on_listctrl_sel_changing, {

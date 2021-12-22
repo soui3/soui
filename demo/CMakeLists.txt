@@ -6,6 +6,7 @@ include_directories(${PROJECT_SOURCE_DIR}/utilities/include)
 include_directories(${PROJECT_SOURCE_DIR}/SOUI/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/wke/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/mhook/mhook-lib)
+include_directories(${PROJECT_SOURCE_DIR}/third-part/nanosvg/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB_RECURSE CURRENT_HEADERS *.h *.hpp)
@@ -62,6 +63,10 @@ set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-option.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-color.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-size.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-group.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/propitem/spropertyitem-rect.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/colorpicker/ColourPopup.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/propgrid/colorpicker/SColorPicker.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/sfadeframe.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/sradiobox2.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/SChromeTabCtrl.cpp

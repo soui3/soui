@@ -98,8 +98,17 @@
 				</headerStyle>
 			</listctrl>
 		</page>
-		<page title="listview(fix)">
-			<listview pos="5,[0,-5,-5" name="lv_test_fix" dividerSize="5" wantTab="1" sbFadeFrames="30">
+		<page title="listview(fix)" layout="vbox" interval="10">
+      <listview size="-2,100" name="lv_test_fix_horz" dividerSize="5" wantTab="1" sbFadeFrames="30" vertical="0">
+        <template itemWidth="100" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1">
+          <imgbtn size="-2,-2" skin="skin_tab_main" layout="vbox" gravity="center" interval="10">
+            <img size="-1,-1" name="btn_icon" skin="skin_page_icons" iconIndex="0"/>
+            <text size="-1,-1" name="btn_text" text="hello"/>
+          </imgbtn>
+        </template>
+      </listview>
+      
+			<listview size="-2,0" weight="1" name="lv_test_fix" dividerSize="5" wantTab="1" sbFadeFrames="30">
 				<template itemHeight="50" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1">
 					<button pos="10,5,@150,@25" name="btn_test" tip="click the button to see how to writing the response function">btn</button>
 					<animateimg pos="[10,{0" skin="skin_busy" name="ani_test" tip="animateimg is used here" msgTransparent="0" />
@@ -161,13 +170,13 @@
 						<text name="songname" dotted="1" pos="5,|,]-30,-0" offset="0,-0.5" font="bold:1,adding:-1">天天想听</text>
 						<window pos="-0,|" name="playbtn" offset="-1.2,-0.5" display="0" show="0" />
 					</window>
-					<window name="col2" clipClient="1">
-						<hr pos="0,0,-0,1" colorLine="#666666" />
-						<text name="artist">卖炭翁</text>
+					<window name="col2" clipClient="1" layout="vbox" gravity="center">
+						<hr size="-2,1" colorLine="#666666" />
+						<text name="artist" size="-1,0" weight="1">卖炭翁</text>
 					</window>
-					<window name="col3" clipClient="1">
-						<hr pos="0,0,-0,1" colorLine="#666666" />
-						<text name="album">SOUI就是棒</text>
+					<window name="col3" clipClient="1"  layout="vbox" gravity="center">
+            <hr size="-2,1" colorLine="#666666" />
+            <text name="album" size="-1,0" weight="1">SOUI就是棒</text>
 					</window>
 					<window name="col4" clipClient="1">
 						<hr pos="0,0,-0,1" colorLine="#666666" />
@@ -206,7 +215,7 @@
 				<button name="btn_richedit_open" pos="[5,0,@120,@25">open from rtf</button>
 				<button name="btn_richedit_save" pos="[5,0,@120,@25">save to rtf</button>
 			</window>
-			<chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" sbFadeFrames="30" enableDragdrop="1" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1" autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test" />
+			<chatedit name="re_gifhost" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" sbFadeFrames="30" enableDragdrop="1" multiLines="1" vscrollBar="1"  wordWrap="1" autoVscroll="1" hscrollBar="0" wantReturn="1" wantTab="1" maxBuf="6400000" rtf="rtf:rtf_test" />
 		</page>
 		<page title="buttons">
 			<imgbtn name="btn_msgbox" pos="10,40" width="200" height="40" accel="ctrl+alt+f9" font="bold:1" skin="win10btn" animate="1">show msg box</imgbtn>
@@ -365,8 +374,9 @@
 				<edit name="prop_value" size="150,30" text="haha" />
 				<button name="btn_set_prop_value" text="set prop" size="100,30" />
 			</window>
-			<propgrid name="prop_test" size="-2,0" weight="1" nameWidth="180" orderType="group" switchSkin="skin_propswitch" colorBkgnd="#ffffff" itemHeight="30">
+			<propgrid name="prop_test" size="-2,0" weight="1" titleWidth="180" orderType="group" switchSkin="skin_propswitch" colorBkgnd="#ffffff" itemHeight="30">
 				<cmdbtnstyle skin="_skin.sys.btn.normal">...</cmdbtnstyle>
+        <editStyle colorBkgnd="#ffffff"/>
 				<groups>
 					<propgroup name="group1" description="desc of group1">
 						<proptext name="text1.1" value="value 1.1">
@@ -380,7 +390,7 @@
 					</propgroup>
 					<propgroup name="group2" description="desc of group2">
 						<propoption name="option2.1" value="1" options="true|false|empty" />
-						<propsize name="size2.1" value="200,300" childrenNames="宽|高" />
+						<propsize name="size2.1" value="200,300" childrenTitle="宽|高" />
 						<proptext name="text2.2" value="value 2.2" />
 						<propcolor name="color2.1" value="#00ff00" format="#%02x%02x%02x%02x" />
 						<proptext name="text2.1" value="value 2.1" />

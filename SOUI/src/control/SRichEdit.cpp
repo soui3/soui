@@ -284,11 +284,19 @@ HRESULT STextHost::TxActivate( LONG * plOldState )
 
 BOOL STextHost::TxClientToScreen( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x += rc.left;
+	lppt->y += rc.top;
     return ::ClientToScreen(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
 BOOL STextHost::TxScreenToClient( LPPOINT lppt )
 {
+	RECT rc={0};
+	m_pRichEdit->GetContainer()->FrameToHost(rc);
+	lppt->x -= rc.left;
+	lppt->y -= rc.top;
     return ::ScreenToClient(m_pRichEdit->GetContainer()->GetHostHwnd(),lppt);
 }
 
@@ -395,14 +403,28 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
     return m_pRichEdit->SetScrollRange(fnBar!=SB_HORZ,nMinPos,nMaxPos,fRedraw);
 }
 
+BOOL SRichEdit::OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw)
+{
+	if(m_fScrollPending) return TRUE;
+	BOOL bVertical = fnBar!=SB_HORZ;
+	SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
+
+	if(psi->nPos != nPos)
+	{
+		psi->nPos = nPos;
+		CRect rcSb = GetScrollBarRect(!!bVertical);
+		InvalidateRect(rcSb);
+	}
+	if (fRedraw)
+	{
+		Invalidate();
+	}
+	return TRUE;
+}
+
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-    BOOL bRet=FALSE;
-    if(m_pRichEdit->m_fScrollPending) return TRUE;
-    m_pRichEdit->m_fScrollPending=TRUE;
-    bRet= m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
-    m_pRichEdit->m_fScrollPending=FALSE;
-    return bRet;
+    return m_pRichEdit->OnTxSetScrollPos(fnBar,nPos,fRedraw);
 }
 
 void STextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
@@ -838,6 +860,12 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
 {
     if(m_pTxtHost && m_pTxtHost->GetTextService())
     {
+		if(uMsg == EM_GETRECT)
+		{
+			SetMsgHandled(TRUE);
+			GetClientRect((LPRECT)lParam);
+			return TRUE;
+		}
         if(m_pTxtHost->GetTextService()->TxSendMessage(uMsg,wParam,lParam,&lResult)==S_OK)
         {
             SetMsgHandled(TRUE);
@@ -1586,7 +1614,9 @@ BOOL SRichEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		return SWindow::OnMouseWheel(nFlags, zDelta, pt);
 	}else
 	{
-		return SPanel::OnMouseWheel(nFlags,zDelta,pt);
+		PSWNDMSG  p = GetCurMsg();
+		LRESULT lResult = 0;
+		return m_pTxtHost->GetTextService()->TxSendMessage(p->uMsg,p->wParam,p->lParam,&lResult)==S_OK;
 	}
 }
 

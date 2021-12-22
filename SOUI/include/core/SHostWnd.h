@@ -41,14 +41,11 @@ namespace SOUI
 
 		CSize GetMinSize(int nScale) const;
 
-		void SetTranslucent(bool bTranslucent) {
-			m_bTranslucent = bTranslucent;
-		}
+		void SetTranslucent(bool bTranslucent);
 
-		void SetTrCtx(const SStringW & strTrCtx)
-		{
-			m_strTrCtx = strTrCtx;
-		}
+		void SetTrCtx(const SStringW & strTrCtx);
+
+		void SetSendWheel2Hover(bool value);
 
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGW(L"trCtx",m_strTrCtx,FALSE)
@@ -354,6 +351,7 @@ protected:
 	void OnWindowPosChanged(LPWINDOWPOS lpWndPos);
         
 	LRESULT OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void OnSysCommand(UINT nID, CPoint lParam);
 
 #ifndef DISABLE_SWNDSPY
 protected:
@@ -460,6 +458,7 @@ public://事件处理接口
 		MSG_WM_WINDOWPOSCHANGING(OnWindowPosChanging)
 		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
 		MESSAGE_HANDLER_EX(WM_GETOBJECT,OnGetObject)
+		MSG_WM_SYSCOMMAND(OnSysCommand)
     #ifndef DISABLE_SWNDSPY
         MESSAGE_HANDLER_EX(SPYMSG_SETSPY, OnSpyMsgSetSpy)
         MESSAGE_HANDLER_EX(SPYMSG_SWNDENUM, OnSpyMsgSwndEnum)

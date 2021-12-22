@@ -246,6 +246,9 @@ namespace SOUI
 		LRESULT lResult = 0;
 
 		ASSERT_UI_THREAD();
+		SWindow *pOwner = GetOwner();
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->AddRef();
 		AddRef();
 		SWNDMSG msgCur= {Msg,wParam,lParam};
 		SWNDMSG *pOldMsg=m_pCurMsg;
@@ -263,7 +266,8 @@ namespace SOUI
 
 		m_pCurMsg=pOldMsg;
 		Release();
-
+		if(pOwner && Msg != WM_DESTROY)
+			pOwner->Release();
 		return lResult;
 	}
 
@@ -605,7 +609,6 @@ namespace SOUI
 		return m_bMsgTransparent;
 	}
 
-	// add by dummyz@126.com
 	const SwndStyle& SWindow::GetStyle() const
 	{
 		return m_style;
@@ -760,7 +763,9 @@ namespace SOUI
 						for (SXmlAttr param = xmlData.first_attribute(); param; param = param.next_attribute())
 						{
 							SStringW strParam = SStringW().Format(KTempParamFmt, param.name());
-							strXml.Replace(strParam, param.value());//replace params to value.
+							SStringW strValue = param.value();
+							strValue.Replace(L"\"",L"&#34;");//防止数据中包含“双引号”，导致破坏XML结构
+							strXml.Replace(strParam, strValue);//replace params to value.
 						}
 						SXmlDoc xmlDoc;
 						if (xmlDoc.load_buffer_inplace(strXml.GetBuffer(strXml.GetLength()), strXml.GetLength() * sizeof(WCHAR), 116, enc_utf16))
@@ -1407,26 +1412,43 @@ namespace SOUI
 		ASSERT_UI_THREAD();
 		if(m_evtSet.isMuted()) return FALSE;
 
-		//调用事件订阅的处理方法
-		m_evtSet.FireEvent(evt);
-		if(!evt->IsBubbleUp()) return evt->HandleCount()>0;
-
-		//调用脚本事件处理方法
-		if(GetScriptModule())
-		{
-			SStringW strEvtName = evt->GetName();
-			if(!strEvtName.IsEmpty())
+		AddRef();
+		BOOL bRet = FALSE;
+		do{
+			//调用事件订阅的处理方法
+			m_evtSet.FireEvent(evt);
+			if(!evt->IsBubbleUp())
 			{
-				SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
-				if(!strScriptHandler.IsEmpty())
+				bRet = evt->HandleCount()>0;
+				break;
+			}
+
+			//调用脚本事件处理方法
+			if(GetScriptModule())
+			{
+				SStringW strEvtName = evt->GetName();
+				if(!strEvtName.IsEmpty())
 				{
-					GetScriptModule()->executeScriptedEventHandler(strScriptHandler,evt);
-					if(!evt->IsBubbleUp()) return evt->HandleCount()>0;
+					SStringA strScriptHandler = m_evtSet.getEventScriptHandler(strEvtName);
+					if(!strScriptHandler.IsEmpty())
+					{
+						GetScriptModule()->executeScriptedEventHandler(strScriptHandler,evt);
+						if(!evt->IsBubbleUp()) {
+							bRet = evt->HandleCount()>0;
+							break;
+						}
+					}
 				}
 			}
-		}
-		if(GetOwner()) return GetOwner()->FireEvent(evt);
-		return GetContainer()->OnFireEvent(evt);
+			if(GetOwner()) 
+			{
+				bRet = GetOwner()->FireEvent(evt);
+				break;
+			}
+			bRet = GetContainer()->OnFireEvent(evt);
+		}while(false);
+		Release();
+		return bRet;
 	}
 
 	BOOL SWindow::OnRelayout(RECT rcWnd)
@@ -1999,17 +2021,19 @@ namespace SOUI
 
 	void SWindow::OnSetFocus(SWND wndOld)
 	{
-		EventSetFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
 		accNotifyEvent(EVENT_OBJECT_FOCUS);
+		EventSetFocus evt(this);
+		evt.wndOld = wndOld;
+		FireEvent(evt);
 	}
 
 	void SWindow::OnKillFocus(SWND wndFocus)
 	{
-		EventKillFocus evt(this);
-		FireEvent(evt);
 		InvalidateRect(GetWindowRect());
+		EventKillFocus evt(this);
+		evt.wndFocus = wndFocus;
+		FireEvent(evt);
 	}
 
 	LRESULT SWindow::OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2961,7 +2985,7 @@ namespace SOUI
 	}
 
 
-	void SWindow::GetScaleSkin(ISkinObj * &pSkin,int nScale)
+	void SWindow::GetScaleSkin(SAutoRefPtr<ISkinObj> &pSkin,int nScale)
 	{
 		if(!pSkin) return;
 		SStringW strName=pSkin->GetName();

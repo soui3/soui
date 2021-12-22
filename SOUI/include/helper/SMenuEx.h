@@ -64,6 +64,7 @@ namespace SOUI
     {
         friend class SMenuExItem;
         friend class SMenuExRunData;
+		friend class SMenuExRoot;
     public:
         SMenuEx(void);
         virtual ~SMenuEx(void);
@@ -74,8 +75,8 @@ namespace SOUI
 		static void ExitPopupMenu(int nCmdId=0);
 
         SMenuExItem * GetParentItem() {return m_pParent;}
-        SMenuEx * GetSubMenu(int nID);
-        SMenuExItem * GetMenuItem(int nID);
+        SMenuEx * GetSubMenu(int nID,BOOL byCmdId=TRUE);
+        SMenuExItem * GetMenuItem(int nID,BOOL byCmdId=TRUE);
 
 		DWORD GetContextHelpId() const;
 

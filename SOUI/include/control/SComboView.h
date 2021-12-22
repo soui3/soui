@@ -107,6 +107,7 @@ namespace SOUI
         */
         virtual void OnSelChanged();
 
+		virtual HRESULT OnLanguageChanged() override;
     protected:
 
         SListView *m_pListBox;  /**< SListBox指针 */

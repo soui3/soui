@@ -21,9 +21,9 @@ public:
 
 	virtual void SetStates(int nStates){m_nStates=nStates;}
 
-	virtual bool SetImage(IBitmap *pImg);
+	virtual bool SetImage(IBitmap* pImg);
 
-	virtual IBitmap * GetImage()  const;
+	virtual IBitmap* GetImage()  const;
 
 	virtual void SetTile(BOOL bTile){m_bTile=bTile;}
 	virtual BOOL IsTile()  const {return m_bTile;}

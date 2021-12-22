@@ -61,6 +61,49 @@ public:
 };
 
 
+class CTestAdapterFixHorz : public SAdapterBase
+{
+public:
+
+	CTestAdapterFixHorz()
+	{
+	}
+
+	~CTestAdapterFixHorz()
+	{
+	}
+
+	virtual int getCount()
+	{
+		return 300;
+	}
+
+	virtual void getView(int position, SWindow * pItem, SXmlNode xmlTemplate)
+	{
+		if (pItem->GetChildrenCount() == 0)
+		{
+			pItem->InitFromXml(&xmlTemplate);
+		}
+
+		SImageWnd *pImg = pItem->FindChildByName2<SImageWnd>(L"btn_icon");
+		pImg->SetIcon(position%9);
+		SWindow *pText = pItem->FindChildByName(L"btn_text");
+		pText->SetWindowText(SStringT().Format(_T("item_%d"),position+1));
+
+		pImg->GetParent()->GetEventSet()->subscribeEvent(&CTestAdapterFixHorz::OnButtonClick, this);
+	}
+
+
+	bool OnButtonClick(EventCmd *pEvt)
+	{
+		SWindow *pBtn = sobj_cast<SWindow>(pEvt->sender);
+		SItemPanel *pItem = (SItemPanel*)pBtn->GetRoot();
+		int iItem = pItem->GetItemIndex();
+		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
+		return true;
+	}
+};
+
 const wchar_t * KAttrName_Height[] = {
 	L"oddHeight",
 	L"evenHeight",
@@ -90,14 +133,14 @@ public:
 		m_nItemHeight[2] = xmlTemplate.attribute(KAttrName_Height[2]).as_int(70);
 	}
 
-	virtual int getCount()
+	virtual int getCount() override
 	{
 		return 12340;
 	}
 
-	virtual int getViewTypeCount() { return 3; }
+	virtual int getViewTypeCount() override{ return 3; }
 
-	virtual int getItemViewType(int position, DWORD dwState)
+	virtual int getItemViewType(int position, DWORD dwState) override
 	{
 		if (position % 2 == 0)
 			return 0;//1,3,5,... odd lines
@@ -107,7 +150,7 @@ public:
 			return 1;//even lines 
 	}
 
-	virtual SIZE getViewDesiredSize(int position, SWindow *pItem, LPCRECT prcContainer)
+	virtual SIZE getViewDesiredSize(int position, SWindow *pItem, int nWid,int nHei) override
 	{
 		DWORD dwState = pItem->GetState();
 		int viewType = getItemViewType(position, dwState);

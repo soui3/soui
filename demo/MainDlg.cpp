@@ -260,6 +260,14 @@ ISmileySource * CreateSource2()
 
 HRESULT CMainDlg::OnSkinChangeMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL bHandled)
 {
+	STabCtrl *pMainTab = FindChildByName2<STabCtrl>("tab_main");
+	if(SSkinPoolMgr::getSingletonPtr()->GetSkin(L"tab_icon",100))
+	{
+		pMainTab->SetAttribute(L"iconSkin",L"tab_icon");
+	}else
+	{
+		pMainTab->SetAttribute(L"iconSkin",L"skin_page_icons");
+	}
 	FindChildByID(9527)->Invalidate();
 	SDemoSkin *skin = (SDemoSkin *) GETSKIN(L"demoskinbk",GetScale());
 
@@ -368,6 +376,16 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
         pLstViewFix->SetAdapter(pAdapter);
         pAdapter->Release();
     }
+
+	//行高固定的列表
+	SListView *pLstViewFixHorz = FindChildByName2<SListView>("lv_test_fix_horz");
+	if(pLstViewFixHorz)
+	{
+		ILvAdapter *pAdapter = new CTestAdapterFixHorz;
+		pLstViewFixHorz->SetAdapter(pAdapter);
+		pAdapter->Release();
+	}
+
 
     //行高可变的列表
     SListView *pLstViewFlex = FindChildByName2<SListView>("lv_test_flex");
@@ -998,7 +1016,7 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 			if(pLove)
 			{
 				pAniHost->UpdateLayout();
-				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:love");
+				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:love"));
 				if(pAni)
 				{
 					pAni->setStartOffset(rand()%100);//random delay max to 100 ms to play the animation.
@@ -1101,6 +1119,11 @@ void CMainDlg::OnBtnCreateByTemp()
 void CMainDlg::On3dViewRotate(IEvtArgs *e)
 {
 	EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
+	if(EventSwndStateChanged_CheckState(e2,WndState_Check))
+	{
+		SWindow *p3dView = FindChildByName("3d_test");
+		if(p3dView) p3dView->SetAttribute(L"rotateDir",e2->sender->GetName());
+	}
 }
 
 void CMainDlg::OnSetPropItemValue()
@@ -1127,7 +1150,7 @@ void CMainDlg::InitSoui3Animation()
 	SWindow *pWnd = FindChildByName(L"img_soui");
 	if (pWnd)
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:rotate");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:rotate"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1156,7 +1179,7 @@ void CMainDlg::OnToggleLeft(IEvtArgs *e)
 		return;
 	if(pToggle->GetToggle())
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_show");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:slide_show"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1164,7 +1187,7 @@ void CMainDlg::OnToggleLeft(IEvtArgs *e)
 		}
 	}else
 	{
-		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(L"anim:slide_hide");
+		IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:slide_hide"));
 		if(pAni)
 		{
 			pWnd->SetAnimation(pAni);
@@ -1175,7 +1198,7 @@ void CMainDlg::OnToggleLeft(IEvtArgs *e)
 
 void CMainDlg::OnSouiClick()
 {
-	IValueAnimator * pAni = SApplication::getSingletonPtr()->LoadValueAnimator(L"valueAni:colorAni");
+	IValueAnimator * pAni = SApplication::getSingletonPtr()->LoadValueAnimator(_T("valueAni:colorAni"));
 	if(pAni)
 	{
 		pAni->addListener(this);

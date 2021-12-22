@@ -87,7 +87,7 @@ public:
      *
      * Describe  设置选中项
      */
-    BOOL SetCurSel(int nIndex);
+    BOOL SetCurSel(int nIndex,BOOL bNotifyChange=FALSE);
 
     /**
      * SListBox::GetTopIndex
@@ -427,7 +427,7 @@ protected:
 	COLORREF m_crItemHotBg; /**< Hot背景色 */
     COLORREF m_crText;      /**< 文字颜色 */
     COLORREF m_crSelText;   /**< 选中文字颜色 */
-    ISkinObj *m_pItemSkin, *m_pIconSkin;
+    SAutoRefPtr<ISkinObj> m_pItemSkin, m_pIconSkin;
 
 public:
 

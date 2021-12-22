@@ -89,7 +89,7 @@ protected:
 protected:
 	
 	DWORD								m_dwBtnState;  /**< 按钮状态      */
-	ISkinObj*							m_pSkinBtn;    /**< 按钮资源      */
+	SAutoRefPtr<ISkinObj>				m_pSkinBtn;    /**< 按钮资源      */
 	SDropDownWnd*				m_pDropDownWnd;  /**< DropDown指针 */
 	EnDateType						m_eSelDateType;
 	int										m_nNumWidth;

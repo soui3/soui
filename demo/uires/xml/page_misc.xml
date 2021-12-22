@@ -93,5 +93,7 @@
       <button pos="[10,5,@100,@30" name="btn_stop_notify_thread">stop</button>
       <chatedit name="re_notifycenter" pos="5,[5,-5,-5" bkgndBlend="1" class="cls_edit" enableDragdrop="0" multiLines="1" vscrollBar="1" sbSkin="skin_vscrollbar" wordWrap="1"  autoVscroll="1" hscrollBar="0" wantReturn="1" maxBuf="6400000"/>
     </page>
-    
+  <page title="svg">
+    <img skin="svg_tiger"/>
+  </page>
   </tabctrl>

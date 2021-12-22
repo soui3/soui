@@ -36,8 +36,9 @@ namespace SOUI
 	{
 		if(NULL != m_pCalendar)
 		{
+			m_pCalendar->SetOwner(NULL);
 			m_pCalendar->SSendMessage(WM_DESTROY);
-			delete m_pCalendar;
+			m_pCalendar->Release();
 		}
 	}
 

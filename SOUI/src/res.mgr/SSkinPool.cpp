@@ -79,6 +79,16 @@ int SSkinPool::LoadSkins(SXmlNode xmlNode)
 }
 
 
+BOOL SSkinPool::AddSkin(ISkinObj* pSkin)
+{
+	SkinKey key = {pSkin->GetName(),pSkin->GetScale()};
+	if(HasKey(key))
+		return FALSE;
+	AddKeyObject(key,pSkin);
+	pSkin->AddRef();
+	return TRUE;
+}
+
 
 ISkinObj* SSkinPool::GetSkin(const SStringW & strSkinName,int nScale)
 {
@@ -125,7 +135,11 @@ void SSkinPool::OnKeyRemoved(const SSkinPtr & obj )
 SSkinPoolMgr::SSkinPoolMgr()
 {
     m_bulitinSkinPool.Attach(new SSkinPool);
-    PushSkinPool(m_bulitinSkinPool);
+    m_lstSkinPools.AddTail(m_bulitinSkinPool);
+	m_bulitinSkinPool->AddRef();
+	m_userSkinPool.Attach(new SSkinPool);
+	m_lstSkinPools.AddTail(m_userSkinPool);
+	m_userSkinPool->AddRef();
 }
 
 SSkinPoolMgr::~SSkinPoolMgr()
@@ -215,7 +229,9 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     SSkinPool * pRet=NULL;
     if(pSkinPool)
     {
-        if(pSkinPool == m_bulitinSkinPool) return NULL;
+        if(pSkinPool == m_bulitinSkinPool
+			|| pSkinPool == m_userSkinPool) 
+			return NULL;
 
         SPOSITION pos=m_lstSkinPools.Find(pSkinPool);
         if(pos)
@@ -229,6 +245,17 @@ SSkinPool * SSkinPoolMgr::PopSkinPool(SSkinPool *pSkinPool)
     }
     if(pRet) pRet->Release();
     return pRet;
+}
+
+
+SSkinPool * SSkinPoolMgr::GetUserSkinPool()
+{
+	return m_userSkinPool;
+}
+
+SSkinPool * SSkinPoolMgr::GetBuiltinSkinPool()
+{
+	return m_bulitinSkinPool;
 }
 
 }//namespace SOUI

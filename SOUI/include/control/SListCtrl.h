@@ -546,9 +546,9 @@ namespace SOUI
         COLORREF        m_crText;  /**< 文本颜色 */
         COLORREF        m_crSelText;  /**< 选中文本颜色 */
 
-        ISkinObj*    m_pItemSkin;  /**< */
-        ISkinObj*    m_pIconSkin;  /**< */
-        ISkinObj*    m_pCheckSkin; /**< */
+        SAutoRefPtr<ISkinObj>    m_pItemSkin;  /**< */
+        SAutoRefPtr<ISkinObj>    m_pIconSkin;  /**< */
+        SAutoRefPtr<ISkinObj>    m_pCheckSkin; /**< */
         BOOL        m_bCheckBox;
         BOOL        m_bMultiSelection;
 
@@ -563,8 +563,8 @@ namespace SOUI
         SOUI_ATTRS_BEGIN()
             ATTR_INT(L"headerHeight", m_nHeaderHeight, FALSE)
             ATTR_INT(L"itemHeight", m_nItemHeight, FALSE)
-            ATTR_INT(L"checkBox", m_bCheckBox, TRUE)
-            ATTR_INT(L"multiSelection", m_bMultiSelection, TRUE)
+            ATTR_BOOL(L"checkBox", m_bCheckBox, TRUE)
+            ATTR_BOOL(L"multiSelection", m_bMultiSelection, TRUE)
             ATTR_SKIN(L"itemSkin", m_pItemSkin, TRUE)
             ATTR_SKIN(L"iconSkin", m_pIconSkin, TRUE)
             ATTR_SKIN(L"checkSkin", m_pCheckSkin, TRUE)

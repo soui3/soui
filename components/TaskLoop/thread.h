@@ -3,8 +3,9 @@
 #include <string>
 #include <helper/SCriticalSection.h>
 #include <helper/SNoCopyable.hpp>
-#include <helper/SFunctor.hpp>
+#include <interface/STaskLoop-i.h>
 #include <helper/SSemaphore.h>
+#include <helper/obj-ref-impl.hpp>
 
 SNSBEGIN
 

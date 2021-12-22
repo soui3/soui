@@ -27,7 +27,7 @@ namespace SOUI
         {
             if(m_bUpdateData) T::UpdateData();
             T::OnKillFocus(wndFocus);
-            T::GetOwner()->OnInplaceActive(false);
+            T::GetOwner()->OnInplaceActive(FALSE);
         }
 
         SOUI_MSG_MAP_BEGIN()

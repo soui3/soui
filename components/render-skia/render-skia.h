@@ -368,7 +368,6 @@ public:
 
 	STDMETHOD_(void,cubicTo)(THIS_ float x1, float y1, float x2, float y2,
 		float x3, float y3) OVERRIDE;
-
 	STDMETHOD_(void,rCubicTo)(THIS_ float x1, float y1, float x2, float y2,
 		float x3, float y3) OVERRIDE;
 

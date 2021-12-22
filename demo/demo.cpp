@@ -32,6 +32,11 @@
 #include <helper/SLogDef.h>
 //-->
 
+#define NANOSVG_IMPLEMENTATION
+#include <nanosvg.h>
+#define NANOSVGRAST_IMPLEMENTATION
+#include <nanosvgrast.h>
+
 #include "MainDlg.h"
 
 
@@ -79,6 +84,64 @@ public:
 	void task2(int a, const std::string & b)
 	{
 		SLOG_INFO("task2,a:" << a<<" b:"<<b.c_str());
+	}
+};
+
+class SApplication2 : public SApplication
+{
+public:
+	SApplication2(IRenderFactory *pRendFactory,HINSTANCE hInst):SApplication(pRendFactory,hInst){}
+
+protected:
+	STDMETHOD_(IBitmap *,LoadImage)(THIS_ LPCTSTR pszType,LPCTSTR pszResName)
+	{
+		int nBufSize = GetRawBufferSize(pszType,pszResName);
+		char *pBuf = (char*)malloc(nBufSize);
+		BOOL bLoad = GetRawBuffer(pszType,pszResName,pBuf,nBufSize);
+		if(bLoad && nBufSize>6)
+		{
+			if(_tcscmp(pszType,L"svg")!=0)
+			{
+				return SApplication::LoadImage(pszType,pszResName);
+			}
+			const unsigned char bom16[2]={0xff,0xfe};
+			const unsigned char bom8[3]={0xef,0xbb,0xbf};
+			SStringA strBuf;
+			if(memcmp(pBuf,bom16,2)==0)
+			{
+				strBuf = S_CW2A(SStringW((WCHAR*)(pBuf+2),(nBufSize-2)/2),CP_UTF8);
+			}else if(memcmp(pBuf,bom8,3)==0)
+			{
+				strBuf = SStringA(pBuf+3,nBufSize-3);
+			}else
+			{
+				strBuf = S_CA2A(SStringA(pBuf,nBufSize),CP_ACP,CP_UTF8);
+			}
+			if(strBuf.Left(4)=="<svg")
+			{
+				NSVGimage *image = nsvgParse((char*)strBuf.c_str(),"px", 96.0f);
+				IBitmap *Ret=NULL;
+				if(image)
+				{
+					int w = (int)image->width;
+					int h = (int)image->height;
+
+					NSVGrasterizer* rast = nsvgCreateRasterizer();
+
+					unsigned char *img = (unsigned char*)malloc(w*h*4);
+					nsvgRasterize(rast, image, 0,0,1, img, w, h, w*4);
+					GETRENDERFACTORY->CreateBitmap(&Ret);
+					Ret->Init(w,h,img);
+					free(img);
+
+					nsvgDeleteRasterizer(rast);
+					nsvgDelete(image);
+
+				}
+				return Ret;
+			}
+		}
+		return SResLoadFromMemory::LoadImage(pBuf,nBufSize);
 	}
 };
 
@@ -156,7 +219,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         pRenderFactory->SetImgDecoderFactory(pImgDecoderFactory);
 
         //定义一个唯一的SApplication对象，SApplication管理整个应用程序的资源
-        SApplication *theApp=new SApplication(pRenderFactory,hInstance);
+        SApplication *theApp=new SApplication2(pRenderFactory,hInstance);
         
         theApp->SetLogManager(pLogMgr);
         SLOG_INFO("test="<<200);

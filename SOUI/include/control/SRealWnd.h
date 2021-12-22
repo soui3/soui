@@ -130,7 +130,7 @@ public:
         ATTR_STRINGT(L"wndname", m_realwndParam.m_strWindowName, FALSE)
         ATTR_HEX(L"style", m_realwndParam.m_dwStyle, FALSE)
         ATTR_HEX(L"exstyle", m_realwndParam.m_dwExStyle, FALSE)
-        ATTR_INT(L"init",m_bInit,FALSE)
+        ATTR_BOOL(L"init",m_bInit,FALSE)
     SOUI_ATTRS_END()
 protected:
     /**

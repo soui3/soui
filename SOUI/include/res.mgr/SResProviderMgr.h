@@ -41,6 +41,8 @@ public:
 
 	STDMETHOD_(BOOL,GetRawBuffer)(THIS_ LPCTSTR pszType,LPCTSTR pszResName,LPVOID pBuf,size_t size) OVERRIDE;
 
+        
+		void SetFilePrefix(LPCTSTR pszFilePrefix);
 
 public:
 	//从字符串返回颜色值，字符串可以是：@color/red (red是在资源包中的颜色表定义的颜色名)，也可以是rgba(r,g,b,a)，也可以是rgb(r,g,b)，还可以是#ff0000(ff)这样的格式
@@ -75,6 +77,7 @@ protected:
 	//使用file:xxx 的形式来引用外部文件资源
 	BOOL    IsFileType(LPCTSTR pszType);
 
+	SStringT	m_strFilePrefix;
 	SList<IResProvider*> m_lstResPackage;
 
 	typedef SMap<SStringT,HCURSOR> CURSORMAP;

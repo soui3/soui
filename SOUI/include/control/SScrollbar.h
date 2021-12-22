@@ -256,7 +256,7 @@ protected:
     SOUI_MSG_MAP_END()
 
 protected:
-    ISkinObj    *m_pSkin;        /**< 皮肤对象 */
+    SAutoRefPtr<ISkinObj> m_pSkin;        /**< 皮肤对象 */
     UINT        m_uAllowSize;    /**< 大小 */
 
     SCROLLINFO  m_si;         /**< 结构体 */

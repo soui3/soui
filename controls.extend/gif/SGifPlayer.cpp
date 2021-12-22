@@ -121,10 +121,10 @@ BOOL SGifPlayer::_PlayFile( LPCTSTR pszFileName, BOOL bGif )
 	pGifSkin->Release();
 
 	m_iCurFrame = 0;
-	TCHAR buff[16] = {0};
-	m_aniSkin->SetAttribute(_T("enableScale"), _itot(m_bEnableScale, buff, 10));
-	m_aniSkin->SetAttribute(_T("scale"), _itot(m_nScale, buff, 10));
-	m_aniSkin->SetAttribute(_T("tile"), _itot(m_bTile, buff, 10));
+	WCHAR buff[16] = {0};
+	m_aniSkin->SetAttribute(L"enableScale", _itow(m_bEnableScale, buff, 10));
+	m_aniSkin->SetAttribute(L"scale", _itow(m_nScale, buff, 10));
+	m_aniSkin->SetAttribute(L"tile", _itow(m_bTile, buff, 10));
 	
 	if(GetLayoutParam()->IsWrapContent(Any))
 	{

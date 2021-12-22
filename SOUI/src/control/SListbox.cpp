@@ -54,7 +54,7 @@ int SListBox::GetCurSel() const
     return m_iSelItem;
 }
 
-BOOL SListBox::SetCurSel(int nIndex)
+BOOL SListBox::SetCurSel(int nIndex,BOOL bNotifyChange)
 {
     if(nIndex >= GetCount())
         return FALSE;
@@ -72,6 +72,10 @@ BOOL SListBox::SetCurSel(int nIndex)
         if(m_iSelItem!=-1)
             RedrawItem(m_iSelItem);
     }
+	if(bNotifyChange)
+	{
+		NotifySelChange(nOldSelItem,nIndex);
+	}
     return TRUE;
 }
 

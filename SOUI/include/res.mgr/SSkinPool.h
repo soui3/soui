@@ -136,6 +136,15 @@ public:
      * Describe  
      */    
     int LoadSkins(SXmlNode xmlNode);
+
+	/**
+     * AddSkin
+     * @brief    增加一个skinObj对象到SkinPool
+     * @param    ISkinObj* --  SkinObj   
+     * @return   BOOL -- 加入是否成功,重名加入失败
+     * Describe  
+     */  
+	BOOL AddSkin(ISkinObj* skin);
 protected:
     static void OnKeyRemoved(const SSkinPtr & obj);
     
@@ -197,17 +206,22 @@ public:
      * GetBuiltinSkinPool
      * @brief    获得管理内建SkinPool对象
      * @return   SSkinPool * -- 内建SkinPool指针
-     * Describe  用户在代码中创建的SkinObj可以交给内建SkinPool管理
+     * Describe  
      */    
-    SSkinPool * GetBuiltinSkinPool(){return m_bulitinSkinPool;}
+    SSkinPool * GetBuiltinSkinPool();
 
-	void SetBuiltinSkinPool(SSkinPool *pSkinPool){
-		m_bulitinSkinPool = pSkinPool;
-	}
+
+	/**
+     * GetUserSkinPool
+     * @brief    获得用户管理的SkinPool对象，该SkinPool对象管理用户在运行时创建的SkinObj对象
+     * @return   SSkinPool * -- User SkinPool指针
+     * Describe  
+     */    
+	SSkinPool * GetUserSkinPool();
 protected:
     SList<SSkinPool *> m_lstSkinPools;
     SAutoRefPtr<SSkinPool> m_bulitinSkinPool;
-
+	SAutoRefPtr<SSkinPool> m_userSkinPool;
 };
 
 

@@ -92,6 +92,7 @@ struct fRect {
 	float    fLeft, fTop, fRight, fBottom;
 };
 
+
 	struct IMaskFilter : public IObjRef
 	{
 		enum SkBlurStyle {
@@ -1042,7 +1043,8 @@ DECLARE_INTERFACE_(IPath,IRenderObj)
 	/** Same as lineTo, but the coordinates are considered relative to the last
 	point on this contour. If there is no previous point, then a moveTo(0,0)
 	is inserted automatically.
-
+		virtual void SetMaskFilter(IMaskFilter *pMaskFilter) = 0;
+		virtual IMaskFilter *GetMaskFilter() = 0;
 	@param dx   The amount to add to the x-coordinate of the previous point
 	on this contour, to specify a line
 	@param dy   The amount to add to the y-coordinate of the previous point

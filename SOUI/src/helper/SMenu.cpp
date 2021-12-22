@@ -25,14 +25,12 @@ SMenuAttr::SMenuAttr()
     ,m_pSepSkin(GETBUILTINSKIN(SKIN_SYS_MENU_SEP))
     ,m_pCheckSkin(GETBUILTINSKIN(SKIN_SYS_MENU_CHECK))
     ,m_pIconSkin(NULL)
+	,m_nItemHei(25,SLayoutSize::defUnit)
+	,m_nMaxWidth(250,SLayoutSize::defUnit)
+	,m_nIconMargin(2,SLayoutSize::defUnit)
+	,m_nTextMargin(5, SLayoutSize::defUnit)
     ,m_scale(100)
 {
-	m_nMaxWidth.setInvalid();
-	m_nItemHei.setInvalid();
-
-	m_nIconMargin.setSize(2,SLayoutSize::defUnit);
-	m_nTextMargin.setSize(5, SLayoutSize::defUnit);
-
 	m_szIcon[0].setSize( CX_ICON, SLayoutSize::defUnit);
 	m_szIcon[1].setSize( CY_ICON, SLayoutSize::defUnit);
 
@@ -297,6 +295,10 @@ BOOL SMenu::LoadMenu(SXmlNode xmlMenu )
 	SetMenuAttr(m_hMenu,pMenuAttr);
 	pMenuAttr->Release();
 
+	if(m_icons)
+	{
+		pMenuAttr->m_pIconSkin = m_icons;
+	}
     BuildMenu(m_hMenu,xmlMenu);
 
     return TRUE;
@@ -574,6 +576,12 @@ ULONG_PTR SMenu::GetMenuUserData(UINT uPosition, UINT uFlags)
 		return 0;
 	SMenuItemData *pmid = (SMenuItemData*)mi.dwItemData;
 	return pmid->dwUserData;
+}
+
+void SMenu::SetIconSkin(SAutoRefPtr<ISkinObj> icons)
+{
+	SASSERT(!m_hMenu);
+	m_icons = icons;
 }
 
 }//namespace SOUI

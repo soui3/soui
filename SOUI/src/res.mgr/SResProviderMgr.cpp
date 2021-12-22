@@ -136,14 +136,15 @@ LPCTSTR SResProviderMgr::SysCursorName2ID( LPCTSTR pszCursorName )
 	return NULL;
 }
 
-BOOL SResProviderMgr::GetRawBuffer( LPCTSTR strType,LPCTSTR pszResName,LPVOID pBuf,size_t size )
-{
-	SAutoLock lock(m_cs);
-	if(IsFileType(strType))
-	{
-		return SResLoadFromFile::GetRawBuffer(pszResName,pBuf,size);
-	}else
-	{
+    BOOL SResProviderMgr::GetRawBuffer( LPCTSTR strType,LPCTSTR pszResName,LPVOID pBuf,size_t size )
+    {
+        SAutoLock lock(m_cs);
+        if(IsFileType(strType))
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::GetRawBuffer(strPath,pBuf,size);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("%s:%s"),strType,pszResName).MakeLower()] ++;
 #endif
@@ -153,14 +154,15 @@ BOOL SResProviderMgr::GetRawBuffer( LPCTSTR strType,LPCTSTR pszResName,LPVOID pB
 	}
 }
 
-size_t SResProviderMgr::GetRawBufferSize( LPCTSTR strType,LPCTSTR pszResName )
-{
-	SAutoLock lock(m_cs);
-	if(IsFileType(strType))
-	{
-		return SResLoadFromFile::GetRawBufferSize(pszResName);
-	}else
-	{
+    size_t SResProviderMgr::GetRawBufferSize( LPCTSTR strType,LPCTSTR pszResName )
+    {
+        SAutoLock lock(m_cs);
+        if(IsFileType(strType))
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::GetRawBufferSize(strPath);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("%s:%s"),strType,pszResName).MakeLower()] ++;
 #endif
@@ -171,14 +173,15 @@ size_t SResProviderMgr::GetRawBufferSize( LPCTSTR strType,LPCTSTR pszResName )
 	}
 }
 
-IImgX * SResProviderMgr::LoadImgX( LPCTSTR strType,LPCTSTR pszResName )
-{
-	SAutoLock lock(m_cs);
-	if(IsFileType(strType))
-	{
-		return SResLoadFromFile::LoadImgX(pszResName);
-	}else
-	{
+    IImgX * SResProviderMgr::LoadImgX( LPCTSTR strType,LPCTSTR pszResName )
+    {
+        SAutoLock lock(m_cs);
+        if(IsFileType(strType))
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadImgX(strPath);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("%s:%s"),strType,pszResName).MakeLower()] ++;
 #endif
@@ -189,15 +192,16 @@ IImgX * SResProviderMgr::LoadImgX( LPCTSTR strType,LPCTSTR pszResName )
 	}
 }
 
-IBitmap * SResProviderMgr::LoadImage( LPCTSTR pszType,LPCTSTR pszResName )
-{
-	if(!pszType) return NULL;
-	SAutoLock lock(m_cs);
-	if(IsFileType(pszType))
-	{
-		return SResLoadFromFile::LoadImage(pszResName);
-	}else
-	{
+    IBitmap * SResProviderMgr::LoadImage( LPCTSTR pszType,LPCTSTR pszResName )
+    {
+        if(!pszType) return NULL;
+        SAutoLock lock(m_cs);
+        if(IsFileType(pszType))
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadImage(strPath);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("%s:%s"),pszType,pszResName).MakeLower()] ++;
 #endif
@@ -214,14 +218,15 @@ IBitmap * SResProviderMgr::LoadImage( LPCTSTR pszType,LPCTSTR pszResName )
 	}
 }
 
-HBITMAP SResProviderMgr::LoadBitmap( LPCTSTR pszResName ,BOOL bFromFile /*= FALSE*/)
-{
-	SAutoLock lock(m_cs);
-	if(bFromFile)
-	{
-		return SResLoadFromFile::LoadBitmap(pszResName);
-	}else
-	{
+    HBITMAP SResProviderMgr::LoadBitmap( LPCTSTR pszResName ,BOOL bFromFile /*= FALSE*/)
+    {
+        SAutoLock lock(m_cs);
+        if(bFromFile)
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadBitmap(strPath);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("bitmap:%s"),pszResName).MakeLower()] ++;
 #endif
@@ -238,27 +243,29 @@ HBITMAP SResProviderMgr::LoadBitmap( LPCTSTR pszResName ,BOOL bFromFile /*= FALS
 	}
 }
 
-HCURSOR SResProviderMgr::LoadCursor( LPCTSTR pszResName ,BOOL bFromFile /*= FALSE*/)
-{
-	SAutoLock lock(m_cs);
-	if(IS_INTRESOURCE(pszResName))
-		return ::LoadCursor(NULL, pszResName);
-	else 
-	{
-		LPCTSTR pszCursorID=SysCursorName2ID(pszResName);
-		if(pszCursorID)
-			return ::LoadCursor(NULL, pszCursorID);
-	}
-	const CURSORMAP::CPair * pPair  = m_mapCachedCursor.Lookup(pszResName);
-	if(pPair) return pPair->m_value;
-
-	HCURSOR hRet = NULL;
-	if(bFromFile)
-	{
-		hRet = SResLoadFromFile::LoadCursor(pszResName);
-	}else
-	{
-
+    HCURSOR SResProviderMgr::LoadCursor( LPCTSTR pszResName ,BOOL bFromFile /*= FALSE*/)
+    {
+        SAutoLock lock(m_cs);
+        if(IS_INTRESOURCE(pszResName))
+		{
+			return ::LoadCursor(NULL, pszResName);
+		}else 
+        {
+            LPCTSTR pszCursorID=SysCursorName2ID(pszResName);
+            if(pszCursorID)
+                return ::LoadCursor(NULL, pszCursorID);
+        }
+        const CURSORMAP::CPair * pPair  = m_mapCachedCursor.Lookup(pszResName);
+        if(pPair) return pPair->m_value;
+        
+        HCURSOR hRet = NULL;
+        if(bFromFile)
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            hRet = SResLoadFromFile::LoadCursor(strPath);
+        }else
+        {
+        
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("cursor:%s"),pszResName).MakeLower()] ++;
 #endif
@@ -282,14 +289,15 @@ HCURSOR SResProviderMgr::LoadCursor( LPCTSTR pszResName ,BOOL bFromFile /*= FALS
 	return hRet;
 }
 
-HICON SResProviderMgr::LoadIcon( LPCTSTR pszResName,int cx/*=0*/,int cy/*=0*/ ,BOOL bFromFile /*= FALSE*/)
-{
-	SAutoLock lock(m_cs);
-	if(bFromFile)
-	{
-		return SResLoadFromFile::LoadIcon(pszResName,cx,cy);
-	}else
-	{
+    HICON SResProviderMgr::LoadIcon( LPCTSTR pszResName,int cx/*=0*/,int cy/*=0*/ ,BOOL bFromFile /*= FALSE*/)
+    {
+        SAutoLock lock(m_cs);
+        if(bFromFile)
+        {
+			SStringT strPath = m_strFilePrefix+pszResName;
+            return SResLoadFromFile::LoadIcon(strPath,cx,cy);
+        }else
+        {
 #ifdef _DEBUG
 		m_mapResUsageCount[SStringT().Format(_T("icon:%s"),pszResName).MakeLower()] ++;
 #endif
@@ -415,5 +423,14 @@ BOOL SResProviderMgr::CheckUsage(LPCTSTR pszName,LPCTSTR pszType,LPARAM lp)
 	return TRUE;
 }
 #endif
+	void SResProviderMgr::SetFilePrefix(LPCTSTR pszFilePrefix)
+	{
+		SAutoLock lock(m_cs);
+		m_strFilePrefix = pszFilePrefix;
+		if(!m_strFilePrefix.EndsWith(_T("\\")))
+			m_strFilePrefix.Append(_T("\\"));
+	}
+
+
 
 SNSEND
