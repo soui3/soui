@@ -13,6 +13,8 @@ interface ISwndContainer;
 #define INTERFACE IWindow
 DECLARE_INTERFACE_(IWindow,IObject)
 {
+	STDMETHOD_(IObject*,GetObj)(THIS) PURE;
+
 	STDMETHOD_(SWND,GetSwnd)(THIS) SCONST PURE;
 
 	STDMETHOD_(ILayout *,GetLayout)(THIS) PURE;

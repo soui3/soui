@@ -6,7 +6,7 @@
 namespace SOUI
 {
 
-	class SLinearLayoutParam : public SObjectImpl<TObjRefImpl<ILayoutParam>>
+	class SLinearLayoutParam : public TObjRefImpl<SObjectImpl<ILayoutParam>>
 							 , protected SLinearLayoutParamStruct
     {
         SOUI_CLASS_NAME(SLinearLayoutParam,L"LinearLayoutParam")
@@ -55,7 +55,7 @@ namespace SOUI
 
     };
 
-    class SOUI_EXP SLinearLayout : public SObjectImpl<TObjRefImpl<ILayout>>
+    class SOUI_EXP SLinearLayout : public TObjRefImpl<SObjectImpl<ILayout>>
     {
 		SOUI_CLASS_NAME_EX(SLinearLayout,L"linearLayout",Layout)
     public:

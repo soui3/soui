@@ -13,7 +13,6 @@
 
 #pragma once
 
-//#include <interface/SWindow-i.h>
 #include <event/SEventImpl.hpp>
 
 SNSBEGIN

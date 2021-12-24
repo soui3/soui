@@ -6,7 +6,7 @@ namespace SOUI{
 
 
 
-	class SouiLayoutParam: public SObjectImpl<TObjRefImpl<ILayoutParam>>
+	class SouiLayoutParam: public TObjRefImpl<SObjectImpl<ILayoutParam>>
 						 , protected SouiLayoutParamStruct
 	{
 		SOUI_CLASS_NAME(SouiLayoutParam,L"SouiLayoutParam")
@@ -60,7 +60,7 @@ namespace SOUI{
 
 	};
 
-	class SOUI_EXP SouiLayout: public SObjectImpl<TObjRefImpl<ILayout>>
+	class SOUI_EXP SouiLayout: public TObjRefImpl<SObjectImpl<ILayout>>
 	{
 		SOUI_CLASS_NAME_EX(SouiLayout,L"SouiLayout",Layout)
 	public:

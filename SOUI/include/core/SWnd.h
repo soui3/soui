@@ -192,8 +192,8 @@ namespace SOUI
     * 
     * Describe   SOUI窗口基类,实现窗口的基本接口
     */
-	class SOUI_EXP SWindow : public TObjRefImpl< SObjectImpl<IWindow> >
-		, public ITrCtxProvider
+	class SOUI_EXP SWindow : public TObjRefImpl<SObjectImpl<IWindow>>
+		                   , public ITrCtxProvider
     {
         SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
         friend class SwndLayoutBuilder;

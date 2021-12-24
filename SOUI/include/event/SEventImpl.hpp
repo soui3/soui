@@ -10,7 +10,7 @@
 
 SNSBEGIN
 
-class SEvtArgs : public TObjRefImpl< SObjectImpl<IEvtArgs> >
+class SOUI_EXP SEvtArgs : public TObjRefImpl<SObjectImpl<IEvtArgs>>
 {
 public:
 	UINT handled; 
