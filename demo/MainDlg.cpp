@@ -864,7 +864,7 @@ void CMainDlg::OnBtnCreateChildren()
         pChild = pNext;
     }
     //using SWindow::CreateChildren to Create Children described in the input xml string.
-    pContainer->CreateChildren(strXml);
+    pContainer->CreateChildrenFromXml(strXml);
 }
 
 void CMainDlg::OnInitListBox()
@@ -1012,9 +1012,10 @@ void CMainDlg::OnTimer(UINT_PTR idEvent)
 		if (pAniHost && pAniHost->IsVisible(TRUE))
 		{
 			const WCHAR * kLoveXml= L"<include src=\"LAYOUT:xml_love\"/>";
-			SWindow *pLove = pAniHost->CreateChildren(kLoveXml);
-			if(pLove)
+			BOOL bLoad= pAniHost->CreateChildrenFromXml(kLoveXml);
+			if(bLoad)
 			{
+				SWindow *pLove = pAniHost->GetWindow(GSW_LASTCHILD);
 				pAniHost->UpdateLayout();
 				IAnimation *pAni = SApplication::getSingletonPtr()->LoadAnimation(_T("anim:love"));
 				if(pAni)
@@ -1112,7 +1113,7 @@ void CMainDlg::OnBtnCreateByTemp()
 	if(pContainer && pInput)
 	{
 		SStringT strInput = pInput->GetWindowText();
-		pContainer->CreateChildren(S_CT2W(strInput));
+		pContainer->CreateChildrenFromXml(S_CT2W(strInput));
 	}
 }
 

@@ -303,7 +303,7 @@ protected:
      *
      * Describe  
      */
-    virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
+    virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
 
     /**
      * SListCtrlEx::NotifySelChange

@@ -1099,11 +1099,11 @@ void SMCListView::SetItemLocator(IListViewItemLocator *pItemLocator)
     onDataSetChanged();
 }
 
-BOOL SMCListView::OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
+BOOL SMCListView::UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
 {
     if(!m_pHoverItem)
-        return __super::OnUpdateToolTip(pt,tipInfo);
-    return m_pHoverItem->OnUpdateToolTip(pt,tipInfo);
+        return __super::UpdateToolTip(pt,tipInfo);
+    return m_pHoverItem->UpdateToolTip(pt,tipInfo);
 }
 
 void SMCListView::SetSel(int iItem,BOOL bNotify)

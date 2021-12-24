@@ -176,7 +176,18 @@ namespace SOUI
 		return m_strText.GetText(bRawText);
 	}
 
-	BOOL SWindow::OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
+	int SWindow::GetWindowText(TCHAR * pBuf,int nBufLen,BOOL bRawText)
+	{
+		SStringT str = GetWindowText(bRawText);
+		if(!pBuf)
+			return str.GetLength();
+		int nRet = smin(nBufLen,str.GetLength());
+		_tcsncpy(pBuf,str.c_str(),nRet);
+		return nRet;
+	}
+
+
+	BOOL SWindow::UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
 	{
 		tipInfo.swnd = m_swnd;
 		tipInfo.dwCookie = 0;
@@ -207,6 +218,10 @@ namespace SOUI
 		OnContentChanged();
 	}
 
+	void SWindow::SetEventMute(BOOL bMute)
+	{
+		GetEventSet()->setMutedState(!!bMute);
+	}
 
 	void SWindow::OnContentChanged()
 	{
@@ -891,13 +906,12 @@ namespace SOUI
 		return TRUE;
 	}
 
-	SWindow * SWindow::CreateChildren(LPCWSTR pszXml)
+	BOOL SWindow::CreateChildrenFromXml(LPCWSTR pszXml)
 	{
 		SXmlDoc xmlDoc;
-		if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),xml_parse_default,enc_utf16)) return NULL;
-		BOOL bLoaded=CreateChildren(xmlDoc.root());
-		if(!bLoaded) return NULL;
-		else return m_pLastChild;
+		if(!xmlDoc.load_buffer(pszXml,wcslen(pszXml)*sizeof(wchar_t),xml_parse_default,enc_utf16)) 
+			return FALSE;
+		return CreateChildren(xmlDoc.root());
 	}
 
 	// Hittest children
@@ -3258,6 +3272,17 @@ namespace SOUI
 		return DestroyChild((SWindow*)pChild);
 	}
 
+	void SWindow::SetIOwner(THIS_ IWindow *pOwner)
+	{
+		SetOwner(static_cast<SWindow*>(pOwner));
+	}
+
+	IWindow * SWindow::GetIOwner(THIS)
+	{
+		return GetOwner();
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	static SWindow * ICWND_NONE = (SWindow*)-2;
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 
 		:m_pOwner(pOwner)

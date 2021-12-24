@@ -300,7 +300,7 @@ LPARAM SItemPanel::GetItemData()
     return m_dwData;
 }
 
-BOOL SItemPanel::OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
+BOOL SItemPanel::UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
 {
     CRect rcItem=GetItemRect();
     if(m_hHover==m_swnd)
@@ -320,7 +320,7 @@ BOOL SItemPanel::OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
     }
     
     pt -= rcItem.TopLeft();
-    BOOL bRet=pHover->OnUpdateToolTip(pt,tipInfo);
+    BOOL bRet=pHover->UpdateToolTip(pt,tipInfo);
     if(bRet)
     {
         tipInfo.rcTarget.OffsetRect(rcItem.TopLeft());

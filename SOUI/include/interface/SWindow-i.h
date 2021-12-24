@@ -7,7 +7,15 @@
 
 SNSBEGIN
 
+typedef struct SWNDMSG
+{
+	UINT uMsg;
+	WPARAM wParam;
+	LPARAM lParam;
+}SWNDMSG, *PSWNDMSG;
+
 interface ISwndContainer;
+interface IEvtArgs;
 
 #undef INTERFACE
 #define INTERFACE IWindow
@@ -187,6 +195,99 @@ DECLARE_INTERFACE_(IWindow,IObject)
 		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) PURE;
 
 		STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) PURE;
+
+		
+		/**
+        * Move
+        * @brief    将窗口移动到指定位置
+        * @param    int x --  left
+        * @param    int y --  top
+        * @param    int cx --  width
+        * @param    int cy --  height
+        * @return   void 
+        *
+        * Describe 
+        * @see     Move(LPRECT prect)
+        */
+        STDMETHOD_(void,Move)(THIS_ int x,int y, int cx,int cy) PURE;
+		
+
+        /**
+        * SetTimer2
+        * @brief    利用函数定时器来模拟一个兼容窗口定时器
+        * @param    UINT_PTR id --  定时器ID
+        * @param    UINT uElapse --  延时(MS)
+        * @return   BOOL 
+        *
+        * Describe  由于SetTimer只支持0-127的定时器ID，SetTimer2提供设置其它timerid
+        *           能够使用SetTimer时尽量不用SetTimer2，在Kill时效率会比较低
+        */
+        STDMETHOD_(BOOL,SetTimer2)(THIS_ UINT_PTR id,UINT uElapse) PURE;
+
+        /**
+        * KillTimer2
+        * @brief    删除一个SetTimer2设置的定时器
+        * @param    UINT_PTR id --  SetTimer2设置的定时器ID
+        * @return   void 
+        *
+        * Describe  需要枚举定时器列表
+        */
+        STDMETHOD_(void,KillTimer2)(THIS_ UINT_PTR id) PURE;
+
+		STDMETHOD_(int,GetWindowText)(THIS_ TCHAR * pBuf,int nBufLen,BOOL bRawText) PURE;
+
+		STDMETHOD_(void,SetEventMute)(THIS_ BOOL bMute) PURE;
+
+		STDMETHOD_(DWORD,GetState)(THIS) SCONST PURE;
+		STDMETHOD_(DWORD,ModifyState)(THIS_ DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate) PURE;
+
+		        /**
+        * GetCurMsg
+        * @brief    获得当前正在处理的消息
+        * @return   PSWNDMSG 
+        *
+        * Describe  
+        */
+        STDMETHOD_(PSWNDMSG,GetCurMsg)(THIS) PURE;
+
+
+		STDMETHOD_(void,SetIOwner)(THIS_ IWindow *pOwner) PURE;
+		STDMETHOD_(IWindow *,GetIOwner)(THIS) PURE;
+
+		/**
+        * CreateChildren
+        * @brief    从XML创建子窗口
+        * @param    LPCWSTR pszXml --  合法的utf16编码XML字符串
+        * @return   BOOL 是否创建成功
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,CreateChildrenFromXml)(THIS_ LPCWSTR pszXml) PURE;
+
+
+		/**
+        * GetISelectedSiblingInGroup
+        * @brief    获得在一个group中选中状态的窗口
+        * @return   SWindow * 
+        *
+        * Describe  不是group中的窗口时返回NULL
+        */
+        STDMETHOD_(IWindow *,GetISelectedSiblingInGroup)(THIS) PURE;
+
+        /**
+        * GetSelectedChildInGroup
+        * @brief    获取有选择状态的子窗口
+        * @return   IWindow * -- 选中状态窗口
+        * Describe  
+        */    
+        STDMETHOD_(IWindow *, GetISelectedChildInGroup)(THIS) PURE;
+
+		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) PURE;
+
+		//caret相关方法
+		STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight) PURE;
+		STDMETHOD_(void,ShowCaret)(THIS_ BOOL bShow) PURE;   
+		STDMETHOD_(void,SetCaretPos)(THIS_ int x,int y) PURE;
 
 };
 

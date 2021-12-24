@@ -83,7 +83,7 @@ namespace SOUI
          *
          * Describe  总是返回FALSE，禁止在page页面上显示tooltip
          */
-        virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo){return FALSE;}
+        virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo){return FALSE;}
 
         SOUI_ATTRS_BEGIN()
             ATTR_I18NSTRT(L"title", m_strTitle, FALSE)
@@ -370,7 +370,7 @@ namespace SOUI
             return SC_WANTARROWS;
         }
 
-        virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
+        virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
         
         /**
         * UpdateChildrenPosition

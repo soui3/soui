@@ -957,7 +957,7 @@ public:
 
 	BOOL ClearCheck();
 protected:
-	virtual BOOL FireEvent(IEvtArgs *evt);
+	STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
 
 	virtual void OnInsertChild(SWindow *pChild);
 	virtual void OnRemoveChild(SWindow *pChild);

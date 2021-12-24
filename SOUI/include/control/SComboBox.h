@@ -182,7 +182,7 @@ protected:
      * 
      * Describe  此函数是消息响应函数
      */ 
-    virtual BOOL FireEvent(IEvtArgs *evt);
+	STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
 
     virtual void OnScaleChanged(int nScale);
 

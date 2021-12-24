@@ -82,7 +82,7 @@ public://SWindow
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
 
     virtual BOOL NeedRedrawWhenStateChange();
-    virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
+    virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
     virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable);
 	virtual COLORREF GetBkgndColor() const;
 

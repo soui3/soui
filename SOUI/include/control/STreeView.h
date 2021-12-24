@@ -158,7 +158,7 @@ namespace SOUI
 	protected:
 		virtual UINT WINAPI OnGetDlgCode () const;
         virtual BOOL OnSetCursor(const CPoint &pt);
-        virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
+        virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo);
         virtual void OnColorize(COLORREF cr);
 		virtual void OnScaleChanged(int nScale);
 		virtual HRESULT OnLanguageChanged();

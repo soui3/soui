@@ -59,7 +59,7 @@ protected:
     virtual int  GetScrollLineSize(BOOL bVertical);
     virtual BOOL CreateChildren(SXmlNode xmlNode);
     
-    virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
+    virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
 	virtual UINT WINAPI OnGetDlgCode () const;
     virtual BOOL OnSetCursor(const CPoint &pt);
     virtual void OnColorize(COLORREF cr);

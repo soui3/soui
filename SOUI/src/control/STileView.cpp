@@ -774,13 +774,13 @@ void STileView::SetItemLocator(STileViewItemLocator *pItemLocator)
     onDataSetChanged();
 }
 
-BOOL STileView::OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
+BOOL STileView::UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
 {
     if(!m_pHoverItem)
     {
-        return __super::OnUpdateToolTip(pt, tipInfo);
+		return __super::UpdateToolTip(pt, tipInfo);
     }
-    return m_pHoverItem->OnUpdateToolTip(pt, tipInfo);
+    return m_pHoverItem->UpdateToolTip(pt, tipInfo);
 }
 
 void STileView::SetSel(int iItem, BOOL bNotify)

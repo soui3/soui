@@ -1036,7 +1036,7 @@ void SHostWnd::UpdateTooltip()
     {
         CPoint pt(GET_X_LPARAM(m_msgMouse.lParam), GET_Y_LPARAM(m_msgMouse.lParam));
         SwndToolTipInfo tipInfo;
-        BOOL bOK=pHover->OnUpdateToolTip(pt,tipInfo);
+        BOOL bOK=pHover->UpdateToolTip(pt,tipInfo);
         if(bOK)
         {
             TIPID id={tipInfo.swnd,tipInfo.dwCookie};

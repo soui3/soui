@@ -69,9 +69,9 @@ namespace SOUI
         * 
         * Describe  此函数是消息响应函数
         */   
-        virtual BOOL FireEvent(IEvtArgs * evt);
+		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
 
-		STDMETHOD_(void,OnFinalRelease)(THIS);
+		STDMETHOD_(void,OnFinalRelease)(THIS) OVERRIDE;
 
 		void OnKillFocus(SWND wndFocus);
 
@@ -240,7 +240,7 @@ namespace SOUI
         virtual void OnSelChanged();
 
 
-        virtual BOOL FireEvent(IEvtArgs *evt);
+		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
 
     protected:
 

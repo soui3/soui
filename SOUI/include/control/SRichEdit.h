@@ -914,7 +914,7 @@ namespace SOUI
 		
 		virtual void OnRebuildFont();
 
-		virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
+		STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight);
 
 		void OnEnable(BOOL bEnable, UINT nStatus);
         /**

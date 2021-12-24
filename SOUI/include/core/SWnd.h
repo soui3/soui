@@ -141,12 +141,6 @@ namespace SOUI
         GSW_OWNER,
     } GW_CODE;
 
-    typedef struct SWNDMSG
-    {
-        UINT uMsg;
-        WPARAM wParam;
-        LPARAM lParam;
-    } *PSWNDMSG;
 
     struct SwndToolTipInfo
     {
@@ -437,9 +431,6 @@ namespace SOUI
 		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
 		STDMETHOD_(void,SetContainer)(THIS_ ISwndContainer *pContainer) OVERRIDE;
 
-		const ISwndContainer* GetContainer() const;
-
-
 		/**
         * GetChildrenLayoutRect
         * @brief    获得子窗口的布局空间
@@ -471,30 +462,116 @@ namespace SOUI
 		STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) OVERRIDE;
 
 
-		virtual void OnContentChanged();
+		/**
+        * Move
+        * @brief    将窗口移动到指定位置
+        * @param    int x --  left
+        * @param    int y --  top
+        * @param    int cx --  width
+        * @param    int cy --  height
+        * @return   void 
+        *
+        * Describe 
+        * @see     Move(LPRECT prect)
+        */
+        STDMETHOD_(void,Move)(THIS_ int x,int y, int cx=-1,int cy=-1) OVERRIDE;
+		
 
         /**
-        * FindChildByID
-        * @brief    通过ID查找对应的子窗口
-        * @param    int nID --  窗口ID
-        * @param    int nDeep --  搜索深度,-1代表无限度
-        * @return   SWindow* 
+        * SetTimer2
+        * @brief    利用函数定时器来模拟一个兼容窗口定时器
+        * @param    UINT_PTR id --  定时器ID
+        * @param    UINT uElapse --  延时(MS)
+        * @return   BOOL 
+        *
+        * Describe  由于SetTimer只支持0-127的定时器ID，SetTimer2提供设置其它timerid
+        *           能够使用SetTimer时尽量不用SetTimer2，在Kill时效率会比较低
+        */
+        STDMETHOD_(BOOL,SetTimer2)(THIS_ UINT_PTR id,UINT uElapse) OVERRIDE;
+
+        /**
+        * KillTimer2
+        * @brief    删除一个SetTimer2设置的定时器
+        * @param    UINT_PTR id --  SetTimer2设置的定时器ID
+        * @return   void 
+        *
+        * Describe  需要枚举定时器列表
+        */
+        STDMETHOD_(void,KillTimer2)(THIS_ UINT_PTR id) OVERRIDE;
+
+		STDMETHOD_(int,GetWindowText)(THIS_ TCHAR * pBuf,int nBufLen,BOOL bRawText) OVERRIDE;
+
+		STDMETHOD_(void,SetEventMute)(THIS_ BOOL bMute) OVERRIDE;
+
+		STDMETHOD_(DWORD,GetState)(THIS) SCONST OVERRIDE;
+		STDMETHOD_(DWORD,ModifyState)(THIS_ DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE) OVERRIDE;
+
+        /**
+        * GetCurMsg
+        * @brief    获得当前正在处理的消息
+        * @return   PSWNDMSG 
         *
         * Describe  
         */
-        SWindow* FindChildByID(int nID, int nDeep =-1);
+        STDMETHOD_(PSWNDMSG,GetCurMsg)(THIS) OVERRIDE
+        {
+            return m_pCurMsg;
+        }
+
+		STDMETHOD_(void,SetIOwner)(THIS_ IWindow *pOwner) OVERRIDE;
+		STDMETHOD_(IWindow *,GetIOwner)(THIS) OVERRIDE;
+
+		        /**
+        * CreateChildren
+        * @brief    从XML创建子窗口
+        * @param    LPCWSTR pszXml --  合法的utf16编码XML字符串
+        * @return   BOOL 是否创建成功
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,CreateChildrenFromXml)(THIS_ LPCWSTR pszXml) OVERRIDE;
+
+		STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode *pNode) OVERRIDE;
+
+		STDMETHOD_(BOOL,GetAttribute)(const IStringW * strAttr,IStringW * strValue) SCONST OVERRIDE;
+
+				/**
+        * GetISelectedSiblingInGroup
+        * @brief    获得在一个group中选中状态的窗口
+        * @return   SWindow * 
+        *
+        * Describe  不是group中的窗口时返回NULL
+        */
+        STDMETHOD_(IWindow *,GetISelectedSiblingInGroup)(THIS) OVERRIDE
+		{
+			return GetSelectedSiblingInGroup();
+		}
+
+        /**
+        * GetSelectedChildInGroup
+        * @brief    获取有选择状态的子窗口
+        * @return   SWindow * -- 选中状态窗口
+        * Describe  
+        */    
+        STDMETHOD_(IWindow *, GetISelectedChildInGroup)(THIS) OVERRIDE
+		{
+			return GetSelectedChildInGroup();
+		}
+
+		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
+
+	public://caret相关方法
+        STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight) OVERRIDE;
+        STDMETHOD_(void,ShowCaret)(THIS_ BOOL bShow) OVERRIDE;   
+        STDMETHOD_(void,SetCaretPos)(THIS_ int x,int y) OVERRIDE;
+
 	public:
 		
 		IAccessible * GetAccessible();
 		IAccProxy * GetAccProxy();
 		void accNotifyEvent(DWORD dwEvt);
 	public:
-
-		template<class T>
-		T * GetLayoutParamT()
-		{
-			return sobj_cast<T>(GetLayoutParam());
-		}
+		const ISwndContainer* GetContainer() const;
 
 		const SWindow * GetWindow(int uCode) const;
 		SWindow * GetWindow(int uCode);
@@ -524,7 +601,7 @@ namespace SOUI
          */
 		BOOL AdjustZOrder(SWindow *pInsertAfter);
 
-		        /**
+		/**
          * InsertChild
          * @brief    在窗口树中插入一个子窗口
          * @param    SWindow * pNewChild --  子窗口对象
@@ -590,9 +667,6 @@ namespace SOUI
         void SetOwner(SWindow *pOwner);
         SWindow *GetOwner();
 
-        DWORD GetState(void) const;
-        DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
-
 
         /**
         * GetTextAlign
@@ -606,19 +680,25 @@ namespace SOUI
 		CRect GetWindowRect() const;
                 
         virtual CRect GetClientRect() const;
-    protected:
+        
+    public://窗口树结构相关方法
 
         /**
-        * OoColorize
-        * @brief    调节窗口色调
-        * @param    COLORREF cr --  目标颜色
-        * @return   void
+        * FindChildByID
+        * @brief    通过ID查找对应的子窗口
+        * @param    int nID --  窗口ID
+        * @param    int nDeep --  搜索深度,-1代表无限度
+        * @return   SWindow* 
         *
         * Describe  
         */
-        virtual void OnColorize(COLORREF cr);
-        
-    public://窗口树结构相关方法
+        SWindow* FindChildByID(int nID, int nDeep =-1);
+
+		template<class T>
+		T * GetLayoutParamT()
+		{
+			return sobj_cast<T>(GetLayoutParam());
+		}
 
 
         /**
@@ -710,30 +790,8 @@ namespace SOUI
 
 			return NULL;
 		}
-        /**
-        * CreateChildren
-        * @brief    从XML创建子窗口
-        * @param    LPCWSTR pszXml --  合法的utf16编码XML字符串
-        * @return   SWindow * 创建成功的的最后一个窗口
-        *
-        * Describe  
-        */
-        SWindow *CreateChildren(LPCWSTR pszXml);
 
 
-    public://窗口消息相关方法
-
-        /**
-        * GetCurMsg
-        * @brief    获得当前正在处理的消息
-        * @return   PSWNDMSG 
-        *
-        * Describe  
-        */
-        PSWNDMSG GetCurMsg()
-        {
-            return m_pCurMsg;
-        }
         
     public://操控SWindow的方法
 
@@ -748,45 +806,6 @@ namespace SOUI
         */
         void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
 
-        /**
-        * Move
-        * @brief    将窗口移动到指定位置
-        * @param    int x --  left
-        * @param    int y --  top
-        * @param    int cx --  width
-        * @param    int cy --  height
-        * @return   void 
-        *
-        * Describe 
-        * @see     Move(LPRECT prect)
-        */
-        void Move(int x,int y, int cx=-1,int cy=-1);
-		
-
-        /**
-        * SetTimer2
-        * @brief    利用函数定时器来模拟一个兼容窗口定时器
-        * @param    UINT_PTR id --  定时器ID
-        * @param    UINT uElapse --  延时(MS)
-        * @return   BOOL 
-        *
-        * Describe  由于SetTimer只支持0-127的定时器ID，SetTimer2提供设置其它timerid
-        *           能够使用SetTimer时尽量不用SetTimer2，在Kill时效率会比较低
-        */
-        BOOL SetTimer2(UINT_PTR id,UINT uElapse);
-
-        /**
-        * KillTimer2
-        * @brief    删除一个SetTimer2设置的定时器
-        * @param    UINT_PTR id --  SetTimer2设置的定时器ID
-        * @return   void 
-        *
-        * Describe  需要枚举定时器列表
-        */
-        void KillTimer2(UINT_PTR id);
-        
-	public:
-
 
 		STransformation GetTransformation() const;
 
@@ -797,8 +816,39 @@ namespace SOUI
 		virtual void OnAnimationStop(IAnimation *pAni);
 		virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
 		virtual void OnAnimationUpdate(IAnimation *pAni);
-	public:// Virtual functions
 
+	protected:
+		virtual void OnContentChanged();
+
+        /**
+        * OoColorize
+        * @brief    调节窗口色调
+        * @param    COLORREF cr --  目标颜色
+        * @return   void
+        *
+        * Describe  
+        */
+        virtual void OnColorize(COLORREF cr);
+
+		// Set current cursor, when hover
+        virtual BOOL OnSetCursor(const CPoint &pt);
+
+
+        virtual void OnStateChanging(DWORD dwOldState,DWORD dwNewState);
+        virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
+
+
+	public:// Virtual functions
+        /**
+        * OnUpdateToolTip
+        * @brief    处理tooltip
+        * @param    const CPoint & pt --  测试点
+        * @param [out]  SwndToolTipInfo & tipInfo -- tip信息 
+        * @return   BOOL -- TRUE:更新tooltip，FALSE:不更新tooltip
+        *
+        * Describe  
+        */
+        virtual BOOL UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
 
         /**
         * GetSelectedSiblingInGroup
@@ -818,24 +868,6 @@ namespace SOUI
         virtual SWindow * GetSelectedChildInGroup();
 
 
-        // Set current cursor, when hover
-        virtual BOOL OnSetCursor(const CPoint &pt);
-
-        /**
-        * OnUpdateToolTip
-        * @brief    处理tooltip
-        * @param    const CPoint & pt --  测试点
-        * @param [out]  SwndToolTipInfo & tipInfo -- tip信息 
-        * @return   BOOL -- TRUE:更新tooltip，FALSE:不更新tooltip
-        *
-        * Describe  
-        */
-        virtual BOOL OnUpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo);
-
-        virtual void OnStateChanging(DWORD dwOldState,DWORD dwNewState);
-        virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
-
-        virtual BOOL WINAPI InitFromXml(IXmlNode *pNode);
         virtual BOOL CreateChildren(SXmlNode xmlNode);
         
         /**
@@ -853,7 +885,6 @@ namespace SOUI
 
         virtual SWND SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent=false);
 
-        virtual BOOL FireEvent(IEvtArgs *evt);
 		virtual BOOL FireEvent(SEvtArgs &evt){return FireEvent(&evt);}
         virtual BOOL OnNcHitTest(CPoint pt);
 
@@ -943,11 +974,6 @@ namespace SOUI
 		*/
 		virtual const SStringW & GetTrCtx() const;
 
-		virtual BOOL WINAPI GetAttribute(const IStringW * strAttr,IStringW * strValue) const;
-    public://caret相关方法
-        virtual BOOL CreateCaret(HBITMAP pBmp,int nWid,int nHeight);
-        virtual void ShowCaret(BOOL bShow);   
-        virtual void SetCaretPos(int x,int y); 
     public://render相关方法
         /**
         * RedrawRegion

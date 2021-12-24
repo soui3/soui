@@ -642,11 +642,11 @@ lblEnd:
 		__super::OnDestroy();
 	}
 
-	BOOL SListCtrlEx::OnUpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
+	BOOL SListCtrlEx::UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
 	{
 		if(m_iHoverItem == -1)
-			return __super::OnUpdateToolTip(pt,tipInfo);
-		return m_arrItems[m_iHoverItem]->OnUpdateToolTip(pt,tipInfo);
+			return __super::UpdateToolTip(pt,tipInfo);
+		return m_arrItems[m_iHoverItem]->UpdateToolTip(pt,tipInfo);
 	}
 
 	void SListCtrlEx::OnItemSetCapture(SItemPanel *pItem,BOOL bCapture )

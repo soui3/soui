@@ -773,7 +773,7 @@ void STabCtrl::DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD d
 }
 
 
-BOOL STabCtrl::OnUpdateToolTip( CPoint pt, SwndToolTipInfo & tipInfo )
+BOOL STabCtrl::UpdateToolTip( CPoint pt, SwndToolTipInfo & tipInfo )
 {
     int iItem = HitTest(pt);
     if(iItem == -1) return FALSE;
