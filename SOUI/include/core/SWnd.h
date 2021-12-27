@@ -521,8 +521,8 @@ namespace SOUI
 		STDMETHOD_(void,SetIOwner)(THIS_ IWindow *pOwner) OVERRIDE;
 		STDMETHOD_(IWindow *,GetIOwner)(THIS) OVERRIDE;
 
-		        /**
-        * CreateChildren
+		/**
+        * CreateChildrenFromXml
         * @brief    从XML创建子窗口
         * @param    LPCWSTR pszXml --  合法的utf16编码XML字符串
         * @return   BOOL 是否创建成功
@@ -535,7 +535,7 @@ namespace SOUI
 
 		STDMETHOD_(BOOL,GetAttribute)(const IStringW * strAttr,IStringW * strValue) SCONST OVERRIDE;
 
-				/**
+		/**
         * GetISelectedSiblingInGroup
         * @brief    获得在一个group中选中状态的窗口
         * @return   SWindow * 
@@ -559,6 +559,27 @@ namespace SOUI
 		}
 
 		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) OVERRIDE;
+
+				/**
+        * FireCommand
+        * @brief    激活窗口的EVT_CMD事件
+        * @return   BOOL-- true:EVT_CMD事件被处理
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,FireCommand)(THIS) OVERRIDE;
+
+        /**
+        * FireCtxMenu
+        * @brief    激活快捷菜单事件
+        * @param    CPoint pt --  鼠标点击位置
+        * @return   BOOL -- true:外部处理了快捷菜单事件
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,FireCtxMenu)(THIS_ POINT pt) OVERRIDE;
+
+		STDMETHOD_(SWND,SwndFromPoint)(THIS_ POINT *pt,bool bIncludeMsgTransparent=FALSE) OVERRIDE;
 
 	public://caret相关方法
         STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight) OVERRIDE;
@@ -1063,27 +1084,6 @@ namespace SOUI
 		void TransformPoint(CPoint & pt) const;
 
 		void TransformPointEx(CPoint &pt) const;
-    public:
-
-        /**
-        * FireCommand
-        * @brief    激活窗口的EVT_CMD事件
-        * @return   BOOL-- true:EVT_CMD事件被处理
-        *
-        * Describe  
-        */
-        BOOL FireCommand();
-
-        /**
-        * FireCtxMenu
-        * @brief    激活快捷菜单事件
-        * @param    CPoint pt --  鼠标点击位置
-        * @return   BOOL -- true:外部处理了快捷菜单事件
-        *
-        * Describe  
-        */
-        BOOL FireCtxMenu(CPoint pt);
-        
 
     protected://cache相关方法
 

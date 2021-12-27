@@ -914,6 +914,16 @@ namespace SOUI
 		return CreateChildren(xmlDoc.root());
 	}
 
+	SWND SWindow::SwndFromPoint(POINT *pt,bool bIncludeMsgTransparent)
+	{
+		if(!pt)
+			return 0;
+		CPoint pt2(*pt);
+		SWND ret = SwndFromPoint(pt2,bIncludeMsgTransparent);
+		*pt = pt2;
+		return ret;
+	}
+
 	// Hittest children
 	SWND SWindow::SwndFromPoint(CPoint &pt,bool bIncludeMsgTransparent)
 	{
@@ -2449,7 +2459,7 @@ namespace SOUI
 		return FireEvent(evt);
 	}
 
-	BOOL SWindow::FireCtxMenu( CPoint pt)
+	BOOL SWindow::FireCtxMenu( POINT pt)
 	{
 		EventCtxMenu evt(this);
 		evt.bCancel = FALSE;
@@ -3274,7 +3284,7 @@ namespace SOUI
 
 	void SWindow::SetIOwner(THIS_ IWindow *pOwner)
 	{
-		SetOwner(static_cast<SWindow*>(pOwner));
+		SetOwner((SWindow*)pOwner);
 	}
 
 	IWindow * SWindow::GetIOwner(THIS)

@@ -284,6 +284,28 @@ DECLARE_INTERFACE_(IWindow,IObject)
 
 		STDMETHOD_(BOOL,FireEvent)(THIS_ IEvtArgs *evt) PURE;
 
+		/**
+        * FireCommand
+        * @brief    激活窗口的EVT_CMD事件
+        * @return   BOOL-- true:EVT_CMD事件被处理
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,FireCommand)(THIS) PURE;
+
+        /**
+        * FireCtxMenu
+        * @brief    激活快捷菜单事件
+        * @param    CPoint pt --  鼠标点击位置
+        * @return   BOOL -- true:外部处理了快捷菜单事件
+        *
+        * Describe  
+        */
+        STDMETHOD_(BOOL,FireCtxMenu)(THIS_ POINT pt) PURE;
+        
+
+		STDMETHOD_(SWND,SwndFromPoint)(THIS_ POINT *pt,bool bIncludeMsgTransparent) PURE;
+
 		//caret相关方法
 		STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight) PURE;
 		STDMETHOD_(void,ShowCaret)(THIS_ BOOL bShow) PURE;   
