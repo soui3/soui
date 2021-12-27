@@ -31,7 +31,7 @@ UI解析目前可采用的是XML布局,便于理解各控件之间的层级关�
 
 ## Git下载地址
 
-- [国内Git下载站点](https://gitee.com/setoutsoft/soui3)
+- [国内Git下载站点](https://gitee.com/setoutsoft/soui3)(作为镜像使用)
 
 - [国外Git下载站点](https://github.com/soui3/soui)
 
@@ -73,8 +73,6 @@ UI解析目前可采用的是XML布局,便于理解各控件之间的层级关�
     * 在VS中编译，编译完成后,在soui源码的bin目录下可以找到生成出来的dll(或lib)和exe。
     ![image](./doc/cmake/07.png)
 
-## 论坛
-- http://www.soui.vip
 ## QQ群
 
 - SOUI讨论#1: [点击加入](http://shang.qq.com/wpa/qunwpa?idkey=9653a811a72365d798a5247d6ba6885a568bdcf51c624f906c8ce7b8fd9e4eda)
