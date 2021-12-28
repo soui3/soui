@@ -1710,43 +1710,26 @@ namespace SOUI
 			CRect rcPadding = GetStyle().GetPadding();
 			CRect rcMargin = GetStyle().GetMargin();
 
-			//计算文本大小
-			SStringT strText = GetWindowText(FALSE);
-			CRect rcTest4Text;
-			if (!strText.IsEmpty())
+			CSize szContent = MeasureContent(szRet.cx,szRet.cy);
+			CSize szChilds;
+			if(GetChildrenCount()>0)
 			{
-				rcTest4Text = CRect(0, 0, szRet.cx, szRet.cy);
-				int nMaxWid = pLayoutParam->IsWrapContent(Horz) ? m_nMaxWidth.toPixelSize(GetScale()) : szRet.cx;
-				if (nMaxWid == SIZE_WRAP_CONTENT)
+				//计算子窗口大小
+				CSize szParent(nParentWid,nParentHei);
+				if (nParentWid>0)
 				{
-					nMaxWid = KWnd_MaxSize;
+					szParent.cx -= rcMargin.left + rcPadding.left + rcMargin.right + rcPadding.right;
+					if (szParent.cx < 0) szParent.cx = 0;
 				}
-				else //if(nMaxWid >= SIZE_SPEC)
+				if (nParentHei>0)
 				{
-					nMaxWid -= rcPadding.left + rcPadding.right;
-					nTestDrawMode |= DT_WORDBREAK;
+					szParent.cy -= rcMargin.top + rcPadding.top + rcMargin.bottom + rcPadding.bottom;
+					if (szParent.cy < 0) szParent.cy = 0;
 				}
-				rcTest4Text.right = smax(nMaxWid, 10);
-				SAutoRefPtr<IRenderTarget> pRT;
-				GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
-				BeforePaintEx(pRT);
-				DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
+				szChilds = GetLayout()->MeasureChildren(this, szParent.cx, szParent.cy);
 			}
-			//计算子窗口大小
-			CSize szParent(nParentWid,nParentHei);
-			if (nParentWid>0)
-			{
-				szParent.cx -= rcMargin.left + rcPadding.left + rcMargin.right + rcPadding.right;
-				if (szParent.cx < 0) szParent.cx = 0;
-			}
-			if (nParentHei>0)
-			{
-				szParent.cy -= rcMargin.top + rcPadding.top + rcMargin.bottom + rcPadding.bottom;
-				if (szParent.cy < 0) szParent.cy = 0;
-			}
-			CSize szChilds = GetLayout()->MeasureChildren(this, szParent.cx, szParent.cy);
 
-			CRect rcTest(0, 0, smax(szChilds.cx, rcTest4Text.right), smax(szChilds.cy, rcTest4Text.bottom));
+			CRect rcTest(0, 0, smax(szChilds.cx, szContent.cx), smax(szChilds.cy,szContent.cy));
 
 			rcTest.InflateRect(rcMargin);
 			rcTest.InflateRect(rcPadding);
@@ -1764,6 +1747,38 @@ namespace SOUI
 		if(bSaveVert) pLayoutParam->SetMatchParent(Vert);
 
 		return szRet;
+	}
+
+
+	SIZE SWindow::MeasureContent(int nParentWid,int nParentHei)
+	{
+		ILayoutParam * pLayoutParam = GetLayoutParam();
+		CRect rcPadding = GetStyle().GetPadding();
+
+		//计算文本大小
+		SStringT strText = GetWindowText(FALSE);
+		CRect rcTest4Text;
+		if (!strText.IsEmpty())
+		{
+			int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
+			rcTest4Text = CRect(0, 0, nParentWid, nParentHei);
+			int nMaxWid = pLayoutParam->IsWrapContent(Horz) ? m_nMaxWidth.toPixelSize(GetScale()) : nParentWid;
+			if (nMaxWid == SIZE_WRAP_CONTENT)
+			{
+				nMaxWid = KWnd_MaxSize;
+			}
+			else //if(nMaxWid >= SIZE_SPEC)
+			{
+				nMaxWid -= rcPadding.left + rcPadding.right;
+				nTestDrawMode |= DT_WORDBREAK;
+			}
+			rcTest4Text.right = smax(nMaxWid, 10);
+			SAutoRefPtr<IRenderTarget> pRT;
+			GETRENDERFACTORY->CreateRenderTarget(&pRT, 0, 0);
+			BeforePaintEx(pRT);
+			DrawText(pRT, strText, strText.GetLength(), rcTest4Text, nTestDrawMode | DT_CALCRECT);
+		}
+		return rcTest4Text.Size();
 	}
 
 	void SWindow::GetTextRect( LPRECT pRect )

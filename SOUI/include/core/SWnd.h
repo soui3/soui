@@ -860,6 +860,8 @@ namespace SOUI
 
 
 	public:// Virtual functions
+		virtual SIZE MeasureContent(int nParentWid,int nParentHei);
+
         /**
         * OnUpdateToolTip
         * @brief    处理tooltip
