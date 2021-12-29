@@ -4,6 +4,7 @@
 #include <interface/sobject-i.h>
 #include <interface/SPathEffect-i.h>
 #include <interface/SImgDecoder-i.h>
+#include <interface/sxml-i.h>
 
 SNSBEGIN
 
@@ -92,28 +93,30 @@ struct fRect {
 	float    fLeft, fTop, fRight, fBottom;
 };
 
+typedef	enum _BlurStyle {
+		kNone_BLurStyle = -1,
+		kNormal_BlurStyle = 0,  //!< fuzzy inside and outside
+		kSolid_BlurStyle,   //!< solid inside, fuzzy outside
+		kOuter_BlurStyle,   //!< nothing inside, fuzzy outside
+		kInner_BlurStyle,   //!< fuzzy inside, nothing outside
+
+		kLastEnum_BlurStyle = kInner_BlurStyle
+	}BlurStyle;
+
+
+typedef	enum _BlurFlags {
+		kNone_BlurFlag = 0x00,
+		/** The blur layer's radius is not affected by transforms */
+		kIgnoreTransform_BlurFlag   = 0x01,
+		/** Use a smother, higher qulity blur algorithm */
+		kHighQuality_BlurFlag       = 0x02,
+		/** mask for all blur flags */
+		kAll_BlurFlag = 0x03
+	}BlurFlags;
 
 	struct IMaskFilter : public IObjRef
 	{
-		enum SkBlurStyle {
-			kNormal_SkBlurStyle,  //!< fuzzy inside and outside
-			kSolid_SkBlurStyle,   //!< solid inside, fuzzy outside
-			kOuter_SkBlurStyle,   //!< nothing inside, fuzzy outside
-			kInner_SkBlurStyle,   //!< fuzzy inside, nothing outside
-
-			kLastEnum_SkBlurStyle = kInner_SkBlurStyle
-		};
-
-
-		enum SkBlurFlags {
-			kNone_BlurFlag = 0x00,
-			/** The blur layer's radius is not affected by transforms */
-			kIgnoreTransform_BlurFlag   = 0x01,
-			/** Use a smother, higher qulity blur algorithm */
-			kHighQuality_BlurFlag       = 0x02,
-			/** mask for all blur flags */
-			kAll_BlurFlag = 0x03
-		};
+		STDMETHOD_(void *, GetPtr)(THIS) PURE;
 	};
 
     /**
@@ -161,7 +164,7 @@ struct fRect {
 
 	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) PURE;
 
-	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) PURE;
+	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, BlurStyle style,BlurFlags flag,IMaskFilter ** ppMaskFilter) PURE;
 
 	STDMETHOD_(HRESULT,CreateEmbossMaskFilter)(THIS_ float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) PURE;
 
@@ -224,9 +227,6 @@ DECLARE_INTERFACE_(IRenderObj,IObjRef)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 };
 
 
@@ -271,10 +271,6 @@ DECLARE_INTERFACE_(IBrush,IRenderObj)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
-
 };
 
 /**
@@ -317,10 +313,6 @@ DECLARE_INTERFACE_(IPen,IRenderObj)
 	* Describe  
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
-
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	STDMETHOD_(int,GetWidth)(THIS) SCONST PURE;
 
@@ -377,9 +369,6 @@ DECLARE_INTERFACE_(IBitmap,IRenderObj)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* Init
@@ -515,6 +504,12 @@ DECLARE_INTERFACE_(IBitmap,IRenderObj)
 
 typedef IBitmap * IBitmapPtr;
 
+typedef enum _FillStyle
+{
+	kFill_Style=0,
+	kStroke_Style=1,
+	kStrokeAndFill_Style=2,
+}FillStyle;
 /**
 * @struct     IFont
 * @brief      字体对象
@@ -548,6 +543,7 @@ DECLARE_INTERFACE_(IFont,IRenderObj)
 	*/    
 	STDMETHOD_(IRenderFactory *,GetRenderFactory)(THIS) SCONST PURE;
 
+
 	/**
 	* ObjectType
 	* @brief    查询对象类型
@@ -556,9 +552,6 @@ DECLARE_INTERFACE_(IFont,IRenderObj)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* LogFont
@@ -617,6 +610,8 @@ DECLARE_INTERFACE_(IFont,IRenderObj)
 	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST PURE;
 
 	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) PURE;
+
+	STDMETHOD_(void,SetProp)(THIS_ IXmlNode *pXmlNode) PURE;
 };
 
 /**
@@ -660,9 +655,6 @@ DECLARE_INTERFACE_(IRegion,IRenderObj)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/**
 	* CombineRect
@@ -863,9 +855,6 @@ DECLARE_INTERFACE_(IPath,IRenderObj)
 	*/    
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST PURE;
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) PURE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) PURE;
 
 	/** Return the path's fill type. This is used to define how "inside" is
 	computed. The default value is kWinding_FillType.

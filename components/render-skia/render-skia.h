@@ -39,7 +39,7 @@ public:
 
 	STDMETHOD_(BOOL,CreatePathMeasure)(THIS_ IPathMeasure ** ppPathMeasure) OVERRIDE;
 
-	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE;
+	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, BlurStyle style,BlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE;
 
 	STDMETHOD_(HRESULT,CreateEmbossMaskFilter)(THIS_ float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) OVERRIDE;
 
@@ -69,15 +69,6 @@ public:
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST OVERRIDE
 	{
 		return ot;
-	}
-
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE
-	{
-		return E_NOTIMPL;
-	}
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE
-	{
 	}
 
 protected:
@@ -123,10 +114,6 @@ public:
 
 	virtual ~SFont_Skia();
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE;
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE;
-
 	STDMETHOD_(const LOGFONT *,LogFont)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(LPCTSTR,FamilyName)(THIS) SCONST OVERRIDE;
@@ -142,17 +129,17 @@ public:
 	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) OVERRIDE;
+
+	STDMETHOD_(void,SetProp)(THIS_ IXmlNode *pXmlNode) OVERRIDE;
 private:
-	const SkPaint  GetPaint() const;
 	SkTypeface *GetFont() const {return m_skFont;}
-	SkMaskFilter *GetBlurFilter() {return m_blurFilter;}
 protected:
 	SkTypeface *m_skFont;   //定义字体
 	SkPaint     m_skPaint;  //定义文字绘制属性
 	LOGFONT     m_lf;
-	SkBlurStyle m_blurStyle;
-	SkScalar	m_blurRadius;
-	SkMaskFilter *m_blurFilter;
+	SAutoRefPtr<IMaskFilter> m_maskFilter;
+	FillStyle	m_fillStyle;
+	BOOL		m_bLcdText;
 };
 
 class SBrush_Skia : public TSkiaRenderObjImpl<IBrush,OT_BRUSH>
@@ -429,6 +416,8 @@ public:
 	SMaskFilter_Skia(SkMaskFilter *maskFilter);
 
 	~SMaskFilter_Skia();
+
+	STDMETHOD_(void*,GetPtr)(THIS) OVERRIDE;
 protected:
 	SkMaskFilter * m_maskFilter;
 };

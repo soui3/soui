@@ -33,7 +33,7 @@ public:
 
 	STDMETHOD_(BOOL,CreateRegion)(THIS_ IRegion **ppRgn) OVERRIDE;
 
-	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE {return E_NOTIMPL;}
+	STDMETHOD_(HRESULT,CreateBlurMaskFilter)(THIS_ float radius, BlurStyle style,BlurFlags flag,IMaskFilter ** ppMaskFilter) OVERRIDE {return E_NOTIMPL;}
 
 	STDMETHOD_(HRESULT,CreateEmbossMaskFilter)(THIS_ float direction[3], float ambient, float specular, float blurRadius,IMaskFilter ** ppMaskFilter) OVERRIDE {return E_NOTIMPL;}
 
@@ -68,15 +68,6 @@ public:
 	STDMETHOD_(OBJTYPE,ObjectType)(THIS) SCONST OVERRIDE
 	{
 		return ot;
-	}
-
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR attrName, LPCWSTR attrValue,BOOL bLoading) OVERRIDE
-	{
-		return E_NOTIMPL;
-	}
-
-	STDMETHOD_(void,SetAttrFinish)(THIS) OVERRIDE
-	{
 	}
 
 protected:
@@ -182,6 +173,8 @@ public:
 	STDMETHOD_(BOOL,IsStrikeOut)(THIS) SCONST OVERRIDE;
 
 	STDMETHOD_(BOOL,UpdateFont)(THIS_ const LOGFONT *pLogFont) OVERRIDE;
+
+	STDMETHOD_(void,SetProp)(THIS_ IXmlNode *pXmlNode) OVERRIDE;
 
 	HFONT GetFont(){return m_hFont;}
 protected:

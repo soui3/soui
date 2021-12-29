@@ -166,13 +166,8 @@ IFontPtr SFontPool::_CreateFont(const FontInfo &fontInfo,SXmlNode xmlExProp)
     lfNew.lfQuality = CLEARTYPE_QUALITY;
     
     _tcscpy_s(lfNew.lfFaceName,_countof(lfNew.lfFaceName), S_CW2T(fontInfo.strFaceName));
-
     IFontPtr ret = _CreateFont(lfNew);
-	for(SXmlAttr attr=xmlExProp.first_attribute();attr;attr=attr.next_attribute())
-	{
-		ret->SetAttribute(attr.name(),attr.value(),FALSE);
-	}
-	ret->SetAttrFinish();
+	ret->SetProp(&xmlExProp);
 	return ret;
 }
 

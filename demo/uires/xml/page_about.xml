@@ -1,5 +1,5 @@
 ﻿<window layout="vbox" interval="10" gravity="left" size="-2,-2" padding="10,50,10,10">
-  <text layout_gravity="center">欢迎使用SOUI！</text>
+  <text layout_gravity="center" font="style:StrokeAndFill,blurStyle:solid,blurRadius:3,size:30">欢迎使用SOUI！</text>
   <text>协议类型：自定义开源协议，商业化产品收费，个人免费产品免费使用，具体参考license.txt</text>
   <text>版权所有：启程软件</text>
   <window size="-1,-1" layout="hbox" interval="10" layout_gravity="center">

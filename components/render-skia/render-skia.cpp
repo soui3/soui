@@ -239,7 +239,7 @@ namespace SOUI
 		return TRUE;
 	}
 
-	HRESULT SRenderFactory_Skia::CreateBlurMaskFilter(float radius, IMaskFilter::SkBlurStyle style,IMaskFilter::SkBlurFlags flag,IMaskFilter ** ppMaskFilter)
+	HRESULT SRenderFactory_Skia::CreateBlurMaskFilter(float radius, BlurStyle style,BlurFlags flag,IMaskFilter ** ppMaskFilter)
 	{
 		SkMaskFilter *pMaskFilter = SkBlurMaskFilter::Create(::SkBlurStyle(style),SkBlurMaskFilter::ConvertRadiusToSigma(radius),flag);
 		if(!pMaskFilter)
@@ -507,10 +507,12 @@ namespace SOUI
 		txtPaint.setTextSize(SkIntToScalar(abs(pFont->TextSize())));
 		txtPaint.setUnderlineText(!!pFont->IsUnderline());
 		txtPaint.setStrikeThruText(!!pFont->IsStrikeOut());
-		txtPaint.setStyle(SkPaint::kStrokeAndFill_Style);
-		if(pFont->GetBlurFilter())
+		txtPaint.setStyle(SkPaint::Style(pFont->m_fillStyle));
+		txtPaint.setLCDRenderText(!!pFont->m_bLcdText);
+		if(pFont->m_maskFilter)
 		{
-			txtPaint.setMaskFilter(pFont->GetBlurFilter());
+			SkMaskFilter *maskFilter=(SkMaskFilter*)pFont->m_maskFilter->GetPtr();
+			txtPaint.setMaskFilter(maskFilter);
 		}
 
 		if(uFormat & DT_CENTER)
@@ -629,7 +631,7 @@ namespace SOUI
 		}else
 		{
 			paint.setFilterBitmap(false);
-			paint.setColor(m_curBrush->GetColor());
+			paint.setColor(SColor(m_curBrush->GetColor()).toARGB());
 		}
 		paint.setStyle(SkPaint::kFill_Style);
 
@@ -671,7 +673,9 @@ namespace SOUI
 		SkPaint paint=m_paint;
 		if(m_bAntiAlias)
 		{
-			paint.setStrokeWidth((SkScalar)m_curPen->GetWidth()-0.5f);
+			SkScalar wid = (SkScalar)m_curPen->GetWidth();
+			if(wid>1.0f) wid-=0.5f;
+			paint.setStrokeWidth(wid);
 		}else
 		{
 			paint.setStrokeWidth((SkScalar)m_curPen->GetWidth());
@@ -1493,7 +1497,7 @@ namespace SOUI
 		}else
 		{
 			paint.setFilterBitmap(false);
-			paint.setColor(m_curBrush->GetColor());
+			paint.setColor(SColor(m_curBrush->GetColor()).toARGB());
 		}
 		paint.setStyle(SkPaint::kFill_Style);
 
@@ -1980,9 +1984,8 @@ namespace SOUI
 	SFont_Skia::SFont_Skia( IRenderFactory * pRenderFac,const LOGFONT * plf) 
 		:TSkiaRenderObjImpl<IFont,OT_FONT>(pRenderFac)
 		,m_skFont(NULL)
-		,m_blurStyle((SkBlurStyle)-1)
-		,m_blurRadius(0.0f)
-		,m_blurFilter(NULL)
+		,m_fillStyle(kStrokeAndFill_Style)
+		,m_bLcdText(TRUE)
 	{
 		memcpy(&m_lf,plf,sizeof(LOGFONT));
 #ifdef UNICODE
@@ -2000,52 +2003,65 @@ namespace SOUI
 
 	SFont_Skia::~SFont_Skia()
 	{
-		if(m_blurFilter) m_blurFilter->unref();
 		if(m_skFont) m_skFont->unref();
 		//         STRACE(L"font delete: objects = %d", --s_cFont);
 	}
 
 
-	HRESULT SFont_Skia::SetAttribute(LPCWSTR attrName, LPCWSTR attrValue, BOOL bLoading)
+	void SFont_Skia::SetProp(THIS_ IXmlNode *pXmlNode)
 	{
-		if(wcsicmp(attrName,L"blurStyle")==0)
-		{
-			if(wcsicmp(attrValue,L"normal") == 0)
-				m_blurStyle = kNormal_SkBlurStyle;
-			else if(wcsicmp(attrValue,L"solid") == 0)
-				m_blurStyle = kSolid_SkBlurStyle;
-			else if(wcsicmp(attrValue,L"outer") == 0)
-				m_blurStyle = kOuter_SkBlurStyle;
-			else if(wcsicmp(attrValue,L"inner") == 0)
-				m_blurStyle = kInner_SkBlurStyle;
-		}else if(wcsicmp(attrName,L"blurRadius")==0)
-		{
-			m_blurRadius = (float)_wtof(attrValue);
-		}
-		else if(wcsicmp(attrName,L"antiAlias")==0)
-		{
-			m_skPaint.setAntiAlias(String2Bool(attrValue));
-		}else if(wcsicmp(attrName,L"style")==0)
-		{
-			if(wcsicmp(attrValue,L"strokeAndFill")==0)
-				m_skPaint.setStyle(SkPaint::kStrokeAndFill_Style);
-			else if(wcsicmp(attrValue,L"fill")!=0)
-				m_skPaint.setStyle(SkPaint::kFill_Style);
-			else if(wcsicmp(attrValue,L"stroke")==0)
-				m_skPaint.setStyle(SkPaint::kStroke_Style);
-		}else if(wcsicmp(attrName,L"lcdText")==0)
-		{
-			m_skPaint.setLCDRenderText(String2Bool(attrValue));
-		}
-		return S_OK;
-	}
+		if(!pXmlNode)
+			return;
+		BlurStyle blurStyle = kNone_BLurStyle;
+		BlurFlags blurFlags = kNone_BlurFlag;
+		float blurRadius = 0.0f;
 
-	void SFont_Skia::SetAttrFinish()
-	{
-		if(m_blurStyle != -1 && m_blurRadius > 0.0f)
+		IXmlAttr *pAttr = pXmlNode->FirstAttribute();
+		while(pAttr)
 		{
-			m_skPaint.setMaskFilter(SkBlurMaskFilter::Create(m_blurStyle,
-				SkBlurMask::ConvertRadiusToSigma(m_blurRadius)))->unref();
+			LPCWSTR attrName = pAttr->Name();
+			LPCWSTR attrValue = pAttr->Value();
+			if(wcsicmp(attrName,L"blurStyle")==0)
+			{
+				if(wcsicmp(attrValue,L"normal") == 0)
+					blurStyle = kNormal_BlurStyle;
+				else if(wcsicmp(attrValue,L"solid") == 0)
+					blurStyle = kSolid_BlurStyle;
+				else if(wcsicmp(attrValue,L"outer") == 0)
+					blurStyle = kOuter_BlurStyle;
+				else if(wcsicmp(attrValue,L"inner") == 0)
+					blurStyle = kInner_BlurStyle;
+			}else if(wcsicmp(attrName,L"blurRadius")==0)
+			{
+				blurRadius = (float)_wtof(attrValue);
+			}else if(wcsicmp(attrName,L"blurFlags") == 0)
+			{
+				if(wcsicmp(attrValue,L"ignoreTransform") == 0)
+					blurFlags = kIgnoreTransform_BlurFlag;
+				else if(wcsicmp(attrValue,L"HighQuality") == 0)
+					blurFlags = kHighQuality_BlurFlag;
+				else if(wcsicmp(attrValue,L"All") == 0)
+					blurFlags = kAll_BlurFlag;
+			}
+			else if(wcsicmp(attrName,L"style")==0)
+			{
+				if(wcsicmp(attrValue,L"strokeAndFill")==0)
+					m_fillStyle = kStrokeAndFill_Style;
+				else if(wcsicmp(attrValue,L"fill")!=0)
+					m_fillStyle = kFill_Style;
+				else if(wcsicmp(attrValue,L"stroke")==0)
+					m_fillStyle =kStroke_Style;
+			}else if(wcsicmp(attrName,L"lcdText")==0)
+			{
+				m_bLcdText = String2Bool(attrValue);
+			}
+
+			pAttr = pAttr->Next();
+		}
+		
+		if(blurStyle != kNone_BlurFlag && blurRadius > 0.0f)
+		{
+			GetRenderFactory()->CreateBlurMaskFilter(blurRadius,blurStyle,blurFlags,&m_maskFilter);
 		}
 	}
 
@@ -2685,6 +2701,11 @@ namespace SOUI
 		{
 			m_maskFilter->unref();
 		}
+	}
+
+	void* SMaskFilter_Skia::GetPtr()
+	{
+		return m_maskFilter;
 	}
 
 }//end of namespace SOUI

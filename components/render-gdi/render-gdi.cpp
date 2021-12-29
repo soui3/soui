@@ -185,6 +185,11 @@ namespace SOUI
 		return TRUE;
 	}
 
+	void SFont_GDI::SetProp(IXmlNode *pXmlNode)
+	{
+
+	}
+
 	SFont_GDI::SFont_GDI(IRenderFactory * pRenderFac,const LOGFONT * plf) 
 		:TGdiRenderObjImpl<IFont,OT_FONT>(pRenderFac)
 		,m_hFont(NULL)

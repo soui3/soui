@@ -28,7 +28,7 @@ void SClock::OnPaint(SOUI::IRenderTarget * pRT)
 	SAutoRefPtr<IPen> br,oldBr;
 	pRT->CreatePen(PS_SOLID,RGBA(200,128,128,128),10,&br);
 	pRT->SelectObject(br,(IRenderObj**)&oldBr);
-	GETRENDERFACTORY->CreateBlurMaskFilter(10,IMaskFilter::kOuter_SkBlurStyle,IMaskFilter::kNone_BlurFlag,&maskFilter);
+	GETRENDERFACTORY->CreateBlurMaskFilter(10,kOuter_BlurStyle,kNone_BlurFlag,&maskFilter);
 	pRT->SetMaskFilter(maskFilter);
 	pRT->DrawEllipse(&rcClient);
 	pRT->SetMaskFilter(NULL);
