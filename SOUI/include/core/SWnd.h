@@ -316,6 +316,10 @@ namespace SOUI
 
 		STDMETHOD_(BYTE,GetAlpha)(THIS) SCONST OVERRIDE;
 
+		STDMETHOD_(void,SetMatrix)(THIS_ const IxForm * mtx) OVERRIDE;
+
+		STDMETHOD_(void,GetMatrix)(THIS_ IxForm *mtx) SCONST OVERRIDE;
+
 		STDMETHOD_(int,GetScale)(THIS) SCONST OVERRIDE;
 
 		STDMETHOD_(BOOL,IsSiblingsAutoGroupped)(THIS) SCONST OVERRIDE;
@@ -426,6 +430,10 @@ namespace SOUI
         STDMETHOD_(BOOL,DestroyIChild)(THIS_ IWindow *pChild) OVERRIDE;
         
 		STDMETHOD_(void,DestroyAllChildren)(THIS) OVERRIDE;
+
+		STDMETHOD_(IWindow *,FindIChildByID)(THIS_ int nId,int nDeep=-1) OVERRIDE;
+
+		STDMETHOD_(IWindow *,FindIChildByName)(THIS_ LPCWSTR pszName,int nDeep=-1) OVERRIDE;
 
 
 		STDMETHOD_(ISwndContainer*,GetContainer)(THIS) OVERRIDE;
@@ -652,8 +660,10 @@ namespace SOUI
          * Describe  先调用RemoveChild，再调用pChild->Release来释放子窗口对象
          */
         BOOL DestroyChild(SWindow *pChild);
-    public://SWindow状态相关方法
 
+    public:
+
+		void SetMatrix(const SMatrix & mtx);
 
         /**
         * GetWindowText
@@ -813,9 +823,7 @@ namespace SOUI
 		}
 
 
-        
-    public://操控SWindow的方法
-
+	protected:
         /**
         * InvalidateRect
         * @brief    刷新窗口
@@ -825,12 +833,8 @@ namespace SOUI
         *
         * Describe 
         */
-        void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
-
-
+		void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
 		STransformation GetTransformation() const;
-
-		void SetMatrix(const SMatrix & mtx);
 
 	protected:
 		virtual void OnAnimationStart(IAnimation *pAni);

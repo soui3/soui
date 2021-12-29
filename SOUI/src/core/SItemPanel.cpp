@@ -159,7 +159,7 @@ void SItemPanel::OnRedraw(LPCRECT rc)
             rc2.IntersectRect(rc2,rcItem);
             CRect rcHostClient = m_pFrmHost->GetClientRect();
             rc2.IntersectRect(rc2,rcHostClient);
-            m_pFrmHost->InvalidateRect(rc2);
+            m_pFrmHost->InvalidateRect(&rc2);
         }else
         {
             IRenderTarget *pRT=OnGetRenderTarget(rc,GRT_PAINTBKGND);

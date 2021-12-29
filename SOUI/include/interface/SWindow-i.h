@@ -98,6 +98,10 @@ DECLARE_INTERFACE_(IWindow,IObject)
 
 	STDMETHOD_(BYTE,GetAlpha)(THIS) SCONST PURE;
 
+	STDMETHOD_(void,SetMatrix)(THIS_ const IxForm * mtx) PURE;
+
+	STDMETHOD_(void,GetMatrix)(THIS_ IxForm *mtx) SCONST PURE;
+
 	STDMETHOD_(int,GetScale)(THIS) SCONST PURE;
 
 	STDMETHOD_(BOOL,IsSiblingsAutoGroupped)(THIS) SCONST PURE;
@@ -123,6 +127,10 @@ DECLARE_INTERFACE_(IWindow,IObject)
 
 	STDMETHOD_(const IWindow*,GetNextLayoutIChild2)(THIS_ const IWindow* pCurChild) SCONST PURE;
 	STDMETHOD_(IWindow*,GetNextLayoutIChild)(THIS_ IWindow* pCurChild) PURE;
+
+	STDMETHOD_(IWindow *,FindIChildByID)(THIS_ int nId,int nDeep) PURE;
+
+	STDMETHOD_(IWindow *,FindIChildByName)(THIS_ LPCWSTR pszName,int nDeep) PURE;
 
 	STDMETHOD_(BOOL,IsIDescendant)(THIS_ const IWindow *pTest) SCONST PURE;
 

@@ -1532,6 +1532,16 @@ namespace SOUI
 		return 0;
 	}
 
+	IWindow * SWindow::FindIChildByID(THIS_ int nId,int nDeep)
+	{
+		return FindChildByID(nId,nDeep);
+	}
+
+	IWindow * SWindow::FindIChildByName(THIS_ LPCWSTR pszName,int nDeep)
+	{
+		return FindChildByName(pszName,nDeep);
+	}
+
 	void SWindow::DestroyAllChildren()
 	{
 		//destroy children windows
@@ -2382,6 +2392,20 @@ namespace SOUI
 	{
 		return (BYTE)((int)m_transform.getAlpha()*m_animationHandler.GetTransformation().getAlpha()/255);
 	}
+
+	void SWindow::SetMatrix(const IxForm * mtx)
+	{
+		SMatrix smtx(mtx->fMat);
+		SetMatrix(&smtx);
+	}
+
+	void SWindow::GetMatrix(IxForm * mtx) SCONST
+	{
+		SMatrix smtx = m_transform.getMatrix();
+		smtx.postConcat(m_animationHandler.GetTransformation().getMatrix());
+		memcpy(mtx,smtx.fMat,sizeof(smtx.fMat));
+	}
+
 
 	void SWindow::SetFocus()
 	{
