@@ -84,7 +84,7 @@ namespace SOUI
 			m_pEdit->GetWindowRect(&rcColor);
 			rcColor.right=rcColor.left;
 			rcColor.left -= KColorWidth;
-			m_pOwner->InvalidateRect(rcColor);
+			m_pOwner->InvalidateRect(&rcColor);
 			}
         }
         return true;
