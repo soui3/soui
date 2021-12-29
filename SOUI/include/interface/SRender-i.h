@@ -751,20 +751,13 @@ typedef enum _xFormIndex{
 	kMTransY,
 	kMPersp0,
 	kMPersp1,
-	kMPersp2
+	kMPersp2,
+	kMCount,
 }xFormIndex;
 
-#undef INTERFACE
-#define INTERFACE IxForm
-DECLARE_INTERFACE(IxForm)
-{
-	STDMETHOD_(float,GetValue)(THIS_ xFormIndex idx) SCONST PURE;
-	STDMETHOD_(void,SetValue)(THIS_ xFormIndex index, float v) PURE;
-	STDMETHOD_(float *,GetData)(THIS) PURE;
-	STDMETHOD_(const float *,GetConstData)(THIS) SCONST PURE;
-	STDMETHOD_(void,SetData)(THIS_ const float fMat[9]) PURE;
-};
-
+typedef struct _IxForm{
+	float fMat[kMCount];
+}IxForm;
 
 #undef INTERFACE
 #define INTERFACE IPathInfo

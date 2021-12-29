@@ -32,12 +32,6 @@ public:
 	SMatrix(const float data[9]);
 
 public:
-	STDMETHOD_(float,GetValue)(THIS_ xFormIndex idx) SCONST OVERRIDE;
-	STDMETHOD_(void,SetValue)(THIS_ xFormIndex index, float v) OVERRIDE;
-	STDMETHOD_(float *,GetData)(THIS) OVERRIDE;
-	STDMETHOD_(const float *,GetConstData)(THIS) SCONST OVERRIDE;
-	STDMETHOD_(void,SetData)(THIS_ const float fMat[9]) OVERRIDE;
-public:
 	SMatrix &operator*=(const SMatrix &src);
 	SMatrix operator*(const SMatrix &src) const;
 
@@ -175,6 +169,7 @@ public:
         this->setTypeMask(kUnknown_Mask);
     }
 
+	void setMatrix(const float data[9],int matType = kUnknown_Mask);
 
     /** Set the matrix to identity
     */
@@ -628,7 +623,6 @@ private:
                     kRectStaysRect_Mask
     };
 
-    float         fMat[9];
     mutable uint32_t fTypeMask;
 
     uint8_t computeTypeMask() const;

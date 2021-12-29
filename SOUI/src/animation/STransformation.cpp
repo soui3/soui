@@ -86,7 +86,7 @@ void STransformation::compose(STransformation t)
 void STransformation::set(STransformation t)
 {
 	mAlpha = t.getAlpha();
-	mMatrix.SetData(t.getMatrix().GetData());
+	mMatrix = t.getMatrix();
 
 	mTransformationType = t.getTransformationType();
 }

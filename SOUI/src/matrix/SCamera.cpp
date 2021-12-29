@@ -396,7 +396,7 @@ void SkCamera3D::patchToMatrix(const SkPatch3D& quilt, SMatrix* matrix) const {
         fNeedToUpdate = false;
     }
 
-    const float* mapPtr = fOrientation.GetData();
+    const float* mapPtr = fOrientation.fMat;
     const float* patchPtr;
     SkPoint3D       diff;
     float        dot;
@@ -406,7 +406,7 @@ void SkCamera3D::patchToMatrix(const SkPatch3D& quilt, SMatrix* matrix) const {
     diff.fZ = quilt.fOrigin.fZ - fLocation.fZ;
 
     dot = SkUnit3D::Dot(*SkTCast<const SkUnit3D*>(&diff),
-                        *SkTCast<const SkUnit3D*>(fOrientation.GetData() + 6));
+                        *SkTCast<const SkUnit3D*>(fOrientation.fMat + 6));
 
     patchPtr = (const float*)&quilt;
     matrix->set(kMScaleX, SFloatDotDiv(3, patchPtr, 1, mapPtr, 1, dot));

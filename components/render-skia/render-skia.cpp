@@ -2423,15 +2423,15 @@ namespace SOUI
 	void SPath_Skia::transform(const IxForm * xForm)
 	{
 		SkMatrix mat;
-		mat.setAll(xForm->GetValue(kMScaleX),
-			xForm->GetValue(kMSkewX), 
-			xForm->GetValue(kMTransX),
-			xForm->GetValue(kMSkewY),
-			xForm->GetValue(kMScaleY), 
-			xForm->GetValue(kMTransY),
-			xForm->GetValue(kMPersp0), 
-			xForm->GetValue(kMPersp1), 
-			xForm->GetValue(kMPersp2));
+		mat.setAll(xForm->fMat[kMScaleX],
+			xForm->fMat[kMSkewX], 
+			xForm->fMat[kMTransX],
+			xForm->fMat[kMSkewY],
+			xForm->fMat[kMScaleY], 
+			xForm->fMat[kMTransY],
+			xForm->fMat[kMPersp0], 
+			xForm->fMat[kMPersp1], 
+			xForm->fMat[kMPersp2]);
 		m_skPath.transform(mat);
 	}
 

@@ -1547,32 +1547,7 @@ const SMatrix& SMatrix::InvalidMatrix() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-float SMatrix::GetValue(xFormIndex idx) const
-{
-	return fMat[idx];
-}
 
-const float * SMatrix::GetConstData() const
-{
-	return fMat;
-}
-
-float * SMatrix::GetData()
-{
-	return fMat;
-}
-
-
-void SMatrix::SetValue(xFormIndex idx, float v)
-{
-	set(idx, v);
-}
-
-void SMatrix::SetData(const float fMat[9])
-{
-	memcpy(this->fMat, fMat, sizeof(this->fMat));
-	this->setTypeMask(kUnknown_Mask);
-}
 
 
 /*!
@@ -1629,6 +1604,12 @@ void SMatrix::orTypeMask(int mask)
 {
 	SASSERT((mask & kORableMasks) == mask);
 	fTypeMask = SiToU8(fTypeMask | mask);
+}
+
+void SMatrix::setMatrix(const float fMat[9],int matType)
+{
+	memcpy(this->fMat, fMat, sizeof(this->fMat));
+	this->setTypeMask(matType);
 }
 
 }//end of namespace SOUI

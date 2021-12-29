@@ -1264,7 +1264,7 @@ namespace SOUI
 			pRT = pRTBackup;
 			p->Release();
 		}
-		if(bMtx) pRT->SetTransform(oriMtx.GetData(),NULL);
+		if(bMtx) pRT->SetTransform(oriMtx.fMat,NULL);
 	}
 
 	void SWindow::TransformPoint(CPoint & pt) const
@@ -2239,13 +2239,13 @@ namespace SOUI
 		STransformation xform = GetTransformation();
 		if (!xform.hasMatrix())
 			return false;
-		pRT->GetTransform(oriMtx.GetData());
+		pRT->GetTransform(oriMtx.fMat);
 		CRect rcWnd = GetWindowRect();
 		SMatrix mtx = xform.getMatrix();
 		mtx.preTranslate(-rcWnd.left, -rcWnd.top);
 		mtx.postTranslate(rcWnd.left, rcWnd.top);
 		mtx.preConcat(oriMtx);
-		pRT->SetTransform(mtx.GetData(),NULL);
+		pRT->SetTransform(mtx.fMat,NULL);
 		return true;
 	}
 
