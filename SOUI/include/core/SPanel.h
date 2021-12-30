@@ -77,6 +77,8 @@ namespace SOUI
         virtual void OnColorize(COLORREF cr);
         virtual void OnScaleChanged(int nScale);
 
+		virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
+
 	protected:
 		int GetSbWidth() const;
 

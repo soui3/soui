@@ -502,6 +502,7 @@ namespace SOUI
 			return FALSE;
 
 		OnRemoveChild(pChild);
+		pChild->SetContainer(NULL);
 
 		SWindow *pPrevSib=pChild->m_pPrevSibling;
 		SWindow *pNextSib=pChild->m_pNextSibling;
@@ -576,8 +577,7 @@ namespace SOUI
 	void SWindow::SetContainer(ISwndContainer *pContainer)
 	{
 		ASSERT_UI_THREAD();
-		m_pContainer=pContainer;
-
+		OnContainerChanged(m_pContainer,pContainer);
 		SWindow *pChild=GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
@@ -3098,6 +3098,20 @@ namespace SOUI
 	COLORREF SWindow::GetBkgndColor() const
 	{
 		return GetStyle().m_crBg;
+	}
+
+	void SWindow::OnRemoveChild(SWindow *pChild)
+	{
+	}
+
+	void SWindow::OnInsertChild(SWindow *pChild)
+	{
+	}
+
+	void SWindow::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		
+		m_pContainer=pNewContainer;
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;
