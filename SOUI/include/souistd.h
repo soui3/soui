@@ -1,5 +1,5 @@
 ﻿#include <core-def.h>
-
+#include <com-def.h>
 //需要IAccessible接口支持打开下面的宏: 2018.10.17
 //#define SOUI_ENABLE_ACC
 

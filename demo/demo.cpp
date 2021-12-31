@@ -272,10 +272,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         theApp->SetAppDir(strResDir);
 #endif
         //加载系统资源
-#ifndef LIB_ALL
-		HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
-#else
+#if (defined(LIB_CORE) && defined(LIB_SOUI_COM))
 		HMODULE hSysResource = hInstance;
+#else
+		HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
 #endif
         if (hSysResource)
         {
@@ -284,7 +284,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             sysResProvider->Init((WPARAM)hSysResource, 0);
             theApp->LoadSystemNamedResource(sysResProvider);
 
-#ifndef LIB_ALL
+#if !(defined(LIB_CORE) && defined(LIB_SOUI_COM))
 			FreeLibrary(hSysResource);
 #endif
         }
@@ -345,7 +345,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 				}
             }
         }
-#if (defined(DLL_CORE) || defined(LIB_ALL)) && !defined(_WIN64)
+#if (defined(DLL_CORE) || (defined(LIB_CORE) && defined(LIB_SOUI_COM))) && !defined(_WIN64)
         //加载LUA脚本模块，注意，脚本模块只有在SOUI内核是以DLL方式编译时才能使用。
         bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
         SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));

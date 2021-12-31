@@ -2,8 +2,8 @@
 //
 #include "resource.h"
 #include "../config/core-def.h"
+#include "../config/com-def.h"
 
-//#define LIB_ALL
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -44,7 +44,7 @@ BEGIN
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
     "#include ""res\\soui_res.rc2"" //SOUI资源\r\n"
-#ifdef LIB_ALL
+#if (defined(LIB_CORE) && defined(LIB_SOUI_COM))
     "#include ""..\soui-sys-resource\\theme_sys_res.rc2"" //SOUI SYS资源\r\n"
 #endif
     "#endi\0"
@@ -105,7 +105,7 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #include "res\soui_res.rc2" //SOUI资源
-#ifdef LIB_ALL
+#if (defined(LIB_CORE) && defined(LIB_SOUI_COM))
     #include "..\soui-sys-resource\theme_sys_res.rc2" //SOUI SYS资源
 #endif
 #endif
