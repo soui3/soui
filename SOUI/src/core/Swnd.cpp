@@ -3162,7 +3162,7 @@ namespace SOUI
 				pOldContainer->UnregisterTrackMouseEvent(m_swnd);
 			if(GetCapture() == m_swnd)
 				ReleaseCapture();
-			pOldContainer->RegisterTimelineHandler(&m_animationHandler);
+			pOldContainer->UnregisterTimelineHandler(&m_animationHandler);
 		}
 		m_pContainer=pNewContainer;
 		if(pNewContainer)
