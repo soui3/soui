@@ -410,4 +410,10 @@ end:
 		return dwState;
 	}
 
+	void SScrollBarHandler::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		if(pOldContainer)
+			pOldContainer->UnregisterTimelineHandler(this);
+	}
+
 }

@@ -502,6 +502,7 @@ namespace SOUI
 			return FALSE;
 
 		OnRemoveChild(pChild);
+		pChild->SetContainer(NULL);
 
 		SWindow *pPrevSib=pChild->m_pPrevSibling;
 		SWindow *pNextSib=pChild->m_pNextSibling;
@@ -576,8 +577,7 @@ namespace SOUI
 	void SWindow::SetContainer(ISwndContainer *pContainer)
 	{
 		ASSERT_UI_THREAD();
-		m_pContainer=pContainer;
-
+		OnContainerChanged(m_pContainer,pContainer);
 		SWindow *pChild=GetWindow(GSW_FIRSTCHILD);
 		while(pChild)
 		{
@@ -1125,7 +1125,7 @@ namespace SOUI
 	//paint zorder in [iZorderBegin,iZorderEnd) widnows
 	void SWindow::DispatchPaint( IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd )
 	{
-		if(!IsVisible(FALSE))
+		if(!IsVisible(FALSE) || !GetContainer())
 			return;
 
 		SMatrix oriMtx;
@@ -1291,6 +1291,8 @@ namespace SOUI
 
 	void SWindow::UpdateWindow()
 	{
+		if(!GetContainer())
+			return;
 		GetContainer()->UpdateWindow();
 	}
 
@@ -1316,13 +1318,15 @@ namespace SOUI
 	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
 	{
 		ASSERT_UI_THREAD();
-		if(!IsVisible(TRUE) || IsUpdateLocked()) return ;
+		if(!IsVisible(TRUE) || IsUpdateLocked() || !GetContainer()) 
+			return ;
 
 		//只能更新窗口有效区域
 		CRect rcWnd = GetWindowRect();
 
 		CRect rcIntersect = rect & rcWnd;
-		if (rcIntersect.IsRectEmpty()) return;
+		if (rcIntersect.IsRectEmpty()) 
+			return;
 		MarkCacheDirty(true);
 
 		STransformation xForm = GetTransformation();
@@ -1402,7 +1406,8 @@ namespace SOUI
 	BOOL SWindow::FireEvent(EventArgs &evt)
 	{
 		ASSERT_UI_THREAD();
-		if(m_evtSet.isMuted()) return FALSE;
+		if(m_evtSet.isMuted() || !GetContainer())
+			return FALSE;
 
 		AddRef();
 		BOOL bRet = FALSE;
@@ -1487,6 +1492,7 @@ namespace SOUI
 
 	int SWindow::OnCreate( LPVOID )
 	{
+		SASSERT(GetContainer());
 		if(GetStyle().m_bTrackMouseEvent)
 			GetContainer()->RegisterTrackMouseEvent(m_swnd);
 		else
@@ -1814,8 +1820,10 @@ namespace SOUI
 		}
 		if(!IsVisible(TRUE))
 		{
-			if(IsFocused()) GetContainer()->OnSetSwndFocus(NULL);   //窗口隐藏时自动失去焦点
-			if(GetCapture() == m_swnd) ReleaseCapture();//窗口隐藏时自动失去Capture
+			if(IsFocused() && GetContainer()) 
+				GetContainer()->OnSetSwndFocus(NULL);   //窗口隐藏时自动失去焦点
+			if(GetCapture() == m_swnd) 
+				ReleaseCapture();//窗口隐藏时自动失去Capture
 		}
 
 		if(!m_bDisplay)
@@ -1854,7 +1862,7 @@ namespace SOUI
 			pChild->SSendMessage(WM_ENABLE,bEnable,ParentEnable);
 			pChild=pChild->GetWindow(GSW_NEXTSIBLING);
 		}
-		if(IsDisabled(TRUE) && IsFocused())
+		if(IsDisabled(TRUE) && IsFocused() && GetContainer())
 		{
 			GetContainer()->OnSetSwndFocus(NULL);
 		}
@@ -2103,6 +2111,7 @@ namespace SOUI
 			return pRT;
 		}
 
+		SASSERT(GetContainer());
 
 		GetContainer()->BuildWndTreeZorder();
 
@@ -2157,6 +2166,7 @@ namespace SOUI
 				rcRT = sRcRT.toRect();
 			}
 
+			SASSERT(GetContainer());
 			IRenderTarget *pRTRoot = GetContainer()->OnGetRenderTarget(rcRT,GRT_OFFSCREEN);
 			SWindow *pRoot = GetRoot();
 			SAutoRefPtr<IRegion> rgn;
@@ -2230,16 +2240,22 @@ namespace SOUI
 
 	SWND SWindow::GetCapture()
 	{
+		if(!GetContainer())
+			return 0;
 		return GetContainer()->OnGetSwndCapture();
 	}
 
 	SWND SWindow::SetCapture()
 	{
+		if(!GetContainer())
+			return 0;
 		return GetContainer()->OnSetSwndCapture(m_swnd);
 	}
 
 	BOOL SWindow::ReleaseCapture()
 	{
+		if(!GetContainer())
+			return FALSE;
 		return GetContainer()->OnReleaseSwndCapture();
 	}
 
@@ -2270,7 +2286,8 @@ namespace SOUI
 				m_animation->startNow();
 				OnAnimationStart(m_animation);
 			}
-			GetContainer()->RegisterTimelineHandler(&m_animationHandler);
+			if(GetContainer())
+				GetContainer()->RegisterTimelineHandler(&m_animationHandler);
 		}
 	}
 
@@ -2344,7 +2361,10 @@ namespace SOUI
 
 	void SWindow::SetFocus()
 	{
-		if(!IsVisible(TRUE) || IsDisabled(TRUE) && IsFocusable()) return;
+		if(!IsVisible(TRUE) || IsDisabled(TRUE) || !IsFocusable()) 
+			return;
+		if(!GetContainer())
+			return;
 		GetContainer()->OnSetSwndFocus(m_swnd);
 	}
 
@@ -2352,12 +2372,17 @@ namespace SOUI
 	{
 		if(IsFocused())
 		{
+			if(!GetContainer())
+				return;
 			GetContainer()->OnSetSwndFocus(NULL);
 		}
 	}
 
 	BOOL SWindow::IsFocused()
 	{
+		if(!GetContainer())
+			return FALSE;
+
 		return GetContainer()->GetFocus() == m_swnd;
 	}
 
@@ -2422,6 +2447,7 @@ namespace SOUI
 
 		pRT->ClearRect(&rcDraw,0);//清除残留的alpha值
 
+		SASSERT(GetContainer());
 		GetContainer()->BuildWndTreeZorder();
 		pTopWnd->_PaintRegion(pRT,pRgn,ZORDER_MIN,m_uZorder);
 
@@ -2437,6 +2463,7 @@ namespace SOUI
 		pRgn->CombineRect(&rcDraw,RGN_COPY);
 		pRT->PushClipRect(&rcDraw);
 
+		SASSERT(GetContainer());
 		GetContainer()->BuildWndTreeZorder();
 		GetTopLevelParent()->_PaintRegion(pRT,pRgn,(UINT)m_uZorder+1,(UINT)ZORDER_MAX);
 
@@ -2452,6 +2479,7 @@ namespace SOUI
 		pRgn->CombineRect(&rcDraw, RGN_COPY);
 		pRT->PushClipRect(&rcDraw);
 
+		SASSERT(GetContainer());
 		GetContainer()->BuildWndTreeZorder();
 		GetParent()->_PaintRegion(pRT, pRgn, (UINT)m_uZorder + 1, (UINT)ZORDER_MAX);
 
@@ -2559,10 +2587,13 @@ namespace SOUI
 		GetStyle().m_bTrackMouseEvent = STRINGASBOOL(strValue);
 		if(!bLoading)
 		{
-			if(GetStyle().m_bTrackMouseEvent)
-				GetContainer()->RegisterTrackMouseEvent(m_swnd);
-			else
-				GetContainer()->UnregisterTrackMouseEvent(m_swnd);
+			if(GetContainer())
+			{
+				if(GetStyle().m_bTrackMouseEvent)
+					GetContainer()->RegisterTrackMouseEvent(m_swnd);
+				else
+					GetContainer()->UnregisterTrackMouseEvent(m_swnd);
+			}
 		}
 		return S_FALSE;
 	}
@@ -2785,7 +2816,8 @@ namespace SOUI
 
 	IScriptModule * SWindow::GetScriptModule()
 	{
-		if(!GetContainer()) return NULL;
+		if(!GetContainer()) 
+			return NULL;
 		return GetContainer()->GetScriptModule();
 	}
 
@@ -2815,11 +2847,16 @@ namespace SOUI
 
 	BOOL SWindow::CreateCaret(HBITMAP pBmp,int nWid,int nHeight)
 	{
+		if(!GetContainer())
+			return FALSE;
 		return GetContainer()->GetCaret()->Init(pBmp,nWid,nHeight);
 	}
 
 	void SWindow::ShowCaret(BOOL bShow)
 	{
+		if(!GetContainer())
+			return ;
+
 		ICaret * pCaret = GetContainer()->GetCaret();
 		if (pCaret->SetVisible(bShow,m_swnd))
 		{
@@ -2830,6 +2867,9 @@ namespace SOUI
 
 	void SWindow::SetCaretPos(int x,int y)
 	{
+		if(!GetContainer())
+			return ;
+
 		ICaret * pCaret = GetContainer()->GetCaret();
 		if (pCaret->IsVisible())
 		{
@@ -2987,6 +3027,8 @@ namespace SOUI
 	void SWindow::SetToolTipText(LPCTSTR pszText)
 	{
 		m_strToolTipText.SetText(pszText);
+		if(!GetContainer())
+			return ;
 		if(GetContainer()->GetHover() == m_swnd)
 		{//请求更新显示的tip
 			GetContainer()->UpdateTooltip();
@@ -2995,7 +3037,7 @@ namespace SOUI
 
 	const SStringW & SWindow::GetTrCtx() const
 	{
-		if (m_strTrCtx.IsEmpty())
+		if (GetContainer() && m_strTrCtx.IsEmpty())
 			return GetContainer()->GetTranslatorContext();
 		else
 			return m_strTrCtx;
@@ -3058,7 +3100,8 @@ namespace SOUI
 	void SWindow::accNotifyEvent(DWORD dwEvt)
 	{
 #ifdef SOUI_ENABLE_ACC
-		NotifyWinEvent(dwEvt, GetContainer()->GetHostHwnd(), GetSwnd(), CHILDID_SELF);
+		if(GetContainer())
+			NotifyWinEvent(dwEvt, GetContainer()->GetHostHwnd(), GetSwnd(), CHILDID_SELF);
 #endif
 	}
 
@@ -3080,7 +3123,8 @@ namespace SOUI
 
 	void SWindow::OnAnimationStop(IAnimation *pAni)
 	{
-		GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
+		if(GetContainer())
+			GetContainer()->UnregisterTimelineHandler(&m_animationHandler);
 		m_isAnimating = false;
 		m_animationHandler.OnAnimationStop();
 		UpdateCacheMode();
@@ -3098,6 +3142,34 @@ namespace SOUI
 	COLORREF SWindow::GetBkgndColor() const
 	{
 		return GetStyle().m_crBg;
+	}
+
+	void SWindow::OnRemoveChild(SWindow *pChild)
+	{
+	}
+
+	void SWindow::OnInsertChild(SWindow *pChild)
+	{
+	}
+
+	void SWindow::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		if(pOldContainer)
+		{	
+			if(IsFocused())
+				pOldContainer->OnSetSwndFocus(NULL);
+			if(GetStyle().m_bTrackMouseEvent)
+				pOldContainer->UnregisterTrackMouseEvent(m_swnd);
+			if(GetCapture() == m_swnd)
+				ReleaseCapture();
+			pOldContainer->UnregisterTimelineHandler(&m_animationHandler);
+		}
+		m_pContainer=pNewContainer;
+		if(pNewContainer)
+		{
+			if(GetStyle().m_bTrackMouseEvent)
+				pNewContainer->RegisterTrackMouseEvent(m_swnd);
+		}
 	}
 
 	static SWindow * ICWND_NONE = (SWindow*)-2;

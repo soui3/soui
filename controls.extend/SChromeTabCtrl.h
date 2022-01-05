@@ -103,6 +103,7 @@ namespace SOUI
         virtual void UpdateChildrenPosition();
         
         virtual void OnNextFrame();
+		void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
 
         bool OnBtnNewClick(EventArgs *pEvt);
         bool OnBtnCloseTabClick(EventArgs *pEvt);

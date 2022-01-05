@@ -142,4 +142,14 @@ void SGifPlayer::OnDestroy()
     GetContainer()->UnregisterTimelineHandler(this);
     __super::OnDestroy();
 }
+
+void SGifPlayer::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+{
+	if(pOldContainer)
+		pOldContainer->UnregisterTimelineHandler(this);
+	if(pNewContainer)
+		pNewContainer->RegisterTimelineHandler(this);
+	SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+}
+
 }
