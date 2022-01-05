@@ -589,7 +589,7 @@ namespace SOUI
 		InvalidateRect(GetWindowRect());
 	}
 
-	IPropertyItem * SPropertyGrid::FindItemByName(const SStringT & strName) const
+	IPropertyItem * SPropertyGrid::FindItemByName(const SStringW & strName) const
 	{
 		SPOSITION pos = m_lstGroup.GetHeadPosition();
 		while(pos)

@@ -11,12 +11,12 @@ namespace SOUI
     {
 		IPropertyItem *pWidth = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pWidth->SetID(CHILD_WIDTH);
-        pWidth->SetTitle(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pWidth->SetTitle(S_CW2T(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pWidth);
         pWidth->Release();
         IPropertyItem *pHeight = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pHeight->SetID(CHILD_HEIGHT);
-        pHeight->SetTitle(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pHeight->SetTitle(S_CW2T(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pHeight);
         pHeight->Release();
         m_szValue.cx=m_szValue.cy=0;

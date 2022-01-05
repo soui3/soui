@@ -89,7 +89,7 @@ namespace SOUI
 		void LoadFromXml(pugi::xml_node data);
 
 		void RemoveAllItems();
-		IPropertyItem * FindItemByName(const SStringT & strName) const;
+		IPropertyItem * FindItemByName(const SStringW & strName) const;
 		IPropertyItem * FindChildById(int nID) const;
 
 		IPropertyItem * CreateItem(const SStringW& strName);

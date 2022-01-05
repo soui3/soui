@@ -100,7 +100,7 @@ protected:
 		BOOL bLoad = GetRawBuffer(pszType,pszResName,pBuf,nBufSize);
 		if(bLoad && nBufSize>6)
 		{
-			if(_tcscmp(pszType,L"svg")!=0)
+			if(_tcscmp(pszType,_T("svg"))!=0)
 			{
 				return SApplication::LoadImage(pszType,pszResName);
 			}

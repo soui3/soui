@@ -29,7 +29,7 @@ namespace SOUI
         virtual int ChildrenCount() const;
 
 		virtual SStringT GetTitle() const{return m_strTitle.IsEmpty()?S_CW2T(m_strName):m_strTitle;}
-        virtual void SetTitle(const SStringW & strName){m_strTitle=strName;}
+        virtual void SetTitle(const SStringT & strName){m_strTitle=strName;}
 		virtual LPCWSTR  GetName() const {return m_strName;}
 		virtual SStringW GetName2() const {return m_strName;}
         virtual int GetID()const {return m_nID;}
@@ -69,7 +69,7 @@ namespace SOUI
     protected:
         HRESULT OnAttrExpanded(const SStringW &  strValue,BOOL bLoading);
 
-        SStringW        m_strTitle;
+        SStringT        m_strTitle;
 		SStringW		m_strName;
 		int				m_nID;
         SStringT        m_strDescription;

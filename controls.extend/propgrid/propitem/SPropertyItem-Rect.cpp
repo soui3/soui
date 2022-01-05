@@ -11,25 +11,25 @@ namespace SOUI
     {
 		IPropertyItem *pLeft = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pLeft->SetID(CHILD_LEFT);
-        pLeft->SetTitle(TR(L"left",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pLeft->SetTitle(S_CW2T(TR(L"left",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pLeft);
         pLeft->Release();
 
         IPropertyItem *pTop = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pTop->SetID(CHILD_TOP);
-        pTop->SetTitle(TR(L"top",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pTop->SetTitle(S_CW2T(TR(L"top",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pTop);
         pTop->Release();
 
 		IPropertyItem *pRight = pOwner->CreateItem(SPropertyItemText::GetClassName());
 		pRight->SetID(CHILD_RIGHT);
-		pRight->SetTitle(TR(L"right",GetOwner()->GetContainer()->GetTranslatorContext()));
+		pRight->SetTitle(S_CW2T(TR(L"right",GetOwner()->GetContainer()->GetTranslatorContext())));
 		InsertChild(pRight);
 		pRight->Release();
 
 		IPropertyItem *pBottom = pOwner->CreateItem(SPropertyItemText::GetClassName());
 		pBottom->SetID(CHILD_BOTTOM);
-		pBottom->SetTitle(TR(L"bottom",GetOwner()->GetContainer()->GetTranslatorContext()));
+		pBottom->SetTitle(S_CW2T(TR(L"bottom",GetOwner()->GetContainer()->GetTranslatorContext())));
 		InsertChild(pBottom);
 		pBottom->Release();
     }
