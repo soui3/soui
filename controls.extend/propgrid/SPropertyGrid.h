@@ -110,7 +110,7 @@ namespace SOUI
 		ITEMPART HitTest(int iItem, const CPoint &pt);
 		void SortItems(SList<IPropertyItem*> & lstItems);
 
-		virtual BOOL CreateChildren(IXmlNode * xmlNode);
+		virtual BOOL CreateChildren(SXmlNode xmlNode);
 
 		virtual void DrawItem(IRenderTarget *pRT, CRect &rc, int iItem);
 		virtual UINT OnGetDlgCode(){return SC_WANTALLKEYS;}

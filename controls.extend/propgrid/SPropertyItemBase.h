@@ -12,6 +12,27 @@ namespace SOUI
     public:
         virtual ~SPropertyItemBase();
 
+	public:
+		STDMETHOD_(int,GetID)(THIS) SCONST OVERRIDE
+		{
+			return m_nID;
+		}
+
+		STDMETHOD_(void,SetID)(THIS_ int nID) OVERRIDE
+		{
+			m_nID = nID;
+		}
+
+		STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST OVERRIDE
+		{
+			return m_strName.c_str();
+		}
+		STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) OVERRIDE
+		{
+			m_strName = pszName;
+		}
+
+	public:
         virtual BOOL HasButton() const {return FALSE;}
         virtual int  GetLevel() const ;
         virtual BOOL IsExpand() const ;
@@ -29,10 +50,7 @@ namespace SOUI
 
 		virtual SStringT GetTitle() const{return m_strTitle.IsEmpty()?S_CW2T(m_strName):m_strTitle;}
         virtual void SetTitle(const SStringT & strName){m_strTitle=strName;}
-		//virtual LPCWSTR  GetName() const {return m_strName;}
 		virtual SStringW GetName2() const {return m_strName;}
-        //virtual int GetID()const {return m_nID;}
-        //virtual void SetID(int nID) {m_nID = nID;}
         virtual SStringT GetDescription() const {return m_strDescription;}
         virtual void SetDescription(const SStringT & strDescription){m_strDescription =strDescription;}
         virtual SStringT GetValue() const {return _T("");}

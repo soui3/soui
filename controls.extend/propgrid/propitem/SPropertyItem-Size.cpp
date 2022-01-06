@@ -55,7 +55,7 @@ namespace SOUI
 	SStringT SPropertyItemSize::GetValue() const
 	{
 		if(HasValue())
-			return SStringT().Format(_T("%s,%s"),m_strValue[0],m_strValue[1]);
+			return SStringT().Format(_T("%s,%s"),m_strValue[0].c_str(),m_strValue[1].c_str());
 		else
 			return SStringT();
 	}

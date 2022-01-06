@@ -307,9 +307,8 @@ namespace SOUI
         }
     }
 
-    BOOL SPropertyGrid::CreateChildren( IXmlNode * pNode )
+    BOOL SPropertyGrid::CreateChildren( SXmlNode  xmlNode )
     {
-		SXmlNode xmlNode(pNode);
         SXmlNode xmlCmdBtn = xmlNode.child(L"cmdbtnstyle");
         SASSERT(xmlCmdBtn);
         m_pCmdBtn = SApplication::getSingleton().CreateWindowByName(SWindow::GetClassName());
