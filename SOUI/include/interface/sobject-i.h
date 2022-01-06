@@ -195,13 +195,24 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	/**
 	* SetAttribute
 	* @brief    设置一个对象属性
+	* @param    LPCSTR pszAttr --  属性名
+	* @param    LPCSTR pszValue --  属性值
+	* @param    BOOL bLoading --  对象创建时由系统调用标志
+	* @return   HRESULT -- 处理处理结果
+	* Describe  
+	*/    
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR pszAttr, LPCSTR pszValue, BOOL bLoading) PURE;
+
+	/**
+	* SetAttribute
+	* @brief    设置一个对象属性
 	* @param    LPCWSTR pszAttr --  属性名
 	* @param    LPCWSTR pszValue --  属性值
 	* @param    BOOL bLoading --  对象创建时由系统调用标志
 	* @return   HRESULT -- 处理处理结果
 	* Describe  
 	*/    
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
+	STDMETHOD_(HRESULT,SetAttributeW)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
 
 	/**
 	* GetAttribute

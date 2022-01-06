@@ -122,7 +122,7 @@ DECLARE_INTERFACE_(ILayoutParam,IObject)
 	* @return   HRESULT -- 处理处理结果
 	* Describe  
 	*/    
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR pszAttr, LPCSTR pszValue, BOOL bLoading) PURE;
 
 	/**
 	* GetAttribute
@@ -268,7 +268,7 @@ DECLARE_INTERFACE_(ILayout,IObject)
 	* @return   HRESULT -- 处理处理结果
 	* Describe  
 	*/    
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading) PURE;
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR pszAttr, LPCSTR pszValue, BOOL bLoading) PURE;
 
 	/**
 	* GetAttribute

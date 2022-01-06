@@ -52,7 +52,7 @@ namespace SOUI
             , m_luaFun(pszLuaFun)
         {}
 
-        virtual bool operator()(EventArgs *pArg)
+        virtual bool operator()(IEvtArgs *pArg)
         {
             return lua_tinker::call<bool>(m_pLuaState,m_luaFun,pArg);
         }
@@ -121,11 +121,11 @@ namespace SOUI
         lua_tinker::dobuffer(d_state,buff,sz);
     }
 
-    bool SScriptModule_Lua::executeScriptedEventHandler( LPCSTR handler_name, EventArgs *pArg)
+    BOOL SScriptModule_Lua::executeScriptedEventHandler( LPCSTR handler_name, IEvtArgs *pArg)
     {
         LuaFunctionSlot luaFunSlot(d_state,handler_name);
-        bool bRet =  luaFunSlot(pArg);
-		if(bRet) pArg->handled++;
+        BOOL bRet =  luaFunSlot(pArg);
+		if(bRet) pArg->IncreaseHandleCount();
 		return bRet;
     }
 
@@ -134,14 +134,16 @@ namespace SOUI
         lua_tinker::dostring(d_state,str);
     }
 
-    bool SScriptModule_Lua::subscribeEvent(SWindow* target, UINT uEvent, LPCSTR subscriber_name )
+    BOOL SScriptModule_Lua::subscribeEvent(IWindow* target, UINT uEvent, LPCSTR subscriber_name )
     {
-        return target->GetEventSet()->subscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
+		return FALSE;
+        //return target->GetEventSet()->subscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
     }
 
-    bool SScriptModule_Lua::unsubscribeEvent(SWindow* target, UINT uEvent, LPCSTR subscriber_name )
+    BOOL SScriptModule_Lua::unsubscribeEvent(IWindow* target, UINT uEvent, LPCSTR subscriber_name )
     {
-        return target->GetEventSet()->unsubscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
+		return FALSE;
+        //return target->GetEventSet()->unsubscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
     }
 
 

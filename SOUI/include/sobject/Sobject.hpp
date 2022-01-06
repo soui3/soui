@@ -98,7 +98,12 @@ public:
 		return DefAttributeProc(&strAttr, &strValue, bLoading);
 	}
 
-	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCWSTR  pszAttr, LPCWSTR  pszValue, BOOL bLoading) OVERRIDE
+	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR  pszAttr, LPCSTR  pszValue, BOOL bLoading) OVERRIDE
+	{
+		return SetAttribute(S_CA2W(pszAttr,CP_UTF8),S_CA2W(pszValue,CP_UTF8),bLoading);
+	}
+
+	STDMETHOD_(HRESULT,SetAttributeW)(THIS_ LPCWSTR  pszAttr, LPCWSTR  pszValue, BOOL bLoading) OVERRIDE
 	{
 		return SetAttribute(SStringW(pszAttr),SStringW(pszValue),bLoading);
 	}
