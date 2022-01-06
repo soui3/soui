@@ -336,7 +336,7 @@ int SMCListView::GetHeaderHeight() const
 }
 
 
-bool SMCListView::OnHeaderClick(IEvtArgs *pEvt)
+BOOL SMCListView::OnHeaderClick(IEvtArgs *pEvt)
 {
     EventHeaderClick *pEvt2 = sobj_cast<EventHeaderClick>(pEvt);
     SASSERT(pEvt2);
@@ -363,10 +363,10 @@ bool SMCListView::OnHeaderClick(IEvtArgs *pEvt)
     }
     delete []pOrders;
     delete []pstFlags;
-    return true;
+    return TRUE;
 }
 
-bool SMCListView::OnHeaderSizeChanging(IEvtArgs *pEvt)
+BOOL SMCListView::OnHeaderSizeChanging(IEvtArgs *pEvt)
 {
     UpdateScrollBar();
     UpdateHeaderCtrl();
@@ -397,13 +397,13 @@ bool SMCListView::OnHeaderSizeChanging(IEvtArgs *pEvt)
     }
 
     InvalidateRect(GetListRect());    
-    return true;
+    return TRUE;
 }
 
-bool SMCListView::OnHeaderSwap(IEvtArgs *pEvt)
+BOOL SMCListView::OnHeaderSwap(IEvtArgs *pEvt)
 {
     OnHeaderSizeChanging(NULL);
-    return true;
+    return TRUE;
 }
 
 
@@ -1209,7 +1209,7 @@ BOOL SMCListView::OnSetCursor(const CPoint &pt)
 
 }
 
-bool SMCListView::OnItemClick(IEvtArgs *pEvt)
+BOOL SMCListView::OnItemClick(IEvtArgs *pEvt)
 {
     SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
     SASSERT(pItemPanel);
@@ -1218,8 +1218,7 @@ bool SMCListView::OnItemClick(IEvtArgs *pEvt)
     {
         SetSel(iItem,TRUE);
     }
-    return true;
- 
+    return TRUE;
 }
 
 void SMCListView::OnColorize(COLORREF cr)

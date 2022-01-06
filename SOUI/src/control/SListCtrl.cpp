@@ -861,12 +861,12 @@ void SListCtrl::OnSize(UINT nType, CSize size)
     UpdateHeaderCtrl();
 }
 
-bool SListCtrl::OnHeaderClick(IEvtArgs *pEvt)
+BOOL SListCtrl::OnHeaderClick(IEvtArgs *pEvt)
 {
     return true;
 }
 
-bool SListCtrl::OnHeaderSizeChanging(IEvtArgs *pEvt)
+BOOL SListCtrl::OnHeaderSizeChanging(IEvtArgs *pEvt)
 {
     UpdateScrollBar();
     InvalidateRect(GetListRect());
@@ -874,7 +874,7 @@ bool SListCtrl::OnHeaderSizeChanging(IEvtArgs *pEvt)
     return true;
 }
 
-bool SListCtrl::OnHeaderSwap(IEvtArgs *pEvt)
+BOOL SListCtrl::OnHeaderSwap(IEvtArgs *pEvt)
 {
     InvalidateRect(GetListRect());
 

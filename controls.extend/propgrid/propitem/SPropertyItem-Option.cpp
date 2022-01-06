@@ -168,7 +168,7 @@ namespace SOUI
         return S_FALSE;
     }
 
-	bool SPropertyItemOption::OnCBSelChange(IEvtArgs *pEvt)
+	BOOL SPropertyItemOption::OnCBSelChange(IEvtArgs *pEvt)
 	{
 		int iSel = m_pCombobox->GetCurSel();
 		if(iSel != -1)

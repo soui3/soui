@@ -19,7 +19,7 @@
 #include <helper/STimerEx.h>
 #include <helper/SwndMsgCracker.h>
 #include <layout/SLayoutSize.h>
-#include <event/SEventSubscriber.h>
+#include <event/SEventSlot.h>
 #include <event/SEvents.h>
 #include <event/SEventSet.h>
 #include <res.mgr/SStylePool.h>
@@ -211,7 +211,7 @@ namespace SOUI
 		public:
 			STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 		protected:
-			bool OnOwnerResize(IEvtArgs *e);
+			BOOL OnOwnerResize(IEvtArgs *e);
 		};
 
     public:

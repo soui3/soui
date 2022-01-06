@@ -170,7 +170,7 @@ namespace SOUI
 		OnClick();
 	}
 
-	bool SSpinButtonCtrl::OnBuddyChange(IEvtArgs* pEvt)
+	BOOL SSpinButtonCtrl::OnBuddyChange(IEvtArgs* pEvt)
 	{
 		EventRENotify *pEvt2 = sobj_cast<EventRENotify>(pEvt);
 		if (pEvt2->iNotify != EN_CHANGE)
@@ -190,7 +190,7 @@ namespace SOUI
 				FireEvent(evt);
 			}
 		}
-		return true;
+		return TRUE;
 	}
 
 	int SSpinButtonCtrl::OnCreate(void *)

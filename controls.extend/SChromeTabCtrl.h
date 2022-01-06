@@ -70,9 +70,9 @@ namespace SOUI
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
 		void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
 
-        bool OnBtnNewClick(IEvtArgs *pEvt);
-        bool OnBtnCloseTabClick(IEvtArgs *pEvt);
-        bool OnTabClick(IEvtArgs *pEvt);
+        BOOL OnBtnNewClick(IEvtArgs *pEvt);
+        BOOL OnBtnCloseTabClick(IEvtArgs *pEvt);
+        BOOL OnTabClick(IEvtArgs *pEvt);
     
         int OnCreate(LPVOID);
         void OnDestroy();

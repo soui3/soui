@@ -33,17 +33,17 @@ public:
 		pBtn->GetRoot()->SetUserData(position);
 
 		//由网友“从未来过” 修改的新事件订阅方式,采用模板函数从响应函数中自动提取事件类型，2016.12.13
-		pBtn->GetEventSet()->subscribeEvent(&CTestAdapterFix::OnButtonClick, this);
+		pBtn->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&CTestAdapterFix::OnButtonClick, this));
 
 		SComboBox * pCbx = pItem->FindChildByName2<SComboBox>(L"cbx_in_lv");
 		if (pCbx)
 		{
 			pCbx->SetCurSel(m_pCbxSel[position]);
-			pCbx->GetEventSet()->subscribeEvent(&CTestAdapterFix::OnCbxSelChange, this);
+			pCbx->GetEventSet()->subscribeEvent(EventCBSelChange::EventID,Subscriber(&CTestAdapterFix::OnCbxSelChange, this));
 		}
 	}
 
-	bool OnCbxSelChange(EventCBSelChange *pEvt)
+	BOOL OnCbxSelChange(EventCBSelChange *pEvt)
 	{
 		SComboBox *pCbx = sobj_cast<SComboBox>(pEvt->Sender());
 		int iItem = pCbx->GetRoot()->GetUserData();
@@ -51,7 +51,7 @@ public:
 		return true;
 	}
 
-	bool OnButtonClick(EventCmd *pEvt)
+	BOOL OnButtonClick(EventCmd *pEvt)
 	{
 		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetRoot()->GetUserData();
@@ -90,11 +90,11 @@ public:
 		SWindow *pText = pItem->FindChildByName(L"btn_text");
 		pText->SetWindowText(SStringT().Format(_T("item_%d"),position+1));
 
-		pImg->GetParent()->GetEventSet()->subscribeEvent(&CTestAdapterFixHorz::OnButtonClick, this);
+		pImg->GetParent()->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&CTestAdapterFixHorz::OnButtonClick, this));
 	}
 
 
-	bool OnButtonClick(EventCmd *pEvt)
+	BOOL OnButtonClick(EventCmd *pEvt)
 	{
 		SWindow *pBtn = sobj_cast<SWindow>(pEvt->sender);
 		SItemPanel *pItem = (SItemPanel*)pBtn->GetRoot();
@@ -172,7 +172,7 @@ public:
 		pBtn->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestAdapterFlex::OnButtonClick, this));
 	}
 
-	bool OnItemStateChanged(IEvtArgs *e)
+	BOOL OnItemStateChanged(IEvtArgs *e)
 	{
 		EventSwndStateChanged *e2 = sobj_cast<EventSwndStateChanged>(e);
 		if (!EventSwndStateChanged_CheckState(e2,WndState_Hover)) return false;
@@ -181,7 +181,7 @@ public:
 		return true;
 	}
 
-	bool OnButtonClick(IEvtArgs *pEvt)
+	BOOL OnButtonClick(IEvtArgs *pEvt)
 	{
 		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetUserData();
@@ -328,7 +328,7 @@ public:
 		pBtnUninstall->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestMcAdapterFix::OnButtonClick, this));
 	}
 
-	bool OnButtonClick(IEvtArgs *pEvt)
+	BOOL OnButtonClick(IEvtArgs *pEvt)
 	{
 		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetUserData();
@@ -456,7 +456,7 @@ public:
 		pBtn->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTestTileAdapter::OnButtonClick, this));
 	}
 
-	bool OnButtonClick(IEvtArgs *pEvt)
+	BOOL OnButtonClick(IEvtArgs *pEvt)
 	{
 		SButton *pBtn = sobj_cast<SButton>(pEvt->Sender());
 		int iItem = pBtn->GetRoot()->GetUserData();
@@ -518,7 +518,7 @@ public:
 		pSwitch->GetEventSet()->subscribeEvent(EVT_CMD, Subscriber(&CTreeViewAdapter::OnSwitchClick, this));
 	}
 
-	bool OnSwitchClick(IEvtArgs *pEvt)
+	BOOL OnSwitchClick(IEvtArgs *pEvt)
 	{
 		SToggle *pToggle = sobj_cast<SToggle>(pEvt->Sender());
 		SASSERT(pToggle);

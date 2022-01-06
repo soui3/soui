@@ -179,7 +179,7 @@ namespace SOUI {
 		return pItem;
 	}
 
-	bool SGroupList::OnGroupClick(IEvtArgs * e)
+	BOOL SGroupList::OnGroupClick(IEvtArgs * e)
 	{
 		e->SetBubbleUp(FALSE);
 		SWindow *pSender = sobj_cast<SWindow>(e->Sender());
@@ -194,7 +194,7 @@ namespace SOUI {
 		return true;
 	}
 
-	bool SGroupList::OnItemClick(IEvtArgs * e)
+	BOOL SGroupList::OnItemClick(IEvtArgs * e)
 	{
 		SWindow *pSender = sobj_cast<SWindow>(e->Sender());
 		if (m_pSelectedItem != pSender)

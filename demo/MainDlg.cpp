@@ -200,7 +200,7 @@ int funCmpare(void* pCtx,const void *p1,const void *p2)
 }
 
 //表头点击事件处理函数
-bool CMainDlg::OnListHeaderClick(IEvtArgs *pEvtBase)
+BOOL CMainDlg::OnListHeaderClick(IEvtArgs *pEvtBase)
 {
     //事件对象强制转换
     EventHeaderClick *pEvt =(EventHeaderClick*)pEvtBase;

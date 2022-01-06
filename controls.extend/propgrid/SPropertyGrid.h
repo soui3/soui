@@ -143,8 +143,8 @@ namespace SOUI
 		SWindow *   m_pInplaceActiveWnd;    //属性内嵌的窗口
 
 	protected:
-		bool OnSelChanged(IEvtArgs *pEvt);
-		bool OnCmdBtnClicked(IEvtArgs *pEvt);
+		BOOL OnSelChanged(IEvtArgs *pEvt);
+		BOOL OnCmdBtnClicked(IEvtArgs *pEvt);
 
 		int ExpandChildren(const IPropertyItem *pItem,int iInsert);
 		void CollapseChildren(const IPropertyItem *pItem,int idx);

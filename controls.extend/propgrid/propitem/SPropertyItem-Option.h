@@ -49,7 +49,7 @@ namespace SOUI
         SComboBox  * m_pCombobox;
         
     public:
-		bool OnCBSelChange(IEvtArgs *pEvt);
+		BOOL OnCBSelChange(IEvtArgs *pEvt);
     protected:
         SPropertyItemOption(SPropertyGrid *pOwner);
     };

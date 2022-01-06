@@ -313,7 +313,7 @@ HWND SHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
     return Create(hWndParent, WS_CLIPCHILDREN | WS_TABSTOP | WS_OVERLAPPED,0,x,y,nWidth,nHeight);
 }
 
-bool SHostWnd::onRootResize( IEvtArgs *e )
+BOOL SHostWnd::onRootResize( IEvtArgs *e )
 {
 	if (!m_bResizing)
 	{
@@ -324,7 +324,7 @@ bool SHostWnd::onRootResize( IEvtArgs *e )
 		SetWindowPos(NULL, 0, 0, rcWnd.Width(), rcWnd.Height(), SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
 		UpdateAutoSizeCount(false);
 	}
-	return true;
+	return TRUE;
 }
 
 BOOL SHostWnd::InitFromXml(IXmlNode * pNode)

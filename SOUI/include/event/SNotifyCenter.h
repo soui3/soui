@@ -45,9 +45,9 @@ template<class T>
 			SNotifyCenter::getSingleton().UnregisterEventMap(Subscriber(&_thisClass::OnEvent, this));
 		}
 	protected:
-		bool OnEvent(IEvtArgs *e){
+		BOOL OnEvent(IEvtArgs *e){
 			T * pThis = static_cast<T*>(this);
-			return !!pThis->_HandleEvent(e);
+			return pThis->_HandleEvent(e);
 		}
 	};
 
@@ -94,7 +94,7 @@ template<class T>
         *
         * Describe 
         */
-		bool RegisterEventMap(const ISlotFunctor &slot);
+		bool RegisterEventMap(const IEvtSlot &slot);
 
         /**
         * RegisterEventMap
@@ -104,14 +104,14 @@ template<class T>
         *
         * Describe 
         */
-		bool UnregisterEventMap(const ISlotFunctor & slot);
+		bool UnregisterEventMap(const IEvtSlot & slot);
 	protected:
 		virtual void OnFireEvent(IEvtArgs *e);
 		virtual void OnFireEvts();
 
 		DWORD				m_dwMainTrdID;//主线程ID
 
-		SList<ISlotFunctor*>	m_evtHandlerMap;
+		SList<IEvtSlot*>	m_evtHandlerMap;
 
 		SNotifyReceiver	 *  m_pReceiver;
 

@@ -844,7 +844,7 @@ namespace SOUI
 					bNewItem = TRUE;
                     ii.pItem = SItemPanel::Create(this,SXmlNode(),this);
                     ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelClick::EventID,Subscriber(&STreeView::OnItemClick,this));
-                    ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelDbclick::EventID,Subscriber(&STreeView::OnItemDblClick,this));
+                    //ii.pItem->GetEventSet()->subscribeEvent(EventItemPanelDbclick::EventID,Subscriber(&STreeView::OnItemDblClick,this));
                 }else
                 {
                     ii.pItem = lstRecycle->RemoveHead();
@@ -1188,7 +1188,7 @@ namespace SOUI
     }
     
 
-    bool STreeView::OnItemClick(IEvtArgs *pEvt)
+    BOOL STreeView::OnItemClick(IEvtArgs *pEvt)
     {
         SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);
@@ -1197,10 +1197,10 @@ namespace SOUI
         {
             SetSel(hItem,TRUE);
         }
-        return true;
+        return TRUE;
     }
 
-    bool STreeView::OnItemDblClick(IEvtArgs *pEvt)
+    BOOL STreeView::OnItemDblClick(IEvtArgs *pEvt)
     {
         SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);

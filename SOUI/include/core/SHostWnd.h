@@ -128,13 +128,14 @@ namespace SOUI
 		SHostWnd*					m_pHostWnd;
 	};
 
-	class SOUI_EXP SHostWnd: public TObjRefImpl<IHostWnd>
+	class SOUI_EXP SHostWnd: public TObjRefImpl<SObjectImpl<IHostWnd>>
     , public SwndContainerImpl
     , public SNativeWnd
 	, protected IHostMsgHandler
 {
     friend class SDummyWnd;
 	friend class SRootWindow;
+	SOUI_CLASS_NAME_EX(SHostWnd,L"SHostWnd",NativeWnd)
 protected:    
     SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */
@@ -419,7 +420,7 @@ protected:
 protected:
 	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
-	virtual bool onRootResize(IEvtArgs *e);
+	virtual BOOL onRootResize(IEvtArgs *e);
 	
 public://事件处理接口
     virtual BOOL _HandleEvent(IEvtArgs *pEvt){return FALSE;}

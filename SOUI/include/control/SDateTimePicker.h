@@ -44,8 +44,8 @@ protected:		// 继承
 	virtual void OnDestroyDropDown(SDropDownWnd* pDropDown);
 protected:
 	virtual BOOL CreateChildren(SXmlNode xmlNode);
-	bool OnDateChanged(EventCalendarExChanged* pEvt);
-	bool OnDateCmd(EventCmd* pEvt);
+	BOOL OnDateChanged(EventCalendarExChanged* pEvt);
+	BOOL OnDateCmd(EventCmd* pEvt);
 	void GetDropBtnRect(LPRECT pBtnRc, LPRECT pSkinRc = NULL);
 	SStringT ToFormatText(EnDateType eType, WORD wNum);
 	bool CalcPopupRect(int nHeight, CRect& rcPopup);

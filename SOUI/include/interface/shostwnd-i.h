@@ -1,28 +1,13 @@
 #pragma once
-#include <interface/obj-ref-i.h>
+#include <interface/sobject-i.h>
 SNSBEGIN
 
 interface IWindow;
 
 #undef INTERFACE
 #define INTERFACE IHostWnd
-DECLARE_INTERFACE_(IHostWnd,IObjRef)
+DECLARE_INTERFACE_(IHostWnd,IObject)
 {
-	//!添加引用
-	/*!
-	*/
-	STDMETHOD_(long,AddRef) (THIS) PURE;
-
-	//!释放引用
-	/*!
-	*/
-	STDMETHOD_(long,Release) (THIS) PURE;
-
-	//!释放对象
-	/*!
-	*/
-	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
-
 	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) PURE;
 	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x /*= 0*/, int y /*= 0*/, int nWidth /*= 0*/, int nHeight /*= 0*/) PURE;
 	STDMETHOD_(BOOL,Destroy)(THIS) PURE;

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include <event/SEventSubscriber.h>
+#include <event/SEventSlot.h>
 #include "ScriptModule-Lua.h"
 #include "../lua_tinker/lua_tinker.h"
 #include <string/strcpcvt.h>
@@ -43,7 +43,7 @@ namespace SOUI
         return 1;
     }
 
-    class LuaFunctionSlot : public ISlotFunctor
+    class LuaFunctionSlot : public TObjRefImpl<IEvtSlot>
     {
     public:
         //! Slot function type.
@@ -52,25 +52,27 @@ namespace SOUI
             , m_luaFun(pszLuaFun)
         {}
 
-        virtual bool operator()(IEvtArgs *pArg)
-        {
-            return lua_tinker::call<bool>(m_pLuaState,m_luaFun,pArg);
-        }
 
-        virtual ISlotFunctor* Clone() const 
-        {
-            return new LuaFunctionSlot(m_pLuaState,m_luaFun);
-        }
+		STDMETHOD_(BOOL,Run)(THIS_ IEvtArgs *pArg) OVERRIDE
+		{
+			return lua_tinker::call<bool>(m_pLuaState,m_luaFun,pArg);
+		}
+		STDMETHOD_(IEvtSlot*, Clone)(THIS) SCONST OVERRIDE
+		{
+			return new LuaFunctionSlot(m_pLuaState,m_luaFun);
+		}
+		STDMETHOD_(BOOL,Equal)(THIS_ const IEvtSlot * sour) SCONST OVERRIDE
+		{
+			if(sour->GetSlotType()!=GetSlotType()) return false;
+			const LuaFunctionSlot *psour=static_cast<const LuaFunctionSlot*>(sour);
+			SASSERT(psour);
+			return psour->m_luaFun==m_luaFun && psour->m_pLuaState==m_pLuaState;
+		}
 
-        virtual bool Equal(const ISlotFunctor & sour)const 
-        {
-            if(sour.GetSlotType()!=GetSlotType()) return false;
-            const LuaFunctionSlot *psour=static_cast<const LuaFunctionSlot*>(&sour);
-            SASSERT(psour);
-            return psour->m_luaFun==m_luaFun && psour->m_pLuaState==m_pLuaState;
-        }
-
-        virtual UINT GetSlotType() const {return SLOT_USER+1;}
+		STDMETHOD_(UINT,GetSlotType)(THIS) SCONST OVERRIDE
+		{
+			return SLOT_USER+1;
+		}
 
     private:
         SStringA m_luaFun;
@@ -124,7 +126,7 @@ namespace SOUI
     BOOL SScriptModule_Lua::executeScriptedEventHandler( LPCSTR handler_name, IEvtArgs *pArg)
     {
         LuaFunctionSlot luaFunSlot(d_state,handler_name);
-        BOOL bRet =  luaFunSlot(pArg);
+        BOOL bRet =  luaFunSlot.Run(pArg);
 		if(bRet) pArg->IncreaseHandleCount();
 		return bRet;
     }
@@ -136,14 +138,14 @@ namespace SOUI
 
     BOOL SScriptModule_Lua::subscribeEvent(IWindow* target, UINT uEvent, LPCSTR subscriber_name )
     {
-		return FALSE;
-        //return target->GetEventSet()->subscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
+		SWindow *pWnd = (SWindow*)target;
+        return pWnd->GetEventSet()->subscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
     }
 
     BOOL SScriptModule_Lua::unsubscribeEvent(IWindow* target, UINT uEvent, LPCSTR subscriber_name )
     {
-		return FALSE;
-        //return target->GetEventSet()->unsubscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
+		SWindow *pWnd = (SWindow*)target;
+        return pWnd->GetEventSet()->unsubscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
     }
 
 

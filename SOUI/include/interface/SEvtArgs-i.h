@@ -20,4 +20,20 @@ DECLARE_INTERFACE_(IEvtArgs,IObject)
 	STDMETHOD_(LPCVOID,Data)(THIS) PURE;
 };
 
+/*!
+\brief
+    Defines abstract interface which will be used when constructing various
+    functor objects that bind slots to signals (or in CEGUI terms, handlers to
+    events).
+*/
+#undef INTERFACE
+#define INTERFACE IEvtArgs
+DECLARE_INTERFACE_(IEvtSlot,IObjRef)
+{
+    STDMETHOD_(BOOL,Run)(THIS_ IEvtArgs *pArg) PURE;
+    STDMETHOD_(IEvtSlot*, Clone)(THIS) SCONST PURE;
+    STDMETHOD_(BOOL,Equal)(THIS_ const IEvtSlot * sour) SCONST PURE;
+    STDMETHOD_(UINT,GetSlotType)(THIS) SCONST PURE;
+};
+
 SNSEND

@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "SEventSubscriber.h"
+#include "SEventSlot.h"
 
 namespace SOUI
 {
 
-    class SEvent
+    class SOUI_EXP SEvent
     {
     public:
         SEvent(DWORD dwEventID,LPCWSTR pszEventName);
@@ -20,20 +20,20 @@ namespace SOUI
 
         void SetScriptHandler(const SStringA & strScriptHandler);
 
-        bool subscribe(const ISlotFunctor& slot);
+        bool subscribe(const IEvtSlot& slot);
 
-        bool unsubscribe(const ISlotFunctor& slot);
+        bool unsubscribe(const IEvtSlot& slot);
 
         void operator()(IEvtArgs* args);
 
     protected:
-        int findSlotFunctor(const ISlotFunctor& slot);
+        int findSlotFunctor(const IEvtSlot& slot);
 
         DWORD    m_dwEventID;
         SStringW m_strEventName;
         SStringA m_strScriptHandler;
 
-        SArray<ISlotFunctor *> m_evtSlots;
+        SArray<IEvtSlot *> m_evtSlots;
     };
 
     class SOUI_EXP SEventSet
@@ -103,10 +103,10 @@ namespace SOUI
             Function or object that is to be subscribed to the Event.
         \return bool
         */
-        bool subscribeEvent(DWORD dwEventID, const ISlotFunctor & subscriber);
+        bool subscribeEvent(DWORD dwEventID, const IEvtSlot & subscriber);
 
 #if _MSC_VER >= 1700	//VS2012
-		bool subscribeEvent(DWORD dwEventID, const EventCallback & eventCallback);
+		bool subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback);
 #endif
         template<typename T, typename A>
         bool subscribeEvent(bool (T::* pFn)(A *), T* pObject) {
@@ -122,7 +122,7 @@ namespace SOUI
 			return subscribeEvent(dwEventID, Subscriber(pFn,this));
 		}
 
-        bool unsubscribeEvent( const DWORD dwEventID, const ISlotFunctor & subscriber );
+        bool unsubscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber );
 
         template<typename T, typename A>
         bool unsubscribeEvent(bool (T::* pFn)(A *), T* pObject) {

@@ -47,8 +47,8 @@ namespace SOUI{
 		SWindow * InsertGroup(int iGroup,const SStringW & name,const SStringT & text, int iIcon, int nID);
 		SWindow * InsertItem(SWindow *pGroup,int iItem, const SStringW & name, const SStringT & text, int iIcon, int nID);
 	protected:
-		bool OnGroupClick(IEvtArgs *e);
-		bool OnItemClick(IEvtArgs *e);
+		BOOL OnGroupClick(IEvtArgs *e);
+		BOOL OnItemClick(IEvtArgs *e);
 
 		virtual BOOL CreateChildren(SXmlNode xmlNode);
 

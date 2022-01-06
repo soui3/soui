@@ -7,7 +7,7 @@ namespace SOUI
 	{
 		if (m_pTabHost)
 		{
-			m_pTabHost->GetEventSet()->subscribeEvent<STabCtrlHeaderBinder, EventTabSelChanged>(&STabCtrlHeaderBinder::TabSelChanged, this);
+			m_pTabHost->GetEventSet()->subscribeEvent(EventTabSelChanged::EventID,Subscriber(&STabCtrlHeaderBinder::TabSelChanged, this));
 		}
 	}
 
@@ -21,12 +21,12 @@ namespace SOUI
 		if (m_pTabHost)
 		{
 			m_lstPages.RemoveAll();
-			m_pTabHost->GetEventSet()->unsubscribeEvent<STabCtrlHeaderBinder, EventTabSelChanged>(&STabCtrlHeaderBinder::TabSelChanged, this);
+			m_pTabHost->GetEventSet()->unsubscribeEvent(EventTabSelChanged::EventID,Subscriber(&STabCtrlHeaderBinder::TabSelChanged, this));
 		}
 		m_pTabHost = _host;
 		if (m_pTabHost)
 		{
-			m_pTabHost->GetEventSet()->subscribeEvent<STabCtrlHeaderBinder, EventTabSelChanged>(&STabCtrlHeaderBinder::TabSelChanged, this);
+			m_pTabHost->GetEventSet()->subscribeEvent(EventTabSelChanged::EventID,Subscriber(&STabCtrlHeaderBinder::TabSelChanged, this));
 		}
 	}
 
@@ -42,7 +42,7 @@ namespace SOUI
 		}
 	}
 
-	bool STabCtrlHeaderBinder::EvtHander(IEvtArgs *e)
+	BOOL STabCtrlHeaderBinder::EvtHander(IEvtArgs *e)
 	{
 		if (SMap<SWindow*, int>::CPair *pair = m_lstPages.Lookup((SWindow*)e->Sender()))
 		{
@@ -50,11 +50,11 @@ namespace SOUI
 			m_pTabHost->SetCurSel(pair->m_value);
 			//pair->m_key->SetCheck(TRUE);
 			//m_pTabHost->GetEventSet()->setMutedState(false);
-			return true;
+			return TRUE;
 		}
-		return false;
+		return FALSE;
 	}
-	bool STabCtrlHeaderBinder::TabSelChanged(EventTabSelChanged *evt_sel)
+	BOOL STabCtrlHeaderBinder::TabSelChanged(EventTabSelChanged *evt_sel)
 	{
 		SPOSITION pos = m_lstPages.GetStartPosition();
 		SMap<SWindow*, int>::CPair* pair;
@@ -73,6 +73,6 @@ namespace SOUI
 				//pair->m_key->SetCheck(FALSE);
 			}
 		}
-		return false;
+		return FALSE;
 	}
 }

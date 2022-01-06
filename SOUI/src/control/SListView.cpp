@@ -977,7 +977,7 @@ namespace SOUI
 
     }
 
-    bool SListView::OnItemClick(IEvtArgs *pEvt)
+    BOOL SListView::OnItemClick(IEvtArgs *pEvt)
     {
         SItemPanel *pItemPanel = sobj_cast<SItemPanel>(pEvt->Sender());
         SASSERT(pItemPanel);
@@ -986,7 +986,7 @@ namespace SOUI
         {
             SetSel(iItem,TRUE);
         }
-        return true;
+        return TRUE;
 
     }
 

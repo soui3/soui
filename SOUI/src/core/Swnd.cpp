@@ -3493,7 +3493,7 @@ namespace SOUI
 		m_pOwner->Release();
 	}
 
-	bool SWindow::SAnimationHandler::OnOwnerResize(IEvtArgs * e)
+	BOOL SWindow::SAnimationHandler::OnOwnerResize(IEvtArgs * e)
 	{
 		CSize szOwner = m_pOwner->GetWindowRect().Size();
 		CSize szParent = szOwner;

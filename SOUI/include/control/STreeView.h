@@ -110,8 +110,8 @@ namespace SOUI
 		void EnsureVisible(HTREEITEM hItem);
 
     protected:
-        bool OnItemClick(IEvtArgs *pEvt);
-        bool OnItemDblClick(IEvtArgs *pEvt);
+        BOOL OnItemClick(IEvtArgs *pEvt);
+        BOOL OnItemDblClick(IEvtArgs *pEvt);
 
 		void onBranchChanged(HTREEITEM hBranch);
 		void onBranchInvalidated(HTREEITEM hBranch,bool bInvalidParents, bool bInvalidChildren);

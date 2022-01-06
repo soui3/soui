@@ -44,7 +44,7 @@ namespace SOUI
         void onDataSetInvalidated();
 		void onItemDataChanged(int iItem);
     protected:
-        bool OnItemClick(IEvtArgs *pEvt);
+        BOOL OnItemClick(IEvtArgs *pEvt);
         
     protected:
         virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);

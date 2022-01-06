@@ -806,7 +806,7 @@
 				>
 			</File>
 			<File
-				RelativePath="include\event\SEventSubscriber.h"
+				RelativePath=".\include\event\SEventSlot.h"
 				>
 			</File>
 			<File
@@ -1306,11 +1306,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath=".\include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File

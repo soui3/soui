@@ -128,7 +128,7 @@ public:
 // 		}
 // 		return false;
 // 	}
-	bool OnItemStateChanged(IEvtArgs *pEvt)
+	BOOL OnItemStateChanged(IEvtArgs *pEvt)
 	{
 		SWindow *pItem = sobj_cast<SWindow>(pEvt->Sender());
 		if ((pItem->GetState() & WndState_Check) || (pItem->GetState() & WndState_Hover))

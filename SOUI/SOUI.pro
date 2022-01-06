@@ -109,7 +109,7 @@ HEADERS += include/SApp.h \
            include/event/SEventCrack.h \
            include/event/SEvents.h \
            include/event/SEventSet.h \
-           include/event/SEventSubscriber.h \
+           include/event/SEventSlot.h \
            include/event/SNotifyCenter.h \
            include/helper/SAdapterBase.h \
            include/helper/SAppDir.h \

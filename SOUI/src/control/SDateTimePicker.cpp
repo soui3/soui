@@ -56,14 +56,14 @@ namespace SOUI
 		m_pCalendar->SetAttribute(L"pos", L"0,0,-0,-0", TRUE);
 		m_pCalendar->SetOwner(this);    //chain notify message to SDateTimePicker
 
-		m_pCalendar->GetEventSet()->subscribeEvent(&SDateTimePicker::OnDateChanged, this);
-		m_pCalendar->GetEventSet()->subscribeEvent(&SDateTimePicker::OnDateCmd, this);
+		m_pCalendar->GetEventSet()->subscribeEvent(EventCalendarExChanged::EventID,Subscriber(&SDateTimePicker::OnDateChanged, this));
+		m_pCalendar->GetEventSet()->subscribeEvent(EventCmd::EventID,Subscriber(&SDateTimePicker::OnDateCmd, this));
 		return TRUE;
 	}
 
-	bool SDateTimePicker::OnDateChanged(EventCalendarExChanged* pEvt)
+	BOOL SDateTimePicker::OnDateChanged(EventCalendarExChanged* pEvt)
 	{
-		if (NULL == pEvt) return true;
+		if (NULL == pEvt) return TRUE;
 
 		m_sysTime.wDay = pEvt->iNewDay;
 		m_sysTime.wMonth = pEvt->iNewMonth;
@@ -75,13 +75,13 @@ namespace SOUI
 		e.newTime = m_sysTime;
 		FireEvent(e);
 
-		return true;
+		return TRUE;
 	}
 
-	bool SDateTimePicker::OnDateCmd(EventCmd* pEvt)
+	BOOL SDateTimePicker::OnDateCmd(EventCmd* pEvt)
 	{
 		CloseUp();
-		return true;
+		return TRUE;
 	}
 
 	SWindow* SDateTimePicker::GetDropDownOwner()

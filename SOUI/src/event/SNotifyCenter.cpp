@@ -113,8 +113,8 @@ void SNotifyCenter::OnFireEvent( IEvtArgs *e )
 	SPOSITION pos = m_evtHandlerMap.GetTailPosition();
 	while(pos)
 	{
-		ISlotFunctor * pSlot = m_evtHandlerMap.GetPrev(pos);
-		(*pSlot)(e);
+		IEvtSlot * pSlot = m_evtHandlerMap.GetPrev(pos);
+		pSlot->Run(e);
 		if(!e->IsBubbleUp()) break;
 	}
 }
@@ -159,27 +159,27 @@ void SNotifyCenter::OnFireEvts()
 }
 
 
-bool SNotifyCenter::RegisterEventMap( const ISlotFunctor &slot )
+bool SNotifyCenter::RegisterEventMap( const IEvtSlot &slot )
 {
 	for(SPOSITION pos = m_evtHandlerMap.GetHeadPosition();pos;)
 	{
-		ISlotFunctor * pSlot = m_evtHandlerMap.GetNext(pos);
-		if(pSlot->Equal(slot)) return false;
+		IEvtSlot * pSlot = m_evtHandlerMap.GetNext(pos);
+		if(pSlot->Equal(&slot)) return false;
 	}
 	m_evtHandlerMap.AddTail(slot.Clone());
 	return true;
 }
 
-bool SNotifyCenter::UnregisterEventMap( const ISlotFunctor &slot )
+bool SNotifyCenter::UnregisterEventMap( const IEvtSlot &slot )
 {
 	for(SPOSITION pos = m_evtHandlerMap.GetHeadPosition();pos;)
 	{
 		SPOSITION posPrev = pos;
-		ISlotFunctor * pSlot = m_evtHandlerMap.GetNext(pos);
-		if(pSlot->Equal(slot))
+		IEvtSlot * pSlot = m_evtHandlerMap.GetNext(pos);
+		if(pSlot->Equal(&slot))
 		{
 			m_evtHandlerMap.RemoveAt(posPrev);
-			delete pSlot;
+			pSlot->Release();
 			return true;
 		}
 	}

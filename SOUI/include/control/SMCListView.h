@@ -90,7 +90,7 @@ namespace SOUI
         void onDataSetInvalidated();
         void onItemDataChanged(int iItem);
     protected:
-        bool OnItemClick(IEvtArgs *pEvt);
+        BOOL OnItemClick(IEvtArgs *pEvt);
 
     protected:
         virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
@@ -190,7 +190,7 @@ namespace SOUI
         *
         * Describe  列表头单击事件
         */
-        bool            OnHeaderClick(IEvtArgs *pEvt);
+        BOOL            OnHeaderClick(IEvtArgs *pEvt);
         /**
         * SMCListView::OnHeaderSizeChanging
         * @brief    列表头大小改变
@@ -198,7 +198,7 @@ namespace SOUI
         *
         * Describe  列表头大小改变
         */
-        bool            OnHeaderSizeChanging(IEvtArgs *pEvt);
+        BOOL            OnHeaderSizeChanging(IEvtArgs *pEvt);
         /**
         * SMCListView::OnHeaderSwap
         * @brief    列表头交换
@@ -206,7 +206,7 @@ namespace SOUI
         *
         * Describe  列表头交换
         */
-        bool            OnHeaderSwap(IEvtArgs *pEvt);
+        BOOL            OnHeaderSwap(IEvtArgs *pEvt);
 
         /**
         * SMCListView::GetListRect

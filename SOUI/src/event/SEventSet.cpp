@@ -21,28 +21,28 @@ namespace SOUI
     }
 
 
-    bool SEvent::subscribe( const ISlotFunctor& slot )
+    bool SEvent::subscribe( const IEvtSlot& slot )
     {
         if(findSlotFunctor(slot) != -1) return false;
         m_evtSlots.Add(slot.Clone());
         return true;
     }
 
-    bool SEvent::unsubscribe( const ISlotFunctor& slot )
+    bool SEvent::unsubscribe( const IEvtSlot& slot )
     {
         int idx=findSlotFunctor(slot);
         if(idx==-1) return false;
 
-        delete m_evtSlots[idx];
+        m_evtSlots[idx]->Release();
         m_evtSlots.RemoveAt(idx);
         return true;
     }
 
-    int SEvent::findSlotFunctor( const ISlotFunctor& slot )
+    int SEvent::findSlotFunctor( const IEvtSlot& slot )
     {
         for(UINT i=0;i<m_evtSlots.GetCount();i++)
         {
-            if(m_evtSlots[i]->Equal(slot))
+            if(m_evtSlots[i]->Equal(&slot))
             {
                 return i;
             }
@@ -56,7 +56,7 @@ namespace SOUI
         // execute all subscribers, updating the 'handled' state as we go
         for (int i=(int)m_evtSlots.GetCount()-1;i>=0; i--)
         {//the latest event handler handles the event first.
-            bool bHandled = (*m_evtSlots[i])(args);
+            BOOL bHandled = m_evtSlots[i]->Run(args);
             if(bHandled)
             {
 				args->IncreaseHandleCount();
@@ -161,20 +161,20 @@ namespace SOUI
         m_evtArr.RemoveAll();
     }
 
-    bool SEventSet::subscribeEvent( const DWORD dwEventID, const ISlotFunctor & subscriber )
+    bool SEventSet::subscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber )
     {
         if(!isEventPresent(dwEventID)) return false;
         return GetEventObject(dwEventID)->subscribe(subscriber);
     }
 
-    bool SEventSet::unsubscribeEvent( const DWORD dwEventID, const ISlotFunctor & subscriber )
+    bool SEventSet::unsubscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber )
     {
         if(!isEventPresent(dwEventID)) return false;
         return GetEventObject(dwEventID)->unsubscribe(subscriber);
     }
 
 #if _MSC_VER >= 1700	//VS2012
-	bool SEventSet::subscribeEvent(DWORD dwEventID, const EventCallback & eventCallback)
+	bool SEventSet::subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback)
 	{
 		if (!isEventPresent(dwEventID)) return false;
 		return GetEventObject(dwEventID)->subscribe(StdFunctionSlot(eventCallback));

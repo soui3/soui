@@ -152,7 +152,7 @@ protected:
 	bool LoadSkin();
 
 	//演示如何使用subscribeEvent来不使用事件映射表实现事件响应
-    bool OnListHeaderClick(IEvtArgs *pEvt);
+    BOOL OnListHeaderClick(IEvtArgs *pEvt);
 
         
     void OnChromeTabNew(IEvtArgs *pEvt);
