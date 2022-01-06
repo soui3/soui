@@ -68,6 +68,7 @@ namespace SOUI
 		STDMETHOD_(void,UpdateChildrenPosition)(THIS) OVERRIDE;
         
 		STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
+		void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
 
         bool OnBtnNewClick(IEvtArgs *pEvt);
         bool OnBtnCloseTabClick(IEvtArgs *pEvt);

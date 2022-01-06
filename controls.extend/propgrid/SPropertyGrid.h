@@ -66,7 +66,7 @@ namespace SOUI
 		void LoadFromXml(SXmlNode data);
 
 		void RemoveAllItems();
-		IPropertyItem * FindItemByName(const SStringT & strName) const;
+		IPropertyItem * FindItemByName(const SStringW & strName) const;
 		IPropertyItem * FindChildById(int nID) const;
 
 		IPropertyItem * CreateItem(const SStringW& strName);

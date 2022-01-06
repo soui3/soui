@@ -535,6 +535,13 @@ void SButton::OnNextFrame()
     Invalidate();
 }
 
+void SButton::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+{
+	if(pOldContainer)
+		pOldContainer->UnregisterTimelineHandler(this);
+	SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+}
+
 //////////////////////////////////////////////////////////////////////////
 SImageButton::SImageButton()
 {
@@ -796,6 +803,13 @@ void SAnimateImgWnd::OnColorize(COLORREF cr)
 {
     __super::OnColorize(cr);
     if(m_pSkin) m_pSkin->OnColorize(cr);
+}
+
+void SAnimateImgWnd::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+{
+	if(pOldContainer)
+		pOldContainer->UnregisterTimelineHandler(this);
+	SWindow::OnContainerChanged(pOldContainer,pNewContainer);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -232,6 +232,15 @@ namespace SOUI
 		}
 	protected:
 
+		virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+		{
+			if(pOldContainer)
+				pOldContainer->UnregisterTimelineHandler(this);
+			if(pNewContainer)
+				pNewContainer->RegisterTimelineHandler(this);
+			SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+		}
+
 		void OnPaint(IRenderTarget *pRT)
 		{
 			CRect rcWnd = GetWindowRect();

@@ -74,6 +74,7 @@ namespace SOUI
 	   virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
 	   bool OnItemHover(IEvtArgs *pEvt);
 	   bool OnItemLeave(IEvtArgs *pEvt);
+	   virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
  
         SOUI_MSG_MAP_BEGIN()
 			MSG_WM_CREATE(OnCreate)

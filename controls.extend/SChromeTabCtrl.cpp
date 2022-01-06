@@ -518,5 +518,15 @@ namespace SOUI
         else
             return NULL;
     }
+
+	void SChromeTabCtrl::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		if(pOldContainer)
+			pOldContainer->UnregisterTimelineHandler(this);
+		if(pNewContainer)
+			pNewContainer->RegisterTimelineHandler(this);
+		SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+	}
+
 }
 

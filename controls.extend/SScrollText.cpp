@@ -137,4 +137,14 @@ namespace SOUI
         GetContainer()->UnregisterTimelineHandler(this);
         SStatic::OnDestroy();
     }
+
+	void SScrollText::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		if(pOldContainer)
+			pOldContainer->UnregisterTimelineHandler(this);
+		if(pNewContainer)
+			pNewContainer->RegisterTimelineHandler(this);
+		SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+	}
+
 }

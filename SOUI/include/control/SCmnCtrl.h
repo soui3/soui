@@ -200,7 +200,8 @@ protected:
      * Describe  状态改变处理函数
      */
     virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
-    
+    virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
+
     void OnPaint(IRenderTarget *pRT);
 
     void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -441,7 +442,7 @@ protected:
 	STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei) OVERRIDE;
 	STDMETHOD_(void,OnNextFrame)(THIS_) OVERRIDE;
     virtual void OnColorize(COLORREF cr);
-    
+	virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
     void OnPaint(IRenderTarget *pRT);
 
     void OnShowWindow(BOOL bShow, UINT nStatus);

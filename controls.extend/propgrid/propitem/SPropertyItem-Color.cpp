@@ -96,7 +96,7 @@ namespace SOUI
 
 		COLORREF crTmp;
 		crTmp = CR_INVALID;
-		SColorParser::ParseValue(strValue,crTmp);
+		SColorParser::ParseValue(S_CT2W(strValue),crTmp);
 		if (m_crValue != crTmp)
 		{
 			m_crValue = crTmp;

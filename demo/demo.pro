@@ -172,3 +172,4 @@ SOURCES += demo.cpp \
 
 RC_FILE += demo.rc
 
+RC_INCLUDEPATH += ..\soui-sys-resource

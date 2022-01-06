@@ -68,6 +68,8 @@ namespace SOUI
 
 		int HitTest(CPoint pt) const;
 
+		void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
+
 	protected:
 
 		ISwndContainer * GetContainer();

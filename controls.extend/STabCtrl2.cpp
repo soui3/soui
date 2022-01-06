@@ -297,5 +297,15 @@ namespace SOUI
         if (wcscmp(xmlPage.name(),STabPage2::GetClassName()) != 0) return NULL;
         return (STabPage *)SApplication::getSingleton().CreateWindowByName(STabPage2::GetClassName());
     }
+
+	void STabCtrl2::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+	{
+		if(pOldContainer)
+			pOldContainer->UnregisterTimelineHandler(this);
+		if(pNewContainer)
+			pNewContainer->RegisterTimelineHandler(this);
+		SWindow::OnContainerChanged(pOldContainer,pNewContainer);
+	}
+
 }
  

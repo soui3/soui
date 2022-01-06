@@ -100,7 +100,7 @@ protected:
 		BOOL bLoad = GetRawBuffer(pszType,pszResName,pBuf,nBufSize);
 		if(bLoad && nBufSize>6)
 		{
-			if(_tcscmp(pszType,L"svg")!=0)
+			if(_tcscmp(pszType,_T("svg"))!=0)
 			{
 				return SApplication::LoadImage(pszType,pszResName);
 			}
@@ -289,14 +289,21 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         theApp->SetAppDir(strResDir);
 #endif
         //加载系统资源
-        HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+#if (defined(LIB_CORE) && defined(LIB_SOUI_COM))
+		HMODULE hSysResource = hInstance;
+#else
+		HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+#endif
         if (hSysResource)
         {
             SAutoRefPtr<IResProvider> sysResProvider;
             CreateResProvider(RES_PE, (IObjRef**)&sysResProvider);
             sysResProvider->Init((WPARAM)hSysResource, 0);
             theApp->LoadSystemNamedResource(sysResProvider);
-            FreeLibrary(hSysResource);
+
+#if !(defined(LIB_CORE) && defined(LIB_SOUI_COM))
+			FreeLibrary(hSysResource);
+#endif
         }
 
         //定义一人个资源提供对象,SOUI系统中实现了3种资源加载方式，分别是从文件加载，从EXE的资源加载及从ZIP压缩包加载
@@ -356,7 +363,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 				}
             }
         }
-#if (defined(DLL_CORE) || defined(LIB_ALL)) && !defined(_WIN64)
+#if (defined(DLL_CORE) || (defined(LIB_CORE) && defined(LIB_SOUI_COM))) && !defined(_WIN64)
         //加载LUA脚本模块，注意，脚本模块只有在SOUI内核是以DLL方式编译时才能使用。
         //bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
         //SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));

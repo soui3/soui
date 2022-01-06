@@ -7,6 +7,7 @@ include_directories(${PROJECT_SOURCE_DIR}/SOUI/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/wke/include)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/mhook/mhook-lib)
 include_directories(${PROJECT_SOURCE_DIR}/third-part/nanosvg/src)
+include_directories(${PROJECT_SOURCE_DIR}/soui-sys-resource)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB_RECURSE CURRENT_HEADERS *.h *.hpp)
@@ -89,6 +90,7 @@ set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/SAniWindow.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/SGroupList.cpp
 )
+
 source_group("Header Files" FILES ${CURRENT_HEADERS})
 source_group("Source Files" FILES ${CURRENT_SRCS})
 source_group("SoUI Resouece" FILES ${CURRENT_SOUIS})

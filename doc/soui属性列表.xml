@@ -160,7 +160,7 @@
     <Attribute name="maxwidth" default="9999" type="INT" comment="窗口最大宽度，根据内容自适应窗口大小时窗口的最大宽度 如(100)"/>
     <Attribute name="maxheight" default="9999" type="INT" comment="窗口最大高度，如(30)"/>
     <Attribute name="clipClient" default="0" type="INT" comment="是否在绘制窗口时限制内容只绘制在客户区，  如果窗口内容绘制时可能超出窗口，则将该属性设置为1 0--不剪裁（默认） 1--剪裁"/>
-    <Attribute name="focusable" default="0" type="INT" comment="窗口是否接受焦点，0--不接受  1--接受（默认）"/>
+    <Attribute name="focusable" default="0" type="INT" comment="窗口是否接受焦点，0--不接受  1--接受  SWindow默认0，Button等默认1"/>
     <Attribute name="float" default="0" type="INT" comment="是否使用绝对定位 ,0--不接受（默认）  1--接受"/>
     <Attribute name="alpha" default="255" type="INT" comment="窗口的alpha值(0-255),如(100)"/>
     <Attribute name="dotted" default="0" type="INT" comment="在文件绘制长度超出客户区时是否使用'...', 0--不使用（默认） 1--使用"/>
