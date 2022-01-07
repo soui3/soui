@@ -17,23 +17,8 @@ DECLARE_INTERFACE_(IHostWnd,IObject)
 
 #undef INTERFACE
 #define INTERFACE IHostDialog
-DECLARE_INTERFACE_(IHostDialog, IObjRef)
+DECLARE_INTERFACE(IHostDialog)
 {
-	//!添加引用
-	/*!
-	*/
-	STDMETHOD_(long,AddRef) (THIS) PURE;
-
-	//!释放引用
-	/*!
-	*/
-	STDMETHOD_(long,Release) (THIS) PURE;
-
-	//!释放对象
-	/*!
-	*/
-	STDMETHOD_(void,OnFinalRelease) (THIS) PURE;
-
 	STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent/*=NULL*/) PURE;
 	STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) PURE;
 	STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) PURE;

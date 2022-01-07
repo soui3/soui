@@ -15,7 +15,7 @@ namespace SOUI
     {
         for(UINT i=0;i<m_evtSlots.GetCount();i++)
         {
-            delete m_evtSlots[i];
+            m_evtSlots[i]->Release();
         }
         m_evtSlots.RemoveAll();
     }

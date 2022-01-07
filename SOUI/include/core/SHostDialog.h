@@ -28,30 +28,6 @@ namespace SOUI
 		STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent=NULL) OVERRIDE;
 		STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) OVERRIDE;
 		STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) OVERRIDE;
-		//!添加引用
-		/*!
-		*/
-		STDMETHOD_(long,AddRef) (THIS) OVERRIDE
-		{
-			return SHostWnd::AddRef();
-		}
-
-		//!释放引用
-		/*!
-		*/
-		STDMETHOD_(long,Release) (THIS) OVERRIDE
-		{
-			return SHostWnd::Release();
-		}
-
-		//!释放对象
-		/*!
-		*/
-		STDMETHOD_(void,OnFinalRelease) (THIS) OVERRIDE
-		{
-			delete this;
-		}
-
     protected:
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
         void OnOK();
