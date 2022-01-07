@@ -15,8 +15,8 @@ BOOL ExpLua_Window(lua_State *L)
         lua_tinker::class_inh<SWindow,IObject>(L);
 		lua_tinker::class_con<SWindow>(L,lua_tinker::constructor<SWindow>);
 		lua_tinker::class_def<SWindow>(L,"GetContainer",(ISwndContainer *(SWindow::*)(void))&SWindow::GetContainer);
-        //lua_tinker::class_def<SWindow>(L,"GetRoot",&SWindow::GetRoot);
-		//lua_tinker::class_def<SWindow>(L,"GetParent",&SWindow::GetParent);
+        lua_tinker::class_def<SWindow>(L,"GetRoot",(SWindow* (SWindow::*)())&SWindow::GetRoot);
+		lua_tinker::class_def<SWindow>(L,"GetParent",(SWindow* (SWindow::*)())&SWindow::GetParent);
 		lua_tinker::class_def<SWindow>(L,"DestroyChild",&SWindow::DestroyChild);
 		lua_tinker::class_def<SWindow>(L,"GetChildrenCount",&SWindow::GetChildrenCount);
 		lua_tinker::class_def<SWindow>(L,"FindChildByID",&SWindow::FindChildByID);
@@ -28,7 +28,7 @@ BOOL ExpLua_Window(lua_State *L)
         lua_tinker::class_def<SWindow>(L,"GetWindowRect2",(CRect (SWindow::*)() const)&SWindow::GetWindowRect);
 		lua_tinker::class_def<SWindow>(L,"GetClientRect",(void (SWindow::*)(LPRECT)const)&SWindow::GetClientRect);
         lua_tinker::class_def<SWindow>(L,"GetClientRect2",(CRect (SWindow::*)()const)&SWindow::GetClientRect);
-		//lua_tinker::class_def<SWindow>(L,"GetWindowText",&SWindow::GetWindowText);
+		lua_tinker::class_def<SWindow>(L,"GetWindowText",(SStringT (SWindow::*)(BOOL))&SWindow::GetWindowText);
 		lua_tinker::class_def<SWindow>(L,"SetWindowText",&SWindow::SetWindowText);
 		lua_tinker::class_def<SWindow>(L,"SendSwndMessage",&SWindow::SSendMessage);
 		lua_tinker::class_def<SWindow>(L,"GetID",&SWindow::GetID);
@@ -54,7 +54,7 @@ BOOL ExpLua_Window(lua_State *L)
         lua_tinker::class_def<SWindow>(L,"Move",(void (SWindow::*)(LPCRECT))&SWindow::Move);
         lua_tinker::class_def<SWindow>(L,"FireCommand",&SWindow::FireCommand);
 		lua_tinker::class_def<SWindow>(L,"GetDesiredSize",(CSize (SWindow::*)(int, int))&SWindow::GetDesiredSize);
-        //lua_tinker::class_def<SWindow>(L,"GetWindow",&SWindow::GetWindow);
+		lua_tinker::class_def<SWindow>(L,"GetWindow",(SWindow *(SWindow::*)(int))&SWindow::GetWindow);
         lua_tinker::class_def<SWindow>(L,"SetWindowRgn",&SWindow::SetWindowRgn);
         lua_tinker::class_def<SWindow>(L,"GetWindowRgn",&SWindow::GetWindowRgn);
 

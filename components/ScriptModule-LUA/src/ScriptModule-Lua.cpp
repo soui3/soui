@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include <event/SEventSlot.h>
 #include "ScriptModule-Lua.h"
-#include "../lua_tinker/lua_tinker.h"
+#include "luatinker.h"
 #include <string/strcpcvt.h>
 
 extern BOOL SOUI_Export_Lua(lua_State *L);

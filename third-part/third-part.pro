@@ -13,13 +13,13 @@ SUBDIRS += png
 SUBDIRS += skia
 SUBDIRS += zlib
 SUBDIRS += lua-52
+SUBDIRS += lua-53
 SUBDIRS += smiley
 SUBDIRS += mhook
 SUBDIRS += 7z
 SUBDIRS += scintilla
 SUBDIRS += sqlite3
 SUBDIRS += jsoncpp
-
 CONFIG(c++11){
 #7z需要c11支持
 	

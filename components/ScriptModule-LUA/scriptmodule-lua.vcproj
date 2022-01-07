@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,src,..\..\third-part\lua-52\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,src,luatinker,..\..\third-part\lua-53\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\..\obj\release\scriptmodule-lua\"
 				DebugInformationFormat="3"
@@ -43,7 +43,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua-52.lib soui3.lib utilities.lib"
+				AdditionalDependencies="lua-53.lib soui3.lib utilities.lib"
 				AdditionalLibraryDirectories="..\..\bin"
 				DataExecutionPrevention="true"
 				EnableCOMDATFolding="2"
@@ -85,7 +85,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,src,..\..\third-part\lua-52\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,src,luatinker,..\..\third-part\lua-53\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\..\obj\debug\scriptmodule-lua\"
 				DebugInformationFormat="3"
@@ -108,7 +108,7 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua-52d.lib soui3d.lib utilitiesd.lib"
+				AdditionalDependencies="lua-53d.lib soui3d.lib utilitiesd.lib"
 				AdditionalLibraryDirectories="..\..\bin"
 				DataExecutionPrevention="true"
 				GenerateDebugInformation="true"
@@ -148,7 +148,7 @@
 			<File
 				RelativePath="src\exports\exp_soui.cpp" />
 			<File
-				RelativePath="lua_tinker\lua_tinker.cpp" />
+				RelativePath="luatinker\luatinker.cpp" />
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -183,7 +183,7 @@
 			<File
 				RelativePath="src\exports\exp_string.h" />
 			<File
-				RelativePath="lua_tinker\lua_tinker.h" />
+				RelativePath="luatinker\luatinker.h" />
 			<File
 				RelativePath="src\require.h" />
 			<File
