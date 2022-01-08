@@ -54,6 +54,7 @@ HEADERS += resource.h \
            include/string/tstring.h \
            include/wtl.mini/msgcrack.h \
            include/wtl.mini/souimisc.h \
+           include/xml/sxml.h \
 
 SOURCES += src/gdialpha.cpp \
            src/soui_mem_wrapper.cpp \
@@ -66,4 +67,5 @@ SOURCES += src/gdialpha.cpp \
            src/string/sstringa.cpp \
            src/string/sstringdata.cpp \
            src/string/sstringw.cpp \
-           src/string/strcpcvt.cpp
+           src/string/strcpcvt.cpp \
+           src/xml/sxml.cpp
