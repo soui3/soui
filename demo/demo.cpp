@@ -208,10 +208,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         if(pComMgr->CreateLog4z((IObjRef**)&pLogMgr) && pLogMgr)
         {
 			//uncomment next line to disable log mgr to output debug string.
-			//pLogMgr->setLoggerDisplay(LOG4Z_MAIN_LOGGER_ID,false);	
+			pLogMgr->setLoggerDisplay(LOG4Z_MAIN_LOGGER_ID,false);	
 			
 			//uncomment next line to record info level log.
-			//pLogMgr->setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,ILog4zManager::LOG_LEVEL_INFO);	
+			pLogMgr->setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_INFO);	
             pLogMgr->start();
         }
         
@@ -365,9 +365,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         }
 #if (defined(DLL_CORE) || (defined(LIB_CORE) && defined(LIB_SOUI_COM))) && !defined(_WIN64)
         //加载LUA脚本模块，注意，脚本模块只有在SOUI内核是以DLL方式编译时才能使用。
-        //bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
-        //SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));
-        //theApp->SetScriptFactory(pScriptLua);
+        bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
+        SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));
+        theApp->SetScriptFactory(pScriptLua);
 #endif//DLL_CORE
 
         

@@ -143,7 +143,8 @@ void SHostWndAttr::SetSendWheel2Hover(bool value)
 
 SRootWindow::SRootWindow(SHostWnd *pHostWnd) :m_pHostWnd(pHostWnd)
 {
-
+	GetEventSet()->addEvent(EVENTID(EventInit));
+	GetEventSet()->addEvent(EVENTID(EventExit));
 }
 
 void SRootWindow::OnAnimationInvalidate(IAnimation *pAni,bool bErase)
@@ -283,8 +284,6 @@ SHostWnd::SHostWnd( LPCTSTR pszResName /*= NULL*/ )
 	m_privateTemplatePool.Attach(new STemplatePool);
     m_pRoot->SetContainer(this);
 	m_hostAnimationHandler.m_pHostWnd=this;
-    GetRoot()->GetEventSet()->addEvent(EVENTID(EventInit));
-    GetRoot()->GetEventSet()->addEvent(EVENTID(EventExit));
 }
 
 SHostWnd::~SHostWnd()

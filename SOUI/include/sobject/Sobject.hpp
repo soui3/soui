@@ -34,13 +34,6 @@ public:
 		return xmlAttr.get_userdata()==1?true:false;
 	}
 
-	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) OVERRIDE
-	{
-		UNREFERENCED_PARAMETER(strAttribName);
-		UNREFERENCED_PARAMETER(strValue);
-		UNREFERENCED_PARAMETER(bLoading);
-		return E_FAIL;
-	}
 
 	STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * pXmlNode ) OVERRIDE
 	{
@@ -91,11 +84,6 @@ public:
 		UNREFERENCED_PARAMETER(strValue);
 		UNREFERENCED_PARAMETER(bLoading);
 		return hr;
-	}
-
-	virtual HRESULT SetAttribute(const SStringW &strAttr,const SStringW & strValue,BOOL bLoading)
-	{
-		return DefAttributeProc(&strAttr, &strValue, bLoading);
 	}
 
 	STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR  pszAttr, LPCSTR  pszValue, BOOL bLoading) OVERRIDE
@@ -156,6 +144,16 @@ public:
 	STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode * xmlNode) OVERRIDE
 	{
 		UNREFERENCED_PARAMETER(xmlNode);
+	}
+
+	virtual HRESULT SetAttribute(const SStringW &strAttr,const SStringW & strValue,BOOL bLoading)
+	{
+		return DefAttributeProc(strAttr, strValue, bLoading);
+	}
+
+	virtual HRESULT DefAttributeProc(const SStringW &strAttr,const SStringW & strValue,BOOL bLoading)
+	{
+		return E_FAIL;
 	}
 
 #ifdef    _DEBUG

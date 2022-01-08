@@ -7,7 +7,7 @@ extern "C"
 #include <lauxlib.h>
 };
 
-#include <luatinker.h>
+#include <lua_tinker.h>
 
 using namespace SOUI;
 
@@ -27,6 +27,7 @@ using namespace SOUI;
 
 BOOL SOUI_Export_Lua(lua_State *L)
 {
+	lua_tinker::init(L);
 	BOOL bRet=TRUE;
 	if(bRet) bRet=ExpLua_Basic(L);
 	if(bRet) bRet=ExpLua_String(L);

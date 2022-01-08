@@ -234,18 +234,6 @@ DECLARE_INTERFACE_(IObject,IObjRef)
 	* Describe  不做处理，直接返回
 	*/    
 	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
-
-	/**
-	* DefAttributeProc
-	* @brief    默认属性处理函数
-	* @param    const SStringW & strAttribName --  属性名
-	* @param	 const SStringW & strValue --属性值
-	* @param    BOOL bLoading -- 从XML初始化标志
-	* @return   HRESULT -- S_OK:刷新UI， S_FALSE:成功但不刷新UI，其它：失败
-	* Describe  在SetAttribute中没有处理一个属性时转到本方法处理。
-	*/  
-	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
-
 };
 
 #ifdef __cplusplus

@@ -145,16 +145,6 @@ DECLARE_INTERFACE_(ILayoutParam,IObject)
 	*/    
 	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
 
-	/**
-	* DefAttributeProc
-	* @brief    默认属性处理函数
-	* @param    const SStringW & strAttribName --  属性名
-	* @param	 const SStringW & strValue --属性值
-	* @param    BOOL bLoading -- 从XML初始化标志
-	* @return   HRESULT -- S_OK:刷新UI， S_FALSE:成功但不刷新UI，其它：失败
-	* Describe  在SetAttribute中没有处理一个属性时转到本方法处理。
-	*/  
-	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
 	STDMETHOD_(void,Clear)(THIS) PURE;
 	STDMETHOD_(BOOL, IsMatchParent)(THIS_ ORIENTATION orientation) SCONST PURE;
@@ -291,16 +281,6 @@ DECLARE_INTERFACE_(ILayout,IObject)
 	*/    
 	STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr) PURE;
 
-	/**
-	* DefAttributeProc
-	* @brief    默认属性处理函数
-	* @param    const SStringW & strAttribName --  属性名
-	* @param	 const SStringW & strValue --属性值
-	* @param    BOOL bLoading -- 从XML初始化标志
-	* @return   HRESULT -- S_OK:刷新UI， S_FALSE:成功但不刷新UI，其它：失败
-	* Describe  在SetAttribute中没有处理一个属性时转到本方法处理。
-	*/  
-	STDMETHOD_(HRESULT,DefAttributeProc)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading) PURE;
 
 	STDMETHOD_(BOOL, IsParamAcceptable)(THIS_ const ILayoutParam *pLayoutParam) SCONST PURE;
 	STDMETHOD_(void,LayoutChildren)(THIS_ IWindow * pParent) PURE;
