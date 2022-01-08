@@ -560,6 +560,7 @@ BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
     m_rgnInvalidate->Clear();
     
     EventInit evt(GetRoot());
+	evt.host = this;
     GetRoot()->FireEvent(evt);
 
 	//handle user xml node
@@ -720,6 +721,7 @@ int SHostWnd::OnCreate( LPCREATESTRUCT lpCreateStruct )
 void SHostWnd::OnDestroy()
 {
     EventExit evt(GetRoot());
+	evt.host = this;
     GetRoot()->FireEvent(evt);
 
     GetRoot()->SSendMessage(WM_DESTROY);

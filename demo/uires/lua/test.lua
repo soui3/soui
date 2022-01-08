@@ -10,11 +10,14 @@ coins_bet = {0,0,0,0} --下注金额
 bet_rate = 4;		--赔率
 prog_max	 = 200;	--最大步数
 prog_all = {0,0,0,0} --马匹进度
-
 function on_init(args)
 	--初始化全局对象
-	win = toHostWnd(args.sender);
-	gamewnd = win:GetRoot():FindChildByNameA("game_wnd",-1);
+	win = getHost(args);
+	if win == nil then
+		return 0;
+	end
+	local root = toSWindow(args:sender());
+	gamewnd = root:FindChildByNameA("game_wnd",-1);
 	gamecanvas = gamewnd:FindChildByNameA("game_canvas",-1);
 	flag_win = gamewnd:FindChildByNameA("flag_win",-1);
 	players = {
@@ -27,7 +30,6 @@ function on_init(args)
 	on_canvas_size(nil);
 
 	math.randomseed(os.time());
-	--SMessageBox(0,T "execute script function: on_init", T "msgbox", 1);
 end
 
 function on_exit(args)
@@ -71,7 +73,9 @@ function on_timer(args)
 			coins_bet = {0,0,0,0};
 
 			local rcPlayer = players[win_id]:GetWindowRect2();
-			local szFlag = flag_win:GetDesiredSize(rcPlayer);
+			local widPlayer = rcPlayer:Width();
+			local heiPlayer = rcPlayer:Height();
+			local szFlag = flag_win:GetDesiredSize(widPlayer,heiPlayer);
 			rcPlayer.right = rcPlayer.left + szFlag.cx;
 			rcPlayer.bottom = rcPlayer.top + szFlag.cy;
 			rcPlayer:OffsetRect(-szFlag.cx,-szFlag.cy/3);
@@ -92,7 +96,7 @@ function on_bet(args)
 		return 1;
 	end
 
-	local btn = toSWindow(args.sender);
+	local btn = toSWindow(args:sender());
 	if coins_all >= 10 then
 	    --id range from 101-104
 		id = btn:GetID()-100;
@@ -115,7 +119,7 @@ function on_canvas_size(args)
 	local heiCanvas = rcCanvas:Height();
 	local widCanvas = rcCanvas:Width();
 
-	local szPlayer = players[1]:GetDesiredSize(rcCanvas);
+	local szPlayer = players[1]:GetDesiredSize(widCanvas,heiCanvas);
 
 	local wid = szPlayer.cx;
 	local hei = szPlayer.cy;
@@ -134,7 +138,9 @@ function on_canvas_size(args)
 	local win_id = flag_win:GetUserData();
 	if win_id ~= 0 then
 		local rcPlayer = players[win_id]:GetWindowRect2();
-		local szFlag = flag_win:GetDesiredSize(rcPlayer);
+		local widPlayer = rcPlayer:Width();
+		local heiPlayer = rcPlayer:Height();
+		local szFlag = flag_win:GetDesiredSize(widPlayer,heiPlayer);
 		flag_win:Move2(rcPlayer.left-szFlag.cx,rcPlayer.top-szFlag.cy/3,-1,-1);
 	end
 
@@ -143,7 +149,10 @@ function on_canvas_size(args)
 end
 
 function on_run(args)
-	local btn = toSWindow(args.sender);
+	if win == nil then
+		return 0;
+	end
+	local btn = toSWindow(args:sender());
 	if tid == 0 then
 		prog_all = {0,0,0,0};
 		on_canvas_size(nil);

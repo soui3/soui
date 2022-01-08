@@ -18,8 +18,8 @@ else{
 DEPENDPATH += . exports
 INCLUDEPATH += . \
 			   ./src \
-			   ./luatinker \
-			   ../../third-part/lua-53/src \
+			   ./lua_tinker \
+			   ../../third-part/lua-52/src \
 			   ../../soui/include \
 			   ../../utilities/include \
 
@@ -29,10 +29,10 @@ include($$dir/common.pri)
 
 
 CONFIG(debug,debug|release){
-	LIBS += lua-53d.lib soui3d.lib utilitiesd.lib
+	LIBS += lua-52d.lib soui3d.lib utilitiesd.lib
 }
 else{
-	LIBS += lua-53.lib soui3.lib utilities.lib
+	LIBS += lua-52.lib soui3.lib utilities.lib
 }
 
 PRECOMPILED_HEADER = src/stdafx.h
@@ -53,9 +53,9 @@ HEADERS += src/require.h \
            src/exports/exp_Window.h \
            src/exports/exp_Object.h \
            src/exports/exp_ctrls.h \
-           luatinker/luatinker.h
+           lua_tinker/lua_tinker.h
 
 SOURCES += src/ScriptModule-Lua.cpp \
            src/exports/exp_soui.cpp \
-           luatinker/luatinker.cpp
+           lua_tinker/lua_tinker.cpp
 
