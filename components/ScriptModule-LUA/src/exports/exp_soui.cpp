@@ -27,7 +27,7 @@ using namespace SOUI;
 
 BOOL SOUI_Export_Lua(lua_State *L)
 {
-	lua_tinker::init(L);
+	//lua_tinker::init(L);
 	BOOL bRet=TRUE;
 	if(bRet) bRet=ExpLua_Basic(L);
 	if(bRet) bRet=ExpLua_String(L);
