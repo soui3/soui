@@ -229,7 +229,7 @@ float SPathInterpolator::getInterpolation(float t) const{
 	}
 	// Do a binary search for the correct x to interpolate between.
 	int startIndex = 0;
-	int endIndex = mPt.GetCount() - 1;
+	int endIndex = (int)mPt.GetCount() - 1;
 
 	while (endIndex - startIndex > 1) {
 		int midIndex = (startIndex + endIndex) / 2;

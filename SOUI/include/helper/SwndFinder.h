@@ -23,7 +23,7 @@ namespace SOUI
 	public:
 		static ULONG Hash(INARGTYPE fi)
 		{
-			ULONG_PTR lRet = 0;
+			ULONG lRet = 0;
 			if(fi.findByName)
 				lRet =SStringElementTraits<SStringW>::Hash(fi.strName);
 			else

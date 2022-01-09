@@ -195,11 +195,11 @@ FontInfo SFontPool::FontInfoFromString(const SStringW &strFontDesc)
 	FontInfo fi;
 	fi.style=0;
 	SArray<SStringW> strLst;
-	int nSeg = SplitString(strFontDesc,KFontPropSeprator,strLst);
+	int nSeg = (int)SplitString(strFontDesc,KFontPropSeprator,strLst);
 	for(int i=0;i<nSeg;i++)
 	{
 		SArray<SStringW> kv;
-		int n = SplitString(strLst[i],KPropSeprator,kv);
+		int n = (int)SplitString(strLst[i],KPropSeprator,kv);
 		if(n!=2) continue;
 		if(kv[0].CompareNoCase(KFontFace)==0)
 		{

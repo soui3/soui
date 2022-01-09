@@ -525,9 +525,9 @@ SArray< E, ETraits > & SArray<E, ETraits>::operator=(const SArray< E, ETraits >&
 template< typename E, class ETraits >
 int SArray<E, ETraits>::Find(const E & target) const
 {
-	for(size_t i=0;i<GetCount();i++)
+	for(UINT i=0;i<GetCount();i++)
 	{
-		if(GetAt(i) == target) return i;
+		if(GetAt(i) == target) return (int)i;
 	}
 	return -1;
 }

@@ -214,7 +214,7 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 				while(p3<p2)
 				{
 					LPCTSTR p4=CharNext(p3);
-					pRT->MeasureText(p3,p4-p3,&szChar);
+					pRT->MeasureText(p3,(int)(p4-p3),&szChar);
 					if(szWord.cx + szChar.cx > nLineWid)
 					{
 						if(p3==p1)
@@ -355,7 +355,7 @@ void SLink::OnMouseMove( UINT nFlags,CPoint pt )
 void SLink::OnMouseHover( WPARAM wParam, CPoint pt )
 {
     if(!m_rcText.PtInRect(pt)) return;
-    __super::OnMouseHover(wParam,pt);
+    SWindow::OnMouseHover((UINT)wParam,pt);
 }
 //////////////////////////////////////////////////////////////////////////
 // Button Control

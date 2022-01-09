@@ -111,7 +111,7 @@ void SAnimationSet::copy(const IAnimation * src)
 
 void SAnimationSet::scaleCurrentDuration(float scale)
 {
-	int count = mAnimations.GetCount();
+	int count = (int)mAnimations.GetCount();
 	for (int i = 0; i < count; i++) {
 		mAnimations[i]->scaleCurrentDuration(scale);
 	}
@@ -133,7 +133,7 @@ bool SAnimationSet::getTransformation(int64_t currentTime, STransformation &t)
 	{
 		return true;
 	}
-	int count = mAnimations.GetCount();
+	int count = (int)mAnimations.GetCount();
 	if (!mChildStarted) {
 		mChildStarted = true;
 		for (int i = count - 1; i >= 0; --i) {
@@ -185,7 +185,7 @@ bool SAnimationSet::getTransformation(int64_t currentTime, STransformation &t)
 
 long SAnimationSet::getDuration() const
 {
-	int count = mAnimations.GetCount();
+	int count = (int)mAnimations.GetCount();
 	long duration = 0;
 
 	bool durationSet = (mFlags & PROPERTY_DURATION_MASK) == PROPERTY_DURATION_MASK;
@@ -231,7 +231,7 @@ bool SAnimationSet::hasAlpha()
 	if (mDirty) {
 		mDirty = mHasAlpha = false;
 
-		int count = mAnimations.GetCount();
+		int count = (int)mAnimations.GetCount();
 		for (int i = 0; i < count; i++) {
 			if (mAnimations.GetAt(i)->hasAlpha()) {
 				mHasAlpha = true;

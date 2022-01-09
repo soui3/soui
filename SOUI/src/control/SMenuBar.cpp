@@ -35,7 +35,7 @@ namespace SOUI
 		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei);
 		BOOL OnCmd(IEvtArgs* e);
 
-		void OnTimer(UINT_PTR timerID);
+		void OnTimer(char timerID);
 
 		SOUI_MSG_MAP_BEGIN()
 			MSG_WM_TIMER(OnTimer)
@@ -147,7 +147,7 @@ namespace SOUI
 		return TRUE;
 	}
 
-	void SMenuBarItem::OnTimer(UINT_PTR timerID)
+	void SMenuBarItem::OnTimer(char timerID)
 	{
 		if (timerID == TIMER_POP)
 		{
@@ -207,7 +207,7 @@ namespace SOUI
 		if (nPos > -1)
 			pNewMenu->SetAttribute(L"accel", SStringW().Format(L"alt+%c", strText[nPos + 1]));
 
-		if (iPos < 0) iPos = m_lstMenuItem.GetCount();
+		if (iPos < 0) iPos = (int)m_lstMenuItem.GetCount();
 		m_lstMenuItem.InsertAt(iPos, pNewMenu);
 
 		pNewMenu->m_iIndex = iPos;
@@ -241,7 +241,7 @@ namespace SOUI
 		if (nPos > -1)
 			pNewMenu->SetAttribute(L"accel", SStringW().Format(L"alt+%c", strText[nPos + 1]));
 
-		if (iPos < 0) iPos = m_lstMenuItem.GetCount();
+		if (iPos < 0) iPos = (int)m_lstMenuItem.GetCount();
 		m_lstMenuItem.InsertAt(iPos, pNewMenu);
 
 		pNewMenu->m_iIndex = iPos;
@@ -265,7 +265,7 @@ namespace SOUI
 			SMenuBarItem* pItem = m_lstMenuItem[i];
 			CRect rcItem = pItem->GetClientRect();
 			if (rcItem.PtInRect(pt))
-				return i;
+				return (int)i;
 		}
 		return -1;
 	}
@@ -307,7 +307,7 @@ namespace SOUI
 			{
 			case WM_MOUSEMOVE:
 			{
-				CPoint pt = msg.lParam;
+				CPoint pt(GET_X_LPARAM(msg.lParam),GET_Y_LPARAM(msg.lParam));
 				if (SMenuBar::m_pMenuBar->m_ptMouse != pt &&
 					SMenuBar::m_pMenuBar->m_iNowMenu != -1)
 				{
@@ -331,13 +331,13 @@ namespace SOUI
 			}
 			case WM_KEYDOWN:
 			{
-				TCHAR vKey = msg.wParam;
+				TCHAR vKey = (TCHAR)msg.wParam;
 				if (SMenuBar::m_pMenuBar->m_iNowMenu == -1)
 					return TRUE;
 				if (vKey == VK_LEFT)
 				{
 					int nRevIndex = SMenuBar::m_pMenuBar->m_iNowMenu - 1;
-					if (nRevIndex < 0) nRevIndex = SMenuBar::m_pMenuBar->m_lstMenuItem.GetCount() - 1;
+					if (nRevIndex < 0) nRevIndex = (int)SMenuBar::m_pMenuBar->m_lstMenuItem.GetCount() - 1;
 					SMenuBarItem* menuItem = SMenuBar::m_pMenuBar->m_lstMenuItem[nRevIndex];
 					if (menuItem)
 					{

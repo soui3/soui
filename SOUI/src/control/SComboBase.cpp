@@ -20,7 +20,7 @@ namespace SOUI
 
     void SComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
     {
-        __super::OnMouseHover(wParam,ptPos);
+        SEdit::OnMouseHover((UINT)wParam,ptPos);
         GetOwner()->SSendMessage(WM_MOUSEHOVER,wParam,MAKELPARAM(ptPos.x,ptPos.y));
     }
 
@@ -610,7 +610,7 @@ namespace SOUI
     {
         SWindow::SetWindowText(pszText);
 		m_pEdit->SetWindowText(pszText);
-		m_nTextLength = _tcslen(pszText);
+		m_nTextLength = (int)_tcslen(pszText);
 	}
 
     void SComboBase::OnKillFocus(SWND wndFocus)
