@@ -1,7 +1,7 @@
 add_subdirectory(zlib)
 add_subdirectory(png)
 add_subdirectory(skia)
-add_subdirectory(lua-52)
+add_subdirectory(lua-53)
 add_subdirectory(mhook)
 add_subdirectory(smiley)
 add_subdirectory(gtest)

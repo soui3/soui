@@ -12,7 +12,6 @@ SUBDIRS += gtest
 SUBDIRS += png
 SUBDIRS += skia
 SUBDIRS += zlib
-SUBDIRS += lua-52
 SUBDIRS += lua-53
 SUBDIRS += smiley
 SUBDIRS += mhook
