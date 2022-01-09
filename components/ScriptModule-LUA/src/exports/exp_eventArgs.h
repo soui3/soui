@@ -13,20 +13,13 @@ EventSwndSize * toEventSize(IEvtArgs *pEvt)
 
 SHostWnd * getHost(IEvtArgs *pEvt)
 {
-	if(pEvt->IsClass(EventInit::GetClassName()))
-	{
-		EventInit *e2 = (EventInit*)pEvt;
-		return sobj_cast<SHostWnd>(e2->host);
-	}
-	else if(pEvt->IsClass(EventExit::GetClassName()))
-	{
-		EventExit *e2 = (EventExit*)pEvt;
-		return sobj_cast<SHostWnd>(e2->host);
-	}else
-	{
+	SRootWindow *pRoot = sobj_cast<SRootWindow>(pEvt->Sender());
+	if(pRoot)
+		return pRoot->GetHostWnd();
+	else
 		return NULL;
-	}
 }
+
 BOOL ExpLua_EventArgs(lua_State *L)
 {
 	try{

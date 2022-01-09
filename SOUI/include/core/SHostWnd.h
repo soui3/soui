@@ -106,6 +106,10 @@ namespace SOUI
 	public:
 		SRootWindow(SHostWnd *pHostWnd);
 
+	public:
+		SHostWnd * GetHostWnd() const;
+	public:
+		STDMETHOD_(void,UpdateLayout)(THIS) OVERRIDE;
 	protected:
 		virtual void OnAnimationInvalidate(IAnimation *pAni,bool bErase);
 		virtual void OnAnimationUpdate(IAnimation *pAni);
@@ -114,7 +118,6 @@ namespace SOUI
 		virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
 		virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
 		virtual BOOL IsLayeredWindow() const{return FALSE;}
-		virtual void WINAPI UpdateLayout();
 		virtual HRESULT OnLanguageChanged(); 
 		virtual void OnScaleChanged(int scale);
 		virtual void RequestRelayout(SWND hSource ,BOOL bSourceResizable );

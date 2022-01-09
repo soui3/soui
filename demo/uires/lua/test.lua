@@ -51,7 +51,7 @@ function on_timer(args)
 		for i = 1,4 do
 			local prog = prog_all[i];
 			if(prog<prog_max) then
-				prog = prog + math.random(0,5);
+				prog = prog + math.random(0,10);
 				prog_all[i] = prog;
 				local rc = players[i]:GetWindowRect2();
 				rc.left = rcCanvas.left + (widCanvas-wid)*prog/prog_max;
@@ -156,7 +156,7 @@ function on_run(args)
 	if tid == 0 then
 		prog_all = {0,0,0,0};
 		on_canvas_size(nil);
-		tid = win:setInterval("on_timer",200);
+		tid = win:setInterval("on_timer",50);
 		btn:SetWindowText(T"stop");
 		flag_win:SetVisible(0,1);
 	else

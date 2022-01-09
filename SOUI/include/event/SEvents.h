@@ -161,11 +161,9 @@ public:\
 #define DEF_EVT_EXT(evt,id,x) DEF_EVENT(evt,id,on_##evt,x,)
 
 DEF_EVT(EventInit, EVT_INIT,on_init,{
-	IObject * host;
 });
 
 DEF_EVT(EventExit, EVT_EXIT,on_exit,{
-	IObject * host;
 });
 
 DEF_EVT(EventTimer, EVT_TIMER, on_timer,{
