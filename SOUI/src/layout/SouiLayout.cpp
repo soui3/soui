@@ -542,7 +542,7 @@ namespace SOUI{
             if(!pChild->IsFloat() && (pChild->IsVisible(FALSE) || pChild->IsDisplay()))
             {//不显示且不占位的窗口不参与计算
                 WndPos wndPos;
-                wndPos.pWnd = (IWindow*)pChild;
+                wndPos.pWnd = (SWindow*)pChild;
                 wndPos.rc = CRect(POS_INIT,POS_INIT,POS_INIT,POS_INIT);
 				const SouiLayoutParam *pParam = (const SouiLayoutParam*)pChild->GetLayoutParam2();
 				wndPos.bWaitOffsetX = pParam->IsOffsetRequired(Horz);
@@ -770,7 +770,7 @@ namespace SOUI{
 		while(pChild)
 		{
 			WndPos wndPos;
-			wndPos.pWnd = pChild;
+			wndPos.pWnd = (SWindow*)pChild;
 			wndPos.rc = CRect(POS_INIT,POS_INIT,POS_INIT,POS_INIT);
 			const SouiLayoutParam *pParam = (const SouiLayoutParam *)pChild->GetLayoutParam2();
 			wndPos.bWaitOffsetX = pParam->IsOffsetRequired(Horz);

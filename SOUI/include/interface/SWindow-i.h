@@ -201,8 +201,6 @@ DECLARE_INTERFACE_(IWindow,IObject)
         */
 		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) PURE;
 
-		STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) PURE;
-
 		
 		/**
         * Move2

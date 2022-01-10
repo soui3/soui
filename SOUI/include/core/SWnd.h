@@ -195,6 +195,9 @@ namespace SOUI
         friend class SHostWnd;
         friend class SwndContainerImpl;
         friend class FocusSearch;
+		friend class SGridLayout;
+		friend class SLinearLayout;
+		friend class SouiLayout;
 
 		class SAnimationHandler : public ITimelineHandler{
 		private:
@@ -458,17 +461,6 @@ namespace SOUI
         * Describe  
         */
 		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int nParentWid, int nParentHei) OVERRIDE;
-
-		/**
-        * OnRelayout
-        * @brief    窗口位置发生变化
-        * @param    const CRect & rcWnd --  新位置
-        * @return   void 
-        *
-        * Describe  窗口位置发生变化,更新窗口及计算子窗口位置
-        */
-		STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) OVERRIDE;
-
 
 		/**
         * Move2
@@ -863,6 +855,16 @@ namespace SOUI
         virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
 
 
+		/**
+        * OnRelayout
+        * @brief    窗口位置发生变化
+        * @param    const CRect & rcWnd --  新位置
+        * @return   void 
+        *
+        * Describe  窗口位置发生变化,更新窗口及计算子窗口位置
+        */
+		virtual BOOL OnRelayout(const CRect & rcWnd);
+
 	public:// Virtual functions
 		virtual SIZE MeasureContent(int nParentWid,int nParentHei);
 
@@ -1142,6 +1144,7 @@ namespace SOUI
 		virtual void DispatchPaint(IRenderTarget *pRT, IRegion *pRgn,UINT iZorderBegin,UINT iZorderEnd);
 
 		virtual COLORREF GetBkgndColor() const;
+
     protected://helper functions
 
 		SWindow* _FindChildByID(int nID, int nDeep);

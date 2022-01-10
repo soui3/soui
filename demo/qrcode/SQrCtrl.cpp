@@ -17,7 +17,7 @@ void SQrCtrl::SetWindowText(LPCTSTR lpszText)
 	CreateQrImg(GetWindowText());
 }
 
-BOOL SQrCtrl::OnRelayout(RECT rcWnd)
+BOOL SQrCtrl::OnRelayout(const CRect & rcWnd)
 {
 	CRect rcOld = GetClientRect();
 	BOOL bRet = __super::OnRelayout(rcWnd);

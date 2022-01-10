@@ -10,9 +10,9 @@ public:
 	~SQrCtrl();
 
 	STDMETHOD_(void,SetWindowText)(THIS_ LPCTSTR lpszText) OVERRIDE;
-	STDMETHOD_(BOOL,OnRelayout)(THIS_ RECT rcWnd) OVERRIDE;
 protected:
 	void CreateQrImg(SStringT strContent);
+	virtual BOOL OnRelayout(const CRect & rcWnd) override;
 
 	void MakeCacheApha(ISkinObj *pSkin, IBitmap *_pBitCache, IBitmap *_pBitMask);
 

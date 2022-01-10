@@ -1480,7 +1480,7 @@ namespace SOUI
 		return bRet;
 	}
 
-	BOOL SWindow::OnRelayout(RECT rcWnd)
+	BOOL SWindow::OnRelayout(const CRect & rcWnd)
 	{
 		if (m_rcWindow.EqualRect(&rcWnd) && m_layoutDirty == dirty_clean)
 			return FALSE;

@@ -341,7 +341,7 @@ namespace SOUI
             offset = 0;
 			for(int iChild = 0;iChild < nChilds;iChild ++)
 			{
-				IWindow *pChild = pChilds[iChild];
+				SWindow *pChild = (SWindow*)pChilds[iChild];
 
                 SLinearLayoutParam *pLinearLayoutParam = (SLinearLayoutParam *)pChild->GetLayoutParam();
 				int nScale = pChild->GetScale();

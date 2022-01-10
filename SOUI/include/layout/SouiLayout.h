@@ -73,7 +73,7 @@ namespace SOUI{
 		STDMETHOD_(SIZE, MeasureChildren)(THIS_ const IWindow * pParent,int nWidth,int nHeight) SCONST OVERRIDE;
     protected:
         struct WndPos{
-            IWindow *pWnd;
+            SWindow *pWnd;
             CRect    rc;
 			bool     bWaitOffsetX;
 			bool	 bWaitOffsetY;

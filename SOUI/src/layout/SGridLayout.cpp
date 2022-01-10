@@ -555,7 +555,7 @@ namespace SOUI
 					pt.x += pCellsWidth[x] + xInter;
 					continue;
 				}
-				IWindow *pCell = pCellsChild[iCell];
+				SWindow *pCell = (SWindow*)pCellsChild[iCell];
 				if(!pCell) break;
 
 				SGridLayoutParam * pLayoutParam = (SGridLayoutParam *)pCell->GetLayoutParam();
