@@ -17,6 +17,9 @@ SNSBEGIN
 #define INTERFACE IApplication
 DECLARE_INTERFACE_(IApplication,IObjRef)
 {
+	STDMETHOD_(void,SetRenderFactory)(THIS_ IRenderFactory * pRenderFac) PURE;
+	STDMETHOD_(void,SetAppInfo)(THIS_ HMODULE hMod,LPCTSTR pszClsName,BOOL bImeApp) PURE;
+
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST PURE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) PURE;
 	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) PURE;
