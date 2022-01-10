@@ -6,7 +6,7 @@ namespace SOUI
 {
     #define RC_INIT 0xcccccccc
 
-    SHostDialog::SHostDialog(LPCTSTR pszXmlName):SHostWnd(pszXmlName),m_nRetCode(RC_INIT)
+    SHostDialog::SHostDialog(LPCTSTR pszXmlName):THostWndProxy<IHostDialog>(pszXmlName),m_nRetCode(RC_INIT)
     {
         SApplication::getSingleton().GetMsgLoopFactory()->CreateMsgLoop(&m_MsgLoop);
     }
@@ -93,11 +93,6 @@ namespace SOUI
 		}
 	}
 
-	IHostWnd* SHostDialog::GetHostWnd(THIS)
-	{
-		return this;
-	}
-
     void SHostDialog::OnOK()
     {
         EndDialog(IDOK);
@@ -121,11 +116,5 @@ namespace SOUI
             }
         }
     }
-
-	HRESULT CreateHostDialog(LPCTSTR pszResID,IHostDialog ** ppRet)
-	{
-		(*ppRet) = new SHostDialog(pszResID);
-		return S_OK;
-	}
 
 }

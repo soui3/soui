@@ -18,7 +18,75 @@
 
 namespace SOUI
 {
-    class SOUI_EXP SHostDialog : public SHostWnd, public IHostDialog
+	template<class T>
+	class THostWndProxy : public T, public SHostWnd
+	{
+	public:
+		THostWndProxy(LPCTSTR pszResId):SHostWnd(pszResId){}
+
+	public:
+
+		STDMETHOD_(long,AddRef) (THIS) {return SHostWnd::AddRef();}
+		STDMETHOD_(long,Release) (THIS) {return SHostWnd::Release();}
+		STDMETHOD_(void,OnFinalRelease) (THIS) {SHostWnd::OnFinalRelease();}
+		STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST {return SHostWnd::IsClass(lpszName);}
+		STDMETHOD_(LPCWSTR,GetObjectClass)(THIS) SCONST {return SHostWnd::GetObjectClass();}
+		STDMETHOD_(int,GetObjectType)(THIS)  SCONST {return SHostWnd::GetObjectType();}
+		STDMETHOD_(int,GetID)(THIS) SCONST {return SHostWnd::GetID();}
+		STDMETHOD_(void,SetID)(THIS_ int nID) {return SHostWnd::SetID(nID);}
+		STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST {return SHostWnd::GetName();}
+		STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) {return SHostWnd::SetName(pszName);}
+		STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) {return SHostWnd::InitFromXml(xmlNode);}
+		STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) {return SHostWnd::OnInitFinished(xmlNode);}
+		STDMETHOD_(HRESULT,SetAttributeA)(THIS_ const IStringA * strAttribName, const IStringA *  strValue, BOOL bLoading) {
+			return SHostWnd::SetAttributeA(strAttribName,strValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttributeW)(THIS_ const IStringW *  strAttribName, const IStringW *  strValue, BOOL bLoading)
+		{
+			return SHostWnd::SetAttributeW(strAttribName,strValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR pszAttr, LPCSTR pszValue, BOOL bLoading)
+		{
+			return SHostWnd::SetAttribute(pszAttr,pszValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttributeW)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading)
+		{
+			return SHostWnd::SetAttributeW(pszAttr,pszValue,bLoading);
+		}
+		STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST
+		{
+			return SHostWnd::GetAttribute(strAttr,pValue);
+		}
+		STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr)
+		{
+			return SHostWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
+		}
+
+		STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) OVERRIDE
+		{
+			SHostWnd::SetLayoutId(pszLayoutId);
+		}
+		STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE
+		{
+			return SHostWnd::Create(hWndParent,dwExStyle,dwExStyle,x,y,nWidth,nHeight);
+		}
+
+		STDMETHOD_(BOOL,Destroy)(THIS) OVERRIDE
+		{
+			return SHostWnd::Destroy();
+		}
+		STDMETHOD_(IWindow*,GetIRoot)(THIS) OVERRIDE
+		{
+			return SHostWnd::GetIRoot();
+		}
+
+		STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
+		{
+			return SHostWnd::GetHwnd();
+		}
+	};
+
+    class SOUI_EXP SHostDialog : public THostWndProxy<IHostDialog>
     {
     public:
         SHostDialog(LPCTSTR pszXmlName = NULL);
@@ -27,7 +95,6 @@ namespace SOUI
 	public:
 		STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent=NULL) OVERRIDE;
 		STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) OVERRIDE;
-		STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) OVERRIDE;
     protected:
         void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
         void OnOK();
@@ -50,7 +117,5 @@ namespace SOUI
         
         SAutoRefPtr<IMessageLoop> m_MsgLoop;
     };
-
-	EXTERN_C HRESULT CreateHostDialog(LPCTSTR pszResID,IHostDialog ** ppRet);
 
 }

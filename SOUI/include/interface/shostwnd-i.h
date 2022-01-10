@@ -17,9 +17,8 @@ DECLARE_INTERFACE_(IHostWnd,IObject)
 
 #undef INTERFACE
 #define INTERFACE IHostDialog
-DECLARE_INTERFACE(IHostDialog)
+DECLARE_INTERFACE_(IHostDialog,IHostWnd)
 {
-	STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) PURE;
 	STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent/*=NULL*/) PURE;
 	STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) PURE;
 };
