@@ -94,7 +94,7 @@ namespace SOUI
 		for (SXmlNode xmlChild = xmlNode.first_child(); xmlChild; xmlChild = xmlChild.next_sibling())
 		{
 			SStringW strTempName = xmlChild.name();
-			SStringW strValue = xmlChild.ToString();
+			SStringW strValue = xmlChild.first_child().ToString();
 			AddKeyObject(strTempName, strValue);
 		}
 		return TRUE;
