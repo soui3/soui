@@ -19,9 +19,9 @@ DECLARE_INTERFACE_(IHostWnd,IObject)
 #define INTERFACE IHostDialog
 DECLARE_INTERFACE(IHostDialog)
 {
+	STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) PURE;
 	STDMETHOD_(INT_PTR,DoModal)(THIS_ HWND hParent/*=NULL*/) PURE;
 	STDMETHOD_(void,EndDialog)(THIS_ INT_PTR nResult) PURE;
-	STDMETHOD_(IHostWnd*,GetHostWnd)(THIS) PURE;
 };
 
 SNSEND

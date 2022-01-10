@@ -50,8 +50,8 @@ BOOL ExpLua_Window(lua_State *L)
 		lua_tinker::class_def<SWindow>(L,"Invalidate",&SWindow::Invalidate);
         lua_tinker::class_def<SWindow>(L,"InvalidateRect",(void (SWindow::*)(LPCRECT))&SWindow::InvalidateRect);
         lua_tinker::class_def<SWindow>(L,"GetScriptModule",&SWindow::GetScriptModule);
-        lua_tinker::class_def<SWindow>(L,"Move2",(void (UAPI SWindow::*)(int,int,int,int))&SWindow::Move);
-        lua_tinker::class_def<SWindow>(L,"Move",(void (UAPI SWindow::*)(LPCRECT))&SWindow::Move);
+        lua_tinker::class_def<SWindow>(L,"Move2",&SWindow::Move2);
+        lua_tinker::class_def<SWindow>(L,"Move",&SWindow::Move);
         lua_tinker::class_def<SWindow>(L,"FireCommand",&SWindow::FireCommand);
 		lua_tinker::class_def<SWindow>(L,"GetDesiredSize",&SWindow::GetDesiredSize);
 		lua_tinker::class_def<SWindow>(L,"GetWindow",(SWindow *(SWindow::*)(int))&SWindow::GetWindow);

@@ -314,7 +314,7 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::Move(int x,int y, int cx/*=-1*/,int cy/*=-1*/)
+	void SWindow::Move2(int x,int y, int cx/*=-1*/,int cy/*=-1*/)
 	{
 		CRect rcWnd = GetWindowRect();
 		if(cx==-1) cx=rcWnd.Width();

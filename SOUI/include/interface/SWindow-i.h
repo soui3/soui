@@ -74,7 +74,6 @@ DECLARE_INTERFACE_(IWindow,IObject)
 	STDMETHOD_(void,UnlockUpdate)(THIS) PURE;
 	STDMETHOD_(BOOL,IsUpdateLocked)(THIS) SCONST PURE;
 	STDMETHOD_(void,Update)(THIS) PURE;
-	STDMETHOD_(void,Move)(THIS_ LPCRECT prect) PURE;
 	STDMETHOD_(void,SetWindowRgn)(THIS_ IRegion *pRgn,BOOL bRedraw) PURE;
 	STDMETHOD_(IRegion*,GetWindowRgn)(THIS) SCONST PURE;
 	STDMETHOD_(void,SetWindowPath)(THIS_ IPath *pPath,BOOL bRedraw) PURE;
@@ -206,7 +205,7 @@ DECLARE_INTERFACE_(IWindow,IObject)
 
 		
 		/**
-        * Move
+        * Move2
         * @brief    将窗口移动到指定位置
         * @param    int x --  left
         * @param    int y --  top
@@ -217,8 +216,9 @@ DECLARE_INTERFACE_(IWindow,IObject)
         * Describe 
         * @see     Move(LPRECT prect)
         */
-        STDMETHOD_(void,Move)(THIS_ int x,int y, int cx,int cy) PURE;
+        STDMETHOD_(void,Move2)(THIS_ int x,int y, int cx,int cy) PURE;
 		
+		STDMETHOD_(void,Move)(THIS_ LPCRECT prect) PURE;
 
         /**
         * SetTimer2

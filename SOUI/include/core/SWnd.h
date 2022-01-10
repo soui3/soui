@@ -471,7 +471,7 @@ namespace SOUI
 
 
 		/**
-        * Move
+        * Move2
         * @brief    将窗口移动到指定位置
         * @param    int x --  left
         * @param    int y --  top
@@ -482,7 +482,7 @@ namespace SOUI
         * Describe 
         * @see     Move(LPRECT prect)
         */
-        STDMETHOD_(void,Move)(THIS_ int x,int y, int cx=-1,int cy=-1) OVERRIDE;
+        STDMETHOD_(void,Move2)(THIS_ int x,int y, int cx=-1,int cy=-1) OVERRIDE;
 		
 
         /**
