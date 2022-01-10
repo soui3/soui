@@ -8,6 +8,8 @@
 #include <interface/smsgloop-i.h>
 #include <interface/shostwnd-i.h>
 #include <interface/SResProviderMgr-i.h>
+#include <interface/SRealWndHandler-i.h>
+#include <interface/SRender-i.h>
 SNSBEGIN
 
 
@@ -40,6 +42,32 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
 	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID) SCONST PURE;
 
 	STDMETHOD_(IResProviderMgr*,GetResProviderMgr)(THIS) PURE;
+
+	/**
+     * GetRealWndHander
+     * @brief    获得RealWndHander
+     * @return   IRealWndHandler * -- RealWndHander
+     * Describe  
+     */    	    
+    STDMETHOD_(IRealWndHandler *, GetRealWndHander)(THIS) PURE;
+
+    /**
+     * SetRealWndHandler
+     * @brief    设置RealWnd处理接口
+     * @param    IRealWndHandler * pRealHandler --  RealWnd处理接口
+     * @return   void
+     * Describe  
+     */    
+    STDMETHOD_(void,SetRealWndHandler)(THIS_ IRealWndHandler *pRealHandler) PURE;
+
+	/**
+     * GetRenderFactory
+     * @brief    获得当前的渲染模块
+     * @return   IRenderFactory * 渲染模块指针
+     *
+     * Describe  
+     */
+    STDMETHOD_(IRenderFactory *, GetRenderFactory)(THIS) PURE;
 };
 
 typedef IApplication * IApplicationPtr;

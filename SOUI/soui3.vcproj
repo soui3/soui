@@ -349,6 +349,8 @@
 			<File
 				RelativePath="include\msaa\SAccProxyWindow.h" />
 			<File
+				RelativePath="include\interface\SAccelerator-i.h" />
+			<File
 				RelativePath="include\core\SAccelerator.h" />
 			<File
 				RelativePath="include\control\SActiveX.h" />
@@ -424,6 +426,8 @@
 				RelativePath="include\event\SEventSlot.h" />
 			<File
 				RelativePath="include\event\SEvents.h" />
+			<File
+				RelativePath="include\interface\SEvtArgs-i.h" />
 			<File
 				RelativePath="include\matrix\SFloat.h" />
 			<File
@@ -519,7 +523,7 @@
 			<File
 				RelativePath="include\control\SRealWnd.h" />
 			<File
-				RelativePath="include\control\SRealWndHandler-i.h" />
+				RelativePath="include\interface\SRealWndHandler-i.h" />
 			<File
 				RelativePath="include\matrix\SRect.h" />
 			<File
@@ -530,6 +534,8 @@
 				RelativePath="include\interface\SResProvider-i.h" />
 			<File
 				RelativePath="include\res.mgr\SResProvider.h" />
+			<File
+				RelativePath="include\interface\SResProviderMgr-i.h" />
 			<File
 				RelativePath="include\res.mgr\SResProviderMgr.h" />
 			<File
@@ -611,6 +617,8 @@
 			<File
 				RelativePath="include\valueAnimator\SValueAnimator.h" />
 			<File
+				RelativePath="include\interface\SWindow-i.h" />
+			<File
 				RelativePath="include\core\SWindowMgr.h" />
 			<File
 				RelativePath="include\core\SWnd.h" />
@@ -618,6 +626,8 @@
 				RelativePath="include\core\SWndAccessible.h" />
 			<File
 				RelativePath="include\core\SWndContainer-i.h" />
+			<File
+				RelativePath="include\interface\SWndContainer-i.h" />
 			<File
 				RelativePath="include\core\SWndContainerImpl.h" />
 			<File
@@ -649,7 +659,11 @@
 			<File
 				RelativePath="include\interface\saccproxy-i.h" />
 			<File
+				RelativePath="include\interface\sapp-i.h" />
+			<File
 				RelativePath="include\interface\scaret-i.h" />
+			<File
+				RelativePath="include\interface\shostwnd-i.h" />
 			<File
 				RelativePath="include\interface\sinterpolator-i.h" />
 			<File
@@ -660,6 +674,8 @@
 				RelativePath="include\interface\slog-i.h" />
 			<File
 				RelativePath="include\helper\slog.h" />
+			<File
+				RelativePath="include\interface\smsgloop-i.h" />
 			<File
 				RelativePath="include\interface\sobject-i.h" />
 			<File

@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "souistd.h"
-#include "control/Srealwnd.h"
-#include "control/SRealWndHandler-i.h"
+#include <souistd.h>
+#include <control/Srealwnd.h>
+#include <interface/SRealWndHandler-i.h>
 
 namespace SOUI
 {

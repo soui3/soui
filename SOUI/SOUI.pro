@@ -68,7 +68,6 @@ HEADERS += include/SApp.h \
            include/control/SMessageBox.h \
            include/control/SouiCtrls.h \
            include/control/SRealWnd.h \
-           include/control/SRealWndHandler-i.h \
            include/control/SRichEdit.h \
            include/control/SScrollbar.h \
            include/control/SSliderBar.h \
@@ -167,6 +166,15 @@ HEADERS += include/SApp.h \
            include/interface/STranslator-i.h \
            include/interface/STreeViewItemLocator-i.h \
            include/interface/SValueAnimator-i.h \
+           include/interface/SRealWndHandler-i.h \
+           include/interface/SAccelerator-i.h \
+           include/interface/SEvtArgs-i.h \
+           include/interface/shostwnd-i.h \
+           include/interface/sapp-i.h \
+           include/interface/smsgloop-i.h \
+           include/interface/SResProviderMgr-i.h \
+           include/interface/SWindow-i.h \
+           include/interface/SWndContainer-i.h \
            include/layout/SGridLayout.h \
            include/layout/SGridLayoutParamStruct.h \
            include/layout/SLayoutSize.h \

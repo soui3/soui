@@ -14,16 +14,9 @@
 #pragma once
 #include <core/ssingleton.h>
 #include <interface/sapp-i.h>
-#include <interface/SRender-i.h>
 #include <interface/SScriptModule-i.h>
-#include <interface/STranslator-i.h>
-#include <interface/STooltip-i.h>
-#include <interface/SLog-i.h>
-#include <interface/SAttrStorage-i.h>
-#include <interface/SInterpolator-i.h>
 #include <interface/SAnimation-i.h>
 #include <interface/SValueAnimator-i.h>
-#include <control/SRealWndHandler-i.h>
 
 #include <res.mgr/SResProviderMgr.h>
 #include <res.mgr/SNamedValue.h>
@@ -132,6 +125,13 @@ public:
 	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID = ::GetCurrentThreadId()) SCONST OVERRIDE;
 	
 	STDMETHOD_(IResProviderMgr*,GetResProviderMgr)(THIS) OVERRIDE;
+
+	STDMETHOD_(IRealWndHandler *, GetRealWndHander)(THIS) OVERRIDE;
+
+	STDMETHOD_(void,SetRealWndHandler)(THIS_ IRealWndHandler *pRealHandler) OVERRIDE;
+
+	STDMETHOD_(IRenderFactory *, GetRenderFactory)(THIS) OVERRIDE;
+
 public:
     /**
      * Init
@@ -159,14 +159,6 @@ public:
 	IAnimation * LoadAnimation(const SStringT &strResId);
 
 	IValueAnimator *LoadValueAnimator(const SStringT &strResId);
-    /**
-     * GetRenderFactory
-     * @brief    获得当前的渲染模块
-     * @return   IRenderFactory * 渲染模块指针
-     *
-     * Describe  
-     */
-    IRenderFactory * GetRenderFactory();
     
     /**
      * GetScriptModule
@@ -188,26 +180,6 @@ public:
      */
     void SetScriptFactory(IScriptFactory *pScriptModule);
     
-        
-
-    
-    /**
-     * GetRealWndHander
-     * @brief    获得RealWndHander
-     * @return   IRealWndHandler * -- RealWndHander
-     * Describe  
-     */    
-    IRealWndHandler * GetRealWndHander();
-
-    /**
-     * SetRealWndHandler
-     * @brief    设置RealWnd处理接口
-     * @param    IRealWndHandler * pRealHandler --  RealWnd处理接口
-     * @return   void
-     * Describe  
-     */    
-    void SetRealWndHandler(IRealWndHandler *pRealHandler);
-
     void SetAppDir(const SStringT & strAppDir);
 
     SStringT GetAppDir()const;
