@@ -24,6 +24,8 @@ public:
 	STDMETHOD_(IResProvider *,GetHeadResProvider)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(IResProvider *,GetTailResProvider)(THIS) SCONST OVERRIDE;
 
+	STDMETHOD_(void,SetFilePrefix)(THIS_ LPCTSTR pszFilePrefix) OVERRIDE;
+
 	//////////////////////////////////////////////////////////////////////////
 	STDMETHOD_(BOOL,HasResource)(THIS_ LPCTSTR pszType,LPCTSTR pszResName) OVERRIDE;
 
@@ -40,9 +42,6 @@ public:
 	STDMETHOD_(size_t,GetRawBufferSize)(THIS_ LPCTSTR pszType,LPCTSTR pszResName) OVERRIDE;
 
 	STDMETHOD_(BOOL,GetRawBuffer)(THIS_ LPCTSTR pszType,LPCTSTR pszResName,LPVOID pBuf,size_t size) OVERRIDE;
-
-        
-		void SetFilePrefix(LPCTSTR pszFilePrefix);
 
 public:
 	//从字符串返回颜色值，字符串可以是：@color/red (red是在资源包中的颜色表定义的颜色名)，也可以是rgba(r,g,b,a)，也可以是rgb(r,g,b)，还可以是#ff0000(ff)这样的格式

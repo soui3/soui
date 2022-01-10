@@ -7,18 +7,14 @@
 #include <interface/SAttrStorage-i.h>
 #include <interface/smsgloop-i.h>
 #include <interface/shostwnd-i.h>
-
+#include <interface/SResProviderMgr-i.h>
 SNSBEGIN
 
 
 #undef INTERFACE
 #define INTERFACE IApplication
-DECLARE_INTERFACE(IApplication)
+DECLARE_INTERFACE_(IApplication,IObjRef)
 {
-	STDMETHOD_(HRESULT,NewHostWnd)(THIS_ IHostWnd ** ppHostWnd) PURE;
-
-	STDMETHOD_(HRESULT,NewHostDialog)(THIS_ IHostWnd ** ppHostDialog) PURE;
-
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST PURE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) PURE;
 	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) PURE;
@@ -43,6 +39,7 @@ DECLARE_INTERFACE(IApplication)
 
 	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID) SCONST PURE;
 
+	STDMETHOD_(IResProviderMgr*,GetResProviderMgr)(THIS) PURE;
 };
 
 typedef IApplication * IApplicationPtr;

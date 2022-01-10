@@ -16,6 +16,8 @@ DECLARE_INTERFACE(IResProviderMgr)
 	STDMETHOD_(IResProvider *,GetHeadResProvider)(THIS) SCONST PURE;
 	STDMETHOD_(IResProvider *,GetTailResProvider)(THIS) SCONST PURE;
 
+	STDMETHOD_(void,SetFilePrefix)(THIS_ LPCTSTR pszFilePrefix) PURE;
+
 	//////////////////////////////////////////////////////////////////////////
 	STDMETHOD_(BOOL,HasResource)(THIS_ LPCTSTR pszType,LPCTSTR pszResName) PURE;
 

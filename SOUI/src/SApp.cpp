@@ -645,16 +645,9 @@ IMessageLoop* SApplication::GetMsgLoop(DWORD dwThreadID /*= ::GetCurrentThreadId
 	return p->m_value;
 }
 
-HRESULT SApplication::NewHostWnd(THIS_ IHostWnd ** ppHostWnd)
+IResProviderMgr* SApplication::GetResProviderMgr(THIS)
 {
-	*ppHostWnd = new SHostWnd();
-	return S_OK;
-}
-
-HRESULT SApplication::NewHostDialog(THIS_ IHostWnd ** ppHostDialog)
-{
-	*ppHostDialog = new SHostDialog();
-	return S_OK;
+	return this;
 }
 
 

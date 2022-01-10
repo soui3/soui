@@ -87,7 +87,7 @@ public:
  * Describe   SOUI Application
  */
 class SOUI_EXP SApplication :public SSingleton<SApplication>
-							,public IApplication
+							,public TObjRefImpl<IApplication>
                             ,public SResProviderMgr
 	                        ,public SObjectFactoryMgr
 {
@@ -107,10 +107,6 @@ public:
     ~SApplication(void);
 
 public:
-	STDMETHOD_(HRESULT,NewHostWnd)(THIS_ IHostWnd ** ppHostWnd) OVERRIDE;
-
-	STDMETHOD_(HRESULT,NewHostDialog)(THIS_ IHostWnd ** ppHostDialog) OVERRIDE;
-
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST OVERRIDE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) OVERRIDE;
 	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) OVERRIDE;
@@ -134,7 +130,8 @@ public:
 	STDMETHOD_(BOOL,RemoveMsgLoop)(THIS) OVERRIDE;
 
 	STDMETHOD_(IMessageLoop*,GetMsgLoop)(THIS_ DWORD dwThreadID = ::GetCurrentThreadId()) SCONST OVERRIDE;
-    
+	
+	STDMETHOD_(IResProviderMgr*,GetResProviderMgr)(THIS) OVERRIDE;
 public:
     /**
      * Init
