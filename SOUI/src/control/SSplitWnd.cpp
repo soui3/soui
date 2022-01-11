@@ -108,7 +108,7 @@ namespace SOUI
 
     void SSplitWnd::OnLButtonDown( UINT nFlags,CPoint pt )
     {
-        __super::OnLButtonDown(nFlags,pt);
+        __baseCls::OnLButtonDown(nFlags,pt);
 
         if (!m_bAdjustable) return;
 
@@ -138,7 +138,7 @@ namespace SOUI
 
     void SSplitWnd::OnLButtonUp( UINT nFlags,CPoint pt )
     {
-        __super::OnLButtonUp(nFlags,pt);
+        __baseCls::OnLButtonUp(nFlags,pt);
         m_iDragSep = -1;
     }
 

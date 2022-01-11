@@ -426,7 +426,7 @@ namespace SOUI
 		SXmlNode xmlItems = xmlNode.child(L"items");
 		if(xmlItems)
 			xmlItems.set_userdata(1);
-		__super::CreateChildren(xmlNode);
+		__baseCls::CreateChildren(xmlNode);
 
 		if (!xmlItems) return FALSE;
 		SXmlNode xmlItem = xmlItems.child(L"item");
@@ -648,14 +648,14 @@ namespace SOUI
 
 	void SHeaderCtrl::OnColorize(COLORREF cr)
 	{
-		__super::OnColorize(cr);
+		__baseCls::OnColorize(cr);
 		if (m_pSkinItem) m_pSkinItem->OnColorize(cr);
 		if (m_pSkinSort) m_pSkinSort->OnColorize(cr);
 	}
 
 	HRESULT SHeaderCtrl::OnLanguageChanged()
 	{
-		__super::OnLanguageChanged();
+		__baseCls::OnLanguageChanged();
 		for (UINT i = 0; i < m_arrItems.GetCount(); i++)
 		{
 			m_arrItems[i].strText.TranslateText();
@@ -680,7 +680,7 @@ namespace SOUI
 
 	BOOL SHeaderCtrl::OnRelayout(const CRect & rcWnd)
 	{
-		BOOL bRet = __super::OnRelayout(rcWnd);
+		BOOL bRet = __baseCls::OnRelayout(rcWnd);
 		if (bRet)
 		{
 			EventHeaderRelayout e(this);

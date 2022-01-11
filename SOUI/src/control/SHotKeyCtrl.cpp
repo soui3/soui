@@ -20,7 +20,7 @@ SHotKeyCtrl::~SHotKeyCtrl(void)
 
 void SHotKeyCtrl::OnLButtonDown( UINT nFlags,CPoint pt )
 {
-    __super::OnLButtonDown(nFlags,pt);
+    __baseCls::OnLButtonDown(nFlags,pt);
     GetContainer()->OnSetSwndFocus(m_swnd);
 }
 
@@ -80,7 +80,7 @@ void SHotKeyCtrl::OnSetFocus(SWND wndOld)
 	GetContainer()->EnableIME(FALSE);
 	ShowCaret(TRUE);
     
-    __super::OnSetFocus(wndOld);
+    __baseCls::OnSetFocus(wndOld);
     
 }
 
@@ -88,7 +88,7 @@ void SHotKeyCtrl::OnKillFocus(SWND wndFocus)
 {
 	ShowCaret(FALSE);
 	GetContainer()->EnableIME(TRUE);
-    __super::OnKillFocus(wndFocus);
+    __baseCls::OnKillFocus(wndFocus);
 }
 
 void SHotKeyCtrl::UpdateModifier()

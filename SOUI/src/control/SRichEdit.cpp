@@ -636,7 +636,7 @@ SRichEdit::SRichEdit()
 
 int SRichEdit::OnCreate( LPVOID )
 {
-    if(0 != __super::OnCreate(NULL)) return 1;
+    if(0 != __baseCls::OnCreate(NULL)) return 1;
 
     InitDefaultCharFormat(&m_cfDef);
     InitDefaultParaFormat(&m_pfDef);
@@ -690,7 +690,7 @@ void SRichEdit::OnDestroy()
         m_pTxtHost->Release();
         m_pTxtHost=NULL;
     }
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 
@@ -749,7 +749,7 @@ void SRichEdit::OnPaint( IRenderTarget * pRT )
 
 void SRichEdit::OnSetFocus(SWND wndOld)
 {
-    __super::OnSetFocus(wndOld);
+    __baseCls::OnSetFocus(wndOld);
 
     if(m_pTxtHost && IsVisible(TRUE) && !IsDisabled(TRUE))
     {
@@ -772,7 +772,7 @@ void SRichEdit::OnKillFocus(SWND wndFocus)
 		GetContainer()->EnableIME(TRUE);
 	}
 
-    __super::OnKillFocus(wndFocus);
+    __baseCls::OnKillFocus(wndFocus);
     if(m_pTxtHost)
     {
         m_pTxtHost->m_fUiActive=FALSE;
@@ -792,7 +792,7 @@ void SRichEdit::OnTimer( char idEvent )
     }
     else
     {
-        __super::OnTimer(idEvent);
+        __baseCls::OnTimer(idEvent);
     }
 }
 
@@ -872,7 +872,7 @@ BOOL SRichEdit::SwndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & lResul
             return TRUE;
         }
     }
-    return __super::SwndProc(uMsg,wParam,lParam,lResult);
+    return __baseCls::SwndProc(uMsg,wParam,lParam,lResult);
 }
 
 HRESULT SRichEdit::InitDefaultCharFormat( CHARFORMAT2W* pcf ,IFont *pFont)
@@ -1201,7 +1201,7 @@ void SRichEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 LRESULT SRichEdit::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
 {
-    __super::OnNcCalcSize(bCalcValidRects,lParam);
+    __baseCls::OnNcCalcSize(bCalcValidRects,lParam);
     
 
     CRect rcInsetPixel = GetStyle().GetPadding();
@@ -1568,7 +1568,7 @@ DWORD SRichEdit::LoadRtf( LPCTSTR pszFileName )
 
 void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-    __super::OnShowWindow(bShow,nStatus);
+    __baseCls::OnShowWindow(bShow,nStatus);
     if(!IsVisible(TRUE))
     {//防止正在编辑时隐藏了cursor
         HWND hHost = GetContainer()->GetHostHwnd();
@@ -1578,19 +1578,19 @@ void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
 
 void SRichEdit::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	OnSetFont(NULL,FALSE);//更新默认字体
 }
 
 void SRichEdit::OnRebuildFont()
 {
-	__super::OnRebuildFont();
+	__baseCls::OnRebuildFont();
 	OnSetFont(NULL,FALSE);//更新默认字体
 }
 
 void SRichEdit::OnEnable(BOOL bEnable, UINT nStatus)
 {
-	__super::OnEnable(bEnable, nStatus);
+	__baseCls::OnEnable(bEnable, nStatus);
 	COLORREF cr;
 	if (bEnable)
 	{
@@ -1743,7 +1743,7 @@ SStringT SEdit::GetCueText(BOOL bRawText) const
 
 HRESULT SEdit::OnLanguageChanged()
 {
-	HRESULT hr = __super::OnLanguageChanged();
+	HRESULT hr = __baseCls::OnLanguageChanged();
 	m_strCue.TranslateText();
 	return hr;
 }

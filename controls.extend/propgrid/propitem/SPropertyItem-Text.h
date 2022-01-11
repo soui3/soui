@@ -7,7 +7,7 @@ namespace SOUI
     class SPropertyItemText : public SPropertyItemBase
     {
 		friend class SPropertyGrid;
-        SOUI_CLASS_NAME(SPropertyItemText,L"proptext")
+        SOUI_CLASS_NAME(SPropertyItemBase,L"proptext")
     public:
 		static LPCWSTR GetInplaceItemStyleName();
 

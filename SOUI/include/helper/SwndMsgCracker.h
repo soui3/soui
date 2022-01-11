@@ -9,7 +9,7 @@ protected:                                                          \
 
 #define SOUI_MSG_MAP_END()                                        \
     if (!IsMsgHandled())                                        \
-    return __super::ProcessSwndMessage(                   \
+    return __baseCls::ProcessSwndMessage(                   \
     uMsg, wParam, lParam, lResult);                     \
     return TRUE;                                                \
     }

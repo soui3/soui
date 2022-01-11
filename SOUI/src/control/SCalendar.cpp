@@ -247,7 +247,7 @@ SCalendar::~SCalendar()
 
 HRESULT SCalendar::OnLanguageChanged()
 {
-	__super::OnLanguageChanged();
+	__baseCls::OnLanguageChanged();
 	for (UINT i = 0; i < 7; i++)
 	{
 		m_strWeek[i].TranslateText();
@@ -841,7 +841,7 @@ void SCalendar::OnPaintYearDecadeCentury(IRenderTarget *pRT)
 
 void SCalendar::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	__super::OnLButtonDown(nFlags, point);
+	__baseCls::OnLButtonDown(nFlags, point);
 	int nItem = HitTest(point);
 	if (nItem < 0)
 	{
@@ -983,7 +983,7 @@ void SCalendar::OnLButtonUp(UINT nFlags, CPoint point)
 		GetEventSet()->setMutedState(true);
 	}
 
-	__super::OnLButtonUp(nFlags, point);
+	__baseCls::OnLButtonUp(nFlags, point);
 
 	if (!(m_showType == SHOW_MONTH && m_showTypeLbdown == SHOW_MONTH  && nItem >= 0 && nItem < 42))
 	{

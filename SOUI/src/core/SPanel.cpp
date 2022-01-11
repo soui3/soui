@@ -307,7 +307,7 @@ BOOL SPanel::HasScrollBar(BOOL bVertical) const
 
 int SPanel::OnCreate(LPVOID)
 {
-    int nRet=__super::OnCreate(NULL);
+    int nRet=__baseCls::OnCreate(NULL);
     if(nRet!=0) return nRet;
     SASSERT(m_pSkinSb);
     return 0;
@@ -322,7 +322,7 @@ void SPanel::OnDestroy()
 
 void SPanel::OnNcPaint(IRenderTarget *pRT)
 {
-    __super::OnNcPaint(pRT);
+    __baseCls::OnNcPaint(pRT);
     CRect rcDest;
     //绘制滚动条
     if(HasScrollBar(TRUE))
@@ -343,7 +343,7 @@ void SPanel::OnNcPaint(IRenderTarget *pRT)
     if(HasScrollBar(TRUE) && HasScrollBar(FALSE))
     {
         CRect rcDest;
-        __super::GetClientRect(&rcDest);
+        __baseCls::GetClientRect(&rcDest);
         rcDest.left=rcDest.right-GetSbWidth();
         rcDest.top=rcDest.bottom-GetSbWidth();
         m_pSkinSb->DrawByState(pRT,rcDest,SB_CORNOR);
@@ -615,13 +615,13 @@ void SPanel::OnHScroll(UINT nSBCode, UINT nPos, HWND)
 
 void SPanel::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkinSb) m_pSkinSb->OnColorize(cr);
 }
 
 void SPanel::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	if(m_pSkinSb)
 	{
 		SAutoRefPtr<ISkinObj> pSkin = m_pSkinSb;
@@ -660,7 +660,7 @@ SScrollView::SScrollView()
 
 void SScrollView::OnSize(UINT nType,CSize size)
 {
-    __super::OnSize(nType,size);
+    __baseCls::OnSize(nType,size);
 	UpdateScrollBar();
 }
 
@@ -819,7 +819,7 @@ void SScrollView::UpdateScrollBar()
 
 BOOL SScrollView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 {
-    BOOL bRet=__super::OnScroll(bVertical,uCode,nPos);
+    BOOL bRet=__baseCls::OnScroll(bVertical,uCode,nPos);
     if(bRet)
     {
         int nPos=GetScrollPos(bVertical);
@@ -902,7 +902,7 @@ HRESULT SScrollView::OnAttrViewSize(const SStringW & strValue,BOOL bLoading)
 
 RECT SScrollView::GetChildrenLayoutRect() const
 {
-	CRect rcRet=__super::GetChildrenLayoutRect();
+	CRect rcRet=__baseCls::GetChildrenLayoutRect();
 	CRect rcPadding = GetStyle().GetPadding();
 	rcRet.OffsetRect(-m_ptOrigin);
 	rcRet.right=rcRet.left+m_szView.cx - rcPadding.left - rcPadding.right;
@@ -913,7 +913,7 @@ RECT SScrollView::GetChildrenLayoutRect() const
 void SScrollView::UpdateChildrenPosition()
 {
 	UpdateViewSize();
-	__super::UpdateChildrenPosition();
+	__baseCls::UpdateChildrenPosition();
 }
 
 

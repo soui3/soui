@@ -53,7 +53,7 @@ namespace SOUI
 
     void SComboView::OnCreateDropDown( SDropDownWnd *pDropDown)
     {
-        __super::OnCreateDropDown(pDropDown);
+        __baseCls::OnCreateDropDown(pDropDown);
         pDropDown->GetRoot()->InsertChild(m_pListBox);
         pDropDown->GetRoot()->UpdateChildrenPosition();
 
@@ -67,7 +67,7 @@ namespace SOUI
         pDropDown->GetRoot()->RemoveChild(m_pListBox);
         m_pListBox->SetVisible(FALSE);
         m_pListBox->SetContainer(GetContainer());
-        __super::OnDestroyDropDown(pDropDown);
+        __baseCls::OnDestroyDropDown(pDropDown);
     }
 
     void SComboView::OnSelChanged()
@@ -81,7 +81,7 @@ namespace SOUI
             m_pEdit->GetEventSet()->setMutedState(false);
         }
         Invalidate();
-        __super::OnSelChanged();
+        __baseCls::OnSelChanged();
     }
 
     BOOL SComboView::FireEvent( IEvtArgs *evt )
@@ -104,7 +104,7 @@ namespace SOUI
 
     void SComboView::OnScaleChanged(int nScale)
     {
-        __super::OnScaleChanged(nScale);
+        __baseCls::OnScaleChanged(nScale);
         if (m_pListBox)
             m_pListBox->SSendMessage(UM_SETSCALE, GetScale());
     }
@@ -147,7 +147,7 @@ namespace SOUI
 
 	HRESULT SComboView::OnLanguageChanged()
 	{
-		HRESULT hr = __super::OnLanguageChanged();
+		HRESULT hr = __baseCls::OnLanguageChanged();
 		if(m_pListBox)
 			m_pListBox->SSendMessage(UM_SETLANGUAGE);
 		return hr;

@@ -855,7 +855,7 @@ namespace SOUI
 				SetAttribute(attrClass.name(), attrClass.value(), TRUE);
 			}
 
-			__super::InitFromXml(pNode);
+			__baseCls::InitFromXml(pNode);
 
 			MarkAttributeHandled(attrClass,false);
 			MarkAttributeHandled(attrLayout,false);
@@ -3039,7 +3039,7 @@ namespace SOUI
 			return m_attrStorage->OnGetAttribute(strAttr,strValue);
 		}else
 		{
-			return __super::GetAttribute(strAttr,strValue);
+			return __baseCls::GetAttribute(strAttr,strValue);
 		}
 	}
 

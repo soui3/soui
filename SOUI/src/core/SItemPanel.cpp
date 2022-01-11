@@ -41,7 +41,7 @@ void SItemPanel::OnFinalRelease()
 {
     AddRef();//防止重复进入该函数
     SSendMessage(WM_DESTROY);
-    __super::OnFinalRelease();
+    __baseCls::OnFinalRelease();
 }
 
 LRESULT SItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -102,7 +102,7 @@ LRESULT SItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 	{
 		GetEventSet()->setMutedState(true);
 	}
-    LRESULT lRet=__super::DoFrameEvent(uMsg,wParam,lParam);
+    LRESULT lRet=SwndContainerImpl::DoFrameEvent(uMsg,wParam,lParam);
 	if(uMsg == WM_LBUTTONUP && !isMute)
 	{
 		GetEventSet()->setMutedState(false);
@@ -174,7 +174,7 @@ void SItemPanel::OnRedraw(LPCRECT rc)
 
 BOOL SItemPanel::OnReleaseSwndCapture()
 {
-    if(!__super::OnReleaseSwndCapture()) return FALSE;
+    if(!SwndContainerImpl::OnReleaseSwndCapture()) return FALSE;
     m_pItemContainer->OnItemSetCapture(this,FALSE);
     return TRUE;
 }
@@ -182,7 +182,7 @@ BOOL SItemPanel::OnReleaseSwndCapture()
 SWND SItemPanel::OnSetSwndCapture(SWND swnd)
 {
     m_pItemContainer->OnItemSetCapture(this,TRUE);
-    return __super::OnSetSwndCapture(swnd);
+    return SwndContainerImpl::OnSetSwndCapture(swnd);
 }
 
 HWND SItemPanel::GetHostHwnd()
@@ -346,7 +346,7 @@ void SItemPanel::FrameToHost(RECT & rc) const
 
 void SItemPanel::RequestRelayout(SWND hSource ,BOOL bSourceResizable)
 {
-	__super::RequestRelayout(hSource,bSourceResizable);
+	__baseCls::RequestRelayout(hSource,bSourceResizable);
     m_pItemContainer->OnItemRequestRelayout(this);
 }
 
@@ -373,7 +373,7 @@ void SItemPanel::BeforePaint(IRenderTarget *pRT, SPainter &painter)
 
 void SItemPanel::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-    __super::OnShowWindow(bShow,nStatus);
+    __baseCls::OnShowWindow(bShow,nStatus);
     if(IsVisible(TRUE))
         m_pFrmHost->GetContainer()->RegisterTimelineHandler(this);
     else
@@ -383,7 +383,7 @@ void SItemPanel::OnShowWindow(BOOL bShow, UINT nStatus)
 void SItemPanel::OnDestroy()
 {
     m_pFrmHost->GetContainer()->UnregisterTimelineHandler(this);
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 int SItemPanel::GetScale() const

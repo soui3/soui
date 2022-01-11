@@ -106,7 +106,7 @@ namespace SOUI
 
 		STDMETHOD_(SIZE,GetDesiredSize)(THIS_ int wid,int hei)
 		{
-			CSize szRet = __super::GetDesiredSize(wid,hei);
+			CSize szRet = __baseCls::GetDesiredSize(wid,hei);
 			if (szRet.cx > m_nMaxWidth.toPixelSize(GetScale()) && !m_nMaxWidth.isWrapContent())
 				szRet.cx = m_nMaxWidth.toPixelSize(GetScale());
 			if (szRet.cx < m_nMinWidth.toPixelSize(GetScale()))
@@ -121,10 +121,10 @@ namespace SOUI
 			SXmlNode xmlRoot = xmlNode.root().first_child();
 			if (xmlNode != xmlRoot)
 			{
-				__super::InitFromXml(&xmlRoot);
+				__baseCls::InitFromXml(&xmlRoot);
 			}
 
-			BOOL bRet = __super::InitFromXml(&xmlNode);
+			BOOL bRet = __baseCls::InitFromXml(&xmlNode);
 
 			SetWindowText(_T(""));//防止子菜单显示父级菜单项的文本。
 			return bRet;
@@ -159,7 +159,7 @@ namespace SOUI
 
 		virtual void OnScaleChanged(int nScale)
 		{
-			__super::OnScaleChanged(nScale);
+			__baseCls::OnScaleChanged(nScale);
 			GetScaleSkin(m_pItemSkin, nScale);
 			GetScaleSkin(m_pIconSkin, nScale);
 			GetScaleSkin(m_pCheckSkin, nScale);
@@ -237,7 +237,7 @@ namespace SOUI
 
 	void SMenuExItem::OnPaint(IRenderTarget *pRT)
 	{
-		__super::OnPaint(pRT);
+		__baseCls::OnPaint(pRT);
 
 		CRect rc = GetClientRect();
 		SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
@@ -315,7 +315,7 @@ namespace SOUI
 
 	SIZE SMenuExItem::GetDesiredSize(int wid,int hei)
 	{
-		CSize szRet = __super::GetDesiredSize(wid,hei);
+		CSize szRet = __baseCls::GetDesiredSize(wid,hei);
 		SMenuExRoot * pMenuRoot = sobj_cast<SMenuExRoot>(GetRoot()->GetWindow(GSW_FIRSTCHILD));
 		SASSERT(pMenuRoot);
 		if(GetChildrenCount()==0)
@@ -335,7 +335,7 @@ namespace SOUI
 
 	BOOL SMenuExItem::CreateChildren(SXmlNode xmlNode)
 	{
-		__super::CreateChildren(xmlNode);
+		__baseCls::CreateChildren(xmlNode);
 		SXmlNode xmlChild = xmlNode.child(SMenuExItem::GetClassName());
 		if (xmlChild)
 		{//有子菜单
@@ -1085,7 +1085,7 @@ namespace SOUI
 		}
 		else
 		{
-			return __super::GetTranslatorContext();
+			return __baseCls::GetTranslatorContext();
 		}
 	}
 

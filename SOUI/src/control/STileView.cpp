@@ -262,7 +262,7 @@ void STileView::OnPaint(IRenderTarget *pRT)
 BOOL STileView::OnScroll(BOOL bVertical, UINT uCode, int nPos)
 {
     int nOldPos = m_siVer.nPos;
-    __super::OnScroll(bVertical, uCode, nPos);
+    __baseCls::OnScroll(bVertical, uCode, nPos);
     int nNewPos = m_siVer.nPos;
     if(nOldPos != nNewPos)
     {
@@ -409,7 +409,7 @@ void STileView::UpdateVisibleItems()
 
 void STileView::OnSize(UINT nType, CSize size)
 {
-    __super::OnSize(nType, size);
+    __baseCls::OnSize(nType, size);
     
 	CRect rcClient = SWindow::GetClientRect();
     m_tvItemLocator->SetTileViewWidth(rcClient.Width());//重设TileView宽度
@@ -446,7 +446,7 @@ void STileView::OnDestroy()
         delete pLstTypeItems;
     }
     m_itemRecycle.RemoveAll();
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -539,7 +539,7 @@ LRESULT STileView::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         if(uMsg==WM_LBUTTONDOWN || uMsg== WM_RBUTTONDOWN || uMsg==WM_MBUTTONDOWN)
         {//交给panel处理
-            __super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+            __baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
         }
         
         SItemPanel *pHover = HitTest(pt);
@@ -566,7 +566,7 @@ LRESULT STileView::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
     
     if(uMsg==WM_LBUTTONUP || uMsg== WM_RBUTTONUP || uMsg==WM_MBUTTONUP)
     {//交给panel处理
-        __super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+        __baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
     }
     SetMsgHandled(TRUE);
     
@@ -591,7 +591,7 @@ LRESULT STileView::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void STileView::OnMouseLeave()
 {
-	__super::OnMouseLeave();
+	__baseCls::OnMouseLeave();
 
     if(m_pHoverItem)
     {
@@ -717,7 +717,7 @@ BOOL STileView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
             return TRUE;
         }
     }
-    return __super::OnMouseWheel(nFlags, zDelta, pt);
+    return __baseCls::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 int STileView::GetScrollLineSize(BOOL bVertical)
@@ -778,7 +778,7 @@ BOOL STileView::UpdateToolTip(CPoint pt, SwndToolTipInfo &tipInfo)
 {
     if(!m_pHoverItem)
     {
-		return __super::UpdateToolTip(pt, tipInfo);
+		return __baseCls::UpdateToolTip(pt, tipInfo);
     }
     return m_pHoverItem->UpdateToolTip(pt, tipInfo);
 }
@@ -864,7 +864,7 @@ UINT STileView::OnGetDlgCode() const
 
 void STileView::OnKillFocus(SWND wndFocus)
 {
-    __super::OnKillFocus(wndFocus);
+    __baseCls::OnKillFocus(wndFocus);
     
     if(m_iSelItem == -1)
     {
@@ -880,7 +880,7 @@ void STileView::OnKillFocus(SWND wndFocus)
 
 void STileView::OnSetFocus(SWND wndOld)
 {
-    __super::OnSetFocus(wndOld);
+    __baseCls::OnSetFocus(wndOld);
     if(m_iSelItem == -1)
     {
         return;
@@ -897,7 +897,7 @@ LRESULT STileView::OnSetScale(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     int nScale = (int)wParam;
     m_tvItemLocator->SetScale(nScale);
-    __super::OnSetScale(uMsg, wParam, lParam);
+    __baseCls::OnSetScale(uMsg, wParam, lParam);
     return LRESULT();
 }
 
@@ -916,7 +916,7 @@ BOOL STileView::OnSetCursor(const CPoint &pt)
     }
     if(!bRet)
     {
-        bRet=__super::OnSetCursor(pt);
+        bRet=__baseCls::OnSetCursor(pt);
     }
     return bRet;
 
@@ -938,19 +938,19 @@ BOOL STileView::OnItemClick(IEvtArgs *pEvt)
 
 void STileView::OnColorize(COLORREF cr)
 {
-	__super::OnColorize(cr);
+	__baseCls::OnColorize(cr);
 	DispatchMessage2Items(UM_SETCOLORIZE,cr,0);
 }
 
 void STileView::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	DispatchMessage2Items(UM_SETSCALE,nScale,0);
 }
 
 HRESULT STileView::OnLanguageChanged()
 {
-	HRESULT hret =__super::OnLanguageChanged();
+	HRESULT hret =__baseCls::OnLanguageChanged();
 	DispatchMessage2Items(UM_SETLANGUAGE,0,0);
 	return hret;
 }
@@ -977,7 +977,7 @@ void STileView::DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void STileView::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-	__super::OnShowWindow(bShow,nStatus);
+	__baseCls::OnShowWindow(bShow,nStatus);
 	if(IsVisible(TRUE) && m_bPendingUpdate)
 	{
 		if(m_iPendingUpdateItem == -1)
@@ -992,7 +992,7 @@ void STileView::OnShowWindow(BOOL bShow, UINT nStatus)
 
 void STileView::OnRebuildFont()
 {
-	__super::OnRebuildFont();
+	__baseCls::OnRebuildFont();
 	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 

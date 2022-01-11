@@ -30,7 +30,7 @@ public:                                                          \
 
 //从SObject派生的类是属性结尾
 #define SOUI_ATTRS_END()                                        \
-		if(FAILED(hRet)) return __super::SetAttribute(           \
+		if(FAILED(hRet)) return __baseCls::SetAttribute(           \
 						strAttribName,                          \
 						strValue,                               \
 						bLoading                                \

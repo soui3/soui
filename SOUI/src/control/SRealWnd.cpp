@@ -49,7 +49,7 @@ void SRealWnd::ShowRealWindow()
 
 void SRealWnd::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-    __super::OnShowWindow(bShow, nStatus);
+    __baseCls::OnShowWindow(bShow, nStatus);
     ShowRealWindow();
 }
 
@@ -60,14 +60,14 @@ void SRealWnd::OnDestroy()
         IRealWndHandler *pRealWndHandler=GETREALWNDHANDLER;
         if(pRealWndHandler) pRealWndHandler->OnRealWndDestroy(this);
     }
-	__super::OnDestroy();
+	__baseCls::OnDestroy();
 }
 
 BOOL SRealWnd::InitFromXml(IXmlNode * pNode)
 {
 	SXmlNode xmlNode(pNode);
 	m_realwndParam.m_xmlParams.root().append_copy(xmlNode.child(L"params"));
-    BOOL bRet=__super::InitFromXml(pNode);
+    BOOL bRet=__baseCls::InitFromXml(pNode);
     if(bRet)
     {
         if(m_bInit) InitRealWnd();
@@ -114,7 +114,7 @@ BOOL SRealWnd::InitRealWnd()
 
 BOOL SRealWnd::OnRelayout(const CRect &rcWnd)
 {
-	if (!__super::OnRelayout(rcWnd)) 
+	if (!__baseCls::OnRelayout(rcWnd)) 
 		return FALSE;
 
 	IRealWndHandler *pRealWndHandler = GETREALWNDHANDLER;

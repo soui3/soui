@@ -271,13 +271,13 @@ SIZE SSliderBar::GetDesiredSize(int wid, int hei)
 
 void SSliderBar::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkinThumb) m_pSkinThumb->OnColorize(cr);
 }
 
 void SSliderBar::OnScaleChanged(int scale)
 {
-	__super::OnScaleChanged(scale);
+	__baseCls::OnScaleChanged(scale);
 	GetScaleSkin(m_pSkinThumb,scale);
 }
 

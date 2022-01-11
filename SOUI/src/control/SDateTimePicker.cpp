@@ -390,7 +390,7 @@ namespace SOUI
 
 	void SDateTimePicker::OnLButtonDown(UINT nFlags, CPoint pt)
 	{
-		__super::OnLButtonDown(nFlags,pt);
+		__baseCls::OnLButtonDown(nFlags,pt);
 		if(WndState_PushDown == m_dwBtnState) return;
 
 		m_wCharNum = 0;
@@ -399,7 +399,7 @@ namespace SOUI
 		GetDropBtnRect(&rcBtn);
 		if(!rcBtn.PtInRect(pt))				// 没有点击 按钮 
 		{
-			__super::OnLButtonDown(nFlags, pt);
+			__baseCls::OnLButtonDown(nFlags, pt);
 
 			EnDateType  eSelType = HitTest(pt);
 			if(m_eSelDateType != eSelType)
@@ -438,7 +438,7 @@ namespace SOUI
 		if(WndState_PushDown == m_dwBtnState)
 			return;
 
-		__super::OnMouseHover(nFlags, pt);
+		__baseCls::OnMouseHover(nFlags, pt);
 
 		CRect rcBtn;
 		GetDropBtnRect(&rcBtn);
@@ -461,7 +461,7 @@ namespace SOUI
 			return;
 
 		if(GetState() & WndState_Hover) 
-			__super::OnMouseLeave();
+			__baseCls::OnMouseLeave();
 
 		if(WndState_Hover == m_dwBtnState)
 		{
@@ -644,17 +644,17 @@ namespace SOUI
 	void SDateTimePicker::OnDestroy()
 	{
 		CloseUp();
-		__super::OnDestroy();
+		__baseCls::OnDestroy();
 	}
 
 	void SDateTimePicker::OnSetFocus(SWND wndOld)
 	{
-		__super::OnSetFocus(wndOld);
+		__baseCls::OnSetFocus(wndOld);
 	}
 
 	void SDateTimePicker::OnKillFocus(SWND wndFocus)
 	{
-		__super::OnKillFocus(wndFocus);
+		__baseCls::OnKillFocus(wndFocus);
 		CloseUp();
 		m_wCharNum = 0;
 		if (eDT_NULL != m_eSelDateType)

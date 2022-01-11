@@ -65,6 +65,7 @@ namespace SOUI
         friend class SMenuExItem;
         friend class SMenuExRunData;
 		friend class SMenuExRoot;
+		SOUI_CLASS_NAME(SHostWnd,L"smenuex")
     public:
         SMenuEx(void);
         virtual ~SMenuEx(void);

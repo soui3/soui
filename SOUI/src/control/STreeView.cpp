@@ -520,7 +520,7 @@ namespace SOUI
 
 	void STreeView::OnSize( UINT nType, CSize size )
 	{
-		__super::OnSize(nType, size);
+		__baseCls::OnSize(nType, size);
 		if(!m_adapter) return;
 		UpdateScrollBar();
 		UpdateVisibleItems();
@@ -555,7 +555,7 @@ namespace SOUI
         }
         m_itemRecycle.RemoveAll();
 
-		__super::OnDestroy();
+		__baseCls::OnDestroy();
 	}
 
 	void STreeView::EnsureVisible(HTREEITEM hItem)
@@ -1061,7 +1061,7 @@ namespace SOUI
 					//m_hSelected = NULL;
 				}
 
-				__super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+				__baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
 			}
 
 			SItemPanel * pHover = HitTest(pt);
@@ -1089,7 +1089,7 @@ namespace SOUI
 
         if(uMsg==WM_LBUTTONUP || uMsg== WM_RBUTTONUP || uMsg==WM_MBUTTONUP)
         {//交给panel处理
-            __super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+            __baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
         }
         SetMsgHandled(TRUE);
 		return 0;
@@ -1102,7 +1102,7 @@ namespace SOUI
 
 	void STreeView::OnMouseLeave()
 	{
-		__super::OnMouseLeave();
+		__baseCls::OnMouseLeave();
 
 		if(m_pHoverItem)
 		{
@@ -1121,19 +1121,19 @@ namespace SOUI
             if(pSelItem->DoFrameEvent(WM_MOUSEWHEEL,MAKEWPARAM(nFlags,zDelta),MAKELPARAM(pt2.x,pt2.y)))
                 return TRUE;
         }
-		return __super::OnMouseWheel(nFlags, zDelta, pt);
+		return __baseCls::OnMouseWheel(nFlags, zDelta, pt);
 	}
 	
 	void STreeView::OnKillFocus(SWND wndFocus)
 	{
-		__super::OnKillFocus(wndFocus);
+		__baseCls::OnKillFocus(wndFocus);
 		SItemPanel * itemPanel = GetItemPanel(m_hSelected);
 		if (itemPanel) itemPanel->GetFocusManager()->StoreFocusedView();
 	}
 
 	void STreeView::OnSetFocus(SWND wndOld)
 	{
-		__super::OnSetFocus(wndOld);
+		__baseCls::OnSetFocus(wndOld);
 		SItemPanel * itemPanel = GetItemPanel(m_hSelected);
 		if (itemPanel)
 		{
@@ -1144,7 +1144,7 @@ namespace SOUI
 	BOOL STreeView::OnScroll( BOOL bVertical,UINT uCode,int nPos )
 	{
 		int nOldPos = m_siVer.nPos;
-		__super::OnScroll(bVertical, uCode, nPos);                      
+		__baseCls::OnScroll(bVertical, uCode, nPos);                      
 		int nNewPos = m_siVer.nPos;
 		if(nOldPos != nNewPos)
 		{
@@ -1233,7 +1233,7 @@ namespace SOUI
         }
         if(!bRet)
         {
-            bRet=__super::OnSetCursor(pt);
+            bRet=__baseCls::OnSetCursor(pt);
         }
         return bRet;
 
@@ -1243,7 +1243,7 @@ namespace SOUI
     BOOL STreeView::UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
     {
         if(!m_pHoverItem)
-            return __super::UpdateToolTip(pt,tipInfo);
+            return __baseCls::UpdateToolTip(pt,tipInfo);
         return m_pHoverItem->UpdateToolTip(pt,tipInfo);
     }
 
@@ -1256,20 +1256,20 @@ namespace SOUI
 
     void STreeView::OnColorize(COLORREF cr)
     {
-        __super::OnColorize(cr);
+        __baseCls::OnColorize(cr);
 		DispatchMessage2Items(UM_SETCOLORIZE,cr,0);
     }
 
 
 	void STreeView::OnScaleChanged(int nScale)
 	{
-		__super::OnScaleChanged(nScale);
+		__baseCls::OnScaleChanged(nScale);
 		DispatchMessage2Items(UM_SETSCALE,nScale,0);
 	}
 
 	HRESULT STreeView::OnLanguageChanged()
 	{
-		HRESULT hret =__super::OnLanguageChanged();
+		HRESULT hret =__baseCls::OnLanguageChanged();
 		DispatchMessage2Items(UM_SETLANGUAGE,0,0);
 		return hret;
 	}
@@ -1296,7 +1296,7 @@ namespace SOUI
 
 	void STreeView::OnRebuildFont()
 	{
-		__super::OnRebuildFont();
+		__baseCls::OnRebuildFont();
 		DispatchMessage2Items(UM_UPDATEFONT,0,0);
 	}
 

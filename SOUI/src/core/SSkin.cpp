@@ -129,7 +129,7 @@ void SSkinImgList::OnColorize(COLORREF cr)
 
 void SSkinImgList::_Scale(ISkinObj * skinObj, int nScale)
 {
-	__super::_Scale(skinObj,nScale);
+	__baseCls::_Scale(skinObj,nScale);
 	SSkinImgList *pRet = sobj_cast<SSkinImgList>(skinObj);
 	pRet->m_nStates = m_nStates;
 	pRet->m_bTile = m_bTile;
@@ -452,7 +452,7 @@ void SSkinScrollbar::_DrawByState(IRenderTarget *pRT, LPCRECT prcDraw, DWORD dwS
 
 void SSkinScrollbar::_Scale(ISkinObj *skinObj, int nScale)
 {
-	__super::_Scale(skinObj,nScale);
+	__baseCls::_Scale(skinObj,nScale);
 
 	SSkinScrollbar *pRet = sobj_cast<SSkinScrollbar>(skinObj);
 	pRet->m_nMargin = MulDiv(m_nMargin,nScale,100);
@@ -585,7 +585,7 @@ void SSkinShape::OnInitFinished(IXmlNode * pNode)
 
 void SSkinShape::_Scale(ISkinObj * pObj, int nScale)
 {
-	__super::_Scale(pObj, nScale);
+	__baseCls::_Scale(pObj, nScale);
 
 	SSkinShape * pRet = sobj_cast<SSkinShape>(pObj);
 	SASSERT(pRet);
@@ -761,7 +761,7 @@ SIZE SSKinGroup::GetSkinSize() const
 
 void SSKinGroup::_Scale(ISkinObj * skinObj, int nScale)
 {
-	__super::_Scale(skinObj, nScale);
+	__baseCls::_Scale(skinObj, nScale);
 	SSKinGroup *pRet = sobj_cast<SSKinGroup>(skinObj);
 	for(int i=0;i<ARRAYSIZE(m_skins);i++)
 	{

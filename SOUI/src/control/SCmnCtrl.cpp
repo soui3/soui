@@ -301,13 +301,13 @@ void SLink::DrawText(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,
             m_rcText.bottom=m_rcText.top+rc.Height();
         }
     }
-    __super::DrawText(pRT,pszBuf,cchText,pRect,uFormat);
+    __baseCls::DrawText(pRT,pszBuf,cchText,pRect,uFormat);
 }
 
 
 void SLink::OnInitFinished(IXmlNode *pNode)
 {
-    __super::OnInitFinished(pNode);
+    __baseCls::OnInitFinished(pNode);
     if(m_strToolTipText.GetText(TRUE).IsEmpty()) m_strToolTipText.SetText(m_strLinkUrl);
 }
 
@@ -322,7 +322,7 @@ BOOL SLink::OnSetCursor(const CPoint &pt)
 void SLink::OnLButtonDown( UINT nFlags,CPoint pt )
 {
     if(!m_rcText.PtInRect(pt)) return;
-    __super::OnLButtonDown(nFlags,pt);
+    __baseCls::OnLButtonDown(nFlags,pt);
 }
 
 void SLink::OnLButtonUp( UINT nFlags,CPoint pt )
@@ -332,7 +332,7 @@ void SLink::OnLButtonUp( UINT nFlags,CPoint pt )
         ReleaseCapture();
         return;
     }
-    __super::OnLButtonUp(nFlags,pt);
+    __baseCls::OnLButtonUp(nFlags,pt);
     
 	SStringT strUrl = m_strLinkUrl;
 	if(m_strLinkUrl.IsEmpty())
@@ -473,7 +473,7 @@ void SButton::OnDestroy()
         GetContainer()->GetAcceleratorMgr()->UnregisterAccelerator(&acc,this);
     }
     StopCurAnimate();
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
@@ -496,7 +496,7 @@ HRESULT SButton::OnAttrAccel( SStringW strAccel,BOOL bLoading )
 
 void SButton::OnStateChanged( DWORD dwOldState,DWORD dwNewState )
 {
-    __super::OnStateChanged(dwOldState,dwNewState);
+    __baseCls::OnStateChanged(dwOldState,dwNewState);
     StopCurAnimate();
 
     if(GetCapture()==m_swnd)    //点击中
@@ -513,7 +513,7 @@ void SButton::OnStateChanged( DWORD dwOldState,DWORD dwNewState )
 
 void SButton::OnSize( UINT nType, CSize size )
 {
-    __super::OnSize(nType,size);
+    __baseCls::OnSize(nType,size);
     StopCurAnimate();
 }
 
@@ -693,13 +693,13 @@ SIZE SImageWnd::GetDesiredSize(int wid,int hei)
 
 void SImageWnd::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkin) m_pSkin->OnColorize(cr);
 }
 
 void SImageWnd::OnScaleChanged(int scale)
 {
-	__super::OnScaleChanged(scale);
+	__baseCls::OnScaleChanged(scale);
 	GetScaleSkin(m_pSkin,scale);
 }
 
@@ -751,7 +751,7 @@ void SAnimateImgWnd::Stop()
 void SAnimateImgWnd::OnDestroy()
 {
     Stop();
-	__super::OnDestroy();
+	__baseCls::OnDestroy();
 }
 
 SIZE SAnimateImgWnd::GetDesiredSize(int wid, int hei)
@@ -763,7 +763,7 @@ SIZE SAnimateImgWnd::GetDesiredSize(int wid, int hei)
 
 void SAnimateImgWnd::OnShowWindow( BOOL bShow, UINT nStatus )
 {
-    __super::OnShowWindow(bShow,nStatus);
+    __baseCls::OnShowWindow(bShow,nStatus);
     if(!bShow)
     {
         if(IsPlaying()) GetContainer()->UnregisterTimelineHandler(this);
@@ -801,7 +801,7 @@ void SAnimateImgWnd::OnNextFrame()
 
 void SAnimateImgWnd::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkin) m_pSkin->OnColorize(cr);
 }
 
@@ -928,14 +928,14 @@ void SProgress::GetRange( int *pMin,int *pMax )
 
 void SProgress::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkinBg) m_pSkinBg->OnColorize(cr);
     if(m_pSkinPos) m_pSkinPos->OnColorize(cr);
 }
 
 void SProgress::OnScaleChanged(int scale)
 {
-	__super::OnScaleChanged(scale);
+	__baseCls::OnScaleChanged(scale);
 	GetScaleSkin(m_pSkinBg,scale);
 	GetScaleSkin(m_pSkinPos,scale);
 }
@@ -1005,7 +1005,7 @@ void SCheckBox::OnPaint(IRenderTarget *pRT)
 {
     CRect rcCheckBox=GetCheckRect();
     m_pSkin->DrawByState(pRT, rcCheckBox, GetState());
-    __super::OnPaint(pRT);
+    __baseCls::OnPaint(pRT);
 }
 
 void SCheckBox::DrawFocus(IRenderTarget *pRT)
@@ -1016,7 +1016,7 @@ void SCheckBox::DrawFocus(IRenderTarget *pRT)
         m_pFocusSkin->DrawByIndex(pRT,rcCheckBox,0);
     }else
     {
-        __super::DrawFocus(pRT);
+        __baseCls::DrawFocus(pRT);
     }
 }
 
@@ -1024,7 +1024,7 @@ SIZE SCheckBox::GetDesiredSize(int wid, int hei)
 {
     SASSERT(m_pSkin);
     CSize szCheck=m_pSkin->GetSkinSize();
-    CSize szRet=__super::GetDesiredSize(wid,hei);
+    CSize szRet=__baseCls::GetDesiredSize(wid,hei);
     szRet.cx+=szCheck.cx + CheckBoxSpacing;
     szRet.cy=smax(szRet.cy, szCheck.cy);
     return szRet;
@@ -1061,14 +1061,14 @@ HRESULT SCheckBox::OnAttrCheck( const SStringW& strValue, BOOL bLoading )
 
 void SCheckBox::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pFocusSkin) m_pFocusSkin->OnColorize(cr);
     if(m_pSkin) m_pSkin->OnColorize(cr);
 }
 
 void SCheckBox::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	GetScaleSkin(m_pSkin, nScale);
 	GetScaleSkin(m_pFocusSkin, nScale);
 }
@@ -1195,7 +1195,7 @@ void SRadioBox::OnPaint(IRenderTarget *pRT)
     SASSERT(m_pSkin);
     CRect rcRadioBox=GetRadioRect();
     m_pSkin->DrawByState(pRT, rcRadioBox, GetState());
-    __super::OnPaint(pRT);
+    __baseCls::OnPaint(pRT);
 }
 
 void SRadioBox::DrawFocus(IRenderTarget *pRT)
@@ -1206,14 +1206,14 @@ void SRadioBox::DrawFocus(IRenderTarget *pRT)
         m_pFocusSkin->DrawByIndex(pRT,rcCheckBox,0);
     }else
     {
-        __super::DrawFocus(pRT);
+        __baseCls::DrawFocus(pRT);
     }
 }
 
 
 SIZE SRadioBox::GetDesiredSize(int wid, int hei)
 {
-    CSize szRet=__super::GetDesiredSize(wid,hei);
+    CSize szRet=__baseCls::GetDesiredSize(wid,hei);
     CSize szRaio=m_pSkin->GetSkinSize();
     szRet.cx+=szRaio.cx + m_nRadioBoxSpacing;
     szRet.cy=smax(szRet.cy,szRaio.cy);
@@ -1291,14 +1291,14 @@ void SRadioBox::OnStateChanging( DWORD dwOldState,DWORD dwNewState )
 
 void SRadioBox::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pFocusSkin) m_pFocusSkin->OnColorize(cr);
     if(m_pSkin) m_pSkin->OnColorize(cr);
 }
 
 void SRadioBox::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	GetScaleSkin(m_pSkin, nScale);
 	GetScaleSkin(m_pFocusSkin, nScale);
 }
@@ -1487,7 +1487,7 @@ RECT SGroup::GetChildrenLayoutRect() const
 
 SIZE SGroup::GetDesiredSize(int nParentWid, int nParentHei)
 {
-	CSize szRet = __super::GetDesiredSize(nParentWid,nParentHei);
+	CSize szRet = __baseCls::GetDesiredSize(nParentWid,nParentHei);
 	szRet.cy += m_nHeaderHeight.toPixelSize(GetScale());
 	return szRet;
 }

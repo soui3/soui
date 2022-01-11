@@ -64,7 +64,7 @@ BOOL SListCtrl::CreateChildren(SXmlNode xmlNode)
 	m_pHeader->InitFromXml(&xmlHeader);
 	xmlHeader.set_userdata(1);
 
-	if (!__super::CreateChildren(xmlNode))
+	if (!__baseCls::CreateChildren(xmlNode))
 		return FALSE;
 
     m_pHeader->GetEventSet()->subscribeEvent(EventHeaderItemChanging::EventID, Subscriber(&SListCtrl::OnHeaderSizeChanging,this));
@@ -706,7 +706,7 @@ void SListCtrl::OnDestroy()
 {
     DeleteAllItems();
 
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 int SListCtrl::GetColumnCount() const
@@ -797,7 +797,7 @@ void SListCtrl::NotifySelChange(int nOldSel, int nNewSel, BOOL checkBox)
 
 BOOL SListCtrl::OnScroll(BOOL bVertical, UINT uCode, int nPos)
 {
-    BOOL bRet = __super::OnScroll(bVertical, uCode, nPos);
+    BOOL bRet = __baseCls::OnScroll(bVertical, uCode, nPos);
 
     if (bVertical)
     {
@@ -819,7 +819,7 @@ BOOL SListCtrl::OnScroll(BOOL bVertical, UINT uCode, int nPos)
 
 void SListCtrl::OnLButtonDown(UINT nFlags, CPoint pt)
 {
-    __super::OnLButtonDown(nFlags,pt);
+    __baseCls::OnLButtonDown(nFlags,pt);
     m_nHoverItem = HitTest(pt);
     BOOL hitCheckBox = HitCheckBox(pt);
 
@@ -844,19 +844,19 @@ void SListCtrl::OnLButtonDbClick(UINT nFlags, CPoint pt)
 
 void SListCtrl::OnLButtonUp(UINT nFlags, CPoint pt)
 {
-    __super::OnLButtonUp(nFlags,pt);
+    __baseCls::OnLButtonUp(nFlags,pt);
 }
 
 
 void SListCtrl::UpdateChildrenPosition()
 {
-    __super::UpdateChildrenPosition();
+    __baseCls::UpdateChildrenPosition();
     UpdateHeaderCtrl();
 }
 
 void SListCtrl::OnSize(UINT nType, CSize size)
 {
-    __super::OnSize(nType,size);
+    __baseCls::OnSize(nType,size);
     UpdateScrollBar();
     UpdateHeaderCtrl();
 }
@@ -898,7 +898,7 @@ void SListCtrl::OnMouseLeave()
         m_nHoverItem=-1;
         Invalidate();
     }
-    __super::OnMouseLeave();
+    __baseCls::OnMouseLeave();
 }
 
 BOOL SListCtrl::GetCheckState(int nItem)

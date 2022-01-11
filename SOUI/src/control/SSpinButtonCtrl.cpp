@@ -129,7 +129,7 @@ namespace SOUI
 
     void SSpinButtonCtrl::OnColorize(COLORREF cr)
     {
-        __super::OnColorize(cr);
+        __baseCls::OnColorize(cr);
 
         if ( m_pUpSkin ) m_pUpSkin->OnColorize(cr);
         if ( m_pDownSkin ) m_pDownSkin->OnColorize(cr);
@@ -195,7 +195,7 @@ namespace SOUI
 
 	int SSpinButtonCtrl::OnCreate(void *)
 	{
-		int nRet =__super::OnCreate(NULL);
+		int nRet =__baseCls::OnCreate(NULL);
 		if (nRet != 0) return nRet;
 		OnValueChanged(true);
 

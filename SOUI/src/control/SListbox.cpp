@@ -456,7 +456,7 @@ void SListBox::OnPaint(IRenderTarget * pRT)
 
 void SListBox::OnSize(UINT nType,CSize size)
 {
-    __super::OnSize(nType,size);
+    __baseCls::OnSize(nType,size);
     CRect rcClient;
     SWindow::GetClientRect(&rcClient);
     CSize szView(rcClient.Width(),GetCount()*m_itemHeight.toPixelSize(GetScale()));
@@ -548,7 +548,7 @@ UINT SListBox::OnGetDlgCode() const
 void SListBox::OnDestroy()
 {
     DeleteAll();
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 void SListBox::OnShowWindow( BOOL bShow, UINT nStatus )
@@ -557,12 +557,12 @@ void SListBox::OnShowWindow( BOOL bShow, UINT nStatus )
     {
         m_iHoverItem=-1;
     }
-    __super::OnShowWindow(bShow,nStatus);
+    __baseCls::OnShowWindow(bShow,nStatus);
 }
 
 void SListBox::OnMouseLeave()
 {
-	__super::OnMouseLeave();
+	__baseCls::OnMouseLeave();
 	if(m_iHoverItem!=-1)
 	{
 		int nOldHover=m_iHoverItem;
@@ -573,7 +573,7 @@ void SListBox::OnMouseLeave()
 
 HRESULT SListBox::OnLanguageChanged()
 {
-	HRESULT hr = __super::OnLanguageChanged();
+	HRESULT hr = __baseCls::OnLanguageChanged();
 	for(size_t i=0;i<m_arrItems.GetCount();i++)
 	{
 		m_arrItems[i]->strText.TranslateText();

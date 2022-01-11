@@ -94,7 +94,7 @@ namespace SOUI
 
     int SActiveX::OnCreate( LPVOID )
     {
-		int nRet = __super::OnCreate(NULL);
+		int nRet = __baseCls::OnCreate(NULL);
 		if(nRet != 0) return nRet;
         if(IsEqualCLSID(m_clsid,CLSID_NULL)) return 0;
 		
@@ -104,7 +104,7 @@ namespace SOUI
 
     void SActiveX::OnSize( UINT nType, CSize size )
     {
-        __super::OnSize(nType,size);
+        __baseCls::OnSize(nType,size);
         if(m_axContainer->GetActiveXControl())
         {
             m_axContainer->OnPosRectChange(GetWindowRect());        
@@ -113,7 +113,7 @@ namespace SOUI
 
     void SActiveX::OnShowWindow( BOOL bShow, UINT nStatus )
     {
-        __super::OnShowWindow(bShow, nStatus);
+        __baseCls::OnShowWindow(bShow, nStatus);
 
         if(IsVisible(TRUE) && m_bDelayInit)
         {

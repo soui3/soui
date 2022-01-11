@@ -152,7 +152,7 @@ BOOL SMCListView::CreateChildren(SXmlNode xmlNode)
 	InsertChild(m_pHeader);
 	m_pHeader->InitFromXml(&xmlHeader);
 
-	if (!__super::CreateChildren(xmlNode))
+	if (!__baseCls::CreateChildren(xmlNode))
 		return FALSE;
     if(xmlTemplate)
     {
@@ -326,7 +326,7 @@ int SMCListView::GetColumnCount() const
 
 void SMCListView::UpdateChildrenPosition()
 {
-    __super::UpdateChildrenPosition();
+    __baseCls::UpdateChildrenPosition();
     UpdateHeaderCtrl();
 }
 
@@ -553,7 +553,7 @@ void SMCListView::OnPaint(IRenderTarget *pRT)
 BOOL SMCListView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 {
     int nOldPos = bVertical?m_siVer.nPos:m_siHoz.nPos;
-    __super::OnScroll(bVertical, uCode, nPos);
+    __baseCls::OnScroll(bVertical, uCode, nPos);
     int nNewPos = bVertical?m_siVer.nPos:m_siHoz.nPos;
     if(nOldPos != nNewPos)
     {
@@ -735,7 +735,7 @@ void SMCListView::UpdateVisibleItem(int iItem)
 
 void SMCListView::OnSize(UINT nType, CSize size)
 {
-    __super::OnSize(nType,size);
+    __baseCls::OnSize(nType,size);
     UpdateScrollBar();
     UpdateHeaderCtrl();
 
@@ -783,7 +783,7 @@ void SMCListView::OnDestroy()
     }
     m_itemRecycle.RemoveAll();
 
-    __super::OnDestroy();
+    __baseCls::OnDestroy();
 }
 
 
@@ -874,7 +874,7 @@ LRESULT SMCListView::OnMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     {
         if(uMsg==WM_LBUTTONDOWN || uMsg== WM_RBUTTONDOWN || uMsg==WM_MBUTTONDOWN)
         {//交给panel处理
-            __super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+            __baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
         }
 
         SItemPanel * pHover=HitTest(pt);
@@ -907,7 +907,7 @@ LRESULT SMCListView::OnMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     
     if(uMsg==WM_LBUTTONUP || uMsg== WM_RBUTTONUP || uMsg==WM_MBUTTONUP)
     {//交给panel处理
-        __super::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
+        __baseCls::ProcessSwndMessage(uMsg,wParam,lParam,lRet);
     }
     SetMsgHandled(TRUE);
     return 0;
@@ -930,7 +930,7 @@ LRESULT SMCListView::OnKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void SMCListView::OnMouseLeave()
 {
-	__super::OnMouseLeave();
+	__baseCls::OnMouseLeave();
     if(m_pHoverItem)
     {
         m_pHoverItem->DoFrameEvent(WM_MOUSELEAVE,0,0);
@@ -1065,7 +1065,7 @@ BOOL SMCListView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
         if(pSelItem->DoFrameEvent(WM_MOUSEWHEEL,MAKEWPARAM(nFlags,zDelta),MAKELPARAM(pt2.x,pt2.y)))
             return TRUE;
     }
-    return __super::OnMouseWheel(nFlags, zDelta, pt);
+    return __baseCls::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 int SMCListView::GetScrollLineSize(BOOL bVertical)
@@ -1102,7 +1102,7 @@ void SMCListView::SetItemLocator(IListViewItemLocator *pItemLocator)
 BOOL SMCListView::UpdateToolTip(CPoint pt, SwndToolTipInfo & tipInfo)
 {
     if(!m_pHoverItem)
-        return __super::UpdateToolTip(pt,tipInfo);
+        return __baseCls::UpdateToolTip(pt,tipInfo);
     return m_pHoverItem->UpdateToolTip(pt,tipInfo);
 }
 
@@ -1171,7 +1171,7 @@ UINT SMCListView::OnGetDlgCode() const
 
 void SMCListView::OnKillFocus(SWND wndFocus)
 {
-    __super::OnKillFocus(wndFocus);
+    __baseCls::OnKillFocus(wndFocus);
 
     if(m_iSelItem==-1) return;
 
@@ -1181,7 +1181,7 @@ void SMCListView::OnKillFocus(SWND wndFocus)
 
 void SMCListView::OnSetFocus(SWND wndOld)
 {
-    __super::OnSetFocus(wndOld);
+    __baseCls::OnSetFocus(wndOld);
     if(m_iSelItem==-1) return;
 
     SItemPanel *pSelPanel = GetItemPanel(m_iSelItem);
@@ -1203,7 +1203,7 @@ BOOL SMCListView::OnSetCursor(const CPoint &pt)
     }
     if(!bRet)
     {
-        bRet=__super::OnSetCursor(pt);
+        bRet=__baseCls::OnSetCursor(pt);
     }
     return bRet;
 
@@ -1223,7 +1223,7 @@ BOOL SMCListView::OnItemClick(IEvtArgs *pEvt)
 
 void SMCListView::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
 	DispatchMessage2Items(UM_SETCOLORIZE,cr,0);
     SPOSITION pos = m_lstItems.GetHeadPosition();
     while(pos)
@@ -1236,14 +1236,14 @@ void SMCListView::OnColorize(COLORREF cr)
 
 void SMCListView::OnScaleChanged(int nScale)
 {
-	__super::OnScaleChanged(nScale);
+	__baseCls::OnScaleChanged(nScale);
 	if(m_lvItemLocator)	m_lvItemLocator->SetScale(nScale);
 	DispatchMessage2Items(UM_SETSCALE,nScale,0);
 }
 
 HRESULT SMCListView::OnLanguageChanged()
 {
-	HRESULT hret =__super::OnLanguageChanged();
+	HRESULT hret =__baseCls::OnLanguageChanged();
 	DispatchMessage2Items(UM_SETLANGUAGE,0,0);
 	return hret;
 }
@@ -1270,7 +1270,7 @@ void SMCListView::DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void SMCListView::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-	__super::OnShowWindow(bShow,nStatus);
+	__baseCls::OnShowWindow(bShow,nStatus);
 	if(IsVisible(TRUE) && m_bPendingUpdate)
 	{
 		if(m_iPendingUpdateItem == -1)
@@ -1289,7 +1289,7 @@ SHeaderCtrl * SMCListView::GetHeaderCtrl() const
 
 void SMCListView::OnRebuildFont()
 {
-	__super::OnRebuildFont();
+	__baseCls::OnRebuildFont();
 	DispatchMessage2Items(UM_UPDATEFONT,0,0);
 }
 

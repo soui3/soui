@@ -26,7 +26,7 @@ namespace SOUI
 
     void SComboEdit::OnMouseLeave()
     {
-        __super::OnMouseLeave();
+        __baseCls::OnMouseLeave();
         GetOwner()->SSendMessage(WM_MOUSELEAVE);
     }
 
@@ -54,7 +54,7 @@ namespace SOUI
 
 	void SComboEdit::OnKillFocus(SWND wndFocus)
 	{
-		__super::OnKillFocus(wndFocus);
+		__baseCls::OnKillFocus(wndFocus);
 		GetOwner()->SSendMessage(WM_KILLFOCUS,wndFocus);
 	}
 
@@ -211,7 +211,7 @@ namespace SOUI
     {
         if(m_dwBtnState==WndState_PushDown) return;
 
-        __super::OnMouseHover(nFlags,pt);
+        __baseCls::OnMouseHover(nFlags,pt);
         CRect rcBtn;
         GetDropBtnRect(&rcBtn);
         if(rcBtn.PtInRect(pt))
@@ -230,7 +230,7 @@ namespace SOUI
         if(m_dwBtnState==WndState_PushDown) return;
 
         if(GetState()&WndState_Hover) 
-            __super::OnMouseLeave();
+            __baseCls::OnMouseLeave();
         if(m_dwBtnState==WndState_Hover)
         {
             m_dwBtnState=WndState_Normal;
@@ -479,7 +479,7 @@ namespace SOUI
     void SComboBase::OnDestroy()
     {
         CloseUp();
-        __super::OnDestroy();
+        __baseCls::OnDestroy();
     }
 
     void SComboBase::OnSelChanged()
@@ -615,7 +615,7 @@ namespace SOUI
 
     void SComboBase::OnKillFocus(SWND wndFocus)
     {
-        __super::OnKillFocus(wndFocus);
+        __baseCls::OnKillFocus(wndFocus);
         CloseUp();
     }
 
@@ -629,7 +629,7 @@ namespace SOUI
 
 	void SComboBase::UpdateChildrenPosition()
 	{
-		__super::UpdateChildrenPosition();
+		__baseCls::UpdateChildrenPosition();
 		SIZE szBtn = m_pSkinBtn->GetSkinSize();		
 		CRect rcPadding = GetStyle().GetPadding();
 		CRect rcEdit = GetClientRect();
@@ -642,7 +642,7 @@ namespace SOUI
 	
     void SComboBase::OnColorize(COLORREF cr)
     {
-        __super::OnColorize(cr);
+        __baseCls::OnColorize(cr);
         if(m_pSkinBtn) m_pSkinBtn->OnColorize(cr);
 		if (m_pDropDownWnd)
 		{
@@ -652,7 +652,7 @@ namespace SOUI
 
 	HRESULT SComboBase::OnLanguageChanged()
 	{
-		HRESULT hr =__super::OnLanguageChanged();
+		HRESULT hr =__baseCls::OnLanguageChanged();
 		if (m_pDropDownWnd)
 		{
 			m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETLANGUAGE, 0, 0);
@@ -662,7 +662,7 @@ namespace SOUI
 
 	void SComboBase::OnScaleChanged(int nScale)
 	{
-		__super::OnScaleChanged(nScale);
+		__baseCls::OnScaleChanged(nScale);
 		if (m_pDropDownWnd)
 		{
 			m_pDropDownWnd->GetRoot()->SDispatchMessage(UM_SETSCALE, nScale, 0);
@@ -691,7 +691,7 @@ namespace SOUI
 		if(!m_bDropdown) 
 			m_pEdit->SetFocus();
 		else
-			__super::SetFocus();
+			__baseCls::SetFocus();
 	}
 
 }

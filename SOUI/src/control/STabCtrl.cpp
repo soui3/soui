@@ -487,7 +487,7 @@ void STabCtrl::OnDestroy()
         DestroyChild(m_lstPages[i]);
     }
     m_lstPages.RemoveAll();
-	__super::OnDestroy();
+	__baseCls::OnDestroy();
 }
 
 
@@ -908,7 +908,7 @@ void STabCtrl::DrawTextV(IRenderTarget *pRT, CRect rcText, const SStringT & strT
 
 void STabCtrl::OnColorize(COLORREF cr)
 {
-    __super::OnColorize(cr);
+    __baseCls::OnColorize(cr);
     if(m_pSkinIcon) m_pSkinIcon->OnColorize(cr);
     if(m_pSkinTab) m_pSkinTab->OnColorize(cr);
     if(m_pSkinTabInter) m_pSkinTabInter->OnColorize(cr);
@@ -917,7 +917,7 @@ void STabCtrl::OnColorize(COLORREF cr)
 
 void STabCtrl::OnScaleChanged(int nScale)
 {
-    __super::OnScaleChanged(nScale);
+    __baseCls::OnScaleChanged(nScale);
     if (m_pSkinIcon) GetScaleSkin(m_pSkinIcon, nScale);
     if (m_pSkinTab) GetScaleSkin(m_pSkinTab, nScale);
     if (m_pSkinTabInter) GetScaleSkin(m_pSkinTabInter, nScale);
@@ -926,7 +926,7 @@ void STabCtrl::OnScaleChanged(int nScale)
 
 HRESULT STabCtrl::OnLanguageChanged()
 {
-	__super::OnLanguageChanged();
+	__baseCls::OnLanguageChanged();
 	for(int i=0;i<(int)m_lstPages.GetCount();i++)
 	{
 		STabPage *pPage = m_lstPages.GetAt(i);

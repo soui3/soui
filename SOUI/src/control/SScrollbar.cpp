@@ -73,7 +73,7 @@ int SScrollBar::GetMin()
 
 void SScrollBar::OnInitFinished(IXmlNode * pNode)
 {
-    __super::OnInitFinished(pNode);
+    __baseCls::OnInitFinished(pNode);
     SASSERT(m_pSkin);
     if(m_uAllowSize==-1)
     {

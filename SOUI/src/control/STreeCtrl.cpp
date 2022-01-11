@@ -1158,7 +1158,7 @@ void STreeCtrl::ItemMouseLeave(HSTREEITEM hItem)
 void STreeCtrl::OnDestroy()
 {
     DeleteAllItems();
-	__super::OnDestroy();
+	__baseCls::OnDestroy();
 }
 
 void STreeCtrl::OnPaint(IRenderTarget *pRT)
@@ -1204,7 +1204,7 @@ void STreeCtrl::OnPaint(IRenderTarget *pRT)
 
 void STreeCtrl::OnLButtonDown(UINT nFlags,CPoint pt)
 {
-    __super::OnLButtonDown(nFlags,pt);
+    __baseCls::OnLButtonDown(nFlags,pt);
     m_hHoverItem=HitTest(pt);
 
     if(m_hHoverItem!=m_hSelItem && m_hHoverItem)
@@ -1222,7 +1222,7 @@ void STreeCtrl::OnRButtonDown(UINT nFlags, CPoint pt)
 	CPoint pt2 = pt;
 	if (!m_bRightClickSel)
 	{
-		__super::OnRButtonDown(nFlags, pt2);
+		__baseCls::OnRButtonDown(nFlags, pt2);
 		return;
 	}
 
@@ -1231,12 +1231,12 @@ void STreeCtrl::OnRButtonDown(UINT nFlags, CPoint pt)
     if(m_hHoverItem!=m_hSelItem && m_hHoverItem)
         SelectItem(m_hHoverItem,FALSE);
 
-	__super::OnRButtonDown(nFlags, pt2);
+	__baseCls::OnRButtonDown(nFlags, pt2);
 }
 
 void STreeCtrl::OnLButtonUp(UINT nFlags,CPoint pt)
 {
-    __super::OnLButtonUp(nFlags,pt);
+    __baseCls::OnLButtonUp(nFlags,pt);
 
     m_hHoverItem=HitTest(pt);
 
