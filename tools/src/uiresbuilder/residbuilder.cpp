@@ -15,12 +15,9 @@ L"/*该文件由uiresbuilder生成，请不要手动修改*/\n"
 L"/*<------------------------------------------------------------------------------------------------->*/\n";
 
 const wchar_t ROBJ_DEF[] =
-L"#define ROBJ_IN_CPP \\\n"
-L"namespace SOUI \\\n"
-L"{\\\n"
-L"    const _R R;\\\n"
-L"    const _UIRES UIRES;\\\n"
-L"}\n";
+L"#define ROBJ_IN_CPP \\\r\n"
+L"    const _R R;\\\r\n"
+L"    const _UIRES UIRES;\r\n\r\n";
 
 struct IDMAPRECORD
 {
@@ -578,8 +575,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<IDMAPRECORD> vecIdMapRecord;
 	map<string,string>  mapFiles;
 	
-	wstring strFiles = L"\tclass _UIRES{\r\n\t\tpublic:\r\n";
+	wstring strFiles = L"\tstruct _UIRES{\r\n";
 	
+	wstring strFileTypeStructAll;
+	wstring strFileTypeDataAll;
+
 	//load xml description of resource to vector
     TiXmlElement *pXmlType=xmlResource->FirstChildElement();
 	while(pXmlType)
@@ -590,9 +590,8 @@ int _tmain(int argc, _TCHAR* argv[])
         MakeNameValid(szType,szType2);
         
         wstring strClassName = wstring(L"_")+szType2;
-        wstring strFileType = wstring(L"\t\tclass ") + strClassName +L"{\r\n\t\t\tpublic:\r\n";
-        wstring strFileTypeConstructor = wstring(L"\t\t\t") + strClassName + L"(){\r\n";
-        wstring strFileTypeMember;
+        wstring strFileTypeData = L"\t\t{\r\n";
+        wstring strFileTypeStruct= wstring(L"\t\tstruct ") + strClassName +L"{\r\n";;
         
         TiXmlElement *pXmlFile=pXmlType->FirstChildElement();
         while(pXmlFile)
@@ -619,19 +618,22 @@ int _tmain(int argc, _TCHAR* argv[])
                 string strKey = string(pszType)+":"+pszName;
                 mapFiles[strKey] = strPath;
 
-                strFileTypeConstructor += wstring(L"\t\t\t\t") + wszName + L" = _T(\"" + szType2 + L":" + rec.szName + L"\");\r\n";
-                strFileTypeMember += wstring(L"\t\t\tconst TCHAR * ") + wszName + L";\r\n";
+                strFileTypeData += wstring(L"\t\t\t_T(\"") + szType2 + L":" + rec.szName + L"\"),\r\n";
+                strFileTypeStruct += wstring(L"\t\t\tconst TCHAR * ") + wszName + L";\r\n";
             }
             pXmlFile=pXmlFile->NextSiblingElement();
 		}
-		
-		strFileTypeConstructor += L"\t\t\t}\r\n";
-		strFileType += strFileTypeConstructor + strFileTypeMember + L"\t\t}" + szType2 + L";\r\n";
-		strFiles += strFileType;
+		pXmlFile=pXmlType->FirstChildElement();
+		if(pXmlFile)
+		{
+			strFileTypeStruct += wstring(L"\t\t\t}")+ szType2 + L";\r\n";
+			strFileTypeData += L"\t\t},\r\n";
+			strFileTypeStructAll += strFileTypeStruct;
+			strFileTypeDataAll += strFileTypeData;
+		}
 		pXmlType=pXmlType->NextSiblingElement();
 	}
-    
-    strFiles += L"\t};\r\n";
+	strFiles += strFileTypeStructAll + L"\t}UIRES={\r\n"+strFileTypeDataAll + L"\t};\r\n";
     
 	if(strRes.length())
 	{//编译资源.rc2文件
@@ -770,7 +772,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		wstring strOut = RB_HEADER_ID;
 		strOut += L"#pragma once\r\n#include <res.mgr/snamedvalue.h>\r\n";
 		strOut += ROBJ_DEF;
-		strOut += L"namespace SOUI\r\n{\r\n";
+		//strOut += L"namespace SOUI\r\n{\r\n";
 		strOut += strFiles;
 				
 		if(bBuildIDMap)
@@ -799,7 +801,7 @@ int _tmain(int argc, _TCHAR* argv[])
         strOut += L"\t extern const __declspec(selectany) _UIRES & UIRES = _UIRES();\r\n";
         strOut += L"#endif//R_IN_CPP\r\n";
 
-        strOut += L"}\r\n";
+        //strOut += L"}\r\n";
 
 		WriteFile(tmResource, strHeadFile, strOut, FALSE);
 	}
