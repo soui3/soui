@@ -67,7 +67,7 @@ class SOUI_EXP STreeCtrl
     : public SScrollView
     , protected CSTree<LPTVITEM>
 {
-    SOUI_CLASS_NAME(STreeCtrl, L"treectrl")
+    SOUI_CLASS_NAME(SScrollView,L"treectrl")
 public:
 
 	struct IListener

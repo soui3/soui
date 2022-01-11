@@ -22,7 +22,7 @@ namespace SOUI
 {
     class SHostWndAttr : public TObjRefImpl<SObject>, public ITrCtxProvider
     {
-        SOUI_CLASS_NAME(SHostWndAttr, L"SHostWndAttr")
+        SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"SHostWndAttr")
         enum {WT_UNDEFINE=0,WT_APPMAIN=1,WT_NORMAL=2};
 		friend class SHostWnd;
 		friend class SRootWindow;
@@ -101,7 +101,7 @@ namespace SOUI
 
 	class SOUI_EXP SRootWindow: public SWindow
 	{
-		SOUI_CLASS_NAME(SRootWindow,L"root")
+		SOUI_CLASS_NAME(SWindow,L"root")
 		friend class SHostWnd;
 	public:
 		SRootWindow(SHostWnd *pHostWnd);
@@ -138,7 +138,7 @@ namespace SOUI
 {
     friend class SDummyWnd;
 	friend class SRootWindow;
-	SOUI_CLASS_NAME_EX(SHostWnd,L"SHostWnd",NativeWnd)
+	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<IHostWnd>>,L"SHostWnd",NativeWnd)
 protected:    
     SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */

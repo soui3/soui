@@ -5,7 +5,7 @@ namespace SOUI
 
 	class SAniWindow : public SWindow, protected ITimelineHandler
 	{
-		SOUI_CLASS_NAME(SAniWindow,L"AniWindow")
+		SOUI_CLASS_NAME(SWindow,L"AniWindow")
 	public:
 		SAniWindow(void);
 		~SAniWindow(void);

@@ -189,7 +189,7 @@ namespace SOUI
 	class SOUI_EXP SWindow : public TObjRefImpl<SObjectImpl<IWindow>>
 		                   , public ITrCtxProvider
     {
-        SOUI_CLASS_NAME_EX(SWindow, L"window",Window)
+        SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<IWindow>>,L"window",Window)
         friend class SwndLayoutBuilder;
         friend class SWindowRepos;
         friend class SHostWnd;

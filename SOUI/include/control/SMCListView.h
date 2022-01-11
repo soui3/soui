@@ -23,7 +23,7 @@ namespace SOUI
     class SOUI_EXP SMCListView : public SPanel
         , protected IItemContainer
     {
-        SOUI_CLASS_NAME(SMCListView, L"mclistview")
+        SOUI_CLASS_NAME(SPanel,L"mclistview")
         friend class SMCListViewDataSetObserver;
     public:
         /**

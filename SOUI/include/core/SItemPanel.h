@@ -23,7 +23,7 @@ struct IItemContainer
 
 class SOUI_EXP SItemPanel : public SwndContainerImpl, public SWindow
 {
-	SOUI_CLASS_NAME(SItemPanel,L"itemPanel")
+	SOUI_CLASS_NAME(SWindow,L"itemPanel")
 public:
     static SItemPanel * Create(SWindow *pFrameHost,SXmlNode xmlNode,IItemContainer *pItemContainer);
     

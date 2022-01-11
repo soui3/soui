@@ -28,7 +28,7 @@ namespace SOUI
 
     class SOUI_EXP SPanel: public SWindow, protected IScrollBarHost
     {
-        SOUI_CLASS_NAME(SPanel, L"div")
+        SOUI_CLASS_NAME(SWindow,L"div")
 
     public:
         SPanel();
@@ -190,7 +190,7 @@ namespace SOUI
 
     class SOUI_EXP SScrollView : public SPanel
     {
-        SOUI_CLASS_NAME(SScrollView, L"scrollview")
+        SOUI_CLASS_NAME(SPanel,L"scrollview")
     public:
         SScrollView();
         virtual ~SScrollView() {}

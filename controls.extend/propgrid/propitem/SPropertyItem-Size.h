@@ -7,7 +7,7 @@ namespace SOUI
     class SPropertyItemSize : public SPropertyItemText
     {
 		friend class SPropertyGrid;
-        SOUI_CLASS_NAME(SPropertyItemSize,L"propsize")
+        SOUI_CLASS_NAME(SPropertyItemText,L"propsize")
 
 			enum{
 				CHILD_WIDTH=1,

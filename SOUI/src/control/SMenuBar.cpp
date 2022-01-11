@@ -16,8 +16,8 @@ namespace SOUI
 		public SButton,
 		public SMenu
 	{
-		SOUI_CLASS_NAME(SMenuBarItem, L"menuItem")
-			friend class SMenuBar;
+		SOUI_CLASS_NAME(SButton,L"menuItem")
+		friend class SMenuBar;
 	public:
 		SMenuBarItem(SMenuBar* pHostMenu);
 		~SMenuBarItem();

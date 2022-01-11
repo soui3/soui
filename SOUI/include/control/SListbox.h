@@ -45,7 +45,7 @@ class SOUI_EXP SListBox :public SScrollView
 {
 public:
 
-    SOUI_CLASS_NAME(SListBox, L"listbox")
+    SOUI_CLASS_NAME(SScrollView,L"listbox")
     /**
      * SListBox::SListBox
      * @brief    构造函数

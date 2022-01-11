@@ -26,7 +26,7 @@ SNSBEGIN
 *
 */
 class SOUI_EXP SRotateAnimation : public SAnimation {
-	SOUI_CLASS_NAME(SRotateAnimation, L"rotate")
+	SOUI_CLASS_NAME(SAnimation,L"rotate")
 
 private:
 	float mFromDegrees;

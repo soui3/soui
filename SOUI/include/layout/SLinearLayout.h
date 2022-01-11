@@ -9,7 +9,7 @@ namespace SOUI
 	class SLinearLayoutParam : public TObjRefImpl<SObjectImpl<ILayoutParam>>
 							 , protected SLinearLayoutParamStruct
     {
-        SOUI_CLASS_NAME(SLinearLayoutParam,L"LinearLayoutParam")
+        SOUI_CLASS_NAME(TObjRefImpl<SObjectImpl<ILayoutParam>>,L"LinearLayoutParam")
 
 		friend class SLinearLayout;
     public:
@@ -57,7 +57,7 @@ namespace SOUI
 
     class SOUI_EXP SLinearLayout : public TObjRefImpl<SObjectImpl<ILayout>>
     {
-		SOUI_CLASS_NAME_EX(SLinearLayout,L"linearLayout",Layout)
+		SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<ILayout>>,L"linearLayout",Layout)
     public:
         SLinearLayout(void);
         ~SLinearLayout(void);
@@ -92,7 +92,7 @@ namespace SOUI
 
 	class SVBox : public SLinearLayout
 	{
-		SOUI_CLASS_NAME(SVBox,L"vbox")
+		SOUI_CLASS_NAME(SLinearLayout,L"vbox")
 
 	public:
 		SVBox(){m_orientation = Vert;}
@@ -100,7 +100,7 @@ namespace SOUI
 
 	class SHBox : public SLinearLayout
 	{
-		SOUI_CLASS_NAME(SHBox,L"hbox")
+		SOUI_CLASS_NAME(SLinearLayout,L"hbox")
 
 	public:
 		SHBox(){m_orientation = Horz;}

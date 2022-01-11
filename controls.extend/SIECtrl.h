@@ -89,7 +89,7 @@ namespace SOUI
         
     class SIECtrl :	public SActiveX, public IMessageFilter
     {
-        SOUI_CLASS_NAME(SIECtrl, L"iectrl")
+        SOUI_CLASS_NAME(SActiveX, L"iectrl")
     public:
         SIECtrl(void);
         ~SIECtrl(void);

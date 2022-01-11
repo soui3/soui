@@ -34,7 +34,7 @@ namespace SOUI
 
     class SChromeTabCtrl : public SWindow, public ITimelineHandler
     {
-        SOUI_CLASS_NAME(SChromeTabCtrl,L"chromeTabCtrl")
+        SOUI_CLASS_NAME(SWindow,L"chromeTabCtrl")
         friend class SChromeTab;
     public:
         enum TABDIR{

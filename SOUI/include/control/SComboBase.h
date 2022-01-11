@@ -102,7 +102,7 @@ namespace SOUI
         : public SWindow
         , public ISDropDownOwner
     {
-        SOUI_CLASS_NAME(SComboBase,L"combobase")
+        SOUI_CLASS_NAME(SWindow,L"combobase")
     public:
 
         /**

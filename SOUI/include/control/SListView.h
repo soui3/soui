@@ -9,7 +9,7 @@ namespace SOUI
     class SOUI_EXP SListView : public SPanel
         , protected IItemContainer
     {
-        SOUI_CLASS_NAME(SListView,L"listview")
+        SOUI_CLASS_NAME(SWindow,L"listview")
 
         friend class SListViewDataSetObserver;
     public:

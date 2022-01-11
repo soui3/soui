@@ -610,7 +610,7 @@ namespace SOUI
     {
         friend class STextHost;
     public:
-        SOUI_CLASS_NAME(SRichEdit, L"richedit")
+        SOUI_CLASS_NAME(SPanel,L"richedit")
 
         /**
         * SRichEdit::SRichEdit
@@ -1232,7 +1232,7 @@ namespace SOUI
     */
     class SOUI_EXP SEdit : public SRichEdit
     {
-        SOUI_CLASS_NAME(SEdit, L"edit")
+        SOUI_CLASS_NAME(SRichEdit,L"edit")
     public:
         /**
         * SEdit::SEdit

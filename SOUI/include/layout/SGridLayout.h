@@ -19,7 +19,7 @@ namespace SOUI
 	class SGridLayoutParam : public TObjRefImpl<SObjectImpl<ILayoutParam>>
 		, protected SGridLayoutParamStruct
 	{
-		SOUI_CLASS_NAME(SGridLayoutParam,L"GridLayoutParam")
+		SOUI_CLASS_NAME(TObjRefImpl<SObjectImpl<ILayoutParam>>,L"GridLayoutParam")
 
 		friend class SGridLayout;
 	public:
@@ -62,7 +62,7 @@ namespace SOUI
 
 	class SOUI_EXP SGridLayout: public TObjRefImpl<SObjectImpl<ILayout>>
 	{
-		SOUI_CLASS_NAME_EX(SGridLayout,L"gridLayout",Layout)
+		SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<ILayout>>,L"gridLayout",Layout)
 	public:
 		SGridLayout(void);
 		~SGridLayout(void);

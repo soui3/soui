@@ -6,10 +6,9 @@ namespace SOUI
 {
 	class SMenuBarItem;
 
-	class SOUI_EXP SMenuBar :
-		public SWindow
+	class SOUI_EXP SMenuBar : public SWindow
 	{
-		SOUI_CLASS_NAME(SMenuBar, L"menubar")
+		SOUI_CLASS_NAME(SWindow,L"menubar")
 		friend class SMenuBarItem;
 	public:
 		SMenuBar();

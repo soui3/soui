@@ -7,7 +7,7 @@ namespace SOUI{
 
 	class SPathView : public SWindow
 	{
-		SOUI_CLASS_NAME(SPathView,L"pathView")
+		SOUI_CLASS_NAME(SWindow,L"pathView")
 	public:
 		SPathView(void);
 		~SPathView(void);

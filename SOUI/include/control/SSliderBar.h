@@ -23,7 +23,7 @@ namespace SOUI
  */
 class SOUI_EXP SSliderBar : public SProgress
 {
-    SOUI_CLASS_NAME(SSliderBar, L"sliderbar")
+    SOUI_CLASS_NAME(SProgress,L"sliderbar")
 
     struct RANGE
     {

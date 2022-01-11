@@ -26,7 +26,7 @@ namespace SOUI
       : public SWindow
       , public SAccelerator
   {
-      SOUI_CLASS_NAME(SHotKeyCtrl, L"hotkey")
+      SOUI_CLASS_NAME(SWindow,L"hotkey")
 	  enum{
 		Mod_SC = Mod_Shift|Mod_Ctrl,
 		Mod_SA = Mod_Shift|Mod_Alt,

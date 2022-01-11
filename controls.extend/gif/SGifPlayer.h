@@ -17,7 +17,7 @@ namespace SOUI
     */
     class SGifPlayer : public SWindow , public ITimelineHandler
     {
-        SOUI_CLASS_NAME(SGifPlayer, L"gifplayer")   //定义GIF控件在XM加的标签
+        SOUI_CLASS_NAME(SWindow, L"gifplayer")   //定义GIF控件在XM加的标签
     public:
         SGifPlayer();
         ~SGifPlayer();

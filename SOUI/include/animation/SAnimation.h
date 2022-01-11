@@ -70,7 +70,7 @@ public:
 };
 
 class SOUI_EXP SAnimation : public TObjRefImpl<SObjectImpl<IAnimation>> {
-	SOUI_CLASS_NAME_EX(SAnimation, L"animation", Animation)
+	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<IAnimation>>,L"animation", Animation)
 protected:
 	/**
 	* Set by {@link #getTransformation(long, STransformation)} when the animation ends.

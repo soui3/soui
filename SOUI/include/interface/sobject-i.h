@@ -22,8 +22,9 @@
 SNSBEGIN
 
 // SObject Class Name Declaration
-#define SOUI_CLASS_NAME_EX(theclass, classname,clsType) \
+#define SOUI_CLASS_NAME_EX(baseCls, classname,clsType)  \
 public:                                                 \
+	typedef baseCls	__baseCls;                          \
 	static LPCWSTR GetClassName()                       \
 	{                                                   \
 		return classname;                               \
@@ -33,25 +34,25 @@ public:                                                 \
 	{                                                   \
 		int ret = clsType;                              \
 		if(ret == SOUI::Undef)                          \
-			ret = __super::GetClassType();              \
+			ret = __baseCls::GetClassType();            \
 		return ret;                                     \
 	}                                                   \
 	\
 	static LPCWSTR BaseClassName()                      \
 	{                                                   \
-		return __super::GetClassName();                 \
+		return __baseCls::GetClassName();               \
 	}                                                   \
 	\
-	virtual LPCWSTR WINAPI GetObjectClass()  const             \
+	virtual LPCWSTR WINAPI GetObjectClass()  const      \
 	{                                                   \
 		return classname;                               \
 	}                                                   \
 	\
-	virtual int WINAPI GetObjectType()  const                  \
+	virtual int WINAPI GetObjectType()  const           \
 	{                                                   \
 		int ret = clsType;                              \
 		if(ret == SOUI::Undef)                          \
-			ret = __super::GetObjectType();             \
+			ret = __baseCls::GetObjectType();           \
 		return ret;                                     \
 	}                                                   \
 	\
@@ -59,12 +60,12 @@ public:                                                 \
 	{                                                   \
 		if(wcscmp(GetClassName(), lpszName)  == 0)      \
 			return TRUE;                                \
-		return __super::IsClass(lpszName);              \
+		return baseCls::IsClass(lpszName);              \
 	}                                                   \
 
 
-#define SOUI_CLASS_NAME(theclass, classname) \
-	SOUI_CLASS_NAME_EX(theclass,classname,0)
+#define SOUI_CLASS_NAME(baseCls,classname) \
+	SOUI_CLASS_NAME_EX(baseCls,classname,0)
 
 /**
 * @class      SObject

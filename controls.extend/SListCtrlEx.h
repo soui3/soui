@@ -30,7 +30,7 @@ class SListCtrlEx :public SScrollView
 {
 public:
 
-    SOUI_CLASS_NAME(SListCtrlEx, L"listctrlex")
+    SOUI_CLASS_NAME(SScrollView, L"listctrlex")
     
     /**
      * SListCtrlEx::SListBox

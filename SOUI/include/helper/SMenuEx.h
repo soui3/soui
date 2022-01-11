@@ -8,7 +8,7 @@ namespace SOUI
     class SMenuEx;
     class SOUI_EXP SMenuExItem : public SWindow
     {
-        SOUI_CLASS_NAME(SMenuExItem,L"menuItem")
+        SOUI_CLASS_NAME(SWindow,L"menuItem")
     public:
         SMenuExItem(SMenuEx *pOwnerMenu,ISkinObj *pItemSkin);
 

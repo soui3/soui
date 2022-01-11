@@ -62,7 +62,7 @@ public:
  */
 class SOUI_EXP SRealWnd : public SWindow
 {
-    SOUI_CLASS_NAME(SRealWnd, L"realwnd")
+    SOUI_CLASS_NAME(SWindow,L"realwnd")
 public:
     /**
      * SRealWnd::SRealWnd

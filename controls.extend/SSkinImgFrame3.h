@@ -8,7 +8,7 @@ namespace SOUI
     */
     class SSkinImgFrame3 : public SSkinImgFrame
     {
-    SOUI_CLASS_NAME(SSkinImgFrame3,L"imgframe3")
+    SOUI_CLASS_NAME(SSkinImgFrame,L"imgframe3")
     public:
         SSkinImgFrame3(void);
         ~SSkinImgFrame3(void);

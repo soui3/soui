@@ -5,7 +5,7 @@ namespace SOUI
 {
     class SSkinAni : public SSkinObjBase
     {
-        SOUI_CLASS_NAME(SSkinAni,L"skinani")
+        SOUI_CLASS_NAME(SSkinObjBase,L"skinani")
 
 		class SAniFrame
 		{

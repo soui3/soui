@@ -14,7 +14,7 @@ namespace SOUI
     //
 class SOUI_EXP SDateTimePicker : public SWindow, public ISDropDownOwner
 {
-	SOUI_CLASS_NAME(SDateTimePicker, L"dateTimePicker")   //
+	SOUI_CLASS_NAME(SWindow,L"dateTimePicker")
 
 public:
 	enum EnDateType

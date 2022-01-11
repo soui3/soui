@@ -21,7 +21,7 @@ namespace SOUI {
 	*
 	*/
 	class SOUI_EXP SScaleAnimation : public SAnimation {
-		SOUI_CLASS_NAME(SScaleAnimation,L"scale")
+		SOUI_CLASS_NAME(SAnimation,L"scale")
 
 	private: 
 		float mFromX;

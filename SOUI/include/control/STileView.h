@@ -11,7 +11,7 @@ namespace SOUI
 class SOUI_EXP STileView : public SPanel
     , protected IItemContainer
 {
-    SOUI_CLASS_NAME(STileView, L"tileview")
+    SOUI_CLASS_NAME(SPanel,L"tileview")
     
     friend class STileViewDataSetObserver;
 public:

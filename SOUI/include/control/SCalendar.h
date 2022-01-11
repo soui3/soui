@@ -147,7 +147,7 @@ namespace SOUI
 
 	class SOUI_EXP SCalendar : public SWindow
 	{
-		SOUI_CLASS_NAME(SCalendar, L"calendar")   //
+		SOUI_CLASS_NAME(SWindow,L"calendar")
 	public:
 		SCalendar(WORD iYeay, WORD iMonth, WORD iDay);
 		SCalendar();

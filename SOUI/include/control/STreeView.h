@@ -84,7 +84,7 @@ namespace SOUI
 
 	class SOUI_EXP STreeView : public SPanel, protected IItemContainer
 	{
-		SOUI_CLASS_NAME(STreeView, L"treeview")
+		SOUI_CLASS_NAME(SPanel,L"treeview")
 		friend class STreeViewDataSetObserver;
 	public:
 		STreeView();

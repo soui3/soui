@@ -11,7 +11,7 @@ class SColorPicker :
 	public SButton ,
 	public IColorPicker
 {
-	SOUI_CLASS_NAME(SColorPicker, L"colorpicker")
+	SOUI_CLASS_NAME(SButton, L"colorpicker")
 
 public:
 	SColorPicker(void);

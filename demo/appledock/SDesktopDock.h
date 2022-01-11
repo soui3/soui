@@ -10,7 +10,7 @@ using namespace SOUI;
 
 class SDesktopDock : public SWindow
 {
-	SOUI_CLASS_NAME(SDesktopDock, L"deskdock")
+	SOUI_CLASS_NAME(SWindow, L"deskdock")
 public:
 	SDesktopDock();
 protected:

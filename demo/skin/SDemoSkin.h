@@ -29,7 +29,7 @@ namespace SOUI
 	class  SDemoSkin :
 		public SSkinImgFrame
 	{
-		SOUI_CLASS_NAME(SDemoSkin, L"demoskin")
+		SOUI_CLASS_NAME(SSkinImgFrame, L"demoskin")
 	public:
 		SDemoSkin();
 		SDemoSkin(ISetOrLoadSkinHandler *iSkinHander);

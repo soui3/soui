@@ -8,7 +8,7 @@ namespace SOUI{
 */
 class SSkinVScrollbar : public SSkinScrollbar
 {
-	SOUI_CLASS_NAME(SSkinVScrollbar, L"vscrollbar")
+	SOUI_CLASS_NAME(SSkinScrollbar, L"vscrollbar")
 
 public:
 

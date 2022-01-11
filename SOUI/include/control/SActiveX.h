@@ -10,7 +10,7 @@ namespace SOUI
     {
         friend class SAxContainerImpl;
     public:
-        SOUI_CLASS_NAME(SActiveX, L"activex")
+        SOUI_CLASS_NAME(SWindow,L"activex")
         explicit SActiveX();
         virtual ~SActiveX();
 
@@ -60,7 +60,7 @@ namespace SOUI
     class SOUI_EXP SFlashCtrl : public SActiveX
     {
     public:
-        SOUI_CLASS_NAME(SFlashCtrl, L"flash")
+        SOUI_CLASS_NAME(SActiveX,L"flash")
         SFlashCtrl();
 
         ShockwaveFlashObjects::IShockwaveFlash* GetFlashInterface()  const

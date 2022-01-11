@@ -7,7 +7,7 @@ namespace SOUI
 {
     class SOUI_EXP SComboView : public SComboBase
     {
-        SOUI_CLASS_NAME(SComboView,L"comboview")
+        SOUI_CLASS_NAME(SComboBase,L"comboview")
     public:
         SComboView(void);
         ~SComboView(void);

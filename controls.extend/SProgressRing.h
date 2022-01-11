@@ -4,7 +4,7 @@ namespace SOUI
 {
 	class SProgressRing : public SProgress
 	{
-		SOUI_CLASS_NAME(SProgressRing,L"progressRing")
+		SOUI_CLASS_NAME(SProgress,L"progressRing")
 	public:
 		SProgressRing(void);
 		~SProgressRing(void);

@@ -7,7 +7,7 @@ namespace SOUI
 
 	class STabSlider : public SWindow, public ITimelineHandler
 	{
-		SOUI_CLASS_NAME(STabSlider, L"tabslider")
+		SOUI_CLASS_NAME(SWindow,L"tabslider")
 
 	public:
 		STabSlider(STabCtrl *pTabCtrl, int iFrom, int iTo, int nSteps, int nType,IInterpolator *pInterpolator)

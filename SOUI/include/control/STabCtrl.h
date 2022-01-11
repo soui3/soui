@@ -24,7 +24,7 @@ namespace SOUI
     */
     class SOUI_EXP STabPage : public SWindow
     {
-        SOUI_CLASS_NAME(STabPage, L"page")
+        SOUI_CLASS_NAME(SWindow,L"page")
 		friend class STabCtrl;
     public:
         /**
@@ -104,7 +104,7 @@ namespace SOUI
     class SOUI_EXP STabCtrl : public SWindow
     {
 		friend class STabSlider;
-        SOUI_CLASS_NAME(STabCtrl, L"tabctrl")
+        SOUI_CLASS_NAME(SWindow,L"tabctrl")
 
     protected:
         int m_nHoverTabItem; /**< hover状态item */

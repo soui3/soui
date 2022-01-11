@@ -5,7 +5,7 @@ namespace SOUI
 
 	class SCheckBox2 : public SWindow
 	{
-		SOUI_CLASS_NAME(SCheckBox2,L"check2")
+		SOUI_CLASS_NAME(SWindow,L"check2")
 	public:
 		SCheckBox2(void);
 		~SCheckBox2(void);

@@ -544,7 +544,7 @@ protected:
 template<class T>
 class  TValueAnimator : public TObjRefImpl<SObjectImpl<SValueAnimator> >
 {
-	SOUI_CLASS_NAME_EX(TValueAnimator<T>, L"valueAnimator", ValueAnimator)
+	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<SValueAnimator> >,L"valueAnimator", ValueAnimator)
 protected:
 	TypeEvaluator<T> mValueEvaluator;
 	T				 mValue;
@@ -601,7 +601,7 @@ public:
 };
 
 class SOUI_EXP SIntAnimator : public TValueAnimator<int> {
-	SOUI_CLASS_NAME(SIntAnimator, L"IntAnimator")
+	SOUI_CLASS_NAME(TValueAnimator<int>,L"IntAnimator")
 public:
 	SIntAnimator():TValueAnimator<int>(0,100)
 	{
@@ -624,7 +624,7 @@ public:
 };
 
 class SOUI_EXP SFloatAnimator : public TValueAnimator<float> {
-	SOUI_CLASS_NAME(SFloatAnimator, L"FloatAnimator")
+	SOUI_CLASS_NAME(TValueAnimator<float>,L"FloatAnimator")
 public:
 	SFloatAnimator() :TValueAnimator<float>(0.f, 1.f)
 	{
@@ -647,7 +647,7 @@ public:
 };
 
 class SOUI_EXP SColorAnimator : public TValueAnimator<COLORREF> {
-	SOUI_CLASS_NAME(SColorAnimator, L"ColorAnimator")
+	SOUI_CLASS_NAME(TValueAnimator<COLORREF>,L"ColorAnimator")
 
 protected:
 	COLORREF mStart, mEnd;

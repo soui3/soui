@@ -133,7 +133,7 @@ typedef enum _SOUI_EVENTS
 #define DEF_EVT_CLASS(evt,id,evt_name,evtData,api) \
 class api evt : public SEvtArgs, public evtData \
 { \
-	SOUI_CLASS_NAME(evt,L#evt_name ) \
+	SOUI_CLASS_NAME(SEvtArgs,L#evt_name ) \
 public:\
 	STDMETHOD_(int,GetID)(THIS) const { return evt::EventID; }\
 	STDMETHOD_(LPCWSTR,GetName)(THIS) const { return evt::GetClassName(); }\

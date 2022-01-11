@@ -4,7 +4,7 @@ namespace SOUI
 {
     class SRatingBar : public SWindow
     {
-    SOUI_CLASS_NAME(SRatingBar,L"ratingbar")
+    SOUI_CLASS_NAME(SWindow,L"ratingbar")
     public:
         SRatingBar(void);
         ~SRatingBar(void);

@@ -64,7 +64,7 @@ namespace SOUI
    */
   class SOUI_EXP SHeaderCtrl: public SWindow
   {
-      SOUI_CLASS_NAME(SHeaderCtrl, L"header")
+      SOUI_CLASS_NAME(SWindow,L"header")
 
 	  enum{
 		  MARGIN_ADJUST_ENABLE=4,

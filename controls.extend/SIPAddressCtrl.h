@@ -13,10 +13,9 @@ namespace SOUI
 	
 	class SEditIP;
 	
-	class SIPAddressCtrl :
-		public SWindow
+	class SIPAddressCtrl : public SWindow
 	{
-		SOUI_CLASS_NAME(SIPAddressCtrl,L"ipctrl")
+		SOUI_CLASS_NAME(SWindow,L"ipctrl")
 	public:
 		SIPAddressCtrl(void);
 		~SIPAddressCtrl(void);

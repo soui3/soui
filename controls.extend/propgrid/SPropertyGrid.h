@@ -35,7 +35,7 @@ namespace SOUI
 
 	class SPropertyGrid : public SListBox
 	{
-		SOUI_CLASS_NAME(SPropertyGrid, L"propgrid")
+		SOUI_CLASS_NAME(SListBox, L"propgrid")
 	public:
 		enum EXPSTATE
 		{

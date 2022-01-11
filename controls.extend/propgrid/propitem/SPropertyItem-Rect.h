@@ -7,7 +7,7 @@ namespace SOUI
     class SPropertyItemRect : public SPropertyItemText
     {
 		friend class SPropertyGrid;
-        SOUI_CLASS_NAME(SPropertyItemRect,L"proprect")
+        SOUI_CLASS_NAME(SPropertyItemText,L"proprect")
 
 			enum{
 				CHILD_LEFT=1,

@@ -8,7 +8,7 @@ SNSBEGIN
 
 class SOUI_EXP SSkinImgList: public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSkinImgList, L"imglist")
+	SOUI_CLASS_NAME(SSkinObjBase,L"imglist")
 
 public:
 	SSkinImgList();
@@ -70,7 +70,7 @@ protected:
 
 class SOUI_EXP SSkinImgCenter : public SSkinImgList
 {
-	SOUI_CLASS_NAME(SSkinImgCenter, L"imgCenter")
+	SOUI_CLASS_NAME(SSkinImgList,L"imgCenter")
 public:
 	SSkinImgCenter() {}
 
@@ -81,7 +81,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinImgFrame : public SSkinImgList
 {
-	SOUI_CLASS_NAME(SSkinImgFrame, L"imgframe")
+	SOUI_CLASS_NAME(SSkinImgList,L"imgframe")
 
 public:
 	SSkinImgFrame();
@@ -113,7 +113,7 @@ protected:
 // 加载android .9的皮肤
 class SOUI_EXP SSkinImgFrame2 : public SSkinImgFrame
 {
-	SOUI_CLASS_NAME(SSkinImgFrame2, L"imgframe2")
+	SOUI_CLASS_NAME(SSkinImgFrame,L"imgframe2")
 public:
 	SOUI_ATTRS_BEGIN()
 		ATTR_CUSTOM(L"src" ,OnAttrSrc)
@@ -125,7 +125,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinButton : public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSkinButton, L"button")
+	SOUI_CLASS_NAME(SSkinObjBase,L"button")
 
 		enum{
 			ST_NORMAL=0,
@@ -179,7 +179,7 @@ protected:
 
 class SOUI_EXP SSkinGradation  : public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSkinGradation, L"gradation")
+	SOUI_CLASS_NAME(SSkinObjBase,L"gradation")
 public:
 	SSkinGradation();
 
@@ -237,7 +237,7 @@ enum SBSTATE{
 
 class SOUI_EXP SSkinScrollbar : public SSkinImgList
 {
-	SOUI_CLASS_NAME(SSkinScrollbar, L"scrollbar")
+	SOUI_CLASS_NAME(SSkinImgList,L"scrollbar")
 
 public:
 
@@ -270,7 +270,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class SOUI_EXP SSkinColorRect : public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSkinColorRect,L"colorrect")
+	SOUI_CLASS_NAME(SSkinObjBase,L"colorrect")
 public:
 	SSkinColorRect();
 	virtual ~SSkinColorRect();
@@ -307,12 +307,12 @@ protected:
 
 class SOUI_EXP SSkinShape : public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSkinShape,L"shape")
-		enum Shape {rectangle,oval,ring};
+	SOUI_CLASS_NAME(SSkinObjBase,L"shape")
+	enum Shape {rectangle,oval,ring};
 
 	class SGradient : public TObjRefImpl<SObject>
 	{
-		SOUI_CLASS_NAME(SGradient,L"gradient")
+		SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"gradient")
 	public:
 		SGradient():m_Type(linear), m_angle(0.0f),m_centerX(0.5f),m_centerY(0.5f){
 
@@ -347,7 +347,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 	class SStroke : public TObjRefImpl<SObject>
 	{
-		SOUI_CLASS_NAME(SStroke,L"stroke")
+		SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"stroke")
 	public:
 
 		SStroke():m_color(CR_INVALID),m_style(PS_SOLID){}
@@ -370,7 +370,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 	class SCornerSize : public TObjRefImpl<SObject>
 	{
-		SOUI_CLASS_NAME(SCornerSize,L"corners")
+		SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"corners")
 
 	public:
 
@@ -394,7 +394,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 	class SShapeSize :  public TObjRefImpl<SObject>
 	{
-		SOUI_CLASS_NAME(SShapeSize,L"size")
+		SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"size")
 
 	public:
 
@@ -408,7 +408,7 @@ class SOUI_EXP SSkinShape : public SSkinObjBase
 
 	class SShapeRing : public TObjRefImpl<SObject>
 	{
-		SOUI_CLASS_NAME(SShapeRing, L"ring")
+		SOUI_CLASS_NAME(TObjRefImpl<SObject>,L"ring")
 
 	public:
 		SShapeRing() :m_startAngle(0.0f), m_sweepAngle(360.0f) {}
@@ -457,7 +457,7 @@ protected:
 
 class SOUI_EXP SSKinGroup : public SSkinObjBase
 {
-	SOUI_CLASS_NAME(SSKinGroup,L"group")
+	SOUI_CLASS_NAME(SSkinObjBase,L"group")
 public:
 
 	STDMETHOD_(SIZE,GetSkinSize)(THIS) SCONST OVERRIDE;

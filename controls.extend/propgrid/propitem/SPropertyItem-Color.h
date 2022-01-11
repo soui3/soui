@@ -10,7 +10,7 @@ namespace SOUI
     {
 		friend class SPropertyGrid;
         friend class SPropColorEdit;
-        SOUI_CLASS_NAME(SPropertyItemColor,L"propcolor")
+        SOUI_CLASS_NAME(SPropertyItemText,L"propcolor")
     public:
 		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
 

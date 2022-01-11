@@ -28,7 +28,7 @@ namespace SOUI
  */
 class SOUI_EXP SStatic : public SWindow
 {
-    SOUI_CLASS_NAME(SStatic, L"text")
+    SOUI_CLASS_NAME(SWindow,L"text")
 public:
     /**
      * SStatic::SStatic
@@ -72,7 +72,7 @@ protected:
  */
 class SOUI_EXP SLink : public SWindow
 {
-    SOUI_CLASS_NAME(SLink, L"link")
+    SOUI_CLASS_NAME(SWindow,L"link")
 
 public:
     /**
@@ -146,7 +146,7 @@ class SOUI_EXP SButton : public SWindow
     , public IAcceleratorTarget
     , public ITimelineHandler
 {
-    SOUI_CLASS_NAME(SButton, L"button")
+    SOUI_CLASS_NAME(SWindow,L"button")
 public:
     /**
      * SButton::SButton
@@ -259,7 +259,7 @@ public:
  */
 class SOUI_EXP SImageButton : public SButton
 {
-    SOUI_CLASS_NAME(SImageButton, L"imgbtn")
+    SOUI_CLASS_NAME(SButton,L"imgbtn")
 public:
     SImageButton();
 
@@ -285,7 +285,7 @@ protected:
  */
 class SOUI_EXP SImageWnd : public SWindow
 {
-    SOUI_CLASS_NAME(SImageWnd, L"img")
+    SOUI_CLASS_NAME(SWindow,L"img")
 public:
     /**
      * SImageWnd::SImageWnd
@@ -389,7 +389,7 @@ protected:
  */
 class SOUI_EXP SAnimateImgWnd : public SWindow, public ITimelineHandler
 {
-    SOUI_CLASS_NAME(SAnimateImgWnd, L"animateimg")
+    SOUI_CLASS_NAME(SWindow,L"animateimg")
 public:    
     /**
      * SAnimateImgWnd::SAnimateImgWnd
@@ -481,7 +481,7 @@ protected:
  */
 class SOUI_EXP SProgress : public SWindow
 {
-    SOUI_CLASS_NAME(SProgress, L"progress")
+    SOUI_CLASS_NAME(SWindow,L"progress")
 public:
     /**
      * SProgress::SProgress
@@ -587,7 +587,7 @@ protected:
  */
 class SOUI_EXP SLine : public SWindow
 {
-    SOUI_CLASS_NAME(SLine, L"hr")
+    SOUI_CLASS_NAME(SWindow,L"hr")
 
 public:
     /**
@@ -643,7 +643,7 @@ protected:
  */
 class SOUI_EXP SCheckBox : public SWindow
 {
-    SOUI_CLASS_NAME(SCheckBox, L"check")
+    SOUI_CLASS_NAME(SWindow,L"check")
 
     enum
     {
@@ -756,7 +756,7 @@ protected:
  */
 class SOUI_EXP SIconWnd : public SWindow
 {
-    SOUI_CLASS_NAME(SIconWnd, L"icon")
+    SOUI_CLASS_NAME(SWindow,L"icon")
 public:    
     /**
      * SIconWnd::SIconWnd
@@ -809,7 +809,7 @@ protected:
  */
 class SOUI_EXP SRadioBox : public SWindow
 {
-    SOUI_CLASS_NAME(SRadioBox, L"radio")
+    SOUI_CLASS_NAME(SWindow,L"radio")
 
 public:
     /**
@@ -949,7 +949,7 @@ protected:
 
 class SOUI_EXP SRadioGroup : public SWindow
 {
-	SOUI_CLASS_NAME(SRadioGroup, L"radioGroup")
+	SOUI_CLASS_NAME(SWindow,L"radioGroup")
 public:
 	SRadioGroup();
 
@@ -972,7 +972,7 @@ protected:
  */
 class SOUI_EXP SToggle : public SCheckBox
 {
-    SOUI_CLASS_NAME(SToggle, L"toggle")
+    SOUI_CLASS_NAME(SCheckBox,L"toggle")
 public:
     
     /**
@@ -1021,7 +1021,7 @@ protected:
  */
 class SOUI_EXP SGroup : public SWindow
 {
-    SOUI_CLASS_NAME(SGroup, L"group")
+    SOUI_CLASS_NAME(SWindow,L"group")
 public:
     SGroup();
 

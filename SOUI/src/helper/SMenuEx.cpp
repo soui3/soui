@@ -19,7 +19,7 @@ namespace SOUI
 	//////////////////////////////////////////////////////////////////////////
 	class SMenuExRoot : public SWindow
 	{
-		SOUI_CLASS_NAME(SMenuExRoot, L"menuRoot")
+		SOUI_CLASS_NAME(SWindow,L"menuRoot")
 		friend class SMenuEx;
 		friend class SMenuExItem;
 	protected:
@@ -382,7 +382,7 @@ namespace SOUI
 
 	class SMenuExSep : public SMenuExItem
 	{
-		SOUI_CLASS_NAME(SMenuExSep, L"sep")
+		SOUI_CLASS_NAME(SMenuExItem,L"sep")
 	public:
 		SMenuExSep(SMenuEx *pOwnerMenu, ISkinObj *pItemSkin)
 			:SMenuExItem(pOwnerMenu, pItemSkin)

@@ -98,7 +98,7 @@ namespace SOUI
     //  SListCtrl
     class SOUI_EXP SListCtrl : public SPanel
     {
-        SOUI_CLASS_NAME(SListCtrl, L"listctrl")
+        SOUI_CLASS_NAME(SPanel,L"listctrl")
 
     public:
         /**
