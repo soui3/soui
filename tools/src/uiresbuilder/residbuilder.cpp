@@ -633,7 +633,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		pXmlType=pXmlType->NextSiblingElement();
 	}
-	strFiles += strFileTypeStructAll + L"\t}UIRES={\r\n"+strFileTypeDataAll + L"\t};\r\n";
+	strFiles += strFileTypeStructAll + L"\t};\r\n";
+	strFiles += L"#ifdef INIT_R_DATA\r\n";
+	strFiles += L"struct _UIRES UIRES={\r\n"+strFileTypeDataAll + L"\t};\r\n";
+	strFiles += L"#else\r\n";
+	strFiles += L"extern struct _UIRES UIRES;\r\n";
+	strFiles += L"#endif//INIT_R_DATA\r\n";
     
 	if(strRes.length())
 	{//编译资源.rc2文件
@@ -724,7 +729,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			idx ++;
 		}
 		strNameConstrutor += L"\t\t}\r\n";
-		strName = L"\t\tclass _name{\r\n\t\tpublic:\r\n\t\t";
+		strName = L"\tstruct _name{\r\n\t\t";
 		strName += strNameConstrutor;
 		strName += strNameVariables;
 		strName += L"\t\t}name;\r\n";
@@ -778,7 +783,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		if(bBuildIDMap)
 		    strOut += strNamedID;
 		
-		strOut += L"\tclass _R{\r\n\tpublic:\r\n";
+		strOut += L"\tstruct _R{\r\n\t";
 		strOut += strName;
 		if(bBuildIDMap)
         {
