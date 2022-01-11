@@ -85,7 +85,6 @@ class SOUI_EXP SApplication :public SSingleton<SApplication>
 	                        ,public SObjectFactoryMgr
 {
 public:
-	SApplication();
     /**
      * SApplication
      * @brief    构造函数
@@ -101,8 +100,6 @@ public:
     ~SApplication(void);
 
 public:
-	STDMETHOD_(void,SetAppInfo)(THIS_ HMODULE hMod,LPCTSTR pszClsName,BOOL bImeApp) OVERRIDE;
-
 	STDMETHOD_(void,SetRenderFactory)(THIS_ IRenderFactory * pRenderFac) OVERRIDE;
 	STDMETHOD_(IRenderFactory *, GetRenderFactory)(THIS) OVERRIDE;
 

@@ -18,7 +18,6 @@ namespace SOUI
 
         HINSTANCE GetAppInstance(){return m_hInst;}
         ATOM GetSimpleWndAtom(){return m_atom;}
-		void SetNativeClassInfo(HINSTANCE hInst,LPCTSTR pszClassName,BOOL bImeApp);
     private:
         SNativeWndHelper(HINSTANCE hInst,LPCTSTR pszClassName, BOOL bImeApp);
         ~SNativeWndHelper();

@@ -10,21 +10,11 @@ namespace SOUI
     {
         InitializeCriticalSection(&m_cs);
         m_hHeap=HeapCreate(HEAP_CREATE_ENABLE_EXECUTE,0,0);
-		SetNativeClassInfo(hInst,pszClassName,bImeApp);
+		if(bImeApp)
+			m_atom = SNativeWnd::RegisterSimpleWnd2(m_hInst, pszClassName);
+		else
+			m_atom=SNativeWnd::RegisterSimpleWnd(m_hInst,pszClassName);
     }
-
-	void SNativeWndHelper::SetNativeClassInfo(HINSTANCE hInst,LPCTSTR pszClassName,BOOL bImeApp)
-	{
-		if(m_atom) UnregisterClass((LPCTSTR)m_atom,m_hInst);
-		m_hInst = hInst;
-		if(hInst)
-		{
-			if(bImeApp)
-				m_atom = SNativeWnd::RegisterSimpleWnd2(m_hInst, pszClassName);
-			else
-				m_atom=SNativeWnd::RegisterSimpleWnd(m_hInst,pszClassName);
-		}
-	}
 
     SNativeWndHelper::~SNativeWndHelper()
     {

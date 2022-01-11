@@ -210,28 +210,6 @@ void SObjectDefaultRegister::RegisterValueAnimator(SObjectFactoryMgr * objFactor
 
 template<> SApplication* SSingleton<SApplication>::ms_Singleton = 0;
 
-SApplication::SApplication():m_hInst(0),m_hMainWnd(NULL)
-{
-	SWndSurface::Init();
-	memset(m_pSingletons, 0, sizeof(m_pSingletons));
-	_CreateSingletons(NULL,NULL,FALSE);
-
-	m_translator.Attach(new SNullTranslator);
-	m_tooltipFactory.Attach(new SDefToolTipFactory);
-	m_msgLoopFactory.Attach(new SDefMsgLoopFactory);
-
-	GetMsgLoopFactory()->CreateMsgLoop(&m_pMsgLoop);
-	AddMsgLoop(m_pMsgLoop);
-
-	SObjectDefaultRegister sysObjRegister;
-	sysObjRegister.RegisterLayouts(this);
-	sysObjRegister.RegisterSkins(this);
-	sysObjRegister.RegisterWindows(this);
-	sysObjRegister.RegisterInterpolator(this);
-	sysObjRegister.RegisterAnimation(this);
-	sysObjRegister.RegisterValueAnimator(this);
-}
-
 SApplication::SApplication(IRenderFactory *pRendFactory,HINSTANCE hInst,LPCTSTR pszHostClassName, const ISystemObjectRegister & sysObjRegister,BOOL bImeApp)
     :m_hInst(hInst)
     ,m_RenderFactory(pRendFactory)
@@ -271,16 +249,6 @@ SApplication::~SApplication(void)
 void SApplication::SetRenderFactory(THIS_ IRenderFactory * pRenderFac)
 {
 	m_RenderFactory = pRenderFac;
-}
-
-void SApplication::SetAppInfo(THIS_ HMODULE hMod,LPCTSTR pszClsName,BOOL bImeApp)
-{
-	m_hInst = hMod;
-	SAppDir appDir(m_hInst);
-	m_strAppDir = appDir.AppDir();
-
-	SNativeWndHelper * pNativeWndHelper = (SNativeWndHelper*)m_pSingletons[SNativeWndHelper::GetType()];
-	pNativeWndHelper->SetNativeClassInfo(hMod,pszClsName,bImeApp);
 }
 
 
