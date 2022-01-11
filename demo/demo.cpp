@@ -218,6 +218,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         //为渲染模块设置它需要引用的图片解码模块
         pRenderFactory->SetImgDecoderFactory(pImgDecoderFactory);
 
+
         //定义一个唯一的SApplication对象，SApplication管理整个应用程序的资源
         SApplication *theApp=new SApplication2(pRenderFactory,hInstance);
         

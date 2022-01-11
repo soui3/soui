@@ -62,27 +62,23 @@
 #include <string/strcpcvt.h>
 #include <xml/sxml.h>
 
-
-
 #include <interface/SRender-i.h>
 #include <interface/SImgDecoder-i.h>
 
 #include <soui-version.h>
+
 #include <helper/SLog.h>
 #include <helper/SLogDef.h>
 #include <helper/SAssertFmt.h>
-
-#include <SApp.h>
-
 #include <helper/SAttrCracker.h>
 #include <helper/SColor.h>
-#include <helper/SHostMgr.h>
+#include <SApp.h>
+
 #include <res.mgr/sfontpool.h>
 #include <res.mgr/sresprovider.h>
 
+
 #include <control/souictrls.h>
 #include <control/SMessageBox.h>
-
-
 
 #pragma comment(lib,"shlwapi.lib")

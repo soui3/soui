@@ -30,6 +30,7 @@ endif()
 target_include_directories(soui3
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/interface
   PUBLIC ${PROJECT_SOURCE_DIR}/config
   PUBLIC ${PROJECT_SOURCE_DIR}/utilities/include
 )

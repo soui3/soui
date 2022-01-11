@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,..\config,.,include,..\utilities\include,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,..\config,.,include,interface,..\utilities\include,..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\obj\release\soui3\"
 				DebugInformationFormat="3"
@@ -85,7 +85,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,..\config,.,include,..\utilities\include,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,..\config,.,include,interface,..\utilities\include,..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\obj\debug\soui3\"
 				DebugInformationFormat="3"
