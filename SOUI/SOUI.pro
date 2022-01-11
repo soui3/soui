@@ -38,6 +38,7 @@ INCLUDEPATH += . \
 
 # Input
 HEADERS += include/SApp.h \
+           include/SouiFactory.h \
            include/soui-version.h \
            include/stdint.h \
            interface/sacchelper-i.h \
@@ -210,6 +211,7 @@ HEADERS += include/SApp.h \
            src/updatelayeredwindow/SUpdateLayeredWindow.h \
 
 SOURCES += src/SApp.cpp \
+           src/SouiFactory.cpp \
            src/activex/SAxContainer.cpp \
            src/activex/SBStr.cpp \
            src/animation/SAlphaAnimation.cpp \
