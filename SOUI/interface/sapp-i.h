@@ -10,6 +10,7 @@
 #include <interface/SResProviderMgr-i.h>
 #include <interface/SRealWndHandler-i.h>
 #include <interface/SRender-i.h>
+#include <interface/SScriptModule-i.h>
 SNSBEGIN
 
 
@@ -17,8 +18,6 @@ SNSBEGIN
 #define INTERFACE IApplication
 DECLARE_INTERFACE_(IApplication,IObjRef)
 {
-	STDMETHOD_(void,SetRenderFactory)(THIS_ IRenderFactory * pRenderFac) PURE;
-
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST PURE;
 	STDMETHOD_(UINT,LoadSystemNamedResource)(THIS_ IResProvider *pResProvider) PURE;
 	STDMETHOD_(ITranslatorMgr *,GetTranslator)(THIS) PURE;
@@ -70,6 +69,17 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
      * Describe  
      */
     STDMETHOD_(IRenderFactory *, GetRenderFactory)(THIS) PURE;
+
+	/**
+     * SetScriptModule
+     * @brief    设置SOUI中使用的脚本模块类厂
+     * @param    IScriptFactory *pScriptModule --  脚本模块类厂
+     * @return   void 
+     *
+     * Describe  
+     */
+    STDMETHOD_(void,SetScriptFactory)(THIS_ IScriptFactory *pScriptModule) PURE;
+
 };
 
 typedef IApplication * IApplicationPtr;

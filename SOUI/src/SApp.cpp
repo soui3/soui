@@ -245,13 +245,6 @@ SApplication::~SApplication(void)
     _DestroySingletons();
 }
 
-
-void SApplication::SetRenderFactory(THIS_ IRenderFactory * pRenderFac)
-{
-	m_RenderFactory = pRenderFac;
-}
-
-
 void SApplication::_CreateSingletons(HINSTANCE hInst,LPCTSTR pszHostClassName,BOOL bImeApp)
 {
 	m_pSingletons[SUiDef::GetType()] = new SUiDef();

@@ -11,9 +11,9 @@ SouiFactory::~SouiFactory(void)
 {
 }
 
-STDMETHODIMP_(HRESULT) SouiFactory::CreateApp(THIS_ IApplication **ppRet,HMODULE hInst,LPCTSTR pszHostClassName,BOOL bImeApp)
+STDMETHODIMP_(HRESULT) SouiFactory::CreateApp(THIS_ IApplication **ppRet,IRenderFactory *pRenderFac,HMODULE hInst,LPCTSTR pszHostClassName,BOOL bImeApp)
 {
-	* ppRet = new SApplication(NULL,hInst,pszHostClassName,SObjectDefaultRegister(),bImeApp);
+	* ppRet = new SApplication(pRenderFac,hInst,pszHostClassName,SObjectDefaultRegister(),bImeApp);
 	return S_OK;
 }
 

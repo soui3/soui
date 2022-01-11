@@ -14,7 +14,6 @@
 #pragma once
 #include <core/ssingleton.h>
 #include <interface/sapp-i.h>
-#include <interface/SScriptModule-i.h>
 #include <interface/SAnimation-i.h>
 #include <interface/SValueAnimator-i.h>
 
@@ -100,7 +99,6 @@ public:
     ~SApplication(void);
 
 public:
-	STDMETHOD_(void,SetRenderFactory)(THIS_ IRenderFactory * pRenderFac) OVERRIDE;
 	STDMETHOD_(IRenderFactory *, GetRenderFactory)(THIS) OVERRIDE;
 
 	STDMETHOD_(HMODULE,GetModule)(THIS) SCONST OVERRIDE;
@@ -133,7 +131,7 @@ public:
 
 	STDMETHOD_(void,SetRealWndHandler)(THIS_ IRealWndHandler *pRealHandler) OVERRIDE;
 
-
+    STDMETHOD_(void,SetScriptFactory)(THIS_ IScriptFactory *pScriptModule) OVERRIDE;
 public:
     /**
      * Init
@@ -172,15 +170,6 @@ public:
      */
     HRESULT CreateScriptModule(IScriptModule **ppScriptModule);
 
-    /**
-     * SetScriptModule
-     * @brief    设置SOUI中使用的脚本模块类厂
-     * @param    IScriptFactory *pScriptModule --  脚本模块类厂
-     * @return   void 
-     *
-     * Describe  
-     */
-    void SetScriptFactory(IScriptFactory *pScriptModule);
     
     void SetAppDir(const SStringT & strAppDir);
 
