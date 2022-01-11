@@ -349,19 +349,19 @@
 			<File
 				RelativePath="include\msaa\SAccProxyWindow.h" />
 			<File
-				RelativePath="include\interface\SAccelerator-i.h" />
+				RelativePath="interface\SAccelerator-i.h" />
 			<File
 				RelativePath="include\core\SAccelerator.h" />
 			<File
 				RelativePath="include\control\SActiveX.h" />
 			<File
-				RelativePath="include\interface\SAdapter-i.h" />
+				RelativePath="interface\SAdapter-i.h" />
 			<File
 				RelativePath="include\helper\SAdapterBase.h" />
 			<File
 				RelativePath="include\animation\SAlphaAnimation.h" />
 			<File
-				RelativePath="include\interface\SAnimation-i.h" />
+				RelativePath="interface\SAnimation-i.h" />
 			<File
 				RelativePath="include\animation\SAnimation.h" />
 			<File
@@ -375,7 +375,7 @@
 			<File
 				RelativePath="include\helper\SAttrCracker.h" />
 			<File
-				RelativePath="include\interface\SAttrStorage-i.h" />
+				RelativePath="interface\SAttrStorage-i.h" />
 			<File
 				RelativePath="src\activex\SAxContainer.h" />
 			<File
@@ -427,7 +427,7 @@
 			<File
 				RelativePath="include\event\SEvents.h" />
 			<File
-				RelativePath="include\interface\SEvtArgs-i.h" />
+				RelativePath="interface\SEvtArgs-i.h" />
 			<File
 				RelativePath="include\matrix\SFloat.h" />
 			<File
@@ -453,13 +453,13 @@
 			<File
 				RelativePath="include\core\SHostMsgDef.h" />
 			<File
-				RelativePath="include\interface\SHostMsgHandler-i.h" />
+				RelativePath="interface\SHostMsgHandler-i.h" />
 			<File
 				RelativePath="include\core\SHostWnd.h" />
 			<File
 				RelativePath="include\control\SHotKeyCtrl.h" />
 			<File
-				RelativePath="include\interface\SImgDecoder-i.h" />
+				RelativePath="interface\SImgDecoder-i.h" />
 			<File
 				RelativePath="include\animation\SInterpolatorImpl.h" />
 			<File
@@ -477,7 +477,7 @@
 			<File
 				RelativePath="include\control\SListView.h" />
 			<File
-				RelativePath="include\interface\SListViewItemLocator-i.h" />
+				RelativePath="interface\SListViewItemLocator-i.h" />
 			<File
 				RelativePath="include\helper\SListViewItemLocator.h" />
 			<File
@@ -517,25 +517,25 @@
 			<File
 				RelativePath="include\core\SPanel.h" />
 			<File
-				RelativePath="include\interface\SPathEffect-i.h" />
+				RelativePath="interface\SPathEffect-i.h" />
 			<File
 				RelativePath="include\matrix\SPoint.h" />
 			<File
 				RelativePath="include\control\SRealWnd.h" />
 			<File
-				RelativePath="include\interface\SRealWndHandler-i.h" />
+				RelativePath="interface\SRealWndHandler-i.h" />
 			<File
 				RelativePath="include\matrix\SRect.h" />
 			<File
-				RelativePath="include\interface\SRender-i.h" />
+				RelativePath="interface\SRender-i.h" />
 			<File
 				RelativePath="include\helper\SResID.h" />
 			<File
-				RelativePath="include\interface\SResProvider-i.h" />
+				RelativePath="interface\SResProvider-i.h" />
 			<File
 				RelativePath="include\res.mgr\SResProvider.h" />
 			<File
-				RelativePath="include\interface\SResProviderMgr-i.h" />
+				RelativePath="interface\SResProviderMgr-i.h" />
 			<File
 				RelativePath="include\res.mgr\SResProviderMgr.h" />
 			<File
@@ -543,7 +543,7 @@
 			<File
 				RelativePath="include\animation\SRotateAnimation.h" />
 			<File
-				RelativePath="include\interface\SScriptModule-i.h" />
+				RelativePath="interface\SScriptModule-i.h" />
 			<File
 				RelativePath="include\helper\SScriptTimer.h" />
 			<File
@@ -563,7 +563,7 @@
 			<File
 				RelativePath="include\res.mgr\SSkinPool.h" />
 			<File
-				RelativePath="include\interface\SSkinobj-i.h" />
+				RelativePath="interface\SSkinobj-i.h" />
 			<File
 				RelativePath="include\control\SSliderBar.h" />
 			<File
@@ -577,7 +577,7 @@
 			<File
 				RelativePath="include\helper\STaskHandler.h" />
 			<File
-				RelativePath="include\interface\STaskLoop-i.h" />
+				RelativePath="interface\STaskLoop-i.h" />
 			<File
 				RelativePath="include\control\STileView.h" />
 			<File
@@ -585,7 +585,7 @@
 			<File
 				RelativePath="include\helper\STime.h" />
 			<File
-				RelativePath="include\interface\STimelineHandler-i.h" />
+				RelativePath="interface\STimelineHandler-i.h" />
 			<File
 				RelativePath="include\helper\STimerEx.h" />
 			<File
@@ -597,7 +597,7 @@
 			<File
 				RelativePath="include\animation\STranslateAnimation.h" />
 			<File
-				RelativePath="include\interface\STranslator-i.h" />
+				RelativePath="interface\STranslator-i.h" />
 			<File
 				RelativePath="include\control\STree.h" />
 			<File
@@ -605,7 +605,7 @@
 			<File
 				RelativePath="include\control\STreeView.h" />
 			<File
-				RelativePath="include\interface\STreeViewItemLocator-i.h" />
+				RelativePath="interface\STreeViewItemLocator-i.h" />
 			<File
 				RelativePath="include\res.mgr\SUiDef.h" />
 			<File
@@ -613,11 +613,11 @@
 			<File
 				RelativePath="src\updatelayeredwindow\SUpdateLayeredWindow.h" />
 			<File
-				RelativePath="include\interface\SValueAnimator-i.h" />
+				RelativePath="interface\SValueAnimator-i.h" />
 			<File
 				RelativePath="include\valueAnimator\SValueAnimator.h" />
 			<File
-				RelativePath="include\interface\SWindow-i.h" />
+				RelativePath="interface\SWindow-i.h" />
 			<File
 				RelativePath="include\core\SWindowMgr.h" />
 			<File
@@ -627,7 +627,7 @@
 			<File
 				RelativePath="include\core\SWndContainer-i.h" />
 			<File
-				RelativePath="include\interface\SWndContainer-i.h" />
+				RelativePath="interface\SWndContainer-i.h" />
 			<File
 				RelativePath="include\core\SWndContainerImpl.h" />
 			<File
@@ -655,29 +655,29 @@
 			<File
 				RelativePath="include\unknown\obj-ref-impl.hpp" />
 			<File
-				RelativePath="include\interface\sacchelper-i.h" />
+				RelativePath="interface\sacchelper-i.h" />
 			<File
-				RelativePath="include\interface\saccproxy-i.h" />
+				RelativePath="interface\saccproxy-i.h" />
 			<File
-				RelativePath="include\interface\sapp-i.h" />
+				RelativePath="interface\sapp-i.h" />
 			<File
-				RelativePath="include\interface\scaret-i.h" />
+				RelativePath="interface\scaret-i.h" />
 			<File
-				RelativePath="include\interface\shostwnd-i.h" />
+				RelativePath="interface\shostwnd-i.h" />
 			<File
-				RelativePath="include\interface\sinterpolator-i.h" />
+				RelativePath="interface\sinterpolator-i.h" />
 			<File
-				RelativePath="include\interface\sipcobj-i.h" />
+				RelativePath="interface\sipcobj-i.h" />
 			<File
-				RelativePath="include\interface\slayout-i.h" />
+				RelativePath="interface\slayout-i.h" />
 			<File
-				RelativePath="include\interface\slog-i.h" />
+				RelativePath="interface\slog-i.h" />
 			<File
 				RelativePath="include\helper\slog.h" />
 			<File
-				RelativePath="include\interface\smsgloop-i.h" />
+				RelativePath="interface\smsgloop-i.h" />
 			<File
-				RelativePath="include\interface\sobject-i.h" />
+				RelativePath="interface\sobject-i.h" />
 			<File
 				RelativePath="include\soui-version.h" />
 			<File
@@ -702,7 +702,7 @@
 			<File
 				RelativePath="include\stdint.h" />
 			<File
-				RelativePath="include\interface\stooltip-i.h" />
+				RelativePath="interface\stooltip-i.h" />
 			<File
 				RelativePath="include\helper\swndspy.h" />
 		</Filter>
