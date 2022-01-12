@@ -549,12 +549,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	if(strIndexFile.empty())
 	{
 		printf("not specify input file, using -i to define the input file\n");
-		printf("usage: uiresbuilder -p uires -i uires\\uires.idx -r .\\uires\\winres.rc2 -h .\\uires\\resource.h idtable\n");
+		printf("usage: uiresbuilder -p uires -i uires\\uires.idx -r .\\uires\\winres.rc2 -h .\\uires\\resource.h\n");
         printf("\tparam -i : define uires.idx path\n");
         printf("\tparam -p : define path of uires folder\n");
         printf("\tparam -r : define path of output .rc2 file\n");
         printf("\tparam -h : define path of output resource.h file\n");
-        printf("\tparam idtable : define idtable is needed for resource.h. no id table for default.\n");
 		return 1;
 	}
 
@@ -667,8 +666,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
         __int64 tmResource = bBuildIDMap;
         
-		mapNameID[L"_name_start"] = KStartID-1;//增加一个_name_start的项，防止产生一个为空的name-id数组。
-
         int nStartID = KStartID;
         vector<IDMAPRECORD>::iterator it2=vecIdMapRecord.begin();
         while(it2!=vecIdMapRecord.end())
@@ -685,128 +682,130 @@ int _tmain(int argc, _TCHAR* argv[])
             it2 ++;
         }
 
-		wstring strName, 
-		        strId ,     //.id
-		        strNamedID; //{name,id}数组
-		wstring strNameConstrutor;  //.name的构造函数
-		wstring strNameVariables;    //.name的成员变量
-		
-        strNamedID = L"\tconst SNamedID::NAMEDVALUE namedXmlID[]={\r\n";
-        strNameConstrutor = L"_name(){\r\n";
-        strId = L"\t\tclass _id{\r\n\t\tpublic:\r\n";
+		wstring strNameStruct, strNameData,	//.name
+		        strIdStruct,strIdData ;     //.id
+
+		int nNames = mapNameID.size();
+		strNameStruct = L"\tstruct _name{\r\n";
+        strNameData = L"\t{\r\n";
+        strIdStruct = L"\t\tstruct _id{\r\n";
+		strIdData = L"\t{\r\n";
         
 		map<wstring,int>::iterator it=mapNameID.begin();
-		
-		if(it == mapNameID.end())
-		{
-		    printf("!!!err: name-id map is empty!");
-		}
 		int idx = 0;
 		while(it!=mapNameID.end())
 		{
 			WCHAR szName[200]={0},szBuf[2000] = { 0 };
 			MakeNameValid(it->first.c_str(),szName);
-            
-            if(!bBuildIDMap)
-            {
-                swprintf(szBuf,L"\t\t\t%s = L\"%s\";\r\n",szName, it->first.c_str());
-                strNameConstrutor += szBuf;
-            }else
-            {
-                swprintf(szBuf,L"\t\t\t%s = namedXmlID[%d].strName;\r\n",szName, idx);
-                strNameConstrutor += szBuf;
-            }
-			
+            			
 			swprintf(szBuf,L"\t\t const wchar_t * %s;\r\n",szName);
-			strNameVariables += szBuf;
+			strNameStruct += szBuf;			
+			swprintf(szBuf, L"\t\tint %s;\r\n", szName);
+			strIdStruct += szBuf;
 			
-			swprintf(szBuf, L"\t\tconst static int %s\t=\t%d;\r\n", szName, it->second);
-			strId += szBuf;
-			
-			swprintf(szBuf,L"\t\t{L\"%s\",%d},\r\n",it->first.c_str(),it->second);
-			strNamedID += szBuf;
+			if(idx == nNames-1)
+			{
+				swprintf(szBuf,L"\t\tL\"%s\"\r\n",it->first.c_str());
+				strNameData += szBuf;
+				swprintf(szBuf, L"\t\t%d\r\n",it->second);
+				strIdData += szBuf;
+			}
+			else{
+				swprintf(szBuf,L"\t\tL\"%s\",\r\n",it->first.c_str());
+				strNameData += szBuf;
+				swprintf(szBuf, L"\t\t%d,\r\n",it->second);
+				strIdData += szBuf;
+			}
+
 			it ++;
 			idx ++;
 		}
-		strNameConstrutor += L"\t\t}\r\n";
-		strName = L"\tstruct _name{\r\n\t\t";
-		strName += strNameConstrutor;
-		strName += strNameVariables;
-		strName += L"\t\t}name;\r\n";
+		strNameStruct += L"\t\t}name;\r\n";
+		strIdStruct += L"\t\t}id;\r\n";
+		strNameData += L"\t}\r\n";
+		strIdData += L"\t}\r\n";
 		
-		strId += L"\t\t}id;\r\n";
 		
-		if(mapNameID.size()>0)
-		{
-		    strNamedID = strNamedID.substr(0,strNamedID.size()-3); //去除数组最后一个","
-		}
-		strNamedID += L"\t\t};\r\n";
-		
-        wstring strString;          //.string
+        wstring strStringStruct,strStringData;          //.string
+		int nStrings = mapString.size();
         {
-            int idx = 0;
-            strString = L"\t\tclass _string{\r\n\t\tpublic:\r\n";
+            strStringStruct = L"\t\tstruct _string{\r\n";
+			strStringData = L"\t{\r\n";
             map<string,int>::iterator it = mapString.begin();
+			int idx = 0;
             while(it != mapString.end())
             {
                 WCHAR szName[200],szBuf[2000] = { 0 };
                 MakeNameValid(it->first.c_str(),szName);
-                swprintf(szBuf, L"\t\tconst static int %s\t=\t%d;\r\n", szName, idx++);
-                strString += szBuf;
+                swprintf(szBuf, L"\t\tint %s;\r\n", szName);
+                strStringStruct += szBuf;
+
+				if(idx == nStrings-1)
+					swprintf(szBuf, L"\t\t%d\r\n", idx);
+				else
+					swprintf(szBuf, L"\t\t%d,\r\n", idx);
+				strStringData += szBuf;
+				idx ++;
                 it ++;
             }
-            strString += L"\t\t}string;\r\n";
+            strStringStruct += L"\t\t}string;\r\n";
+			strStringData += L"\t}\r\n";
         }
 
-        wstring strColor;           //.color
+        wstring strColorStruct,strColorData;           //.color
+		int nColors = mapColor.size();
         {
             int idx = 0;
-            strColor = L"\t\tclass _color{\r\n\t\tpublic:\r\n";
+            strColorStruct = L"\t\tstruct _color{\r\n";
+			strColorData =  L"\t{\r\n";
             map<string,int>::iterator it = mapColor.begin();
             while(it != mapColor.end())
             {
                 WCHAR szName[200],szBuf[2000] = { 0 };
                 MakeNameValid(it->first.c_str(),szName);
-                swprintf(szBuf, L"\t\tconst static int %s\t=\t%d;\r\n", szName, idx++);
-                strColor += szBuf;
+                swprintf(szBuf, L"\t\tint %s;\r\n", szName);
+                strColorStruct += szBuf;
+				if(idx == nColors-1)
+					swprintf(szBuf, L"\t\t%d\r\n", idx);
+				else
+					swprintf(szBuf, L"\t\t%d,\r\n", idx);
+				strColorData += szBuf;
+				idx ++;
                 it ++;
             }
-            strColor += L"\t\t}color;\r\n";
+            strColorStruct += L"\t\t}color;\r\n";
+			strColorData +=  L"\t}\r\n";
         }
 
 		wstring strOut = RB_HEADER_ID;
-		strOut += L"#pragma once\r\n#include <res.mgr/snamedvalue.h>\r\n";
-		strOut += ROBJ_DEF;
-		//strOut += L"namespace SOUI\r\n{\r\n";
+
+		wstring strRStructAll;
+		wstring strRDataAll;
+		if(nNames)
+		{
+			strRStructAll += strNameStruct + L"\r\n"+ strIdStruct +L"\r\n";
+			strRDataAll += strNameData + L"\t,\r\n" + strIdData + L"\t,\r\n";
+		}
+		if(nColors)
+		{
+			strRStructAll += strColorStruct + L"\r\n";
+			strRDataAll += strColorData + L"\t,\r\n";
+		}
+		if(nStrings)
+		{
+			strRStructAll += strStringStruct + L"\t\r\n";
+			strRDataAll += strStringData + L"\t\r\n";
+		}
 		strOut += strFiles;
-				
-		if(bBuildIDMap)
-		    strOut += strNamedID;
-		
-		strOut += L"\tstruct _R{\r\n\t";
-		strOut += strName;
-		if(bBuildIDMap)
-        {
-            strOut += L"\r\n";
-            strOut += strId;
-        }
-        strOut += L"\r\n";
-        strOut += strString;
-
-        strOut += L"\r\n";
-        strOut += strColor;
-
-        strOut += L"\r\n\t};\r\n\r\n";
+						
+		strOut += L"\tstruct _R{\r\n\t" + strRStructAll + L"\r\n\t};\r\n\r\n";
         
-        strOut += L"#ifdef R_IN_CPP\r\n";
-        strOut += L"\t extern const _R R;\r\n";
-        strOut += L"\t extern const _UIRES UIRES;\r\n";
-        strOut += L"#else\r\n";
-        strOut += L"\t extern const __declspec(selectany) _R & R = _R();\r\n";
-        strOut += L"\t extern const __declspec(selectany) _UIRES & UIRES = _UIRES();\r\n";
-        strOut += L"#endif//R_IN_CPP\r\n";
 
-        //strOut += L"}\r\n";
+		strOut += L"#ifdef INIT_R_DATA\r\n";
+		strOut += L"struct _R R={\r\n"+strRDataAll + L"};\r\n";
+		strOut += L"#else\r\n";
+		strOut += L"extern struct _R R;\r\n";
+		strOut += L"#endif//INIT_R_DATA\r\n";
 
 		WriteFile(tmResource, strHeadFile, strOut, FALSE);
 	}
