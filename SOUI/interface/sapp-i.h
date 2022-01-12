@@ -11,6 +11,8 @@
 #include <interface/SRealWndHandler-i.h>
 #include <interface/SRender-i.h>
 #include <interface/SScriptModule-i.h>
+#include <interface/SAnimation-i.h>
+#include <interface/SValueAnimator-i.h>
 SNSBEGIN
 
 
@@ -81,6 +83,13 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
     STDMETHOD_(void,SetScriptFactory)(THIS_ IScriptFactory *pScriptModule) PURE;
 
 	STDMETHOD_(void,InitXmlNamedID)(THIS_ const LPCWSTR *pNames, const int * nIds,int nCount) PURE;
+
+	STDMETHOD_(IXmlDoc *,LoadXmlDocment)(THIS_ LPCTSTR strResId) PURE;
+
+	STDMETHOD_(IAnimation *,LoadAnimation)(THIS_ LPCTSTR strResId) PURE;
+
+	STDMETHOD_(IValueAnimator *,LoadValueAnimator)(THIS_ LPCTSTR strResId) PURE;
+
 };
 
 typedef IApplication * IApplicationPtr;

@@ -371,6 +371,19 @@ BOOL SApplication::_LoadXmlDocment( LPCTSTR pszXmlName ,LPCTSTR pszType ,SXmlDoc
     return bLoad;
 }
 
+IXmlDoc * SApplication::LoadXmlDocment(LPCTSTR strResId)
+{
+	SXmlDoc *xmlDoc = new SXmlDoc;
+	BOOL bRet = LoadXmlDocment(*xmlDoc,strResId);
+	if(bRet)
+	{
+		return xmlDoc;
+	}else
+	{
+		delete xmlDoc;
+		return NULL;
+	}
+}
 
 BOOL SApplication::LoadXmlDocment(SXmlDoc & xmlDoc, const SStringT & strResId)
 {
@@ -379,7 +392,7 @@ BOOL SApplication::LoadXmlDocment(SXmlDoc & xmlDoc, const SStringT & strResId)
     return _LoadXmlDocment(strLst[1],strLst[0],xmlDoc);
 }
 
-IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
+IAnimation * SApplication::LoadAnimation(LPCTSTR strResId)
 {
 	SXmlDoc xml;
 	if (!LoadXmlDocment(xml, strResId))
@@ -391,7 +404,7 @@ IAnimation * SApplication::LoadAnimation(const SStringT &strResId)
 	return pRet;
 }
 
-IValueAnimator * SApplication::LoadValueAnimator(const SStringT & strResId)
+IValueAnimator * SApplication::LoadValueAnimator(LPCTSTR strResId)
 {
 	SXmlDoc xml;
 	if (!LoadXmlDocment(xml, strResId))

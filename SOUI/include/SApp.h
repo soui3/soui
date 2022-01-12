@@ -14,8 +14,6 @@
 #pragma once
 #include <core/ssingleton.h>
 #include <interface/sapp-i.h>
-#include <interface/SAnimation-i.h>
-#include <interface/SValueAnimator-i.h>
 
 #include <res.mgr/SResProviderMgr.h>
 #include <res.mgr/SNamedValue.h>
@@ -135,6 +133,12 @@ public:
 
 	STDMETHOD_(void,InitXmlNamedID)(THIS_ const LPCWSTR *pNames, const int * nIds,int nCount) OVERRIDE;
 
+	STDMETHOD_(IXmlDoc *,LoadXmlDocment)(THIS_ LPCTSTR strResId) OVERRIDE;
+
+	STDMETHOD_(IAnimation *,LoadAnimation)(THIS_ LPCTSTR strResId) OVERRIDE;
+
+	STDMETHOD_(IValueAnimator *,LoadValueAnimator)(THIS_ LPCTSTR strResId) OVERRIDE;
+
 public:
     /**
      * Init
@@ -159,9 +163,6 @@ public:
      */
     BOOL LoadXmlDocment(SXmlDoc & xmlDoc,const SStringT & strResId);
 
-	IAnimation * LoadAnimation(const SStringT &strResId);
-
-	IValueAnimator *LoadValueAnimator(const SStringT &strResId);
     
     /**
      * GetScriptModule
