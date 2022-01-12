@@ -70,7 +70,8 @@
 #include <helper/SFunctor.hpp>
 #include <string>
 
-ROBJ_IN_CPP
+#define INIT_R_DATA
+#include "res/resource.h"
 
 //演示异步任务。
 class CAsyncTaskObj
@@ -279,7 +280,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         SSkinGif::Gdiplus_Startup();
         
         //如果需要在代码中使用R::id::namedid这种方式来使用控件必须要这一行代码：2016年2月2日，R::id::namedXmlID是由uiresbuilder 增加-h .\res\resource.h idtable 这3个参数后生成的。
-        theApp->InitXmlNamedID(namedXmlID,ARRAYSIZE(namedXmlID),TRUE);
+        theApp->InitXmlNamedID((const LPCWSTR*)&R.name,(const int*)&R.id,sizeof(R.id)/sizeof(int));
         
         //将程序的运行路径修改到demo所在的目录
 #ifdef _DEBUG
