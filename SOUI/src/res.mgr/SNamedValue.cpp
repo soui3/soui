@@ -157,5 +157,22 @@ void SNamedID::Init2(const NAMEDVALUE *pValue,int nCount,BOOL bSorted)
     }
 }
 
+void SNamedID::Init3(const LPCWSTR *pNames, const int *nIDs,int nCount,BOOL bSorted)
+{
+	m_lstNamedValue.RemoveAll();
+	m_lstNamedValue.SetCount(nCount);
+	for(int i=0;i<nCount;i++)
+	{
+		NAMEDVALUE value;
+		wcscpy_s(value.strName,MAX_NAME,pNames[i]);
+		value.value = nIDs[i];
+		m_lstNamedValue.SetAt(i,value);
+	}
+	if(!bSorted)
+	{//自动排序
+		qsort(m_lstNamedValue.GetData(),m_lstNamedValue.GetCount(),sizeof(NAMEDVALUE),Compare);
+	}
+}
+
 
 }//namespace SOUI

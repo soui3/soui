@@ -529,6 +529,11 @@ void SApplication::InitXmlNamedID(const SNamedID::NAMEDVALUE *pNamedValue,int nC
     m_namedID.Init2(pNamedValue,nCount,bSorted);
 }
 
+void SApplication::InitXmlNamedID(const LPCWSTR *pNames ,const int * nIds,int nCount)
+{
+	m_namedID.Init3(pNames,nIds,nCount,TRUE);
+}
+
 int SApplication::Str2ID(const SStringW & str)
 {
     return m_namedID.String2Value(str);

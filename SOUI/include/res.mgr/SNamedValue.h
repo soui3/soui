@@ -109,6 +109,7 @@ namespace SOUI
         //int nCount:数组长度
         //BOOL bSorted:数组关键字从小到大已经有序
         void Init2(const NAMEDVALUE *pValue,int nCount,BOOL bSorted);
+		void Init3(const LPCWSTR *pNames, const int *nIDs,int nCount,BOOL bSorted);
     }; 
     
     class SOUI_EXP SColorParser

@@ -132,6 +132,9 @@ public:
 	STDMETHOD_(void,SetRealWndHandler)(THIS_ IRealWndHandler *pRealHandler) OVERRIDE;
 
     STDMETHOD_(void,SetScriptFactory)(THIS_ IScriptFactory *pScriptModule) OVERRIDE;
+
+	STDMETHOD_(void,InitXmlNamedID)(THIS_ const LPCWSTR *pNames, const int * nIds,int nCount) OVERRIDE;
+
 public:
     /**
      * Init

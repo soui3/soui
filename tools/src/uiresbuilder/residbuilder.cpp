@@ -574,7 +574,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<IDMAPRECORD> vecIdMapRecord;
 	map<string,string>  mapFiles;
 	
-	wstring strFiles = L"\tstruct _UIRES{\r\n";
+	wstring strFiles = 
+		L"#ifndef _UIRES_H_\r\n"
+		L"#define _UIRES_H_\r\n"
+		L"\tstruct _UIRES{\r\n";
 	
 	wstring strFileTypeStructAll;
 	wstring strFileTypeDataAll;
@@ -633,6 +636,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pXmlType=pXmlType->NextSiblingElement();
 	}
 	strFiles += strFileTypeStructAll + L"\t};\r\n";
+	strFiles += L"#endif//_UIRES_H_\r\n";
 	strFiles += L"#ifdef INIT_R_DATA\r\n";
 	strFiles += L"struct _UIRES UIRES={\r\n"+strFileTypeDataAll + L"\t};\r\n";
 	strFiles += L"#else\r\n";
@@ -688,7 +692,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		int nNames = mapNameID.size();
 		strNameStruct = L"\tstruct _name{\r\n";
         strNameData = L"\t{\r\n";
-        strIdStruct = L"\t\tstruct _id{\r\n";
+        strIdStruct = L"\tstruct _id{\r\n";
 		strIdData = L"\t{\r\n";
         
 		map<wstring,int>::iterator it=mapNameID.begin();
@@ -720,8 +724,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			it ++;
 			idx ++;
 		}
-		strNameStruct += L"\t\t}name;\r\n";
-		strIdStruct += L"\t\t}id;\r\n";
+		strNameStruct += L"\t}name;\r\n";
+		strIdStruct += L"\t}id;\r\n";
 		strNameData += L"\t}\r\n";
 		strIdData += L"\t}\r\n";
 		
@@ -729,7 +733,7 @@ int _tmain(int argc, _TCHAR* argv[])
         wstring strStringStruct,strStringData;          //.string
 		int nStrings = mapString.size();
         {
-            strStringStruct = L"\t\tstruct _string{\r\n";
+            strStringStruct = L"\tstruct _string{\r\n";
 			strStringData = L"\t{\r\n";
             map<string,int>::iterator it = mapString.begin();
 			int idx = 0;
@@ -748,7 +752,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				idx ++;
                 it ++;
             }
-            strStringStruct += L"\t\t}string;\r\n";
+            strStringStruct += L"\t}string;\r\n";
 			strStringData += L"\t}\r\n";
         }
 
@@ -756,7 +760,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		int nColors = mapColor.size();
         {
             int idx = 0;
-            strColorStruct = L"\t\tstruct _color{\r\n";
+            strColorStruct = L"\tstruct _color{\r\n";
 			strColorData =  L"\t{\r\n";
             map<string,int>::iterator it = mapColor.begin();
             while(it != mapColor.end())
@@ -773,7 +777,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				idx ++;
                 it ++;
             }
-            strColorStruct += L"\t\t}color;\r\n";
+            strColorStruct += L"\t}color;\r\n";
 			strColorData +=  L"\t}\r\n";
         }
 
@@ -783,23 +787,27 @@ int _tmain(int argc, _TCHAR* argv[])
 		wstring strRDataAll;
 		if(nNames)
 		{
-			strRStructAll += strNameStruct + L"\r\n"+ strIdStruct +L"\r\n";
+			strRStructAll += strNameStruct + strIdStruct;
 			strRDataAll += strNameData + L"\t,\r\n" + strIdData + L"\t,\r\n";
 		}
 		if(nColors)
 		{
-			strRStructAll += strColorStruct + L"\r\n";
+			strRStructAll += strColorStruct;
 			strRDataAll += strColorData + L"\t,\r\n";
 		}
 		if(nStrings)
 		{
-			strRStructAll += strStringStruct + L"\t\r\n";
+			strRStructAll += strStringStruct;
 			strRDataAll += strStringData + L"\t\r\n";
 		}
+
 		strOut += strFiles;
-						
-		strOut += L"\tstruct _R{\r\n\t" + strRStructAll + L"\r\n\t};\r\n\r\n";
-        
+		strOut += L"\r\n";
+	
+		strOut += L"#ifndef _R_H_\r\n"
+				  L"#define _R_H_\r\n";
+		strOut += L"struct _R{\r\n" + strRStructAll + L"\r\n};\r\n";
+		strOut += L"#endif//_R_H_\r\n";
 
 		strOut += L"#ifdef INIT_R_DATA\r\n";
 		strOut += L"struct _R R={\r\n"+strRDataAll + L"};\r\n";

@@ -80,6 +80,7 @@ DECLARE_INTERFACE_(IApplication,IObjRef)
      */
     STDMETHOD_(void,SetScriptFactory)(THIS_ IScriptFactory *pScriptModule) PURE;
 
+	STDMETHOD_(void,InitXmlNamedID)(THIS_ const LPCWSTR *pNames, const int * nIds,int nCount) PURE;
 };
 
 typedef IApplication * IApplicationPtr;
