@@ -396,6 +396,10 @@ void SItemPanel::EnableIME(BOOL bEnable)
 	m_pFrmHost->GetContainer()->EnableIME(bEnable);
 }
 
+void SItemPanel::OnUpdateCursor()
+{
+	m_pFrmHost->GetContainer()->OnUpdateCursor();
+}
 
 COLORREF SItemPanel::GetBkgndColor() const
 {
@@ -409,6 +413,8 @@ COLORREF SItemPanel::GetBkgndColor() const
 	}
 	return m_crBk;
 }
+
+
 BOOL SOUI_EXP IsItemInClip(const SMatrix &mtx,const CRect rcClip,const IRegion * clipRgn,const CRect & rcItem)
 {
 	if(!mtx.isIdentity())//don't clip any item if matrix is not identify.

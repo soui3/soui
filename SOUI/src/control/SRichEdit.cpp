@@ -1579,8 +1579,7 @@ void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
     __super::OnShowWindow(bShow,nStatus);
     if(!IsVisible(TRUE))
     {//防止正在编辑时隐藏了cursor
-        HWND hHost = GetContainer()->GetHostHwnd();
-        ::PostMessage(hHost,WM_SETCURSOR,(WPARAM)hHost,MAKELPARAM(HTCLIENT,0));
+		GetContainer()->OnUpdateCursor();
     }
 }
 

@@ -69,6 +69,8 @@ public://SwndContainerImpl
 	virtual int GetScale() const;
 
 	virtual void EnableIME(BOOL bEnable);
+
+	virtual void OnUpdateCursor();
 public://SWindow
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);
 

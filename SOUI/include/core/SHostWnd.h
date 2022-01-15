@@ -321,6 +321,8 @@ protected:// IContainer
 	virtual void OnCavasInvalidate(SWND swnd);
 
 	virtual void EnableIME(BOOL bEnable);
+
+	virtual void OnUpdateCursor();
 protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
