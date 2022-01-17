@@ -109,14 +109,7 @@ struct tagThunk
 #error Only AMD64, ARM and X86 supported
 #endif
 
-class SMessageMap
-{
-public:
-    virtual BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
-                                      LRESULT& lResult, DWORD dwMsgMapID) = 0;
-};
-
-class  SOUI_EXP SNativeWnd : public SMessageMap
+class  SOUI_EXP SNativeWnd 
 {
 public:
     SNativeWnd(HWND hWnd=0);
@@ -444,7 +437,7 @@ public:
     static BOOL DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
 public://EXTRACT FROM BEGIN_MSG_MAP_EX and END_MSG_MAP
-    BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0)
+    virtual BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0)
     {
         return FALSE;
     }
