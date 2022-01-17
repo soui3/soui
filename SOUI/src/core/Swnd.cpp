@@ -3403,6 +3403,16 @@ namespace SOUI
 		return GetOwner();
 	}
 
+	BOOL SWindow::SubscribeEvent(THIS_ DWORD evtId, const IEvtSlot *pSlot)
+	{
+		return GetEventSet()->subscribeEvent(evtId,pSlot);
+	}
+
+	BOOL SWindow::UnsubscribeEvent(THIS_ DWORD evtId,const IEvtSlot *pSlot)
+	{
+		return GetEventSet()->unsubscribeEvent(evtId,pSlot);
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	static SWindow * ICWND_NONE = (SWindow*)-2;
 	SWindow::SAnimationHandler::SAnimationHandler(SWindow * pOwner) 

@@ -21,14 +21,14 @@ namespace SOUI
     }
 
 
-    bool SEvent::subscribe( const IEvtSlot& slot )
+    BOOL SEvent::subscribe( const IEvtSlot* slot )
     {
         if(findSlotFunctor(slot) != -1) return false;
-        m_evtSlots.Add(slot.Clone());
+        m_evtSlots.Add(slot->Clone());
         return true;
     }
 
-    bool SEvent::unsubscribe( const IEvtSlot& slot )
+    BOOL SEvent::unsubscribe( const IEvtSlot* slot )
     {
         int idx=findSlotFunctor(slot);
         if(idx==-1) return false;
@@ -38,11 +38,11 @@ namespace SOUI
         return true;
     }
 
-    int SEvent::findSlotFunctor( const IEvtSlot& slot )
+    int SEvent::findSlotFunctor( const IEvtSlot * slot )
     {
         for(UINT i=0;i<m_evtSlots.GetCount();i++)
         {
-            if(m_evtSlots[i]->Equal(&slot))
+            if(m_evtSlots[i]->Equal(slot))
             {
                 return i;
             }
@@ -51,7 +51,7 @@ namespace SOUI
     }
 
 
-    void SEvent::operator()(IEvtArgs* args)
+    void SEvent::fire(IEvtArgs* args)
     {
         // execute all subscribers, updating the 'handled' state as we go
         for (int i=(int)m_evtSlots.GetCount()-1;i>=0; i--)
@@ -96,7 +96,7 @@ namespace SOUI
         removeAllEvents();
     }
 
-	void SEventSet::setMutedState(bool setting)
+	void SEventSet::setMutedState(BOOL setting)
 	{
 		if (setting)
 			m_nMuted++;
@@ -105,7 +105,7 @@ namespace SOUI
 		SASSERT(m_nMuted >= 0);
 	}
 
-	SEvent * SEventSet::GetEventObject(const DWORD dwEventID )
+	SEvent * SEventSet::GetEventObject(DWORD dwEventID )
     {
         for(UINT i=0;i<m_evtArr.GetCount();i++)
         {
@@ -122,11 +122,11 @@ namespace SOUI
         // fire the event if present and set is not muted
         if ((ev != 0) && m_nMuted==0)
         {
-            (*ev)(args);
+            ev->fire(args);
         }
     }
 
-    void SEventSet::addEvent( const DWORD dwEventID ,LPCWSTR pszEventHandlerName)
+    void SEventSet::addEvent( DWORD dwEventID ,LPCWSTR pszEventHandlerName)
     {
         if(!isEventPresent(dwEventID))
         {
@@ -134,7 +134,7 @@ namespace SOUI
         }
     }
 
-    void SEventSet::removeEvent( const DWORD dwEventID )
+    void SEventSet::removeEvent( DWORD dwEventID )
     {
         for(UINT i=0;i<m_evtArr.GetCount();i++)
         {
@@ -147,7 +147,7 @@ namespace SOUI
         }
     }
 
-    bool SEventSet::isEventPresent( const DWORD dwEventID )
+    BOOL SEventSet::isEventPresent( DWORD dwEventID )
     {
         return GetEventObject(dwEventID)!=NULL;
     }
@@ -161,27 +161,27 @@ namespace SOUI
         m_evtArr.RemoveAll();
     }
 
-    bool SEventSet::subscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber )
+    BOOL SEventSet::subscribeEvent( DWORD dwEventID, const IEvtSlot * subscriber )
     {
         if(!isEventPresent(dwEventID)) return false;
         return GetEventObject(dwEventID)->subscribe(subscriber);
     }
 
-    bool SEventSet::unsubscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber )
+    BOOL SEventSet::unsubscribeEvent( DWORD dwEventID, const IEvtSlot * subscriber )
     {
         if(!isEventPresent(dwEventID)) return false;
         return GetEventObject(dwEventID)->unsubscribe(subscriber);
     }
 
 #if _MSC_VER >= 1700	//VS2012
-	bool SEventSet::subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback)
+	BOOL SEventSet::subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback)
 	{
 		if (!isEventPresent(dwEventID)) return false;
 		return GetEventObject(dwEventID)->subscribe(StdFunctionSlot(eventCallback));
 	}
 #endif
 
-    bool SEventSet::setEventScriptHandler( const SStringW & strEventName,const SStringA strScriptHandler )
+    BOOL SEventSet::setEventScriptHandler( const SStringW & strEventName,const SStringA strScriptHandler )
     {
         for(UINT i=0;i<m_evtArr.GetCount();i++)
         {

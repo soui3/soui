@@ -581,6 +581,10 @@ namespace SOUI
 
 		STDMETHOD_(SWND,SwndFromPoint)(THIS_ POINT *pt,bool bIncludeMsgTransparent=FALSE) OVERRIDE;
 
+		STDMETHOD_(BOOL,SubscribeEvent)(THIS_ DWORD evtId,const IEvtSlot *pSlot) OVERRIDE;
+
+		STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ DWORD evtId,const IEvtSlot *pSlot) OVERRIDE;
+
 	public://caret相关方法
         STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP pBmp,int nWid,int nHeight) OVERRIDE;
         STDMETHOD_(void,ShowCaret)(THIS_ BOOL bShow) OVERRIDE;   

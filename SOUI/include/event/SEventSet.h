@@ -20,14 +20,14 @@ namespace SOUI
 
         void SetScriptHandler(const SStringA & strScriptHandler);
 
-        bool subscribe(const IEvtSlot& slot);
+        BOOL subscribe(const IEvtSlot* slot);
 
-        bool unsubscribe(const IEvtSlot& slot);
+        BOOL unsubscribe(const IEvtSlot* slot);
 
-        void operator()(IEvtArgs* args);
+        void fire(IEvtArgs* args);
 
     protected:
-        int findSlotFunctor(const IEvtSlot& slot);
+        int findSlotFunctor(const IEvtSlot* slot);
 
         DWORD    m_dwEventID;
         SStringW m_strEventName;
@@ -55,7 +55,7 @@ namespace SOUI
 
         \exception AlreadyExistsException    Thrown if an Event already exists named \a name.
         */
-        void    addEvent(const DWORD dwEventID,LPCWSTR pszEventHandlerName);
+        void    addEvent(DWORD dwEventID,LPCWSTR pszEventHandlerName);
 
 
         /*!
@@ -68,7 +68,7 @@ namespace SOUI
         \return
             Nothing.
         */
-        void    removeEvent(const DWORD dwEventID);
+        void    removeEvent(DWORD dwEventID);
 
 
         /*!
@@ -88,9 +88,9 @@ namespace SOUI
         \return
             true if an Event named \a name was found, or false if the Event was not found
         */
-        bool    isEventPresent(const DWORD dwEventID);
+        BOOL    isEventPresent(DWORD dwEventID);
 
-        bool    setEventScriptHandler(const SStringW &  strEventName,const SStringA strScriptHandler);
+        BOOL    setEventScriptHandler(const SStringW &  strEventName,const SStringA strScriptHandler);
 
         SStringA getEventScriptHandler(const SStringW &  strEventName) const;
 
@@ -101,40 +101,48 @@ namespace SOUI
             Event ID to subscribe to.
         \param ISlotFunctor
             Function or object that is to be subscribed to the Event.
-        \return bool
+        \return BOOL
         */
-        bool subscribeEvent(DWORD dwEventID, const IEvtSlot & subscriber);
+		BOOL subscribeEvent(DWORD dwEventID, const IEvtSlot & subscriber){
+			return subscribeEvent(dwEventID,&subscriber);
+		}
 
+		BOOL subscribeEvent(DWORD dwEventID, const IEvtSlot * subscriber);
 #if _MSC_VER >= 1700	//VS2012
-		bool subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback);
+		BOOL subscribeEvent(DWORD dwEventID, const StdFunCallback & eventCallback);
 #endif
         template<typename T, typename A>
-        bool subscribeEvent(bool (T::* pFn)(A *), T* pObject) {
+        BOOL subscribeEvent(BOOL (T::* pFn)(A *), T* pObject) {
             return subscribeEvent(A::EventID, Subscriber(pFn, pObject));
         }
         template<typename A>
-        bool subscribeEvent(bool(*pFn)(A *)) {
+        BOOL subscribeEvent(BOOL(*pFn)(A *)) {
             return subscribeEvent(A::EventID, Subscriber(pFn));
         }
 		//add by 2017.2.25 008
 		template<typename T>
-		bool subscribeEvent(const DWORD dwEventID, bool(T::*pFn)(IEvtArgs*),T *pObject) {
+		BOOL subscribeEvent(DWORD dwEventID, BOOL(T::*pFn)(IEvtArgs*),T *pObject) {
 			return subscribeEvent(dwEventID, Subscriber(pFn,this));
 		}
 
-        bool unsubscribeEvent( const DWORD dwEventID, const IEvtSlot & subscriber );
+        BOOL unsubscribeEvent(DWORD dwEventID, const IEvtSlot * subscriber );
+
+		BOOL unsubscribeEvent(DWORD dwEventID, const IEvtSlot & subscriber )
+		{
+			return unsubscribeEvent(dwEventID,&subscriber);
+		}
 
         template<typename T, typename A>
-        bool unsubscribeEvent(bool (T::* pFn)(A *), T* pObject) {
+        BOOL unsubscribeEvent(BOOL (T::* pFn)(A *), T* pObject) {
             return unsubscribeEvent(A::EventID, Subscriber(pFn, pObject));
         }
         template<typename A>
-        bool unsubscribeEvent(bool(*pFn)(A *)) {
+        BOOL unsubscribeEvent(BOOL(*pFn)(A *)) {
             return unsubscribeEvent(A::EventID, Subscriber(pFn));
         }
 		//add by 2017.2.25 008
 		template<typename T>
-		bool unsubscribeEvent(const DWORD dwEventID, bool(T::*pFn)(IEvtArgs*), T *pObject) {
+		BOOL unsubscribeEvent(DWORD dwEventID, BOOL(T::*pFn)(IEvtArgs*), T *pObject) {
 			return unsubscribeEvent(dwEventID, Subscriber(pFn, this));
 		}
         void FireEvent(IEvtArgs* args);
@@ -147,7 +155,7 @@ namespace SOUI
         - true if the EventSet is muted.  All requests to fire events will be ignored.
         - false if the EventSet is not muted.  All requests to fire events are processed as normal.
     */
-    bool    isMuted(void) const
+    BOOL    isMuted(void) const
     {
         return m_nMuted>0;
     }
@@ -164,7 +172,7 @@ namespace SOUI
     \return
         Nothing.
     */
-	void    setMutedState(bool setting);
+	void    setMutedState(BOOL setting);
 
     protected:
         SEvent * GetEventObject(const DWORD dwEventID);

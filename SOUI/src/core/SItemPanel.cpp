@@ -97,7 +97,7 @@ LRESULT SItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
     SetMsgHandled(FALSE);
 
-	bool isMute = GetEventSet()->isMuted();
+	BOOL isMute = GetEventSet()->isMuted();
 	if(uMsg == WM_LBUTTONUP && !isMute)
 	{
 		GetEventSet()->setMutedState(true);

@@ -317,6 +317,10 @@ DECLARE_INTERFACE_(IWindow,IObject)
 		STDMETHOD_(void,ShowCaret)(THIS_ BOOL bShow) PURE;   
 		STDMETHOD_(void,SetCaretPos)(THIS_ int x,int y) PURE;
 
+		STDMETHOD_(BOOL,SubscribeEvent)(THIS_ DWORD evtId,const IEvtSlot *pSlot) PURE;
+
+		STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ DWORD evtId,const IEvtSlot *pSlot) PURE;
+
 };
 
 SNSEND
