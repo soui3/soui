@@ -41,40 +41,41 @@ HEADERS += include/SApp.h \
            include/SouiFactory.h \
            include/soui-version.h \
            include/stdint.h \
-           interface/sacchelper-i.h \
-           interface/saccproxy-i.h \
-           interface/SAdapter-i.h \
-           interface/SAnimation-i.h \
-           interface/SAttrStorage-i.h \
-           interface/scaret-i.h \
-           interface/SHostMsgHandler-i.h \
-           interface/SImgDecoder-i.h \
-           interface/sinterpolator-i.h \
-           interface/sipcobj-i.h \
-           interface/slayout-i.h \
-           interface/SListViewItemLocator-i.h \
-           interface/slog-i.h \
-           interface/sobject-i.h \
-           interface/SPathEffect-i.h \
-           interface/SRender-i.h \
-           interface/SResProvider-i.h \
-           interface/SScriptModule-i.h \
-           interface/SSkinobj-i.h \
-           interface/STaskLoop-i.h \
-           interface/STimelineHandler-i.h \
-           interface/stooltip-i.h \
-           interface/STranslator-i.h \
-           interface/STreeViewItemLocator-i.h \
-           interface/SValueAnimator-i.h \
-           interface/SRealWndHandler-i.h \
-           interface/SAccelerator-i.h \
-           interface/SEvtArgs-i.h \
-           interface/shostwnd-i.h \
-           interface/sapp-i.h \
-           interface/smsgloop-i.h \
-           interface/SResProviderMgr-i.h \
-           interface/SWindow-i.h \
-           interface/SWndContainer-i.h \
+           include/interface/sacchelper-i.h \
+           include/interface/saccproxy-i.h \
+           include/interface/SAdapter-i.h \
+           include/interface/SAnimation-i.h \
+           include/interface/SAttrStorage-i.h \
+           include/interface/scaret-i.h \
+           include/interface/SHostMsgHandler-i.h \
+           include/interface/SImgDecoder-i.h \
+           include/interface/sinterpolator-i.h \
+           include/interface/sipcobj-i.h \
+           include/interface/slayout-i.h \
+           include/interface/SListViewItemLocator-i.h \
+           include/interface/slog-i.h \
+           include/interface/sobject-i.h \
+           include/interface/SPathEffect-i.h \
+           include/interface/SRender-i.h \
+           include/interface/SResProvider-i.h \
+           include/interface/SScriptModule-i.h \
+           include/interface/SSkinobj-i.h \
+           include/interface/STaskLoop-i.h \
+           include/interface/STimelineHandler-i.h \
+           include/interface/stooltip-i.h \
+           include/interface/STranslator-i.h \
+           include/interface/STreeViewItemLocator-i.h \
+           include/interface/SValueAnimator-i.h \
+           include/interface/SRealWndHandler-i.h \
+           include/interface/SAccelerator-i.h \
+           include/interface/SEvtArgs-i.h \
+           include/interface/shostwnd-i.h \
+           include/interface/sapp-i.h \
+           include/interface/smsgloop-i.h \
+           include/interface/SResProviderMgr-i.h \
+           include/interface/SWindow-i.h \
+           include/interface/SWndContainer-i.h \
+           include/interface/SFactory-i.h \
            include/activex/SBStr.h \
            include/animation/SAlphaAnimation.h \
            include/animation/SAnimation.h \
