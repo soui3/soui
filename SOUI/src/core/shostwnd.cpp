@@ -1774,7 +1774,7 @@ void SHostWnd::UpdateAutoSizeCount(bool bInc)
 		m_nAutoSizing--;
 }
 
-void SHostWnd::OnHostMsg(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
+void SHostWnd::OnHostMsg(BOOL bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
 {
 	GetRoot()->SDispatchMessage(uMsg,wp,lp);
 	if(bRelayout)
@@ -1899,12 +1899,6 @@ void SHostWnd::SHostAnimationHandler::OnNextFrame()
 		m_pHostWnd->UnregisterTimelineHandler(this);
 		m_pHostWnd->OnHostAnimationStoped(pAni);
 	}
-}
- 
-HRESULT CreateHostWnd(LPCTSTR pszResID,IHostWnd ** ppRet)
-{
-	(*ppRet) = new SHostWnd(pszResID);
-	return S_OK;
 }
 
 

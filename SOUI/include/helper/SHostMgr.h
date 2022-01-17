@@ -12,7 +12,7 @@ namespace SOUI
 		SHostMgr(void);
 		~SHostMgr(void);
 
-		void DispatchMessage(bool bRelayout,UINT uMsg, WPARAM wp=0,LPARAM lp=0);
+		void DispatchMessage(BOOL bRelayout,UINT uMsg, WPARAM wp=0,LPARAM lp=0);
 
 	protected:
 		bool AddHostMsgHandler(IHostMsgHandler * pHost);

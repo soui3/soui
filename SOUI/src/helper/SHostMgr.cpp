@@ -27,7 +27,7 @@ namespace SOUI
 		return m_mapHostMsgHandler.RemoveKey(pHost);
 	}
 
-	void SHostMgr::DispatchMessage(bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
+	void SHostMgr::DispatchMessage(BOOL bRelayout,UINT uMsg,WPARAM wp,LPARAM lp)
 	{
 		SAutoLock autoLock(m_cs);
 		SPOSITION pos = m_mapHostMsgHandler.GetStartPosition();

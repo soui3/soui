@@ -422,7 +422,7 @@ protected:
 	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
 	virtual void OnUserXmlNode(SXmlNode xmlUser);
 protected:
-	STDMETHOD_(void,OnHostMsg)(THIS_ bool bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
+	STDMETHOD_(void,OnHostMsg)(THIS_ BOOL bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
 	virtual BOOL onRootResize(IEvtArgs *e);
 	
@@ -474,6 +474,4 @@ public://事件处理接口
     END_MSG_MAP()
 };
 
-EXTERN_C 
-HRESULT SOUI_EXP CreateHostWnd(LPCTSTR pszResID,IHostWnd ** ppRet);
 }//namespace SOUI
