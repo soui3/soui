@@ -69,6 +69,8 @@ public://SwndContainerImpl
 	STDMETHOD_(int,GetScale)() const;
 
 	STDMETHOD_(void,EnableIME)(BOOL bEnable);
+
+	STDMETHOD_(void,OnUpdateCursor)();
 public://SWindow
 	virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);

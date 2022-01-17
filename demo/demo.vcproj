@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
 				AssemblerListingLocation="..\obj\release\demo\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"
@@ -86,7 +86,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,..\utilities\include,..\soui\include,..\third-part\wke\include,..\third-part\mhook\mhook-lib,..\third-part\nanosvg\src,..\components,..\config,..\tools\mkspecs\win32-msvc2008"
 				AssemblerListingLocation="..\obj\debug\demo\"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100,4101,4102,4189,4996"

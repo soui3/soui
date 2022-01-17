@@ -33,7 +33,6 @@ DEPENDPATH += . \
 
 INCLUDEPATH += . \
               include \
-              interface \
               ../utilities/include \
 
 

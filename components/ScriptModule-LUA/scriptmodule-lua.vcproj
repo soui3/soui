@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,src,lua_tinker,..\..\third-part\lua-53\src,..\..\soui,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,src,lua_tinker,..\..\third-part\lua-53\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\..\obj\release\scriptmodule-lua\"
 				DebugInformationFormat="3"
@@ -85,7 +85,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".,.,src,lua_tinker,..\..\third-part\lua-53\src,..\..\soui,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories=".,.,src,lua_tinker,..\..\third-part\lua-53\src,..\..\soui\include,..\..\utilities\include,..\..\config,..\..\tools\mkspecs\win32-msvc2008"
 				AdditionalOptions="/MP"
 				AssemblerListingLocation="..\..\obj\debug\scriptmodule-lua\"
 				DebugInformationFormat="3"

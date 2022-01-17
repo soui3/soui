@@ -106,6 +106,8 @@ DECLARE_INTERFACE_(ISwndContainer,ITimelineHandlersMgr)
 	STDMETHOD_(void,OnCavasInvalidate)(THIS_ SWND swnd) PURE;
 
 	STDMETHOD_(void,EnableIME)(THIS_ BOOL bEnable) PURE;
+
+	STDMETHOD_(void,OnUpdateCursor)(THIS) PURE;
 };
 
 SNSEND

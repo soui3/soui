@@ -20,7 +20,6 @@ INCLUDEPATH += . \
 			   ./src \
 			   ./lua_tinker \
 			   ../../third-part/lua-53/src \
-			   ../../soui \
 			   ../../soui/include \
 			   ../../utilities/include \
 

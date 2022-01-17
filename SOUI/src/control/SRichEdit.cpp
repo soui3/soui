@@ -1085,7 +1085,7 @@ void SRichEdit::OnRButtonDown( UINT nFlags, CPoint point )
             EnableMenuItem(menu.m_hMenu,MENU_DEL,MF_BYCOMMAND|((hasSel&&(!bReadOnly))?0:MF_GRAYED));
             EnableMenuItem(menu.m_hMenu,MENU_SELALL,MF_BYCOMMAND|((uLen>0)?0:MF_GRAYED));
 
-            UINT uCmd=menu.TrackPopupMenu(TPM_RETURNCMD|TPM_LEFTALIGN,point.x,point.y,hHost);
+            UINT uCmd=menu.TrackPopupMenu(TPM_RETURNCMD|TPM_LEFTALIGN,point.x,point.y,hHost,NULL,GetScale());
             
             EventREMenu evt(this);
             evt.uCmd = uCmd;
@@ -1571,8 +1571,7 @@ void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
     __baseCls::OnShowWindow(bShow,nStatus);
     if(!IsVisible(TRUE))
     {//防止正在编辑时隐藏了cursor
-        HWND hHost = GetContainer()->GetHostHwnd();
-        ::PostMessage(hHost,WM_SETCURSOR,(WPARAM)hHost,MAKELPARAM(HTCLIENT,0));
+		GetContainer()->OnUpdateCursor();
     }
 }
 

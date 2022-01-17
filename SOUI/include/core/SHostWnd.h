@@ -412,6 +412,7 @@ protected:// IContainer
 	STDMETHOD_(void,OnCavasInvalidate)(SWND swnd);
 
 	STDMETHOD_(void,EnableIME)(BOOL bEnable);
+	STDMETHOD_(void,OnUpdateCursor)();
 
 protected:
 	virtual IToolTip * CreateTooltip() const;

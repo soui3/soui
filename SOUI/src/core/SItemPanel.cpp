@@ -396,6 +396,10 @@ void SItemPanel::EnableIME(BOOL bEnable)
 	m_pFrmHost->GetContainer()->EnableIME(bEnable);
 }
 
+void SItemPanel::OnUpdateCursor()
+{
+	m_pFrmHost->GetContainer()->OnUpdateCursor();
+}
 
 COLORREF SItemPanel::GetBkgndColor() const
 {

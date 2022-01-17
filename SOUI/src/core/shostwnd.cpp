@@ -1804,6 +1804,14 @@ void SHostWnd::EnableIME(BOOL bEnable)
 	}
 }
 
+void SHostWnd::OnUpdateCursor()
+{
+	CPoint pt;
+	GetCursorPos(&pt);
+	UINT ht = OnWndNcHitTest(pt);
+	PostMessage(WM_SETCURSOR,(WPARAM)m_hWnd,MAKELPARAM(ht,WM_MOUSEMOVE));
+}
+
 BOOL SHostWnd::ShowWindow(int nCmdShow)
 {
 	UpdateAutoSizeCount(true);

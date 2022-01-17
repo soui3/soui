@@ -10,7 +10,6 @@ TARGET = $$TARGET"64"
 DEPENDPATH += .
 INCLUDEPATH += . \
 			   ../utilities/include \
-			   ../soui \
 			   ../soui/include \
 			   ../third-part/wke/include \
 			   ../third-part/mhook/mhook-lib \

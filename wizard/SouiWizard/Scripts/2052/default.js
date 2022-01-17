@@ -165,7 +165,7 @@ function AddConfig(proj, strProjectName) {
 		CLTool.SuppressStartupBanner = true;
 		CLTool.TreatWChar_tAsBuiltInType = (wcharSet == 1);
 		CLTool.WarningLevel = warningLevelOption.warningLevel_3;
-		CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
+		CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
 		CLTool.PreprocessorDefinitions = 'WIN32;_WINDOWS;STRICT;_DEBUG';
 		CLTool.RuntimeLibrary = (mtSet == 1) ? 1 : 3; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
 		CLTool.BrowseInformation = browseInfoOption.brAllInfo;// FR
@@ -208,7 +208,7 @@ function AddConfig(proj, strProjectName) {
 		CLTool.SuppressStartupBanner = true;
 		CLTool.TreatWChar_tAsBuiltInType = (wcharSet == 1);
 		CLTool.WarningLevel = warningLevelOption.warningLevel_3;
-		CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
+		CLTool.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
 		CLTool.PreprocessorDefinitions = 'WIN32;_WINDOWS;NDEBUG';
 		CLTool.RuntimeLibrary = (mtSet == 1) ? 0 : 2;; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
 		CLTool.WholeProgramOptimization = true;	//全程序优化：启动链接时代码生成
@@ -246,7 +246,7 @@ function AddConfig(proj, strProjectName) {
 			CLTool_x64.SuppressStartupBanner = true;
 			CLTool_x64.TreatWChar_tAsBuiltInType = (wcharSet == 1);
 			CLTool_x64.WarningLevel = warningLevelOption.warningLevel_3;
-			CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
+			CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
 			CLTool_x64.PreprocessorDefinitions = 'WIN64;_WINDOWS;STRICT;_DEBUG';
 			CLTool_x64.RuntimeLibrary = (mtSet == 1) ? 1 : 3; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
 			CLTool_x64.BrowseInformation = browseInfoOption.brAllInfo;// FR
@@ -284,7 +284,7 @@ function AddConfig(proj, strProjectName) {
 			CLTool_x64.SuppressStartupBanner = true;
 			CLTool_x64.TreatWChar_tAsBuiltInType = (wcharSet == 1);
 			CLTool_x64.WarningLevel = warningLevelOption.warningLevel_3;
-			CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
+			CLTool_x64.AdditionalIncludeDirectories = '"$(SOUI3PATH)\\config";"$(SOUI3PATH)\\components";"$(SOUI3PATH)\\SOUI";"$(SOUI3PATH)\\SOUI\\include";"$(SOUI3PATH)\\utilities\\include"';
 			CLTool_x64.PreprocessorDefinitions = 'WIN64;_WINDOWS;NDEBUG';
 			CLTool_x64.RuntimeLibrary = (mtSet == 1) ? 0 : 2;; // 0=MT, 1=MTd, 2=MD (DLL), 3=MDd
 			CLTool_x64.WholeProgramOptimization = true;	//全程序优化：启动链接时代码生成
