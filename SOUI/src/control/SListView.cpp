@@ -49,6 +49,7 @@ namespace SOUI
         ,m_bDataSetInvalidated(FALSE)
 		,m_bPendingUpdate(false)
 		,m_iPendingUpdateItem(-2)
+		,m_iPendingViewItem(-1)
 		,m_bVertical(TRUE)
     {
         m_bFocusable = TRUE;
@@ -757,7 +758,13 @@ namespace SOUI
 
     void SListView::EnsureVisible( int iItem )
     {
-        if(iItem<0 || iItem>=m_adapter->getCount()) return;
+        if(iItem<0 || iItem>=m_adapter->getCount()) 
+			return;
+		if(!IsVisible(TRUE))
+		{
+			m_iPendingViewItem = iItem;
+			return;
+		}
 
         int iFirstVisible= m_iFirstVisible;
         int iLastVisible = m_iFirstVisible + (int)m_lstItems.GetCount();
@@ -1033,14 +1040,22 @@ namespace SOUI
 	void SListView::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		__super::OnShowWindow(bShow,nStatus);
-		if(IsVisible(TRUE) && m_bPendingUpdate)
+		if(IsVisible(TRUE))
 		{
-			if(m_iPendingUpdateItem == -1)
-				onDataSetChanged();
-			else
-				onItemDataChanged(m_iPendingUpdateItem);
-			m_bPendingUpdate = false;
-			m_iPendingUpdateItem = -2;
+			if(m_bPendingUpdate)
+			{
+				if(m_iPendingUpdateItem == -1)
+					onDataSetChanged();
+				else
+					onItemDataChanged(m_iPendingUpdateItem);
+				m_bPendingUpdate = false;
+				m_iPendingUpdateItem = -2;
+			}
+			if(m_iPendingViewItem!=-1)
+			{
+				EnsureVisible(m_iPendingViewItem);
+				m_iPendingViewItem = -1;
+			}
 		}
 	}
 

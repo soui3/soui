@@ -48,6 +48,7 @@ STileView::STileView()
 	, m_bDatasetInvalidated(false)
 	, m_bPendingUpdate(false)
 	, m_iPendingUpdateItem(-2)
+	, m_iPendingViewItem(-1)
 {
     m_bFocusable = TRUE;
     m_observer.Attach(new STileViewDataSetObserver(this));
@@ -691,7 +692,12 @@ void STileView::EnsureVisible(int iItem)
     {
         return;
     }
-    
+	if(!IsVisible(TRUE))
+	{
+		m_iPendingViewItem = iItem;
+		return;
+	}
+
     CRect rcItem = m_tvItemLocator->GetItemRect(iItem);
     if(rcItem.top < m_siVer.nPos)
     {
@@ -982,14 +988,22 @@ void STileView::DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam)
 void STileView::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	__super::OnShowWindow(bShow,nStatus);
-	if(IsVisible(TRUE) && m_bPendingUpdate)
+	if(IsVisible(TRUE))
 	{
-		if(m_iPendingUpdateItem == -1)
-			onDataSetChanged();
-		else
-			onItemDataChanged(m_iPendingUpdateItem);
-		m_bPendingUpdate = false;
-		m_iPendingUpdateItem = -2;
+		if(m_bPendingUpdate)
+		{
+			if(m_iPendingUpdateItem == -1)
+				onDataSetChanged();
+			else
+				onItemDataChanged(m_iPendingUpdateItem);
+			m_bPendingUpdate = false;
+			m_iPendingUpdateItem = -2;
+		}
+		if(m_iPendingViewItem!=-1)
+		{
+			EnsureVisible(m_iPendingViewItem);
+			m_iPendingViewItem = -1;
+		}
 	}
 
 }
