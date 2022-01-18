@@ -1580,8 +1580,8 @@ void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
 	if(lpWndPos->flags&SWP_SHOWWINDOW && m_bFirstShow)
 	{
-		m_bFirstShow = FALSE;
 		OnHostShowWindow(TRUE,0);
+		m_bFirstShow = FALSE;
 	}
 }
 
@@ -1596,7 +1596,6 @@ void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
 			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 		}
 	}
-	SetMsgHandled(FALSE);
 }
 
 LRESULT SHostWnd::OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1776,13 +1775,10 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
 {
 	DefWindowProc();
-	if(bShow && m_aniEnter)
+	if(bShow && m_aniEnter && m_bFirstShow)
 	{
-		if(m_aniEnter)
-		{
-			StartAnimation(m_aniEnter);
-			m_AniState |= Ani_win;
-		}
+		StartAnimation(m_aniEnter);
+		m_AniState |= Ani_win;
 		OnNextFrame();
 	}
 }
