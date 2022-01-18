@@ -1596,6 +1596,8 @@ void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
 			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 		}
 	}
+	//下面这一行不能删除，否则显示不正常。
+	SetMsgHandled(FALSE);
 }
 
 LRESULT SHostWnd::OnGetObject(UINT uMsg, WPARAM wParam, LPARAM lParam)
