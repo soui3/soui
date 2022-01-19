@@ -171,7 +171,7 @@ void SRootWindow::OnAnimationStop(IAnimation *pAni)
 	}
 	if(pAni == m_aniExit && m_pHostWnd->m_AniState==Ani_none)
 	{
-		m_pHostWnd->GetNative()->DestroyWindow();
+		m_pHostWnd->SNativeWnd::DestroyWindow();
 	}
 }
 
@@ -1633,8 +1633,8 @@ void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
 	if(lpWndPos->flags&SWP_SHOWWINDOW && m_bFirstShow)
 	{
-		m_bFirstShow = FALSE;
 		OnHostShowWindow(TRUE,0);
+		m_bFirstShow = FALSE;
 	}
 }
 
@@ -1649,6 +1649,7 @@ void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
 			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 		}
 	}
+	//下面这一行不能删除，否则显示不正常。
 	SetMsgHandled(FALSE);
 }
 
@@ -1813,13 +1814,10 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
 {
 	DefWindowProc();
-	if(bShow && m_pRoot->m_aniEnter)
+	if(bShow && m_pRoot->m_aniEnter && m_bFirstShow)
 	{
-		if(m_pRoot->m_aniEnter)
-		{
-			GetRoot()->StartAnimation(m_pRoot->m_aniEnter);
-			m_AniState |= Ani_win;
-		}
+		GetRoot()->StartAnimation(m_pRoot->m_aniEnter);
+		m_AniState |= Ani_win;
 		OnNextFrame();
 	}
 }

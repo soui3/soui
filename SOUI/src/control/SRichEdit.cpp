@@ -780,7 +780,8 @@ void SRichEdit::OnKillFocus(SWND wndFocus)
         m_pTxtHost->GetTextService()->TxSendMessage(WM_KILLFOCUS, 0, 0, 0);
         m_pTxtHost->TxShowCaret(FALSE);
     }
-
+    //防止正在编辑时隐藏了cursor
+    GetContainer()->OnUpdateCursor();
 }
 
 void SRichEdit::OnTimer( char idEvent )
@@ -1564,15 +1565,6 @@ DWORD SRichEdit::LoadRtf( LPCTSTR pszFileName )
     DWORD dwRet=(DWORD)SSendMessage(EM_STREAMIN,SF_RTF,(LPARAM)&es);
     fclose(f);
     return dwRet;
-}
-
-void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
-{
-    __baseCls::OnShowWindow(bShow,nStatus);
-    if(!IsVisible(TRUE))
-    {//防止正在编辑时隐藏了cursor
-		GetContainer()->OnUpdateCursor();
-    }
 }
 
 void SRichEdit::OnScaleChanged(int nScale)

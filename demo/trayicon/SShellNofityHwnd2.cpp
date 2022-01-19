@@ -28,6 +28,11 @@ namespace SOUI
 			else
 			{
 				m_pMainWnd->ShowWindow(SW_SHOW);
+				if(m_pMainWnd->IsIconic())
+				{
+					m_pMainWnd->SendMessage(WM_SYSCOMMAND,SC_RESTORE);
+				}
+
 				SetForegroundWindow(m_pMainWnd->m_hWnd);
 			}
 			bRet = S_OK;

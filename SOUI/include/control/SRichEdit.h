@@ -1102,8 +1102,6 @@ namespace SOUI
             return SRicheditMenuDef::getSingleton().GetMenuXml();
         }
         
-        void OnShowWindow(BOOL bShow, UINT nStatus);
-
 		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
 
 		BOOL OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw);
@@ -1125,7 +1123,6 @@ namespace SOUI
             MSG_WM_KEYDOWN(OnKeyDown)
             MSG_WM_CHAR(OnChar)
             MSG_WM_SETFONT_EX(OnSetFont)
-            MSG_WM_SHOWWINDOW(OnShowWindow)
             MESSAGE_HANDLER_EX(WM_LBUTTONDBLCLK,OnButtonClick)
             MESSAGE_HANDLER_EX(WM_SETTEXT,OnSetText)
             MESSAGE_HANDLER_EX(EM_SETPARAFORMAT,OnSetParaFormat)
