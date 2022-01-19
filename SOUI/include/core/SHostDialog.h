@@ -28,9 +28,6 @@ namespace SOUI
 		STDMETHOD_(long,AddRef) (THIS) {return SHostWnd::AddRef();}
 		STDMETHOD_(long,Release) (THIS) {return SHostWnd::Release();}
 		STDMETHOD_(void,OnFinalRelease) (THIS) {SHostWnd::OnFinalRelease();}
-		STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST {return SHostWnd::IsClass(lpszName);}
-		STDMETHOD_(LPCWSTR,GetObjectClass)(THIS) SCONST {return SHostWnd::GetObjectClass();}
-		STDMETHOD_(int,GetObjectType)(THIS)  SCONST {return SHostWnd::GetObjectType();}
 		STDMETHOD_(int,GetID)(THIS) SCONST {return SHostWnd::GetID();}
 		STDMETHOD_(void,SetID)(THIS_ int nID) {return SHostWnd::SetID(nID);}
 		STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST {return SHostWnd::GetName();}
@@ -61,8 +58,8 @@ namespace SOUI
 			return SHostWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
 		}
 
-		STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
-		{return 0;}//SHostWnd::Create(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
+		STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
+		{return SHostWnd::CreateWindow(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
 
 		STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
 		{return SHostWnd::GetHwnd();}

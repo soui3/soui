@@ -54,7 +54,7 @@ namespace SOUI
     BOOL SDropDownWnd::Create(LPCRECT lpRect ,LPVOID lParam,DWORD dwStyle,DWORD dwExStyle)
     {
         HWND hParent = m_pOwner->GetDropDownOwner()->GetContainer()->GetHostHwnd();
-        HWND hWnd=SNativeWnd::Create(NULL,dwStyle,dwExStyle,lpRect->left,lpRect->top,lpRect->right-lpRect->left,lpRect->bottom-lpRect->top,hParent,0);
+        HWND hWnd=SNativeWnd::CreateWindow(NULL,dwStyle,dwExStyle,lpRect->left,lpRect->top,lpRect->right-lpRect->left,lpRect->bottom-lpRect->top,hParent,0);
         if(!hWnd) return FALSE;
         m_pOwner->OnCreateDropDown(this);
         return TRUE;

@@ -65,7 +65,7 @@ SNotifyCenter::SNotifyCenter(int nInterval)
 {
 	m_dwMainTrdID = GetCurrentThreadId();
 	m_pReceiver = new SNotifyReceiver(this);
-	m_pReceiver->Create(_T("NotifyReceiver"),WS_POPUP,0,0,0,0,0,HWND_MESSAGE,0);
+	m_pReceiver->CreateWindow(_T("NotifyReceiver"),WS_POPUP,0,0,0,0,0,HWND_MESSAGE,0);
 	SASSERT(m_pReceiver->IsWindow());
 }
 

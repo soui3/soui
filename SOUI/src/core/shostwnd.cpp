@@ -304,7 +304,7 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
     if (NULL != m_hWnd)
         return m_hWnd;
 	UpdateAutoSizeCount(true);
-    HWND hWnd = SNativeWnd::Create(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
+    HWND hWnd = SNativeWnd::CreateWindow(_T("HOSTWND"),dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,NULL);
 	UpdateAutoSizeCount(false);
 	if(!hWnd) return NULL;
 
@@ -500,7 +500,7 @@ BOOL SHostWnd::InitFromXml(IXmlNode * pNode)
 			MONITORINFO info = { sizeof(MONITORINFO) };
 			GetMonitorInfo(hMonitor,&info);
 			SStringT dummyTitle = SStringT().Format(_T("%s_dummy"),strTitle.c_str());
-			m_dummyWnd->Create(dummyTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
+			m_dummyWnd->CreateWindow(dummyTitle,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,info.rcWork.left,info.rcWork.top,1,1,m_hWnd,NULL);
 			m_dummyWnd->SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
 			::SetLayeredWindowAttributes(m_dummyWnd->m_hWnd,0,0,LWA_ALPHA);
 			m_dummyWnd->ShowWindow(SW_SHOWNOACTIVATE);

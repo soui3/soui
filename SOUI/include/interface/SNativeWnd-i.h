@@ -3,11 +3,13 @@
 
 SNSBEGIN
 
+#undef CreateWindow
+
 #undef INTERFACE
 #define INTERFACE INativeWnd
 DECLARE_INTERFACE_(INativeWnd,IObject)
 {
-	STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) PURE;
+	STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) PURE;
 
 	STDMETHOD_(HWND,GetHwnd)(THIS) PURE;
 

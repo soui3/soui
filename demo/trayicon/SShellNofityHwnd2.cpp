@@ -6,7 +6,7 @@ namespace SOUI
 	CShellNotifyHwnd2::CShellNotifyHwnd2(SHostWnd * pMainWnd, SShellNotifyIcon* shellnotifyicon) :m_pMainWnd(pMainWnd),m_ShellNotifyIcon(shellnotifyicon)
 	{
 		MsgTaskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
-		Create(_T("shell_nofity_msg_windows"), 0, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr);
+		CreateWindow(_T("shell_nofity_msg_windows"), 0, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL);
 	}
 
 	//托盘通知消息处理函数

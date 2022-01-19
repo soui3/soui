@@ -138,9 +138,6 @@ namespace SOUI
 		STDMETHOD_(long,AddRef) (THIS) {return SNativeWnd::AddRef();}
 		STDMETHOD_(long,Release) (THIS) {return SNativeWnd::Release();}
 		STDMETHOD_(void,OnFinalRelease) (THIS) {SNativeWnd::OnFinalRelease();}
-		STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST {return SNativeWnd::IsClass(lpszName);}
-		STDMETHOD_(LPCWSTR,GetObjectClass)(THIS) SCONST {return SNativeWnd::GetObjectClass();}
-		STDMETHOD_(int,GetObjectType)(THIS)  SCONST {return SNativeWnd::GetObjectType();}
 		STDMETHOD_(int,GetID)(THIS) SCONST {return SNativeWnd::GetID();}
 		STDMETHOD_(void,SetID)(THIS_ int nID) {return SNativeWnd::SetID(nID);}
 		STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST {return SNativeWnd::GetName();}
@@ -171,8 +168,8 @@ namespace SOUI
 			return SNativeWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
 		}
 
-		STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
-		{return SNativeWnd::Create(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
+		STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
+		{return SNativeWnd::CreateWindow(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
 
 		STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
 		{return SNativeWnd::GetHwnd();}
@@ -348,7 +345,8 @@ public:
 	STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) OVERRIDE;
 
 public:
-	HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
+	HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y , int nWidth, int nHeight);
+	HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
 
 	SWindow* FindChildByName(LPCWSTR strName , int nDeep =-1){
@@ -393,7 +391,6 @@ public:
 
 	SNativeWnd * GetNative(){return this;}
 
-    HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
 
 	BOOL WINAPI InitFromXml(IXmlNode * pNode);
     

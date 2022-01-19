@@ -29,7 +29,7 @@ namespace SOUI
 #else
 		strcpy_s(szBuf, 100, pszName);
 #endif
-		Create(szBuf, WS_POPUP, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL);
+		CreateWindow(szBuf, WS_POPUP, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL);
 	}
 
 	void STaskHandler::stop()

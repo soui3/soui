@@ -74,7 +74,7 @@ ATOM SNativeWnd::RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName)
 	return ::RegisterClassEx(&wcex);
 }
 
-HWND SNativeWnd::Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
+HWND SNativeWnd::CreateWindow(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
 {
     SNativeWndHelper::getSingletonPtr()->LockSharePtr(this);
 

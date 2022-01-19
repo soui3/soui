@@ -2,8 +2,24 @@
 
 SHostWnd * toHostWnd(IObject *pObj)
 {
-    return sobj_cast<SHostWnd>(pObj);
+	if(pObj->IsClass(SHostWnd::GetClassName()))
+		return (SHostWnd*)(SNativeWnd*)pObj;
+	else
+		return NULL;
+
+    //return sobj_cast<SHostWnd>(pObj);
 }
+
+SHostDialog * toHostDialog(IObject *pObj)
+{
+	if(pObj->IsClass(SHostDialog::GetClassName()))
+		return (SHostDialog*)(SHostWnd*)(SNativeWnd*)pObj;
+	else
+		return NULL;
+
+	//return sobj_cast<SHostWnd>(pObj);
+}
+
 
 SRootWindow * toRoot(IObject *pObj)
 {

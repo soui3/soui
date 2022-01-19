@@ -195,7 +195,7 @@ BOOL CColourPopup::Create(CPoint p, COLORREF crColour,
 {
     m_crColour = m_crInitialColour = crColour;
 
-	if (!SNativeWnd::Create(NULL, WS_VISIBLE|WS_POPUP, WS_EX_TOOLWINDOW,
+	if (!SNativeWnd::CreateWindow(NULL, WS_VISIBLE|WS_POPUP, WS_EX_TOOLWINDOW,
                         p.x, p.y, 100, 100, // size updated soon
                         m_hOwner, NULL))
         return FALSE;
@@ -655,7 +655,7 @@ void CColourPopup::SetWindowSize()
     }
 
     // Set the window size and position
-    MoveWindow(m_WindowRect, TRUE);
+    MoveWindow2(m_WindowRect, TRUE);
 }
 
 void CColourPopup::CreateToolTips()

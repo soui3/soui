@@ -988,7 +988,7 @@ void CMainDlg::OnBtnTip()
 	if (pBtn)
 	{
 		CRect rc = pBtn->GetWindowRect();
-		ClientToScreen(&rc);
+		ClientToScreen2(&rc);
 		STipWnd::ShowTip(rc.right, rc.top, STipWnd::AT_LEFT_BOTTOM, _T("欢迎使用SOUI!\n如果有好的demo欢迎发送截图给作者，SOUI2基于MIT协议,SOUI3使用自定义协议,商用收费!\n启程软件"));
 	}
 }

@@ -24,7 +24,7 @@ namespace SOUI
 
     BOOL STipCtrl::Create()
     {
-        HWND hWnd=SNativeWnd::Create(_T("soui tooltip"),WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,WS_EX_TOOLWINDOW|WS_EX_TOPMOST|WS_EX_NOACTIVATE,0,0,0,0,NULL,NULL);
+        HWND hWnd=SNativeWnd::CreateWindow(_T("soui tooltip"),WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,WS_EX_TOOLWINDOW|WS_EX_TOPMOST|WS_EX_NOACTIVATE,0,0,0,0,NULL,NULL);
         if(!hWnd) return FALSE;
 
         LOGFONT lf;
