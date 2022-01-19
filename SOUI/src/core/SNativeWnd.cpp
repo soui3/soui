@@ -113,20 +113,17 @@ LRESULT CALLBACK SNativeWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
     MSG msg= {pThis->m_hWnd, uMsg, wParam, lParam};
     const MSG* pOldMsg = pThis->m_pCurrentMsg;
     pThis->m_pCurrentMsg = &msg;
-    // pass to the message map to process
-    LRESULT lRes;
 	{
 		EventNativeMsg evt(pThis);
-		evt.hWnd = hWnd;
-		evt.uMsg = uMsg;
-		evt.wParam = wParam;
-		evt.lParam = lParam;
+		evt.pMsg = &msg;
 		evt.result = 0;
 		pThis->m_evtSet.FireEvent(&evt);
 		if(!evt.IsBubbleUp())
 			return evt.result;
 	}
 
+	// pass to the message map to process
+	LRESULT lRes;
     BOOL bRet = pThis->ProcessWindowMessage(pThis->m_hWnd, uMsg, wParam, lParam, lRes, 0);
     // restore saved value for the current message
     SASSERT(pThis->m_pCurrentMsg == &msg);

@@ -164,9 +164,7 @@ public:\
 
 DEF_EVT(EventNativeMsg, EVT_NATIVE_MSG,on_native_msg,{
 	HWND hWnd;
-	UINT uMsg;
-	WPARAM wParam;
-	LPARAM lParam;
+	MSG *pMsg;
 	LRESULT result;
 });
 
