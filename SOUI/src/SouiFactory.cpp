@@ -17,6 +17,12 @@ STDMETHODIMP_(HRESULT) SouiFactory::CreateApp(THIS_ IApplication **ppRet,IRender
 	return S_OK;
 }
 
+STDMETHODIMP_(HRESULT) SouiFactory::CreateNativeWnd(THIS_ INativeWnd **ppRet)
+{
+	*ppRet = new SNativeWnd();
+	return S_OK;
+}
+
 STDMETHODIMP_(HRESULT) SouiFactory::CreateHostWnd(THIS_ IHostWnd **ppRet,LPCTSTR pszResID)
 {
 	*ppRet = new SHostWnd(pszResID);
