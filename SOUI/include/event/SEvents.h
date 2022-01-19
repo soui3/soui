@@ -20,6 +20,8 @@ SNSBEGIN
 interface IWindow;
 typedef enum _SOUI_EVENTS
 {
+	EVT_NATIVE_MSG=7000,
+
 	EVT_INIT=8000,
 	EVT_EXIT,
 	EVT_TIMER,
@@ -159,6 +161,14 @@ public:\
 
 #define DEF_EVT(evt,id,name,x) DEF_EVENT(evt,id,name,x,SOUI_EXP)
 #define DEF_EVT_EXT(evt,id,x) DEF_EVENT(evt,id,on_##evt,x,)
+
+DEF_EVT(EventNativeMsg, EVT_NATIVE_MSG,on_native_msg,{
+	HWND hWnd;
+	UINT uMsg;
+	WPARAM wParam;
+	LPARAM lParam;
+	LRESULT result;
+});
 
 DEF_EVT(EventInit, EVT_INIT,on_init,{
 });
