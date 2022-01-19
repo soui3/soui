@@ -112,7 +112,7 @@ struct tagThunk
 
 class  SOUI_EXP SNativeWnd : public TObjRefImpl<SObjectImpl<INativeWnd>>
 {
-	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<INativeWnd>>,L"native_wnd",NativeWnd)
+	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<INativeWnd>>,L"SNativeWnd",NativeWnd)
 public:
     SNativeWnd();
     virtual ~SNativeWnd(void);
@@ -120,6 +120,9 @@ public:
     static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 
 	static ATOM RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName);
+
+	STDMETHOD_(int,GetID)(THIS) SCONST {return GetDlgCtrlID();}
+	STDMETHOD_(void,SetID)(THIS_ int nID) {SetWindowLongPtr(GWL_ID,nID);}
 
 	STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE;
 

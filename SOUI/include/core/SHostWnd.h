@@ -549,14 +549,15 @@ protected:// IContainer
 	STDMETHOD_(void,OnUpdateCursor)();
 
 protected:
+	STDMETHOD_(void,OnHostMsg)(THIS_ BOOL bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
+
+protected:
 	virtual IToolTip * CreateTooltip() const;
 	virtual void DestroyTooltip(IToolTip * pTooltip) const;
 
 protected:
 	virtual BOOL OnLoadLayoutFromResourceID(const SStringT &resId);
 	virtual void OnUserXmlNode(SXmlNode xmlUser);
-protected:
-	STDMETHOD_(void,OnHostMsg)(THIS_ BOOL bRelayout,UINT uMsg,WPARAM wp,LPARAM lp) OVERRIDE;
 public:
 	virtual BOOL onRootResize(IEvtArgs *e);
 	
