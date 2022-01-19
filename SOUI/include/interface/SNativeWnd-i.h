@@ -1,6 +1,6 @@
 #pragma once
 #include <interface/obj-ref-i.h>
-
+#include <interface/SEvtArgs-i.h>
 SNSBEGIN
 
 #undef CreateWindow
@@ -9,6 +9,10 @@ SNSBEGIN
 #define INTERFACE INativeWnd
 DECLARE_INTERFACE_(INativeWnd,IObject)
 {
+	STDMETHOD_(BOOL,SubscribeEvent)(THIS_ const IEvtSlot *pSlot) PURE;
+
+	STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ const IEvtSlot *pSlot) PURE;
+
 	STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) PURE;
 
 	STDMETHOD_(HWND,GetHwnd)(THIS) PURE;

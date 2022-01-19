@@ -58,6 +58,16 @@ namespace SOUI
 			return SHostWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
 		}
 
+		STDMETHOD_(BOOL,SubscribeEvent)(THIS_ const IEvtSlot *pSlot)
+		{
+			return SHostWnd::SubscribeEvent(pSlot);
+		}
+
+		STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ const IEvtSlot *pSlot)
+		{
+			return SHostWnd::UnsubscribeEvent(pSlot);
+		}
+
 		STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
 		{return SHostWnd::CreateWindow(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
 

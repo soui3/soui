@@ -42,6 +42,7 @@ SNativeWnd::SNativeWnd()
     ,m_pfnSuperWindowProc(::DefWindowProc)
     ,m_pThunk(NULL)
 {
+	m_evtSet.addEvent(EVENTID(EventNativeMsg));
 }
 
 SNativeWnd::~SNativeWnd(void)
@@ -114,6 +115,18 @@ LRESULT CALLBACK SNativeWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
     pThis->m_pCurrentMsg = &msg;
     // pass to the message map to process
     LRESULT lRes;
+	{
+		EventNativeMsg evt(pThis);
+		evt.hWnd = hWnd;
+		evt.uMsg = uMsg;
+		evt.wParam = wParam;
+		evt.lParam = lParam;
+		evt.result = 0;
+		pThis->m_evtSet.FireEvent(&evt);
+		if(!evt.IsBubbleUp())
+			return evt.result;
+	}
+
     BOOL bRet = pThis->ProcessWindowMessage(pThis->m_hWnd, uMsg, wParam, lParam, lRes, 0);
     // restore saved value for the current message
     SASSERT(pThis->m_pCurrentMsg == &msg);
@@ -490,6 +503,16 @@ BOOL SNativeWnd::ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags /*= 0*/)
 BOOL SNativeWnd::ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID /*= 0*/)
 {
 	return FALSE;
+}
+
+BOOL SNativeWnd::SubscribeEvent(const IEvtSlot *pSlot)
+{
+	return m_evtSet.subscribeEvent(EventNativeMsg::EventID,pSlot);
+}
+
+BOOL SNativeWnd::UnsubscribeEvent(const IEvtSlot *pSlot)
+{
+	return m_evtSet.unsubscribeEvent(EventNativeMsg::EventID,pSlot);
 }
 
 BOOL SNativeWnd::UpdateLayeredWindow(HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc,COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags)

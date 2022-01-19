@@ -168,6 +168,16 @@ namespace SOUI
 			return SNativeWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
 		}
 
+		STDMETHOD_(BOOL,SubscribeEvent)(THIS_ const IEvtSlot *pSlot)
+		{
+			return SNativeWnd::SubscribeEvent(pSlot);
+		}
+
+		STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ const IEvtSlot *pSlot)
+		{
+			return SNativeWnd::UnsubscribeEvent(pSlot);
+		}
+
 		STDMETHOD_(HWND,CreateWindow)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
 		{return SNativeWnd::CreateWindow(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
 

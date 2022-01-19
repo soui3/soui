@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <interface/SNativeWnd-i.h>
 #include <sobject/Sobject.hpp>
+#include <event/SEvents.h>
+#include <event/SEventSet.h>
 
 #include "SSingleton2.h"
 //////////////////////////////////////////////////////////////////////////
@@ -230,6 +232,10 @@ public:
 
 	STDMETHOD_(BOOL,UpdateLayeredWindow)(THIS_ HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc,COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags) OVERRIDE;
 
+	STDMETHOD_(BOOL,SubscribeEvent)(THIS_ const IEvtSlot *pSlot) OVERRIDE;
+
+	STDMETHOD_(BOOL,UnsubscribeEvent)(THIS_ const IEvtSlot *pSlot) OVERRIDE;
+
     LRESULT DefWindowProc();
     LRESULT ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -244,6 +250,7 @@ protected:
 
     const MSG * m_pCurrentMsg;
     BOOL m_bDestoryed;
+	SEventSet m_evtSet;
 public:
 
     HWND m_hWnd;
