@@ -355,15 +355,8 @@ public:
     BOOL SetWindowText(LPCTSTR lpszString)
     {
         SASSERT(::IsWindow(m_hWnd));
-        BOOL bRet= ::SetWindowText(m_hWnd, lpszString);
-		if (bRet)
-		{
-			OnWindowTextChanged(lpszString);
-		}
-		return bRet;
+        return ::SetWindowText(m_hWnd, lpszString);
     }
-
-	virtual void OnWindowTextChanged(LPCTSTR lpszString) {}
 
     int GetWindowText(LPTSTR lpszStringBuf, int nMaxCount) const
     {
