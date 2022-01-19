@@ -76,6 +76,7 @@ HEADERS += include/SApp.h \
            include/interface/SWindow-i.h \
            include/interface/SWndContainer-i.h \
            include/interface/SFactory-i.h \
+           include/interface/SNativeWnd-i.h \
            include/activex/SBStr.h \
            include/animation/SAlphaAnimation.h \
            include/animation/SAnimation.h \

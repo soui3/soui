@@ -1,11 +1,10 @@
 ﻿#pragma once
-
+#include <interface/SNativeWnd-i.h>
 #include "SSingleton2.h"
 //////////////////////////////////////////////////////////////////////////
 // thunk 技术实现参考http://www.cppblog.com/proguru/archive/2008/08/24/59831.html
 //////////////////////////////////////////////////////////////////////////
-namespace SOUI
-{
+SNSBEGIN
 
 	class SOUI_EXP SNativeWndHelper: public SSingleton2<SNativeWndHelper>{
 		SINGLETON2_TYPE(SINGLETON_SIMPLEWNDHELPER)
@@ -456,4 +455,4 @@ protected:
     WNDPROC    m_pfnSuperWindowProc;
 };
 
-}//namespace SOUI
+SNSEND
