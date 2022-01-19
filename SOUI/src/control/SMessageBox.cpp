@@ -210,7 +210,7 @@ namespace SOUI
         OnSetIcon(s_MsgBoxInfo.uType);
         GetRoot()->UpdateLayout();
 
-		CRect rcWnd = GetWindowRect();
+		CRect rcWnd = SHostWnd::GetWindowRect();
 		CSize szWnd = rcWnd.Size();
         if(szWnd.cx<szMin[0].toPixelSize(GetScale()))
 			szWnd.cx = szMin[0].toPixelSize(GetScale());

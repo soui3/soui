@@ -1,18 +1,15 @@
 #pragma once
-#include <interface/sobject-i.h>
+#include <interface/SNativeWnd-i.h>
 SNSBEGIN
 
 interface IWindow;
 
 #undef INTERFACE
 #define INTERFACE IHostWnd
-DECLARE_INTERFACE_(IHostWnd,IObject)
+DECLARE_INTERFACE_(IHostWnd,INativeWnd)
 {
 	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) PURE;
-	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x /*= 0*/, int y /*= 0*/, int nWidth /*= 0*/, int nHeight /*= 0*/) PURE;
-	STDMETHOD_(BOOL,Destroy)(THIS) PURE;
 	STDMETHOD_(IWindow*,GetIRoot)(THIS) PURE;
-	STDMETHOD_(HWND,GetHwnd)(THIS) PURE;
 };
 
 #undef INTERFACE

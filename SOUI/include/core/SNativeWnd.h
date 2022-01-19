@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include <interface/SNativeWnd-i.h>
+#include <sobject/Sobject.hpp>
+
 #include "SSingleton2.h"
 //////////////////////////////////////////////////////////////////////////
 // thunk 技术实现参考http://www.cppblog.com/proguru/archive/2008/08/24/59831.html
@@ -108,331 +110,130 @@ struct tagThunk
 #error Only AMD64, ARM and X86 supported
 #endif
 
-class  SOUI_EXP SNativeWnd 
+class  SOUI_EXP SNativeWnd : public TObjRefImpl<SObjectImpl<INativeWnd>>
 {
+	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<INativeWnd>>,L"native_wnd",NativeWnd)
 public:
-    SNativeWnd(HWND hWnd=0);
+    SNativeWnd();
     virtual ~SNativeWnd(void);
 
     static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 
 	static ATOM RegisterSimpleWnd2(HINSTANCE hInst, LPCTSTR pszSimpleWndName);
 
-    HWND Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam );
+	STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE;
 
-    BOOL SubclassWindow(HWND hWnd);
+	STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE;
 
-    HWND UnsubclassWindow(BOOL bForce /*= FALSE*/);
+	STDMETHOD_(BOOL,SubclassWindow)(THIS_ HWND hWnd) OVERRIDE;
 
-    const MSG * GetCurrentMessage() const
-    {
-        return m_pCurrentMsg;
-    }
+	STDMETHOD_(HWND,UnsubclassWindow)(THIS_ BOOL bForce = FALSE) OVERRIDE;
 
-	int GetDlgCtrlID() const
-	{
-		SASSERT(::IsWindow(m_hWnd));
-		return ::GetDlgCtrlID(m_hWnd);
-	}
+	STDMETHOD_(const MSG *, GetCurrentMessage)(THIS) SCONST OVERRIDE;
 
-    DWORD GetStyle() const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-    }
+	STDMETHOD_(int,GetDlgCtrlID)(THIS) SCONST OVERRIDE;
 
-    DWORD GetExStyle() const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return (DWORD)::GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
-    }
+	STDMETHOD_(DWORD,GetStyle)(THIS) SCONST OVERRIDE;
 
-    LONG_PTR GetWindowLongPtr(int nIndex) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetWindowLongPtr(m_hWnd, nIndex);
-    }
+	STDMETHOD_(DWORD,GetExStyle)(THIS) SCONST OVERRIDE;
 
-    LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);
-    }
+	STDMETHOD_(LONG_PTR,GetWindowLongPtr)(THIS_ int nIndex) SCONST OVERRIDE;
 
-	HWND GetParent()
-	{
-		SASSERT(::IsWindow(m_hWnd));
-		return ::GetParent(m_hWnd);
-	}
+	STDMETHOD_(LONG_PTR,SetWindowLongPtr)(THIS_ int nIndex, LONG_PTR dwNewLong) OVERRIDE;
 
-	HWND SetParent(HWND hWndNewParent)
-	{
-		SASSERT(::IsWindow(m_hWnd));
-		return ::SetParent(m_hWnd, hWndNewParent);
-	}
+	STDMETHOD_(HWND,GetParent)(THIS) OVERRIDE;
 
-	BOOL IsWindowEnabled() const
-	{
-		SASSERT(::IsWindow(m_hWnd));
-		return ::IsWindowEnabled(m_hWnd);
-	}
+	STDMETHOD_(HWND,SetParent)(THIS_ HWND hWndNewParent) OVERRIDE;
 
-    BOOL ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
+	STDMETHOD_(BOOL,IsWindowEnabled)(THIS) SCONST OVERRIDE;
 
-    BOOL ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
+	STDMETHOD_(BOOL,ModifyStyle)(THIS_ DWORD dwRemove, DWORD dwAdd, UINT nFlags=0) OVERRIDE;
 
-    BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT nFlags)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, nFlags);
-    }
-    BOOL CenterWindow(HWND hWndCenter = NULL);
+	STDMETHOD_(BOOL,ModifyStyleEx)(THIS_ DWORD dwRemove, DWORD dwAdd, UINT nFlags=0) OVERRIDE;
 
-    BOOL DestroyWindow()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::DestroyWindow(m_hWnd);
-    }
-    BOOL IsWindow()
-    {
-        return ::IsWindow(m_hWnd);
-    }
+	STDMETHOD_(BOOL,SetWindowPos)(THIS_ HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT nFlags) OVERRIDE;
 
+	STDMETHOD_(BOOL,CenterWindow)(THIS_ HWND hWndCenter = NULL) OVERRIDE;
 
-    BOOL Invalidate(BOOL bErase = TRUE)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::InvalidateRect(m_hWnd, NULL, bErase);
-    }
+	STDMETHOD_(BOOL,DestroyWindow)(THIS) OVERRIDE;
 
-    BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::InvalidateRect(m_hWnd, lpRect, bErase);
-    }
-    BOOL GetWindowRect(LPRECT lpRect) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetWindowRect(m_hWnd, lpRect);
-    }
+	STDMETHOD_(BOOL,IsWindow)(THIS) OVERRIDE;
 
-    BOOL GetClientRect(LPRECT lpRect) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetClientRect(m_hWnd, lpRect);
-    }
-    BOOL ClientToScreen(LPPOINT lpPoint) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::ClientToScreen(m_hWnd, lpPoint);
-    }
+	STDMETHOD_(BOOL,Invalidate)(THIS_ BOOL bErase = TRUE) OVERRIDE;
 
-    BOOL ClientToScreen(LPRECT lpRect) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        if(!::ClientToScreen(m_hWnd, (LPPOINT)lpRect))
-            return FALSE;
-        return ::ClientToScreen(m_hWnd, ((LPPOINT)lpRect)+1);
-    }
+	STDMETHOD_(BOOL,InvalidateRect)(THIS_ LPCRECT lpRect, BOOL bErase = TRUE) OVERRIDE;
 
-    BOOL ScreenToClient(LPPOINT lpPoint) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::ScreenToClient(m_hWnd, lpPoint);
-    }
+	STDMETHOD_(BOOL,GetWindowRect)(THIS_ LPRECT lpRect) SCONST OVERRIDE;
 
-    BOOL ScreenToClient(LPRECT lpRect) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        if(!::ScreenToClient(m_hWnd, (LPPOINT)lpRect))
-            return FALSE;
-        return ::ScreenToClient(m_hWnd, ((LPPOINT)lpRect)+1);
-    }
+	STDMETHOD_(BOOL,GetClientRect)(THIS_ LPRECT lpRect) SCONST OVERRIDE;
 
-    int MapWindowPoints(HWND hWndTo, LPPOINT lpPoint, UINT nCount) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::MapWindowPoints(m_hWnd, hWndTo, lpPoint, nCount);
-    }
+	STDMETHOD_(BOOL,ClientToScreen)(THIS_ LPPOINT lpPoint) SCONST OVERRIDE;
 
-    int MapWindowPoints(HWND hWndTo, LPRECT lpRect) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::MapWindowPoints(m_hWnd, hWndTo, (LPPOINT)lpRect, 2);
-    }
+	STDMETHOD_(BOOL,ClientToScreen2)(THIS_ LPRECT lpRect) SCONST OVERRIDE;
 
+	STDMETHOD_(BOOL,ScreenToClient)(THIS_ LPPOINT lpPoint) SCONST OVERRIDE;
 
-    UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT nElapse, void (CALLBACK* lpfnTimer)(HWND, UINT, UINT_PTR, DWORD) = NULL)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetTimer(m_hWnd, nIDEvent, nElapse, (TIMERPROC)lpfnTimer);
-    }
+	STDMETHOD_(BOOL,ScreenToClient2)(THIS_ LPRECT lpRect) SCONST OVERRIDE;
 
-    BOOL KillTimer(UINT_PTR nIDEvent)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::KillTimer(m_hWnd, nIDEvent);
-    }
+	STDMETHOD_(int,MapWindowPoints)(THIS_ HWND hWndTo, LPPOINT lpPoint, UINT nCount) SCONST OVERRIDE;
 
-    HDC GetDC()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetDC(m_hWnd);
-    }
+	STDMETHOD_(int,MapWindowRect)(THIS_ HWND hWndTo, LPRECT lpRect) SCONST OVERRIDE;
 
-    HDC GetWindowDC()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetWindowDC(m_hWnd);
-    }
+	STDMETHOD_(UINT_PTR,SetTimer)(THIS_ UINT_PTR nIDEvent, UINT nElapse, void (CALLBACK* lpfnTimer)(HWND, UINT, UINT_PTR, DWORD) = NULL) OVERRIDE;
 
-    int ReleaseDC(HDC hDC)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::ReleaseDC(m_hWnd, hDC);
-    }
+	STDMETHOD_(BOOL,KillTimer)(THIS_ UINT_PTR nIDEvent) OVERRIDE;
 
-    BOOL CreateCaret(HBITMAP hBitmap)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::CreateCaret(m_hWnd, hBitmap, 0, 0);
-    }
+	STDMETHOD_(HDC,GetDC)(THIS) OVERRIDE;
 
-    BOOL CreateSolidCaret(int nWidth, int nHeight)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::CreateCaret(m_hWnd, (HBITMAP)0, nWidth, nHeight);
-    }
+	STDMETHOD_(HDC,GetWindowDC)(THIS) OVERRIDE;
 
-    BOOL CreateGrayCaret(int nWidth, int nHeight)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::CreateCaret(m_hWnd, (HBITMAP)1, nWidth, nHeight);
-    }
+	STDMETHOD_(int,ReleaseDC)(THIS_ HDC hDC) OVERRIDE;
 
-    BOOL HideCaret()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::HideCaret(m_hWnd);
-    }
+	STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP hBitmap) OVERRIDE;
 
-    BOOL ShowCaret()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::ShowCaret(m_hWnd);
-    }
-    HWND SetCapture()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetCapture(m_hWnd);
-    }
+	STDMETHOD_(BOOL,HideCaret)(THIS) OVERRIDE;
 
-    HWND SetFocus()
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetFocus(m_hWnd);
-    }
+	STDMETHOD_(BOOL,ShowCaret)(THIS) OVERRIDE;
 
-    LRESULT SendMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SendMessage(m_hWnd,message,wParam,lParam);
-    }
+	STDMETHOD_(HWND,SetCapture)(THIS) OVERRIDE;
 
-    BOOL PostMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::PostMessage(m_hWnd,message,wParam,lParam);
-    }
+	STDMETHOD_(HWND,SetFocus)(THIS) OVERRIDE;
 
-    BOOL SendNotifyMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SendNotifyMessage(m_hWnd, message, wParam, lParam);
-    }
+	STDMETHOD_(LRESULT,SendMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE;
 
-    BOOL SetWindowText(LPCTSTR lpszString)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetWindowText(m_hWnd, lpszString);
-    }
+	STDMETHOD_(BOOL,PostMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE;
 
-    int GetWindowText(LPTSTR lpszStringBuf, int nMaxCount) const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::GetWindowText(m_hWnd, lpszStringBuf, nMaxCount);
-    }
-    BOOL IsIconic() const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::IsIconic(m_hWnd);
-    }
+	STDMETHOD_(BOOL,SendNotifyMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE;
 
-    BOOL IsZoomed() const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::IsZoomed(m_hWnd);
-    }
+	STDMETHOD_(BOOL,SetWindowText)(THIS_ LPCTSTR lpszString) OVERRIDE;
 
-    BOOL IsWindowVisible() const
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::IsWindowVisible(m_hWnd);
-    }
+	STDMETHOD_(int,GetWindowText)(THIS_ LPTSTR lpszStringBuf, int nMaxCount) SCONST OVERRIDE;
 
-    BOOL MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint);
-    }
+	STDMETHOD_(BOOL,IsIconic)(THIS) SCONST OVERRIDE;
 
-    BOOL MoveWindow(LPCRECT lpRect, BOOL bRepaint = TRUE)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::MoveWindow(m_hWnd, lpRect->left, lpRect->top, lpRect->right - lpRect->left, lpRect->bottom - lpRect->top, bRepaint);
-    }
+	STDMETHOD_(BOOL,IsZoomed)(THIS) SCONST OVERRIDE;
 
-    virtual BOOL ShowWindow(int nCmdShow) 
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::ShowWindow(m_hWnd,nCmdShow);
-    }
+	STDMETHOD_(BOOL,IsWindowVisible)(THIS) SCONST OVERRIDE;
 
-    int SetWindowRgn(HRGN hRgn,BOOL bRedraw=TRUE)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetWindowRgn(m_hWnd,hRgn,bRedraw);
-    }
+	STDMETHOD_(BOOL,MoveWindow)(THIS_ int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) OVERRIDE;
 
-    BOOL SetLayeredWindowAttributes(COLORREF crKey,BYTE bAlpha,DWORD dwFlags)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::SetLayeredWindowAttributes(m_hWnd,crKey,bAlpha,dwFlags);
-    }
+	STDMETHOD_(BOOL,MoveWindow2)(THIS_ LPCRECT lpRect, BOOL bRepaint = TRUE) OVERRIDE;
 
-    BOOL UpdateLayeredWindow(HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc,COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags)
-    {
-        SASSERT(::IsWindow(m_hWnd));
-        return ::UpdateLayeredWindow(m_hWnd,hdcDst,pptDst,psize,hdcSrc,pptSrc,crKey,pblend,dwFlags);
-    }
+	STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) OVERRIDE;
 
-    LRESULT DefWindowProc()
-    {
-        const MSG* pMsg = m_pCurrentMsg;
-        LRESULT lRes = 0;
-        if (pMsg != NULL)
-            lRes = DefWindowProc(pMsg->message, pMsg->wParam, pMsg->lParam);
-        return lRes;
-    }
+	STDMETHOD_(int,SetWindowRgn)(THIS_ HRGN hRgn,BOOL bRedraw= TRUE) OVERRIDE;
+
+	STDMETHOD_(BOOL,SetLayeredWindowAttributes)(THIS_ COLORREF crKey,BYTE bAlpha,DWORD dwFlags) OVERRIDE;
+
+	STDMETHOD_(BOOL,UpdateLayeredWindow)(THIS_ HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc,COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags) OVERRIDE;
+
+    LRESULT DefWindowProc();
     LRESULT ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     static BOOL DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
 public://EXTRACT FROM BEGIN_MSG_MAP_EX and END_MSG_MAP
-    virtual BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0)
-    {
-        return FALSE;
-    }
+    virtual BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0);
 protected:
     LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

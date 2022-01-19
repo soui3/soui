@@ -9,6 +9,8 @@ DECLARE_INTERFACE_(INativeWnd,IObject)
 {
 	STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) PURE;
 
+	STDMETHOD_(HWND,GetHwnd)(THIS) PURE;
+
 	STDMETHOD_(BOOL,SubclassWindow)(THIS_ HWND hWnd) PURE;
 
 	STDMETHOD_(HWND,UnsubclassWindow)(THIS_ BOOL bForce /*= FALSE*/) PURE;
@@ -61,7 +63,7 @@ DECLARE_INTERFACE_(INativeWnd,IObject)
 
 	STDMETHOD_(int,MapWindowPoints)(THIS_ HWND hWndTo, LPPOINT lpPoint, UINT nCount) SCONST PURE;
 
-	STDMETHOD_(int,MapWindowPoints2)(THIS_ HWND hWndTo, LPRECT lpRect) SCONST PURE;
+	STDMETHOD_(int,MapWindowRect)(THIS_ HWND hWndTo, LPRECT lpRect) SCONST PURE;
 
 	STDMETHOD_(UINT_PTR,SetTimer)(THIS_ UINT_PTR nIDEvent, UINT nElapse, void (CALLBACK* lpfnTimer)(HWND, UINT, UINT_PTR, DWORD) /*= NULL*/) PURE;
 
@@ -101,7 +103,7 @@ DECLARE_INTERFACE_(INativeWnd,IObject)
 
 	STDMETHOD_(BOOL,MoveWindow)(THIS_ int x, int y, int nWidth, int nHeight, BOOL bRepaint /*= TRUE*/) PURE;
 
-	STDMETHOD_(BOOL,MoveWindow)(THIS_ LPCRECT lpRect, BOOL bRepaint /*= TRUE*/) PURE;
+	STDMETHOD_(BOOL,MoveWindow2)(THIS_ LPCRECT lpRect, BOOL bRepaint /*= TRUE*/) PURE;
 
 	STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) PURE;
 

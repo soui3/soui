@@ -131,14 +131,161 @@ namespace SOUI
 		SHostWnd*					m_pHostWnd;
 	};
 
-	class SOUI_EXP SHostWnd: public TObjRefImpl<SObjectImpl<IHostWnd>>
+	template<class T>
+	class TNativeWndProxy : public T, public SNativeWnd
+	{
+	public:
+		STDMETHOD_(long,AddRef) (THIS) {return SNativeWnd::AddRef();}
+		STDMETHOD_(long,Release) (THIS) {return SNativeWnd::Release();}
+		STDMETHOD_(void,OnFinalRelease) (THIS) {SNativeWnd::OnFinalRelease();}
+		STDMETHOD_(BOOL,IsClass)(THIS_ LPCWSTR lpszName) SCONST {return SNativeWnd::IsClass(lpszName);}
+		STDMETHOD_(LPCWSTR,GetObjectClass)(THIS) SCONST {return SNativeWnd::GetObjectClass();}
+		STDMETHOD_(int,GetObjectType)(THIS)  SCONST {return SNativeWnd::GetObjectType();}
+		STDMETHOD_(int,GetID)(THIS) SCONST {return SNativeWnd::GetID();}
+		STDMETHOD_(void,SetID)(THIS_ int nID) {return SNativeWnd::SetID(nID);}
+		STDMETHOD_(LPCWSTR,GetName)(THIS) SCONST {return SNativeWnd::GetName();}
+		STDMETHOD_(void,SetName)(THIS_ LPCWSTR pszName) {return SNativeWnd::SetName(pszName);}
+		STDMETHOD_(BOOL,InitFromXml)(THIS_ IXmlNode * xmlNode ) {return SNativeWnd::InitFromXml(xmlNode);}
+		STDMETHOD_(void,OnInitFinished)(THIS_ IXmlNode* xmlNode) {return SNativeWnd::OnInitFinished(xmlNode);}
+		STDMETHOD_(HRESULT,SetAttributeA)(THIS_ const IStringA * strAttribName, const IStringA *  strValue, BOOL bLoading) {
+			return SNativeWnd::SetAttributeA(strAttribName,strValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttributeW)(THIS_ const IStringW *  strAttribName, const IStringW *  strValue, BOOL bLoading)
+		{
+			return SNativeWnd::SetAttributeW(strAttribName,strValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttribute)(THIS_ LPCSTR pszAttr, LPCSTR pszValue, BOOL bLoading)
+		{
+			return SNativeWnd::SetAttribute(pszAttr,pszValue,bLoading);
+		}
+		STDMETHOD_(HRESULT,SetAttributeW)(THIS_ LPCWSTR pszAttr, LPCWSTR pszValue, BOOL bLoading)
+		{
+			return SNativeWnd::SetAttributeW(pszAttr,pszValue,bLoading);
+		}
+		STDMETHOD_(BOOL,GetAttribute)(THIS_ const IStringW * strAttr, IStringW * pValue) SCONST
+		{
+			return SNativeWnd::GetAttribute(strAttr,pValue);
+		}
+		STDMETHOD_(HRESULT,AfterAttribute)(THIS_ const IStringW * strAttribName,const IStringW * strValue, BOOL bLoading, HRESULT hr)
+		{
+			return SNativeWnd::AfterAttribute(strAttribName,strValue,bLoading,hr);
+		}
+
+		STDMETHOD_(HWND,Create)(THIS_ LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam ) OVERRIDE
+		{return SNativeWnd::Create(lpWindowName,dwStyle,dwExStyle,x,y,nWidth,nHeight,hWndParent,lpParam);}
+
+		STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
+		{return SNativeWnd::GetHwnd();}
+
+		STDMETHOD_(BOOL,SubclassWindow)(THIS_ HWND hWnd) OVERRIDE
+		{return SNativeWnd::SubclassWindow(hWnd);}
+		STDMETHOD_(HWND,UnsubclassWindow)(THIS_ BOOL bForce /*= FALSE*/) OVERRIDE
+		{return SNativeWnd::UnsubclassWindow(bForce);}
+		STDMETHOD_(const MSG *, GetCurrentMessage)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::GetCurrentMessage();}
+		STDMETHOD_(int,GetDlgCtrlID)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::GetDlgCtrlID();}
+		STDMETHOD_(DWORD,GetStyle)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::GetStyle();}
+		STDMETHOD_(DWORD,GetExStyle)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::GetExStyle();}
+		STDMETHOD_(LONG_PTR,GetWindowLongPtr)(THIS_ int nIndex) SCONST OVERRIDE
+		{return SNativeWnd::GetWindowLongPtr(nIndex);}
+		STDMETHOD_(LONG_PTR,SetWindowLongPtr)(THIS_ int nIndex, LONG_PTR dwNewLong) OVERRIDE
+		{return SNativeWnd::SetWindowLongPtr(nIndex,dwNewLong);}
+		STDMETHOD_(HWND,GetParent)(THIS) OVERRIDE
+		{return SNativeWnd::GetParent();}
+		STDMETHOD_(HWND,SetParent)(THIS_ HWND hWndNewParent) OVERRIDE
+		{return SNativeWnd::SetParent(hWndNewParent);}
+		STDMETHOD_(BOOL,IsWindowEnabled)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::IsWindowEnabled();}
+		STDMETHOD_(BOOL,ModifyStyle)(THIS_ DWORD dwRemove, DWORD dwAdd, UINT nFlags=0) OVERRIDE
+		{return SNativeWnd::ModifyStyle(dwRemove,dwAdd,nFlags);}
+		STDMETHOD_(BOOL,ModifyStyleEx)(THIS_ DWORD dwRemove, DWORD dwAdd, UINT nFlags=0) OVERRIDE
+		{return SNativeWnd::ModifyStyleEx(dwRemove,dwAdd,nFlags);}
+		STDMETHOD_(BOOL,SetWindowPos)(THIS_ HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT nFlags) OVERRIDE
+		{return SNativeWnd::SetWindowPos(hWndInsertAfter,x,y,cx,cy,nFlags);}
+		STDMETHOD_(BOOL,CenterWindow)(THIS_ HWND hWndCenter = NULL) OVERRIDE
+		{return SNativeWnd::CenterWindow(hWndCenter);}
+		STDMETHOD_(BOOL,IsWindow)(THIS) OVERRIDE
+		{return SNativeWnd::IsWindow();}
+		STDMETHOD_(BOOL,Invalidate)(THIS_ BOOL bErase = TRUE) OVERRIDE
+		{return SNativeWnd::Invalidate(bErase);}
+		STDMETHOD_(BOOL,InvalidateRect)(THIS_ LPCRECT lpRect, BOOL bErase = TRUE) OVERRIDE
+		{return SNativeWnd::InvalidateRect(lpRect,bErase);}
+		STDMETHOD_(BOOL,GetWindowRect)(THIS_ LPRECT lpRect) SCONST OVERRIDE
+		{return SNativeWnd::GetWindowRect(lpRect);}
+		STDMETHOD_(BOOL,GetClientRect)(THIS_ LPRECT lpRect) SCONST OVERRIDE
+		{return SNativeWnd::GetClientRect(lpRect);}
+		STDMETHOD_(BOOL,ClientToScreen)(THIS_ LPPOINT lpPoint) SCONST OVERRIDE
+		{return SNativeWnd::ClientToScreen(lpPoint);}
+		STDMETHOD_(BOOL,ClientToScreen2)(THIS_ LPRECT lpRect) SCONST OVERRIDE
+		{return SNativeWnd::ClientToScreen2(lpRect);}
+		STDMETHOD_(BOOL,ScreenToClient)(THIS_ LPPOINT lpPoint) SCONST OVERRIDE
+		{return SNativeWnd::ScreenToClient(lpPoint);}
+		STDMETHOD_(BOOL,ScreenToClient2)(THIS_ LPRECT lpRect) SCONST OVERRIDE
+		{return SNativeWnd::ScreenToClient2(lpRect);}
+		STDMETHOD_(int,MapWindowPoints)(THIS_ HWND hWndTo, LPPOINT lpPoint, UINT nCount) SCONST OVERRIDE
+		{return SNativeWnd::MapWindowPoints(hWndTo,lpPoint,nCount);}
+		STDMETHOD_(int,MapWindowRect)(THIS_ HWND hWndTo, LPRECT lpRect) SCONST OVERRIDE
+		{return SNativeWnd::MapWindowRect(hWndTo,lpRect);}
+		STDMETHOD_(UINT_PTR,SetTimer)(THIS_ UINT_PTR nIDEvent, UINT nElapse, void (CALLBACK* lpfnTimer)(HWND, UINT, UINT_PTR, DWORD) = NULL) OVERRIDE
+		{return SNativeWnd::SetTimer(nIDEvent,nElapse,lpfnTimer);}
+		STDMETHOD_(BOOL,KillTimer)(THIS_ UINT_PTR nIDEvent) OVERRIDE
+		{return SNativeWnd::KillTimer(nIDEvent);}
+		STDMETHOD_(HDC,GetDC)(THIS) OVERRIDE
+		{return SNativeWnd::GetDC();}
+		STDMETHOD_(HDC,GetWindowDC)(THIS) OVERRIDE
+		{return SNativeWnd::GetWindowDC();}
+		STDMETHOD_(int,ReleaseDC)(THIS_ HDC hDC) OVERRIDE
+		{return SNativeWnd::ReleaseDC(hDC);}
+		STDMETHOD_(BOOL,CreateCaret)(THIS_ HBITMAP hBitmap) OVERRIDE
+		{return SNativeWnd::CreateCaret(hBitmap);}
+		STDMETHOD_(BOOL,HideCaret)(THIS) OVERRIDE
+		{return SNativeWnd::HideCaret();}
+		STDMETHOD_(BOOL,ShowCaret)(THIS) OVERRIDE
+		{return SNativeWnd::ShowCaret();}
+		STDMETHOD_(HWND,SetCapture)(THIS) OVERRIDE
+		{return SNativeWnd::SetCapture();}
+		STDMETHOD_(HWND,SetFocus)(THIS) OVERRIDE
+		{return SNativeWnd::SetFocus();}
+		STDMETHOD_(LRESULT,SendMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE
+		{return SNativeWnd::SendMessage(message,wParam,lParam);}
+		STDMETHOD_(BOOL,PostMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE
+		{return SNativeWnd::PostMessage(message,wParam,lParam);}
+		STDMETHOD_(BOOL,SendNotifyMessage)(THIS_ UINT message, WPARAM wParam = 0, LPARAM lParam = 0) OVERRIDE
+		{return SNativeWnd::SendNotifyMessage(message,wParam,lParam);}
+		STDMETHOD_(BOOL,SetWindowText)(THIS_ LPCTSTR lpszString) OVERRIDE
+		{return SNativeWnd::SetWindowText(lpszString);}
+		STDMETHOD_(int,GetWindowText)(THIS_ LPTSTR lpszStringBuf, int nMaxCount) SCONST OVERRIDE
+		{return SNativeWnd::GetWindowText(lpszStringBuf,nMaxCount);}
+		STDMETHOD_(BOOL,IsIconic)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::IsIconic();}
+		STDMETHOD_(BOOL,IsZoomed)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::IsZoomed();}
+		STDMETHOD_(BOOL,IsWindowVisible)(THIS) SCONST OVERRIDE
+		{return SNativeWnd::IsWindowVisible();}
+		STDMETHOD_(BOOL,MoveWindow)(THIS_ int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) OVERRIDE
+		{return SNativeWnd::MoveWindow(x,y,nWidth,nHeight,bRepaint);}
+		STDMETHOD_(BOOL,MoveWindow2)(THIS_ LPCRECT lpRect, BOOL bRepaint = TRUE) OVERRIDE
+		{return SNativeWnd::MoveWindow2(lpRect,bRepaint);}
+		STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) OVERRIDE
+		{return SNativeWnd::ShowWindow(nCmdShow);}
+		STDMETHOD_(int,SetWindowRgn)(THIS_ HRGN hRgn,BOOL bRedraw=TRUE) OVERRIDE
+		{return SNativeWnd::SetWindowRgn(hRgn,bRedraw);}
+		STDMETHOD_(BOOL,SetLayeredWindowAttributes)(THIS_ COLORREF crKey,BYTE byAlpha,DWORD dwFlags) OVERRIDE
+		{return SNativeWnd::SetLayeredWindowAttributes(crKey,byAlpha,dwFlags);}
+		STDMETHOD_(BOOL,UpdateLayeredWindow)(THIS_ HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc,COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags)
+		{return SNativeWnd::UpdateLayeredWindow(hdcDst,pptDst,psize,hdcSrc,pptSrc,crKey,pblend,dwFlags);}
+	};
+
+	class SOUI_EXP SHostWnd: public TNativeWndProxy<IHostWnd>
     , public SwndContainerImpl
-    , public SNativeWnd
 	, protected IHostMsgHandler
 {
     friend class SDummyWnd;
 	friend class SRootWindow;
-	SOUI_CLASS_NAME_EX(TObjRefImpl<SObjectImpl<IHostWnd>>,L"SHostWnd",NativeWnd)
+	SOUI_CLASS_NAME(SNativeWnd,L"SHostWnd")
 protected:    
     SDummyWnd*           m_dummyWnd;            /**<半透明窗口使用的一个响应WM_PAINT消息的窗口*/
     SHostWndAttr         m_hostAttr;            /**<host属性，对应XML中的SOUI结点 */
@@ -187,26 +334,22 @@ public:
 	};
 
 public:
+	STDMETHOD_(BOOL,DestroyWindow)(THIS) OVERRIDE;
+
 	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) OVERRIDE
 	{
 		m_strXmlLayout = pszLayoutId;
 	}
-	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE;
 
-	STDMETHOD_(BOOL,Destroy)(THIS) OVERRIDE
-	{
-		return DestroyWindow();
-	}
 	STDMETHOD_(IWindow*,GetIRoot)(THIS) OVERRIDE
 	{
 		return m_pRoot;
 	}
-	STDMETHOD_(HWND,GetHwnd)(THIS) OVERRIDE
-	{
-		return m_hWnd;
-	}
+	STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) OVERRIDE;
 
 public:
+	HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
+
 
 	SWindow* FindChildByName(LPCWSTR strName , int nDeep =-1){
 		return GetRoot()->FindChildByName(strName,nDeep);
@@ -261,10 +404,6 @@ public:
     UINT setInterval(LPCSTR pszScriptFunc,UINT uElapse);
     void clearTimer(UINT uID);
 
-    //实现几个常用接口,防止派生类调用时产生歧义
-    BOOL DestroyWindow();
-    UINT_PTR SetTimer(UINT_PTR nIDEvent,UINT nElapse);
-    BOOL KillTimer(UINT_PTR id);
     CRect GetWindowRect() const;
     CRect GetClientRect() const;
 
@@ -369,8 +508,6 @@ protected:
 
     HWND    m_hSpyWnd;
 #endif
-public:
-	virtual BOOL ShowWindow(int nCmdShow);
 
 protected:// IContainer
 

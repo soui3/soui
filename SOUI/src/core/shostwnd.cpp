@@ -1609,16 +1609,6 @@ BOOL SHostWnd::DestroyWindow()
 	}
 }
 
-UINT_PTR SHostWnd::SetTimer(UINT_PTR nIDEvent,UINT nElapse)
-{
-    return SNativeWnd::SetTimer(nIDEvent,nElapse);
-}
-
-BOOL SHostWnd::KillTimer(UINT_PTR id)
-{
-    return SNativeWnd::KillTimer(id);
-}
-
 CRect SHostWnd::GetWindowRect() const
 {
     CRect rc;

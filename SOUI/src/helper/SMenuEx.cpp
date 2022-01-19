@@ -712,7 +712,7 @@ namespace SOUI
 			{
 				SMenuEx *pParent = m_pParent->GetOwnerMenu();
 				CRect rcParent = pParent->GetWindowRect();
-				pParent->ClientToScreen(&rcParent);
+				pParent->ClientToScreen2(&rcParent);
 				if (rcMenu.right > mi.rcMonitor.right)
 				{
 					rcMenu.MoveToX(x - szMenu.cx - rcParent.Width() - subMenuOffset);
@@ -996,7 +996,7 @@ namespace SOUI
 		CRect rcWnd = GetRoot()->GetWindowRect();
 		CRect rcItem = pItem->GetWindowRect();
 		rcItem.left = rcWnd.left, rcItem.right = rcWnd.right;
-		ClientToScreen(&rcItem);
+		ClientToScreen2(&rcItem);
 
 		m_pCheckItem = pItem;
 		m_pCheckItem->SetCheck(TRUE);
