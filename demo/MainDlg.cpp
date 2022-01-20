@@ -672,7 +672,7 @@ void CMainDlg::OnBtnLRC()
     static int s_Count = 0;
     
     SSkiaTestWnd* pHostWnd = new SSkiaTestWnd(_T("layout:dlg_skiatext"));
-    pHostWnd->Create(m_hWnd,WS_POPUP,0,0,0,0,0);
+    pHostWnd->CreateEx(m_hWnd,WS_POPUP,0,0,0,0,0);
     
     //选择一种吸附模式
     CMagnetFrame::ATTACHMODE am;

@@ -575,7 +575,7 @@ namespace SOUI
 			&& xmlNode.name() != SStringW(SMenuExItem::GetClassName()))
 			return FALSE;
 
-		HWND hWnd = Create(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST |WS_EX_NOACTIVATE, 0, 0, 0, 0);
+		HWND hWnd = CreateEx(hParent, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST |WS_EX_NOACTIVATE, 0, 0, 0, 0);
 		SXmlDoc souiXml;
 		SXmlNode root = souiXml.root().append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);
@@ -1177,7 +1177,7 @@ namespace SOUI
 
 	BOOL SMenuEx::IniNullMenu(SMenuExRoot *ParentRoot)
 	{
-		HWND hWnd = Create(NULL, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
+		HWND hWnd = CreateEx(NULL, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
 		SXmlDoc souiXml;
 		SXmlNode root = souiXml.root().append_child(L"SOUI");
 		root.append_attribute(L"translucent").set_value(1);		

@@ -16,29 +16,29 @@ enum _SLOTTYPE{SLOT_FUN,SLOT_STDFUNCTOR,SLOT_MEMBER,SLOT_USER};
 \brief
     Slot functor class that calls back via a free function pointer.
 */
-typedef BOOL (*FunCallback)(IEvtArgs *);
+typedef BOOL (*FunCallback)(IEvtArgs *,void *Ctx);
 class FreeFunctionSlot : public TObjRefImpl<IEvtSlot>
 {
 public:
 	//! Slot function type.
 
-	FreeFunctionSlot(FunCallback func) : d_function(func)
+	FreeFunctionSlot(FunCallback func,void * ctx) : d_function(func),d_ctx(ctx)
 	{}
 
 	STDMETHOD_(BOOL,Run)(THIS_ IEvtArgs *pArg) OVERRIDE
 	{
-		return d_function(pArg);
+		return d_function(pArg,d_ctx);
 	}
 	STDMETHOD_(IEvtSlot*, Clone)(THIS) SCONST OVERRIDE
 	{
-		return new FreeFunctionSlot(d_function);
+		return new FreeFunctionSlot(d_function,d_ctx);
 	}
 	STDMETHOD_(BOOL,Equal)(THIS_ const IEvtSlot * sour) SCONST OVERRIDE
 	{
 		if(sour->GetSlotType()!=SLOT_FUN) return FALSE;
 		const FreeFunctionSlot *psour=static_cast<const FreeFunctionSlot*>(sour);
 		SASSERT(psour);
-		return psour->d_function==d_function;
+		return psour->d_function==d_function && psour->d_ctx == d_ctx;
 
 	}
 	STDMETHOD_(UINT,GetSlotType)(THIS) SCONST OVERRIDE
@@ -49,6 +49,7 @@ public:
 
 private:
 	FunCallback d_function;
+	void *		d_ctx;
 };
 
 #if _MSC_VER >= 1700	//VS2012
@@ -143,9 +144,9 @@ MemberFunctionSlot<T,A> Subscriber(BOOL (T::* pFn)(A *), T* pObject)
     return MemberFunctionSlot<T,A>(pFn, pObject);
 }
 
-inline FreeFunctionSlot Subscriber(FunCallback  pFn)
+inline FreeFunctionSlot Subscriber(FunCallback  pFn,void * ctx)
 {
-    return FreeFunctionSlot(pFn); 
+    return FreeFunctionSlot(pFn,ctx); 
 }
 
 SNSEND

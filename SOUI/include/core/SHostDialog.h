@@ -178,6 +178,15 @@ namespace SOUI
 		{return SHostWnd::UpdateLayeredWindow(hdcDst,pptDst,psize,hdcSrc,pptSrc,crKey,pblend,dwFlags);}
 
 
+		STDMETHOD_(HWND,CreateEx)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y , int nWidth, int nHeight)
+		{
+			return SHostWnd::CreateEx(hWndParent,dwStyle,dwExStyle,x,y,nWidth,nHeight);
+		}
+		STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0)
+		{
+			return SHostWnd::Create(hWndParent,x,y,nWidth,nHeight);
+		}
+
 		STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) OVERRIDE
 		{
 			SHostWnd::SetLayoutId(pszLayoutId);

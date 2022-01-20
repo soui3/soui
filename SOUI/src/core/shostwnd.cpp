@@ -299,7 +299,7 @@ SHostWnd::~SHostWnd()
 	delete m_pRoot;
 }
 
-HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight)
+HWND SHostWnd::CreateEx(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight)
 {
     if (NULL != m_hWnd)
         return m_hWnd;
@@ -314,7 +314,7 @@ HWND SHostWnd::Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int 
 
 HWND SHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
 {
-    return Create(hWndParent, WS_CLIPCHILDREN | WS_TABSTOP | WS_OVERLAPPED,0,x,y,nWidth,nHeight);
+    return CreateEx(hWndParent, WS_CLIPCHILDREN | WS_TABSTOP | WS_OVERLAPPED,0,x,y,nWidth,nHeight);
 }
 
 BOOL SHostWnd::onRootResize( IEvtArgs *e )

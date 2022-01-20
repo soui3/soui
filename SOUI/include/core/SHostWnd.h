@@ -354,10 +354,9 @@ public:
 	}
 	STDMETHOD_(BOOL,ShowWindow)(THIS_ int nCmdShow) OVERRIDE;
 
+	STDMETHOD_(HWND,CreateEx)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y , int nWidth, int nHeight) OVERRIDE;
+	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0) OVERRIDE;
 public:
-	HWND Create(HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y , int nWidth, int nHeight);
-	HWND Create(HWND hWndParent,int x = 0, int y = 0, int nWidth = 0, int nHeight = 0);
-
 
 	SWindow* FindChildByName(LPCWSTR strName , int nDeep =-1){
 		return GetRoot()->FindChildByName(strName,nDeep);

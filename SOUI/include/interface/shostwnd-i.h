@@ -8,6 +8,8 @@ interface IWindow;
 #define INTERFACE IHostWnd
 DECLARE_INTERFACE_(IHostWnd,INativeWnd)
 {
+	STDMETHOD_(HWND,CreateEx)(THIS_ HWND hWndParent,DWORD dwStyle,DWORD dwExStyle, int x, int y , int nWidth, int nHeight) PURE;
+	STDMETHOD_(HWND,Create)(THIS_ HWND hWndParent,int x /*= 0*/, int y /*= 0*/, int nWidth /*= 0*/, int nHeight /*= 0*/) PURE;
 	STDMETHOD_(void,SetLayoutId)(THIS_ LPCTSTR pszLayoutId) PURE;
 	STDMETHOD_(IWindow*,GetIRoot)(THIS) PURE;
 };
