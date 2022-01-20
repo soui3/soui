@@ -245,6 +245,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\uires\xml\dlg_test.xml"
+				>
+			</File>
+			<File
 				RelativePath=".\uires\uidef\init.xml"
 				>
 			</File>

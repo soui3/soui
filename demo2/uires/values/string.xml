@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
   <string>
     <title value="demo2"/>
+    <dialog value="dialog test"/>
     <ver value="1.0"/>
   </string>
