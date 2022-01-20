@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				Optimization="1"
+				Optimization="0"
 				AdditionalIncludeDirectories=".,..\config,.,include,..\utilities\include,..\tools\mkspecs\win32-msvc2008"
 				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,SOUI_EXPORTS,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,NDEBUG"
 				GeneratePreprocessedFile="0"
@@ -58,6 +58,7 @@
 				AssemblerListingLocation="..\obj\release\soui3\"
 				ObjectFile="..\obj\release\soui3\"
 				ProgramDataBaseFileName="$(IntDir)"
+				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1306,11 +1307,11 @@
 				>
 			</File>
 			<File
-				RelativePath="include\interface\SWndContainer-i.h"
+				RelativePath="include\core\SWndContainer-i.h"
 				>
 			</File>
 			<File
-				RelativePath="include\core\SWndContainer-i.h"
+				RelativePath="include\interface\SWndContainer-i.h"
 				>
 			</File>
 			<File
