@@ -781,7 +781,7 @@ namespace SOUI
                     OnScroll(m_bVertical,SB_BOTTOM,0);
                 else
                 {
-					int pos = m_lvItemLocator->Item2Position(iItem+1) - m_bVertical?m_siVer.nPage:m_siHoz.nPage;
+					int pos = m_lvItemLocator->Item2Position(iItem+1) - (m_bVertical?m_siVer.nPage:m_siHoz.nPage);
                     OnScroll(m_bVertical,SB_THUMBPOSITION,pos);
                 }
             }
@@ -801,7 +801,7 @@ namespace SOUI
                 OnScroll(m_bVertical,SB_BOTTOM,0);
             }else
             {
-				int pos = m_lvItemLocator->Item2Position(iItem+1)-m_bVertical?m_siVer.nPage:m_siHoz.nPage;
+				int pos = m_lvItemLocator->Item2Position(iItem+1)-(m_bVertical?m_siVer.nPage:m_siHoz.nPage);
                 OnScroll(m_bVertical,SB_THUMBPOSITION,pos);
             }
         }
