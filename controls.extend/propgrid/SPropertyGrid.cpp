@@ -535,8 +535,8 @@ namespace SOUI
     void SPropertyGrid::OnInplaceActiveWndDestroy( IPropertyItem *pItem,SWindow *pWnd )
     {
         SASSERT(m_pInplaceActiveWnd == pWnd);
-        RemoveChild(pWnd);
 		pWnd->SSendMessage(WM_DESTROY);
+		RemoveChild(pWnd);
         m_pInplaceActiveWnd = NULL;
     }
 
