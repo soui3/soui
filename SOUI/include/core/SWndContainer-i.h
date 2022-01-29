@@ -102,6 +102,8 @@ namespace SOUI
 		virtual void OnCavasInvalidate(SWND swnd) = 0;
 
 		virtual void EnableIME(BOOL bEnable) = 0;
+
+		virtual void OnUpdateCursor() = 0;
     };
 
 

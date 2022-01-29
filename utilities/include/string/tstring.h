@@ -929,9 +929,9 @@ namespace SOUI
         }
 
         // Access to string implementation buffer as "C" character array
-        tchar* GetBuffer(int nMinBufLength)
+        tchar* GetBuffer(int nMinBufLength = -1)
         {
-            SASSERT(nMinBufLength >= 0);
+            if(nMinBufLength <0 ) nMinBufLength = GetLength();
 
             TStringData* pData = GetData();
             if (pData->IsShared() || nMinBufLength > pData->nAllocLength)

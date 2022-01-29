@@ -675,7 +675,7 @@ namespace SOUI
 		*
 		* Describe   设置选中, 支持超长文本
 		*/
-    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll = FALSE);
+    	void SetSel(long nStartChar, long nEndChar, BOOL bNoScroll);
         /**
         * SRichEdit::ReplaceSel
         * @brief     替换选中项
@@ -1102,9 +1102,9 @@ namespace SOUI
             return SRicheditMenuDef::getSingleton().GetMenuXml();
         }
         
-        void OnShowWindow(BOOL bShow, UINT nStatus);
-
 		LRESULT OnGetRect(UINT uMsg,WPARAM wp, LPARAM lp);
+
+		BOOL OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw);
     protected:
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_CREATE(OnCreate)
@@ -1123,7 +1123,6 @@ namespace SOUI
             MSG_WM_KEYDOWN(OnKeyDown)
             MSG_WM_CHAR(OnChar)
             MSG_WM_SETFONT_EX(OnSetFont)
-            MSG_WM_SHOWWINDOW(OnShowWindow)
             MESSAGE_HANDLER_EX(WM_LBUTTONDBLCLK,OnButtonClick)
             MESSAGE_HANDLER_EX(WM_SETTEXT,OnSetText)
             MESSAGE_HANDLER_EX(EM_SETPARAFORMAT,OnSetParaFormat)
@@ -1191,7 +1190,6 @@ namespace SOUI
 			ATTR_CUSTOM(L"passwordChar",OnAttrPasswordChar)
 			ATTR_CUSTOM(L"enableDragdrop",OnAttrEnableDragdrop)
        SOUI_ATTRS_END()
-
     protected:
         
         CHARFORMAT2W   m_cfDef;              /**< Default character format  */

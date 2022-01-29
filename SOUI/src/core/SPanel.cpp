@@ -470,6 +470,8 @@ LRESULT SPanel::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
 
 BOOL SPanel::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
+	BOOL bVertScroll = HasScrollBar(TRUE);
+
 	m_zDelta += zDelta;
     short delta = m_zDelta /WHEEL_DELTA;
 	m_zDelta %= WHEEL_DELTA;
@@ -479,7 +481,7 @@ BOOL SPanel::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     for (; i < nLines; i++)
     {
         // 返回FALSE代表无法再再进行滚动,可以透传给父窗口
-        if (!OnScroll(TRUE, delta>0?SB_LINEUP:SB_LINEDOWN, 0)) 
+        if (!OnScroll(bVertScroll, delta>0?SB_LINEUP:SB_LINEDOWN, 0)) 
         {
             break;
         }
@@ -634,6 +636,13 @@ int SPanel::GetSbWidth() const
 	if(m_nSbWid.isValid()) return m_nSbWid.toPixelSize(GetScale());
 	SASSERT(m_pSkinSb);
 	return m_pSkinSb->GetIdealSize();
+}
+
+void SPanel::OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer)
+{
+	m_sbHorz.OnContainerChanged(pOldContainer,pNewContainer);
+	m_sbVert.OnContainerChanged(pOldContainer,pNewContainer);
+	SWindow::OnContainerChanged(pOldContainer,pNewContainer);
 }
 
 //////////////////////////////////////////////////////////////////////////

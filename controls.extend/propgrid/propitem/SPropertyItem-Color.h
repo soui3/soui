@@ -14,14 +14,18 @@ namespace SOUI
     public:
 		static LPCWSTR GetInplaceItemStyleName(){return NULL;}
 
+		virtual PropType GetType() const {return PT_COLOR;}
         virtual BOOL HasButton() const {return TRUE;}
         virtual void DrawItem(IRenderTarget *pRT,CRect rc);
         virtual void AdjustInplaceActiveWndRect(CRect & rc);
         
         virtual void SetValue(const SStringT & strValue);
-
         virtual SStringT GetValue() const;
 		COLORREF GetValue2() const{return m_crValue;}
+		virtual BOOL HasValue() const ;
+		virtual void ClearValue() ;
+
+
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGT(L"format",m_strFormat,TRUE)
             ATTR_COLOR(L"value",m_crValue,TRUE)
@@ -37,10 +41,7 @@ namespace SOUI
     protected:
         bool OnReNotify(EventArgs *pEvt);
 
-        SPropertyItemColor(SPropertyGrid *pOwner):SPropertyItemText(pOwner)
-        {
-			m_strFormat = _T("#%02x%02x%02x%02x");
-        }
+        SPropertyItemColor(SPropertyGrid *pOwner);
 
 	protected://IColorPicker
 		virtual void OnColorChanged(COLORREF cr);

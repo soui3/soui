@@ -3,7 +3,9 @@
 |启程输入法|isserver3.exe|3.0.5.21|贡献代码|启程软件|[https://soime.cn](https://soime.cn)|作者自研|
 |爱课时升级卸载程序|Uninstall.exe,Update.exe|3.3.3.1955|贡献代码|厦门三读教育科技有限公司|    http://xclass.k123du.com/|无|
 |OfficeAid|OfficeAid.App.exe|1.0.0.3|贡献代码|北京云动智效网络科技有限公司|https://www.officeaid.com/|提供demo,pcmanager及souiviewer|
-|恒星播放器|StellarPlayer.exe|1.1.0.147|购买|冷湖科技(武汉)有限公司|https://www.stellarplayer.com/||
+|恒星播放器|StellarPlayer.exe|1.1.0.147|购买|冷湖科技(武汉)有限公司|https://www.stellarplayer.com/|购买授权|
+|壹加点图软件|YJApp.arx|1.0.2.0|贡献代码|壹加软件|适于于AutoCAD2010~2020|
+
 
 |购买授权企业|日期|备注|
 |:-|:-:|:-:|
@@ -11,7 +13,8 @@
 |月轮网络科技有限公司|2021.3|月轮加速器|
 |江下信息科技|2021.4|https://www.callmysoft.com/|
 |北京航信|2021.7|航信电子开票系统|
-|冷湖光棱科技（武汉）有限公司|2021.8||
+|冷湖光棱科技（武汉）有限公司|2021.8|恒星播放器|
+|厦门享游网络科技有限公司|2022.1.26||
 
-2021.9.2
+2022.1.27
 说明：还有几个用户购买了授权，具体信息我记不清了，看到名单后请联系我来补充，谢谢！

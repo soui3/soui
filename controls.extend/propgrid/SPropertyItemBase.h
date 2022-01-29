@@ -13,7 +13,6 @@ namespace SOUI
     public:
         virtual ~SPropertyItemBase();
 
-        virtual BOOL IsGroup() const {return FALSE;}
         virtual BOOL HasButton() const {return FALSE;}
         virtual int  GetLevel() const ;
         virtual BOOL IsExpand() const ;
@@ -22,13 +21,15 @@ namespace SOUI
         virtual IPropertyItem * GetParent() const ;
         virtual void SetParent(IPropertyItem * pParent);
         virtual IPropertyItem * GetItem(PROPITEMTYPE type) const ;
+		virtual IPropertyItem * GetChildById(int nID) const;
+
         virtual SPropertyGrid * GetOwner() const ;
         virtual BOOL InsertChild(IPropertyItem * pChild,IPropertyItem * pInsertAfter=IC_LAST);
         virtual BOOL RemoveChild(IPropertyItem * pChild);
         virtual int ChildrenCount() const;
 
 		virtual SStringT GetTitle() const{return m_strTitle.IsEmpty()?S_CW2T(m_strName):m_strTitle;}
-        virtual void SetTitle(const SStringW & strName){m_strTitle=strName;}
+        virtual void SetTitle(const SStringT & strName){m_strTitle=strName;}
 		virtual LPCWSTR  GetName() const {return m_strName;}
 		virtual SStringW GetName2() const {return m_strName;}
         virtual int GetID()const {return m_nID;}
@@ -38,9 +39,9 @@ namespace SOUI
         virtual SStringT GetValue() const {return _T("");}
         virtual void SetValue(const SStringT & strValue) {}
 
-        virtual void AdjustInplaceActiveWndRect(CRect & rc){rc.bottom--;}
+        virtual void AdjustInplaceActiveWndRect(CRect & rc){}
         virtual void DrawItem(IRenderTarget *pRT,CRect rc){}
-        virtual BOOL IsInplaceActive(){return m_bInplaceActive;}
+        virtual BOOL IsInplaceActive() const {return m_bInplaceActive;}
         virtual void OnInplaceActive(BOOL bActive){ m_bInplaceActive = bActive;}
         virtual BOOL OnButtonClick(){ return FALSE;}
         virtual void OnValueChanged();
@@ -49,9 +50,11 @@ namespace SOUI
 		
 		virtual BOOL IsReadOnly() const{return m_bReadOnly;}
 		virtual void SetReadOnly(BOOL bReadOnly);
+		virtual SStringW GetExtendType() const{return m_strExType;}
+
 		IPropertyItem * FindChildByName(LPCWSTR pszName) const;
 		IPropertyItem * FindChildById(int nID);
-
+		
         SOUI_ATTRS_BEGIN()
             ATTR_STRINGT(L"title",m_strTitle,TRUE)
 			ATTR_STRINGW(L"name",m_strName,FALSE)
@@ -59,16 +62,18 @@ namespace SOUI
             ATTR_STRINGT(L"description",m_strDescription,FALSE)
             ATTR_INT(L"readOnly",m_bReadOnly,FALSE)
             ATTR_CUSTOM(L"expanded",OnAttrExpanded)
+			ATTR_STRINGW(L"extendType",m_strExType,FALSE)
         SOUI_ATTRS_END()
 
         virtual BOOL InitFromXml(pugi::xml_node xmlNode);
     protected:
         HRESULT OnAttrExpanded(const SStringW &  strValue,BOOL bLoading);
 
-        SStringW        m_strTitle;
+        SStringT        m_strTitle;
 		SStringW		m_strName;
 		int				m_nID;
         SStringT        m_strDescription;
+		SStringW		m_strExType;
 
         SPropertyGrid * m_pOwner;
         IPropertyItem * m_pParent;

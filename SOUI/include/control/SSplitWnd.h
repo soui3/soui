@@ -265,7 +265,7 @@ public:
     SOUI_ATTRS_BEGIN()
         ATTR_INT(L"sepSize", m_spliterSize, TRUE)
         ATTR_SKIN(L"sepSkin",m_pSkinSep,TRUE)
-        ATTR_INT(L"adjustable", m_bAdjustable, TRUE)
+        ATTR_BOOL(L"adjustable", m_bAdjustable, TRUE)
         ATTR_INT(L"vertical", m_orintation, TRUE)
     SOUI_ATTRS_END()
 

@@ -13,6 +13,7 @@ INCLUDEPATH += . \
 			   ../soui/include \
 			   ../third-part/wke/include \
 			   ../third-part/mhook/mhook-lib \
+			   ../third-part/nanosvg/src \
 			   ../components
 			   
 dir = ..
@@ -53,7 +54,16 @@ HEADERS += MainDlg.h \
           ../controls.extend/SSkinNewScrollbar.h \
           ../controls.extend/FileHelper.h \
           ../controls.extend/sipaddressctrl.h \
-          ../controls.extend/propgrid/SPropertyGrid.h \
+          ../controls.extend/propgrid/spropertygrid.h \
+          ../controls.extend/propgrid/spropertyitembase.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-text.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-option.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-color.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-size.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-rect.h \
+          ../controls.extend/propgrid/propitem/spropertyitem-group.h \
+          ../controls.extend/propgrid/colorpicker/ColourPopup.h \
+          ../controls.extend/propgrid/colorpicker/SColorPicker.h \
           ../controls.extend/sfadeframe.h \
           ../controls.extend/sradiobox2.h \
           ../controls.extend/SChromeTabCtrl.h \
@@ -73,14 +83,12 @@ HEADERS += MainDlg.h \
           ../controls.extend/sprogressring.h \
           ../controls.extend/saniwindow.h \
           ../controls.extend/sgrouplist.h \
+          ../controls.extend/shexedit.h \
+          ../controls.extend/sbytearray.h \
           ../controls.extend/SMcListViewEx/STabCtrlHeaderBinder.h \
-          httpsvr/filereader-i.h \
-          httpsvr/genericserver.h \
-          httpsvr/httpserver.h \
           magnet/magnetframe.h \
           smatrixwindow.h \
-		  sroundimage.h \
-          memflash.h \          
+          sroundimage.h \
           threadObject.h \
           SmileyCreateHook.h \
           uianimation/uianimation.h \
@@ -116,9 +124,10 @@ SOURCES += demo.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-option.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-color.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-size.cpp \
+          ../controls.extend/propgrid/propitem/spropertyitem-rect.cpp \
           ../controls.extend/propgrid/propitem/spropertyitem-group.cpp \
-          ../controls.extend/propgrid/colorpicker/ColourPopup.cpp
-          ../controls.extend/propgrid/colorpicker/SColorPicker.cpp
+          ../controls.extend/propgrid/colorpicker/ColourPopup.cpp \
+          ../controls.extend/propgrid/colorpicker/SColorPicker.cpp \
           ../controls.extend/sfadeframe.cpp \
           ../controls.extend/sradiobox2.cpp \
           ../controls.extend/SChromeTabCtrl.cpp \
@@ -137,10 +146,9 @@ SOURCES += demo.cpp \
           ../controls.extend/sprogressring.cpp \
           ../controls.extend/saniwindow.cpp \
           ../controls.extend/sgrouplist.cpp \
-          httpsvr/genericserver.cpp \
-          httpsvr/httpserver.cpp \
+          ../controls.extend/shexedit.cpp \
+          ../controls.extend/sbytearray.cpp \
           magnet/magnetframe.cpp \
-          memflash.cpp	\
           smatrixwindow.cpp \ 
           sroundimage.cpp \          
           threadObject.cpp \
@@ -161,3 +169,4 @@ SOURCES += demo.cpp \
 
 RC_FILE += demo.rc
 
+RC_INCLUDEPATH += ..\soui-sys-resource

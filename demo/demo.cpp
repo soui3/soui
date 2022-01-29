@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include <helper/SMenuWndHook.h>
 #include <helper/SAutoBuf.h>
-#include "httpsvr/HTTPServer.h"
-#include "MemFlash.h"
 #include "../controls.extend/SFadeFrame.h"
 #include "../controls.extend/sradiobox2.h"
 #include "../controls.extend/SVscrollbar.h"
@@ -15,6 +13,7 @@
 #include "../controls.extend/schatedit.h"
 #include "../controls.extend/SScrollText.h"
 #include "../controls.extend/SCalendar2.h"
+#include "../controls.extend/SHexEdit.h"
 
 #include "../controls.extend/SMcListViewEx\SHeaderCtrlEx.h"
 #include "../controls.extend/SMcListViewEx\SMcListViewEx.h"
@@ -31,6 +30,11 @@
 #define LOG_FILTER "demo"
 #include <helper/SLogDef.h>
 //-->
+
+#define NANOSVG_IMPLEMENTATION
+#include <nanosvg.h>
+#define NANOSVGRAST_IMPLEMENTATION
+#include <nanosvgrast.h>
 
 #include "MainDlg.h"
 
@@ -79,6 +83,64 @@ public:
 	void task2(int a, const std::string & b)
 	{
 		SLOG_INFO("task2,a:" << a<<" b:"<<b.c_str());
+	}
+};
+
+class SApplication2 : public SApplication
+{
+public:
+	SApplication2(IRenderFactory *pRendFactory,HINSTANCE hInst):SApplication(pRendFactory,hInst){}
+
+protected:
+	virtual IBitmap * LoadImage(LPCTSTR pszType,LPCTSTR pszResName)
+	{
+		int nBufSize = GetRawBufferSize(pszType,pszResName);
+		char *pBuf = (char*)malloc(nBufSize);
+		BOOL bLoad = GetRawBuffer(pszType,pszResName,pBuf,nBufSize);
+		if(bLoad && nBufSize>6)
+		{
+			if(_tcscmp(pszType,_T("svg"))!=0)
+			{
+				return SApplication::LoadImage(pszType,pszResName);
+			}
+			const unsigned char bom16[2]={0xff,0xfe};
+			const unsigned char bom8[3]={0xef,0xbb,0xbf};
+			SStringA strBuf;
+			if(memcmp(pBuf,bom16,2)==0)
+			{
+				strBuf = S_CW2A(SStringW((WCHAR*)(pBuf+2),(nBufSize-2)/2),CP_UTF8);
+			}else if(memcmp(pBuf,bom8,3)==0)
+			{
+				strBuf = SStringA(pBuf+3,nBufSize-3);
+			}else
+			{
+				strBuf = S_CA2A(SStringA(pBuf,nBufSize),CP_ACP,CP_UTF8);
+			}
+			if(strBuf.Left(4)=="<svg")
+			{
+				NSVGimage *image = nsvgParse((char*)strBuf.c_str(),"px", 96.0f);
+				IBitmap *Ret=NULL;
+				if(image)
+				{
+					int w = (int)image->width;
+					int h = (int)image->height;
+
+					NSVGrasterizer* rast = nsvgCreateRasterizer();
+
+					unsigned char *img = (unsigned char*)malloc(w*h*4);
+					nsvgRasterize(rast, image, 0,0,1, img, w, h, w*4);
+					GETRENDERFACTORY->CreateBitmap(&Ret);
+					Ret->Init(w,h,img);
+					free(img);
+
+					nsvgDeleteRasterizer(rast);
+					nsvgDelete(image);
+
+				}
+				return Ret;
+			}
+		}
+		return SResLoadFromMemory::LoadImage(pBuf,nBufSize);
 	}
 };
 
@@ -139,7 +201,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         pRenderFactory->SetImgDecoderFactory(pImgDecoderFactory);
 
         //定义一个唯一的SApplication对象，SApplication管理整个应用程序的资源
-        SApplication *theApp=new SApplication(pRenderFactory,hInstance);
+        SApplication *theApp=new SApplication2(pRenderFactory,hInstance);
         
         theApp->SetLogManager(pLogMgr);
         SLOG_INFO("test="<<200);
@@ -185,6 +247,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		theApp->RegisterWindowClass<SAniWindow>();
 		theApp->RegisterWindowClass<SGroupList>();
 		theApp->RegisterWindowClass<SRoundImage>();
+        theApp->RegisterWindowClass<SHexEdit>();
         if(SUCCEEDED(CUiAnimation::Init()))
         {
             theApp->RegisterWindowClass<SUiAnimationWnd>();//注册动画控件
@@ -209,14 +272,21 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         theApp->SetAppDir(strResDir);
 #endif
         //加载系统资源
-        HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+#if (defined(LIB_CORE) && defined(LIB_SOUI_COM))
+		HMODULE hSysResource = hInstance;
+#else
+		HMODULE hSysResource = LoadLibrary(SYS_NAMED_RESOURCE);
+#endif
         if (hSysResource)
         {
             SAutoRefPtr<IResProvider> sysResProvider;
             CreateResProvider(RES_PE, (IObjRef**)&sysResProvider);
             sysResProvider->Init((WPARAM)hSysResource, 0);
             theApp->LoadSystemNamedResource(sysResProvider);
-            FreeLibrary(hSysResource);
+
+#if !(defined(LIB_CORE) && defined(LIB_SOUI_COM))
+			FreeLibrary(hSysResource);
+#endif
         }
 
         //定义一人个资源提供对象,SOUI系统中实现了3种资源加载方式，分别是从文件加载，从EXE的资源加载及从ZIP压缩包加载
@@ -252,12 +322,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		SSkinLoader *SkinLoader = new SSkinLoader(theApp);
 		SkinLoader->LoadSkin(_T("themes\\skin1"));
 
-        //创建一个http服务器，用来从资源中加载flash
-        CMemFlash   memFlash;
-
-        CHTTPServer flashSvr(&memFlash);
-        flashSvr.Start(CMemFlash::HomeDir(),"",82,0);
-
         if(trans)
         {//加载语言翻译包
             theApp->SetTranslator(trans);
@@ -275,7 +339,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 				}
             }
         }
-#if (defined(DLL_CORE) || defined(LIB_ALL)) && !defined(_WIN64)
+#if (defined(DLL_CORE) || (defined(LIB_CORE) && defined(LIB_SOUI_COM))) && !defined(_WIN64)
         //加载LUA脚本模块，注意，脚本模块只有在SOUI内核是以DLL方式编译时才能使用。
         bLoaded=pComMgr->CreateScrpit_Lua((IObjRef**)&pScriptLua);
         SASSERT_FMT(bLoaded,_T("load interface [%s] failed!"),_T("scirpt_lua"));
@@ -320,8 +384,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             pLogMgr->stop();
         }
         
-        flashSvr.Shutdown();
-
         //卸载菜单边框绘制hook
         SMenuWndHook::UnInstallHook();
         CUiAnimation::Free();

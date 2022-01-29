@@ -200,7 +200,8 @@ protected:
      * Describe  状态改变处理函数
      */
     virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
-    
+    virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
+
     void OnPaint(IRenderTarget *pRT);
 
     void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -234,7 +235,7 @@ protected:
 public:
     SOUI_ATTRS_BEGIN()
         ATTR_CUSTOM(L"accel",OnAttrAccel)
-        ATTR_INT(L"animate", m_bAnimate, FALSE)
+        ATTR_BOOL(L"animate", m_bAnimate, FALSE)
 		ATTR_INT(L"animateStep",m_nAniStep,FALSE)
 		ATTR_BOOL(L"disableAccelIfInvisible",m_bDisableAccelIfInvisible,FALSE)
     SOUI_ATTRS_END()
@@ -441,7 +442,7 @@ protected:
     virtual CSize GetDesiredSize(int wid, int hei);
     virtual void OnNextFrame();
     virtual void OnColorize(COLORREF cr);
-    
+	virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
     void OnPaint(IRenderTarget *pRT);
 
     void OnShowWindow(BOOL bShow, UINT nStatus);
@@ -456,7 +457,7 @@ protected:
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"skin", m_pSkin, TRUE)
         ATTR_UINT(L"speed", m_nSpeed, FALSE)
-        ATTR_UINT(L"autoStart", m_bAutoStart, FALSE)
+        ATTR_BOOL(L"autoStart", m_bAutoStart, FALSE)
 		ATTR_INT(L"repeat",m_nRepeat,FALSE)
     SOUI_ATTRS_END()
 
@@ -572,8 +573,8 @@ protected:
         ATTR_INT(L"min", m_nMinValue, FALSE)
         ATTR_INT(L"max", m_nMaxValue, FALSE)
         ATTR_INT(L"value", m_nValue, FALSE)
-        ATTR_UINT(L"vertical", m_bVertical, FALSE)
-        ATTR_UINT(L"showPercent", m_bShowPercent, FALSE)
+        ATTR_BOOL(L"vertical", m_bVertical, FALSE)
+        ATTR_BOOL(L"showPercent", m_bShowPercent, FALSE)
     SOUI_ATTRS_END()
 };
 

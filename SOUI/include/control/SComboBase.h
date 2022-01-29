@@ -33,7 +33,7 @@ namespace SOUI
         *
         * Describe  析构函数
         */
-        virtual ~SComboEdit(){}
+        virtual ~SComboEdit();
     protected:
         /**
         * SComboEdit::OnMouseHover
@@ -71,11 +71,16 @@ namespace SOUI
         */   
         virtual BOOL FireEvent(EventArgs & evt);
 
+		virtual void OnFinalRelease();
+
+		void OnKillFocus(SWND wndFocus);
+
         SOUI_MSG_MAP_BEGIN()
             MSG_WM_MOUSEHOVER(OnMouseHover)
             MSG_WM_MOUSELEAVE(OnMouseLeave)
             MSG_WM_KEYDOWN(OnKeyDown)
-            SOUI_MSG_MAP_END()
+			MSG_WM_KILLFOCUS_EX(OnKillFocus)
+        SOUI_MSG_MAP_END()
     };
 
     class SOUI_EXP SDropDownWnd_ComboBox : public SDropDownWnd
@@ -171,10 +176,12 @@ namespace SOUI
         * @return   int -- 目标索引，失败返回-1。
         * Describe  
         */    
-        virtual int FindString(LPCTSTR pszFind,int nAfter=-1);
+        virtual int FindString(LPCTSTR pszFind,int nAfter=-1, BOOL bPartMatch=TRUE);
 
 
 		virtual CSize GetDesiredSize(int nParentWid, int nParentHei);
+
+		virtual void SetFocus();
 
         /**
         * SComboBoxBase::DropDown
@@ -376,14 +383,13 @@ namespace SOUI
         UINT OnGetDlgCode();
 
         /**
-        * SComboBoxBase::IsTabStop
+        * SComboBoxBase::IsFocusable
         * @brief    是否禁止TAB键
         * 
         * Describe  是否禁止TAB键
         */  
         BOOL IsFocusable();
 
-        void OnSetFocus(SWND wndOld);
 		void UpdateChildrenPosition();
 
         void OnKillFocus(SWND wndFocus);
@@ -401,6 +407,7 @@ namespace SOUI
 			ATTR_INT(L"autoFitDropBtn", m_bAutoFitDropBtn, TRUE)
 			ATTR_COLOR(L"cueColor",m_crCue,TRUE)
 			ATTR_I18NSTRT(L"cueText",m_strCue,TRUE)
+			ATTR_BOOL(L"autoMatch",m_bAutoMatch,FALSE)
         SOUI_ATTRS_END()
 
         SOUI_MSG_MAP_BEGIN()
@@ -412,7 +419,6 @@ namespace SOUI
             MSG_WM_KEYDOWN(OnKeyDown) 
             MSG_WM_CHAR(OnChar)
             MSG_WM_DESTROY(OnDestroy)
-            MSG_WM_SETFOCUS_EX(OnSetFocus)
             MSG_WM_KILLFOCUS_EX(OnKillFocus)
         SOUI_MSG_MAP_END()
 
@@ -450,6 +456,8 @@ namespace SOUI
 
 		SStringT	m_strMatch;	 /*快速输入用来定位下拉列表中的项*/
 		DWORD	m_LastPressTime; /*最后按键的时间,*/
+		BOOL		m_bAutoMatch;
+		int			m_nTextLength;
     };
 
 }

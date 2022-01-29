@@ -403,9 +403,28 @@ BOOL STextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRe
     return m_pRichEdit->SetScrollRange(fnBar!=SB_HORZ,nMinPos,nMaxPos,fRedraw);
 }
 
+BOOL SRichEdit::OnTxSetScrollPos(INT fnBar, INT nPos, BOOL fRedraw)
+{
+	if(m_fScrollPending) return TRUE;
+	BOOL bVertical = fnBar!=SB_HORZ;
+	SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
+
+	if(psi->nPos != nPos)
+	{
+		psi->nPos = nPos;
+		CRect rcSb = GetScrollBarRect(!!bVertical);
+		InvalidateRect(rcSb);
+	}
+	if (fRedraw)
+	{
+		Invalidate();
+	}
+	return TRUE;
+}
+
 BOOL STextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-    return m_pRichEdit->SetScrollPos(fnBar!=SB_HORZ,nPos,fRedraw);
+    return m_pRichEdit->OnTxSetScrollPos(fnBar,nPos,fRedraw);
 }
 
 void STextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
@@ -761,7 +780,8 @@ void SRichEdit::OnKillFocus(SWND wndFocus)
         m_pTxtHost->GetTextService()->TxSendMessage(WM_KILLFOCUS, 0, 0, 0);
         m_pTxtHost->TxShowCaret(FALSE);
     }
-
+    //防止正在编辑时隐藏了cursor
+    GetContainer()->OnUpdateCursor();
 }
 
 void SRichEdit::OnTimer( char idEvent )
@@ -1074,7 +1094,7 @@ void SRichEdit::OnRButtonDown( UINT nFlags, CPoint point )
             EnableMenuItem(menu.m_hMenu,MENU_DEL,MF_BYCOMMAND|((hasSel&&(!bReadOnly))?0:MF_GRAYED));
             EnableMenuItem(menu.m_hMenu,MENU_SELALL,MF_BYCOMMAND|((uLen>0)?0:MF_GRAYED));
 
-            UINT uCmd=menu.TrackPopupMenu(TPM_RETURNCMD|TPM_LEFTALIGN,point.x,point.y,hHost);
+            UINT uCmd=menu.TrackPopupMenu(TPM_RETURNCMD|TPM_LEFTALIGN,point.x,point.y,hHost,NULL,GetScale());
             
             EventREMenu evt(this);
             evt.uCmd = uCmd;
@@ -1553,16 +1573,6 @@ DWORD SRichEdit::LoadRtf( LPCTSTR pszFileName )
     DWORD dwRet=(DWORD)SSendMessage(EM_STREAMIN,SF_RTF,(LPARAM)&es);
     fclose(f);
     return dwRet;
-}
-
-void SRichEdit::OnShowWindow(BOOL bShow, UINT nStatus)
-{
-    __super::OnShowWindow(bShow,nStatus);
-    if(!IsVisible(TRUE))
-    {//防止正在编辑时隐藏了cursor
-        HWND hHost = GetContainer()->GetHostHwnd();
-        ::PostMessage(hHost,WM_SETCURSOR,(WPARAM)hHost,MAKELPARAM(HTCLIENT,0));
-    }
 }
 
 void SRichEdit::OnScaleChanged(int nScale)

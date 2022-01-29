@@ -1992,6 +1992,7 @@ public:
     const CPair* Lookup( KINARGTYPE key ) const;
     CPair* Lookup( KINARGTYPE key );
     V& operator[]( KINARGTYPE key ) ;
+    const V& operator[]( KINARGTYPE key ) const;
 
     SPOSITION SetAt( KINARGTYPE key, VINARGTYPE value );
     void SetValueAt( SPOSITION pos, VINARGTYPE value );
@@ -2083,6 +2084,20 @@ inline V& SMap< K, V, KTraits, VTraits >::operator[]( KINARGTYPE key )
 
     return( pNode->m_value );
 }
+
+template< typename K, typename V, class KTraits, class VTraits >
+inline const V& SMap< K, V, KTraits, VTraits >::operator[]( KINARGTYPE key ) const
+{
+    CNode* pNode;
+    UINT iBin;
+    UINT nHash;
+    CNode* pPrev;
+
+    pNode = GetNode( key, iBin, nHash, pPrev );
+    SASSERT(pNode);
+    return( pNode->m_value );
+}
+
 
 template< typename K, typename V, class KTraits, class VTraits >
 inline UINT SMap< K, V, KTraits, VTraits >::GetHashTableSize() const

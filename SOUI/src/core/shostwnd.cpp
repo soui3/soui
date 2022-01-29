@@ -1580,8 +1580,8 @@ void SHostWnd::OnWindowPosChanging(LPWINDOWPOS lpWndPos)
 {//默认不处理该消息，同时防止系统处理该消息
 	if(lpWndPos->flags&SWP_SHOWWINDOW && m_bFirstShow)
 	{
-		m_bFirstShow = FALSE;
 		OnHostShowWindow(TRUE,0);
+		m_bFirstShow = FALSE;
 	}
 }
 
@@ -1596,6 +1596,7 @@ void SHostWnd::OnWindowPosChanged(LPWINDOWPOS lpWndPos)
 			m_dummyWnd->SetWindowPos(NULL, info.rcWork.left, info.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 		}
 	}
+	//下面这一行不能删除，否则显示不正常。
 	SetMsgHandled(FALSE);
 }
 
@@ -1757,6 +1758,14 @@ void SHostWnd::EnableIME(BOOL bEnable)
 	}
 }
 
+void SHostWnd::OnUpdateCursor()
+{
+	CPoint pt;
+	GetCursorPos(&pt);
+	UINT ht = OnWndNcHitTest(pt);
+	PostMessage(WM_SETCURSOR,(WPARAM)m_hWnd,MAKELPARAM(ht,WM_MOUSEMOVE));
+}
+
 BOOL SHostWnd::ShowWindow(int nCmdShow)
 {
 	UpdateAutoSizeCount(true);
@@ -1768,13 +1777,10 @@ BOOL SHostWnd::ShowWindow(int nCmdShow)
 void SHostWnd::OnHostShowWindow(BOOL bShow, UINT nStatus)
 {
 	DefWindowProc();
-	if(bShow && m_aniEnter)
+	if(bShow && m_aniEnter && m_bFirstShow)
 	{
-		if(m_aniEnter)
-		{
-			StartAnimation(m_aniEnter);
-			m_AniState |= Ani_win;
-		}
+		StartAnimation(m_aniEnter);
+		m_AniState |= Ani_win;
 		OnNextFrame();
 	}
 }

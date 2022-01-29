@@ -14,6 +14,10 @@ namespace SOUI
         SetOwner(pOwner);
     }
 
+	SComboEdit::~SComboEdit()
+	{
+	}
+
     void SComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
     {
         __super::OnMouseHover(wParam,ptPos);
@@ -48,6 +52,17 @@ namespace SOUI
         return SEdit::FireEvent(evt);
     }
 
+	void SComboEdit::OnKillFocus(SWND wndFocus)
+	{
+		__super::OnKillFocus(wndFocus);
+		GetOwner()->SSendMessage(WM_KILLFOCUS,wndFocus);
+	}
+
+	void SComboEdit::OnFinalRelease()
+	{
+		delete this;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     // SDropDownWnd_ComboBox
     BOOL SDropDownWnd_ComboBox::PreTranslateMessage( MSG* pMsg )
@@ -79,6 +94,8 @@ namespace SOUI
 		,m_crCue(RGBA(0xcc,0xcc,0xcc,0xff))
 		,m_strCue(this)
 		,m_LastPressTime(0)
+		,m_bAutoMatch(FALSE)
+		,m_nTextLength(0)
     {
         m_bFocusable=TRUE;
 		m_style.SetAlign(SwndStyle::Align_Left);
@@ -87,6 +104,7 @@ namespace SOUI
         m_evtSet.addEvent(EVENTID(EventCBSelChange));
         m_evtSet.addEvent(EVENTID(EventRENotify));
 		m_evtSet.addEvent(EVENTID(EventCBDropdown));
+		m_evtSet.addEvent(EVENTID(EventCBBeforeCloseUp));
     }
 
     SComboBase::~SComboBase(void)
@@ -129,7 +147,7 @@ namespace SOUI
 
 		int nHei = prc->bottom - prc->top;
         prc->left= prc->right-nHei*szBtn.cx/szBtn.cy;
-		if (m_bAutoFitDropBtn) {
+		if (m_bAutoFitDropBtn && szBtn.cy<nHei) {
 			prc->top += (prc->bottom - prc->top - szBtn.cy) / 2;
 			prc->left = prc->right - szBtn.cx;
 			prc->right = prc->left + szBtn.cx;
@@ -448,21 +466,15 @@ namespace SOUI
 
     void SComboBase::CloseUp()
     {
-        if(m_pDropDownWnd)
+		EventCBBeforeCloseUp evt(this);
+		evt.bCloseBlock = false;
+		FireEvent(evt);
+
+        if(!evt.bCloseBlock && m_pDropDownWnd)
         {
             m_pDropDownWnd->EndDropDown(IDCANCEL);
         }
     }
-
-
-    void SComboBase::OnSetFocus(SWND wndOld)
-    {
-        if(!m_bDropdown) 
-            m_pEdit->SetFocus();
-        else
-            __super::OnSetFocus(wndOld);
-    }
-
 
     void SComboBase::OnDestroy()
     {
@@ -484,15 +496,33 @@ namespace SOUI
             EventRENotify *evtRe = (EventRENotify*)&evt;
             if(evtRe->iNotify == EN_CHANGE && !m_pEdit->GetEventSet()->isMuted())
             {
-                m_pEdit->GetEventSet()->setMutedState(true);
-                SetCurSel(FindString(m_pEdit->GetWindowText()));
-                m_pEdit->GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(true);
+				if(m_bAutoMatch)
+				{
+					SStringT strTxt = m_pEdit->GetWindowText();
+					if(strTxt.GetLength()>m_nTextLength)
+					{
+						int iItem = FindString(strTxt,-1,TRUE);
+						if(iItem!=-1)
+						{
+							SStringT strItem = GetLBText(iItem);
+							m_pEdit->SetWindowText(strItem);
+							m_pEdit->SetSel(strTxt.GetLength(),strItem.GetLength(),TRUE);
+						}
+					}
+					m_nTextLength = strTxt.GetLength();
+				}
+
+				GetEventSet()->setMutedState(true);
+				SetCurSel(-1);
+				GetEventSet()->setMutedState(false);
+				m_pEdit->GetEventSet()->setMutedState(false);
             }
         }
         return SWindow::FireEvent(evt);
     }
 
-    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ )
+    int SComboBase::FindString( LPCTSTR pszFind,int iFindAfter/*=-1*/ , BOOL bPartMatch/*=TRUE*/)
     {
 		if(iFindAfter<0) iFindAfter=-1;
 		int iStart = iFindAfter+1;
@@ -500,8 +530,15 @@ namespace SOUI
 		{
 			int iTarget = (i+iStart)%GetCount();
 			SStringT strItem = GetLBText(iTarget,TRUE);
-			if(strItem.StartsWith(pszFind))
-				return iTarget;
+			if(bPartMatch)
+			{
+				if(strItem.StartsWith(pszFind))
+					return iTarget;
+			}else
+			{
+				if(strItem.Compare(pszFind)==0)
+					return iTarget;
+			}
 		}
 		return -1;
     }
@@ -572,8 +609,8 @@ namespace SOUI
     void SComboBase::SetWindowText(LPCTSTR pszText)
     {
         SWindow::SetWindowText(pszText);
-        SetCurSel(FindString(pszText));
 		m_pEdit->SetWindowText(pszText);
+		m_nTextLength = _tcslen(pszText);
 	}
 
     void SComboBase::OnKillFocus(SWND wndFocus)
@@ -647,6 +684,14 @@ namespace SOUI
 	SStringT SComboBase::GetCueText(BOOL bRawText) const
 	{
 		return m_strCue.GetText(bRawText);
+	}
+
+	void SComboBase::SetFocus()
+	{
+		if(!m_bDropdown) 
+			m_pEdit->SetFocus();
+		else
+			__super::SetFocus();
 	}
 
 }

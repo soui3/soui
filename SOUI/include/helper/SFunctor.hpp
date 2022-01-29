@@ -222,7 +222,6 @@ namespace SOUI
 		}
 
 	private:
-		TClass *_obj;
 		Func _func;
 		T1 _param1;
 		T2 _param2;
@@ -295,7 +294,6 @@ namespace SOUI
 		}
 
 	private:
-		TClass *_obj;
 		Func _func;
 		T1 _param1;
 		T2 _param2;
@@ -335,7 +333,6 @@ namespace SOUI
 			(((TClass*)getObject())->*_func)(_param1, _param2, _param3, _param4, _param5, _param6, _param7, _param8);
 		}
 	private:
-		TClass *_obj;
 		Func _func;
 		T1 _param1;
 		T2 _param2;
@@ -378,7 +375,6 @@ namespace SOUI
 		}
 
 	private:
-		TClass *_obj;
 		Func _func;
 		T1 _param1;
 		T2 _param2;

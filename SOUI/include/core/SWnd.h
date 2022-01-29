@@ -717,8 +717,8 @@ namespace SOUI
 
     public://操控SWindow的方法
 
-        void SetFocus();
-        void KillFocus();
+        virtual void SetFocus();
+        virtual void KillFocus();
         BOOL IsFocused();
         
         void Invalidate();
@@ -1452,9 +1452,11 @@ namespace SOUI
 		
 		virtual void OnRebuildFont();
 
-		virtual void OnInsertChild(SWindow *pChild) {}
+		virtual void OnInsertChild(SWindow *pChild);
 
-		virtual void OnRemoveChild(SWindow *pChild) {}
+		virtual void OnRemoveChild(SWindow *pChild);
+
+		virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
     private:
         CRect               m_rcWindow;         /**< 窗口在容器中的位置,由于它的值包含POS_INIT等，调整为private，不允许派生类中直接访问该变量的值 */
 

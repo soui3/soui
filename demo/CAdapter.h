@@ -61,6 +61,49 @@ public:
 };
 
 
+class CTestAdapterFixHorz : public SAdapterBase
+{
+public:
+
+	CTestAdapterFixHorz()
+	{
+	}
+
+	~CTestAdapterFixHorz()
+	{
+	}
+
+	virtual int getCount()
+	{
+		return 300;
+	}
+
+	virtual void getView(int position, SWindow * pItem, pugi::xml_node xmlTemplate)
+	{
+		if (pItem->GetChildrenCount() == 0)
+		{
+			pItem->InitFromXml(xmlTemplate);
+		}
+
+		SImageWnd *pImg = pItem->FindChildByName2<SImageWnd>(L"btn_icon");
+		pImg->SetIcon(position%9);
+		SWindow *pText = pItem->FindChildByName(L"btn_text");
+		pText->SetWindowText(SStringT().Format(_T("item_%d"),position+1));
+
+		pImg->GetParent()->GetEventSet()->subscribeEvent(&CTestAdapterFixHorz::OnButtonClick, this);
+	}
+
+
+	bool OnButtonClick(EventCmd *pEvt)
+	{
+		SWindow *pBtn = sobj_cast<SWindow>(pEvt->sender);
+		SItemPanel *pItem = (SItemPanel*)pBtn->GetRoot();
+		int iItem = pItem->GetItemIndex();
+		SMessageBox(NULL, SStringT().Format(_T("button of %d item was clicked"), iItem), _T("haha"), MB_OK);
+		return true;
+	}
+};
+
 const wchar_t * KAttrName_Height[] = {
 	L"oddHeight",
 	L"evenHeight",

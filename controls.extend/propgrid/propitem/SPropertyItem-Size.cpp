@@ -5,21 +5,18 @@
 
 #include <helper/SplitString.h>
 
-#define CHILD_WIDTH     1
-#define CHILD_HEIGHT    2
-
 namespace SOUI
 {
-    SPropertyItemSize::SPropertyItemSize( SPropertyGrid *pOwner ) :SPropertyItemText(pOwner),m_bChildChanged(FALSE)
+    SPropertyItemSize::SPropertyItemSize( SPropertyGrid *pOwner ) :SPropertyItemText(pOwner),m_bChildChanged(FALSE),m_bDigit(TRUE)
     {
 		IPropertyItem *pWidth = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pWidth->SetID(CHILD_WIDTH);
-        pWidth->SetTitle(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pWidth->SetTitle(S_CW2T(TR(L"width",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pWidth);
         pWidth->Release();
         IPropertyItem *pHeight = pOwner->CreateItem(SPropertyItemText::GetClassName());
         pHeight->SetID(CHILD_HEIGHT);
-        pHeight->SetTitle(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext()));
+        pHeight->SetTitle(S_CW2T(TR(L"height",GetOwner()->GetContainer()->GetTranslatorContext())));
         InsertChild(pHeight);
         pHeight->Release();
         m_szValue.cx=m_szValue.cy=0;
@@ -28,22 +25,39 @@ namespace SOUI
 
     void SPropertyItemSize::SetValue( const SStringT & strValue )
     {
-        SIZE sz;
-        if(_stscanf(strValue,_T("%d,%d"),&sz.cx,&sz.cy)==2)
-        {
-			//如果值有变化，就发送通知
-			if (sz.cy != m_szValue.cy || sz.cy != m_szValue.cy)
+		if(m_bDigit)
+		{
+			SIZE sz;
+			if(_stscanf(strValue,_T("%d,%d"),&sz.cx,&sz.cy)==2)
 			{
+				//如果值有变化，就发送通知
+				if (sz.cy != m_szValue.cy || sz.cy != m_szValue.cy)
+				{
 
-				m_szValue = sz;
+					m_szValue = sz;
+					m_strValue[0].Format(_T("%d"),sz.cx);
+					m_strValue[1].Format(_T("%d"),sz.cy);
+					OnValueChanged();
+				}
+			}
+		}else
+		{
+			SStringTList lstValue;
+			if(2==SplitString(strValue,_T(','),lstValue))
+			{
+				m_strValue[0]=lstValue[0];
+				m_strValue[1]=lstValue[1];
 				OnValueChanged();
 			}
-        }
+		}
     }
 
 	SStringT SPropertyItemSize::GetValue() const
 	{
-		return SStringT().Format(_T("%d,%d"),m_szValue.cx,m_szValue.cy);
+		if(HasValue())
+			return SStringT().Format(_T("%s,%s"),m_strValue[0],m_strValue[1]);
+		else
+			return SStringT();
 	}
 
 
@@ -51,10 +65,24 @@ namespace SOUI
     {
         if(pChild->GetID() == CHILD_WIDTH)
         {
-            m_szValue.cx=_ttoi(pChild->GetValue());
+			if(m_bDigit)
+			{
+				m_szValue.cx=_ttoi(pChild->GetValue());
+				m_strValue[0].Format(_T("%d"),m_szValue.cx);
+			}else
+			{
+				m_strValue[0]=pChild->GetValue();
+			}
         }else if(pChild->GetID()==CHILD_HEIGHT)
         {
-            m_szValue.cy=_ttoi(pChild->GetValue());
+			if(m_bDigit)
+			{
+				m_szValue.cy=_ttoi(pChild->GetValue());
+				m_strValue[0].Format(_T("%d"),m_szValue.cy);
+			}else
+			{
+				m_strValue[1]=pChild->GetValue();
+			}
         }
         m_bChildChanged=TRUE;
         OnValueChanged();
@@ -66,15 +94,10 @@ namespace SOUI
     {
         if(!m_bChildChanged)
         {
-            IPropertyItem *pWid = GetItem(IPropertyItem::GPI_FIRSTCHILD);
-            SASSERT(pWid && pWid->GetID()==CHILD_WIDTH);
-            SStringT str;
-            str.Format(_T("%d"),m_szValue.cx);
-            pWid->SetValue(str);
-            IPropertyItem *pHei = GetItem(IPropertyItem::GPI_LASTCHILD);
-            SASSERT(pHei && pHei->GetID()==CHILD_HEIGHT);
-            str.Format(_T("%d"),m_szValue.cy);
-            pHei->SetValue(str);
+            IPropertyItem *pWid = GetChildById(CHILD_WIDTH);
+            pWid->SetValue(m_strValue[0]);
+            IPropertyItem *pHei = GetChildById(CHILD_HEIGHT);
+            pHei->SetValue(m_strValue[1]);
         }
         __super::OnValueChanged();
     }
@@ -96,4 +119,20 @@ namespace SOUI
         }
         return S_OK;
     }
+
+	BOOL SPropertyItemSize::HasValue() const
+	{
+		if(m_bDigit)
+			return m_szValue.cx || m_szValue.cy;
+		else
+			return !(m_strValue[0].IsEmpty() && m_strValue[1].IsEmpty());
+	}
+
+	void SPropertyItemSize::ClearValue()
+	{
+		m_szValue.cx = m_szValue.cy =0;
+		m_strValue[0]=m_strValue[1]=SStringT();
+		OnValueChanged();
+	}
+
 }

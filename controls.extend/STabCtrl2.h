@@ -72,6 +72,8 @@ namespace SOUI
 		void DrawItem(IRenderTarget *pRT,const CRect &rcItem,int iItem,DWORD dwState );
 
 	   virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState);
+	   virtual void OnContainerChanged(ISwndContainer *pOldContainer,ISwndContainer *pNewContainer);
+
 	   bool OnItemHover(EventArgs *pEvt);
 	   bool OnItemLeave(EventArgs *pEvt);
  

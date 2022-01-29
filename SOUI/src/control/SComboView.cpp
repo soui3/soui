@@ -12,8 +12,9 @@ namespace SOUI
     {
         if(m_pListBox)
         {
+			m_pListBox->SetOwner(NULL);
             m_pListBox->SSendMessage(WM_DESTROY);
-            delete m_pListBox;
+            m_pListBox->Release();
         }
     }
 
@@ -76,7 +77,7 @@ namespace SOUI
         {
             SStringT strText=GetLBText(m_pListBox->GetSel(),FALSE);
             m_pEdit->GetEventSet()->setMutedState(true);
-            m_pEdit->SetWindowText(strText);
+            SComboBase::SetWindowText(strText);
             m_pEdit->GetEventSet()->setMutedState(false);
         }
         Invalidate();

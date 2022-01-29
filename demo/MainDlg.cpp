@@ -8,6 +8,7 @@
 #include "../controls.extend/FileHelper.h"
 #include "../controls.extend/SChatEdit.h"
 #include "../controls.extend/reole/richeditole.h"
+#include "../controls.extend/SHexEdit.h"
 #include "SMatrixWindow.h"
 #include "FormatMsgDlg.h"
 #include <math.h>
@@ -377,6 +378,16 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
         pAdapter->Release();
     }
 
+	//行高固定的列表
+	SListView *pLstViewFixHorz = FindChildByName2<SListView>("lv_test_fix_horz");
+	if(pLstViewFixHorz)
+	{
+		ILvAdapter *pAdapter = new CTestAdapterFixHorz;
+		pLstViewFixHorz->SetAdapter(pAdapter);
+		pAdapter->Release();
+	}
+
+
     //行高可变的列表
     SListView *pLstViewFlex = FindChildByName2<SListView>("lv_test_flex");
     if(pLstViewFlex)
@@ -430,6 +441,14 @@ LRESULT CMainDlg::OnInitDialog( HWND hWnd, LPARAM lParam )
 
 	//init soui 3.0 animation.
 	InitSoui3Animation();
+
+	BYTE hexData[128] = {0};
+	for (int i=0; i<sizeof(hexData); ++i)
+	{
+		hexData[i] = i;
+	}
+	SHexEdit* hexEdit = FindChildByName2<SHexEdit>("ctrl_hexedit");
+	hexEdit->SetData(hexData, sizeof(hexData));
 
     return 0;
 }

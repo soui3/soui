@@ -51,6 +51,7 @@ namespace SOUI
 		,m_bDatasetInvalidated(TRUE)
 		,m_bPendingUpdate(false)
 		,m_iPendingUpdateItem(-2)
+		,m_iPendingViewItem(-1)
 		,m_crGrid(CR_INVALID)
     {
         m_bFocusable = TRUE;
@@ -800,6 +801,8 @@ BOOL SMCListView::IsItemRedrawDelay() const
 BOOL SMCListView::OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const
 {
     int iPosition = (int)pItem->GetItemIndex();
+	if(iPosition<0 || iPosition >= m_adapter->getCount())
+		return FALSE;
     rcItem = _OnItemGetRect(iPosition);
     return TRUE;
 }
@@ -1011,6 +1014,11 @@ void SMCListView::OnKeyDown( TCHAR nChar, UINT nRepCnt, UINT nFlags )
 void SMCListView::EnsureVisible( int iItem )
 {
     if(iItem<0 || iItem>=m_adapter->getCount()) return;
+	if(!IsVisible(TRUE))
+	{
+		m_iPendingViewItem = iItem;
+		return;
+	}
 
     int iFirstVisible= m_iFirstVisible;
     int iLastVisible = m_iFirstVisible + m_lstItems.GetCount();
@@ -1270,15 +1278,24 @@ void SMCListView::DispatchMessage2Items(UINT uMsg,WPARAM wParam,LPARAM lParam)
 void SMCListView::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	__super::OnShowWindow(bShow,nStatus);
-	if(IsVisible(TRUE) && m_bPendingUpdate)
+	if(IsVisible(TRUE))
 	{
-		if(m_iPendingUpdateItem == -1)
-			onDataSetChanged();
-		else
-			onItemDataChanged(m_iPendingUpdateItem);
-		m_bPendingUpdate = false;
-		m_iPendingUpdateItem = -2;
+		if(m_bPendingUpdate)
+		{
+			if(m_iPendingUpdateItem == -1)
+				onDataSetChanged();
+			else
+				onItemDataChanged(m_iPendingUpdateItem);
+			m_bPendingUpdate = false;
+			m_iPendingUpdateItem = -2;
+		}
+		if(m_iPendingViewItem!=-1)
+		{
+			EnsureVisible(m_iPendingViewItem);
+			m_iPendingViewItem = -1;
+		}
 	}
+
 }
 
 SHeaderCtrl * SMCListView::GetHeaderCtrl() const

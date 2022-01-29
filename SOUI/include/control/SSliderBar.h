@@ -170,7 +170,7 @@ protected:
 
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"thumbSkin", m_pSkinThumb, TRUE)
-        ATTR_INT(L"thumbInRail",m_bThumbInRail,TRUE)
+        ATTR_BOOL(L"thumbInRail",m_bThumbInRail,TRUE)
     SOUI_ATTRS_END()
 };
 

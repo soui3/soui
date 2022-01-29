@@ -108,7 +108,8 @@ namespace SOUI
         SOUI_ATTRS_BEGIN()
             ATTR_SKIN(L"dividerSkin",m_pSkinDivider,TRUE)
             ATTR_LAYOUTSIZE(L"dividerSize",m_nDividerSize,FALSE)
-            ATTR_INT(L"wantTab",m_bWantTab,FALSE)
+            ATTR_BOOL(L"wantTab",m_bWantTab,FALSE)
+			ATTR_BOOL(L"vertical",m_bVertical,FALSE)
         SOUI_ATTRS_END()
 	protected:
         SAutoRefPtr<ILvAdapter>           m_adapter;
@@ -122,6 +123,7 @@ namespace SOUI
         
 		bool							m_bPendingUpdate;//response for data set changed in OnShowWindow.
 		int								m_iPendingUpdateItem; //-1 for all. -2 for nothing
+		int								m_iPendingViewItem;//-1 for init
 
         int                             m_iFirstVisible;//第一个显示项索引
         SList<ItemInfo>                 m_lstItems; //当前正在显示的项
@@ -137,5 +139,6 @@ namespace SOUI
         SAutoRefPtr<ISkinObj>           m_pSkinDivider;
         SLayoutSize                     m_nDividerSize;
         BOOL                            m_bWantTab;
+		BOOL							m_bVertical;
     };
 }
