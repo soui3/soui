@@ -1117,6 +1117,8 @@ namespace SOUI
 		nAddress = nColumn + (nRow + m_nScrollPostionY) * m_tPaintDetails.nBytesPerRow;
 		if (nAddress >= GetDataSize()) {
 			nAddress = GetDataSize() - 1;
+			if ((int)nAddress < 0)
+				nAddress = 0;
 			bHighBits = false;
 		}
 		m_bCaretAscii = bAscii;

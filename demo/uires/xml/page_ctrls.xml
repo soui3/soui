@@ -197,6 +197,8 @@
 				<edit pos="0,0,-30,-0" font="adding:10" margin="0" cueText="cue text" cueColor="rgb(255,0,0)" password="1">scroll edit</edit>
 				<button pos="-30,0,-0,-0">:)</button>
 			</window>
+            <text pos="50,[5" multiLines="1">hexedit</text>
+            <hexedit name="ctrl_hexedit" pos="50,[5, -10, -10" AutoBytesPerRow="1" HexBkColor="#ffff80" AsciiBkColor="#78ebe6" clipClient="1"/>			
 		</page>
 		<page title="hotkey">
 			<text pos="50,20">hotkey 1:</text>
