@@ -1,3 +1,7 @@
+/*
+ * 2022.1.29  by Ð¡ÐÂ
+ */
+
 #include "stdafx.h"
 #include "SHexEdit.h"
 
@@ -60,26 +64,26 @@ namespace SOUI
 	//=============================================================================
 
 
-#define NOSECTION_VAL				0xffffffff
+	#define NOSECTION_VAL	    0xffffffff
 
 	// data length that can be handled
-#define MAXHEXEDITLENGTH 0x7ffff000
+	#define MAXHEXEDITLENGTH	0x7ffff000
 
-// increase capacity by 1 + m_nCapacity/CAPACICTYINCDIVISOR when a character is appended/inserted
-#define CAPACICTYINCDIVISOR 8
+	// increase capacity by 1 + m_nCapacity/CAPACICTYINCDIVISOR when a character is appended/inserted
+	#define CAPACICTYINCDIVISOR 8
 
-// control-layout customization (low-level)
-#define ADR_DATA_SPACE				15
-#define DATA_ASCII_SPACE			5
-#define CONTROL_BORDER_SPACEH		1
-#define CONTROL_BORDER_SPACEV		1
+	// control-layout customization (low-level)
+	#define ADR_DATA_SPACE				15
+	#define DATA_ASCII_SPACE			15
+	#define CONTROL_BORDER_SPACEH		0
+	#define CONTROL_BORDER_SPACEV		0
 
-// boundaries and special values
-#define MOUSEREP_TIMER_TID			0x400
-#define MOUSEREP_TIMER_ELAPSE		0x5
+	// boundaries and special values
+	#define MOUSEREP_TIMER_TID			0x400
+	#define MOUSEREP_TIMER_ELAPSE		0x5
 
-// macros
-#define NORMALIZE_SELECTION(beg, end) if(beg>end){UINT tmp = end; end=beg; beg=tmp; }
+	// macros
+	#define NORMALIZE_SELECTION(beg, end) if(beg>end){UINT tmp = end; end=beg; beg=tmp; }
 
 
 	const TCHAR tabHexCharacters[16] = {
@@ -118,12 +122,12 @@ namespace SOUI
 		m_bFocusable = TRUE;
 		m_tPaintDetails.nCharacterWidth = 0;
 
-		m_tAdrTxtCol = RGBA(0x00, 0x00, 0x00, 0xFF);
+		m_tAdrTxtCol = RGBA(0x00, 0x00, 0xBF, 0xFF);
 		m_tAdrBkgCol = RGBA(0xFF, 0xF8, 0xF0, 0xFF);
 		m_tHexBkgCol = m_tAdrBkgCol;
 		m_tAsciiBkgCol = m_tAdrBkgCol;
-		m_tHexTxtCol = m_tAdrTxtCol;
-		m_tAsciiTxtCol = m_tAdrTxtCol;
+		m_tHexTxtCol = RGBA(0x00, 0x00, 0x00, 0xFF);
+		m_tAsciiTxtCol = RGBA(0x00, 0x00, 0x00, 0xFF);
 
 		m_tSelectedNoFocusTxtCol = RGBA(114, 114, 114, 255);
 		m_tSelectedNoFocusBkgCol = RGBA(194, 222, 244, 255);
@@ -173,10 +177,24 @@ namespace SOUI
 
 	void SHexEdit::SetData(const SByteArray& data)
 	{
+		ReInitialize();
 		m_xData = data;
-		//_undoDataStack->clear();
-		//_undoMaskStack->clear();
 		m_bRecalc = true;
+
+		SetEditCaretPos(0, true);
+
+		EventHexEditDataChanged evt(this);
+		FireEvent(evt);
+	}
+
+	void SHexEdit::SetData(const BYTE* data, UINT len)
+	{
+		ReInitialize();
+		if (data && len > 0)
+			m_xData.Append(data, len);
+		m_bRecalc = true;
+
+		SetEditCaretPos(0, true);
 
 		EventHexEditDataChanged evt(this);
 		FireEvent(evt);
@@ -1685,7 +1703,9 @@ namespace SOUI
 				MoveCurrentAddress(m_tPaintDetails.nBytesPerRow * (m_tPaintDetails.nVisibleLines - 1), m_bHighBits);
 				return TRUE;
 			case VK_HOME:
-				MoveCurrentAddress(-(int)(m_nCurrentAddress % m_tPaintDetails.nBytesPerRow), true);
+				if (m_nCurrentAddress == GetDataSize())
+					m_nCurrentAddress--;
+				MoveCurrentAddress(-(int)((m_nCurrentAddress) % m_tPaintDetails.nBytesPerRow), true);
 				return TRUE;
 			case VK_END:
 				MoveCurrentAddress(m_tPaintDetails.nBytesPerRow - 1 - (m_nCurrentAddress % m_tPaintDetails.nBytesPerRow), false);
@@ -1751,7 +1771,6 @@ namespace SOUI
 		}
 		return S_OK;
 	}
-
 
 	BOOL SHexEdit::SaveUndoAction(UINT type, UINT position, const SByteArray& replaceData, const SByteArray& insertData)
 	{

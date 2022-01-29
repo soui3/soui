@@ -35,21 +35,22 @@ namespace SOUI
 		virtual           ~SHexEdit();
 
 		void              SetData(const SByteArray& data);
+		void              SetData(const BYTE* data, UINT len);
 		const SByteArray& GetData() const { return m_xData; }
 
 		bool IsSelection() const;
 		bool IsInsert() const;
 		bool GetSelection(UINT& nBegin, UINT& nEnd) const;
-		void SetBytesPerRow(UINT nBytesPerRow, bool bAuto, bool bUpdate);
-		void SetShowAddress(bool bShow, bool bUpdate);
-		void SetShowAscii(bool bShow, bool bUpdate);
-		void SetSelection(UINT nBegin, UINT nEnd, bool bMakeVisible, bool bUpdate);
-		void SetReadonly(bool bReadOnly, bool bUpdate);
-		void SetAddressSize(BYTE nAdrSize, bool bUpdate);
-		void SetAdrCol(COLORREF tAdrBkgCol, COLORREF tAdrTxtCol, bool bUpdate);
-		void SetAsciiCol(COLORREF tAsciiBkgCol, COLORREF tAsciiTxtCol, bool bUpdate);
-		void SetHexCol(COLORREF tHexBkgCol, COLORREF tHexTxtCol, bool bUpdate);
-		void SetSelectedNoFocusCol(COLORREF tSelectedNoFocusBkgCol, COLORREF tSelectedNoFocusTxtCol, bool bUpdate);
+		void SetBytesPerRow(UINT nBytesPerRow, bool bAuto, bool bUpdate = false);
+		void SetShowAddress(bool bShow, bool bUpdate = false);
+		void SetShowAscii(bool bShow, bool bUpdate = false);
+		void SetSelection(UINT nBegin, UINT nEnd, bool bMakeVisible, bool bUpdate = false);
+		void SetReadonly(bool bReadOnly, bool bUpdate = false);
+		void SetAddressSize(BYTE nAdrSize, bool bUpdate = false);
+		void SetAdrCol(COLORREF tAdrBkgCol, COLORREF tAdrTxtCol, bool bUpdate = false);
+		void SetAsciiCol(COLORREF tAsciiBkgCol, COLORREF tAsciiTxtCol, bool bUpdate = false);
+		void SetHexCol(COLORREF tHexBkgCol, COLORREF tHexTxtCol, bool bUpdate = false);
+		void SetSelectedNoFocusCol(COLORREF tSelectedNoFocusBkgCol, COLORREF tSelectedNoFocusTxtCol, bool bUpdate = false);
 		void ReInitialize();
 		UINT GetDataSize() const { return m_xData.Size(); }
 

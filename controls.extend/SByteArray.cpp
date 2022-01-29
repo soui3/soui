@@ -35,7 +35,7 @@ namespace SOUI
 			memset(&m_data[oldsize], 0, size - oldsize);
 	}
 
-	void SByteArray::CopyTo(int index, void* psrc, int len)
+	void SByteArray::CopyTo(int index, const void* psrc, int len)
 	{
 		if (len <= 0)
 			return;
@@ -82,7 +82,7 @@ namespace SOUI
 		return *this;
 	}
 
-	SByteArray& SByteArray::Append(BYTE* psrc, int len)
+	SByteArray& SByteArray::Append(const BYTE* psrc, int len)
 	{
 		if (len > 0)
 			CopyTo(m_data.size(), psrc, len);

@@ -19,7 +19,7 @@ namespace SOUI
 		~SByteArray();
 
 		void Resize(int size);
-		void CopyTo(int index, void* psrc, int len);
+		void CopyTo(int index, const void* psrc, int len);
 		BYTE* GetData(int index = 0);
 		void Clear();
 
@@ -28,7 +28,7 @@ namespace SOUI
 		SByteArray& Insert(int pos, BYTE ch);
 
 		SByteArray& Append(const SByteArray& C);
-		SByteArray& Append(BYTE* psrc, int len);
+		SByteArray& Append(const BYTE* psrc, int len);
 		SByteArray& Append(BYTE ch);
 		int Size() const;
 
