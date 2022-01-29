@@ -170,9 +170,6 @@
 	<translator>
 		<file name="lang_cn" path="translation files\lang_cn.xml" />
 	</translator>
-	<flash>
-		<file name="apple.swf" path="flash\apple.swf" />
-	</flash>
 	<ImgTrayMenu>
 		<file name="circulation" path="image\TrayMenu\circulation.png" />
 		<file name="ilike" path="image\TrayMenu\ilike.png" />

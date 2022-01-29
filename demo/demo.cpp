@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include <helper/SMenuWndHook.h>
 #include <helper/SAutoBuf.h>
-#include "httpsvr/HTTPServer.h"
-#include "MemFlash.h"
 #include "../controls.extend/SFadeFrame.h"
 #include "../controls.extend/sradiobox2.h"
 #include "../controls.extend/SVscrollbar.h"
@@ -324,12 +322,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		SSkinLoader *SkinLoader = new SSkinLoader(theApp);
 		SkinLoader->LoadSkin(_T("themes\\skin1"));
 
-        //创建一个http服务器，用来从资源中加载flash
-        CMemFlash   memFlash;
-
-        CHTTPServer flashSvr(&memFlash);
-        flashSvr.Start(CMemFlash::HomeDir(),"",82,0);
-
         if(trans)
         {//加载语言翻译包
             theApp->SetTranslator(trans);
@@ -392,8 +384,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             pLogMgr->stop();
         }
         
-        flashSvr.Shutdown();
-
         //卸载菜单边框绘制hook
         SMenuWndHook::UnInstallHook();
         CUiAnimation::Free();

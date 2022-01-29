@@ -4,10 +4,6 @@
 
 namespace SOUI
 {
-#ifndef BYTE
-	typedef unsigned char BYTE;
-#endif
-
 	class SByteArray
 	{
 	public:
@@ -49,8 +45,8 @@ namespace SOUI
 
 		std::vector<BYTE>::iterator begin() { return m_data.begin(); }
 		std::vector<BYTE>::iterator end() { return m_data.end(); }
-		std::vector<BYTE>::const_iterator cbegin() const { return m_data.cbegin(); }
-		std::vector<BYTE>::const_iterator cend() const { return m_data.cend(); }
+		std::vector<BYTE>::const_iterator cbegin() const { return m_data.begin(); }
+		std::vector<BYTE>::const_iterator cend() const { return m_data.end(); }
 
 	protected:
 		std::vector<BYTE> m_data;

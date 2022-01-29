@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SByteArray.h"
 #include <ctype.h>
+#include <algorithm>
 
 namespace SOUI
 {
@@ -271,7 +272,7 @@ namespace SOUI
 
 	std::string SByteArray::ToString()
 	{
-		return std::string((const char*)m_data.data(), m_data.size());
+		return std::string((const char*)&m_data[0], m_data.size());
 	}
 
 }
