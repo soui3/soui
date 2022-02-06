@@ -121,7 +121,8 @@ namespace SOUI
 	{
 		m_bFocusable = TRUE;
 		m_tPaintDetails.nCharacterWidth = 0;
-
+		m_bCaretAtLineEnd = false;
+		
 		m_tAdrTxtCol = RGBA(0x00, 0x00, 0xBF, 0xFF);
 		m_tAdrBkgCol = RGBA(0xFF, 0xF8, 0xF0, 0xFF);
 		m_tHexBkgCol = m_tAdrBkgCol;
@@ -677,7 +678,7 @@ namespace SOUI
 				cRect.left += (pSelectionBufPtrBegin - pBuf) * m_tPaintDetails.nCharacterWidth;
 				cRect.right -= (pBuf - 1 + m_tPaintDetails.nBytesPerRow * 3 - pSelectionBufPtrEnd) * m_tPaintDetails.nCharacterWidth;
 				CRect cSelectionRect(cRect);
-				cSelectionRect.InflateRect(0, -1, +1, 0);
+				cSelectionRect.InflateRect(0, -1, +1, +1);
 				*pSelectionBufPtrEnd = '\0'; // set "end-mark"
 				pRT->FillSolidRect(cSelectionRect, !m_bCaretAscii ? m_tSelectedFousBkgCol : m_tSelectedNoFocusBkgCol);
 				pRT->SetTextColor(!m_bCaretAscii ? m_tSelectedFousTxtCol : m_tSelectedNoFocusTxtCol);
@@ -697,8 +698,8 @@ namespace SOUI
 		UINT nAdr;
 		UINT nEndAdr;
 		CRect cAsciiRect(m_tPaintDetails.cPaintingRect);
-		TCHAR pBuf[512];
-		TCHAR* pBufPtr;
+		char pBuf[512];
+		char* pBufPtr;
 
 		BYTE* pDataPtr;
 		BYTE* pDataPtrEnd;
@@ -706,8 +707,8 @@ namespace SOUI
 		BYTE* pSelectionPtrBegin;
 		BYTE* pSelectionPtrEnd;
 		BYTE* pEndDataPtr;
-		TCHAR* pSelectionBufPtrBegin;
-		TCHAR* pSelectionBufPtrEnd;
+		char* pSelectionBufPtrBegin;
+		char* pSelectionBufPtrEnd;
 
 
 		memset(pBuf, 0, m_tPaintDetails.nBytesPerRow + 1);
@@ -768,6 +769,8 @@ namespace SOUI
 				}
 
 				*pBufPtr = isprint(*pDataPtr) ? (char)*pDataPtr : '.';
+				// 支持汉字的显示, 会导致Ascii区对齐计算不正确
+				//*pBufPtr = (*pDataPtr >= 0x20) ? (char)*pDataPtr : '.';	
 			}
 			*pBufPtr = '\0';
 
@@ -777,7 +780,8 @@ namespace SOUI
 			}
 
 			pRT->SetTextColor(m_tAsciiTxtCol);
-			pRT->DrawText(pBuf, -1, (LPRECT)cAsciiRect, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOPREFIX);
+			SStringT outText = S_CA2T(pBuf);
+			pRT->DrawText(outText, -1, (LPRECT)cAsciiRect, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOPREFIX);
 
 			//highlighted section now
 
@@ -789,11 +793,12 @@ namespace SOUI
 				cRect.left += (pSelectionBufPtrBegin - pBuf) * m_tPaintDetails.nCharacterWidth;
 				cRect.right -= (pBuf + m_tPaintDetails.nBytesPerRow - pSelectionBufPtrEnd) * m_tPaintDetails.nCharacterWidth;
 				CRect cSelectionRect(cRect);
-				cSelectionRect.InflateRect(0, -1, +1, 0);
+				cSelectionRect.InflateRect(0, -1, +1, +1);
 				*pSelectionBufPtrEnd = '\0'; // set "end-mark"
 				pRT->FillSolidRect(cSelectionRect, m_bCaretAscii ? m_tSelectedFousBkgCol : m_tSelectedNoFocusBkgCol);
 				pRT->SetTextColor(m_bCaretAscii ? m_tSelectedFousTxtCol : m_tSelectedNoFocusTxtCol);
-				pRT->DrawText(pSelectionBufPtrBegin, -1, (LPRECT)cRect, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOPREFIX);
+				SStringT outText = S_CA2T(pSelectionBufPtrBegin);
+				pRT->DrawText(outText, -1, (LPRECT)cRect, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOPREFIX);
 				*pSelectionBufPtrEnd = ' '; // restore the buffer
 			}
 
@@ -805,22 +810,21 @@ namespace SOUI
 	{
 		m_nCurrentAddress = nOffset;
 		m_bHighBits = bHighBits;
-		UINT calcAddress = m_nCurrentAddress;
 
 		if (GetDataSize() == 0) {
 			return;
 		}
 		if (m_nCurrentAddress >= GetDataSize())
-			calcAddress--;
+			m_nCurrentAddress--;
 
-		if (calcAddress < m_nScrollPostionY * m_tPaintDetails.nBytesPerRow
-			|| (calcAddress >= (m_nScrollPostionY + m_tPaintDetails.nVisibleLines) * m_tPaintDetails.nBytesPerRow)) {
+		if (m_nCurrentAddress < m_nScrollPostionY * m_tPaintDetails.nBytesPerRow
+			|| (m_nCurrentAddress >= (m_nScrollPostionY + m_tPaintDetails.nVisibleLines) * m_tPaintDetails.nBytesPerRow)) {
 			// not in the visible range
 			DestoyEditCaret();
 			return;
 		}
 
-		UINT nRelAdr = calcAddress - m_nScrollPostionY * m_tPaintDetails.nBytesPerRow;
+		UINT nRelAdr = m_nCurrentAddress - m_nScrollPostionY * m_tPaintDetails.nBytesPerRow;
 		UINT nRow = nRelAdr / m_tPaintDetails.nBytesPerRow;
 		UINT nColumn = nRelAdr % m_tPaintDetails.nBytesPerRow;
 		UINT nCarretHeight;
@@ -838,8 +842,8 @@ namespace SOUI
 			xpos += m_tPaintDetails.nAsciiPos + nColumn * m_tPaintDetails.nCharacterWidth;
 		else
 			xpos += m_tPaintDetails.nHexPos + (nColumn * 3 + (bHighBits ? 0 : 1)) * m_tPaintDetails.nCharacterWidth;
-		if (calcAddress != m_nCurrentAddress)
-			xpos += m_tPaintDetails.nCharacterWidth;
+		if (m_bCaretAtLineEnd)
+			xpos += (bHighBits ? 2 : 1) * m_tPaintDetails.nCharacterWidth;
 
 		UINT ypos = m_tPaintDetails.cPaintingRect.top + 1 + nRow * m_tPaintDetails.nLineHeight;
 		CPoint cCarretPoint(xpos, ypos);
@@ -1044,12 +1048,13 @@ namespace SOUI
 			m_nSelectingEnd = NOSECTION_VAL;
 			m_nSelectionEnd = NOSECTION_VAL;
 		}
-		if (iDeltaAdr > 0) {
+		if (iDeltaAdr >= 0) {
 			// go down
 			if (nAddress + iDeltaAdr >= GetDataSize()) {
 				// we reached the end
-				nAddress = GetDataSize();
+				nAddress = GetDataSize() - 1;
 				bHighBits = false;
+				m_bCaretAtLineEnd = true;
 			}
 			else {
 				nAddress += iDeltaAdr;
@@ -1057,11 +1062,25 @@ namespace SOUI
 		}
 		else if (iDeltaAdr < 0) {
 			if ((UINT)(-iDeltaAdr) <= nAddress) {
-				nAddress -= (UINT)(-iDeltaAdr);
+				if (m_bCaretAtLineEnd && iDeltaAdr == -1)
+				{
+					m_bCaretAtLineEnd = false;
+				}else
+					nAddress -= (UINT)(-iDeltaAdr);
+				if (m_bCaretAtLineEnd && ((nAddress + 1) % m_tPaintDetails.nBytesPerRow))
+				{
+					m_bCaretAtLineEnd = false;
+					if ((UINT)(-iDeltaAdr) == m_tPaintDetails.nBytesPerRow)
+					{
+						nAddress++;
+						bHighBits = true;
+					}
+				}
 			}
 			else {
 				nAddress = 0;
 				bHighBits = true;
+				m_bCaretAtLineEnd = false;
 			}
 		}
 		if (bExtendSelection && (m_nSelectingBeg != NOSECTION_VAL)) {
@@ -1077,6 +1096,7 @@ namespace SOUI
 
 	void SHexEdit::GetAddressFromPoint(const CPoint& cPt, UINT& nAddress, bool& bHighBits)
 	{
+		m_bCaretAtLineEnd = false;
 		bool bAscii = false;
 		CPoint cPoint(cPt);
 		cPoint.x += m_nScrollPostionX;
@@ -1101,7 +1121,10 @@ namespace SOUI
 		else {
 			cPoint.x -= m_tPaintDetails.nHexPos;
 			if (cPoint.x >= (LONG)m_tPaintDetails.nHexLen - DATA_ASCII_SPACE)
+			{
 				cPoint.x = (LONG)m_tPaintDetails.nHexLen - DATA_ASCII_SPACE - 1;
+				m_bCaretAtLineEnd = true;
+			}
 		}
 
 		UINT nRow = cPoint.y / m_tPaintDetails.nLineHeight;
@@ -1115,12 +1138,15 @@ namespace SOUI
 
 		bHighBits = nCharColumn % 3 == 0;
 		nAddress = nColumn + (nRow + m_nScrollPostionY) * m_tPaintDetails.nBytesPerRow;
+
 		if (nAddress >= GetDataSize()) {
 			nAddress = GetDataSize() - 1;
+			m_bCaretAtLineEnd = true;
 			if ((int)nAddress < 0)
 				nAddress = 0;
 			bHighBits = false;
 		}
+
 		m_bCaretAscii = bAscii;
 	}
 
@@ -1544,16 +1570,19 @@ namespace SOUI
 				if (m_nCurrentAddress == 0)
 					return;
 				m_nCurrentAddress--;
-			}
-			if (m_nCurrentAddress == GetDataSize())
+			}			 
+			UINT delAddress = m_nCurrentAddress;
+			if (m_bCaretAtLineEnd)
+				delAddress++;
+			if (delAddress == GetDataSize())
 				return;
 
-			SaveUndoAction(SHexEditAction::cut, m_nCurrentAddress, m_xData.Mid(m_nCurrentAddress, 1), SByteArray());
+			SaveUndoAction(SHexEditAction::cut, delAddress, m_xData.Mid(delAddress, 1), SByteArray());
 
-			m_xData.Remove(m_nCurrentAddress, 1);
+			m_xData.Remove(delAddress, 1);
 			MoveCurrentAddress(0, true);
 			Invalidate();
-
+			
 			EventHexEditDataChanged evt(this);
 			FireEvent(evt);
 		}
@@ -1666,7 +1695,8 @@ namespace SOUI
 				MoveCurrentAddress(m_tPaintDetails.nBytesPerRow, m_bHighBits);
 				return TRUE;
 			case VK_UP:
-				MoveCurrentAddress(-(int)m_tPaintDetails.nBytesPerRow, m_bHighBits);
+				if (m_nCurrentAddress > m_tPaintDetails.nBytesPerRow)
+					MoveCurrentAddress(-(int)m_tPaintDetails.nBytesPerRow, m_bHighBits);
 				return TRUE;
 			case VK_RIGHT:
 				if (IsSelection()) {
@@ -1690,7 +1720,7 @@ namespace SOUI
 				else if (m_bCaretAscii) {
 					MoveCurrentAddress(-1, true);
 				}
-				else if (!m_bHighBits) {
+				else if (!m_bHighBits && !m_bCaretAtLineEnd) {
 					// offset stays the same, caret moves to high-byte
 					MoveCurrentAddress(0, true);
 				}
@@ -1710,6 +1740,7 @@ namespace SOUI
 				MoveCurrentAddress(-(int)((m_nCurrentAddress) % m_tPaintDetails.nBytesPerRow), true);
 				return TRUE;
 			case VK_END:
+				m_bCaretAtLineEnd = true;
 				MoveCurrentAddress(m_tPaintDetails.nBytesPerRow - 1 - (m_nCurrentAddress % m_tPaintDetails.nBytesPerRow), false);
 				return TRUE;
 			case VK_INSERT:

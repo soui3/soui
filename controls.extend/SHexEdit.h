@@ -193,8 +193,9 @@ namespace SOUI
 
 		bool m_bHasCaret;
 		bool m_bRecalc;
-		bool m_bHighBits; // caret on high nibble
+		bool m_bHighBits;	// caret on high nibble
 		bool m_bCaretAscii;	// true: caret in ASCII area; false: caret in hex area
+		bool m_bCaretAtLineEnd;	// 光标在行尾
 
 		CPoint m_cMouseRepPoint;
 		int m_iMouseRepDelta;
