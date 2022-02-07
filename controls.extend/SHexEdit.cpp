@@ -183,7 +183,7 @@ namespace SOUI
 		m_bRecalc = true;
 
 		SetEditCaretPos(0, true);
-
+		Invalidate();
 		EventHexEditDataChanged evt(this);
 		FireEvent(evt);
 	}
@@ -196,7 +196,7 @@ namespace SOUI
 		m_bRecalc = true;
 
 		SetEditCaretPos(0, true);
-
+		Invalidate();
 		EventHexEditDataChanged evt(this);
 		FireEvent(evt);
 	}
@@ -843,7 +843,7 @@ namespace SOUI
 		else
 			xpos += m_tPaintDetails.nHexPos + (nColumn * 3 + (bHighBits ? 0 : 1)) * m_tPaintDetails.nCharacterWidth;
 		if (m_bCaretAtLineEnd)
-			xpos += (bHighBits ? 2 : 1) * m_tPaintDetails.nCharacterWidth;
+			xpos += (bHighBits && !m_bCaretAscii ? 2 : 1) * m_tPaintDetails.nCharacterWidth;
 
 		UINT ypos = m_tPaintDetails.cPaintingRect.top + 1 + nRow * m_tPaintDetails.nLineHeight;
 		CPoint cCarretPoint(xpos, ypos);
@@ -1116,6 +1116,11 @@ namespace SOUI
 		}
 		else if ((int)cPoint.x > (int)(m_tPaintDetails.nAsciiPos)) {
 			cPoint.x -= m_tPaintDetails.nAsciiPos;
+			if (cPoint.x >= (LONG)m_tPaintDetails.nAsciiLen)
+			{
+				cPoint.x = (LONG)m_tPaintDetails.nAsciiLen - 1;
+				m_bCaretAtLineEnd = true;
+			}
 			bAscii = true;
 		}
 		else {
@@ -1154,8 +1159,7 @@ namespace SOUI
 	{
 		MoveScrollPostionY(-(zDelta / WHEEL_DELTA), true);
 		return TRUE;
-	}
-
+	}	
 
 	BOOL SHexEdit::OnScroll(BOOL bVertical, UINT uCode, int nPos)
 	{
