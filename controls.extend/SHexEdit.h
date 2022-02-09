@@ -193,8 +193,9 @@ namespace SOUI
 
 		bool m_bHasCaret;
 		bool m_bRecalc;
-		bool m_bHighBits; // caret on high nibble
+		bool m_bHighBits;	// caret on high nibble
 		bool m_bCaretAscii;	// true: caret in ASCII area; false: caret in hex area
+		bool m_bCaretAtLineEnd;	// 光标在行尾
 
 		CPoint m_cMouseRepPoint;
 		int m_iMouseRepDelta;
@@ -234,7 +235,7 @@ namespace SOUI
 			MSG_WM_KEYDOWN(OnKeyDown)
 			MSG_WM_SYSKEYDOWN(OnSysKeyDown)
 			MSG_WM_TIMER2(OnTimer)
-			SOUI_MSG_MAP_END()
+		SOUI_MSG_MAP_END()
 
 	protected:
 		HRESULT OnAttrAddrBkColor(const SStringW& strValue, BOOL bLoading);
@@ -250,7 +251,7 @@ namespace SOUI
 			ATTR_CUSTOM(L"AddrBkColor", OnAttrAddrBkColor)
 			ATTR_CUSTOM(L"HexBkColor", OnAttrHexBkColor)
 			ATTR_CUSTOM(L"AsciiBkColor", OnAttrAsciiBkColor)
-			SOUI_ATTRS_END()
+		SOUI_ATTRS_END()
 
 	};
 
