@@ -61,12 +61,16 @@ UI展示基于`xml`配置，性能高效（可选择GDI或[Skia](https://www.osc
 
 除本页说明外，您还可以查看更详细的[官方文档](https://2926295173.github.io/SoUIDocs/)
 
-### Git下载地址
+### Git下载地址(SOUI3)
 
 - [国外Git下载站点](https://github.com/soui3/soui)
 
 - [国内Git下载站点](https://gitee.com/setoutsoft/soui3)(作为镜像使用)
 
+### Git下载地址(SOUI4)，SOUI4在SOUI3的基础上调整了内核代码结构，导出类COM接口，方便C语言调用
+- [国外Git下载站点](https://github.com/soui4/soui)
+
+- [国内Git下载站点](https://gitee.com/setoutsoft/soui4)(作为镜像使用)
 
 ### [编译](./doc/build.md)
 
