@@ -31,8 +31,10 @@ SItemPanel::SItemPanel(SWindow *pFrameHost,pugi::xml_node xmlNode,IItemContainer
         BuildWndTreeZorder();
     }
     m_evtSet.addEvent(EVENTID(EventItemPanelClick));
-    m_evtSet.addEvent(EVENTID(EventItemPanelDbclick));
     m_evtSet.addEvent(EVENTID(EventItemPanelRclick));
+	m_evtSet.addEvent(EVENTID(EventItemPanelClickUp));
+	m_evtSet.addEvent(EVENTID(EventItemPanelRclickUp));
+	m_evtSet.addEvent(EVENTID(EventItemPanelDbclick));
     m_evtSet.addEvent(EVENTID(EventItemPanelHover));
     m_evtSet.addEvent(EVENTID(EventItemPanelLeave));
 }
@@ -84,6 +86,22 @@ LRESULT SItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
                 FireEvent(evt);
                 break;
             }
+		case WM_LBUTTONUP:
+			{
+				EventItemPanelClickUp evt(this);
+				evt.wParam = wParam;
+				evt.lParam = lParam;
+				FireEvent(evt);
+				break;
+			}
+		case WM_RBUTTONUP:
+			{
+				EventItemPanelRclickUp evt(this);
+				evt.wParam = wParam;
+				evt.lParam = lParam;
+				FireEvent(evt);
+				break;
+			}
         case WM_LBUTTONDBLCLK:
             {
                 EventItemPanelDbclick evt(this);

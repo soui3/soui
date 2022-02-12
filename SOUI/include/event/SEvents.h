@@ -78,8 +78,10 @@ namespace SOUI
 
         //增加4个itempanel相关的事件,经过EVT_OFPANEL到达应用层
         EVT_ITEMPANEL_CLICK,
-        EVT_ITEMPANEL_DBCLICK,
         EVT_ITEMPANEL_RCLICK,
+		EVT_ITEMPANEL_CLICK_UP,
+		EVT_ITEMPANEL_RCLICK_UP,
+		EVT_ITEMPANEL_DBCLICK,
         EVT_ITEMPANEL_HOVER,
         EVT_ITEMPANEL_LEAVE,
         
@@ -292,22 +294,31 @@ namespace SOUI
 		SRadioBox * pChecked;
 	SEVENT_END()
 
-	SEVENT_BEGIN_EX(EventItemPanelRclick, EVT_ITEMPANEL_RCLICK, on_itemparem_rclick, SOUI_EXP)
-		WPARAM wParam;
-		LPARAM lParam;
-	SEVENT_END()
-
-
 	SEVENT_BEGIN_EX(EventItemPanelDbclick, EVT_ITEMPANEL_DBCLICK, on_itempanel_dbclick, SOUI_EXP)
 		WPARAM wParam;
 		LPARAM lParam;
 	SEVENT_END()
 
+	SEVENT_BEGIN_EX(EventItemPanelRclick, EVT_ITEMPANEL_RCLICK, on_itemparem_rclick, SOUI_EXP)
+		WPARAM wParam;
+		LPARAM lParam;
+	SEVENT_END()
 
 	SEVENT_BEGIN_EX(EventItemPanelClick, EVT_ITEMPANEL_CLICK, on_itempanel_click, SOUI_EXP)
 		WPARAM wParam;
 		LPARAM lParam;
 	SEVENT_END()
+
+	SEVENT_BEGIN_EX(EventItemPanelRclickUp, EVT_ITEMPANEL_RCLICK_UP, on_itemparem_rclick_up, SOUI_EXP)
+		WPARAM wParam;
+		LPARAM lParam;
+	SEVENT_END()
+
+	SEVENT_BEGIN_EX(EventItemPanelClickUp, EVT_ITEMPANEL_CLICK_UP, on_itempanel_click_up, SOUI_EXP)
+		WPARAM wParam;
+		LPARAM lParam;
+	SEVENT_END()
+
 
 	SEVENT_BEGIN_EX(EventItemPanelHover, EVT_ITEMPANEL_HOVER, on_itempanel_hover, SOUI_EXP)
 		WPARAM wParam;
