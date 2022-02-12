@@ -73,6 +73,7 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="$(ProjectDir)\..\soui-sys-resource"
 				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST" />
 		</Configuration>
 		<Configuration
@@ -135,6 +136,7 @@
 				Name="VCPreLinkEventTool" />
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="$(ProjectDir)\..\soui-sys-resource"
 				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,_CRT_SECURE_NO_WARNINGS,QT_NO_DYNAMIC_CAST,_DEBUG" />
 		</Configuration>
 	</Configurations>
@@ -202,17 +204,13 @@
 			<File
 				RelativePath="demo.cpp" />
 			<File
-				RelativePath="httpsvr\genericserver.cpp" />
-			<File
-				RelativePath="httpsvr\httpserver.cpp" />
-			<File
 				RelativePath="magnet\magnetframe.cpp" />
-			<File
-				RelativePath="memflash.cpp" />
 			<File
 				RelativePath="..\controls.extend\reole\richeditole.cpp" />
 			<File
 				RelativePath="..\controls.extend\saniwindow.cpp" />
+			<File
+				RelativePath="..\controls.extend\sbytearray.cpp" />
 			<File
 				RelativePath="..\controls.extend\scalendar2.cpp" />
 			<File
@@ -225,6 +223,8 @@
 				RelativePath="..\controls.extend\sfadeframe.cpp" />
 			<File
 				RelativePath="..\controls.extend\sgrouplist.cpp" />
+			<File
+				RelativePath="..\controls.extend\shexedit.cpp" />
 			<File
 				RelativePath="..\controls.extend\siectrl.cpp" />
 			<File
@@ -337,21 +337,15 @@
 			<File
 				RelativePath="..\controls.extend\reole\dataobject.h" />
 			<File
-				RelativePath="httpsvr\filereader-i.h" />
-			<File
-				RelativePath="httpsvr\genericserver.h" />
-			<File
-				RelativePath="httpsvr\httpserver.h" />
-			<File
 				RelativePath="magnet\magnetframe.h" />
-			<File
-				RelativePath="memflash.h" />
 			<File
 				RelativePath="resource.h" />
 			<File
 				RelativePath="..\controls.extend\reole\richeditole.h" />
 			<File
 				RelativePath="..\controls.extend\saniwindow.h" />
+			<File
+				RelativePath="..\controls.extend\sbytearray.h" />
 			<File
 				RelativePath="..\controls.extend\scalendar2.h" />
 			<File
@@ -364,6 +358,8 @@
 				RelativePath="..\controls.extend\sfadeframe.h" />
 			<File
 				RelativePath="..\controls.extend\sgrouplist.h" />
+			<File
+				RelativePath="..\controls.extend\shexedit.h" />
 			<File
 				RelativePath="..\controls.extend\siectrl.h" />
 			<File
