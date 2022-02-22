@@ -69,7 +69,7 @@ BOOL SRealWnd::InitFromXml(pugi::xml_node xmlNode)
     BOOL bRet=__super::InitFromXml(xmlNode);
     if(bRet)
     {
-        if(m_bInit) InitRealWnd();
+        if(m_bInit && !IsWindow(m_hRealWnd)) InitRealWnd();
     }
     return bRet;
 }
