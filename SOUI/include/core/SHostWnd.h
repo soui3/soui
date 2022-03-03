@@ -327,7 +327,7 @@ protected://Swindow 虚方法
     virtual void BeforePaint(IRenderTarget *pRT, SPainter &painter);
     virtual void AfterPaint(IRenderTarget *pRT, SPainter &painter);
     virtual BOOL IsLayeredWindow() const{return FALSE;}
-	virtual void UpdateLayout();
+	virtual BOOL UpdateLayout();
 	virtual HRESULT OnLanguageChanged(); 
 	virtual void OnScaleChanged(int scale);
 

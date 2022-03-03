@@ -2001,11 +2001,14 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::UpdateLayout()
+	BOOL SWindow::UpdateLayout()
 	{
-		if(m_layoutDirty == dirty_clean) return;
-		if(GetChildrenCount()) UpdateChildrenPosition();
+		if(m_layoutDirty == dirty_clean) 
+			return FALSE;
+		if(GetChildrenCount()) 
+			UpdateChildrenPosition();
 		m_layoutDirty = dirty_clean;
+		return TRUE;
 	}
 
 

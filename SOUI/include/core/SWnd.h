@@ -957,7 +957,7 @@ namespace SOUI
 		void RequestRelayout();
         virtual void RequestRelayout(SWND hSource,BOOL bSourceResizable);
         
-        virtual void UpdateLayout();
+        virtual BOOL UpdateLayout();
         
 		virtual void OnContentChanged();
 

@@ -462,11 +462,10 @@ void SHostWnd::_Redraw()
 
 void SHostWnd::OnPrint(HDC dc, UINT uFlags)
 {
-	if(!IsWindowVisible())
+	if(!(UpdateLayout() || IsWindowVisible()))
 		return;
+
 	SMatrix mtx = _GetMatrixEx();
-    //刷新前重新布局，会自动检查布局脏标志
-	UpdateLayout();
     
     if (m_bNeedAllRepaint)
     {
@@ -1418,10 +1417,10 @@ void SHostWnd::AfterPaint(IRenderTarget *pRT, SPainter &painter)
     pRT->SelectDefaultObject(OT_FONT);
 }
 
-void SHostWnd::UpdateLayout()
+BOOL SHostWnd::UpdateLayout()
 {
 	if (!IsLayoutDirty()) 
-		return;
+		return FALSE;
 	if ((m_szAppSetted.cx <=0 || m_szAppSetted.cy<=0) && GetLayoutParam()->IsWrapContent(Any))
 	{
 		int nWid = m_szAppSetted.cx;
@@ -1441,6 +1440,7 @@ void SHostWnd::UpdateLayout()
 	{
 		SWindow::UpdateLayout();
 	}
+	return TRUE;
 }
 
 void SHostWnd::OnCaptureChanged( HWND wnd )
