@@ -23,7 +23,7 @@ namespace SOUI
 
     protected:
         void OnValueChanged(bool bInit=false);
-    
+		void OnScaleChanged(int scale);
 		void OnLButtonDown(UINT nFlags, CPoint point);
 		void OnLButtonUp(UINT nFlags, CPoint point);
 		void OnMouseMove(UINT nFlags, CPoint point);
