@@ -95,6 +95,13 @@ namespace SOUI
         }
     }
 
+	void SSpinButtonCtrl::OnScaleChanged(int scale)
+	{
+		__super::OnScaleChanged(scale);
+		GetScaleSkin(m_pUpSkin, scale);
+		GetScaleSkin(m_pDownSkin, scale);
+	}
+
 
 	void SSpinButtonCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	{
