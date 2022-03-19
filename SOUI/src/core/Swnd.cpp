@@ -2733,7 +2733,10 @@ namespace SOUI
 				}
 				else if (pszBuf[i + 1] == L'\\')
 				{
+					strCvt += strText.Mid(iBegin, i - iBegin);
+					strCvt += L"\\";
 					i += 2;
+					iBegin = i;
 				}
 				else
 				{
