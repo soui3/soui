@@ -1390,8 +1390,11 @@ BOOL SToggle::GetToggle()
 
 void SToggle::OnPaint(IRenderTarget *pRT)
 {
-    SASSERT(m_pSkin);
-    m_pSkin->DrawByState(pRT,GetWindowRect(),GetState());
+	SASSERT(m_pSkin);
+	SSkinObjBase *pSkin = sobj_cast<SSkinObjBase>(m_pSkin);
+	int index = pSkin->State2Index(GetState());
+	if(GetToggle()) index += 3;
+	m_pSkin->DrawByIndex(pRT, GetWindowRect(), index);
 }
 
 CSize SToggle::GetDesiredSize(int wid, int hei)
