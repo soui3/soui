@@ -47,6 +47,7 @@ int SSkinImgList::GetStates() const
 
 void SSkinImgList::OnInitFinished(pugi::xml_node xmlNode)
 {
+	SSkinObjBase::OnInitFinished(xmlNode);
 	if (!m_bLazyLoad && !m_strSrc.IsEmpty())
 	{
 		m_pImg.Attach(LOADIMAGE2(m_strSrc));
@@ -547,6 +548,7 @@ SSkinShape::SSkinShape() :m_crSolid(CR_INVALID),m_shape(rectangle)
 
 void SSkinShape::OnInitFinished(pugi::xml_node xmlNode)
 {
+	SSkinObjBase::OnInitFinished(xmlNode);
 	pugi::xml_node xmlSolid = xmlNode.child(L"solid");
 	if(xmlSolid)
 	{

@@ -7,7 +7,16 @@
   <scrollbar name="_skin.sys.scrollbar" src="PNG:SYS_SCROLLBAR" margin="3" hasgripper="0"/>
   <imgframe name="_skin.sys.border" src="PNG:SYS_BORDER" states="2" margin-x="2" margin-y="2"/>
   <imgcenter name="_skin.sys.dropbtn" src="PNG:SYS_DROPBTN" states="3"/>
-  <imglist name="_skin.sys.tree.toggle" src="PNG:SYS_TREE_TOGGLE" states="6"/>
+  <imglist name="_skin.sys.tree.toggle" src="PNG:SYS_TREE_TOGGLE" states="6">
+    <states>
+      <state index="0" value="normal"/>
+      <state index="1" value="hover"/>
+      <state index="2" value="pushdown"/>
+      <state index="3" value="normal|checked"/>
+      <state index="4" value="hover|checked"/>
+      <state index="5" value="pushdown|cheched"/>
+    </states>
+  </imglist>
   <imglist name="_skin.sys.tree.checkbox" src="PNG:SYS_TREE_CHECKBOX" states="9"/>
   <imglist name="_skin.sys.tree.lines" src="PNG:SYS_TREE_LINES" states="9"/>
   <imglist name="_skin.sys.tab.page" src="PNG:SYS_TAB_PAGE" states="3"/>
