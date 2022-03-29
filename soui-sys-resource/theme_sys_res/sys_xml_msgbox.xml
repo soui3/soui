@@ -3,13 +3,13 @@
     <class name="normalbtn" skin="_skin.sys.btn.normal" font="" colorText="#385e8b" colorTextDisable="#91a7c0" textMode="0x25" cursor="hand" margin-x="0"/>
   </style>
   <buttonText>
-    <ok>确定</ok>
-    <cancel>取消</cancel>
-    <abort>中止</abort>
-    <retry>重试</retry>
-    <yes>是</yes>
-    <no>否</no>
-    <ignore>忽略</ignore>
+    <ok accel="Ctrl+O">确定(&O)</ok>
+    <cancel accel="Ctrl+C">取消(&C)</cancel>
+    <abort accel="Ctrl+A">中止(&A)</abort>
+    <retry accel="Ctrl+R">重试(&R)</retry>
+    <yes accel="Ctrl+Y">是(&Y)</yes>
+    <no accel="Ctrl+N">否(&N)</no>
+    <ignore accel="Ctrl+I">忽略(&I)</ignore>
   </buttonText>
 
   <root skin="_skin.sys.wnd.bkgnd" layout="vbox">

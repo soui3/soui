@@ -174,6 +174,7 @@ namespace SOUI
             pBtn->SetID(nID);
             
             SStringT strText = OnGetButtonText(nID);
+			SStringW strAccel;
             if(strText.IsEmpty())
             {
                 SStringW strBtnText = g_msgBtnText[uType].btnInfo[i].szText;
@@ -184,10 +185,15 @@ namespace SOUI
                     strBtnText=nodeTxt.text().get();
                     strBtnText.TrimBlank();
                     strBtnText = GETSTRING(strBtnText);
+					strAccel = nodeTxt.attribute(L"accel").as_string();
                 }
                 //从翻译引擎中翻译
                 strText = S_CW2T(tr(strBtnText));    
             }
+			if(!strAccel.IsEmpty())
+			{
+				pBtn->SetAttribute(L"accel",strAccel,TRUE);
+			}
             pBtn->SetWindowText(strText);
         }
         
