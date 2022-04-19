@@ -5,7 +5,7 @@
 |OfficeAid|OfficeAid.App.exe|1.0.0.3|贡献代码|北京云动智效网络科技有限公司|https://www.officeaid.com/|提供demo,pcmanager及souiviewer|
 |恒星播放器|StellarPlayer.exe|1.1.0.147|购买|冷湖科技(武汉)有限公司|https://www.stellarplayer.com/|购买授权|
 |壹加点图软件|YJApp.arx|1.0.2.0|贡献代码|壹加软件|适于于AutoCAD2010~2020|
-
+|ELT Technology Xray Inspection System|ELT Technology Xray Inspection System.exe|1.0.0.0|贡献代码|008|http://www.elt-group.cn/|深圳市艾兰特科技有限公司(项目外包)|
 
 |购买授权企业|日期|备注|
 |:-|:-:|:-:|
