@@ -41,6 +41,10 @@ function CreateCustomProject(strProjectName, strProjectPath) {
                 strProjTemplatePath += '\\2015';
             else if (WizardVersion == 15.0)
                 strProjTemplatePath += '\\2017';
+            else if (WizardVersion == 16.0)
+                strProjTemplatePath += '\\2019';
+            else if (WizardVersion == 17.0)
+                strProjTemplatePath += '\\2022';
         }
         if (supportXp == 1 && WizardVersion > 10.0) {
             strProjTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
@@ -56,6 +60,10 @@ function CreateCustomProject(strProjectName, strProjectPath) {
                 strProjTemplatePath += '\\2015';
             else if (WizardVersion == 15.0)
                 strProjTemplatePath += '\\2017';
+            else if (WizardVersion == 16.0)
+                strProjTemplatePath += '\\2019';
+            else if (WizardVersion == 17.0)
+                strProjTemplatePath += '\\2022';
         }
 
         var strProjTemplate = '';
@@ -144,7 +152,7 @@ function AddConfig(proj, strProjectName) {
         var wcharSet = wizard.FindSymbol('WCHAR');
         var mtSet = wizard.FindSymbol('MT');
         // DebugÉèÖÃ
-        var config = proj.Object.Configurations('Debug');
+        var config = proj.Object.Configurations('Debug|Win32');
         config.CharacterSet = (unicodeSet == 1) ? charSetUNICODE : charSetMBCS;
         if (WizardVersion >= 10.0) {
             config.IntermediateDirectory = '$(Configuration)\\';
@@ -187,7 +195,7 @@ function AddConfig(proj, strProjectName) {
 			resCplTool.PreprocessorDefinitions += ';_DEBUG';	
 		}
         // ReleaseÉèÖÃ
-        var config = proj.Object.Configurations('Release');
+        var config = proj.Object.Configurations('Release|Win32');
         config.CharacterSet = (unicodeSet == 1) ? charSetUNICODE : charSetMBCS;
         if (WizardVersion >= 10.0) {
             config.IntermediateDirectory = '$(Configuration)\\';

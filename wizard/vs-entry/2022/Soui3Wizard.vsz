@@ -1,0 +1,7 @@
+VSWIZARD 7.0
+Wizard=VsWizard.VsWizardEngine.17.0
+
+Param="WIZARD_NAME = Soui3Wizard"
+Param="ABSOLUTE_PATH = %SOUI3PATH%\wizard\souiwizard"
+Param="WIZARD_VERSION = 17.0"
+Param="FALLBACK_LCID = 2052"

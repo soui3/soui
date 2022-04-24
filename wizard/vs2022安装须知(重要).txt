@@ -1,0 +1,16 @@
+首先确定vs各目录
+
+安装目录(默认):C:\Program Files\Microsoft Visual Studio\2022
+模板目录(默认):C:\Users\用户名\Documents\Visual Studio 2022\Templates
+
+-----------------------------------------------------------------------------------
+从
+"安装目录\Enterprise\Common7\IDE\VC\vcprojects"
+这个目录,把文件剪切到
+"模板目录\ProjectTemplates"
+这里这个目录,
+然后打开vs关闭,
+再剪切回去
+再打开vs就识别到向导了
+
+注：Enterprise为vs版本，可能其它值，如Community
