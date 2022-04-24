@@ -122,7 +122,7 @@ namespace SOUI
 	void SHeaderCtrl::DrawItem(IRenderTarget * pRT, CRect rcItem, const LPSHDITEM pItem)
 	{
 		if(!pItem->bVisible) return;
-		if (m_pSkinItem) m_pSkinItem->DrawByIndex(pRT, rcItem, pItem->state);
+		if (m_pSkinItem) m_pSkinItem->DrawByState(pRT, rcItem, pItem->state);
 		pRT->DrawText(pItem->strText.GetText(FALSE), pItem->strText.GetText(FALSE).GetLength(), rcItem, m_style.GetTextAlign());
 		if (pItem->stFlag == ST_NULL || !m_pSkinSort) return;
 		CSize szSort = m_pSkinSort->GetSkinSize();
