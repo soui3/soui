@@ -114,8 +114,7 @@ DWORD WINAPI UI_Engine::RunUI(LPVOID lpParam)
 			CreateResProvider(RES_PE, (IObjRef**)&pSysResProvider);
 			bLoaded = pSysResProvider->Init((WPARAM)m_hInstance, 0);
 			SASSERT(bLoaded);
-			bLoaded = theApp->LoadSystemNamedResource(pSysResProvider);
-			SASSERT(!bLoaded);
+			theApp->LoadSystemNamedResource(pSysResProvider);
 		}
 #endif
 
