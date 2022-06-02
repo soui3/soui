@@ -72,6 +72,7 @@ public:
 
 	struct IListener
 	{
+		virtual void OnInsertItem(STreeCtrl *pTreeCtrl,HSTREEITEM hItem) = 0;
 		virtual void OnDeleteItem(STreeCtrl *pTreeCtrl,HSTREEITEM hItem,LPARAM lParam) = 0;
 	};
 
@@ -180,6 +181,7 @@ protected:
 
 protected:
     virtual void OnNodeFree(LPTVITEM & pItemData);
+	virtual void OnInsertItem(LPTVITEM & pItemData);
 protected:
 
     HSTREEITEM    m_hSelItem;
