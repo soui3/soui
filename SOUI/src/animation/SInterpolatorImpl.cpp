@@ -188,6 +188,9 @@ namespace SOUI
 		IPathInfo * pathInfo = path->approximate(PRECISION);
 		int numPoints = pathInfo->pointNumber();
 		const float * pointComponents = pathInfo->data();
+		float prevX = 0;
+		float prevFraction = 0;
+		int componentIndex = 0;
 
 		int nLen = numPoints*3;
 		if (pointComponents[1] != 0 || pointComponents[2] != 0
@@ -197,9 +200,6 @@ namespace SOUI
 		}
 
 		mPt.SetCount(numPoints);
-		float prevX = 0;
-		float prevFraction = 0;
-		int componentIndex = 0;
 		for (int i = 0; i < numPoints; i++) {
 			float fraction = pointComponents[componentIndex++];
 			float x = pointComponents[componentIndex++];

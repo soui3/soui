@@ -61,15 +61,15 @@ EXTERN_C const CLSID CLSID_SSmileyCtrl;
         // also catch mismatched Release in debug builds
         virtual ~SComObject() throw()
         {
-            m_dwRef = -(LONG_MAX/2);
-            FinalRelease();
+            Base::m_dwRef = -(LONG_MAX/2);
+            Base::FinalRelease();
         }
         //If InternalAddRef or InternalRelease is undefined then your class
         //doesn't derive from CComObjectRoot
-        STDMETHOD_(ULONG, AddRef)() {return InternalAddRef();}
+        STDMETHOD_(ULONG, AddRef)() {return Base::InternalAddRef();}
         STDMETHOD_(ULONG, Release)()
         {
-            ULONG l = InternalRelease();
+            ULONG l = Base::InternalRelease();
             if (l == 0)
                 delete this;
             return l;
@@ -77,7 +77,7 @@ EXTERN_C const CLSID CLSID_SSmileyCtrl;
         //if _InternalQueryInterface is undefined then you forgot BEGIN_COM_MAP
         STDMETHOD(QueryInterface)(REFIID iid, void ** ppvObject) throw()
         {
-            HRESULT hr = _InternalQueryInterface(iid, ppvObject);
+            HRESULT hr = Base::_InternalQueryInterface(iid, ppvObject);
             if(iid == IID_IOleObject)
             {
                 IOleObject *pOle = *(IOleObject**)ppvObject;

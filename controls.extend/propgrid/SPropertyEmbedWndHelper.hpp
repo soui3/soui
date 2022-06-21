@@ -30,11 +30,26 @@ namespace SOUI
             T::GetOwner()->OnInplaceActive(FALSE);
         }
 
-        SOUI_MSG_MAP_BEGIN()
-            MSG_WM_KEYDOWN(OnKeyDown)
-            MSG_WM_KILLFOCUS_EX(OnKillFocus)
-        SOUI_MSG_MAP_END()
-
+    protected:
+        virtual BOOL ProcessSwndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        {
+            if (uMsg == WM_KEYDOWN)
+            {
+                OnKeyDown((TCHAR)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16));
+                lResult = 0;
+                return TRUE;
+            }
+            else if (uMsg == WM_KILLFOCUS)
+            {
+                OnKillFocus((SWND)wParam);
+                lResult = 0;
+                return TRUE;
+            }
+            else
+            {
+                return T::ProcessSwndMessage(uMsg, wParam, lParam, lResult);
+            }
+        }
         virtual void OnFinalRelease()
         {
             delete this;

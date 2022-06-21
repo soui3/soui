@@ -126,7 +126,7 @@ class S_NO_VTABLE ActiveXSite :   public IOleClientSite,
     {
         if( m_spControl == 0) return E_NOINTERFACE;
         HRESULT hr = E_POINTER;
-        SComQIPtr<IPersistStreamInit> spPSI = m_spControl;
+        SComQIPtr<IPersistStreamInit> spPSI(m_spControl);
         if ( spPSI != NULL )
         {
             if ( pStream != NULL )
@@ -632,7 +632,7 @@ class S_NO_VTABLE ActiveXSite :   public IOleClientSite,
             if (SUCCEEDED(hr))
                 m_dwViewObjectType = 1;
         }
-        SComQIPtr<IAdviseSink> advise_sink=m_spControl;
+        SComQIPtr<IAdviseSink> advise_sink(m_spControl);
         m_spOleObject->Advise(advise_sink, &m_dwOleObjSink);
         if (m_spViewObject)
             hr=m_spViewObject->SetAdvise(DVASPECT_CONTENT, 0, advise_sink);

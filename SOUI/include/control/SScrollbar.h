@@ -134,7 +134,7 @@ protected:
     void NotifySbCode(int nCode,int nPos);
 
 protected:
-	LRESULT OnAttrVertical(const SStringW &value, BOOL bLoading);
+	HRESULT OnAttrVertical(const SStringW &value, BOOL bLoading);
 
     SOUI_ATTRS_BEGIN()
         ATTR_SKIN(L"skin", m_pSkin, TRUE)

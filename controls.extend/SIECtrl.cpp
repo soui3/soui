@@ -20,7 +20,7 @@ namespace SOUI
 
     HRESULT SIECtrl::RegisterEventHandler( BOOL inAdvise )
     {
-        SComQIPtr<IConnectionPointContainer>  pCPC=m_pIE;
+        SComQIPtr<IConnectionPointContainer>  pCPC(m_pIE);
         if(!pCPC) return S_FALSE;
         SComQIPtr<IConnectionPoint> pCP;
         pCPC->FindConnectionPoint(DIID_DWebBrowserEvents2,&pCP);
@@ -111,7 +111,7 @@ namespace SOUI
 			pDocHostUIHandler->Release();
 
 			Navigate(m_strUrl);            
-            SComQIPtr<IOleWindow> ole_window=m_pIE;
+            SComQIPtr<IOleWindow> ole_window(m_pIE);
             SASSERT(ole_window);
             ole_window->GetWindow(&m_hIEWnd);
         }

@@ -368,8 +368,8 @@ namespace SOUI
         }else
         {
             SListBox::OnLButtonDown(nFlags,pt);
-
-            int iItem = SListBox::HitTest(CPoint(pt));
+            CPoint pt2(pt);
+            int iItem = SListBox::HitTest(pt2);
             if(iItem!=-1)
             {
                 ITEMPART ip = HitTest(iItem,pt);
@@ -450,7 +450,8 @@ namespace SOUI
             SetCursor(SApplication::getSingleton().LoadCursor(MAKEINTRESOURCE(IDC_SIZEWE)));
         }else
         {
-            int iItem = SListBox::HitTest(CPoint(pt));
+            CPoint pt2(pt);
+            int iItem = SListBox::HitTest(pt2);
             if(iItem<0) return FALSE;
             ITEMPART ip = HitTest(iItem,pt);
             if(ip==IP_SWITCH)

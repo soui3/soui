@@ -37,7 +37,7 @@ namespace SOUI
     *
     * Describe   msgbox的消息处理对象，如果需要更加个性化的msgbox，可以派生该类。
     */    
-    class SOUI_EXP SMessageBoxImpl:public SHostDialog,SDpiHandler<SMessageBoxImpl>
+    class SOUI_EXP SMessageBoxImpl:public SHostDialog, public SDpiHandler<SMessageBoxImpl>
     {
     public:
         /**

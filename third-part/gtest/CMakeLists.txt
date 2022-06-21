@@ -22,6 +22,8 @@ if (COMMAND set_up_hermetic_build)
   set_up_hermetic_build()
 endif()
 
+add_definitions(-D_HAS_TR1_NAMESPACE)
+
 # Where Google Test's .h files can be found.
 include_directories(
   ${gtest_SOURCE_DIR}/include

@@ -1242,8 +1242,8 @@ namespace SOUI
 		{
 			CRect rc = GetWindowRect();
 			SMatrix mtx = xform.getMatrix();
-			mtx.preTranslate(-rc.left, -rc.top);
-			mtx.postTranslate(rc.left, rc.top);
+			mtx.preTranslate((int)-rc.left, (int)-rc.top);
+			mtx.postTranslate((int)rc.left, (int)rc.top);
 			if (mtx.invert(&mtx))
 			{
 				SPoint spt = SPoint::IMake(pt);
@@ -1333,8 +1333,8 @@ namespace SOUI
 		if (xForm.hasMatrix())
 		{
 			SMatrix mtx = xForm.getMatrix();
-			mtx.preTranslate(-rcWnd.left, -rcWnd.top);
-			mtx.postTranslate(rcWnd.left, rcWnd.top);
+			mtx.preTranslate((int)-rcWnd.left, (int)-rcWnd.top);
+			mtx.postTranslate((int)rcWnd.left, (int)rcWnd.top);
 			SRect fRc = SRect::IMake(rcIntersect);
 			mtx.mapRect(&fRc);
 			rcIntersect = fRc.toRect();
@@ -1624,7 +1624,7 @@ namespace SOUI
 		{
 			SASSERT(pRT);
 			CRect rcClient = SWindow::GetClientRect();
-
+			CRect rcWnd = GetWindowRect();
 			pRT->PushClipRect(&rcClient,RGN_DIFF);
 
 			int nState=0;
@@ -1632,14 +1632,14 @@ namespace SOUI
 			if(m_pNcSkin)
 			{
 				if(nState>=m_pNcSkin->GetStates()) nState=0;
-				m_pNcSkin->DrawByIndex(pRT,GetWindowRect(),nState);
+				m_pNcSkin->DrawByIndex(pRT,&rcWnd,nState);
 			}
 			else
 			{
 				COLORREF crBg = GetStyle().m_crBorder;
 				if (CR_INVALID != crBg)
 				{
-					pRT->FillSolidRect(&GetWindowRect(),crBg);
+					pRT->FillSolidRect(&rcWnd,crBg);
 				}
 			}
 			pRT->PopClip();
@@ -2154,8 +2154,8 @@ namespace SOUI
 				{
 					SMatrix mtx2 = xform.getMatrix();
 					CRect rc = p->GetWindowRect();
-					mtx2.preTranslate(-rc.left,-rc.top);
-					mtx2.postTranslate(rc.left,rc.top);
+					mtx2.preTranslate((int)-rc.left, (int)-rc.top);
+					mtx2.postTranslate((int)rc.left, (int)rc.top);
 					mtx.preConcat(mtx2);
 				}
 				p = p->GetParent();
@@ -2214,8 +2214,8 @@ namespace SOUI
 		pRT->GetTransform(oriMtx.GetData());
 		CRect rcWnd = GetWindowRect();
 		SMatrix mtx = xform.getMatrix();
-		mtx.preTranslate(-rcWnd.left, -rcWnd.top);
-		mtx.postTranslate(rcWnd.left, rcWnd.top);
+		mtx.preTranslate((int)-rcWnd.left, (int)-rcWnd.top);
+		mtx.postTranslate((int)rcWnd.left, (int)rcWnd.top);
 		mtx.preConcat(oriMtx);
 		pRT->SetTransform(mtx.GetData());
 		return true;
@@ -2232,8 +2232,8 @@ namespace SOUI
 			{
 				SMatrix &mtx2 = xform.getMatrix();
 				CRect rcWnd = p->GetWindowRect();
-				mtx2.preTranslate(-rcWnd.left, -rcWnd.top);
-				mtx2.postTranslate(rcWnd.left, rcWnd.top);
+				mtx2.preTranslate((int)-rcWnd.left, (int)-rcWnd.top);
+				mtx2.postTranslate((int)rcWnd.left, (int)rcWnd.top);
 				mtx.preConcat(mtx2);
 			}
 			p = p->GetParent();

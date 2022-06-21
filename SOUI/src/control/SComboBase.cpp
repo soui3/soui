@@ -577,7 +577,7 @@ namespace SOUI
 		BeforePaintEx(pRT);
 
 		SStringT strText = GetWindowText(FALSE);
-		SStringT strForText = strText.IsEmpty() ? _T("A") : strText;
+		SStringT strForText = strText.IsEmpty() ? SStringT(_T("A")) : strText;
 		DrawText(pRT, strForText, strForText.GetLength(), rcTest, nTestDrawMode | DT_CALCRECT);
 		if (strText.IsEmpty()) rcTest.right = rcTest.left;
 
@@ -619,7 +619,7 @@ namespace SOUI
         CloseUp();
     }
 
-	LRESULT SComboBase::OnAttrDropDown(const SStringW & strValue, BOOL bLoading)
+	HRESULT SComboBase::OnAttrDropDown(const SStringW & strValue, BOOL bLoading)
 	{
 		m_bDropdown = STRINGASBOOL(strValue);
 		if (bLoading) return S_OK;

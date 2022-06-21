@@ -54,7 +54,7 @@ private:
 	mutable SStringW m_strSrc;
 	BOOL m_bLazyLoad;
 protected:
-	LRESULT OnAttrSrc(const SStringW& value, BOOL bLoading);
+	HRESULT OnAttrSrc(const SStringW& value, BOOL bLoading);
 
     SOUI_ATTRS_BEGIN()
 		ATTR_CUSTOM(L"src",OnAttrSrc)

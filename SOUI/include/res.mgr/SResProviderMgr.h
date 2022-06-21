@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "interface/sresprovider-i.h"
-#include "atl.mini/scomcli.h"
-#include "helper/SCriticalSection.h"
-#include "res.mgr/SUiDef.h"
-
+#include <interface/sresprovider-i.h>
+#include <atl.mini/scomcli.h>
+#include <helper/SCriticalSection.h>
+#include <layout/SLayoutSize.h>
 namespace SOUI
 {
 

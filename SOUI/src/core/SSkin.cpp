@@ -74,7 +74,7 @@ UINT SSkinImgList::GetExpandMode() const
         return MAKELONG(EM_NULL,m_filterLevel);
 }
 
-LRESULT SSkinImgList::OnAttrSrc(const SStringW& value, BOOL bLoading)
+HRESULT SSkinImgList::OnAttrSrc(const SStringW& value, BOOL bLoading)
 {
 	m_strSrc = value;
 	if (!bLoading)

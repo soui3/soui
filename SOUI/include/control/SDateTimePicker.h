@@ -64,7 +64,7 @@ protected:
 	void TimeWheel(bool bUp);
 	void CircluNum(bool bUp, WORD& wNum, WORD wMin, WORD wMax);				// 循环 子 
 	
-	LRESULT OnAttrCueText(const SStringW &strValue,BOOL bLoading);
+	HRESULT OnAttrCueText(const SStringW &strValue,BOOL bLoading);
 	SOUI_ATTRS_BEGIN()
 		ATTR_SKIN(L"btnSkin", m_pSkinBtn, TRUE)
 		ATTR_BOOL(L"timeEnable", m_bTimeEnable, TRUE)

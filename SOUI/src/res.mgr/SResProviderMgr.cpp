@@ -1,7 +1,7 @@
 ﻿#include "souistd.h"
 #include "res.mgr/SResProviderMgr.h"
 #include "res.mgr/SResProvider.h"
-
+#include "res.mgr/SUiDef.h"
 #include "helper/SplitString.h"
 
 namespace SOUI

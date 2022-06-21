@@ -15,7 +15,7 @@ CONFIG += staticlib
 dir = ../..
 include($$dir/common.pri)
 
-DEFINES += _CRT_SECURE_NO_WARNINGS
+DEFINES += _CRT_SECURE_NO_WARNINGS _HAS_TR1_NAMESPACE
 
 # 解决'std::tuple' : too many template arguments问题
 DEFINES += _VARIADIC_MAX=10

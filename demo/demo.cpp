@@ -330,7 +330,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             {
                 SAutoRefPtr<ITranslator> langCN;
                 trans->CreateTranslator(&langCN);
-                langCN->Load(&xmlLang.child(L"language"),1);//1=LD_XML
+                pugi::xml_node xmlNode = xmlLang.child(L"language");
+                langCN->Load(&xmlNode,1);//1=LD_XML
                 trans->InstallTranslator(langCN);
 				SStringW strFont = langCN->getFontInfo();
 				if(!strFont.IsEmpty())

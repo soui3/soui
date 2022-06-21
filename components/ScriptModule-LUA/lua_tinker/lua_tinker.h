@@ -34,6 +34,11 @@ namespace lua_tinker
 	int		on_error(lua_State *L);
 	void	print_error(lua_State *L, const char* fmt, ...);
 
+	// class helper
+	int meta_get(lua_State* L);
+	int meta_set(lua_State* L);
+	void push_meta(lua_State* L, const char* name);
+
 	// dynamic type extention
 	struct lua_value
 	{
@@ -775,10 +780,6 @@ namespace lua_tinker
 		return pop<RVal>(L);
 	}
 
-	// class helper
-	int meta_get(lua_State *L);
-	int meta_set(lua_State *L);
-	void push_meta(lua_State *L, const char* name);
 
 	// class init
 	template<typename T>

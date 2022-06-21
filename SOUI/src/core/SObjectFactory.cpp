@@ -1,7 +1,7 @@
 ﻿#include "souistd.h"
 #include "core/SObjectFactory.h"
 #include "res.mgr/SObjDefAttr.h"
-
+#include "res.mgr/SUiDef.h"
 namespace SOUI
 {
 
@@ -18,7 +18,7 @@ SObjectFactoryMgr::SObjectFactoryMgr(void)
 // Parameter: SObjectFactory * pWndFactory:窗口工厂指针
 // Parameter: bool bReplace:强制替换原有工厂标志
 //************************************
-bool SObjectFactoryMgr::RegisterFactory(SObjectFactory & objFactory, bool bReplace)
+bool SObjectFactoryMgr::RegisterFactory(const SObjectFactory & objFactory, bool bReplace)
 {
 	if (HasKey(objFactory.GetObjectInfo()))
 	{

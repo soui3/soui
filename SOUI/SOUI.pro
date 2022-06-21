@@ -95,7 +95,9 @@ HEADERS += include/SApp.h \
            include/core/SPanel.h \
            include/core/SScrollBarHandler.h \
            include/core/SSingleton.h \
+           include/core/SSingleton2Type.h \
            include/core/SSingleton2.h \
+           include/core/SCmnMap.h \
            include/core/SSingletonMap.h \
            include/core/SSkin.h \
            include/core/SSkinObjBase.h \

@@ -394,7 +394,7 @@ namespace SOUI
 
         void OnKillFocus(SWND wndFocus);
 
-		LRESULT OnAttrDropDown(const SStringW & strValue, BOOL bLoading);
+		HRESULT OnAttrDropDown(const SStringW & strValue, BOOL bLoading);
 
 		SStringT GetCueText(BOOL bRawText=FALSE) const;
 

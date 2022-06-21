@@ -162,11 +162,12 @@ public:
             // return default height for a system font
             T* pT = static_cast<T*>(this);
             HWND hWnd = pT->GetDlgItem(lpMeasureItemStruct->CtlID);
-            CClientDC dc(hWnd);
+            HDC dc = GetDC(hWnd);
             TEXTMETRIC tm = { 0 };
-            dc.GetTextMetrics(&tm);
+            GetTextMetrics(dc,&tm);
 
             lpMeasureItemStruct->itemHeight = tm.tmHeight;
+            ReleaseDC(hWnd, dc);
         }
         else
             lpMeasureItemStruct->itemHeight = ::GetSystemMetrics(SM_CYMENU);

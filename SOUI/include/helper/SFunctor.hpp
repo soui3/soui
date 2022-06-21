@@ -3,7 +3,9 @@
 #if _MSC_VER>=1700
 #include <functional>
 #endif
-
+#ifdef SOUI_EXP
+#include <core/SMsgLoop.h>
+#endif
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
@@ -625,6 +627,7 @@ namespace SOUI
 			return pTaskLoop->postTask(&runnable, waitUntilDone,nPriority);
 		}
 
+#ifdef SOUI_EXP
 		//////////////////////////////////////////////////////////////////////////
 		template<typename TClass,typename Fun>
 		static void post(SMessageLoop *pMsgLoop,TClass * pObj, Fun fun)
@@ -695,5 +698,6 @@ namespace SOUI
 			SFunctor9<TClass, Fun, P1,P2,P3,P4,P5,P6,P7,P8,P9> runnable(pObj, fun, p1,p2,p3,p4,p5,p6,p7,p8,p9);
 			pMsgLoop->PostTask(runnable);
 		}
+#endif
 	};
 }

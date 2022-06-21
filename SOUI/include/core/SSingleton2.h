@@ -14,7 +14,8 @@
 #pragma once
 
 #include <assert.h>
-#include "../SApp.h"
+#include <SApp.h>
+#include <core/SSingleton2Type.h>
 
 namespace SOUI
 {
@@ -26,24 +27,6 @@ public:\
 	{\
 		return x;\
 	}
-
-	enum {
-		SINGLETON_UIDEF = 0,
-		SINGLETON_SWNDMGR,
-		SINGLETON_TIMER,
-		SINGLETON_SCRIPTTIMER,
-		SINGLETON_FONTPOOL,
-		SINGLETON_STYLEPOOLMGR,
-		SINGLETON_TEMPLATEPOOLMGR,
-		SINGLETON_SKINPOOLMGR,
-		SINGLETON_WINDOWFINDER,
-		SINGLETON_TEXTSERVICEHELPER,
-		SINGLETON_RICHEDITMENUDEF,
-		SINGLETON_SIMPLEWNDHELPER,
-		SINGLETON_HOSTMGR,
-
-		SINGLETON_COUNT,
-	};
 
     /**
     * @class      SSingleton

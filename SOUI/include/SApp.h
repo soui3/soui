@@ -31,6 +31,8 @@
 #include "core/smsgloop.h"
 #include "core/SObjectFactory.h"
 #include <OleAcc.h>
+#include <interface/SSkinobj-i.h>
+#include <core/SSingleton2Type.h>
 
 #define GETRESPROVIDER      SOUI::SApplication::getSingletonPtr()
 #define GETRENDERFACTORY    SOUI::SApplication::getSingleton().GetRenderFactory()

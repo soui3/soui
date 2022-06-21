@@ -678,7 +678,7 @@ namespace SOUI
 		Invalidate();
 	}
 
-	LRESULT SDateTimePicker::OnAttrCueText(const SStringW &strValue,BOOL bLoading)
+	HRESULT SDateTimePicker::OnAttrCueText(const SStringW &strValue,BOOL bLoading)
 	{
 		SStringW strTmp=GETSTRING(strValue); 
 		m_strCue.SetText(S_CW2T(strTmp));

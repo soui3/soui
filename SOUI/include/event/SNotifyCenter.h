@@ -36,14 +36,8 @@ namespace SOUI
 			unregisterNotifyCenter();
 		}
 
-		void registerNotifyCenter()
-		{
-			SNotifyCenter::getSingleton().RegisterEventMap(Subscriber(&_thisClass::OnEvent, this));
-		}
-		void unregisterNotifyCenter()
-		{
-			SNotifyCenter::getSingleton().UnregisterEventMap(Subscriber(&_thisClass::OnEvent, this));
-		}
+		void registerNotifyCenter();
+		void unregisterNotifyCenter();
 	protected:
 		bool OnEvent(EventArgs *e){
 			T * pThis = static_cast<T*>(this);
@@ -126,4 +120,14 @@ namespace SOUI
 		void RunOnUIAsync(std::function<void(void)> fn);
 #endif
 	};
+	template<class T>
+	inline void TAutoEventMapReg<T>::registerNotifyCenter()
+	{
+		SNotifyCenter::getSingleton().RegisterEventMap(Subscriber(&_thisClass::OnEvent, this));
+	}
+	template<class T>
+	inline void TAutoEventMapReg<T>::unregisterNotifyCenter()
+	{
+		SNotifyCenter::getSingleton().UnregisterEventMap(Subscriber(&_thisClass::OnEvent, this));
+	}
 }
