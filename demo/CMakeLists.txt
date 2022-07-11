@@ -49,6 +49,8 @@ set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/SProgressRing.h
 	${PROJECT_SOURCE_DIR}/controls.extend/SAniWindow.h
 	${PROJECT_SOURCE_DIR}/controls.extend/SGroupList.h
+	${PROJECT_SOURCE_DIR}/controls.extend/SHexEdit.h
+	${PROJECT_SOURCE_DIR}/controls.extend/SByteArray.h
 )
 
 set(EXTENDCOTROLS ${EXTENDCOTROLS}
@@ -89,6 +91,8 @@ set(EXTENDCOTROLS ${EXTENDCOTROLS}
 	${PROJECT_SOURCE_DIR}/controls.extend/SProgressRing.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/SAniWindow.cpp
 	${PROJECT_SOURCE_DIR}/controls.extend/SGroupList.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/SHexEdit.cpp
+	${PROJECT_SOURCE_DIR}/controls.extend/SByteArray.cpp
 )
 
 source_group("Header Files" FILES ${CURRENT_HEADERS})
