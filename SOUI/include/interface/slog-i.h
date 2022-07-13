@@ -87,6 +87,7 @@ struct  ILog4zManager : public IObjRef
     virtual bool setLoggerDisplay(LoggerId id, bool enable) = 0;
     virtual bool setLoggerOutFile(LoggerId id, bool enable) = 0;
     virtual bool setLoggerLimitsize(LoggerId id, unsigned int limitsize) = 0;
+    virtual bool setLoggerFileMaxNum(unsigned int maxnum) = 0;
     
     //设置LOG输出到文件的规则
     virtual void setOutputFileBuilder(IOutputFileBuilder *pOutputFileBuilder) = 0;

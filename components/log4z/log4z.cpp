@@ -416,6 +416,7 @@ public:
     virtual bool setLoggerOutFile(LoggerId id, bool enable);
     virtual bool setLoggerLimitsize(LoggerId id, unsigned int limitsize);
     virtual void setOutputFileBuilder(IOutputFileBuilder *pOutputFileBuilder);
+    virtual bool setLoggerFileMaxNum(unsigned int maxnum);
 
     virtual bool setAutoUpdate(int interval);
     virtual bool updateConfig();
@@ -477,6 +478,8 @@ private:
 
     IOutputFileBuilder * m_pOutputFileBuilder;
 	IOutputListener    * m_pListener;
+
+    unsigned int       _maxFileNum;
 };
 
 
@@ -1500,6 +1503,12 @@ void LogerManager::setOutputFileBuilder(IOutputFileBuilder *pOutputFileBuilder)
     m_pOutputFileBuilder = pOutputFileBuilder;
 }
 
+bool LogerManager::setLoggerFileMaxNum(unsigned int maxnum)
+{
+    _maxFileNum = maxnum;
+    return true;
+}
+
 bool LogerManager::setLoggerLimitsize(LoggerId id, unsigned int limitsize)
 {
     if (id <0 || id > _lastId) return false;
@@ -1631,15 +1640,15 @@ bool LogerManager::openLogger(LogData * pLog)
 		char buf[MAX_PATH];
 		tm t = timeToTm(pLogger->_curFileCreateTime);
 
-		const int KMaxLogIndex = 5;
-		m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,KMaxLogIndex);        		
+		const int KMaxLogIndex = _maxFileNum;
+		m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,KMaxLogIndex);
 		std::string path = pLogger->_path+buf;
 		remove(path.c_str());
-		for(int i=KMaxLogIndex;i>0;i--)//max to 5 log index.
+		for(int i=KMaxLogIndex;i>0;i--)//max to _maxFileNum log index.
 		{
-			m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,i-1);        		
+			m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,i-1);
 			std::string pathOld = pLogger->_path+buf;
-			m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,i);        		
+			m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,i);
 			std::string pathNew = pLogger->_path+buf;
 			rename(pathOld.c_str(),pathNew.c_str());
 		}
@@ -1663,7 +1672,7 @@ bool LogerManager::openLogger(LogData * pLog)
             createRecursionDir(path);
         }
         
-        m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,0);        
+        m_pOutputFileBuilder->buildOutputFile(buf,100,t,name.c_str(),_pid,0);
         path += buf;
 
         pLogger->_handle.open(path.c_str(), "ab");
