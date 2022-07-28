@@ -277,6 +277,8 @@ int SPanel::GetScrollPos(BOOL bVertical)
 BOOL SPanel::SetScrollRange( BOOL bVertical,int nMinPos,int nMaxPos,BOOL bRedraw )
 {
     SCROLLINFO *psi=bVertical?(&m_siVer):(&m_siHoz);
+
+	bRedraw = bRedraw || psi->nMin!=nMinPos || psi->nMax != nMaxPos;
     psi->nMin=nMinPos;
     psi->nMax=nMaxPos;
 
