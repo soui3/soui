@@ -47,7 +47,7 @@ for /f "skip=2 delims=: tokens=1,*" %%i in ('%windir%\system32\reg query "HKLM\S
 	 SET strCMD=%strCMD%\Microsoft Visual Studio\Installer\vswhere.exe
 	
 	 if exist "%strCMD%" (
-	 for /f "delims=" %%i in ('"%strCMD%" -nologo -version [16.0^,17.0] -prerelease -property installationPath -format value') do (
+	 for /f "delims=" %%i in ('"%strCMD%" -nologo -version [16.0^,18.0] -prerelease -property installationPath -format value') do (
 	    set vs2019path=%%i
 		)
 	 )
