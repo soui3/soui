@@ -139,12 +139,11 @@ static LPCTSTR WordNext(LPCTSTR pszBuf,bool bWordbreak)
 
 void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
-    SIZE szWord;
     int i=0, nLine=1;
     if(cchText==-1) cchText=(int)_tcslen(pszBuf);
     LPCTSTR p1=pszBuf;
     POINT pt= {pRect->left,pRect->top};
-    pRT->MeasureText(_T("A"),1,&szWord);
+    SIZE szWord=OnMeasureText(pRT,_T("A"),1);
     int nLineHei=szWord.cy;
     int nRight=pRect->right;
 	int nLineWid = pRect->right-pRect->left;
@@ -180,7 +179,7 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 			pLineTail = pLineHead = p2;
 			continue;
 		}
-        pRT->MeasureText(p1,(int)(p2-p1),&szWord);
+        szWord=OnMeasureText(pRT,p1,(int)(p2-p1));
         if(pt.x+szWord.cx > nRight)
         {//检测到一行超过边界时还要保证当前行不为空
 
@@ -214,7 +213,7 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 				while(p3<p2)
 				{
 					LPCTSTR p4=CharNext(p3);
-					pRT->MeasureText(p3,p4-p3,&szChar);
+					szChar=OnMeasureText(pRT,p3,p4-p3);
 					if(szWord.cx + szChar.cx > nLineWid)
 					{
 						if(p3==p1)
@@ -250,6 +249,13 @@ void SStatic::DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT
 		OnDrawLine(pRT, pszBuf, (int)(pLineHead - pszBuf), (int)(pLineTail - pLineHead), &rcText, uFormat);
 	}
     
+}
+
+SIZE SStatic::OnMeasureText(IRenderTarget *pRT,LPCTSTR pszText,int cchLen)
+{
+	SIZE szRet={0};
+	pRT->MeasureText(pszText,cchLen,&szRet);
+	return szRet;
 }
 
 //////////////////////////////////////////////////////////////////////////

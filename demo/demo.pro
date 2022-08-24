@@ -85,10 +85,11 @@ HEADERS += MainDlg.h \
           ../controls.extend/sgrouplist.h \
           ../controls.extend/shexedit.h \
           ../controls.extend/sbytearray.h \
+          ../controls.extend/sroundimage.h \
+          ../controls.extend/sstaticgdip.h \
           ../controls.extend/SMcListViewEx/STabCtrlHeaderBinder.h \
           magnet/magnetframe.h \
           smatrixwindow.h \
-          sroundimage.h \
           threadObject.h \
           SmileyCreateHook.h \
           uianimation/uianimation.h \
@@ -148,9 +149,10 @@ SOURCES += demo.cpp \
           ../controls.extend/sgrouplist.cpp \
           ../controls.extend/shexedit.cpp \
           ../controls.extend/sbytearray.cpp \
+          ../controls.extend/sroundimage.cpp \
+          ../controls.extend/sstaticgdip.cpp \
           magnet/magnetframe.cpp \
           smatrixwindow.cpp \ 
-          sroundimage.cpp \          
           threadObject.cpp \
           SmileyCreateHook.cpp \
           uianimation/uianimationwnd.cpp \

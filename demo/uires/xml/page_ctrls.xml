@@ -322,8 +322,9 @@
 		<page title="split">
 			<splitrow name="split_row" pos="10,0,-10,-10" sepSize="6">
 				<pane idealSize="250" minSize="30" priority="2" colorBkgnd="#880000" clipClient="1">
-					<text pos="|-50,|-20" colorText="#ffffff">pane1 priority=2</text>
-				</pane>
+					<text pos="|0,|-20" offset="-0.5,0" colorText="#ffffff">pane1 priority=2</text>
+          <text2 pos="|0,[20" offset="-0.5,0" font="face:微软雅黑,adding:10" colorText="@color/red">GDI+渲染文字,render by gdiplus</text2>
+        </pane>
 				<pane idealSize="400" minSize="30" priority="1">
 					<splitcol name="split_col" pos="0,0,-0,-0" sepSize="6">
 						<pane idealSize="200" minSize="30" priority="0" colorBkgnd="#000088" clipClient="1">

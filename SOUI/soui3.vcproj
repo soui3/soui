@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="soui3"
-	ProjectGUID="{A278536F-80DF-3C47-A1FD-14BAACB6B8C6}"
+	ProjectGUID="{50C47181-7403-371E-85A8-E0B35D34D37A}"
 	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
@@ -391,6 +391,8 @@
 			<File
 				RelativePath="include\control\SCmnCtrl.h" />
 			<File
+				RelativePath="include\core\SCmnMap.h" />
+			<File
 				RelativePath="include\helper\SColor.h" />
 			<File
 				RelativePath="include\control\SComboBase.h" />
@@ -548,6 +550,8 @@
 				RelativePath="include\core\SSingleton.h" />
 			<File
 				RelativePath="include\core\SSingleton2.h" />
+			<File
+				RelativePath="include\core\SSingleton2Type.h" />
 			<File
 				RelativePath="include\core\SSingletonMap.h" />
 			<File

@@ -52,6 +52,7 @@ public:
 
 protected:
 	virtual void OnDrawLine(IRenderTarget *pRT, LPCTSTR pszBuf, int iBegin, int cchText, LPRECT pRect, UINT uFormat);
+	virtual SIZE OnMeasureText(IRenderTarget *pRT,LPCTSTR pszText,int cchLen);
 
     void DrawMultiLine(IRenderTarget *pRT,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
     

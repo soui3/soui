@@ -256,9 +256,11 @@
 			<File
 				RelativePath="..\controls.extend\sradiobox2.cpp" />
 			<File
-				RelativePath="sroundimage.cpp" />
+				RelativePath="..\controls.extend\sroundimage.cpp" />
 			<File
 				RelativePath="..\controls.extend\sscrolltext.cpp" />
+			<File
+				RelativePath="..\controls.extend\sstaticgdip.cpp" />
 			<File
 				RelativePath="threadObject.cpp" />
 			<File
@@ -391,9 +393,11 @@
 			<File
 				RelativePath="..\controls.extend\sradiobox2.h" />
 			<File
-				RelativePath="sroundimage.h" />
+				RelativePath="..\controls.extend\sroundimage.h" />
 			<File
 				RelativePath="..\controls.extend\sscrolltext.h" />
+			<File
+				RelativePath="..\controls.extend\sstaticgdip.h" />
 			<File
 				RelativePath="stdafx.h">
 				<FileConfiguration
