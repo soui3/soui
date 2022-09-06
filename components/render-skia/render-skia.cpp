@@ -712,9 +712,10 @@ namespace SOUI
         skrcDst.offset(m_ptOrg);
 
         SkPaint paint=m_paint;
-        
-        if(byAlpha != 0xFF) paint.setAlpha(byAlpha);
+        BYTE oldAlpha = paint.getAlpha();
+        paint.setAlpha(byAlpha);
         m_SkCanvas->drawBitmapRectToRect(bmp,&skrcSrc,skrcDst,&paint);
+		paint.setAlpha(oldAlpha);
         return S_OK;
     }
     
@@ -756,7 +757,8 @@ namespace SOUI
         rcDest.offset(m_ptOrg);
 
         SkPaint paint=m_paint;
-        if(byAlpha != 0xFF) paint.setAlpha(byAlpha);
+		BYTE oldAlpha = paint.getAlpha();
+        paint.setAlpha(byAlpha);
         
         SkPaint::FilterLevel fl = (SkPaint::FilterLevel)HIWORD(expendMode);//SkPaint::kNone_FilterLevel;
         paint.setFilterLevel(fl);
@@ -782,6 +784,7 @@ namespace SOUI
             
             PopClip();
         }
+		paint.setAlpha(oldAlpha);
         return S_OK;
 
     }
