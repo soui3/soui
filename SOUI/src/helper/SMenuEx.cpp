@@ -884,8 +884,7 @@ namespace SOUI
 
 			}
 
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			GetMsgLoop()->OnMsg(&msg);
 
 			if (msg.message == WM_KEYDOWN
 				|| msg.message == WM_KEYUP

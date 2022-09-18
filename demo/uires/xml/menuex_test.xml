@@ -3,9 +3,9 @@
           margin="2,2,2,2" colorBkgnd="#ffffff" ncSkin="TrayMenu_border" alpha="220">
   <menuItem height="56">
     <window pos="0,0" size="-2,-2" colorBkgnd="#ffffff">
-      <imgbtn pos="]-20,|" offset="-1,-0.5" cursor="hand" skin="TrayMenu_btn_pre" name="menu_btn_pre" />
-      <imgbtn pos="|,|" offset="-0.5,-0.5" cursor="hand" skin="TrayMenu_btn_play" name="menu_btn_play"/>
-      <imgbtn pos="[+20,|" offset="0,-0.5" cursor="hand" skin="TrayMenu_btn_next" name="menu_btn_next"/>
+      <imgbtn pos="]-20,|" offset="-1,-0.5" cursor="hand" skin="TrayMenu_btn_pre" name="menu_btn_pre" tip="prev"/>
+      <imgbtn pos="|,|" offset="-0.5,-0.5" cursor="hand" skin="TrayMenu_btn_play" name="menu_btn_play" tip="play"/>
+      <imgbtn pos="[+20,|" offset="0,-0.5" cursor="hand" skin="TrayMenu_btn_next" name="menu_btn_next" tip="next"/>
     </window>
   </menuItem>
   <menuItem>
