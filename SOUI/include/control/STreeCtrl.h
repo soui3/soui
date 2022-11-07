@@ -227,6 +227,7 @@ protected:
         ATTR_COLOR(L"colorItemText",m_crItemText,FALSE)
         ATTR_COLOR(L"colorItemSelText",m_crItemSelText,FALSE)
 		ATTR_BOOL(L"hasLines",m_bHasLines,TRUE)
+		ATTR_SKIN(L"lineSkin", m_pLineSkin, TRUE)
     SOUI_ATTRS_END()
 
     SOUI_MSG_MAP_BEGIN()
