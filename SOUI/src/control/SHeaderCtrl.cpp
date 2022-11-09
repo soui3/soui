@@ -92,6 +92,7 @@ namespace SOUI
 		}
 		if (pItem->mask & SHDI_WIDTH) item.cx = pItem->cx;
 		if (pItem->mask & SHDI_LPARAM) item.lParam = pItem->lParam;
+		Invalidate();
 		return TRUE;
 	}
 
@@ -607,6 +608,8 @@ namespace SOUI
 				}
 				for(int i=0;i<iItem;i++)
 				{
+					if(!m_arrItems[i].bVisible)
+						continue;
 					int nAppend = (int)(nRemain * m_arrItems[i].fWeight/fTotalWeight);
 					nRemain-=nAppend;
 					fTotalWeight-=m_arrItems[i].fWeight;
