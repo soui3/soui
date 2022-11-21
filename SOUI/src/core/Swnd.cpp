@@ -955,7 +955,6 @@ namespace SOUI
 				if(IsCacheDirty())
 				{
 					pRTCache->ClearRect(&rcWnd,0);
-					pRTCache->AlphaBlend(rcWnd,pRT,rcWnd,255);
 
 					SAutoRefPtr<IFont> oldFont;
 					COLORREF crOld=pRT->GetTextColor();

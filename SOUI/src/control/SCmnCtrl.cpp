@@ -691,10 +691,16 @@ BOOL SImageWnd::SetIcon( int nSubID )
 
 CSize SImageWnd::GetDesiredSize(int wid,int hei)
 {
-    CSize szRet;
-    if(m_pImg) szRet = m_pImg->Size();
-    else if(m_pSkin) szRet=m_pSkin->GetSkinSize();
-    return szRet;
+	CSize szSkin;
+	if(m_pImg) szSkin = m_pImg->Size();
+	else if(m_pSkin) szSkin=m_pSkin->GetSkinSize();
+	CSize szRet=__super::GetDesiredSize(wid, hei);
+
+	if(GetLayoutParam()->IsWrapContent(Horz))
+		szRet.cx = szSkin.cx;
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy = szSkin.cy;
+	return szRet;
 }
 
 void SImageWnd::OnColorize(COLORREF cr)
@@ -762,9 +768,15 @@ void SAnimateImgWnd::OnDestroy()
 
 CSize SAnimateImgWnd::GetDesiredSize(int wid, int hei)
 {
-    CSize szRet;
-    if(m_pSkin) szRet=m_pSkin->GetSkinSize();
-    return szRet;
+	CSize szSkin;
+	if(m_pSkin) szSkin=m_pSkin->GetSkinSize();
+	CSize szRet=__super::GetDesiredSize(wid, hei);
+
+	if(GetLayoutParam()->IsWrapContent(Horz))
+		szRet.cx = szSkin.cx;
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy = szSkin.cy;
+	return szRet;
 }
 
 void SAnimateImgWnd::OnShowWindow( BOOL bShow, UINT nStatus )
@@ -1102,13 +1114,19 @@ void SIconWnd::OnPaint(IRenderTarget *pRT)
 
 CSize SIconWnd::GetDesiredSize(int wid, int hei)
 {
-    if(!m_theIcon) return CSize();
-    ICONINFO iconInfo={0};
-    GetIconInfo(m_theIcon,&iconInfo);
-    if(iconInfo.hbmColor) DeleteObject(iconInfo.hbmColor);
-    if(iconInfo.hbmMask) DeleteObject(iconInfo.hbmMask);
+	CSize szRet=__super::GetDesiredSize(wid, hei);
 
-    return CSize(iconInfo.xHotspot*2,iconInfo.yHotspot*2);
+	if(!m_theIcon) return szRet;
+	ICONINFO iconInfo={0};
+	GetIconInfo(m_theIcon,&iconInfo);
+	if(iconInfo.hbmColor) DeleteObject(iconInfo.hbmColor);
+	if(iconInfo.hbmMask) DeleteObject(iconInfo.hbmMask);
+
+	if(GetLayoutParam()->IsWrapContent(Horz))
+		szRet.cx = iconInfo.xHotspot*2;
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy = iconInfo.yHotspot*2;
+	return szRet;
 }
 
 void SIconWnd::SetIcon(HICON hIcon)
@@ -1402,9 +1420,14 @@ void SToggle::OnPaint(IRenderTarget *pRT)
 
 CSize SToggle::GetDesiredSize(int wid, int hei)
 {
+	CSize szRet = __super::GetDesiredSize(wid,hei);
     CSize sz;
     if(m_pSkin) sz=m_pSkin->GetSkinSize();
-    return sz;
+	if(GetLayoutParam()->IsWrapContent(Horz))
+		szRet.cx = sz.cx;
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy = sz.cy;
+	return szRet;
 }
 
 
@@ -1494,7 +1517,8 @@ CRect SGroup::GetChildrenLayoutRect() const
 CSize SGroup::GetDesiredSize(int nParentWid, int nParentHei)
 {
 	CSize szRet = __super::GetDesiredSize(nParentWid,nParentHei);
-	szRet.cy += m_nHeaderHeight.toPixelSize(GetScale());
+	if(GetLayoutParam()->IsWrapContent(Vert))
+		szRet.cy += m_nHeaderHeight.toPixelSize(GetScale());
 	return szRet;
 }
 
