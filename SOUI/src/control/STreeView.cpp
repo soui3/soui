@@ -133,7 +133,7 @@ namespace SOUI
     int STreeViewItemLocator::_GetItemVisibleWidth(HTREEITEM hItem) const
     {
         int nRet = GetItemWidth(hItem);
-        if(m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
+        if(m_adapter->IsItemExpanded(hItem) && m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
         {
             int nIndent = m_adapter->GetParentItem(hItem) == ITvAdapter::ITEM_ROOT?0:m_nIndent;
             nRet = smax(nRet,_GetBranchWidth(hItem)+nIndent);
@@ -351,7 +351,7 @@ namespace SOUI
     void STreeViewItemLocator::OnBranchExpandedChanged(HTREEITEM hItem,BOOL bExpandedOld,BOOL bExpandedNew)
     {
         if(bExpandedNew == bExpandedOld) return;
-
+		int nOldBranchWidth = _GetBranchWidth(hItem);
         int nBranchHei = _GetBranchHeight(hItem);
         HTREEITEM hParent = m_adapter->GetParentItem(hItem);
         while(hParent != ITvAdapter::ITEM_NULL)
@@ -361,6 +361,10 @@ namespace SOUI
             hParent = m_adapter->GetParentItem(hParent);
         }
         _UpdateSiblingsOffset(hItem);
+		int nNewBranchWidth = _GetItemVisibleWidth(hItem);
+		if (nOldBranchWidth == nNewBranchWidth)
+			return;
+		_UpdateBranchWidth(hItem, nOldBranchWidth, nNewBranchWidth);
     }
 
     void STreeViewItemLocator::OnBranchChanged(HTREEITEM hItem)
@@ -460,10 +464,10 @@ void STreeViewItemLocator::SetIndent(int nIndent)
 		}
 		
 		if(m_tvItemLocator)
+			m_tvItemLocator->SetAdapter(adapter);
+		if(m_adapter)
 		{
             m_adapter->InitByTemplate(m_xmlTemplate.first_child());
-
-		    m_tvItemLocator->SetAdapter(adapter);
 		    
             for(int i=0;i<m_adapter->getViewTypeCount();i++)
             {
@@ -819,7 +823,7 @@ void STreeViewItemLocator::SetIndent(int nIndent)
         //  重新计算客户区及非客户区
         SSendMessage(WM_NCCALCSIZE);
 
-        Invalidate();
+        InvalidateRect(NULL);
 	}
 
 	void STreeView::UpdateVisibleItems()
@@ -941,7 +945,9 @@ void STreeViewItemLocator::SetIndent(int nIndent)
         {//update scroll range
             UpdateScrollBar();
             UpdateVisibleItems();//根据新的滚动条状态重新记算显示列表项
-        }
+		}else{
+			InvalidateRect(NULL);
+		}
 	}
 
 

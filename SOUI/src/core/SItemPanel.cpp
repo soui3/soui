@@ -251,34 +251,14 @@ void SItemPanel::Draw(IRenderTarget *pRT,const CRect & rc)
     UpdateLayout();
 	BuildWndTreeZorder();
 
-	float fMat[9];
-	pRT->GetTransform(fMat);
-	SMatrix mtx(fMat);
-	if(mtx.isIdentity())
-	{
-		SPainter painter;
-		BeforePaint(pRT,painter);
-		pRT->OffsetViewportOrg(rc.left,rc.top);
-		SAutoRefPtr<IRegion> rgn;
-		pRT->GetClipRegion(&rgn);
-		RedrawRegion(pRT,rgn);
-		pRT->OffsetViewportOrg(-rc.left,-rc.top);
-		AfterPaint(pRT,painter);
-	}else
-	{//draw to cache
-		IRenderTarget *pMemRT=NULL;
-		CRect rcMem=rc;
-		rcMem.MoveToXY(0,0);
-		GETRENDERFACTORY->CreateRenderTarget(&pMemRT,rc.Width(),rc.Height());
-		pMemRT->AlphaBlend(rcMem,pRT,rc,255);
-		SPainter painter;
-		BeforePaint(pMemRT,painter);
-		RedrawRegion(pMemRT,NULL);
-		AfterPaint(pMemRT,painter);
-		pRT->AlphaBlend(rc,pMemRT,rcMem,255);
-		pMemRT->Release();
-	}
-
+	SPainter painter;
+	BeforePaint(pRT,painter);
+	pRT->OffsetViewportOrg(rc.left,rc.top);
+	SAutoRefPtr<IRegion> rgn;
+	pRT->GetClipRegion(&rgn);
+	RedrawRegion(pRT,rgn);
+	pRT->OffsetViewportOrg(-rc.left,-rc.top);
+	AfterPaint(pRT,painter);
 }
 
 void SItemPanel::SetSkin(ISkinObj *pSkin)
