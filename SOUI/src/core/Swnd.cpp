@@ -1006,34 +1006,12 @@ namespace SOUI
 
 	void SWindow::_RedrawNonClient()
 	{
-		SAutoRefPtr<IRegion> rgn;
-		GETRENDERFACTORY->CreateRegion(&rgn);
 		CRect rcWnd = GetWindowRect();
 		CRect rcClient = SWindow::GetClientRect();
 		if(rcWnd == rcClient)
 			return;
-		rgn->CombineRect(&rcWnd,RGN_COPY);
-		rgn->CombineRect(&rcClient,RGN_DIFF);
-		if(m_clipRgn)
-		{
-			m_clipRgn->Offset(GetWindowRect().TopLeft());
-			rgn->CombineRgn(m_clipRgn,RGN_AND);
-			m_clipRgn->Offset(-GetWindowRect().TopLeft());
-		}
-		if (!rgn->IsEmpty())
-		{
-			IRenderTarget *pRT = GetRenderTarget(GRT_OFFSCREEN, rgn);//不自动画背景
-			if(m_clipPath)
-			{
-				m_clipPath->offset((float)rcWnd.left,(float)rcWnd.top);
-				pRT->PushClipPath(m_clipPath,RGN_AND,true);
-				m_clipPath->offset(-(float)rcWnd.left,-(float)rcWnd.top);
-			}
-			PaintBackground(pRT, &rcWnd);
-			SSendMessage(WM_NCPAINT, (WPARAM)pRT);
-			PaintForeground(pRT, &rcWnd);
-			ReleaseRenderTarget(pRT);
-		}
+		InvalidateRect(rcWnd,TRUE,FALSE);//invalid window rect
+		InvalidateRect(rcClient,TRUE,TRUE);//but clip client rect
 	}
 
 	SAutoRefPtr<IRegion> SWindow::_ConvertRect2RenderRegion( const CRect & rc) const
@@ -1314,7 +1292,7 @@ namespace SOUI
 		}
 	}
 
-	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/)
+	void SWindow::InvalidateRect(const CRect & rect,BOOL bFromThis/*=TRUE*/,BOOL bClip/*=FALSE*/)
 	{
 		ASSERT_UI_THREAD();
 		if(!IsVisible(TRUE) || IsUpdateLocked() || !GetContainer()) 
@@ -1326,7 +1304,7 @@ namespace SOUI
 		CRect rcIntersect = rect & rcWnd;
 		if (rcIntersect.IsRectEmpty()) 
 			return;
-		MarkCacheDirty(true);
+		if(!bClip) MarkCacheDirty(true);
 
 		STransformation xForm = GetTransformation();
 		if (xForm.hasMatrix())
@@ -1351,10 +1329,10 @@ namespace SOUI
 		{
 			if(GetParent())
 			{
-				GetParent()->InvalidateRect(rcIntersect,FALSE);
+				GetParent()->InvalidateRect(rcIntersect,FALSE,bClip);
 			}else
 			{
-				GetContainer()->OnRedraw(rcIntersect);
+				GetContainer()->OnRedraw(rcIntersect,bClip);
 			}
 		}
 	}

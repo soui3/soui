@@ -733,7 +733,7 @@ namespace SOUI
         *
         * Describe 
         */
-        void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE);
+        void InvalidateRect(const CRect & rect,BOOL bFromThis=TRUE,BOOL bClip=FALSE);
         
         void LockUpdate();
         void UnlockUpdate();

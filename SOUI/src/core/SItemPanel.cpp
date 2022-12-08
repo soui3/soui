@@ -158,12 +158,12 @@ IRenderTarget * SItemPanel::OnGetRenderTarget(const CRect & rc,GrtFlag gdcFlags)
 
 void SItemPanel::OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)
 {
-	OnRedraw(rc);
+	OnRedraw(rc,FALSE);
 	pRT->PopClip();
 	pRT->Release();
 }
 
-void SItemPanel::OnRedraw(const CRect &rc)
+void SItemPanel::OnRedraw(const CRect &rc,BOOL bClip)
 {
     if(m_pFrmHost->IsUpdateLocked()) return;
 
@@ -177,9 +177,10 @@ void SItemPanel::OnRedraw(const CRect &rc)
             rc2.IntersectRect(rc2,rcItem);
             CRect rcHostClient = m_pFrmHost->GetClientRect();
             rc2.IntersectRect(rc2,rcHostClient);
-            m_pFrmHost->InvalidateRect(rc2);
+            m_pFrmHost->InvalidateRect(rc2,bClip);
         }else
         {
+			//hjx: todo, if matrix was applied, following logic maybe error.
             IRenderTarget *pRT=OnGetRenderTarget(rc,GRT_PAINTBKGND);
             SAutoRefPtr<IRegion> rgn;
             GETRENDERFACTORY->CreateRegion(&rgn);

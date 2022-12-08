@@ -294,7 +294,7 @@ protected:// IContainer
 
     virtual void OnReleaseRenderTarget(IRenderTarget * pRT,const CRect &rc,GrtFlag gdcFlags);
 
-    virtual void OnRedraw(const CRect &rc);
+    virtual void OnRedraw(const CRect &rc,BOOL bClip);
 
     virtual BOOL OnReleaseSwndCapture();
 
