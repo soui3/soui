@@ -530,9 +530,9 @@ void STreeViewItemLocator::SetIndent(int nIndent)
 		    
 		    CRect rcItem(pt,szItem);
 		    rcItem.OffsetRect(rcClient.TopLeft());
+			if(m_bHasLines) rcItem.OffsetRect(nIndent,0);
 			if(IsItemInClip(mtx,rcClip,rgnClip,rcItem))
 		    {//draw the item
-			if(m_bHasLines) rcItem.left += nIndent;
 		        ii.pItem->Draw(pRT,rcItem);
 		    }
             pt.y += m_tvItemLocator->GetItemHeight(hItem);
