@@ -105,7 +105,11 @@ source_group("SoUI Resouece" FILES ${CURRENT_SOUIS})
 source_group("Resource Files" FILES ${CURRENT_RC})
 source_group("Extend Cotrols" FILES ${EXTENDCOTROLS})
 
-link_directories(${PROJECT_SOURCE_DIR}/bin)
+if (CMAKE_CL_64)
+    link_directories(${PROJECT_SOURCE_DIR}/bin64)
+else ()
+    link_directories(${PROJECT_SOURCE_DIR}/bin)
+endif ()
 add_executable(demo WIN32 ${CURRENT_HEADERS} ${CURRENT_SRCS} ${CURRENT_SOUIS} ${CURRENT_RC} ${EXTENDCOTROLS})
 
 set_target_properties(demo PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
