@@ -1039,7 +1039,9 @@ namespace SOUI
         BYTE byAlpha=0xFF;
         if(!m_curBrush->IsBitmap()) byAlpha = GetAValue(m_curBrush->GetColor());
         DCBuffer dcBuf(m_hdc,pRect,byAlpha);
+		HGDIOBJ oldPen = ::SelectObject(dcBuf, GetStockObject(NULL_PEN));
         ::Ellipse(dcBuf,pRect->left,pRect->top,pRect->right,pRect->bottom);
+		::SelectObject(dcBuf, oldPen);
         return S_OK;
     }
 
