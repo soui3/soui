@@ -40,6 +40,8 @@ namespace SOUI
         virtual int GetItemHeight(HTREEITEM hItem) const;
 
         virtual int GetItemIndent(HTREEITEM hItem) const;
+        virtual int GetIndent() const ;
+        virtual void SetIndent(int nIndent) ;
     protected:
         BOOL IsItemExpanded(HTREEITEM hItem) const;
 
@@ -138,6 +140,7 @@ namespace SOUI
 
 		void OnKillFocus(SWND wndFocus);
 		void OnSetFocus(SWND wndOld);
+		void OnLButtonDown(UINT nFlags, CPoint pt);
 		
 
 		SOUI_MSG_MAP_BEGIN()
@@ -149,6 +152,8 @@ namespace SOUI
 			MSG_WM_SETFOCUS_EX(OnSetFocus)
 			MSG_WM_MOUSEWHEEL(OnMouseWheel)
 			MSG_WM_MOUSELEAVE(OnMouseLeave)
+			MSG_WM_LBUTTONDOWN(OnLButtonDown)
+			MSG_WM_LBUTTONDBLCLK(OnLButtonDown)
 			MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST,WM_MOUSELAST,OnMouseEvent)
  			MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST,WM_KEYLAST,OnKeyEvent)
  			MESSAGE_RANGE_HANDLER_EX(WM_IME_STARTCOMPOSITION,WM_IME_KEYLAST,OnKeyEvent)
@@ -162,6 +167,8 @@ namespace SOUI
         SOUI_ATTRS_BEGIN()
             ATTR_CUSTOM(L"indent",OnAttrIndent)
             ATTR_INT(L"wantTab", m_bWantTab,FALSE)
+			ATTR_BOOL(L"hasLines", m_bHasLines, TRUE)
+			ATTR_SKIN(L"lineSkin", m_pLineSkin, TRUE)
         SOUI_ATTRS_END()
 	protected:
         virtual UINT OnGetDlgCode();
@@ -180,6 +187,8 @@ namespace SOUI
 		virtual BOOL OnItemGetRect(const SItemPanel *pItem,CRect &rcItem) const;    //获得表项的显示位置
 		virtual BOOL IsItemRedrawDelay() const;                               //指示表项的更新方式
 		virtual void OnItemRequestRelayout(SItemPanel *pItem);          //列表项请求重新布局
+
+		virtual void DrawLines(IRenderTarget *pRT, const CRect &rc, HSTREEITEM hItem);
 	protected:
 
 		void UpdateScrollBar();
@@ -214,5 +223,7 @@ namespace SOUI
         HTREEITEM    m_hSelected;               /**< 当前选择项 */ 
         
         BOOL            m_bWantTab;             /**< want tab */ 
+		BOOL m_bHasLines; /**< has lines*/
+		SAutoRefPtr<ISkinObj> m_pLineSkin;
     };
 }

@@ -1,5 +1,5 @@
 ﻿<include>
-  <treeview pos="0,0,-100,-0" name="tree_view_00" itemHeight="-1" colorItemBkgnd="#FFFFFF" colorItemSelBkgnd="#cccccc" indent="30">
+  <treeview pos="0,0,-100,-0" name="tree_view_00" itemHeight="-1" colorItemBkgnd="#FFFFFF" colorItemSelBkgnd="#cccccc" indent="30" hasLines="1">
 
     <template height="60" colorHover="#cccccc" colorSelected="#0000ff" trackMouseEvent="1">
 		    <toggle pos="[0,|0,@20,@20"  offset="0,-0.5" name="tgl_switch" skin="_skin.sys.tree.toggle" tip="show how to use switch"/>

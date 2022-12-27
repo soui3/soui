@@ -31,7 +31,7 @@ namespace SOUI
 			if(_stscanf(strValue,_T("%d,%d"),&sz.cx,&sz.cy)==2)
 			{
 				//如果值有变化，就发送通知
-				if (sz.cy != m_szValue.cy || sz.cy != m_szValue.cy)
+				if (sz.cx != m_szValue.cx || sz.cy != m_szValue.cy)
 				{
 
 					m_szValue = sz;

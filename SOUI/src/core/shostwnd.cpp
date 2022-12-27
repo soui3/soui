@@ -848,11 +848,11 @@ void SHostWnd::UpdateHost(HDC dc, const CRect &rcInvalid, BYTE byAlpha)
     }
 }
 
-void SHostWnd::OnRedraw(const CRect &rc)
+void SHostWnd::OnRedraw(const CRect &rc,BOOL bClip)
 {
     if(!IsWindow()) return;
     
-    m_rgnInvalidate->CombineRect(&rc,RGN_OR);
+	m_rgnInvalidate->CombineRect(&rc,bClip?RGN_DIFF:RGN_OR);
     
     m_bNeedRepaint = TRUE;
 
@@ -1521,7 +1521,7 @@ void SHostWnd::RequestRelayout(SWND hSource,BOOL bSourceResizable)
         if(!pSource) break;
         rcSour = pSource->GetWindowRect();
     }
-    OnRedraw(rcSour);
+    OnRedraw(rcSour,FALSE);
 }
 
 //////////////////////////////////////////////////////////////////////////

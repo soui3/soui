@@ -58,7 +58,7 @@ namespace SOUI
 
         virtual void OnReleaseRenderTarget(IRenderTarget *pRT,const CRect &rc,GrtFlag gdcFlags)=0;
 
-        virtual void OnRedraw(const CRect &rc)=0;
+        virtual void OnRedraw(const CRect &rc,BOOL bClip)=0;
 
         virtual SWND OnGetSwndCapture()=0;
 

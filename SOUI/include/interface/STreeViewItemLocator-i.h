@@ -23,6 +23,9 @@ namespace SOUI
         virtual void SetItemHeight(HTREEITEM hItem,int nHeight) PURE;
         virtual int GetItemHeight(HTREEITEM hItem) const PURE;
         virtual int GetItemIndent(HTREEITEM hItem) const PURE;
-    };
-    
+        virtual int GetIndent() const PURE;
+        virtual void SetIndent(int nIndent) PURE;
+
+};
+
 }
