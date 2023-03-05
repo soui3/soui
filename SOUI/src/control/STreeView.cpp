@@ -135,7 +135,6 @@ namespace SOUI
         int nRet = GetItemWidth(hItem);
         if(m_adapter->IsItemExpanded(hItem) && m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
         {
-            int nIndent = m_adapter->GetParentItem(hItem) == ITvAdapter::ITEM_ROOT?0:m_nIndent;
             nRet = smax(nRet,_GetBranchWidth(hItem)+nIndent);
         }
         return nRet;
@@ -361,9 +360,8 @@ namespace SOUI
             hParent = m_adapter->GetParentItem(hParent);
         }
         _UpdateSiblingsOffset(hItem);
+
 		int nNewBranchWidth = _GetItemVisibleWidth(hItem);
-		if (nOldBranchWidth == nNewBranchWidth)
-			return;
 		_UpdateBranchWidth(hItem, nOldBranchWidth, nNewBranchWidth);
     }
 
