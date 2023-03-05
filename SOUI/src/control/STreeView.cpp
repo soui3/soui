@@ -135,7 +135,7 @@ namespace SOUI
         int nRet = GetItemWidth(hItem);
         if(m_adapter->IsItemExpanded(hItem) && m_adapter->GetFirstChildItem(hItem)!=ITvAdapter::ITEM_NULL)
         {
-            nRet = smax(nRet,_GetBranchWidth(hItem)+nIndent);
+            nRet = smax(nRet,_GetBranchWidth(hItem));
         }
         return nRet;
     }
