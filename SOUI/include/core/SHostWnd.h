@@ -19,7 +19,7 @@
 #include <helper/SScriptTimer.h>
 namespace SOUI
 {
-    class SHostWndAttr : public SObject, public ITrCtxProvider
+    class SOUI_EXP SHostWndAttr : public SObject, public ITrCtxProvider
     {
         SOUI_CLASS_NAME(SHostWndAttr, L"SHostWndAttr")
         enum {WT_UNDEFINE=0,WT_APPMAIN=1,WT_NORMAL=2};
