@@ -183,18 +183,17 @@ namespace SOUI {
 		Log4zStream & writeULongLong(unsigned long long t);
 		Log4zStream & writePointer(const void * t);
 		Log4zStream & writeString(const char* t);
-		Log4zStream & writeWString(const wchar_t* t);
+		Log4zStream & writeWString(const wchar_t* t,int nLen=-1);
 		Log4zStream & writeBinary(const Log4zBinary & t);
 	public:
 		Log4zStream & operator <<(const void * t) { return  writePointer(t); }
 
 		Log4zStream & operator <<(const char * t) { return writeString(t); }
-#if defined (WIN32) || defined(_WIN64)
 		Log4zStream & operator <<(const wchar_t * t) { return writeWString(t); }
-#endif
 		Log4zStream & operator <<(bool t) { return (t ? writeData("%s", "true") : writeData("%s", "false")); }
 
 		Log4zStream & operator <<(char t) { return writeData("%c", t); }
+		Log4zStream & operator <<(wchar_t t) { return writeWString(&t, 1); }
 
 		Log4zStream & operator <<(unsigned char t) { return writeData("%u", (unsigned int)t); }
 
@@ -328,14 +327,14 @@ namespace SOUI {
 		return *this;
 	}
 
-	inline Log4zStream & Log4zStream::writeWString(const wchar_t* t)
+	inline Log4zStream & Log4zStream::writeWString(const wchar_t* t,int nLen)
 	{
 #if defined (WIN32) || defined(_WIN64)
-		DWORD dwLen = WideCharToMultiByte(CP_ACP, 0, t, -1, NULL, 0, NULL, NULL);
+		DWORD dwLen = WideCharToMultiByte(CP_ACP, 0, t, nLen, NULL, 0, NULL, NULL);
 		if (dwLen < SOUI::LOG4Z_LOG_BUF_SIZE)
 		{
 			char buf[SOUI::LOG4Z_LOG_BUF_SIZE];
-			dwLen = WideCharToMultiByte(CP_ACP, 0, t, -1, buf, dwLen, NULL, NULL);
+			dwLen = WideCharToMultiByte(CP_ACP, 0, t, nLen, buf, dwLen, NULL, NULL);
 			if (dwLen > 0)
 			{
 				buf[dwLen] = 0;
