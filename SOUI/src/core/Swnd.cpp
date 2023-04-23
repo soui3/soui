@@ -77,6 +77,7 @@ namespace SOUI
 		, m_animationHandler(this)
 		, m_isAnimating(false)
 		, m_isDestroying(false)
+		, m_bLoading(false)
 #ifdef _DEBUG
 		, m_nMainThreadId( ::GetCurrentThreadId() ) // 初始化对象的线程不一定是主线程
 #endif
@@ -797,6 +798,14 @@ namespace SOUI
 				}
 			}
 		}
+		if(!m_bLoading){
+			//动态创建子窗口，同步窗口的的属性
+			if(GetScale() != 100)
+				SDispatchMessage(UM_SETSCALE,GetScale(),0);
+			if(m_crColorize!=0)
+				SDispatchMessage(UM_SETCOLORIZE,GetColorizeColor());
+			SDispatchMessage(UM_SETLANGUAGE);
+		}
 		return TRUE;
 	}
 
@@ -811,6 +820,7 @@ namespace SOUI
 	{
 		ASSERT_UI_THREAD();
 		SASSERT(m_pContainer);
+		m_bLoading = true;
 		if (xmlNode)
 		{
 
@@ -880,6 +890,7 @@ namespace SOUI
 
 		EventSwndInitFinish evt(this);
 		FireEvent(evt);
+		m_bLoading = false;
 		return TRUE;
 	}
 
