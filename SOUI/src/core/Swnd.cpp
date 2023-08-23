@@ -1021,6 +1021,7 @@ namespace SOUI
 		CRect rcClient = SWindow::GetClientRect();
 		if(rcWnd == rcClient)
 			return;
+		UpdateWindow();
 		InvalidateRect(rcWnd,TRUE,FALSE);//invalid window rect
 		InvalidateRect(rcClient,TRUE,TRUE);//but clip client rect
 	}
