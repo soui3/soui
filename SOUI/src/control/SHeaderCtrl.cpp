@@ -88,7 +88,7 @@ namespace SOUI
 
 		if (pItem->mask & SHDI_TEXT)
 		{
-			item.strText.SetText(pItem->strText.GetText(FALSE));
+			item.strText.SetText(pItem->strText.GetText(TRUE));
 		}
 		if (pItem->mask & SHDI_WIDTH) item.cx = pItem->cx;
 		if (pItem->mask & SHDI_LPARAM) item.lParam = pItem->lParam;
