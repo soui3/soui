@@ -1287,25 +1287,21 @@ namespace SOUI
 			return Clone(pOutput);
 		}
 		HRESULT hr = E_UNEXPECTED;
-		BOOL bOK = GetRenderFactory()->CreateBitmap(pOutput);
-		if(bOK)
+		IRenderTarget *pRT=NULL;
+		if(GetRenderFactory()->CreateRenderTarget(&pRT,nWid,nHei))
 		{
-			IRenderTarget *pRT=NULL;
-			if(GetRenderFactory()->CreateRenderTarget(&pRT,nWid,nHei))
+			RECT rcSrc = {0,0,(long)Width(),(long)Height()};
+			RECT rcDst ={0,0,nWid,nHei};
+			hr = pRT->DrawBitmapEx(&rcDst,this,&rcSrc,MAKELONG(EM_STRETCH,filterLevel));
+			if(hr == S_OK)
 			{
-				RECT rcSrc = {0,0,(long)Width(),(long)Height()};
-				RECT rcDst ={0,0,nWid,nHei};
-				hr = pRT->DrawBitmapEx(&rcDst,this,&rcSrc,MAKELONG(EM_STRETCH,filterLevel));
-				if(hr == S_OK)
-				{
-					*pOutput = (IBitmap*)pRT->GetCurrentObject(OT_BITMAP);
-					(*pOutput)->AddRef();
-				}
-				pRT->Release();
-			}else
-			{
-				hr = E_OUTOFMEMORY;
+				*pOutput = (IBitmap*)pRT->GetCurrentObject(OT_BITMAP);
+				(*pOutput)->AddRef();
 			}
+			pRT->Release();
+		}else
+		{
+			hr = E_OUTOFMEMORY;
 		}
 		return hr;
 	}
